@@ -17,16 +17,19 @@
     "typecheck": "tsc --noEmit && tsc --noEmit --project inertia/tsconfig.json"
   },
   "imports": {
-    "#controllers/*": "./app/controllers/*.js",
+    "#controllers/*": "./app/http/controllers/*.js",
     "#exceptions/*": "./app/exceptions/*.js",
+    "#helpers/*": "./app/helpers/*.js",
     "#models/*": "./app/models/*.js",
     "#mails/*": "./app/mails/*.js",
-    "#services/*": "./app/services/*.js",
     "#listeners/*": "./app/listeners/*.js",
     "#events/*": "./app/events/*.js",
     "#generated/*": "./.adonisjs/server/*.js",
-    "#middleware/*": "./app/middleware/*.js",
-    "#transformers/*": "./app/transformers/*.js",
+    "#middleware/*": "./app/http/middleware/*.js",
+    "#repositories/*": "./app/domain/repositories/*.js",
+    "#services/*": "./app/domain/services/*.js",
+    "#transformers/*": "./app/data/transformers/*.js",
+    "#types/*": "./app/types/*.js",
     "#validators/*": "./app/validators/*.js",
     "#providers/*": "./providers/*.js",
     "#policies/*": "./app/policies/*.js",
@@ -65,25 +68,29 @@
     "@adonisjs/cors": "^3.0.0",
     "@adonisjs/inertia": "^4.1.0",
     "@adonisjs/lucid": "^22.0.0",
+    "@adonisjs/redis": "^10.0.0",
     "@adonisjs/session": "^8.0.0",
     "@adonisjs/shield": "^9.0.0",
     "@adonisjs/static": "^2.0.0",
     "@adonisjs/vite": "^5.1.0",
     "@inertiajs/react": "^2.3.17",
+    "@tailwindcss/vite": "^4.2.1",
     "@tuyau/core": "^1.0.0",
     "@vinejs/vine": "^4.3.0",
     "better-sqlite3": "^12.6.2",
     "edge.js": "^6.5.0",
     "luxon": "^3.7.2",
+    "pg": "^8.20.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "reflect-metadata": "^0.2.2",
-    "sonner": "^2.0.7"
+    "sonner": "^2.0.7",
+    "tailwindcss": "^4.2.1"
   },
   "hotHook": {
     "boundaries": [
-      "./app/controllers/**/*.ts",
-      "./app/middleware/*.ts"
+      "./app/http/controllers/**/*.ts",
+      "./app/http/middleware/**/*.ts"
     ]
   },
   "prettier": "@adonisjs/prettier-config"

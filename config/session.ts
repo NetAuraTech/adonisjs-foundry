@@ -72,6 +72,13 @@ const sessionConfig = defineConfig({
      * Store session data inside the configured database.
      */
     database: stores.database(),
+
+    /**
+     * Store session data inside redis.
+     */
+    redis: stores.redis({
+      connection: 'main',
+    }),
   },
 })
 

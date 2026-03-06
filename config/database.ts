@@ -5,7 +5,7 @@ const dbConfig = defineConfig({
   /**
    * Default connection used for all queries.
    */
-  connection: 'sqlite',
+  connection: 'pg',
 
   connections: {
     /**
@@ -43,21 +43,21 @@ const dbConfig = defineConfig({
      * PostgreSQL connection.
      * Install package to switch: npm install pg
      */
-    // pg: {
-    //   client: 'pg',
-    //   connection: {
-    //     host: env.get('DB_HOST'),
-    //     port: env.get('DB_PORT'),
-    //     user: env.get('DB_USER'),
-    //     password: env.get('DB_PASSWORD'),
-    //     database: env.get('DB_DATABASE'),
-    //   },
-    //   migrations: {
-    //     naturalSort: true,
-    //     paths: ['database/migrations'],
-    //   },
-    //   debug: app.inDev,
-    // },
+    pg: {
+      client: 'pg',
+      connection: {
+        host: process.env.PG_HOST,
+        port: Number(process.env.PG_PORT || 5432),
+        user: process.env.PG_USER,
+        password: process.env.PG_PASSWORD,
+        database: process.env.PG_DB_NAME,
+      },
+      migrations: {
+        naturalSort: true,
+        paths: ['database/migrations'],
+      },
+      debug: app.inDev,
+    },
 
     /**
      * MySQL / MariaDB connection.
@@ -66,11 +66,11 @@ const dbConfig = defineConfig({
     // mysql: {
     //   client: 'mysql2',
     //   connection: {
-    //     host: env.get('DB_HOST'),
-    //     port: env.get('DB_PORT'),
-    //     user: env.get('DB_USER'),
-    //     password: env.get('DB_PASSWORD'),
-    //     database: env.get('DB_DATABASE'),
+    //     host: process.env.MYSQL_HOST,
+    //     port: Number(process.env.MYSQL_PORT || 3306),
+    //     user: process.env.MYSQL_USER,
+    //     password: process.env.MYSQL_PASSWORD,
+    //     database: process.env.MYSQL_DB_NAME,
     //   },
     //   migrations: {
     //     naturalSort: true,
@@ -86,11 +86,11 @@ const dbConfig = defineConfig({
     // mssql: {
     //   client: 'mssql',
     //   connection: {
-    //     server: env.get('DB_HOST'),
-    //     port: env.get('DB_PORT'),
-    //     user: env.get('DB_USER'),
-    //     password: env.get('DB_PASSWORD'),
-    //     database: env.get('DB_DATABASE'),
+    //     server: process.env.MSSQL_SERVER,
+    //     port: Number(process.env.MSSQL_PORT || 1433),
+    //     user: process.env.MSSQL_USER,
+    //     password: process.env.MSSQL_PASSWORD,
+    //     database: process.env.MSSQL_DB_NAME,
     //   },
     //   migrations: {
     //     naturalSort: true,
@@ -106,8 +106,8 @@ const dbConfig = defineConfig({
     // libsql: {
     //   client: 'libsql',
     //   connection: {
-    //     url: env.get('LIBSQL_URL'),
-    //     authToken: env.get('LIBSQL_AUTH_TOKEN'),
+    //     url: process.env.LIBSQL_URL,
+    //     authToken: process.env.LIBSQL_AUTH_TOKEN,
     //   },
     //   useNullAsDefault: true,
     //   migrations: {
