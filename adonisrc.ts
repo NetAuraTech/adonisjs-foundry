@@ -129,7 +129,19 @@ export default defineConfig({
   hooks: {
     init: [
       indexEntities({
-        transformers: { enabled: true, withSharedProps: true },
+        transformers: {
+          enabled: true,
+          withSharedProps: true,
+          source: 'app/data/transformers',
+          importAlias: '#transformers',
+          glob: ['**\/*transformer.ts'],
+        },
+        controllers: {
+          enabled: true,
+          source: 'app/http/controllers',
+          importAlias: '#controllers',
+          glob: ['**\/*_controller.ts'],
+        },
       }),
       indexPages({ framework: 'react' }),
       generateRegistry(),
