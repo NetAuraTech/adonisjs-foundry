@@ -15,16 +15,64 @@ router.on('/').renderInertia('home', {}).as('home')
 
 router
   .group(() => {
-    router.get('signup', [controllers.NewAccount, 'create'])
-    router.post('signup', [controllers.NewAccount, 'store'])
+    router
+      .group(() => {
+        router
+          .group(() => {
+            router.get('/', [controllers.auth.front.Session, 'render'])
+            router.post('/', [controllers.auth.front.Session, 'execute'])
+          })
+          .prefix('login')
 
-    router.get('login', [controllers.Session, 'create'])
-    router.post('login', [controllers.Session, 'store'])
-  })
-  .use(middleware.guest())
+        router
+          .group(() => {
+            router.get('/', [controllers.auth.front.Register, 'render'])
+            router.post('/', [controllers.auth.front.Register, 'execute'])
+          })
+          .prefix('register')
 
-router
-  .group(() => {
-    router.post('logout', [controllers.Session, 'destroy'])
+        router
+          .group(() => {
+            router.get('/', [controllers.auth.front.ForgotPassword, 'render'])
+            router.post('/', [controllers.auth.front.ForgotPassword, 'execute'])
+          })
+          .prefix('forgot-password')
+
+        router
+          .group(() => {
+            router.get('/:token', [controllers.auth.front.ResetPassword, 'render'])
+            router.post('/', [controllers.auth.front.ResetPassword, 'execute'])
+          })
+          .prefix('reset-password')
+      })
+      .use([middleware.guest()])
+
+    router.group(() => {
+      router
+        .group(() => {
+          router.post('/', [controllers.auth.front.Session, 'destroy'])
+        })
+        .prefix('logout')
+    })
+
+    router
+      .get('/verify/:token', [controllers.auth.front.EmailVerification, 'execute'])
+      .use([middleware.auth()])
+
+    router
+      .group(() => {
+        router
+          .group(() => {
+            router.get('/', [controllers.auth.front.Social, 'render'])
+            router.post('/', [controllers.auth.front.Social, 'execute'])
+          })
+          .prefix('define-password')
+
+        router.get('/:provider', [controllers.auth.front.Social, 'redirect'])
+        router.get('/:provider/callback', [controllers.auth.front.Social, 'callback'])
+
+        router.post('/:provider/unlink', [controllers.auth.front.Social, 'unlink'])
+      })
+      .prefix('oauth')
   })
-  .use(middleware.auth())
+  .as('auth')

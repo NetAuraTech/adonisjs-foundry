@@ -76,6 +76,7 @@ export default defineConfig({
     () => import('@adonisjs/redis/redis_provider'),
     () => import('@rlanz/sentry/provider'),
     () => import('@adonisjs/i18n/i18n_provider'),
+    () => import('@adonisjs/ally/ally_provider'),
     () => import('@adonisjs/mail/mail_provider'),
   ],
 
@@ -91,6 +92,7 @@ export default defineConfig({
     () => import('#start/routes'),
     () => import('#start/kernel'),
     () => import('#start/validator'),
+    () => import('#start/events'),
   ],
 
   /*

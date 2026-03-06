@@ -3,6 +3,279 @@
 @source "../components";
 @source "../layouts";
 
-@theme {
+@custom-variant dark (&:is(.dark *));
+@custom-variant current (&[aria-current="page"]);
+@custom-variant focus (&:is(:focus-visible));
 
+@theme {
+  --color-neutral-base: oklch(0.5 0.02 236);
+  --color-primary-base: oklch(0.691 0.131 154.946);
+  --color-accent-base: oklch(0.585 0.107 71.418);
+
+  /* Primary scale */
+  --color-primary-50:  oklch(from var(--color-primary-base) calc(l + 0.38) calc(c * 0.3) h);
+  --color-primary-100: oklch(from var(--color-primary-base) calc(l + 0.36) calc(c * 0.4) h);
+  --color-primary-200: oklch(from var(--color-primary-base) calc(l + 0.31) calc(c * 0.5) h);
+  --color-primary-300: oklch(from var(--color-primary-base) calc(l + 0.24) calc(c * 0.7) h);
+  --color-primary-400: oklch(from var(--color-primary-base) calc(l + 0.12) calc(c * 0.85) h);
+  --color-primary-500: oklch(from var(--color-primary-base) l c h);
+  --color-primary-600: oklch(from var(--color-primary-base) calc(l - 0.10) calc(c * 1.05) h);
+  --color-primary-700: oklch(from var(--color-primary-base) calc(l - 0.18) calc(c * 1.1) h);
+  --color-primary-800: oklch(from var(--color-primary-base) calc(l - 0.28) calc(c * 0.95) h);
+  --color-primary-900: oklch(from var(--color-primary-base) calc(l - 0.37) calc(c * 0.8) h);
+  --color-primary-950: oklch(from var(--color-primary-base) calc(l - 0.47) calc(c * 0.6) h);
+
+  /* Accent scale */
+  --color-accent-50:  oklch(from var(--color-accent-base) calc(l + 0.29) calc(c * 0.3) h);
+  --color-accent-100: oklch(from var(--color-accent-base) calc(l + 0.27) calc(c * 0.4) h);
+  --color-accent-200: oklch(from var(--color-accent-base) calc(l + 0.23) calc(c * 0.5) h);
+  --color-accent-300: oklch(from var(--color-accent-base) calc(l + 0.15) calc(c * 0.7) h);
+  --color-accent-400: oklch(from var(--color-accent-base) calc(l + 0.02) calc(c * 0.85) h);
+  --color-accent-500: oklch(from var(--color-accent-base) l c h);
+  --color-accent-600: oklch(from var(--color-accent-base) calc(l - 0.10) calc(c * 1.05) h);
+  --color-accent-700: oklch(from var(--color-accent-base) calc(l - 0.22) calc(c * 1.1) h);
+  --color-accent-800: oklch(from var(--color-accent-base) calc(l - 0.36) calc(c * 0.95) h);
+  --color-accent-900: oklch(from var(--color-accent-base) calc(l - 0.48) calc(c * 0.8) h);
+  --color-accent-950: oklch(from var(--color-accent-base) calc(l - 0.57) calc(c * 0.6) h);
+
+  --color-foreground-title: oklch(0.243 0.007 145.351);
+  --color-foreground: color-mix(
+    in oklab,
+    var(--color-foreground-title) 85%,
+    transparent
+  );
+  --color-muted: color-mix(
+    in oklab,
+    var(--color-foreground-title) 60%,
+    transparent
+  );
 }
+
+@layer base {
+  #page-wrapper {
+    @apply relative;
+    @apply flex;
+    @apply flex-col;
+    @apply w-full;
+    @apply min-h-screen;
+  }
+
+  a {
+    @apply transition-colors;
+    @apply duration-200;
+  }
+
+  *:focus-visible {
+    @apply outline-2;
+    @apply outline-primary-700;
+  }
+
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-background-light);
+    padding: 1px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 4px;
+  }
+}
+
+
+@layer components {
+  .header {
+    @apply z-50;
+    @apply top-0;
+    @apply sticky;
+    @apply flex;
+    @apply justify-between;
+    @apply items-center;
+    @apply shadow;
+    @apply p-2;
+
+    @variant md {
+      @apply px-20;
+      @apply py-6;
+    }
+
+    .header__logo {
+      img {
+        @apply w-15;
+        @apply h-auto;
+        @apply mr-4;
+      }
+    }
+
+    .header__nav {
+      @apply fixed;
+      @apply p-4;
+      @apply grid;
+      @apply gap-3;
+      @apply shadow-2xl;
+      @apply transition-all;
+      @apply duration-500;
+      @apply top-19;
+      @apply -right-75;
+      @apply bottom-0;
+      @apply w-3xs;
+      @apply h-max;
+      @apply opacity-0;
+      @apply rounded-bl-lg;
+      @apply items-center;
+
+      &[aria-expanded=true] {
+        @apply -right-0;
+        @apply opacity-100;
+      }
+
+
+      @variant md {
+        @apply relative;
+        @apply flex;
+        @apply gap-6;
+        @apply w-auto;
+        @apply h-auto;
+        @apply opacity-100;
+        @apply top-0;
+        @apply right-0;
+        box-shadow: none;
+      }
+    }
+
+    .header__burger {
+      @apply overflow-hidden;
+      @apply bg-transparent;
+      @apply cursor-pointer;
+
+      &[aria-expanded=true] svg {
+        translate: 3px 0;
+        rotate: 0.125turn;
+
+        .line {
+          stroke-dasharray: 60 105 60 300;
+          stroke-dashoffset: -90;
+        }
+      }
+
+      svg {
+        transition: translate 1s, rotate 1s;
+
+        .line {
+          transition: 1s;
+          stroke-dasharray: 60 31 60 300;
+        }
+      }
+
+      @variant md {
+        @apply hidden;
+      }
+    }
+  }
+
+  .card {
+    @apply grid;
+    @apply rounded-2xl;
+    @apply bg-neutral-50;
+    @apply shadow-2xl;
+    @apply overflow-hidden;
+  }
+
+  .textarea {
+    @apply input;
+    @apply min-h-30;
+    field-sizing: content;
+  }
+
+  .select {
+    @apply input;
+    appearance: base-select;
+
+    &::picker(select) {
+      appearance: base-select;
+      @apply bg-neutral-100;
+      @apply p-2;
+      @apply border-1;
+      @apply border-solid;
+      @apply border-neutral-300;
+      @apply rounded;
+      @apply opacity-0;
+      @apply -translate-y-2.5;
+      transition: all 0.4s allow-discrete;
+    }
+
+    &::picker(select):popover-open {
+      @apply -translate-y-0;
+      @apply opacity-100;
+
+      @starting-style {
+        @apply opacity-0;
+        @apply -translate-y-2.5;
+      }
+    }
+
+    option {
+      @apply p-2;
+
+      &:checked {
+        @apply bg-accent-50;
+      }
+
+      &::checkmark {
+        display: none;
+      }
+    }
+  }
+
+  .checkbox {
+    aspect-ratio: 1;
+    @apply input;
+    @apply cursor-pointer;
+    @apply w-5;
+    @apply accent-accent-700;
+    @apply rounded-lg;
+
+    &+label {
+      @apply cursor-pointer;
+    }
+  }
+
+  .button {
+    @apply flex;
+    @apply items-center;
+    @apply justify-center;
+    @apply font-bold;
+    @apply transition-colors;
+    @apply duration-300;
+    @apply cursor-pointer;
+    @apply rounded-lg;
+    @apply py-3;
+    @apply px-8;
+  }
+}
+
+@utility input {
+  @apply bg-neutral-100;
+  @apply text-neutral-800;
+  @apply p-2;
+  @apply rounded-lg;
+  @apply border-1;
+  @apply border-solid;
+  @apply border-neutral-300;
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1rem;
+  max-width: 1330px;
+}
+
+@utility grid-auto-fit-* {
+  @apply grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(--value([length]), 100%), 1fr));
+}
+

@@ -12,35 +12,95 @@ const routes = {
     tokens: [{"old":"/","type":0,"val":"/","end":""}],
     types: placeholder as Registry['home']['types'],
   },
-  'new_account.create': {
-    methods: ["GET","HEAD"],
-    pattern: '/signup',
-    tokens: [{"old":"/signup","type":0,"val":"signup","end":""}],
-    types: placeholder as Registry['new_account.create']['types'],
-  },
-  'new_account.store': {
-    methods: ["POST"],
-    pattern: '/signup',
-    tokens: [{"old":"/signup","type":0,"val":"signup","end":""}],
-    types: placeholder as Registry['new_account.store']['types'],
-  },
-  'session.create': {
+  'auth.session.render': {
     methods: ["GET","HEAD"],
     pattern: '/login',
     tokens: [{"old":"/login","type":0,"val":"login","end":""}],
-    types: placeholder as Registry['session.create']['types'],
+    types: placeholder as Registry['auth.session.render']['types'],
   },
-  'session.store': {
+  'auth.session.execute': {
     methods: ["POST"],
     pattern: '/login',
     tokens: [{"old":"/login","type":0,"val":"login","end":""}],
-    types: placeholder as Registry['session.store']['types'],
+    types: placeholder as Registry['auth.session.execute']['types'],
   },
-  'session.destroy': {
+  'auth.register.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/register',
+    tokens: [{"old":"/register","type":0,"val":"register","end":""}],
+    types: placeholder as Registry['auth.register.render']['types'],
+  },
+  'auth.register.execute': {
+    methods: ["POST"],
+    pattern: '/register',
+    tokens: [{"old":"/register","type":0,"val":"register","end":""}],
+    types: placeholder as Registry['auth.register.execute']['types'],
+  },
+  'auth.forgot_password.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/forgot-password',
+    tokens: [{"old":"/forgot-password","type":0,"val":"forgot-password","end":""}],
+    types: placeholder as Registry['auth.forgot_password.render']['types'],
+  },
+  'auth.forgot_password.execute': {
+    methods: ["POST"],
+    pattern: '/forgot-password',
+    tokens: [{"old":"/forgot-password","type":0,"val":"forgot-password","end":""}],
+    types: placeholder as Registry['auth.forgot_password.execute']['types'],
+  },
+  'auth.reset_password.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/reset-password/:token',
+    tokens: [{"old":"/reset-password/:token","type":0,"val":"reset-password","end":""},{"old":"/reset-password/:token","type":1,"val":"token","end":""}],
+    types: placeholder as Registry['auth.reset_password.render']['types'],
+  },
+  'auth.reset_password.execute': {
+    methods: ["POST"],
+    pattern: '/reset-password',
+    tokens: [{"old":"/reset-password","type":0,"val":"reset-password","end":""}],
+    types: placeholder as Registry['auth.reset_password.execute']['types'],
+  },
+  'auth.session.destroy': {
     methods: ["POST"],
     pattern: '/logout',
     tokens: [{"old":"/logout","type":0,"val":"logout","end":""}],
-    types: placeholder as Registry['session.destroy']['types'],
+    types: placeholder as Registry['auth.session.destroy']['types'],
+  },
+  'auth.email_verification.execute': {
+    methods: ["GET","HEAD"],
+    pattern: '/verify/:token',
+    tokens: [{"old":"/verify/:token","type":0,"val":"verify","end":""},{"old":"/verify/:token","type":1,"val":"token","end":""}],
+    types: placeholder as Registry['auth.email_verification.execute']['types'],
+  },
+  'auth.social.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/oauth/define-password',
+    tokens: [{"old":"/oauth/define-password","type":0,"val":"oauth","end":""},{"old":"/oauth/define-password","type":0,"val":"define-password","end":""}],
+    types: placeholder as Registry['auth.social.render']['types'],
+  },
+  'auth.social.execute': {
+    methods: ["POST"],
+    pattern: '/oauth/define-password',
+    tokens: [{"old":"/oauth/define-password","type":0,"val":"oauth","end":""},{"old":"/oauth/define-password","type":0,"val":"define-password","end":""}],
+    types: placeholder as Registry['auth.social.execute']['types'],
+  },
+  'auth.social.redirect': {
+    methods: ["GET","HEAD"],
+    pattern: '/oauth/:provider',
+    tokens: [{"old":"/oauth/:provider","type":0,"val":"oauth","end":""},{"old":"/oauth/:provider","type":1,"val":"provider","end":""}],
+    types: placeholder as Registry['auth.social.redirect']['types'],
+  },
+  'auth.social.callback': {
+    methods: ["GET","HEAD"],
+    pattern: '/oauth/:provider/callback',
+    tokens: [{"old":"/oauth/:provider/callback","type":0,"val":"oauth","end":""},{"old":"/oauth/:provider/callback","type":1,"val":"provider","end":""},{"old":"/oauth/:provider/callback","type":0,"val":"callback","end":""}],
+    types: placeholder as Registry['auth.social.callback']['types'],
+  },
+  'auth.social.unlink': {
+    methods: ["POST"],
+    pattern: '/oauth/:provider/unlink',
+    tokens: [{"old":"/oauth/:provider/unlink","type":0,"val":"oauth","end":""},{"old":"/oauth/:provider/unlink","type":1,"val":"provider","end":""},{"old":"/oauth/:provider/unlink","type":0,"val":"unlink","end":""}],
+    types: placeholder as Registry['auth.social.unlink']['types'],
   },
 } as const satisfies Record<string, AdonisEndpoint>
 

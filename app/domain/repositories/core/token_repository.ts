@@ -533,7 +533,7 @@ export class TokenRepository {
     const user = await this.getUserFromToken(token, TOKEN_TYPES.EMAIL_VERIFICATION)
 
     if (!user) {
-      this.logService.logAuth('email_verification.failed.invalid_token', {})
+      this.logService.logAuth('core.token.invalid', {})
       throw new InvalidTokenException()
     }
 
@@ -584,7 +584,7 @@ export class TokenRepository {
     const user = await this.getUserFromToken(token, TOKEN_TYPES.EMAIL_CHANGE)
 
     if (!user || !user.pendingEmail) {
-      this.logService.logAuth('email_change.failed.invalid_token', {})
+      this.logService.logAuth('core.token.invalid', {})
 
       throw new InvalidTokenException()
     }

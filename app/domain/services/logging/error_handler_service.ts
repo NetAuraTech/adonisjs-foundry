@@ -291,17 +291,17 @@ export class ErrorHandlerService {
         status: 403,
       },
       E_INVALID_CREDENTIALS: {
-        message: i18n.t('auth.session.failed'),
+        message: i18n.t('auth.session.login.failed'),
         status: 401,
         redirectTo: 'auth.session.render',
       },
       E_INVALID_TOKEN: {
-        message: i18n.t('auth.token.invalid'),
+        message: i18n.t('core.token.invalid'),
         status: 400,
         redirectTo: 'auth.session.render',
       },
       E_TOKEN_EXPIRED: {
-        message: i18n.t('auth.token.invalid'),
+        message: i18n.t('core.token.invalid'),
         status: 400,
         redirectTo: 'auth.session.render',
       },

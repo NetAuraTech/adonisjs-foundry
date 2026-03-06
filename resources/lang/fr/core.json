@@ -1,0 +1,6 @@
+{
+  "token": {
+    "invalid": "Ce lien n'est pas valide ou a expiré. Veuillez en demander un nouveau.",
+    "max_attempts_exceeded": "Ce lien a été utilisé trop de fois. Veuillez en demander un nouveau."
+  }
+}
