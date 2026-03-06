@@ -76,6 +76,7 @@
     "@adonisjs/static": "^2.0.0",
     "@adonisjs/vite": "^5.1.0",
     "@inertiajs/react": "^2.3.17",
+    "@rlanz/sentry": "^0.3.3",
     "@tailwindcss/vite": "^4.2.1",
     "@tuyau/core": "^1.0.0",
     "@vinejs/vine": "^4.3.0",
