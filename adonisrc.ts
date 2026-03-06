@@ -42,6 +42,7 @@ export default defineConfig({
     httpControllers: 'app/http/controllers',
     transformers: 'app/data/transformers',
     middleware: 'app/http/middleware',
+    services: 'app/domain/services',
   },
 
   /*
