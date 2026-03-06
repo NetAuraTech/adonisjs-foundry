@@ -19,9 +19,13 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
      * Fetching the first error from the flash messages
      */
     const errorsBag = session?.flashMessages.get('errorsBag') ?? {}
-    const error: string | undefined = Object.keys(errorsBag)
+    const errorFromBag: string | undefined = Object.keys(errorsBag)
       .filter((code) => code !== 'E_VALIDATION_ERROR')
       .map((code) => errorsBag[code])[0]
+
+    const success: string | undefined = session?.flashMessages.get('success')
+    const info: string | undefined = session?.flashMessages.get('info')
+    const error: string | undefined = session?.flashMessages.get('error') ?? errorFromBag
 
     /**
      * Data shared with all Inertia pages. Make sure you are using
@@ -31,8 +35,13 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
       errors: ctx.inertia.always(this.getValidationErrors(ctx)),
       flash: ctx.inertia.always({
         error: error,
+        success,
+        info,
       }),
-      user: ctx.inertia.always(auth?.user ? UserTransformer.transform(auth.user) : undefined),
+      currentUser: ctx.inertia.always(
+        auth?.user ? UserTransformer.transform(auth.user) : undefined
+      ),
+      csrfToken: ctx.request.csrfToken,
     }
   }
 

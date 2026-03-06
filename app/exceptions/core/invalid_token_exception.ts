@@ -1,0 +1,13 @@
+import { Exception } from '@adonisjs/core/exceptions'
+
+export default class InvalidTokenException extends Exception {
+  static status = 400
+  static code = 'E_INVALID_TOKEN'
+
+  constructor() {
+    super('Invalid or expired token.', {
+      status: InvalidTokenException.status,
+      code: InvalidTokenException.code,
+    })
+  }
+}
