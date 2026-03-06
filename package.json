@@ -69,6 +69,7 @@
     "@adonisjs/i18n": "^3.0.0",
     "@adonisjs/inertia": "^4.1.0",
     "@adonisjs/lucid": "^22.0.0",
+    "@adonisjs/mail": "^10.0.0",
     "@adonisjs/redis": "^10.0.0",
     "@adonisjs/session": "^8.0.0",
     "@adonisjs/shield": "^9.0.0",
