@@ -45,7 +45,7 @@ export default class RegisterController {
 
       session.flash('success', i18n.t('auth.session.register.success'))
 
-      return response.redirect().toRoute('home')
+      return response.redirect().toRoute('settings.profile.render')
     } catch (error) {
       return this.errorHandler.handle(ctx, error)
     }

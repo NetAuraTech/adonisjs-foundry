@@ -1,0 +1,38 @@
+{
+  "account": {
+    "success": "Votre compte a été mis à jour avec succès.",
+    "delete": {
+      "success": "Votre compte a été supprimé avec succès."
+    },
+    "password": {
+      "success": "Votre mot de passe a été mis à jour avec succès.",
+      "failed": "Le mot de passe est incorrect."
+    }
+  },
+  "profile": {
+    "success": "Votre profil a été mis à jour avec succès."
+  },
+  "email_change": {
+    "success": "Votre adresse e-mail a été modifiée avec succès.",
+    "no_pending": "Vous n'avez aucune modification d'adresse e-mail en attente.",
+    "cancelled": "Le changement d'adresse e-mail a été annulé.",
+    "mail": {
+      "notification": {
+        "subject": "Votre adresse e-mail est en cours de modification.",
+        "greeting": "Bonjour,",
+        "intro": "Cet e-mail a pour but de vous informer que l'adresse e-mail de votre compte va être modifiée, passant de {old} à {new}.",
+        "warning": "Si vous n'avez pas initié ce changement, votre compte est peut-être compromis. Veuillez contacter immédiatement notre équipe d'assistance.",
+        "action": "Si vous avez besoin d'aide, veuillez nous contacter à l'adresse suivante :"
+      },
+      "confirm": {
+        "subject": "Confirmez votre changement d'adresse e-mail",
+        "greeting": "Bonjour,",
+        "intro": "Vous avez demandé à changer votre adresse e-mail pour {email}. Veuillez confirmer cette modification en cliquant sur le bouton ci-dessous.",
+        "action": "Confirmer le changement d'adresse e-mail",
+        "outro": "Si vous n'avez pas demandé cette modification, veuillez ignorer cet e-mail.",
+        "expiry": "Ce lien de confirmation expirera dans {hours} heures.",
+        "footer": "Si vous rencontrez des difficultés pour cliquer sur le bouton, copiez et collez l'URL ci-dessous dans votre navigateur Web :"
+      }
+    }
+  }
+}

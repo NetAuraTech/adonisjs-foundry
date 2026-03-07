@@ -26,7 +26,7 @@ export default class EmailVerificationController {
 
       session.flash('success', i18n.t('auth.verify_email.success'))
 
-      return response.redirect().toRoute('home')
+      return response.redirect().toRoute('settings.profile.render')
     } catch (error) {
       return this.errorHandler.handle(ctx, error)
     }

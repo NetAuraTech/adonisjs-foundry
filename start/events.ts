@@ -5,3 +5,13 @@ import { listeners } from '#generated/listeners'
 emitter.on(events.auth.UserRegistered, [listeners.auth.SendVerificationEmail, 'handle'])
 
 emitter.on(events.auth.ForgotPassword, [listeners.auth.SendForgotPasswordEmail, 'handle'])
+
+emitter.on(events.account.InitiateEmailChange, [
+  listeners.account.SendChangeEmailNotificationEmail,
+  'handle',
+])
+
+emitter.on(events.account.InitiateEmailChange, [
+  listeners.account.SendChangeEmailConfirmationEmail,
+  'handle',
+])

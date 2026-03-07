@@ -53,7 +53,7 @@ export function Header() {
 
         {pageProps.currentUser ? (
           <Link
-            route="home"
+            route="settings.index"
           >
             <Avatar showUsername />
           </Link>

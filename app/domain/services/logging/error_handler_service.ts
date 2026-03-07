@@ -279,11 +279,7 @@ export class ErrorHandlerService {
         status: 404,
       },
       E_INVALID_CURRENT_PASSWORD: {
-        message: i18n.t('profile.password.incorrect_current'),
-        status: 400,
-      },
-      E_INVALID_PASSWORD: {
-        message: i18n.t('profile.password.incorrect_password'),
+        message: i18n.t('settings.account.password.failed'),
         status: 400,
       },
       E_EMAIL_NOT_VERIFIED: {

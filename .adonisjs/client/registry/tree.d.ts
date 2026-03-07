@@ -32,4 +32,20 @@ export interface ApiDefinition {
       unlink: typeof routes['auth.social.unlink']
     }
   }
+  settings: {
+    profile: {
+      render: typeof routes['settings.profile.render']
+      execute: typeof routes['settings.profile.execute']
+    }
+    account: {
+      render: typeof routes['settings.account.render']
+      execute: typeof routes['settings.account.execute']
+      destroy: typeof routes['settings.account.destroy']
+    }
+    emailChange: {
+      render: typeof routes['settings.email_change.render']
+      execute: typeof routes['settings.email_change.execute']
+    }
+    index: typeof routes['settings.index']
+  }
 }

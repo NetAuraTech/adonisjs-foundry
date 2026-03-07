@@ -1,0 +1,78 @@
+{
+  "title": "Paramètres",
+  "sub_title": "Gérez votre profil, votre compte et vos préférences.",
+  "profile": {
+    "avatar": {
+      "change": "Changer",
+      "value": "Avatar"
+    },
+    "username": {
+      "placeholder": "John Doe",
+      "value": "Nom d'utilisateur"
+    },
+    "title": "Informations du profil",
+    "sub_title": "Votre nom et avatar visibles publiquement.",
+    "submit": "Enregistrer les modifications",
+    "value": "Profil"
+  },
+  "account": {
+    "delete" : {
+      "confirm": {
+        "title": "Êtes-vous sûr de vouloir supprimer votre compte ?",
+        "sub_title": "Une fois votre compte supprimé, toutes ses ressources et données seront définitivement supprimées. Veuillez entrer votre mot de passe pour confirmer que vous souhaitez supprimer définitivement votre compte."
+      },
+      "password": "Mot de passe",
+      "title": "Supprimer le compte",
+      "sub_title": "Une fois votre compte supprimé, toutes ses ressources et données seront définitivement supprimées.",
+      "submit": "Supprimer le compte",
+      "cancel": "Annuler"
+    },
+    "email": {
+      "change": {
+        "cancel" : "Annuler",
+        "info": {
+          "title": "Information importante",
+          "message": "Une fois confirmé, l'email de votre compte sera mis à jour et vous devrez utiliser le nouvel email pour vous connecter."
+        },
+        "title" : "Confirmer le changement d'adresse e-mail",
+        "sub_title" : " Cliquez sur le bouton ci-dessous pour confirmer votre nouvelle adresse e-mail.",
+        "submit" : "Confirmer la nouvelle adresse e-mail"
+      },
+      "title": "Adresse e-mail",
+      "sub_title": "Un e-mail de confirmation sera envoyé à la nouvelle adresse.",
+      "value": "E-mail actuel",
+      "submit": "Mettre à jour l'e-mail"
+    },
+    "oauth": {
+      "title": "Comptes connectés",
+      "sub_title": "Gérez vos connexions OAuth.",
+      "link": "Connecter",
+      "unlink": {
+        "confirm": "Êtes-vous sûr de vouloir délier votre compte {provider} ? Vous ne pourrez plus vous connecter via ce fournisseur.",
+        "value": "Délier"
+      },
+      "connected": "Connecté",
+      "not_connected": "Non connecté"
+    },
+    "password": {
+      "title": "Mot de passe",
+      "sub_title": "Assurez-vous que votre compte utilise un mot de passe long et aléatoire pour rester sécurisé.",
+      "current": {
+        "value": "Mot de passe actuel"
+      },
+      "new": {
+        "help": "Pour une sécurité optimale, votre mot de passe doit comporter au moins 8 caractères.",
+        "value": "Nouveau mot de passe"
+      },
+      "confirm": {
+        "help": "Ressaisissez votre mot de passe pour vérifier qu'il n'y a pas d'erreurs de frappe.",
+        "value": "Confirmer le mot de passe"
+      },
+      "submit": "Mettre à jour le mot de passe"
+    },
+    "value": "Compte"
+  },
+  "preferences": {
+    "value": "Préférences"
+  }
+}

@@ -3,10 +3,14 @@
  * DO NOT EDIT manually
  */
 
+import AccountInitiateEmailChange from '#events/account/initiate_email_change'
 import AuthForgotPassword from '#events/auth/forgot_password'
 import AuthUserRegistered from '#events/auth/user_registered'
 
 export const events = {
+  account: {
+    InitiateEmailChange: AccountInitiateEmailChange,
+  },
   auth: {
     ForgotPassword: AuthForgotPassword,
     UserRegistered: AuthUserRegistered,

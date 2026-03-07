@@ -62,7 +62,7 @@ export default class SocialController {
         await this.socialService.linkProvider(authenticatedUser, allyUser, provider)
         regenerateCsrfToken(ctx)
         session.flash('success', i18n.t('auth.social.linked', { provider }))
-        return response.redirect().toRoute('home')
+        return response.redirect().toRoute('settings.account.render')
       }
 
       const user = await this.socialService.findOrCreateUser(allyUser, provider)
@@ -74,7 +74,7 @@ export default class SocialController {
       }
 
       session.flash('success', i18n.t('auth.session.login.success'))
-      return response.redirect().toRoute('home')
+      return response.redirect().toRoute('settings.profile.render')
     } catch (error) {
       return this.errorHandler.handle(ctx, error)
     }
@@ -129,7 +129,7 @@ export default class SocialController {
 
       regenerateCsrfToken(ctx)
       session.flash('success', i18n.t('auth.social.password_defined'))
-      return response.redirect().toRoute('home')
+      return response.redirect().toRoute('settings.account.render')
     } catch (error) {
       return this.errorHandler.handle(ctx, error)
     }

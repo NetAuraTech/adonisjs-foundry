@@ -20,6 +20,14 @@ export type ScannedRoutes = {
     'auth.social.redirect': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
     'auth.social.callback': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
     'auth.social.unlink': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
+    'settings.profile.render': { paramsTuple?: []; params?: {} }
+    'settings.profile.execute': { paramsTuple?: []; params?: {} }
+    'settings.account.render': { paramsTuple?: []; params?: {} }
+    'settings.account.execute': { paramsTuple?: []; params?: {} }
+    'settings.account.destroy': { paramsTuple?: []; params?: {} }
+    'settings.email_change.render': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'settings.email_change.execute': { paramsTuple?: []; params?: {} }
+    'settings.index': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'home': { paramsTuple?: []; params?: {} }
@@ -31,6 +39,10 @@ export type ScannedRoutes = {
     'auth.social.render': { paramsTuple?: []; params?: {} }
     'auth.social.redirect': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
     'auth.social.callback': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
+    'settings.profile.render': { paramsTuple?: []; params?: {} }
+    'settings.account.render': { paramsTuple?: []; params?: {} }
+    'settings.email_change.render': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'settings.index': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'home': { paramsTuple?: []; params?: {} }
@@ -42,6 +54,10 @@ export type ScannedRoutes = {
     'auth.social.render': { paramsTuple?: []; params?: {} }
     'auth.social.redirect': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
     'auth.social.callback': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
+    'settings.profile.render': { paramsTuple?: []; params?: {} }
+    'settings.account.render': { paramsTuple?: []; params?: {} }
+    'settings.email_change.render': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'settings.index': { paramsTuple?: []; params?: {} }
   }
   POST: {
     'auth.session.execute': { paramsTuple?: []; params?: {} }
@@ -51,6 +67,12 @@ export type ScannedRoutes = {
     'auth.session.destroy': { paramsTuple?: []; params?: {} }
     'auth.social.execute': { paramsTuple?: []; params?: {} }
     'auth.social.unlink': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
+    'settings.profile.execute': { paramsTuple?: []; params?: {} }
+    'settings.account.execute': { paramsTuple?: []; params?: {} }
+    'settings.email_change.execute': { paramsTuple?: []; params?: {} }
+  }
+  DELETE: {
+    'settings.account.destroy': { paramsTuple?: []; params?: {} }
   }
 }
 declare module '@adonisjs/core/types/http' {

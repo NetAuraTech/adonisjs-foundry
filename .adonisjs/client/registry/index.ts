@@ -102,6 +102,54 @@ const routes = {
     tokens: [{"old":"/oauth/:provider/unlink","type":0,"val":"oauth","end":""},{"old":"/oauth/:provider/unlink","type":1,"val":"provider","end":""},{"old":"/oauth/:provider/unlink","type":0,"val":"unlink","end":""}],
     types: placeholder as Registry['auth.social.unlink']['types'],
   },
+  'settings.profile.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/settings/profile',
+    tokens: [{"old":"/settings/profile","type":0,"val":"settings","end":""},{"old":"/settings/profile","type":0,"val":"profile","end":""}],
+    types: placeholder as Registry['settings.profile.render']['types'],
+  },
+  'settings.profile.execute': {
+    methods: ["POST"],
+    pattern: '/settings/profile',
+    tokens: [{"old":"/settings/profile","type":0,"val":"settings","end":""},{"old":"/settings/profile","type":0,"val":"profile","end":""}],
+    types: placeholder as Registry['settings.profile.execute']['types'],
+  },
+  'settings.account.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/settings/account',
+    tokens: [{"old":"/settings/account","type":0,"val":"settings","end":""},{"old":"/settings/account","type":0,"val":"account","end":""}],
+    types: placeholder as Registry['settings.account.render']['types'],
+  },
+  'settings.account.execute': {
+    methods: ["POST"],
+    pattern: '/settings/account',
+    tokens: [{"old":"/settings/account","type":0,"val":"settings","end":""},{"old":"/settings/account","type":0,"val":"account","end":""}],
+    types: placeholder as Registry['settings.account.execute']['types'],
+  },
+  'settings.account.destroy': {
+    methods: ["DELETE"],
+    pattern: '/settings/account',
+    tokens: [{"old":"/settings/account","type":0,"val":"settings","end":""},{"old":"/settings/account","type":0,"val":"account","end":""}],
+    types: placeholder as Registry['settings.account.destroy']['types'],
+  },
+  'settings.email_change.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/settings/account/email_change/:token',
+    tokens: [{"old":"/settings/account/email_change/:token","type":0,"val":"settings","end":""},{"old":"/settings/account/email_change/:token","type":0,"val":"account","end":""},{"old":"/settings/account/email_change/:token","type":0,"val":"email_change","end":""},{"old":"/settings/account/email_change/:token","type":1,"val":"token","end":""}],
+    types: placeholder as Registry['settings.email_change.render']['types'],
+  },
+  'settings.email_change.execute': {
+    methods: ["POST"],
+    pattern: '/settings/account/email_change',
+    tokens: [{"old":"/settings/account/email_change","type":0,"val":"settings","end":""},{"old":"/settings/account/email_change","type":0,"val":"account","end":""},{"old":"/settings/account/email_change","type":0,"val":"email_change","end":""}],
+    types: placeholder as Registry['settings.email_change.execute']['types'],
+  },
+  'settings.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/settings',
+    tokens: [{"old":"/settings","type":0,"val":"settings","end":""}],
+    types: placeholder as Registry['settings.index']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

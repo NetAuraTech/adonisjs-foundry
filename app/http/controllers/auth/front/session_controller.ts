@@ -37,7 +37,7 @@ export default class SessionController {
 
       session.flash('success', i18n.t('auth.session.login.success'))
 
-      return response.redirect().toRoute('home')
+      return response.redirect().toRoute('settings.profile.render')
     } catch (error) {
       return this.errorHandler.handle(ctx, error)
     }

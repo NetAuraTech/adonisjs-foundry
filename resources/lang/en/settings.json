@@ -1,0 +1,41 @@
+{
+  "account": {
+    "success": "Your account has been updated successfully.",
+    "delete": {
+      "success": "Your account has been deleted successfully."
+    },
+    "password": {
+      "current": {
+        "failed": "The current password is incorrect."
+      },
+      "success": "Your password has been updated successfully.",
+      "failed": "The password is incorrect."
+    }
+  },
+  "profile": {
+    "success": "Your profile has been updated successfully."
+  },
+  "email_change": {
+    "success": "Your email address has been changed successfully.",
+    "no_pending": "You don't have any pending email change.",
+    "cancelled": "Email change has been cancelled.",
+    "mail": {
+      "notification": {
+        "subject": "Your email address is being changed",
+        "greeting": "Hello,",
+        "intro": "This email is to notify you that your account email address is being changed from {old} to {new}.",
+        "warning": "If you did not initiate this change, your account may be compromised. Please contact our support team immediately.",
+        "action": "If you need assistance, please contact us at:"
+      },
+      "confirm": {
+        "subject": "Confirm your email address change",
+        "greeting": "Hello,",
+        "intro": "You have requested to change your email address to {email}. Please confirm this change by clicking the button below.",
+        "action": "Confirm Email Change",
+        "outro": "If you did not request this change, please ignore this email.",
+        "expiry": "This confirmation link will expire in {hours} hour.",
+        "footer": "If you're having trouble clicking the button, copy and paste the URL below into your web browser:"
+      }
+    }
+  }
+}

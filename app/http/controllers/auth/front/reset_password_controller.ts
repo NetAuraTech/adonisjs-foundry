@@ -57,7 +57,7 @@ export default class ResetPasswordController {
       regenerateCsrfToken(ctx)
 
       session.flash('success', i18n.t('auth.reset_password.success'))
-      return response.redirect().toRoute('home')
+      return response.redirect().toRoute('settings.profile.render')
     } catch (error) {
       return this.errorHandler.handle(ctx, error, [
         {

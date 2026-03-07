@@ -4,6 +4,12 @@
  */
 
 export const controllers = {
+  account: {
+    front: {
+      Account: () => import('#controllers/account/front/account_controller'),
+      EmailChange: () => import('#controllers/account/front/email_change_controller'),
+    },
+  },
   auth: {
     front: {
       EmailVerification: () => import('#controllers/auth/front/email_verification_controller'),
@@ -12,6 +18,11 @@ export const controllers = {
       ResetPassword: () => import('#controllers/auth/front/reset_password_controller'),
       Session: () => import('#controllers/auth/front/session_controller'),
       Social: () => import('#controllers/auth/front/social_controller'),
+    },
+  },
+  profile: {
+    front: {
+      Profile: () => import('#controllers/profile/front/profile_controller'),
     },
   },
 }

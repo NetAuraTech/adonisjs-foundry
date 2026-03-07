@@ -338,42 +338,6 @@ export class UserRepository {
   }
 
   /**
-   * Updates a user's primary email address.
-   *
-   * @param user - The user whose email should be updated.
-   * @param newEmail - The new email address to assign.
-   * @returns The updated {@link User}.
-   *
-   * @example
-   * await userRepository.updateEmail(user, 'new@example.com')
-   */
-  async updateEmail(user: User, newEmail: string): Promise<User> {
-    user.email = newEmail
-    await user.save()
-    return user
-  }
-
-  /**
-   * Updates a user's pending email address.
-   *
-   * The pending email is a temporary field used during the email change
-   * confirmation flow. Pass `null` to clear it once confirmed or cancelled.
-   *
-   * @param user - The user whose pending email should be updated.
-   * @param pendingEmail - The new pending email address, or `null` to clear it.
-   * @returns The updated {@link User}.
-   *
-   * @example
-   * await userRepository.updatePendingEmail(user, 'pending@example.com')
-   * await userRepository.updatePendingEmail(user, null) // clear after confirmation
-   */
-  async updatePendingEmail(user: User, pendingEmail: string | null): Promise<User> {
-    user.pendingEmail = pendingEmail
-    await user.save()
-    return user
-  }
-
-  /**
    * Marks a user's email as verified by setting `emailVerifiedAt` to now.
    *
    * @param user - The user whose email should be marked as verified.
