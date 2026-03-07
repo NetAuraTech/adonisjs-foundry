@@ -20,6 +20,7 @@ AdonisJS Foundry is built on AdonisJS v7 and follows a domain-driven architectur
 - **Tailwind CSS v4** — Utility-first styling with a component library (atoms/molecules/organisms)
 - **Type-Safe Routing** — Tuyau integration for end-to-end type-safe route generation
 - **Docker Ready** — Dockerfile and docker-compose for development and production environments
+- **Database Backup** — Full & differential backups with multi-storage (local, S3, Nextcloud), encryption, retention policy, and health checks
 
 ## Tech Stack
 
@@ -221,6 +222,101 @@ Settings are split into domains, each backed by a dedicated service, repository,
 - OAuth provider linking/unlinking
 - Account deletion (requires password confirmation)
 
+## Backup
+
+Foundry includes a full database backup system with automatic strategy selection, multiple storage providers, encryption, and retention policy.
+
+### Strategy
+
+| Day | Type | Description |
+|---|---|---|
+| Sunday (configurable) | **Full** | Complete `pg_dump` of the entire database |
+| Monday – Saturday | **Differential** | Only tables modified since the last full backup |
+
+If no full backup exists when a differential is requested, a full backup is performed automatically.
+
+### Ace Commands
+
+| Command | Description |
+|---|---|
+| `node ace backup:run` | Run a backup (auto-detects type based on schedule) |
+| `node ace backup:run --type=full` | Force a full backup |
+| `node ace backup:run --type=differential` | Force a differential backup |
+| `node ace backup:list` | List all available backups (with `--limit` flag) |
+| `node ace backup:restore <filename>` | Restore a backup (with `--force` to skip confirmation) |
+| `node ace backup:cleanup` | Apply retention policy and delete old backups |
+| `node ace backup:health-check` | Check backup system health (storage availability, last backup age, disk space) |
+
+### Storage Providers
+
+| Provider | Description |
+|---|---|
+| **Local** | Always enabled, stores in `storage/backups` |
+| **S3** | S3/S3-compatible (MinIO, etc.), enabled via env vars |
+| **Nextcloud** | WebDAV-based, enabled via env vars |
+
+All providers implement the `StorageAdapter` contract (`app/domain/contracts/backup/storage_adapter.ts`).
+
+### Pipeline
+
+Each backup goes through: **pg_dump → gzip compression → AES-256-CBC encryption (optional) → upload to all storages → manifest written**.
+
+### Retention Policy
+
+| Window | Default |
+|---|---|
+| Daily | 7 days |
+| Weekly | 4 weeks (Sunday backups) |
+| Monthly | 3 months (1st of month) |
+| Yearly | 1 per year (1st January) |
+
+### Backup Environment Variables
+
+```env
+# Storage - Local
+BACKUP_LOCAL_PATH=storage/backups
+
+# Storage - S3
+BACKUP_S3_ENABLED=false
+BACKUP_S3_BUCKET=
+BACKUP_S3_REGION=us-east-1
+BACKUP_S3_ENDPOINT=
+BACKUP_S3_ACCESS_KEY_ID=
+BACKUP_S3_SECRET_ACCESS_KEY=
+BACKUP_S3_PATH=backups
+
+# Storage - Nextcloud
+BACKUP_NEXTCLOUD_ENABLED=false
+BACKUP_NEXTCLOUD_URL=
+BACKUP_NEXTCLOUD_USERNAME=
+BACKUP_NEXTCLOUD_PASSWORD=
+BACKUP_NEXTCLOUD_PATH=/backups
+
+# Schedule & Encryption
+BACKUP_TIME=02:00
+BACKUP_ENCRYPTION_ENABLED=true
+
+# Retention
+BACKUP_RETENTION_DAILY=7
+BACKUP_RETENTION_WEEKLY=4
+BACKUP_RETENTION_MONTHLY=3
+BACKUP_RETENTION_YEARLY=1
+
+# Health
+BACKUP_MAX_AGE_HOURS=25
+BACKUP_MAX_SIZE_MB=500
+BACKUP_MIN_FREE_SPACE_GB=5
+
+# Notifications
+BACKUP_NOTIFICATION_EMAIL=
+BACKUP_NOTIFY_SUCCESS=false
+BACKUP_NOTIFY_FAILURE=true
+BACKUP_NOTIFY_HEALTH_CHECK=true
+
+# Differential
+BACKUP_EXCLUDED_TABLES=
+```
+
 ## Architecture
 
 Foundry follows a **domain-driven architecture** with a strict layering convention.
@@ -228,14 +324,18 @@ Foundry follows a **domain-driven architecture** with a strict layering conventi
 ```
 app/
 ├── data/
+│   ├── storage/                        # local_storage_adapter.ts, s3_storage_adapter.ts, nextcloud_storage_adapter.ts
 │   └── transformers/                   # user_transformer.ts
 ├── domain/
+│   ├── contracts/
+│   │   └── backup/                     # storage_adapter.ts
 │   ├── repositories/
 │   │   ├── auth/                       # user_repository.ts, role_repository.ts, permission_repository.ts
 │   │   └── core/                       # token_repository.ts
 │   └── services/
 │       ├── account/                    # account_service.ts
 │       ├── auth/                       # auth_service.ts, social_service.ts, password_service.ts, email_verification_service.ts
+│       ├── backup/                     # backup_service.ts
 │       ├── logging/                    # log_service.ts, error_handler_service.ts
 │       ├── mails/                      # mail_service.ts
 │       └── profile/                    # profile_service.ts
@@ -251,7 +351,7 @@ app/
 │   └── handler.ts
 ├── helpers/
 │   ├── auth/                           # crsf.ts, oauth.ts, username.ts
-│   └── core/                           # crypto.ts
+│   └── core/                           # crypto.ts, encryption.ts
 ├── http/
 │   ├── controllers/
 │   │   ├── account/front/              # account_controller.ts, email_change_controller.ts
@@ -275,6 +375,10 @@ app/
 │   └── core/                           # token.ts
 ├── types/                              # auth.ts, core.ts, logging.ts, mail.ts
 └── validators/                         # auth.ts, account.ts, profile.ts
+
+commands/
+└── backup/                             # backup_run.ts, backup_list.ts, backup_restore.ts,
+                                        # backup_cleanup.ts, backup_health_check.ts
 
 inertia/
 ├── app.tsx
