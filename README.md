@@ -580,16 +580,26 @@ Move email change logic from controller to AccountService
 ### v1.0.0
 
 - Initial release
-- Complete authentication system (registration, login, OAuth, email verification, password reset)
-- User settings (profile, account, email change with dual confirmation)
+- Complete authentication system (registration, login, logout, email verification, password reset)
+- OAuth providers (GitHub, Google, Facebook) with account linking/unlinking
 - Selector/validator token pattern with attempt tracking
-- Domain-driven architecture (services, repositories, exceptions, events/listeners)
-- Structured logging with Sentry integration
-- Inertia.js + React frontend with SSR support
+- Remember-me token support
+- User settings (profile, account, email change with dual confirmation, account deletion)
+- Role-based access control (roles, permissions, role_permissions)
+- Domain-driven architecture (services, repositories, contracts, events/listeners, transformers)
+- Structured logging with categorized log service (AUTH, SECURITY, BUSINESS, API, DATABASE, PERFORMANCE)
+- Sentry integration for error tracking
+- VineJS form validation (backend) + client-side validation hook (`useFormValidation`)
+- Edge email templates (auth & account notifications)
+- Custom error pages (404, 500) rendered via Inertia
+- API serializer provider for consistent JSON responses
+- Inertia.js + React 19 frontend with SSR support
 - Tailwind CSS v4 component library (atoms/molecules/organisms)
-- Full i18n support (EN, FR) — backend and frontend
+- Full i18n support (EN, FR) — backend (AdonisJS i18n) and frontend (react-i18next)
+- Automatic locale detection middleware
 - Docker setup (development + production with Nginx proxy)
 - Type-safe routing with Tuyau
+- Database backup system (full/differential, multi-storage, encryption, retention, health checks)
 
 ## License
 
