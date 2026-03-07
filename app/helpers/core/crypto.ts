@@ -1,5 +1,5 @@
 import { randomBytes } from 'node:crypto'
-import type { FullToken } from '#types/core_type'
+import type { FullToken } from '#types/core'
 
 /**
  * Generate a random token string
