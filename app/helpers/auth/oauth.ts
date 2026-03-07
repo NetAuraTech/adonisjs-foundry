@@ -1,5 +1,5 @@
 import ProviderNotConfiguredException from '#exceptions/auth/provider_not_configured_exception'
-import { type OAuthProvider } from '#types/auth_type'
+import { type OAuthProvider } from '#types/auth'
 import env from '#start/env'
 
 /**
