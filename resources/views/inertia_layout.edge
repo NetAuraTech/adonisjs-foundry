@@ -6,15 +6,19 @@
     <title inertia>
       AdonisJS
     </title>
-
+    <script>
+      (function () {
+        const stored = localStorage.getItem('theme')
+        const isDark = stored === 'dark' || (stored === null && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        document.documentElement.classList.toggle('dark', isDark)
+      })()
+    </script>
     @viteReactRefresh()
     @vite(['inertia/app.tsx'])
     @inertiaHead()
     @stack('dumper')
   </head>
-
   <body>
     @inertia()
   </body>
-
 </html>

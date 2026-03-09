@@ -7,6 +7,8 @@ import { UserRepository } from '#repositories/auth/user_repository'
 import { RoleRepository } from '#repositories/auth/role_repository'
 import { extractNameFromEmail, generateUniqueUsername } from '#helpers/auth/username'
 import EmailAlreadyExistsException from '#exceptions/account/email_already_exists_exception'
+import PreferencesRepository from '#repositories/preferences/preferences_repository'
+import { Locale } from '#types/preferences'
 
 /**
  * Handles core credential-based authentication operations: login,
@@ -21,6 +23,7 @@ export class AuthService {
   constructor(
     protected logService: LogService,
     protected userRepository: UserRepository,
+    protected preferencesRepository: PreferencesRepository,
     protected roleRepository: RoleRepository
   ) {}
 
@@ -98,9 +101,13 @@ export class AuthService {
       email: payload.email,
       password: payload.password,
       roleId: userRole?.id || null,
-      locale: payload.locale,
       username: username,
     } as any)
+
+    await this.preferencesRepository.upsert(user, {
+      locale: payload.locale as Locale,
+      theme: 'light',
+    })
 
     this.logService.logAuth('register.success', {
       userId: user.id,

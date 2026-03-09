@@ -74,6 +74,21 @@
     "value": "Account"
   },
   "preferences": {
-    "value": "Preferences"
+    "value": "Preferences",
+    "appearance": {
+      "title": "Appearance",
+      "sub_title": "Customize how the interface looks and feels.",
+      "value": "Theme"
+    },
+    "interface": {
+      "title": "Interface",
+      "sub_title": "Configure your language and regional preferences.",
+      "submit": "Save",
+      "locale": {
+        "english": "English",
+        "french": "French",
+        "value": "Language"
+      }
+    }
   }
 }

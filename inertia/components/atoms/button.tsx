@@ -51,7 +51,7 @@ export function Button<R extends NonNullable<LinkProps["route"]>>(props: ButtonP
   const variants = {
     primary: 'bg-primary-800 text-neutral-100 hover:bg-primary-900',
     accent: 'bg-accent-600 text-neutral-100 hover:bg-accent-700',
-    danger: 'bg-red-700 text-neutral-100 hover:bg-red-800',
+    danger: 'bg-red-700 text-red-100 hover:bg-red-800',
     success: 'bg-green-600 text-neutral-100 hover:bg-green-700',
     outline: 'border-solid border-2 border-primary-900 text-primary-900  hover:bg-primary-900 hover:text-neutral-100',
     social: 'bg-neutral-50 border-solid border-1 border-neutral-100 hover:border-neutral-800 shadow',

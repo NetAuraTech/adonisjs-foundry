@@ -7,7 +7,7 @@ import { presets } from '~/helpers/validation_rules'
 import { Field } from '~/components/molecules/field'
 import { Button } from '~/components/atoms/button'
 import { Data } from '@generated/data'
-import type { OAuthProvider } from '#types/auth_type'
+import type { OAuthProvider } from '#types/auth'
 import { capitalize } from '~/lib/string'
 import { urlFor } from '~/client'
 import { useState } from 'react'
@@ -38,7 +38,7 @@ export default function AccountPage(props: PageProps) {
 
   const providerStyles: Record<OAuthProvider, { bg: string; text: string; border: string; initials: string }> = {
     google:   { bg: 'bg-red-50',      text: 'text-red-500', border: 'border-1 border-red-500',   initials: 'G'  },
-    github:   { bg: 'bg-neutral-900', text: 'text-white', border: 'border-1 border-neutral-900',     initials: 'GH' },
+    github:   { bg: 'bg-neutral-900', text: 'text-neutral-100', border: 'border-1 border-neutral-900',     initials: 'GH' },
     facebook: { bg: 'bg-blue-50',     text: 'text-blue-600', border: 'border-1 border-blue-600',  initials: 'F'  },
   }
 
@@ -139,7 +139,7 @@ export default function AccountPage(props: PageProps) {
                   ) : (
                     <a
                       href={urlFor("auth.social.redirect", { provider: provider})}
-                      className="text-sm px-3 py-1.5 border border-neutral-300 rounded-lg hover:bg-neutral-50 transition"
+                      className="text-sm px-3 py-1.5 border text-neutral-600 border-neutral-600 rounded-lg hover:bg-neutral-200 transition"
                       title={t('account.oauth.link')}
                     >
                       {t('account.oauth.link')}

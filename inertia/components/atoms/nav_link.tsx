@@ -32,7 +32,7 @@ export function NavLink<R extends NonNullable<LinkProps["route"]>>(props: NavLin
 
   const variants = {
     link: 'text-accent-600 hover:text-accent-800',
-    nav: 'current:text-accent-600 hover:text-accent-600',
+    nav: 'text-primary-950 current:text-accent-600 hover:text-accent-600',
     setting_nav: 'px-4 py-2.5 border-b-2 -mb-px border-transparent current:border-accent-800 hover:border-accent-800 text-muted current:text-accent-800 hover:text-accent-800'
   }
 

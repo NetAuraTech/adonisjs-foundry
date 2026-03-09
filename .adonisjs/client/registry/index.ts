@@ -144,11 +144,29 @@ const routes = {
     tokens: [{"old":"/settings/account/email_change","type":0,"val":"settings","end":""},{"old":"/settings/account/email_change","type":0,"val":"account","end":""},{"old":"/settings/account/email_change","type":0,"val":"email_change","end":""}],
     types: placeholder as Registry['settings.email_change.execute']['types'],
   },
+  'settings.preferences.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/settings/preferences',
+    tokens: [{"old":"/settings/preferences","type":0,"val":"settings","end":""},{"old":"/settings/preferences","type":0,"val":"preferences","end":""}],
+    types: placeholder as Registry['settings.preferences.render']['types'],
+  },
+  'settings.preferences.execute': {
+    methods: ["POST"],
+    pattern: '/settings/preferences',
+    tokens: [{"old":"/settings/preferences","type":0,"val":"settings","end":""},{"old":"/settings/preferences","type":0,"val":"preferences","end":""}],
+    types: placeholder as Registry['settings.preferences.execute']['types'],
+  },
   'settings.index': {
     methods: ["GET","HEAD"],
     pattern: '/settings',
     tokens: [{"old":"/settings","type":0,"val":"settings","end":""}],
     types: placeholder as Registry['settings.index']['types'],
+  },
+  'theme.execute': {
+    methods: ["POST"],
+    pattern: '/api/settings/preferences/theme',
+    tokens: [{"old":"/api/settings/preferences/theme","type":0,"val":"api","end":""},{"old":"/api/settings/preferences/theme","type":0,"val":"settings","end":""},{"old":"/api/settings/preferences/theme","type":0,"val":"preferences","end":""},{"old":"/api/settings/preferences/theme","type":0,"val":"theme","end":""}],
+    types: placeholder as Registry['theme.execute']['types'],
   },
 } as const satisfies Record<string, AdonisEndpoint>
 

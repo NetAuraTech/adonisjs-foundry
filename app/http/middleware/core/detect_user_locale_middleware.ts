@@ -2,6 +2,8 @@ import { I18n } from '@adonisjs/i18n'
 import i18nManager from '@adonisjs/i18n/services/main'
 import type { NextFn } from '@adonisjs/core/types/http'
 import { type HttpContext, RequestValidator } from '@adonisjs/core/http'
+import { inject } from '@adonisjs/core'
+import PreferencesService from '#services/preferences/preference_service'
 
 /**
  * Detect user locale middleware with priority:
@@ -9,7 +11,9 @@ import { type HttpContext, RequestValidator } from '@adonisjs/core/http'
  * 2. Accept-Language header
  * 3. Default locale (en)
  */
+@inject()
 export default class DetectUserLocaleMiddleware {
+  constructor(protected preferencesService: PreferencesService) {}
   /**
    * Using i18n for validation messages. Applicable to only
    * "request.validateUsing" method calls
@@ -26,10 +30,14 @@ export default class DetectUserLocaleMiddleware {
    * 2. Accept-Language header from browser
    * 3. Default locale
    */
-  protected getRequestLocale(ctx: HttpContext): string {
+  protected async getRequestLocale(ctx: HttpContext): Promise<string> {
     // Priority 1: Check user preference (if authenticated)
-    if (ctx.auth.user?.locale) {
-      return ctx.auth.user.locale
+    const user = ctx.auth.user
+
+    if (user) {
+      const preferences = await this.preferencesService.get(user)
+
+      return preferences.locale
     }
 
     // Priority 2: Check Accept-Language header
@@ -48,7 +56,7 @@ export default class DetectUserLocaleMiddleware {
     /**
      * Finding user language based on priority
      */
-    const language = this.getRequestLocale(ctx)
+    const language = await this.getRequestLocale(ctx)
 
     /**
      * Assigning i18n property to the HTTP context
@@ -73,7 +81,7 @@ export default class DetectUserLocaleMiddleware {
 
     if ('inertia' in ctx) {
       ctx.inertia.share({
-        locale: ctx.i18n?.locale || ctx.auth?.user?.locale || 'en',
+        locale: ctx.i18n?.locale || language || 'en',
       })
     }
 

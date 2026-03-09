@@ -22,6 +22,7 @@ declare module '@adonisjs/inertia/types' {
     'home': ExtractProps<(typeof import('../../inertia/pages/home.tsx'))['default']>
     'settings/account/front/email_change': ExtractProps<(typeof import('../../inertia/pages/settings/account/front/email_change.tsx'))['default']>
     'settings/account/front/index': ExtractProps<(typeof import('../../inertia/pages/settings/account/front/index.tsx'))['default']>
+    'settings/preferences/front/index': ExtractProps<(typeof import('../../inertia/pages/settings/preferences/front/index.tsx'))['default']>
     'settings/profile/front/index': ExtractProps<(typeof import('../../inertia/pages/settings/profile/front/index.tsx'))['default']>
   }
 }

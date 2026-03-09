@@ -12,6 +12,12 @@
   "profile": {
     "success": "Votre profil a été mis à jour avec succès."
   },
+  "preferences": {
+    "theme": {
+      "success": "Le thème a été mis à jour avec succès."
+    },
+    "success": "Vos préférences ont été enregistrées."
+  },
   "email_change": {
     "success": "Votre adresse e-mail a été modifiée avec succès.",
     "no_pending": "Vous n'avez aucune modification d'adresse e-mail en attente.",

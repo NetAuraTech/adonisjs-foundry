@@ -15,6 +15,12 @@
   "profile": {
     "success": "Your profile has been updated successfully."
   },
+  "preferences": {
+    "theme": {
+      "success": "The theme has been successfully updated."
+    },
+    "success": "Your preferences have been saved."
+  },
   "email_change": {
     "success": "Your email address has been changed successfully.",
     "no_pending": "You don't have any pending email change.",

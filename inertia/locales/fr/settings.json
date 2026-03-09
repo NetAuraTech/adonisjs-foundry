@@ -73,6 +73,21 @@
     "value": "Compte"
   },
   "preferences": {
-    "value": "Préférences"
+    "value": "Préférences",
+    "appearance": {
+      "title": "Apparence",
+      "sub_title": "Personnalisez l'aspect visuel de l'interface.",
+      "value": "Thème"
+    },
+    "interface": {
+      "title": "Interface",
+      "sub_title": "Configurez vos préférences de langue et régionales.",
+      "submit": "Sauvegarder",
+      "locale": {
+        "english": "Anglais",
+        "french": "Français",
+        "value": "Langue"
+      }
+    }
   }
 }

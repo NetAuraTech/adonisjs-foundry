@@ -27,7 +27,10 @@ export type ScannedRoutes = {
     'settings.account.destroy': { paramsTuple?: []; params?: {} }
     'settings.email_change.render': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'settings.email_change.execute': { paramsTuple?: []; params?: {} }
+    'settings.preferences.render': { paramsTuple?: []; params?: {} }
+    'settings.preferences.execute': { paramsTuple?: []; params?: {} }
     'settings.index': { paramsTuple?: []; params?: {} }
+    'theme.execute': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'home': { paramsTuple?: []; params?: {} }
@@ -42,6 +45,7 @@ export type ScannedRoutes = {
     'settings.profile.render': { paramsTuple?: []; params?: {} }
     'settings.account.render': { paramsTuple?: []; params?: {} }
     'settings.email_change.render': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'settings.preferences.render': { paramsTuple?: []; params?: {} }
     'settings.index': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
@@ -57,6 +61,7 @@ export type ScannedRoutes = {
     'settings.profile.render': { paramsTuple?: []; params?: {} }
     'settings.account.render': { paramsTuple?: []; params?: {} }
     'settings.email_change.render': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'settings.preferences.render': { paramsTuple?: []; params?: {} }
     'settings.index': { paramsTuple?: []; params?: {} }
   }
   POST: {
@@ -70,6 +75,8 @@ export type ScannedRoutes = {
     'settings.profile.execute': { paramsTuple?: []; params?: {} }
     'settings.account.execute': { paramsTuple?: []; params?: {} }
     'settings.email_change.execute': { paramsTuple?: []; params?: {} }
+    'settings.preferences.execute': { paramsTuple?: []; params?: {} }
+    'theme.execute': { paramsTuple?: []; params?: {} }
   }
   DELETE: {
     'settings.account.destroy': { paramsTuple?: []; params?: {} }

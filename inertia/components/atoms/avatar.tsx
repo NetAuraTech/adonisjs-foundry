@@ -26,7 +26,7 @@ export function Avatar(props: AvatarProps) {
   return (
     <div className="group flex gap-4 items-center">
       {Icon}
-      {showUsername && <span className="group-hover:text-accent-600 transition">{pageProps.currentUser.username}</span>}
+      {showUsername && <span className="text-primary-950 group-hover:text-accent-600 transition">{pageProps.currentUser.username}</span>}
     </div>
   )
 }

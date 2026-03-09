@@ -10,7 +10,7 @@ export function Label(props: LabelProps) {
   return (
     <label
       htmlFor={htmlFor}
-      className="font-bold"
+      className="text-primary-950 font-bold"
     >
       {label}
       {required && <span className="ml-1 text-red-700">*</span>}

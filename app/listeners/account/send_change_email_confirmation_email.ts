@@ -10,16 +10,20 @@ import { generateSplitToken } from '#helpers/core/crypto'
 import hash from '@adonisjs/core/services/hash'
 import { TOKEN_TYPES } from '#types/core'
 import { DateTime } from 'luxon'
+import PreferencesService from '#services/preferences/preference_service'
 
 @inject()
 export default class SendChangeEmailConfirmationEmail {
   constructor(
     protected mailService: MailService,
+    protected preferencesService: PreferencesService,
     protected tokenRepository: TokenRepository
   ) {}
 
   async handle(event: InitiateEmailChange) {
-    const locale = event.user.locale || 'en'
+    const preferences = await this.preferencesService.get(event.user)
+
+    const locale = preferences.locale || 'en'
     const i18n = i18nManager.locale(locale)
 
     await this.tokenRepository.expireEmailChangeTokens(event.user)

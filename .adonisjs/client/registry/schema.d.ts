@@ -283,6 +283,30 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account/front/email_change_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'settings.preferences.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/settings/preferences'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/preferences/front/preferences_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/preferences/front/preferences_controller').default['render']>>>
+    }
+  }
+  'settings.preferences.execute': {
+    methods: ["POST"]
+    pattern: '/settings/preferences'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/preference').updateValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/preference').updateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/preferences/front/preferences_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/preferences/front/preferences_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'settings.index': {
     methods: ["GET","HEAD"]
     pattern: '/settings'
@@ -293,6 +317,18 @@ export interface Registry {
       query: {}
       response: unknown
       errorResponse: unknown
+    }
+  }
+  'theme.execute': {
+    methods: ["POST"]
+    pattern: '/api/settings/preferences/theme'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/preference').updateValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/preference').updateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/preferences/api/theme_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/preferences/api/theme_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
 }

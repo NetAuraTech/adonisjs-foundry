@@ -9,6 +9,7 @@ import UnverifiedAccountException from '#exceptions/auth/unverified_account_exce
 import { OAuthProvider } from '#types/auth'
 import { DateTime } from 'luxon'
 import { generateUniqueUsername } from '#helpers/auth/username'
+import PreferencesRepository from '#repositories/preferences/preferences_repository'
 
 /**
  * Handles OAuth-based authentication flows, including account creation,
@@ -24,6 +25,7 @@ export class SocialService {
   constructor(
     protected logService: LogService,
     private userRepository: UserRepository,
+    private preferencesRepository: PreferencesRepository,
     private roleRepository: RoleRepository
   ) {}
 
@@ -102,6 +104,10 @@ export class SocialService {
       [`${provider}Id`]: ally_user.id,
       emailVerifiedAt: DateTime.now(),
       roleId: userRole?.id || null,
+    })
+
+    await this.preferencesRepository.upsert(user, {
+      theme: 'light',
     })
 
     this.logService.logAuth('social.registered', {

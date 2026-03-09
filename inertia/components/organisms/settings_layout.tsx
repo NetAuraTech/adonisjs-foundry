@@ -9,6 +9,7 @@ import { Paragraph } from '~/components/atoms/paragraph'
 const tabs = [
   { id: "profile", label: "profile.value", route: 'settings.profile.render' },
   { id: "account", label: "account.value", route: 'settings.account.render' },
+  { id: "preferences", label: "preferences.value", route: 'settings.preferences.render' },
 ] as const
 
 interface PageProps {

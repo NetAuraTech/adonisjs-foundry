@@ -107,6 +107,14 @@ router
       .prefix('account')
 
     router
+      .group(() => {
+        router.get('/', [controllers.preferences.front.Preferences, 'render'])
+        router.post('/', [controllers.preferences.front.Preferences, 'execute'])
+      })
+      .prefix('preferences')
+      .use([middleware.auth()])
+
+    router
       .get('/', function (ctx) {
         const { response } = ctx
 
@@ -117,3 +125,18 @@ router
   })
   .prefix('settings')
   .as('settings')
+
+router
+  .group(() => {
+    router
+      .group(() => {
+        router
+          .group(() => {
+            router.post('theme', [controllers.preferences.api.Theme, 'execute'])
+          })
+          .prefix('preferences')
+      })
+      .prefix('settings')
+      .use([middleware.auth()])
+  })
+  .prefix('api')

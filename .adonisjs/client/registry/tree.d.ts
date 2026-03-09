@@ -46,6 +46,13 @@ export interface ApiDefinition {
       render: typeof routes['settings.email_change.render']
       execute: typeof routes['settings.email_change.execute']
     }
+    preferences: {
+      render: typeof routes['settings.preferences.render']
+      execute: typeof routes['settings.preferences.execute']
+    }
     index: typeof routes['settings.index']
+  }
+  theme: {
+    execute: typeof routes['theme.execute']
   }
 }

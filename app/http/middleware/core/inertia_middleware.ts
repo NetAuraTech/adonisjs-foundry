@@ -2,9 +2,17 @@ import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
 import UserTransformer from '#transformers/user_transformer'
 import BaseInertiaMiddleware from '@adonisjs/inertia/inertia_middleware'
+import { inject } from '@adonisjs/core'
+import PreferencesService from '#services/preferences/preference_service'
+import { DEFAULT_PREFERENCES } from '#types/preferences'
 
+@inject()
 export default class InertiaMiddleware extends BaseInertiaMiddleware {
-  share(ctx: HttpContext) {
+  constructor(private preferencesService: PreferencesService) {
+    super()
+  }
+
+  async share(ctx: HttpContext) {
     /**
      * The share method is called everytime an Inertia page is rendered. In
      * certain cases, a page may get rendered before the session middleware
@@ -27,6 +35,10 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
     const info: string | undefined = session?.flashMessages.get('info')
     const error: string | undefined = session?.flashMessages.get('error') ?? errorFromBag
 
+    const preferences = ctx.inertia.always(
+      auth?.user ? await this.preferencesService.get(auth.user) : DEFAULT_PREFERENCES
+    )
+
     /**
      * Data shared with all Inertia pages. Make sure you are using
      * transformers for rich data-types like Models.
@@ -41,6 +53,7 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
       currentUser: ctx.inertia.always(
         auth?.user ? UserTransformer.transform(auth.user) : undefined
       ),
+      preferences: preferences,
       csrfToken: ctx.request.csrfToken,
     }
   }

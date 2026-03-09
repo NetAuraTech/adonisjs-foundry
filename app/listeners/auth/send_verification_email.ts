@@ -10,16 +10,20 @@ import AuthNotification from '#mails/auth/auth_notification'
 import { urlFor } from '@adonisjs/core/services/url_builder'
 import i18nManager from '@adonisjs/i18n/services/main'
 import env from '#start/env'
+import PreferencesService from '#services/preferences/preference_service'
 
 @inject()
 export default class SendVerificationEmail {
   constructor(
     protected mailService: MailService,
+    protected preferencesService: PreferencesService,
     protected tokenRepository: TokenRepository
   ) {}
 
   async handle(event: UserRegistered) {
-    const locale = event.user.locale || 'en'
+    const preferences = await this.preferencesService.get(event.user)
+
+    const locale = preferences.locale || 'en'
     const i18n = i18nManager.locale(locale)
 
     await this.tokenRepository.expireEmailVerificationTokens(event.user)

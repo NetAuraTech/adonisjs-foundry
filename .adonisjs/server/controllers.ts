@@ -20,6 +20,14 @@ export const controllers = {
       Social: () => import('#controllers/auth/front/social_controller'),
     },
   },
+  preferences: {
+    api: {
+      Theme: () => import('#controllers/preferences/api/theme_controller'),
+    },
+    front: {
+      Preferences: () => import('#controllers/preferences/front/preferences_controller'),
+    },
+  },
   profile: {
     front: {
       Profile: () => import('#controllers/profile/front/profile_controller'),

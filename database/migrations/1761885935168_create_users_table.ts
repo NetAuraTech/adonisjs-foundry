@@ -13,8 +13,6 @@ export default class extends BaseSchema {
       table.timestamp('email_verified_at').nullable()
       table.string('pending_email').nullable()
 
-      table.string('locale', 5).nullable()
-
       table.string('github_id').nullable().unique()
       table.string('google_id').nullable().unique()
       table.string('facebook_id').nullable().unique()

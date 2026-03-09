@@ -227,7 +227,7 @@ export class UserRepository {
    * @returns The saved {@link User}.
    *
    * @example
-   * user.locale = 'fr'
+   * user.username = 'MyUsername'
    * await userRepository.save(user)
    */
   async save(user: User): Promise<User> {

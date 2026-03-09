@@ -3,14 +3,27 @@
 @source "../components";
 @source "../layouts";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 @custom-variant current (&[aria-current="page"]);
 @custom-variant focus (&:is(:focus-visible));
 
 @theme {
-  --color-neutral-base: oklch(0.5 0.02 236);
+  --color-neutral-base: oklch(55.6% 0 0);
   --color-primary-base: oklch(0.691 0.131 154.946);
   --color-accent-base: oklch(0.585 0.107 71.418);
+
+  /* Neutral scale */
+  --color-neutral-50:  oklch(from var(--color-neutral-base) calc(l + 0.38) calc(c * 0.3) h);
+  --color-neutral-100: oklch(from var(--color-neutral-base) calc(l + 0.36) calc(c * 0.4) h);
+  --color-neutral-200: oklch(from var(--color-neutral-base) calc(l + 0.31) calc(c * 0.5) h);
+  --color-neutral-300: oklch(from var(--color-neutral-base) calc(l + 0.24) calc(c * 0.7) h);
+  --color-neutral-400: oklch(from var(--color-neutral-base) calc(l + 0.12) calc(c * 0.85) h);
+  --color-neutral-500: oklch(from var(--color-neutral-base) l c h);
+  --color-neutral-600: oklch(from var(--color-neutral-base) calc(l - 0.10) calc(c * 1.05) h);
+  --color-neutral-700: oklch(from var(--color-neutral-base) calc(l - 0.18) calc(c * 1.1) h);
+  --color-neutral-800: oklch(from var(--color-neutral-base) calc(l - 0.28) calc(c * 0.95) h);
+  --color-neutral-900: oklch(from var(--color-neutral-base) calc(l - 0.37) calc(c * 0.8) h);
+  --color-neutral-950: oklch(from var(--color-neutral-base) calc(l - 0.47) calc(c * 0.6) h);
 
   /* Primary scale */
   --color-primary-50:  oklch(from var(--color-primary-base) calc(l + 0.38) calc(c * 0.3) h);
@@ -52,12 +65,60 @@
 }
 
 @layer base {
+  .dark {
+    --color-neutral-base: oklch(55.6% 0.006 250);
+    --color-primary-base: oklch(0.691 0.131 154.946);
+    --color-accent-base: oklch(0.585 0.107 71.418);
+
+    /* Neutral scale */
+    --color-neutral-950:  oklch(from var(--color-neutral-base) calc(l + 0.38) calc(c * 0.3) h);
+    --color-neutral-900: oklch(from var(--color-neutral-base) calc(l + 0.36) calc(c * 0.4) h);
+    --color-neutral-800: oklch(from var(--color-neutral-base) calc(l + 0.31) calc(c * 0.5) h);
+    --color-neutral-700: oklch(from var(--color-neutral-base) calc(l + 0.24) calc(c * 0.7) h);
+    --color-neutral-600: oklch(from var(--color-neutral-base) calc(l + 0.12) calc(c * 0.85) h);
+    --color-neutral-500: oklch(from var(--color-neutral-base) l c h);
+    --color-neutral-400: oklch(from var(--color-neutral-base) calc(l - 0.10) calc(c * 1.05) h);
+    --color-neutral-300: oklch(from var(--color-neutral-base) calc(l - 0.18) calc(c * 1.1) h);
+    --color-neutral-200: oklch(from var(--color-neutral-base) calc(l - 0.28) calc(c * 0.95) h);
+    --color-neutral-100: oklch(from var(--color-neutral-base) calc(l - 0.37) calc(c * 0.8) h);
+    --color-neutral-50: oklch(from var(--color-neutral-base) calc(l - 0.47) calc(c * 0.6) h);
+
+    /* Primary scale */
+    --color-primary-950:  oklch(from var(--color-primary-base) calc(l + 0.38) calc(c * 0.3) h);
+    --color-primary-900: oklch(from var(--color-primary-base) calc(l + 0.36) calc(c * 0.4) h);
+    --color-primary-800: oklch(from var(--color-primary-base) calc(l + 0.31) calc(c * 0.5) h);
+    --color-primary-700: oklch(from var(--color-primary-base) calc(l + 0.24) calc(c * 0.7) h);
+    --color-primary-600: oklch(from var(--color-primary-base) calc(l + 0.12) calc(c * 0.85) h);
+    --color-primary-500: oklch(from var(--color-primary-base) l c h);
+    --color-primary-400: oklch(from var(--color-primary-base) calc(l - 0.10) calc(c * 1.05) h);
+    --color-primary-300: oklch(from var(--color-primary-base) calc(l - 0.18) calc(c * 1.1) h);
+    --color-primary-200: oklch(from var(--color-primary-base) calc(l - 0.28) calc(c * 0.95) h);
+    --color-primary-100: oklch(from var(--color-primary-base) calc(l - 0.37) calc(c * 0.8) h);
+    --color-primary-50: oklch(from var(--color-primary-base) calc(l - 0.47) calc(c * 0.6) h);
+
+    /* Accent scale */
+    --color-accent-950:  oklch(from var(--color-accent-base) calc(l + 0.29) calc(c * 0.3) h);
+    --color-accent-900: oklch(from var(--color-accent-base) calc(l + 0.27) calc(c * 0.4) h);
+    --color-accent-800: oklch(from var(--color-accent-base) calc(l + 0.23) calc(c * 0.5) h);
+    --color-accent-700: oklch(from var(--color-accent-base) calc(l + 0.15) calc(c * 0.7) h);
+    --color-accent-600: oklch(from var(--color-accent-base) calc(l + 0.02) calc(c * 0.85) h);
+    --color-accent-500: oklch(from var(--color-accent-base) l c h);
+    --color-accent-400: oklch(from var(--color-accent-base) calc(l - 0.10) calc(c * 1.05) h);
+    --color-accent-300: oklch(from var(--color-accent-base) calc(l - 0.22) calc(c * 1.1) h);
+    --color-accent-200: oklch(from var(--color-accent-base) calc(l - 0.36) calc(c * 0.95) h);
+    --color-accent-100: oklch(from var(--color-accent-base) calc(l - 0.48) calc(c * 0.8) h);
+    --color-accent-50: oklch(from var(--color-accent-base) calc(l - 0.57) calc(c * 0.6) h);
+
+    --color-foreground-title: oklch(0.917 0.014 145.462);
+  }
+
   #page-wrapper {
     @apply relative;
     @apply flex;
     @apply flex-col;
     @apply w-full;
     @apply min-h-screen;
+    @apply bg-neutral-50;
   }
 
   a {
@@ -83,6 +144,12 @@
   ::-webkit-scrollbar-thumb {
     background: var(--color-border);
     border-radius: 4px;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
   }
 }
 

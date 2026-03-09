@@ -1,5 +1,4 @@
 import {ChangeEvent, ReactNode} from "react";
-import {useTranslation} from "react-i18next";
 import {SelectOption} from "~/components/atoms/select_option";
 
 interface SelectProps {
@@ -15,7 +14,6 @@ interface SelectProps {
 }
 
 export function Select(props: SelectProps) {
-  const { t } = useTranslation('common')
   const {
     name,
     type,
@@ -41,9 +39,11 @@ export function Select(props: SelectProps) {
     className={`select`}
     {...inputProps}
   >
-    <SelectOption
-      label={placeholder || t('select.default_placeholder')}
-    />
+    {
+      placeholder && <SelectOption
+        label={placeholder}
+      />
+    }
     { children }
   </select>
 }

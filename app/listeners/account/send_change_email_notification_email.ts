@@ -4,13 +4,19 @@ import InitiateEmailChange from '#events/account/initiate_email_change'
 import i18nManager from '@adonisjs/i18n/services/main'
 import env from '#start/env'
 import AccountNotification from '#mails/account/account_notification'
+import PreferencesService from '#services/preferences/preference_service'
 
 @inject()
 export default class SendChangeEmailNotificationEmail {
-  constructor(protected mailService: MailService) {}
+  constructor(
+    protected mailService: MailService,
+    protected preferencesService: PreferencesService
+  ) {}
 
   async handle(event: InitiateEmailChange) {
-    const locale = event.user.locale || 'en'
+    const preferences = await this.preferencesService.get(event.user)
+
+    const locale = preferences.locale || 'en'
     const i18n = i18nManager.locale(locale)
 
     const payload = new AccountNotification({
