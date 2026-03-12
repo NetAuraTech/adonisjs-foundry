@@ -1,13 +1,13 @@
-import {useEffect, useState} from "react";
-import { router, usePage} from "@inertiajs/react";
-import {useTranslation} from "react-i18next";
+import { useEffect, useState } from 'react'
+import { router, usePage } from '@inertiajs/react'
+import { useTranslation } from 'react-i18next'
 import logo from '~/assets/logo.png'
-import type {SharedProps} from "@adonisjs/inertia/types";
-import {NavLink} from "~/components/atoms/nav_link";
+import type { SharedProps } from '@adonisjs/inertia/types'
+import { NavLink } from '~/components/atoms/nav_link'
 import { Link } from '@adonisjs/inertia/react'
 import { Avatar } from '~/components/atoms/avatar'
 export function Header() {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const pageProps = usePage<SharedProps>().props
@@ -52,13 +52,16 @@ export function Header() {
         <NavLink route={'home'} label={t('header.home')} fs="md:xl" variant="nav" />
 
         {pageProps.currentUser ? (
-          <Link
-            route="settings.index"
-          >
+          <Link route="settings.index">
             <Avatar showUsername />
           </Link>
         ) : (
-          <NavLink route={'auth.session.render'} label={t('header.login')} fs="md:xl" variant="nav" />
+          <NavLink
+            route={'auth.session.render'}
+            label={t('auth:login.value')}
+            fs="md:xl"
+            variant="nav"
+          />
         )}
       </nav>
       <button
