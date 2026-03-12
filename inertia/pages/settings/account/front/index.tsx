@@ -12,6 +12,7 @@ import { capitalize } from '~/lib/string'
 import { urlFor } from '~/client'
 import { useState } from 'react'
 import { Banner } from '~/components/molecules/banner'
+import { getIcon } from '~/helpers/oauth'
 
 interface PageProps {
   user: Data.User
@@ -36,12 +37,6 @@ export default function AccountPage(props: PageProps) {
     password_confirmation: presets.passwordConfirmation(password),
   })
 
-  const providerStyles: Record<OAuthProvider, { bg: string; text: string; border: string; initials: string }> = {
-    google:   { bg: 'bg-red-50',      text: 'text-red-500', border: 'border-1 border-red-500',   initials: 'G'  },
-    github:   { bg: 'bg-neutral-900', text: 'text-neutral-100', border: 'border-1 border-neutral-900',     initials: 'GH' },
-    facebook: { bg: 'bg-blue-50',     text: 'text-blue-600', border: 'border-1 border-blue-600',  initials: 'F'  },
-  }
-
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   const validationDeleteForm = useFormValidation({
@@ -50,13 +45,8 @@ export default function AccountPage(props: PageProps) {
 
   return (
     <>
-      <SettingsLayout
-        tab='account'
-      >
-        <Card
-          title={t('account.email.title')}
-          subtitle={t('account.email.sub_title')}
-        >
+      <SettingsLayout tab="account">
+        <Card title={t('account.email.title')} subtitle={t('account.email.sub_title')}>
           <Form
             route="settings.account.execute"
             className="grid gap-6"
@@ -84,40 +74,28 @@ export default function AccountPage(props: PageProps) {
                   required
                   sanitize
                 />
-                <Button
-                  loading={processing}
-                  type={"submit"}
-                  fitContent
-                >
+                <Button loading={processing} type={'submit'} fitContent>
                   {t('account.email.submit')}
                 </Button>
               </>
             )}
           </Form>
         </Card>
-        <Card
-          title={t('account.oauth.title')}
-          subtitle={t('account.oauth.sub_title')}
-        >
+        <Card title={t('account.oauth.title')} subtitle={t('account.oauth.sub_title')}>
           <div className="divide-y divide-neutral-200">
-            {
-              providers.map((provider) => {
+            {providers.map((provider) => {
               const isConnected = user.connectedProviders[provider]
-              const style = providerStyles[provider]
 
               return (
-                <div
-                  key={provider}
-                  className="flex items-center justify-between py-3"
-                >
+                <div key={provider} className="flex items-center justify-between py-3">
                   <div className="flex items-center gap-3">
-                    <div className={`w-8 h-8 rounded-full ${style.bg} flex items-center justify-center text-xs font-bold ${style.text} ${style.border}`}>
-                      {style.initials}
-                    </div>
+                    {getIcon(provider)}
                     <div>
                       <p className="text-sm font-medium text-neutral-800">{capitalize(provider)}</p>
                       <p className={`text-xs ${isConnected ? 'text-green-600' : 'text-muted'}`}>
-                        {isConnected ? t('account.oauth.connected') : t('account.oauth.not_connected')}
+                        {isConnected
+                          ? t('account.oauth.connected')
+                          : t('account.oauth.not_connected')}
                       </p>
                     </div>
                   </div>
@@ -126,7 +104,11 @@ export default function AccountPage(props: PageProps) {
                     <Form
                       route="auth.social.unlink"
                       routeParams={{ provider: provider }}
-                      onBefore={() => confirm(t('account.oauth.unlink.confirm', { provider: capitalize(provider) }))}
+                      onBefore={() =>
+                        confirm(
+                          t('account.oauth.unlink.confirm', { provider: capitalize(provider) })
+                        )
+                      }
                     >
                       <button
                         type="submit"
@@ -138,7 +120,7 @@ export default function AccountPage(props: PageProps) {
                     </Form>
                   ) : (
                     <a
-                      href={urlFor("auth.social.redirect", { provider: provider})}
+                      href={urlFor('auth.social.redirect', { provider: provider })}
                       className="text-sm px-3 py-1.5 border text-neutral-600 border-neutral-600 rounded-lg hover:bg-neutral-200 transition"
                       title={t('account.oauth.link')}
                     >
@@ -147,14 +129,10 @@ export default function AccountPage(props: PageProps) {
                   )}
                 </div>
               )
-            })
-            }
+            })}
           </div>
         </Card>
-        <Card
-          title={t('account.password.title')}
-          subtitle={t('account.password.sub_title')}
-        >
+        <Card title={t('account.password.title')} subtitle={t('account.password.sub_title')}>
           <Form
             route="settings.account.execute"
             className="grid gap-6"
@@ -170,7 +148,10 @@ export default function AccountPage(props: PageProps) {
                   label={t('account.password.current.value')}
                   name="current_password"
                   type="password"
-                  errorMessage={errors.current_password || validationPasswordForm.getValidationMessage('current_password')}
+                  errorMessage={
+                    errors.current_password ||
+                    validationPasswordForm.getValidationMessage('current_password')
+                  }
                   onChange={(event) => {
                     validationPasswordForm.handleChange('current_password', event.target.value)
                   }}
@@ -184,7 +165,9 @@ export default function AccountPage(props: PageProps) {
                   label={t('account.password.new.value')}
                   name="password"
                   type="password"
-                  errorMessage={errors.password || validationPasswordForm.getValidationMessage('password')}
+                  errorMessage={
+                    errors.password || validationPasswordForm.getValidationMessage('password')
+                  }
                   onChange={(event) => {
                     setPassword(event.target.value)
                     validationPasswordForm.handleChange('password', event.target.value)
@@ -221,11 +204,7 @@ export default function AccountPage(props: PageProps) {
                   helpText={t('account.password.confirm.help')}
                   helpClassName={validationPasswordForm.getHelpClassName('password_confirmation')}
                 />
-                <Button
-                  loading={processing}
-                  type={"submit"}
-                  fitContent
-                >
+                <Button loading={processing} type={'submit'} fitContent>
                   {t('account.password.submit')}
                 </Button>
               </>
@@ -241,64 +220,64 @@ export default function AccountPage(props: PageProps) {
             <Button variant="danger" fitContent onClick={() => setShowDeleteConfirm(true)}>
               {t('account.delete.submit')}
             </Button>
-          ) : (<div className="grid gap-4">
-            <Banner
-              title={t('account.delete.confirm.title')}
-              message={t('account.delete.confirm.sub_title')}
-              type="danger"
-            />
-            <Form
-              route="settings.account.destroy"
-              className="grid gap-6"
-              onBefore={(visit) => {
-                const isValid = validationDeleteForm.validateAll(visit.data as Record<string, any>)
-                if (!isValid) return false
-              }}
-            >
-              {({ errors, processing, reset }) => (
-                <>
-                  <Field
-                    label={t('account.delete.password')}
-                    name="password"
-                    type="password"
-                    errorMessage={errors.password || validationDeleteForm.getValidationMessage('password')}
-                    onChange={(event) => {
-                      validationDeleteForm.handleChange('password', event.target.value)
-                    }}
-                    onBlur={(event) => {
-                      validationDeleteForm.handleBlur('password', event.target.value)
-                    }}
-                    required
-                    sanitize={false}
-                    helpClassName={validationDeleteForm.getHelpClassName('password')}
-                  />
-                  <div className="flex gap-3">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      fitContent
-                      onClick={() => {
-                        setShowDeleteConfirm(false)
-                        reset("password")
-                        validationDeleteForm.reset()
+          ) : (
+            <div className="grid gap-4">
+              <Banner
+                title={t('account.delete.confirm.title')}
+                message={t('account.delete.confirm.sub_title')}
+                type="danger"
+              />
+              <Form
+                route="settings.account.destroy"
+                className="grid gap-6"
+                onBefore={(visit) => {
+                  const isValid = validationDeleteForm.validateAll(
+                    visit.data as Record<string, any>
+                  )
+                  if (!isValid) return false
+                }}
+              >
+                {({ errors, processing, reset }) => (
+                  <>
+                    <Field
+                      label={t('account.delete.password')}
+                      name="password"
+                      type="password"
+                      errorMessage={
+                        errors.password || validationDeleteForm.getValidationMessage('password')
+                      }
+                      onChange={(event) => {
+                        validationDeleteForm.handleChange('password', event.target.value)
                       }}
-                    >
-                      {t('account.delete.cancel')}
-                    </Button>
-                    <Button
-                      loading={processing}
-                      type={"submit"}
-                      fitContent
-                      variant="danger"
-                    >
-                      {t('account.delete.submit')}
-                    </Button>
-                  </div>
-                </>
-              )}
-            </Form>
-          </div>)
-          }
+                      onBlur={(event) => {
+                        validationDeleteForm.handleBlur('password', event.target.value)
+                      }}
+                      required
+                      sanitize={false}
+                      helpClassName={validationDeleteForm.getHelpClassName('password')}
+                    />
+                    <div className="flex gap-3">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        fitContent
+                        onClick={() => {
+                          setShowDeleteConfirm(false)
+                          reset('password')
+                          validationDeleteForm.reset()
+                        }}
+                      >
+                        {t('account.delete.cancel')}
+                      </Button>
+                      <Button loading={processing} type={'submit'} fitContent variant="danger">
+                        {t('account.delete.submit')}
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </Form>
+            </div>
+          )}
         </Card>
       </SettingsLayout>
     </>
