@@ -17,6 +17,7 @@ type NavLinkBaseProps = {
 
 type NavLinkProps<R extends NonNullable<LinkProps['route']>> = NavLinkBaseProps & {
   route: R
+  anchor?: string
 } & (LinkParams<R>['routeParams'] extends undefined | never
     ? { routeParams?: never }
     : { routeParams: LinkParams<R>['routeParams'] })
@@ -40,10 +41,14 @@ export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLin
       'px-4 py-2.5 border-b-2 -mb-px border-transparent current:border-accent-800 hover:border-accent-800 text-muted current:text-accent-800 hover:text-accent-800 cursor-pointer',
   }
 
-  const linkProps = {
-    route: props.route,
-    routeParams: props.routeParams,
-  } as unknown as LinkProps<R>
+  const linkProps = props.anchor
+    ? {
+        href: `${urlFor(props.route as any, props.routeParams as any)}#${props.anchor}`,
+      }
+    : ({
+        route: props.route,
+        routeParams: props.routeParams,
+      } as unknown as LinkProps<R>)
 
   return (
     <Link
