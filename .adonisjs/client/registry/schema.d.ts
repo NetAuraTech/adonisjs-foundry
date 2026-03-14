@@ -319,6 +319,18 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'admin.dashboard.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/core/cms/dashboard_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/core/cms/dashboard_controller').default['render']>>>
+    }
+  }
   'theme.execute': {
     methods: ["POST"]
     pattern: '/api/settings/preferences/theme'

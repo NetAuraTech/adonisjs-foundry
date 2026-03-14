@@ -30,6 +30,7 @@ export type ScannedRoutes = {
     'settings.preferences.render': { paramsTuple?: []; params?: {} }
     'settings.preferences.execute': { paramsTuple?: []; params?: {} }
     'settings.index': { paramsTuple?: []; params?: {} }
+    'admin.dashboard.render': { paramsTuple?: []; params?: {} }
     'theme.execute': { paramsTuple?: []; params?: {} }
   }
   GET: {
@@ -47,6 +48,7 @@ export type ScannedRoutes = {
     'settings.email_change.render': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'settings.preferences.render': { paramsTuple?: []; params?: {} }
     'settings.index': { paramsTuple?: []; params?: {} }
+    'admin.dashboard.render': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'home': { paramsTuple?: []; params?: {} }
@@ -63,6 +65,7 @@ export type ScannedRoutes = {
     'settings.email_change.render': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'settings.preferences.render': { paramsTuple?: []; params?: {} }
     'settings.index': { paramsTuple?: []; params?: {} }
+    'admin.dashboard.render': { paramsTuple?: []; params?: {} }
   }
   POST: {
     'auth.session.execute': { paramsTuple?: []; params?: {} }

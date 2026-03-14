@@ -23,6 +23,14 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
      */
     const { session, auth } = ctx as Partial<HttpContext>
 
+    const user = auth?.user
+
+    await user?.load((loader) => {
+      loader.load('role', (role) => {
+        role.preload('permissions')
+      })
+    })
+
     /**
      * Fetching the first error from the flash messages
      */
@@ -36,7 +44,7 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
     const error: string | undefined = session?.flashMessages.get('error') ?? errorFromBag
 
     const preferences = ctx.inertia.always(
-      auth?.user ? await this.preferencesService.get(auth.user) : DEFAULT_PREFERENCES
+      user ? await this.preferencesService.get(user) : DEFAULT_PREFERENCES
     )
 
     /**
@@ -50,9 +58,7 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
         success,
         info,
       }),
-      currentUser: ctx.inertia.always(
-        auth?.user ? UserTransformer.transform(auth.user) : undefined
-      ),
+      currentUser: ctx.inertia.always(user ? UserTransformer.transform(user) : undefined),
       preferences: preferences,
       csrfToken: ctx.request.csrfToken,
     }

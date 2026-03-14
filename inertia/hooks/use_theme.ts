@@ -3,6 +3,7 @@ import { usePage } from '@inertiajs/react'
 import type { Theme } from '#types/preferences'
 import { type SharedProps } from '@adonisjs/inertia/types'
 import { toast } from 'sonner'
+import { useAuth } from '~/hooks/use_auth'
 
 /**
  * Applies or removes the `dark` class on `<html>` and syncs `localStorage`.
@@ -122,9 +123,9 @@ export interface UseThemeOptions {
  */
 export function useTheme(options: UseThemeOptions = {}) {
   const { mode = 'standalone', value, onChange } = options
+  const { isAuthenticated } = useAuth()
   const pageProps = usePage<SharedProps>().props
   const serverTheme = pageProps.preferences?.theme
-  const isAuthenticated = !!pageProps.currentUser
   const ref = useRef<HTMLButtonElement>(null)
 
   const [theme, setThemeState] = useState<Theme>(() => {

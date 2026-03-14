@@ -162,6 +162,12 @@ const routes = {
     tokens: [{"old":"/settings","type":0,"val":"settings","end":""}],
     types: placeholder as Registry['settings.index']['types'],
   },
+  'admin.dashboard.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin',
+    tokens: [{"old":"/admin","type":0,"val":"admin","end":""}],
+    types: placeholder as Registry['admin.dashboard.render']['types'],
+  },
   'theme.execute': {
     methods: ["POST"],
     pattern: '/api/settings/preferences/theme',

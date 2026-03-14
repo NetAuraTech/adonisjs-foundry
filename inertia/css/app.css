@@ -324,6 +324,58 @@
     @apply px-8;
     @apply gap-3;
   }
+
+  .admin {
+    --sidebar-width: 350px;
+    --main-width: calc(100% - var(--sidebar-width));
+
+    @apply flex;
+    @apply min-h-screen;
+
+    .sidebar {
+      @apply fixed;
+      @apply top-0;
+      @apply left-0;
+      @apply bottom-0;
+      @apply transition-transform;
+      @apply z-50;
+      @apply w-(--sidebar-width);
+      @apply p-4;
+      @apply flex;
+      @apply flex-col;
+      @apply gap-3;
+      @apply -translate-x-full;
+      @apply bg-neutral-200;
+      @apply border-r-2;
+      @apply border-neutral-300;
+      @apply mt-18;
+
+      &[aria-expanded="true"] {
+        @apply translate-x-0;
+      }
+    }
+
+    .main {
+      @apply min-h-screen;
+      @apply transition-all;
+      @apply ml-0;
+      @apply w-full;
+      @apply bg-neutral-50;
+
+      main {
+        @apply lg:ml-(--sidebar-width);
+        @apply lg:w-(--main-width);
+        @apply p-4;
+      }
+    }
+
+    &:has(.sidebar[aria-expanded="false"]) .main {
+      main {
+        @apply ml-0;
+        @apply w-full;
+      }
+    }
+  }
 }
 
 @utility input {

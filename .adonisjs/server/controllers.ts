@@ -20,6 +20,11 @@ export const controllers = {
       Social: () => import('#controllers/auth/front/social_controller'),
     },
   },
+  core: {
+    cms: {
+      Dashboard: () => import('#controllers/core/cms/dashboard_controller'),
+    },
+  },
   preferences: {
     api: {
       Theme: () => import('#controllers/preferences/api/theme_controller'),

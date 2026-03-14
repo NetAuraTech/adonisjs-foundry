@@ -1,16 +1,14 @@
 import { useEffect, useState } from 'react'
-import { router, usePage } from '@inertiajs/react'
+import { router } from '@inertiajs/react'
 import { useTranslation } from 'react-i18next'
 import logo from '~/assets/logo.png'
-import type { SharedProps } from '@adonisjs/inertia/types'
 import { NavLink } from '~/components/atoms/nav_link'
 import { Link } from '@adonisjs/inertia/react'
 import { Avatar } from '~/components/atoms/avatar'
+import { Authenticated } from '~/guards/authenticated'
 export function Header() {
   const { t } = useTranslation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-
-  const pageProps = usePage<SharedProps>().props
 
   useEffect(() => {
     const unregisterListener = router.on('success', () => {
@@ -50,19 +48,20 @@ export function Header() {
         aria-expanded={isExpanded}
       >
         <NavLink route={'home'} label={t('header.home')} fs="md:xl" variant="nav" />
-
-        {pageProps.currentUser ? (
+        <Authenticated
+          fallback={
+            <NavLink
+              route={'auth.session.render'}
+              label={t('auth:login.value')}
+              fs="md:xl"
+              variant="nav"
+            />
+          }
+        >
           <Link route="settings.index">
             <Avatar showUsername />
           </Link>
-        ) : (
-          <NavLink
-            route={'auth.session.render'}
-            label={t('auth:login.value')}
-            fs="md:xl"
-            variant="nav"
-          />
-        )}
+        </Authenticated>
       </nav>
       <button
         className="header__burger clr-primary-900 md:display-hidden"

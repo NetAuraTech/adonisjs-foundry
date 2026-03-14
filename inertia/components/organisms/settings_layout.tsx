@@ -5,6 +5,7 @@ import { Head } from '@inertiajs/react'
 import { Heading } from '~/components/atoms/heading'
 import { NavLink } from '~/components/atoms/nav_link'
 import { Paragraph } from '~/components/atoms/paragraph'
+import { CanAccess } from '~/guards/can_access'
 
 const tabs = [
   { id: 'profile', label: 'settings:profile.value', route: 'settings.profile.render' },
@@ -45,6 +46,13 @@ export function SettingsLayout(props: PageProps) {
               ))}
             </div>
             <div className="flex gap-1">
+              <CanAccess permission={'admin.access'}>
+                <NavLink
+                  label={t('admin:value')}
+                  route="admin.dashboard.render"
+                  variant="setting_nav"
+                />
+              </CanAccess>
               <NavLink
                 label={t('auth:logout.value')}
                 route="auth.session.destroy"

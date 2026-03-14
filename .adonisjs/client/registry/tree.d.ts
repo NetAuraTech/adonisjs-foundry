@@ -52,6 +52,11 @@ export interface ApiDefinition {
     }
     index: typeof routes['settings.index']
   }
+  admin: {
+    dashboard: {
+      render: typeof routes['admin.dashboard.render']
+    }
+  }
   theme: {
     execute: typeof routes['theme.execute']
   }

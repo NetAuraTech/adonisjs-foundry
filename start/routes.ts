@@ -128,6 +128,14 @@ router
 
 router
   .group(() => {
+    router.get('/', [controllers.core.cms.Dashboard, 'render'])
+  })
+  .prefix('admin')
+  .as('admin')
+  .use([middleware.auth()])
+
+router
+  .group(() => {
     router
       .group(() => {
         router
