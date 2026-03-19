@@ -7,7 +7,7 @@ interface HeadingProps {
 }
 
 export function Heading(props: HeadingProps) {
-  const { level, color = 'text-foreground-title', children } = props
+  const { level, color = 'text-ink', children } = props
 
   const Tag = `h${level}` as ElementType
 
@@ -18,9 +18,5 @@ export function Heading(props: HeadingProps) {
     4: 'text-xl',
   }
 
-  return (
-    <Tag className={`${levels[level]} font-bold ${color}`}>
-      {children}
-    </Tag>
-  )
+  return <Tag className={`${levels[level]} font-bold ${color}`}>{children}</Tag>
 }

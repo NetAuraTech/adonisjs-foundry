@@ -1,13 +1,17 @@
-import {ReactNode} from "react";
+import { ReactNode } from 'react'
 
 interface SectionProps {
   children: ReactNode
+  id?: string
+  className?: string
 }
 
 export function Section(props: SectionProps) {
-  const { children } = props
+  const { children, className = 'py-8', ...sectionProps } = props
 
-  return <section className="py-8">
-    { children }
-  </section>
+  return (
+    <section {...sectionProps} className={className}>
+      {children}
+    </section>
+  )
 }

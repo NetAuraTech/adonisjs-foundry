@@ -36,14 +36,14 @@ export function Header() {
   const isExpanded = isMenuOpen ? 'true' : 'false'
 
   return (
-    <header className="header bg-neutral-100" data-state={menuState} aria-expanded={isExpanded}>
+    <header className="header bg-surface" data-state={menuState} aria-expanded={isExpanded}>
       <Link href="/" className="header__logo fs-600" onClick={closeMenu}>
         <img src={logo} alt="Logo" />
       </Link>
 
       <nav
         id="primary-navigation"
-        className="header__nav bg-neutral-100"
+        className="header__nav bg-surface"
         data-state={menuState}
         aria-expanded={isExpanded}
       >
@@ -64,7 +64,7 @@ export function Header() {
         </Authenticated>
       </nav>
       <button
-        className="header__burger clr-primary-900 md:display-hidden"
+        className="header__burger text-ink md:display-hidden"
         aria-controls="primary-navigation"
         aria-expanded={isExpanded}
         data-state={menuState}

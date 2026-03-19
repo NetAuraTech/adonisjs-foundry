@@ -1,6 +1,6 @@
-import {ReactNode} from "react";
-import type {FontSize} from "~/types/font";
-import {getFontSizeClass} from "~/utils/font";
+import { ReactNode } from 'react'
+import type { FontSize } from '~/types/font'
+import { getFontSizeClass } from '~/utils/font'
 
 interface ParagraphProps {
   children: ReactNode
@@ -13,13 +13,13 @@ interface ParagraphProps {
 export function Paragraph(props: ParagraphProps) {
   const { children, variant = 'foreground', color, fs = 'base', spacing = 'base' } = props
 
-  const fontSizeClass = getFontSizeClass(fs);
+  const fontSizeClass = getFontSizeClass(fs)
 
   const variants = {
-    'foreground': 'text-foreground',
-    'muted': 'text-muted',
-    'error': 'text-red-700',
-    'custom': `${color}`
+    foreground: 'text-ink',
+    muted: 'text-ink-muted',
+    error: 'text-danger',
+    custom: `${color}`,
   }
 
   const spacings = {
@@ -29,7 +29,11 @@ export function Paragraph(props: ParagraphProps) {
     xl: '[&:not(:first-child)]:mt-6',
   }
 
-  return <p className={`${variants[variant]} ${fontSizeClass} text-balance leading-7 ${spacings[spacing]}`}>
-    { children }
-  </p>
+  return (
+    <p
+      className={`${variants[variant]} ${fontSizeClass} text-balance leading-7 ${spacings[spacing]}`}
+    >
+      {children}
+    </p>
+  )
 }

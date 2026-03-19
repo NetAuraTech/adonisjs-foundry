@@ -1,4 +1,4 @@
-import {useTheme, UseThemeOptions} from '~/hooks/use_theme'
+import { useTheme, UseThemeOptions } from '~/hooks/use_theme'
 import type { Theme } from '#types/preferences'
 import { Icon } from '~/components/atoms/icon'
 
@@ -50,8 +50,8 @@ export function ThemeToggle(props: ThemeToggleProps) {
   const isDark = theme === 'dark'
 
   const dotStyles: Record<Theme, string> = {
-    light:  'translate-x-0 bg-neutral-100 text-orange-600',
-    dark:   'translate-x-7 bg-neutral-100 text-blue-400',
+    light: 'translate-x-0 bg-raised text-warning',
+    dark: 'translate-x-7 bg-raised text-info',
   }
 
   return (
@@ -64,28 +64,26 @@ export function ThemeToggle(props: ThemeToggleProps) {
       title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       onClick={toggleTheme}
       className={`
-        relative flex items-center
-        w-14 h-7 px-0.5
-        cursor-pointer
-        rounded-full border-2
-        transition-colors duration-300 ease-in-out
-        focus-visible:outline-none focus-visible:border-primary-700
-        bg-neutral-100 border-neutral-300
-      `}
+      relative flex items-center
+      w-14 h-7 px-0.5
+      cursor-pointer
+      rounded-full border-2
+      transition-colors duration-300 ease-in-out
+      focus-visible:outline-none focus-visible:border-primary
+      bg-sunken border-edge
+    `}
     >
       <span
         className={`
-          flex items-center justify-center
-          w-5 h-5 rounded-full
-          shadow-sm
-          transition-transform duration-300 ease-in-out
-          border-1 border-neutral-400
-          ${dotStyles[theme]}
-        `}
+        flex items-center justify-center
+        w-5 h-5 rounded-full
+        shadow-sm
+        transition-transform duration-300 ease-in-out
+        border border-edge
+        ${dotStyles[theme]}
+      `}
       >
-        {
-          isDark ? <Icon name="Moon" size={12} /> : <Icon name="Sun" size={12} />
-        }
+        {isDark ? <Icon name="Moon" size={12} /> : <Icon name="Sun" size={12} />}
       </span>
     </button>
   )

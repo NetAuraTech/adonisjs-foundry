@@ -8,12 +8,9 @@ export function Label(props: LabelProps) {
   const { label, htmlFor, required } = props
 
   return (
-    <label
-      htmlFor={htmlFor}
-      className="text-primary-950 font-bold"
-    >
+    <label htmlFor={htmlFor} className="text-ink font-bold">
       {label}
-      {required && <span className="ml-1 text-red-700">*</span>}
+      {required && <span className="ml-1 text-danger">*</span>}
     </label>
   )
 }

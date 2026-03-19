@@ -8,127 +8,90 @@
 @custom-variant focus (&:is(:focus-visible));
 
 @theme {
-  --color-neutral-base: oklch(55.6% 0 0);
-  --color-primary-base: oklch(0.691 0.131 154.946);
-  --color-accent-base: oklch(0.585 0.107 71.418);
+  --color-primary-deep:          oklch(0.261 0.036 263.634);
+  --color-primary:               oklch(0.345 0.047 264.355);
+  --color-primary-soft:          oklch(0.471 0.054 263.276);
+  --color-primary-light:         oklch(0.759 0.029 263.393);
 
-  /* Neutral scale */
-  --color-neutral-50:  oklch(from var(--color-neutral-base) calc(l + 0.38) calc(c * 0.3) h);
-  --color-neutral-100: oklch(from var(--color-neutral-base) calc(l + 0.36) calc(c * 0.4) h);
-  --color-neutral-200: oklch(from var(--color-neutral-base) calc(l + 0.31) calc(c * 0.5) h);
-  --color-neutral-300: oklch(from var(--color-neutral-base) calc(l + 0.24) calc(c * 0.7) h);
-  --color-neutral-400: oklch(from var(--color-neutral-base) calc(l + 0.12) calc(c * 0.85) h);
-  --color-neutral-500: oklch(from var(--color-neutral-base) l c h);
-  --color-neutral-600: oklch(from var(--color-neutral-base) calc(l - 0.10) calc(c * 1.05) h);
-  --color-neutral-700: oklch(from var(--color-neutral-base) calc(l - 0.18) calc(c * 1.1) h);
-  --color-neutral-800: oklch(from var(--color-neutral-base) calc(l - 0.28) calc(c * 0.95) h);
-  --color-neutral-900: oklch(from var(--color-neutral-base) calc(l - 0.37) calc(c * 0.8) h);
-  --color-neutral-950: oklch(from var(--color-neutral-base) calc(l - 0.47) calc(c * 0.6) h);
+  --color-accent-deep:           oklch(0.252 0.052 305.149);
+  --color-accent:                oklch(0.335 0.067 305.497);
+  --color-accent-soft:           oklch(0.458 0.079 306.963);
+  --color-accent-light:          oklch(0.750 0.044 308.533);
 
-  /* Primary scale */
-  --color-primary-50:  oklch(from var(--color-primary-base) calc(l + 0.38) calc(c * 0.3) h);
-  --color-primary-100: oklch(from var(--color-primary-base) calc(l + 0.36) calc(c * 0.4) h);
-  --color-primary-200: oklch(from var(--color-primary-base) calc(l + 0.31) calc(c * 0.5) h);
-  --color-primary-300: oklch(from var(--color-primary-base) calc(l + 0.24) calc(c * 0.7) h);
-  --color-primary-400: oklch(from var(--color-primary-base) calc(l + 0.12) calc(c * 0.85) h);
-  --color-primary-500: oklch(from var(--color-primary-base) l c h);
-  --color-primary-600: oklch(from var(--color-primary-base) calc(l - 0.10) calc(c * 1.05) h);
-  --color-primary-700: oklch(from var(--color-primary-base) calc(l - 0.18) calc(c * 1.1) h);
-  --color-primary-800: oklch(from var(--color-primary-base) calc(l - 0.28) calc(c * 0.95) h);
-  --color-primary-900: oklch(from var(--color-primary-base) calc(l - 0.37) calc(c * 0.8) h);
-  --color-primary-950: oklch(from var(--color-primary-base) calc(l - 0.47) calc(c * 0.6) h);
+  --color-ink:                   oklch(0.162 0.014 258.363);
+  --color-ink-muted:             oklch(0.400 0.018 263);
+  --color-ink-subtle:            oklch(0.600 0.012 263);
+  --color-ink-inverted:          oklch(0.970 0.005 263);
+  --color-ink-inverted-muted:    oklch(0.823 0.010 267.344);
+  --color-ink-inverted-subtle:   oklch(0.650 0.010 263);
 
-  /* Accent scale */
-  --color-accent-50:  oklch(from var(--color-accent-base) calc(l + 0.29) calc(c * 0.3) h);
-  --color-accent-100: oklch(from var(--color-accent-base) calc(l + 0.27) calc(c * 0.4) h);
-  --color-accent-200: oklch(from var(--color-accent-base) calc(l + 0.23) calc(c * 0.5) h);
-  --color-accent-300: oklch(from var(--color-accent-base) calc(l + 0.15) calc(c * 0.7) h);
-  --color-accent-400: oklch(from var(--color-accent-base) calc(l + 0.02) calc(c * 0.85) h);
-  --color-accent-500: oklch(from var(--color-accent-base) l c h);
-  --color-accent-600: oklch(from var(--color-accent-base) calc(l - 0.10) calc(c * 1.05) h);
-  --color-accent-700: oklch(from var(--color-accent-base) calc(l - 0.22) calc(c * 1.1) h);
-  --color-accent-800: oklch(from var(--color-accent-base) calc(l - 0.36) calc(c * 0.95) h);
-  --color-accent-900: oklch(from var(--color-accent-base) calc(l - 0.48) calc(c * 0.8) h);
-  --color-accent-950: oklch(from var(--color-accent-base) calc(l - 0.57) calc(c * 0.6) h);
+  --color-canvas:                oklch(0.985 0.004 263);
+  --color-surface:               oklch(1.000 0 0);
+  --color-sunken:                oklch(0.940 0.007 263);
+  --color-overlay:               oklch(0.995 0.002 263);
+  --color-raised:                oklch(1.000 0 0);
 
-  --color-foreground-title: oklch(0.243 0.007 145.351);
-  --color-foreground: color-mix(
-    in oklab,
-    var(--color-foreground-title) 85%,
-    transparent
-  );
-  --color-muted: color-mix(
-    in oklab,
-    var(--color-foreground-title) 60%,
-    transparent
-  );
+  --color-edge:                  oklch(0.820 0.012 263);
+  --color-edge-strong:           oklch(0.650 0.018 263);
+
+  --color-success:               oklch(0.550 0.150 145);
+  --color-success-soft:          oklch(0.920 0.040 145);
+  --color-warning:               oklch(0.620 0.150 75);
+  --color-warning-soft:          oklch(0.950 0.040 75);
+  --color-danger:                oklch(0.550 0.180 25);
+  --color-danger-soft:           oklch(0.930 0.040 25);
+  --color-info:                  oklch(0.550 0.120 240);
+  --color-info-soft:             oklch(0.930 0.030 240);
 }
 
 @layer base {
   .dark {
-    --color-neutral-base: oklch(55.6% 0.006 250);
-    --color-primary-base: oklch(0.691 0.131 154.946);
-    --color-accent-base: oklch(0.585 0.107 71.418);
+    --color-primary-deep:          oklch(0.52 0.035 263);
+    --color-primary:               oklch(0.65 0.030 263);
+    --color-primary-soft:          oklch(0.78 0.022 263);
+    --color-primary-light:         oklch(0.92 0.012 263);
 
-    /* Neutral scale */
-    --color-neutral-950:  oklch(from var(--color-neutral-base) calc(l + 0.38) calc(c * 0.3) h);
-    --color-neutral-900: oklch(from var(--color-neutral-base) calc(l + 0.36) calc(c * 0.4) h);
-    --color-neutral-800: oklch(from var(--color-neutral-base) calc(l + 0.31) calc(c * 0.5) h);
-    --color-neutral-700: oklch(from var(--color-neutral-base) calc(l + 0.24) calc(c * 0.7) h);
-    --color-neutral-600: oklch(from var(--color-neutral-base) calc(l + 0.12) calc(c * 0.85) h);
-    --color-neutral-500: oklch(from var(--color-neutral-base) l c h);
-    --color-neutral-400: oklch(from var(--color-neutral-base) calc(l - 0.10) calc(c * 1.05) h);
-    --color-neutral-300: oklch(from var(--color-neutral-base) calc(l - 0.18) calc(c * 1.1) h);
-    --color-neutral-200: oklch(from var(--color-neutral-base) calc(l - 0.28) calc(c * 0.95) h);
-    --color-neutral-100: oklch(from var(--color-neutral-base) calc(l - 0.37) calc(c * 0.8) h);
-    --color-neutral-50: oklch(from var(--color-neutral-base) calc(l - 0.47) calc(c * 0.6) h);
+    --color-accent-deep:           oklch(0.52 0.100 305);
+    --color-accent:                oklch(0.63 0.095 305);
+    --color-accent-soft:           oklch(0.73 0.080 305);
+    --color-accent-light:          oklch(0.87 0.050 305);
 
-    /* Primary scale */
-    --color-primary-950:  oklch(from var(--color-primary-base) calc(l + 0.38) calc(c * 0.3) h);
-    --color-primary-900: oklch(from var(--color-primary-base) calc(l + 0.36) calc(c * 0.4) h);
-    --color-primary-800: oklch(from var(--color-primary-base) calc(l + 0.31) calc(c * 0.5) h);
-    --color-primary-700: oklch(from var(--color-primary-base) calc(l + 0.24) calc(c * 0.7) h);
-    --color-primary-600: oklch(from var(--color-primary-base) calc(l + 0.12) calc(c * 0.85) h);
-    --color-primary-500: oklch(from var(--color-primary-base) l c h);
-    --color-primary-400: oklch(from var(--color-primary-base) calc(l - 0.10) calc(c * 1.05) h);
-    --color-primary-300: oklch(from var(--color-primary-base) calc(l - 0.18) calc(c * 1.1) h);
-    --color-primary-200: oklch(from var(--color-primary-base) calc(l - 0.28) calc(c * 0.95) h);
-    --color-primary-100: oklch(from var(--color-primary-base) calc(l - 0.37) calc(c * 0.8) h);
-    --color-primary-50: oklch(from var(--color-primary-base) calc(l - 0.47) calc(c * 0.6) h);
+    --color-ink:                   oklch(0.970 0.005 263);
+    --color-ink-muted:             oklch(0.820 0.010 263);
+    --color-ink-subtle:            oklch(0.650 0.010 263);
+    --color-ink-inverted:          oklch(0.162 0.014 258.363);
+    --color-ink-inverted-muted:    oklch(0.400 0.018 263);
+    --color-ink-inverted-subtle:   oklch(0.600 0.012 263);
 
-    /* Accent scale */
-    --color-accent-950:  oklch(from var(--color-accent-base) calc(l + 0.29) calc(c * 0.3) h);
-    --color-accent-900: oklch(from var(--color-accent-base) calc(l + 0.27) calc(c * 0.4) h);
-    --color-accent-800: oklch(from var(--color-accent-base) calc(l + 0.23) calc(c * 0.5) h);
-    --color-accent-700: oklch(from var(--color-accent-base) calc(l + 0.15) calc(c * 0.7) h);
-    --color-accent-600: oklch(from var(--color-accent-base) calc(l + 0.02) calc(c * 0.85) h);
-    --color-accent-500: oklch(from var(--color-accent-base) l c h);
-    --color-accent-400: oklch(from var(--color-accent-base) calc(l - 0.10) calc(c * 1.05) h);
-    --color-accent-300: oklch(from var(--color-accent-base) calc(l - 0.22) calc(c * 1.1) h);
-    --color-accent-200: oklch(from var(--color-accent-base) calc(l - 0.36) calc(c * 0.95) h);
-    --color-accent-100: oklch(from var(--color-accent-base) calc(l - 0.48) calc(c * 0.8) h);
-    --color-accent-50: oklch(from var(--color-accent-base) calc(l - 0.57) calc(c * 0.6) h);
+    --color-canvas:                oklch(0.130 0.012 263);
+    --color-surface:               oklch(0.170 0.015 263);
+    --color-sunken:                oklch(0.100 0.010 263);
+    --color-overlay:               oklch(0.210 0.018 263);
+    --color-raised:                oklch(0.230 0.020 263);
 
-    --color-foreground-title: oklch(0.917 0.014 145.462);
+    --color-edge:                  oklch(0.280 0.020 263);
+    --color-edge-strong:           oklch(0.420 0.025 263);
+
+    --color-success:               oklch(0.650 0.150 145);
+    --color-success-soft:          oklch(0.220 0.060 145);
+    --color-warning:               oklch(0.750 0.140  75);
+    --color-warning-soft:          oklch(0.220 0.050  75);
+    --color-danger:                oklch(0.650 0.180  25);
+    --color-danger-soft:           oklch(0.220 0.060  25);
+    --color-info:                  oklch(0.650 0.120 240);
+    --color-info-soft:             oklch(0.220 0.040 240);
   }
 
   #page-wrapper {
-    @apply relative;
-    @apply flex;
-    @apply flex-col;
-    @apply w-full;
-    @apply min-h-screen;
-    @apply bg-neutral-50;
+    @apply relative flex flex-col w-full min-h-screen bg-canvas text-ink;
   }
 
   a {
-    @apply transition-colors;
-    @apply duration-200;
+    @apply transition-colors duration-200;
   }
 
   *:focus-visible {
-    @apply outline-2;
-    @apply outline-primary-700;
+    @apply outline-2 outline-primary;
   }
 
   ::-webkit-scrollbar {
@@ -137,13 +100,15 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--color-background-light);
-    padding: 1px;
+    @apply bg-sunken;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--color-border);
-    border-radius: 4px;
+    @apply bg-edge rounded;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-edge-strong;
   }
 
   ::view-transition-old(root),
@@ -153,71 +118,36 @@
   }
 }
 
-
 @layer components {
+
   .header {
-    @apply z-50;
-    @apply top-0;
-    @apply sticky;
-    @apply flex;
-    @apply justify-between;
-    @apply items-center;
-    @apply shadow;
-    @apply p-2;
+    @apply z-50 top-0 sticky flex justify-between items-center shadow p-2 bg-surface;
 
     @variant md {
-      @apply px-20;
-      @apply py-6;
+      @apply px-20 py-6;
     }
 
-    .header__logo {
-      img {
-        @apply w-15;
-        @apply h-auto;
-        @apply mr-4;
-      }
+    .header__logo img {
+      @apply w-15 h-auto mr-4;
     }
 
     .header__nav {
-      @apply fixed;
-      @apply p-4;
-      @apply grid;
-      @apply gap-3;
-      @apply shadow-2xl;
-      @apply transition-all;
-      @apply duration-500;
-      @apply top-19;
-      @apply -right-75;
-      @apply bottom-0;
-      @apply w-3xs;
-      @apply h-max;
-      @apply opacity-0;
-      @apply rounded-bl-lg;
-      @apply items-center;
+      @apply fixed p-4 grid gap-3 shadow-2xl transition-all duration-500
+      top-19 -right-75 bottom-0 w-3xs h-max
+      opacity-0 rounded-bl-lg items-center bg-overlay;
 
       &[aria-expanded=true] {
-        @apply -right-0;
-        @apply opacity-100;
+        @apply right-0 opacity-100;
       }
 
-
       @variant md {
-        @apply relative;
-        @apply flex;
-        @apply gap-6;
-        @apply w-auto;
-        @apply h-auto;
-        @apply opacity-100;
-        @apply top-0;
-        @apply right-0;
+        @apply relative flex gap-6 w-auto h-auto opacity-100 top-0 right-0 bg-transparent;
         box-shadow: none;
       }
     }
 
     .header__burger {
-      @apply overflow-hidden;
-      @apply bg-transparent;
-      @apply cursor-pointer;
+      @apply overflow-hidden bg-transparent cursor-pointer;
 
       &[aria-expanded=true] svg {
         translate: 3px 0;
@@ -245,16 +175,11 @@
   }
 
   .card {
-    @apply grid;
-    @apply rounded-2xl;
-    @apply bg-neutral-50;
-    @apply shadow-2xl;
-    @apply overflow-hidden;
+    @apply grid rounded-2xl bg-surface shadow-2xl overflow-hidden;
   }
 
   .textarea {
-    @apply input;
-    @apply min-h-30;
+    @apply input min-h-30;
     field-sizing: content;
   }
 
@@ -264,24 +189,15 @@
 
     &::picker(select) {
       appearance: base-select;
-      @apply bg-neutral-100;
-      @apply p-2;
-      @apply border-1;
-      @apply border-solid;
-      @apply border-neutral-300;
-      @apply rounded;
-      @apply opacity-0;
-      @apply -translate-y-2.5;
+      @apply bg-overlay border border-solid border-edge rounded p-2 opacity-0 -translate-y-2.5;
       transition: all 0.4s allow-discrete;
     }
 
     &::picker(select):popover-open {
-      @apply -translate-y-0;
-      @apply opacity-100;
+      @apply translate-y-0 opacity-100;
 
       @starting-style {
-        @apply opacity-0;
-        @apply -translate-y-2.5;
+        @apply opacity-0 -translate-y-2.5;
       }
     }
 
@@ -289,7 +205,7 @@
       @apply p-2;
 
       &:checked {
-        @apply bg-accent-50;
+        @apply bg-accent-light;
       }
 
       &::checkmark {
@@ -300,11 +216,7 @@
 
   .checkbox {
     aspect-ratio: 1;
-    @apply input;
-    @apply cursor-pointer;
-    @apply w-5;
-    @apply accent-accent-700;
-    @apply rounded-lg;
+    @apply input cursor-pointer w-5 accent-accent-deep rounded-lg;
 
     &+label {
       @apply cursor-pointer;
@@ -312,43 +224,20 @@
   }
 
   .button {
-    @apply flex;
-    @apply items-center;
-    @apply justify-center;
-    @apply font-bold;
-    @apply transition-colors;
-    @apply duration-300;
-    @apply cursor-pointer;
-    @apply rounded-lg;
-    @apply py-3;
-    @apply px-8;
-    @apply gap-3;
+    @apply flex items-center justify-center font-bold transition-colors duration-300
+    cursor-pointer rounded-lg py-3 px-8 gap-3;
   }
 
   .admin {
     --sidebar-width: 350px;
     --main-width: calc(100% - var(--sidebar-width));
 
-    @apply flex;
-    @apply min-h-screen;
+    @apply flex min-h-screen bg-canvas text-ink;
 
     .sidebar {
-      @apply fixed;
-      @apply top-0;
-      @apply left-0;
-      @apply bottom-0;
-      @apply transition-transform;
-      @apply z-50;
-      @apply w-(--sidebar-width);
-      @apply p-4;
-      @apply flex;
-      @apply flex-col;
-      @apply gap-3;
-      @apply -translate-x-full;
-      @apply bg-neutral-200;
-      @apply border-r-2;
-      @apply border-neutral-300;
-      @apply mt-18;
+      @apply fixed top-0 left-0 bottom-0 z-50 transition-transform
+      w-(--sidebar-width) p-4 flex flex-col gap-3 mt-18
+      -translate-x-full bg-surface border-r-2 border-edge;
 
       &[aria-expanded="true"] {
         @apply translate-x-0;
@@ -356,36 +245,38 @@
     }
 
     .main {
-      @apply min-h-screen;
-      @apply transition-all;
-      @apply ml-0;
-      @apply w-full;
-      @apply bg-neutral-50;
+      @apply min-h-screen transition-all ml-0 w-full bg-canvas;
 
       main {
-        @apply lg:ml-(--sidebar-width);
-        @apply lg:w-(--main-width);
-        @apply p-4;
+        @apply lg:ml-(--sidebar-width) lg:w-(--main-width) p-4;
       }
     }
 
-    &:has(.sidebar[aria-expanded="false"]) .main {
-      main {
-        @apply ml-0;
-        @apply w-full;
-      }
+    &:has(.sidebar[aria-expanded="false"]) .main main {
+      @apply ml-0 w-full;
     }
   }
 }
 
 @utility input {
-  @apply bg-neutral-100;
-  @apply text-neutral-800;
-  @apply p-2;
-  @apply rounded-lg;
-  @apply border-1;
-  @apply border-solid;
-  @apply border-neutral-300;
+  @apply bg-sunken text-ink p-2 rounded-lg border border-solid border-edge;
+
+  &::placeholder {
+    @apply text-ink-subtle;
+  }
+
+  &:disabled {
+    @apply text-ink-subtle opacity-60 cursor-not-allowed;
+  }
+
+  &:focus-visible {
+    @apply border-primary outline-none;
+    box-shadow: 0 0 0 3px oklch(0.759 0.029 263 / 0.35);
+
+    @variant dark {
+      box-shadow: 0 0 0 3px oklch(0.345 0.047 264 / 0.30);
+    }
+  }
 }
 
 @utility container {
@@ -399,3 +290,79 @@
   grid-template-columns: repeat(auto-fit, minmax(min(--value([length]), 100%), 1fr));
 }
 
+@utility table {
+  @apply border-collapse w-full leading-[1.2];
+
+  thead {
+    @apply border-0 hidden;
+
+    @variant lg {
+      @apply table-header-group;
+    }
+
+    th {
+      @apply uppercase opacity-60 text-[0.9em] text-left;
+
+      &.center {
+        @variant lg {
+          @apply text-center;
+        }
+      }
+
+      &:last-child {
+        @variant lg {
+          @apply text-right;
+        }
+      }
+    }
+  }
+
+  tbody {
+    a {
+      @apply no-underline text-ink;
+
+      &:hover {
+        @apply text-accent;
+      }
+    }
+
+    tr {
+      @apply block mb-6 border border-edge rounded-lg p-4;
+
+      @variant lg {
+        @apply table-row mb-0 border-0 border-b border-edge rounded-none p-0;
+      }
+
+      &:last-child {
+        @apply border border-edge;
+
+        @variant lg {
+          @apply border-0;
+        }
+      }
+    }
+
+    td {
+      @apply block text-left py-2 border-0 align-middle;
+
+      &::before {
+        content: attr(data-label);
+        @apply font-bold uppercase text-[0.85em] opacity-60 block mb-1;
+
+        @variant lg {
+          @apply hidden;
+        }
+      }
+
+      @variant lg {
+        @apply table-cell py-4;
+      }
+
+      &:last-child > * {
+        @variant lg {
+          @apply justify-end;
+        }
+      }
+    }
+  }
+}

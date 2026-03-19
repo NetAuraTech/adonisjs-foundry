@@ -6,10 +6,10 @@ export function AdminHeader(props: AdminHeaderProps) {
   const { handleClick } = props
 
   return (
-    <header className="flex items-center justify-between p-4 bg-neutral-200 border-b-2 border-neutral-300 sticky top-0 z-50">
+    <header className="flex items-center justify-between p-4 bg-surface border-b-2 border-edge sticky top-0 z-50">
       <button
         onClick={handleClick}
-        className="p-2 rounded text-primary-50 bg-primary-700 hover:bg-primary-800 transitions-colors cursor-pointer"
+        className="p-2 rounded text-ink-inverted bg-primary hover:bg-primary-deep transition-colors cursor-pointer"
         aria-label="Toggle sidebar"
       >
         <svg

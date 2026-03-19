@@ -17,7 +17,7 @@ export function Avatar(props: AvatarProps) {
   //TODO: Return user avatar is available
 
   const Icon = (
-    <div className="w-12 h-12 rounded-full bg-neutral-200 flex items-center justify-center text-sm font-semibold text-neutral-600 group-hover:bg-accent-600 group-hover:text-neutral-50 transition">
+    <div className="w-12 h-12 rounded-full bg-sunken flex items-center justify-center text-sm font-semibold text-ink-muted group-hover:bg-accent group-hover:text-ink-inverted transition">
       {getAvatarInitials(user.username)}
     </div>
   )
@@ -26,9 +26,7 @@ export function Avatar(props: AvatarProps) {
     <div className="group flex gap-4 items-center">
       {Icon}
       {showUsername && (
-        <span className="text-primary-950 group-hover:text-accent-600 transition">
-          {user.username}
-        </span>
+        <span className="text-ink group-hover:text-accent transition">{user.username}</span>
       )}
     </div>
   )

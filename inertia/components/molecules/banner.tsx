@@ -7,45 +7,26 @@ interface BannerProps {
   message: string | ReactNode
   children?: ReactNode
 }
-export function Banner (props: BannerProps) {
+
+export function Banner(props: BannerProps) {
   const { type, title, message, children } = props
 
   const config = {
-    success: {
-      bg: 'bg-green-50',
-      text: 'text-green-700',
-      border: 'border-green-700',
-    },
-    danger: {
-      bg: 'bg-red-50',
-      text: 'text-red-700',
-      border: 'border-red-700',
-    },
-    warning: {
-      bg: 'bg-orange-50',
-      text: 'text-orange-700',
-      border: 'border-orange-700',
-    },
-    info: {
-      bg: 'bg-blue-50',
-      text: 'text-blue-700',
-      border: 'border-blue-700',
-    },
+    success: { bg: 'bg-success-soft', text: 'text-success', border: 'border-success' },
+    danger: { bg: 'bg-danger-soft', text: 'text-danger', border: 'border-danger' },
+    warning: { bg: 'bg-warning-soft', text: 'text-warning', border: 'border-warning' },
+    info: { bg: 'bg-info-soft', text: 'text-info', border: 'border-info' },
   }
 
-  return <div className={`p-4 rounded border-1 ${config[type].bg} ${config[type].border}`}>
-    <Paragraph
-      variant="custom"
-      color={`font-bold ${config[type].text}`}
-    >
-      {title}
-    </Paragraph>
-    <Paragraph
-      variant="custom"
-      color={`${config[type].text}`}
-    >
-      {message}
-    </Paragraph>
-    {children}
-  </div>
+  return (
+    <div className={`p-4 rounded border ${config[type].bg} ${config[type].border}`}>
+      <Paragraph variant="custom" color={`font-bold ${config[type].text}`}>
+        {title}
+      </Paragraph>
+      <Paragraph variant="custom" color={config[type].text}>
+        {message}
+      </Paragraph>
+      {children}
+    </div>
+  )
 }

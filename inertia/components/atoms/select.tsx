@@ -1,5 +1,5 @@
-import {ChangeEvent, ReactNode} from "react";
-import {SelectOption} from "~/components/atoms/select_option";
+import { ChangeEvent, ReactNode } from 'react'
+import { SelectOption } from '~/components/atoms/select_option'
 
 interface SelectProps {
   name: string
@@ -27,23 +27,20 @@ export function Select(props: SelectProps) {
     ...inputProps
   } = props
 
-
-  return <select
-    name={name}
-    id={name}
-    defaultValue={defaultValue}
-    disabled={disabled}
-    required={required}
-    onChange={onChange as (e: ChangeEvent<HTMLSelectElement>) => void}
-    onBlur={onBlur}
-    className={`select`}
-    {...inputProps}
-  >
-    {
-      placeholder && <SelectOption
-        label={placeholder}
-      />
-    }
-    { children }
-  </select>
+  return (
+    <select
+      name={name}
+      id={name}
+      defaultValue={defaultValue}
+      disabled={disabled}
+      required={required}
+      onChange={onChange as (e: ChangeEvent<HTMLSelectElement>) => void}
+      onBlur={onBlur}
+      className={`select`}
+      {...inputProps}
+    >
+      {placeholder && <SelectOption value="" label={placeholder} />}
+      {children}
+    </select>
+  )
 }

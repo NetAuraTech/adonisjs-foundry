@@ -1,16 +1,17 @@
-import { icons } from "lucide-react";
+import { icons } from 'lucide-react'
 
 interface IconProps {
-  name: keyof typeof icons,
-  size ?: number,
+  name: keyof typeof icons
+  size?: number
+  className?: string
 }
 export function Icon(props: IconProps) {
-  const { name, size } = props
+  const { name, size, ...iconProps } = props
 
   const Item = icons[name]
 
-  if(Item) {
-    return <Item size={size} />
+  if (Item) {
+    return <Item size={size} {...iconProps} />
   }
 
   return <></>

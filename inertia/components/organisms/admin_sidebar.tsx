@@ -9,6 +9,7 @@ import { Heading } from '../atoms/heading'
 import { NavLink } from '../atoms/nav_link'
 import { CanAccess } from '~/guards/can_access'
 import { useMenu } from '~/hooks/use_admin'
+import { Icon } from '~/components/atoms/icon'
 
 interface AdminSidebarProps {
   sidebarOpen: boolean
@@ -19,9 +20,9 @@ export function AdminSidebar(props: AdminSidebarProps) {
   const { sidebarOpen, setIsMenuOpen } = props
   const isLarge = useIsLarge()
   const pageProps = usePage<SharedProps>().props
-  const { t, i18n } = useTranslation()
+  const { t, i18n } = useTranslation('admin')
 
-  const menu = useMenu()
+  const { menu } = useMenu()
 
   return (
     <aside className="sidebar" aria-expanded={sidebarOpen}>
@@ -38,7 +39,7 @@ export function AdminSidebar(props: AdminSidebarProps) {
         <nav>
           {Object.entries(menu).map(([category, entries]) => (
             <div key={`admin-category-${category}`}>
-              <Heading level={4}>{category}</Heading>
+              <Heading level={4}>{t(`category.${category}`)}</Heading>
               <ul>
                 {entries.map((entry) => (
                   <li key={`admin-category-${category}-${entry.label}`}>
@@ -47,7 +48,9 @@ export function AdminSidebar(props: AdminSidebarProps) {
                         label={entry.label}
                         route={entry.route}
                         routeParams={entry.routeParams}
-                      />
+                      >
+                        {entry.icon && <Icon name={entry.icon} />}
+                      </NavLink>
                     </CanAccess>
                   </li>
                 ))}

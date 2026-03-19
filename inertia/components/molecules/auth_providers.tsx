@@ -16,10 +16,10 @@ export function AuthProviders(props: AuthProviderProps) {
     <>
       <div className="relative my-8">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-solid border-t border-neutral-300"></div>
+          <div className="w-full border-t border-solid border-edge" />
         </div>
         <div className="relative flex justify-center text-lg">
-          <span className="px-4 bg-neutral-50">{t('login.or_continue_with')}</span>
+          <span className="px-4 bg-canvas text-ink-muted">{t('login.or_continue_with')}</span>
         </div>
       </div>
       <div className="grid grid-auto-fit-[250px] gap-3">

@@ -49,7 +49,7 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-4 px-1">
-      <p className="text-sm text-muted tabular-nums">{t('showing', { start, end, total })}</p>
+      <p className="text-sm text-ink-muted tabular-nums">{t('showing', { start, end, total })}</p>
 
       <nav aria-label="Pagination" className="flex items-center gap-1">
         {currentPage > 1 ? (
@@ -72,7 +72,7 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
           page === '...' ? (
             <span
               key={`ellipsis-${index}`}
-              className="grid size-8 place-items-center text-sm text-muted select-none"
+              className="grid size-8 place-items-center text-sm text-ink-muted select-none"
             >
               …
             </span>

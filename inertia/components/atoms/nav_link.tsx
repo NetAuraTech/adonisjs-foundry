@@ -53,12 +53,12 @@ export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLin
   const isActive = pathMatches && qsMatches
 
   const variants = {
-    link: 'text-accent-600 hover:text-accent-800',
-    nav: 'text-primary-950 current:text-accent-600 hover:text-accent-600',
+    link: 'text-accent hover:text-accent-deep',
+    nav: 'text-ink current:text-accent hover:text-accent',
     setting_nav:
-      'px-4 py-2.5 border-b-2 -mb-px border-transparent current:border-accent-800 hover:border-accent-800 text-muted current:text-accent-800 hover:text-accent-800 cursor-pointer',
+      'px-4 py-2.5 border-b-2 -mb-px border-transparent current:border-accent hover:border-accent text-ink-muted current:text-accent hover:text-accent cursor-pointer',
     pagination:
-      'button font-normal hover:bg-primary-800 hover:text-neutral-100 current:bg-primary-800 current:text-neutral-100 px-2 py-1',
+      'button font-normal hover:bg-primary hover:text-ink-inverted current:bg-primary current:text-ink-inverted px-2 py-1',
   }
 
   const states = {

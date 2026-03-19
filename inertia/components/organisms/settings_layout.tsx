@@ -34,7 +34,7 @@ export function SettingsLayout(props: PageProps) {
               {t('settings:sub_title')}
             </Paragraph>
           </div>
-          <div className="flex gap-1 justify-between border-b border-neutral-200 mb-8">
+          <div className="flex gap-1 justify-between border-b border-edge mb-8">
             <div className="flex gap-1">
               {tabs.map((tab) => (
                 <NavLink
