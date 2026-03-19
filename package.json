@@ -11,6 +11,8 @@
     "start": "node bin/server.js",
     "build": "node ace build",
     "dev": "node ace serve --hmr",
+    "docker:up": "docker compose up -d",
+    "docker:stop": "docker compose stop -d",
     "test": "node ace test",
     "lint": "eslint .",
     "format": "prettier --write .",
