@@ -58,6 +58,7 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
             label="«"
             {...(routeProps as any)}
             qs={{ ...filters, page: currentPage - 1 }}
+            title={t('previous')}
           />
         ) : (
           <NavLink
@@ -65,6 +66,7 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
             label="«"
             {...(routeProps as any)}
             qs={{ ...filters, page: currentPage - 1 }}
+            title={t('previous')}
             disabled
           />
         )}
@@ -92,6 +94,7 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
             label="»"
             {...(routeProps as any)}
             qs={{ ...filters, page: currentPage + 1 }}
+            title={t('next')}
           />
         ) : (
           <NavLink
@@ -99,6 +102,7 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
             label="»"
             {...(routeProps as any)}
             qs={{ ...filters, page: currentPage + 1 }}
+            title={t('next')}
             disabled
           />
         )}

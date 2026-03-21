@@ -318,14 +318,6 @@
   }
 
   tbody {
-    a {
-      @apply no-underline text-ink;
-
-      &:hover {
-        @apply text-accent;
-      }
-    }
-
     tr {
       @apply block mb-6 border border-edge rounded-lg p-4;
 

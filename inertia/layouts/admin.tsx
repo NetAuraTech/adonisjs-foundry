@@ -3,8 +3,8 @@ import { toast, Toaster } from 'sonner'
 import { Head, usePage } from '@inertiajs/react'
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { useIsLarge } from '~/hooks/use_is_large'
-import { AdminSidebar } from '~/components/organisms/admin_sidebar'
-import { AdminHeader } from '~/components/organisms/admin_header'
+import { AdminSidebar } from '~/components/organisms/admin/admin_sidebar'
+import { AdminHeader } from '~/components/organisms/admin/admin_header'
 
 interface LayoutProps {
   children: ReactElement<SharedProps>

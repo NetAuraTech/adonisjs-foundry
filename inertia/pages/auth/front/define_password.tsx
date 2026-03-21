@@ -7,7 +7,7 @@ import { Field } from '~/components/molecules/field'
 import { Button } from '~/components/atoms/button'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets } from '~/helpers/validation_rules'
-import { AuthIntro } from '~/components/molecules/auth_intro'
+import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import { useState } from 'react'
 
 export default function DefinePasswordPage() {
@@ -90,11 +90,7 @@ export default function DefinePasswordPage() {
                     helpText={t('define_password.confirmation_help')}
                     helpClassName={validation.getHelpClassName('password_confirmation')}
                   />
-                  <Button
-                  loading={processing}
-                  type={"submit"}
-                  fitContent
-                  >
+                  <Button loading={processing} type={'submit'} fitContent>
                     {t('define_password.submit')}
                   </Button>
                 </>

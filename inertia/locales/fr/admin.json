@@ -1,9 +1,84 @@
 {
+  "actions": {
+    "value": "Actions"
+  },
   "dashboard": {
     "value": "Tableau de bord"
   },
+  "users": {
+    "list": {
+      "action": "Inviter un utilisateur",
+      "empty": "Aucun utilisateur trouvé.",
+      "register_on": "Inscrit le",
+      "title": "Gérer les utilisateurs"
+    },
+    "status": {
+      "verified": "✓ Vérifié",
+      "unverified": "× Non vérifié",
+      "pending_invite": "⟳ Invitation en attente",
+      "value": "Statut"
+    },
+    "show": {
+      "title": "Voir l'utilisateur: {username}",
+      "info": {
+        "email": "E-mail",
+        "username": "Nom d'utilisateur",
+        "value": "Information sur l'utilisateur"
+      },
+      "history": {
+        "created_at": "Créé le",
+        "updated_at": "Dernière mise à jour",
+        "verified_at": "E-mail vérifié le",
+        "value": "Chronologie du compte"
+      },
+      "providers": {
+        "connected": "Connecté",
+        "not_connected": "Non connecté",
+        "value": "Comptes connectés"
+      },
+      "role": {
+        "current": "Rôle actuel",
+        "value": "Rôle et permissions"
+      },
+      "permission": {
+        "value": "Permissions de ce rôle ({amount})"
+      }
+    },
+    "create": {
+      "title": "Inviter un utilisateur"
+    },
+    "edit": {
+      "title": "Modifier l'utilisateur: {username}"
+    },
+    "delete": {
+      "title": "Supprimer l'utilisateur: {username}"
+    },
+    "form": {
+      "email": {
+        "placeholder": "john.doe@test.local",
+        "value": "E-mail"
+      },
+      "username": {
+        "placeholder": "JohnDoe",
+        "value": "Nom d'utilisateur"
+      },
+      "role": {
+        "placeholder": "Choisir un rôle...",
+        "value": "Rôle"
+      },
+      "submit": "Envoyer"
+    },
+    "value": "Utilisateurs",
+    "value_one": "Utilisateur"
+  },
   "category": {
+    "access_control": "Contrôle d'accès",
     "main": ""
+  },
+  "search": {
+    "filter": "Filtrer",
+    "placeholder": "John Doe",
+    "value": "Rechercher"
   },
   "value": "Administration"
 }

@@ -1,0 +1,17 @@
+{
+  "users": {
+    "created": "Un e-mail d'invitation a été envoyé à {email} afin que l'utilisateur {username} puisse créer son compte.",
+    "updated_email": "Un e-mail de confirmation a été envoyé à l'utilisateur afin de confirmer le changement d'adresse e-mail.",
+    "updated": "L'utilisateur a été modifié avec succès.",
+    "deleted": "L'utilisateur a été supprimé avec succès.",
+    "mail": {
+      "subject": "Vous avez été invité à rejoindre {app}",
+      "greeting": "Vous avez été invité,",
+      "intro": "Un administrateur vous a invité à rejoindre {app}. Cliquez sur le bouton ci-dessous pour accepter votre invitation et configurer votre compte.",
+      "action": "Accepter l’invitation",
+      "outro": "Une fois que vous aurez accepté, vous pourrez définir votre mot de passe et commencer à utiliser votre compte immédiatement. Votre adresse e-mail sera vérifiée automatiquement. ",
+      "expiry": "Ce lien d'invitation expirera dans {days} jours.",
+      "footer": "Si vous rencontrez des difficultés pour cliquer sur le bouton, copiez et collez l'URL ci-dessous dans votre navigateur web :"
+    }
+  }
+}

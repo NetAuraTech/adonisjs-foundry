@@ -9,9 +9,9 @@ import { Field } from '~/components/molecules/field'
 import { Button } from '~/components/atoms/button'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets } from '~/helpers/validation_rules'
-import { AuthIntro } from '~/components/molecules/auth_intro'
+import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import type { OAuthProvider } from '#types/auth'
-import { AuthProviders } from '~/components/molecules/auth_providers'
+import { AuthProviders } from '~/components/molecules/auth/auth_providers'
 
 interface PageProps {
   providers: OAuthProvider[]
@@ -47,12 +47,10 @@ export default function LoginPage(props: PageProps) {
           <Card
             footer={
               <div className="text-center">
-                <Paragraph
-                  fs="sm"
-                >
+                <Paragraph fs="sm">
                   {t('login.no_account')}{' '}
                   <NavLink
-                    route={"auth.register.render"}
+                    route={'auth.register.render'}
                     label={t('login.create_account')}
                     fs="sm"
                   />
@@ -100,21 +98,13 @@ export default function LoginPage(props: PageProps) {
                     sanitize={false}
                   />
                   <div className="grid gap-2 md:flex md:items-center md:justify-between">
-                    <Field
-                      label={t('login.remember_me')}
-                      name="remember_me"
-                      type="checkbox"
-                    />
+                    <Field label={t('login.remember_me')} name="remember_me" type="checkbox" />
                     <NavLink
                       route="auth.forgot_password.render"
                       label={t('login.forgot_password')}
                     />
                   </div>
-                  <Button
-                    loading={processing}
-                    type={"submit"}
-                    fitContent
-                  >
+                  <Button loading={processing} type={'submit'} fitContent>
                     {t('login.submit')}
                   </Button>
                 </>

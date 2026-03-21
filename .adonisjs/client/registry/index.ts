@@ -60,6 +60,18 @@ const routes = {
     tokens: [{"old":"/reset-password","type":0,"val":"reset-password","end":""}],
     types: placeholder as Registry['auth.reset_password.execute']['types'],
   },
+  'auth.accept_invitation.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/accept-invitation/:token',
+    tokens: [{"old":"/accept-invitation/:token","type":0,"val":"accept-invitation","end":""},{"old":"/accept-invitation/:token","type":1,"val":"token","end":""}],
+    types: placeholder as Registry['auth.accept_invitation.render']['types'],
+  },
+  'auth.accept_invitation.execute': {
+    methods: ["POST"],
+    pattern: '/accept-invitation',
+    tokens: [{"old":"/accept-invitation","type":0,"val":"accept-invitation","end":""}],
+    types: placeholder as Registry['auth.accept_invitation.execute']['types'],
+  },
   'auth.session.destroy': {
     methods: ["POST"],
     pattern: '/logout',
@@ -167,6 +179,48 @@ const routes = {
     pattern: '/admin',
     tokens: [{"old":"/admin","type":0,"val":"admin","end":""}],
     types: placeholder as Registry['admin.dashboard.render']['types'],
+  },
+  'admin.users.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/users',
+    tokens: [{"old":"/admin/users","type":0,"val":"admin","end":""},{"old":"/admin/users","type":0,"val":"users","end":""}],
+    types: placeholder as Registry['admin.users.render']['types'],
+  },
+  'admin.users_create.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/users/create',
+    tokens: [{"old":"/admin/users/create","type":0,"val":"admin","end":""},{"old":"/admin/users/create","type":0,"val":"users","end":""},{"old":"/admin/users/create","type":0,"val":"create","end":""}],
+    types: placeholder as Registry['admin.users_create.render']['types'],
+  },
+  'admin.users_create.execute': {
+    methods: ["POST"],
+    pattern: '/admin/users/create',
+    tokens: [{"old":"/admin/users/create","type":0,"val":"admin","end":""},{"old":"/admin/users/create","type":0,"val":"users","end":""},{"old":"/admin/users/create","type":0,"val":"create","end":""}],
+    types: placeholder as Registry['admin.users_create.execute']['types'],
+  },
+  'admin.users.destroy': {
+    methods: ["DELETE"],
+    pattern: '/admin/users/:id',
+    tokens: [{"old":"/admin/users/:id","type":0,"val":"admin","end":""},{"old":"/admin/users/:id","type":0,"val":"users","end":""},{"old":"/admin/users/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['admin.users.destroy']['types'],
+  },
+  'admin.users_show.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/users/:id',
+    tokens: [{"old":"/admin/users/:id","type":0,"val":"admin","end":""},{"old":"/admin/users/:id","type":0,"val":"users","end":""},{"old":"/admin/users/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['admin.users_show.render']['types'],
+  },
+  'admin.users_update.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/users/:id/edit',
+    tokens: [{"old":"/admin/users/:id/edit","type":0,"val":"admin","end":""},{"old":"/admin/users/:id/edit","type":0,"val":"users","end":""},{"old":"/admin/users/:id/edit","type":1,"val":"id","end":""},{"old":"/admin/users/:id/edit","type":0,"val":"edit","end":""}],
+    types: placeholder as Registry['admin.users_update.render']['types'],
+  },
+  'admin.users_update.execute': {
+    methods: ["POST"],
+    pattern: '/admin/users/:id/edit',
+    tokens: [{"old":"/admin/users/:id/edit","type":0,"val":"admin","end":""},{"old":"/admin/users/:id/edit","type":0,"val":"users","end":""},{"old":"/admin/users/:id/edit","type":1,"val":"id","end":""},{"old":"/admin/users/:id/edit","type":0,"val":"edit","end":""}],
+    types: placeholder as Registry['admin.users_update.execute']['types'],
   },
   'theme.execute': {
     methods: ["POST"],

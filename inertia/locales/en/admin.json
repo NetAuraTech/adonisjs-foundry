@@ -1,9 +1,84 @@
 {
+  "actions": {
+    "value": "Actions"
+  },
   "dashboard": {
     "value": "Dashboard"
   },
+  "users": {
+    "list": {
+      "action": "Invite a user",
+      "empty": "No user found.",
+      "register_on": "Register on",
+      "title": "Manage users"
+    },
+    "show": {
+      "title": "View the user: {username}",
+      "info": {
+        "email": "Email",
+        "username": "Username",
+        "value": "User information"
+      },
+      "history": {
+        "created_at": "Created at",
+        "updated_at": "Last updated",
+        "verified_at": "Email verified on",
+        "value": "Account history"
+      },
+      "providers": {
+        "connected": "Connected",
+        "not_connected": "Not connected",
+        "value": "Connected Accounts"
+      },
+      "role": {
+        "current": "Current role",
+        "value": "Role and permissions"
+      },
+      "permission": {
+        "value": "Permissions for this role ({amount})"
+      }
+    },
+    "create": {
+      "title": "Invite a user"
+    },
+    "edit": {
+      "title": "Edit the user: {username}"
+    },
+    "delete": {
+      "title": "Delete the user: {username}"
+    },
+    "form": {
+      "email": {
+        "placeholder": "john.doe@test.local",
+        "value": "Email"
+      },
+      "username": {
+        "placeholder": "JohnDoe",
+        "value": "Username"
+      },
+      "role": {
+        "placeholder": "Choose role...",
+        "value": "Role"
+      },
+      "submit": "Submit"
+    },
+    "status": {
+      "verified": "✓ Verified",
+      "unverified": "× Unverified",
+      "pending_invite": "⟳ Pending invite",
+      "value": "Status"
+    },
+    "value": "Users",
+    "value_one": "User"
+  },
   "category": {
+    "access_control": "Access control",
     "main": ""
+  },
+  "search": {
+    "filter": "Filter",
+    "placeholder": "John Doe",
+    "value": "Search"
   },
   "value": "Administration"
 }

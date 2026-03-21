@@ -2,7 +2,7 @@ import { Form } from '@adonisjs/inertia/react'
 import { Head } from '@inertiajs/react'
 import { useTranslation } from 'react-i18next'
 import { Section } from '~/components/atoms/section'
-import { AuthIntro } from '~/components/molecules/auth_intro'
+import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import { Card } from '~/components/atoms/card'
 import { Paragraph } from '~/components/atoms/paragraph'
 import { NavLink } from '~/components/atoms/nav_link'
@@ -44,15 +44,9 @@ export default function RegisterPage() {
           <Card
             footer={
               <div className="text-center">
-                <Paragraph
-                  fs="sm"
-                >
+                <Paragraph fs="sm">
                   {t('register.has_account')}{' '}
-                  <NavLink
-                    route="auth.session.render"
-                    label={t('register.login')}
-                    fs="sm"
-                  />
+                  <NavLink route="auth.session.render" label={t('register.login')} fs="sm" />
                 </Paragraph>
               </div>
             }
@@ -123,11 +117,7 @@ export default function RegisterPage() {
                     helpText={t('register.confirmation_help')}
                     helpClassName={validation.getHelpClassName('password_confirmation')}
                   />
-                  <Button
-                    loading={processing}
-                    type={"submit"}
-                    fitContent
-                  >
+                  <Button loading={processing} type={'submit'} fitContent>
                     {t('register.submit')}
                   </Button>
                 </>

@@ -1,4 +1,5 @@
 import vine from '@vinejs/vine'
+import type User from '#models/auth/user'
 
 /**
  * Shared rules for email and password.
@@ -38,3 +39,29 @@ export const definePasswordValidator = vine.create({
     confirmationField: 'password_confirmation',
   }),
 })
+
+export const invitationValidator = vine.create({
+  token: vine.string(),
+})
+
+export const acceptInvitationValidator = (id: User['id']) =>
+  vine.create({
+    email: email().unique(async (query, value) => {
+      const user = await query.from('users').where('email', value).whereNot('id', id!).first()
+
+      return !user
+    }),
+    username: vine
+      .string()
+      .trim()
+      .minLength(2)
+      .maxLength(255)
+      .unique(async (query, value) => {
+        const user = await query.from('users').where('username', value).whereNot('id', id!).first()
+
+        return !user
+      }),
+    password: password().confirmed({
+      confirmationField: 'password_confirmation',
+    }),
+  })

@@ -11,7 +11,14 @@ export const controllers = {
     },
   },
   auth: {
+    cms: {
+      Users: () => import('#controllers/auth/cms/users_controller'),
+      UsersCreate: () => import('#controllers/auth/cms/users_create_controller'),
+      UsersShow: () => import('#controllers/auth/cms/users_show_controller'),
+      UsersUpdate: () => import('#controllers/auth/cms/users_update_controller'),
+    },
     front: {
+      AcceptInvitation: () => import('#controllers/auth/front/accept_invitation_controller'),
       EmailVerification: () => import('#controllers/auth/front/email_verification_controller'),
       ForgotPassword: () => import('#controllers/auth/front/forgot_password_controller'),
       Register: () => import('#controllers/auth/front/register_controller'),

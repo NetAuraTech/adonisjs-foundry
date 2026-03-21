@@ -1,10 +1,11 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { type LinkParams, type LinkProps } from '@adonisjs/inertia/react'
 import { useTranslation } from 'react-i18next'
+import { type icons } from 'lucide-react'
 
 interface MenuEntryBase {
   label: string
-  icon: string
+  icon?: keyof typeof icons
   permission: string | string[]
 }
 
@@ -23,40 +24,55 @@ interface Menu {
 }
 
 /**
- * Returns the application menu, optionally extended or overridden.
+ * Returns the application menu and related utilities, optionally extended or overridden.
  *
  * Categories from `overrides` are deep-merged with the default menu:
- * - Existing categories are replaced by the override entries
+ * - Existing categories have their entries appended by the override entries
  * - New categories are appended
  *
  * @param overrides - Partial menu to merge into the default menu
- * @returns The merged menu object
+ * @returns An object containing:
+ * - `menu` — the merged menu object
+ * - `getEntryIcon` — a function to retrieve the icon of a menu entry by its route
  *
  * @example
  * // Default menu only
- * const menu = useMenu()
+ * const { menu } = useMenu()
  *
  * @example
  * // Override an existing category and add a new one
- * const menu = useMenu({
+ * const { menu } = useMenu({
  *   main: [{ label: 'home', icon: '', route: 'home.render' }],
  *   settings: [{ label: 'profile', icon: '', route: 'settings.profile.render' }],
  * })
+ *
+ * @example
+ * // Retrieve the icon of a menu entry by its route
+ * const { getEntryIcon } = useMenu()
+ * const icon = getEntryIcon('admin.dashboard.render')
  */
 export function useMenu(overrides: Menu = {}) {
   const { t } = useTranslation('admin')
+
   const defaultMenu: Menu = {
     main: [
       {
         label: t('dashboard.value'),
-        icon: '',
         route: 'admin.dashboard.render',
         permission: 'admin.access',
       },
     ],
+    access_control: [
+      {
+        label: t('users.value'),
+        icon: 'Users',
+        route: 'admin.users.render',
+        permission: 'users.view',
+      },
+    ],
   }
 
-  return useMemo(() => {
+  const menu = useMemo(() => {
     const merged: Menu = { ...defaultMenu }
 
     Object.entries(overrides).forEach(([category, entries]) => {
@@ -65,6 +81,29 @@ export function useMenu(overrides: Menu = {}) {
 
     return merged
   }, [overrides])
+
+  /**
+   * Retrieves the icon of a menu entry by its route.
+   *
+   * Searches across all categories of the merged menu and returns the icon
+   * of the first matching entry, or `undefined` if no entry is found.
+   *
+   * @param route - The route identifier of the menu entry
+   * @returns The icon string if found, otherwise `undefined`
+   *
+   * @example
+   * const icon = getEntryIcon('admin.dashboard.render')
+   */
+  const getEntryIcon = useCallback(
+    (route: NonNullable<LinkProps['route']>): keyof typeof icons | undefined => {
+      return Object.values(menu)
+        .flat()
+        .find((entry) => entry.route === route)?.icon
+    },
+    [menu]
+  )
+
+  return { menu, getEntryIcon }
 }
 
 export type { MenuEntry, AnyMenuEntry, Menu }

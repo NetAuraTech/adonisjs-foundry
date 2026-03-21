@@ -1,0 +1,61 @@
+{
+  "category": {
+    "admin": "Administration",
+    "users": "Users",
+    "roles": "Roles",
+    "permissions": "Permissions"
+  },
+  "admin": {
+    "access": {
+      "value": "Access admin dashboard"
+    }
+  },
+  "users": {
+    "create": {
+      "value": "Create users"
+    },
+    "view": {
+      "value": "View users"
+    },
+    "update": {
+      "value": "Update users"
+    },
+    "delete": {
+      "value": "Delete users"
+    },
+    "manage_roles": {
+      "value": "Manage roles"
+    }
+  },
+  "roles": {
+    "create": {
+      "value": "Create roles"
+    },
+    "view": {
+      "value": "View roles"
+    },
+    "update": {
+      "value": "Update roles"
+    },
+    "delete": {
+      "value": "Delete roles"
+    },
+    "manage_permissions": {
+      "value": "Manage permissions"
+    }
+  },
+  "permissions": {
+    "create": {
+      "value": "Create permissions"
+    },
+    "view": {
+      "value": "View permissions"
+    },
+    "update": {
+      "value": "Update permissions"
+    },
+    "delete": {
+      "value": "Delete permissions"
+    }
+  }
+}

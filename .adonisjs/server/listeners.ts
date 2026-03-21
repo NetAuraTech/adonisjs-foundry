@@ -8,6 +8,9 @@ export const listeners = {
     SendChangeEmailConfirmationEmail: () => import('#listeners/account/send_change_email_confirmation_email'),
     SendChangeEmailNotificationEmail: () => import('#listeners/account/send_change_email_notification_email'),
   },
+  admin: {
+    SendInvitationEmail: () => import('#listeners/admin/send_invitation_email'),
+  },
   auth: {
     SendForgotPasswordEmail: () => import('#listeners/auth/send_forgot_password_email'),
     SendVerificationEmail: () => import('#listeners/auth/send_verification_email'),

@@ -82,7 +82,7 @@ export default function AccountPage(props: PageProps) {
           </Form>
         </Card>
         <Card title={t('account.oauth.title')} subtitle={t('account.oauth.sub_title')}>
-          <div className="divide-y divide-neutral-200">
+          <div className="divide-y divide-edge">
             {providers.map((provider) => {
               const isConnected = user.connectedProviders[provider]
 
@@ -91,8 +91,8 @@ export default function AccountPage(props: PageProps) {
                   <div className="flex items-center gap-3">
                     {getIcon(provider)}
                     <div>
-                      <p className="text-sm font-medium text-neutral-800">{capitalize(provider)}</p>
-                      <p className={`text-xs ${isConnected ? 'text-green-600' : 'text-muted'}`}>
+                      <p className="text-sm font-medium text-ink">{capitalize(provider)}</p>
+                      <p className={`text-xs ${isConnected ? 'text-success' : 'text-ink-muted'}`}>
                         {isConnected
                           ? t('account.oauth.connected')
                           : t('account.oauth.not_connected')}
@@ -112,7 +112,7 @@ export default function AccountPage(props: PageProps) {
                     >
                       <button
                         type="submit"
-                        className="cursor-pointer text-sm px-3 py-1.5 border border-red-700 text-red-700 rounded-lg hover:bg-red-50 transition"
+                        className="cursor-pointer text-sm px-3 py-1.5 border border-danger text-danger rounded-lg hover:bg-danger-soft transition"
                         title={t('account.oauth.unlink')}
                       >
                         {t('account.oauth.unlink.value')}
@@ -121,7 +121,7 @@ export default function AccountPage(props: PageProps) {
                   ) : (
                     <a
                       href={urlFor('auth.social.redirect', { provider: provider })}
-                      className="text-sm px-3 py-1.5 border text-neutral-600 border-neutral-600 rounded-lg hover:bg-neutral-200 transition"
+                      className="text-sm px-3 py-1.5 border text-ink-muted border-edge rounded-lg hover:bg-sunken transition"
                       title={t('account.oauth.link')}
                     >
                       {t('account.oauth.link')}

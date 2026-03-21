@@ -7,7 +7,7 @@ import { Field } from '~/components/molecules/field'
 import { Button } from '~/components/atoms/button'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets } from '~/helpers/validation_rules'
-import { AuthIntro } from '~/components/molecules/auth_intro'
+import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import { useState } from 'react'
 import { InertiaProps } from '~/types'
 
@@ -97,18 +97,10 @@ export default function ResetPasswordPage(props: PageProps) {
                     helpClassName={validation.getHelpClassName('password_confirmation')}
                   />
                   <div className="flex gap-3">
-                    <Button
-                      loading={processing}
-                      type={"submit"}
-                      fitContent
-                    >
+                    <Button loading={processing} type={'submit'} fitContent>
                       {t('reset_password.submit')}
                     </Button>
-                    <Button
-                      route="auth.session.render"
-                      fitContent
-                      variant="outline"
-                    >
+                    <Button route="auth.session.render" fitContent variant="outline">
                       {t('reset_password.back_to_login')}
                     </Button>
                   </div>

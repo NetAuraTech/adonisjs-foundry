@@ -270,7 +270,7 @@ export default class Token extends TokenSchema {
 
     const data = await Token.query()
       .where('selector', selector)
-      .where('type', TOKEN_TYPES.USER_INVITATION)
+      .where('type', TOKEN_TYPES.PENDING_INVITE)
       .where('expires_at', '>', DateTime.now().toSQL())
       .whereNotNull('user_id')
       .first()
@@ -295,7 +295,7 @@ export default class Token extends TokenSchema {
   public static async expireInviteTokens(user: User): Promise<void> {
     await this.query()
       .where('user_id', user.id)
-      .where('type', TOKEN_TYPES.USER_INVITATION)
+      .where('type', TOKEN_TYPES.PENDING_INVITE)
       .update({ expiresAt: DateTime.now() })
   }
 }

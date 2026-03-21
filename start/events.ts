@@ -15,3 +15,5 @@ emitter.on(events.account.InitiateEmailChange, [
   listeners.account.SendChangeEmailConfirmationEmail,
   'handle',
 ])
+
+emitter.on(events.admin.InviteUser, [listeners.admin.SendInvitationEmail, 'handle'])

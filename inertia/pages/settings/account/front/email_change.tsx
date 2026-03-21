@@ -6,7 +6,7 @@ import { Card } from '~/components/atoms/card'
 import { Button } from '~/components/atoms/button'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { rules } from '~/helpers/validation_rules'
-import { AuthIntro } from '~/components/molecules/auth_intro'
+import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import { Field } from '~/components/molecules/field'
 import { Banner } from '~/components/molecules/banner'
 
@@ -40,8 +40,7 @@ export default function EmailChangePage(props: PageProps) {
               />
             }
           />
-          <Card
-          >
+          <Card>
             <Form
               route="settings.email_change.execute"
               className="grid gap-6"
@@ -75,18 +74,10 @@ export default function EmailChangePage(props: PageProps) {
                   />
                   <input id="token" name="token" type="hidden" value={token} />
                   <div className="flex gap-3">
-                    <Button
-                      loading={processing}
-                      type={"submit"}
-                      fitContent
-                    >
+                    <Button loading={processing} type={'submit'} fitContent>
                       {t('account.email.change.submit')}
                     </Button>
-                    <Button
-                      route="settings.account.render"
-                      fitContent
-                      variant="outline"
-                    >
+                    <Button route="settings.account.render" fitContent variant="outline">
                       {t('account.email.change.cancel')}
                     </Button>
                   </div>

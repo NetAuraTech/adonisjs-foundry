@@ -7,7 +7,7 @@ import { Field } from '~/components/molecules/field'
 import { Button } from '~/components/atoms/button'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets } from '~/helpers/validation_rules'
-import { AuthIntro } from '~/components/molecules/auth_intro'
+import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 
 export default function ForgotPasswordPage() {
   const { t } = useTranslation('auth')
@@ -60,18 +60,10 @@ export default function ForgotPasswordPage() {
                     sanitize
                   />
                   <div className="flex gap-3">
-                    <Button
-                      loading={processing}
-                      type={"submit"}
-                      fitContent
-                    >
+                    <Button loading={processing} type={'submit'} fitContent>
                       {t('forgot_password.submit')}
                     </Button>
-                    <Button
-                      route="auth.session.render"
-                      fitContent
-                      variant="outline"
-                    >
+                    <Button route="auth.session.render" fitContent variant="outline">
                       {t('forgot_password.back_to_login')}
                     </Button>
                   </div>

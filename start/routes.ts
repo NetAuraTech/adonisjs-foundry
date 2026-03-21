@@ -44,6 +44,13 @@ router
             router.post('/', [controllers.auth.front.ResetPassword, 'execute'])
           })
           .prefix('reset-password')
+
+        router
+          .group(() => {
+            router.get('/:token', [controllers.auth.front.AcceptInvitation, 'render'])
+            router.post('/', [controllers.auth.front.AcceptInvitation, 'execute'])
+          })
+          .prefix('accept-invitation')
       })
       .use([middleware.guest()])
 
@@ -129,6 +136,33 @@ router
 router
   .group(() => {
     router.get('/', [controllers.core.cms.Dashboard, 'render'])
+
+    router
+      .group(() => {
+        router.get('/', [controllers.auth.cms.Users, 'render']).use([])
+
+        router
+          .group(() => {
+            router.get('/', [controllers.auth.cms.UsersCreate, 'render']).use([])
+            router.post('/', [controllers.auth.cms.UsersCreate, 'execute']).use([])
+          })
+          .prefix('create')
+
+        router
+          .group(() => {
+            router.delete('/', [controllers.auth.cms.Users, 'destroy']).use([])
+            router.get('/', [controllers.auth.cms.UsersShow, 'render']).use([])
+
+            router
+              .group(() => {
+                router.get('/', [controllers.auth.cms.UsersUpdate, 'render']).use([])
+                router.post('/', [controllers.auth.cms.UsersUpdate, 'execute']).use([])
+              })
+              .prefix('edit')
+          })
+          .prefix(':id')
+      })
+      .prefix('users')
   })
   .prefix('admin')
   .as('admin')

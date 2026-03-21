@@ -21,6 +21,10 @@ export interface ApiDefinition {
       render: typeof routes['auth.reset_password.render']
       execute: typeof routes['auth.reset_password.execute']
     }
+    acceptInvitation: {
+      render: typeof routes['auth.accept_invitation.render']
+      execute: typeof routes['auth.accept_invitation.execute']
+    }
     emailVerification: {
       execute: typeof routes['auth.email_verification.execute']
     }
@@ -55,6 +59,21 @@ export interface ApiDefinition {
   admin: {
     dashboard: {
       render: typeof routes['admin.dashboard.render']
+    }
+    users: {
+      render: typeof routes['admin.users.render']
+      destroy: typeof routes['admin.users.destroy']
+    }
+    usersCreate: {
+      render: typeof routes['admin.users_create.render']
+      execute: typeof routes['admin.users_create.execute']
+    }
+    usersShow: {
+      render: typeof routes['admin.users_show.render']
+    }
+    usersUpdate: {
+      render: typeof routes['admin.users_update.render']
+      execute: typeof routes['admin.users_update.execute']
     }
   }
   theme: {

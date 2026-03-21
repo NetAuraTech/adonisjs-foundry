@@ -244,7 +244,7 @@ export class UserRepository {
    * @example
    * const deleted = await userRepository.delete(1)
    */
-  async delete(id: number): Promise<boolean> {
+  async delete(id: User['id']): Promise<boolean> {
     const user = await this.findById(id)
 
     if (!user) {

@@ -8,6 +8,7 @@ import { urlFor } from '~/client'
 
 type NavLinkBaseProps = {
   label: string
+  title?: string
   children?: ReactNode
   onClick?: () => void
   fs?: FontSize
@@ -25,7 +26,7 @@ type NavLinkProps<R extends NonNullable<LinkProps['route']>> = NavLinkBaseProps 
     : { routeParams: LinkParams<R>['routeParams'] })
 
 export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLinkProps<R>) {
-  const { label, children, onClick, fs = 'base', variant = 'link', disabled } = props
+  const { label, title, children, onClick, fs = 'base', variant = 'link', disabled } = props
 
   const { url } = usePage()
   const fontSizeClass = getFontSizeClass(fs)
@@ -84,6 +85,7 @@ export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLin
       aria-current={isActive ? 'page' : undefined}
       onClick={onClick}
       className={`${fontSizeClass} ${variants[variant]} ${states[state]}`}
+      title={title}
     >
       {children}
       {label}

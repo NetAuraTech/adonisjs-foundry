@@ -19,7 +19,7 @@ import MaxAttemptsExceededException from '#exceptions/core/max_attempts_exceeded
  * This repository is the single source of truth for all token lifecycle
  * operations: creation, verification, attempt tracking, and expiration —
  * across every token type (`EMAIL_VERIFICATION`, `PASSWORD_RESET`,
- * `EMAIL_CHANGE`, `USER_INVITATION`).
+ * `EMAIL_CHANGE`, `PENDING_INVITE`).
  *
  * **Conventions:**
  * - Low-level methods (`getUserFromToken`, `findBySelector`, `verify`) return
@@ -513,7 +513,7 @@ export class TokenRepository {
    * await tokenRepository.expireInviteTokens(user)
    */
   async expireInviteTokens(user: User): Promise<void> {
-    await this.expireTokensByType(user.id, TOKEN_TYPES.USER_INVITATION)
+    await this.expireTokensByType(user.id, TOKEN_TYPES.PENDING_INVITE)
   }
 
   /**
@@ -615,7 +615,7 @@ export class TokenRepository {
 
     const data = await Token.query()
       .where('selector', parts.selector)
-      .where('type', TOKEN_TYPES.USER_INVITATION)
+      .where('type', TOKEN_TYPES.PENDING_INVITE)
       .where('expires_at', '>', DateTime.now().toSQL())
       .first()
 
@@ -628,6 +628,12 @@ export class TokenRepository {
     if (!isValid) {
       throw new InvalidTokenException()
     }
+
+    await data.load('user', (query) => {
+      query.preload('role', (q) => {
+        q.preload('permissions')
+      })
+    })
 
     return data
   }
@@ -646,7 +652,7 @@ export class TokenRepository {
    * await tokenRepository.deleteInvitationTokens(user.id)
    */
   async deleteInvitationTokens(userId: number): Promise<void> {
-    await Token.query().where('type', TOKEN_TYPES.USER_INVITATION).where('user_id', userId).delete()
+    await Token.query().where('type', TOKEN_TYPES.PENDING_INVITE).where('user_id', userId).delete()
   }
 
   /**

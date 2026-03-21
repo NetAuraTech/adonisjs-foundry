@@ -201,12 +201,12 @@ All token-based workflows use the **selector/validator pattern**:
 - **Validator** — hashed before storage, never exposed
 - **Full token** — `selector.validator` sent to the user via email
 
-| Token Type | Expiry | Attempt Tracking |
-|---|---|---|
-| `PASSWORD_RESET` | 1 hour | Max 3 attempts |
+| Token Type           | Expiry | Attempt Tracking |
+|----------------------|---|---|
+| `PASSWORD_RESET`     | 1 hour | Max 3 attempts |
 | `EMAIL_VERIFICATION` | 24 hours | — |
-| `EMAIL_CHANGE` | 24 hours | — |
-| `USER_INVITATION` | 7 days | — |
+| `EMAIL_CHANGE`       | 24 hours | — |
+| `PENDING_INVITE`     | 7 days | — |
 
 ## User Settings
 

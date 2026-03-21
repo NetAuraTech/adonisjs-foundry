@@ -1,0 +1,61 @@
+{
+  "category": {
+    "admin": "Administration",
+    "users": "Utilisateurs",
+    "roles": "Rôles",
+    "permissions": "Permissions"
+  },
+  "admin": {
+    "access": {
+      "value": "Accéder au tableau de bord de l'administration"
+    }
+  },
+  "users": {
+    "create": {
+      "value": "Créer des utilisateurs"
+    },
+    "view": {
+      "value": "Afficher les utilisateurs"
+    },
+    "update": {
+      "value": "Modifier les utilisateurs"
+    },
+    "delete": {
+      "value": "Supprimer les utilisateurs"
+    },
+    "manage_roles": {
+      "value": "Gérer les rôles des utilisateurs"
+    }
+  },
+  "roles": {
+    "create": {
+      "value": "Créer des rôles"
+    },
+    "view": {
+      "value": "Afficher les rôles"
+    },
+    "update": {
+      "value": "Modifier les rôles"
+    },
+    "delete": {
+      "value": "Supprimer les rôles"
+    },
+    "manage_permissions": {
+      "value": "Gérer les rôles des permissions"
+    }
+  },
+  "permissions": {
+    "create": {
+      "value": "Créer des permissions"
+    },
+    "view": {
+      "value": "Afficher les permissions"
+    },
+    "update": {
+      "value": "Modifier les permissions"
+    },
+    "delete": {
+      "value": "Supprimer les permissions"
+    }
+  }
+}

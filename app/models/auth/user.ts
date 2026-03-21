@@ -2,11 +2,13 @@ import { UserSchema } from '#database/schema'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
-import { belongsTo, hasOne } from '@adonisjs/lucid/orm'
+import { afterFetch, afterFind, belongsTo, computed, hasMany, hasOne } from '@adonisjs/lucid/orm'
 import Role from '#models/auth/role'
-import type { BelongsTo, HasOne } from '@adonisjs/lucid/types/relations'
+import type { BelongsTo, HasMany, HasOne } from '@adonisjs/lucid/types/relations'
 import { DbRememberMeTokensProvider } from '@adonisjs/auth/session'
 import UserPreference from '#models/preferences/user_preference'
+import Token from '#models/core/token'
+import { TOKEN_TYPES } from '#types/core'
 
 export default class User extends compose(UserSchema, withAuthFinder(hash)) {
   static rememberMeTokens = DbRememberMeTokensProvider.forModel(User)
@@ -16,6 +18,35 @@ export default class User extends compose(UserSchema, withAuthFinder(hash)) {
 
   @hasOne(() => UserPreference)
   declare preference: HasOne<typeof UserPreference>
+
+  @hasMany(() => Token)
+  declare tokens: HasMany<typeof Token>
+
+  declare hasPendingInvite: boolean
+
+  @afterFind()
+  static async loadPendingInvite(user: User) {
+    user.hasPendingInvite = false
+
+    const token = await Token.query()
+      .where('type', TOKEN_TYPES.PENDING_INVITE)
+      .where('user_id', user.id)
+      .first()
+
+    user.hasPendingInvite = !!token && !user.isEmailVerified
+  }
+
+  @afterFetch()
+  static async loadPendingInviteAll(users: User[]) {
+    await Promise.all(users.map(User.loadPendingInvite))
+  }
+
+  @computed()
+  get status(): string {
+    if (this.hasPendingInvite) return TOKEN_TYPES.PENDING_INVITE
+    if (this.isEmailVerified) return 'VERIFIED'
+    return 'UNVERIFIED'
+  }
 
   get isEmailVerified(): boolean {
     return this.emailVerifiedAt !== null

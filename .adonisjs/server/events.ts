@@ -4,12 +4,16 @@
  */
 
 import AccountInitiateEmailChange from '#events/account/initiate_email_change'
+import AdminInviteUser from '#events/admin/invite_user'
 import AuthForgotPassword from '#events/auth/forgot_password'
 import AuthUserRegistered from '#events/auth/user_registered'
 
 export const events = {
   account: {
     InitiateEmailChange: AccountInitiateEmailChange,
+  },
+  admin: {
+    InviteUser: AdminInviteUser,
   },
   auth: {
     ForgotPassword: AuthForgotPassword,
