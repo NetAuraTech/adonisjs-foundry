@@ -2,9 +2,31 @@ import { getAvatarInitials } from '~/helpers/avatar'
 import { useAuth } from '~/hooks/use_auth'
 
 interface AvatarProps {
+  /** Whether to display the username next to the avatar. Defaults to `false`. */
   showUsername?: boolean
 }
 
+/**
+ * Displays the authenticated user's avatar.
+ *
+ * Renders a circular placeholder with the user's initials until a proper
+ * avatar image is available (see the TODO below). When `showUsername` is
+ * enabled the username is shown to the right of the circle.
+ *
+ * Hover states (accent background, accent text) are driven by a CSS `group`
+ * — wrap this component in a `group` element to activate them.
+ *
+ * Returns an empty fragment when no authenticated user is found.
+ *
+ * @example
+ * // Initials only
+ * <Avatar />
+ *
+ * // With username, inside a group for hover effects
+ * <div className="group">
+ *   <Avatar showUsername />
+ * </div>
+ */
 export function Avatar(props: AvatarProps) {
   const { showUsername = false } = props
 

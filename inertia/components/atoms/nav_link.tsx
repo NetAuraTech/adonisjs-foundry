@@ -7,24 +7,71 @@ import type { LinkProps, LinkParams } from '@adonisjs/inertia/react'
 import { urlFor } from '~/client'
 
 type NavLinkBaseProps = {
+  /** Visible link text. */
   label: string
+  /** Tooltip / accessible title attribute. */
   title?: string
+  /** Optional leading content (e.g. an `<Icon>`). Rendered before `label`. */
   children?: ReactNode
   onClick?: () => void
+  /** Font size token. Defaults to `'base'`. */
   fs?: FontSize
+  /**
+   * Visual variant.
+   *
+   * - `'link'` — accent underline-style link, default.
+   * - `'nav'` — neutral text that turns accent on hover and when active.
+   * - `'setting_nav'` — tab-style link with a bottom border indicator.
+   * - `'pagination'` — button-shaped link used inside `<Pagination>`.
+   */
   variant?: 'link' | 'nav' | 'setting_nav' | 'pagination'
   fitContent?: boolean
+  /** Disables pointer events and applies a reduced-opacity style. */
   disabled?: boolean
 }
 
 type NavLinkProps<R extends NonNullable<LinkProps['route']>> = NavLinkBaseProps & {
   route: R
+  /** Optional URL fragment appended to the resolved href (e.g. `'section-1'`). */
   anchor?: string
+  /**
+   * Query-string parameters merged into the URL. When provided the link uses
+   * a plain `href` instead of an Inertia route so the query string is
+   * preserved correctly.
+   */
   qs?: Record<string, any> | undefined
 } & (LinkParams<R>['routeParams'] extends undefined | never
     ? { routeParams?: never }
     : { routeParams: LinkParams<R>['routeParams'] })
 
+/**
+ * Navigation link component with active-state detection.
+ *
+ * Compares the current Inertia URL against the resolved href to determine
+ * whether the link is active, then sets `aria-current="page"` and applies
+ * the `current:` variant styles accordingly.
+ *
+ * Active matching is two-part:
+ * 1. **Path** — the current path equals the resolved href or starts with it
+ *    followed by `/`.
+ * 2. **Query string** — when `qs` is provided, every key/value pair in `qs`
+ *    must match the current URL params (with a special case for `page=1`
+ *    matching an absent `page` param).
+ *
+ * When `anchor` or `qs` are provided, a plain `href` string is built instead
+ * of using an Inertia route object, so the full URL including fragment and
+ * query string is preserved.
+ *
+ * @example
+ * // Simple nav link
+ * <NavLink route="home" label="Home" variant="nav" />
+ *
+ * // Settings tab
+ * <NavLink route="settings.profile.render" label="Profile" variant="setting_nav" />
+ *
+ * // Pagination link with query string
+ * <NavLink route="admin.users.render" label="2" variant="pagination" qs={{ page: 2 }} />
+ */
 export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLinkProps<R>) {
   const { label, title, children, onClick, fs = 'base', variant = 'link', disabled } = props
 

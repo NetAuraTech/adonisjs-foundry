@@ -9,6 +9,31 @@ interface LayoutProps {
   children: ReactElement<SharedProps>
 }
 
+/**
+ * Root layout for all public-facing pages.
+ *
+ * Wraps page content in the `#page-wrapper` flex-column container with a
+ * persistent `<Header>` at the top and a `<Footer>` pinned to the bottom via
+ * `mt-auto`. A `<Toaster>` is mounted at top-right to surface flash messages
+ * passed via Inertia shared props (`flash.error`, `flash.success`, `flash.info`).
+ *
+ * **Flash messages** are displayed as `sonner` toast notifications and
+ * automatically dismissed on every Inertia navigation so stale messages never
+ * carry over to the next page.
+ *
+ * @example
+ * // Attached to a public page component
+ * LoginPage.layout = (page) => <Layout>{page}</Layout>
+ *
+ * // Or used as the default layout in the Inertia setup
+ * createInertiaApp({
+ *   resolve: (name) => {
+ *     const page = pages[name]
+ *     page.layout ??= (page) => <Layout>{page}</Layout>
+ *     return page
+ *   }
+ * })
+ */
 export default function Layout(props: LayoutProps) {
   const { children } = props
 
@@ -29,13 +54,11 @@ export default function Layout(props: LayoutProps) {
   }
 
   return (
-    <div
-      id="page-wrapper"
-    >
+    <div id="page-wrapper">
       <Header />
-      <Toaster position="top-right" richColors  />
+      <Toaster position="top-right" richColors />
       {children}
-      <Footer/>
+      <Footer />
     </div>
   )
 }

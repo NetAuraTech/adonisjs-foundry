@@ -4,8 +4,24 @@ import type { LinkProps, LinkParams } from '@adonisjs/inertia/react'
 import { urlFor } from '~/client'
 
 interface ButtonBaseProps {
+  /** Shows a spinning loader and disables the button while `true`. */
   loading?: boolean
+  /** HTML button type. Defaults to `'submit'`. */
   type?: 'button' | 'submit' | 'reset'
+  /**
+   * Visual variant.
+   *
+   * - `primary` — filled primary color, default CTA.
+   * - `accent` — filled accent color, secondary CTA.
+   * - `danger` — filled danger color, destructive actions.
+   * - `success` — filled success color, confirmations.
+   * - `outline` — transparent with a primary border.
+   * - `social` — surface background with a subtle border, for OAuth buttons.
+   * - `icon` — no background, hover text only, square padding.
+   * - `icon_danger` / `icon_warning` / `icon_info` — soft-background icon buttons.
+   *
+   * Defaults to `'primary'`.
+   */
   variant?:
     | 'primary'
     | 'accent'
@@ -17,11 +33,21 @@ interface ButtonBaseProps {
     | 'icon_danger'
     | 'icon_warning'
     | 'icon_info'
+  /** Disables the button and applies a reduced-opacity cursor-not-allowed style. */
   disabled?: boolean
   children: ReactNode
+  /** Tooltip / accessible title attribute. */
   title?: string
   onClick?: () => void
+  /**
+   * When `true`, the button shrinks to fit its content (`w-fit`).
+   * When `false` (default), it stretches to full width (`w-full`).
+   */
   fitContent?: boolean
+  /**
+   * Renders an `<a>` tag instead of an Inertia `<Link>` when `route` is
+   * provided. Use for routes that trigger a server redirect (e.g. OAuth).
+   */
   external?: boolean
 }
 
@@ -40,6 +66,31 @@ type ButtonProps<R extends NonNullable<LinkProps['route']>> =
   | ButtonRouteProps<R>
   | ButtonNoRouteProps
 
+/**
+ * Polymorphic button component that renders as a `<button>`, an Inertia
+ * `<Link>`, or a plain `<a>` depending on the supplied props.
+ *
+ * - **No `route`** → `<button>` with the given `type`.
+ * - **`route` without `external`** → Inertia `<Link>` for client-side navigation.
+ * - **`route` + `external`** → `<a href>` for server-driven redirects (e.g. OAuth flows).
+ *
+ * All three variants share the same visual variants, loading state, and
+ * disabled state so call sites don't need to handle the distinction.
+ *
+ * @example
+ * // Standard submit button
+ * <Button type="submit" loading={processing}>Save</Button>
+ *
+ * // Inertia link styled as a button
+ * <Button route="admin.users.render" variant="outline" fitContent>
+ *   Back
+ * </Button>
+ *
+ * // External link (full page navigation)
+ * <Button route="auth.social.redirect" routeParams={{ provider }} external variant="social">
+ *   Continue with Google
+ * </Button>
+ */
 export function Button<R extends NonNullable<LinkProps['route']>>(props: ButtonProps<R>) {
   const {
     loading,

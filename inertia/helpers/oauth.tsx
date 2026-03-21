@@ -1,5 +1,23 @@
 import type { OAuthProvider } from '#types/auth'
 
+/**
+ * Returns the branded SVG icon for a given OAuth provider.
+ *
+ * Each icon uses the provider's official brand colors and is rendered as an
+ * inline SVG so no external image assets or icon fonts are required. The
+ * `size` parameter controls both `width` and `height` for square icons.
+ *
+ * Returns an empty fragment for unrecognised provider values so the call
+ * site never needs to handle `null` or `undefined`.
+ *
+ * @param provider - The OAuth provider identifier (e.g. `'google'`, `'github'`).
+ * @param size - Icon dimensions in pixels. Defaults to `32`.
+ * @returns A JSX SVG element, or an empty fragment if the provider is unknown.
+ *
+ * @example
+ * getIcon('google')       // 24×24 Google logo (default size)
+ * getIcon('github', 20)   // 20×20 GitHub logo
+ */
 export const getIcon = (provider: OAuthProvider, size: number = 32) => {
   switch (provider) {
     case 'facebook':

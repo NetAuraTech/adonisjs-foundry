@@ -5,9 +5,34 @@ import { capitalize } from '~/lib/string'
 import { getIcon } from '~/helpers/oauth'
 
 interface AuthProviderProps {
+  /**
+   * List of OAuth providers to display. Each entry maps to a `<Button
+   * variant="social">` that initiates the provider's redirect flow.
+   * Pass an empty array to render nothing (the divider is still shown).
+   */
   providers: OAuthProvider[]
 }
 
+/**
+ * OAuth provider selector shown on login and registration pages.
+ *
+ * Renders a horizontal divider with an "or continue with" label followed by
+ * a responsive grid of social `<Button>` components, one per provider. Each
+ * button triggers an external redirect to the server-side OAuth entry point
+ * (`auth.social.redirect`) so the browser performs a full navigation rather
+ * than an Inertia visit.
+ *
+ * The divider label is read from the `auth` i18n namespace
+ * (`login.or_continue_with`) and adapts to the current locale.
+ * Provider icons are resolved by `getIcon(provider)`.
+ *
+ * @example
+ * // Typically rendered at the bottom of a login or register card
+ * <Card>
+ *   <Form>...</Form>
+ *   <AuthProviders providers={['google', 'github']} />
+ * </Card>
+ */
 export function AuthProviders(props: AuthProviderProps) {
   const { providers } = props
   const { t } = useTranslation('auth')

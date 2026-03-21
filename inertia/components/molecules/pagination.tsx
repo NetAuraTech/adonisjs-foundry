@@ -5,8 +5,18 @@ import type { LinkParams, LinkProps } from '@adonisjs/inertia/react'
 import { NavLink } from '~/components/atoms/nav_link'
 
 interface PaginationBaseProps {
+  /** Pagination metadata returned by the server (current page, last page, total, etc.). */
   metadata: MetaData
+  /**
+   * Maximum number of page buttons to show in the middle window before
+   * collapsing into ellipses. Defaults to `5`.
+   */
   showPages?: number
+  /**
+   * Active filter key/value pairs merged into every page link's query string.
+   * Ensures that navigating between pages preserves the current search and
+   * filter state.
+   */
   filters?: {
     [key: string]: string
   }
@@ -20,6 +30,31 @@ type PaginationProps<R extends NonNullable<LinkProps['route']>> = PaginationBase
 
 type PageItem = number | '...'
 
+/**
+ * Accessible pagination control.
+ *
+ * Renders a results summary (e.g. "Showing 1 to 20 of 84 results") and a
+ * row of page navigation links. The page window is computed with
+ * `useMemo` and collapses distant pages into `…` ellipses, always keeping
+ * page 1 and the last page visible.
+ *
+ * All page links are built as `<NavLink variant="pagination">` with the
+ * `page` query-string parameter merged alongside any active `filters`, so
+ * search and filter state is preserved across pages.
+ *
+ * The previous (`«`) and next (`»`) arrows are disabled when already at the
+ * first or last page respectively.
+ *
+ * Label strings ("Showing", "Previous", "Next") are read from the
+ * `pagination` i18n namespace and adapt to the current locale automatically.
+ *
+ * @example
+ * <Pagination
+ *   route="admin.users.render"
+ *   metadata={users.metadata}
+ *   filters={{ search: 'alice', role: 'admin' }}
+ * />
+ */
 export function Pagination<R extends NonNullable<LinkProps['route']>>(props: PaginationProps<R>) {
   const { metadata, showPages = 5, filters, ...routeProps } = props
   const { lastPage, perPage, currentPage, total } = metadata

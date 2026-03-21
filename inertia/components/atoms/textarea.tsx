@@ -1,10 +1,13 @@
-import {ChangeEvent} from "react";
+import { ChangeEvent } from 'react'
 
 interface TextareaProps {
+  /** The `name` and `id` attribute of the underlying `<textarea>`. */
   name: string
   placeholder?: string
   defaultValue?: string | number
+  /** Fixed column width. Rarely needed — prefer CSS sizing. */
   cols?: number
+  /** Number of visible text rows. Defaults to `4`. */
   rows?: number
   disabled?: boolean
   required?: boolean
@@ -12,6 +15,19 @@ interface TextareaProps {
   onBlur?: (event: ChangeEvent<HTMLTextAreaElement>) => void
 }
 
+/**
+ * Styled multi-line text input.
+ *
+ * Applies the `textarea` utility class, which extends the `input` utility
+ * with a minimum height and `field-sizing: content` so the element grows
+ * with its content automatically.
+ *
+ * The `name` prop is used for both `name` and `id` so that a sibling
+ * `<Label>` with the matching `htmlFor` associates correctly.
+ *
+ * @example
+ * <Textarea name="message" placeholder="Write your message…" rows={6} required />
+ */
 export function Textarea(props: TextareaProps) {
   const {
     name,
@@ -26,19 +42,20 @@ export function Textarea(props: TextareaProps) {
     ...inputProps
   } = props
 
-
-  return <textarea
-    name={name}
-    id={name}
-    cols={cols}
-    rows={rows || 4}
-    placeholder={placeholder}
-    defaultValue={defaultValue}
-    disabled={disabled}
-    required={required}
-    onChange={onChange as (e: ChangeEvent<HTMLTextAreaElement>) => void}
-    onBlur={onBlur}
-    className="textarea"
-    {...inputProps}
-  />
+  return (
+    <textarea
+      name={name}
+      id={name}
+      cols={cols}
+      rows={rows || 4}
+      placeholder={placeholder}
+      defaultValue={defaultValue}
+      disabled={disabled}
+      required={required}
+      onChange={onChange as (e: ChangeEvent<HTMLTextAreaElement>) => void}
+      onBlur={onBlur}
+      className="textarea"
+      {...inputProps}
+    />
+  )
 }

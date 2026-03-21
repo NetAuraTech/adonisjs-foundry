@@ -1,7 +1,9 @@
 import { ChangeEvent } from 'react'
 
 interface CheckboxProps {
+  /** The `name` and `id` attribute of the underlying `<input>`. */
   name: string
+  /** Sets the initial checked state via `defaultChecked`. */
   checked?: boolean
   disabled?: boolean
   required?: boolean
@@ -9,6 +11,20 @@ interface CheckboxProps {
   onBlur?: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
+/**
+ * Styled checkbox input.
+ *
+ * Applies the `checkbox` utility class from the design system, which sets
+ * the accent color to `accent` and handles focus styles. The `name` prop is
+ * used for both the `name` and `id` attributes so that a sibling `<Label>`
+ * with the matching `htmlFor` associates correctly.
+ *
+ * @example
+ * <div className="flex items-center gap-2">
+ *   <Checkbox name="remember_me" />
+ *   <Label htmlFor="remember_me" label="Remember me" />
+ * </div>
+ */
 export function Checkbox(props: CheckboxProps) {
   const { name, checked, disabled, required, onChange, onBlur, ...inputProps } = props
 

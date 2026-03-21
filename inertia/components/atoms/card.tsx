@@ -3,14 +3,58 @@ import { Heading } from '~/components/atoms/heading'
 import { Paragraph } from '~/components/atoms/paragraph'
 
 interface CardProps {
+  /** Optional title rendered in the card header using `<Heading level={3}>`. */
   title?: string
+  /** Optional subtitle rendered below the title as a muted paragraph. */
   subtitle?: string
+  /** Main card content, rendered in the padded body area. */
   children: ReactNode
+  /**
+   * Custom header content. When provided, `title` and `subtitle` are ignored
+   * and this node is rendered directly inside the header slot.
+   */
   header?: ReactNode
+  /**
+   * Footer content rendered below the body with a top border and a sunken
+   * background to visually separate it from the main content.
+   */
   footer?: ReactNode
+  /**
+   * Border style applied to the card container.
+   *
+   * - `'none'` — no border.
+   * - `'muted'` — subtle `edge` border, default.
+   * - `'danger'` — danger-colored border for destructive sections.
+   *
+   * Defaults to `'muted'`.
+   */
   border?: 'none' | 'muted' | 'danger'
 }
 
+/**
+ * General-purpose content container.
+ *
+ * Composed of three optional slots — header, body, and footer — separated by
+ * horizontal dividers. The header slot accepts either a custom `header` node
+ * or a `title` / `subtitle` pair. The footer gets a sunken background to
+ * visually anchor secondary actions (e.g. pagination, submit buttons).
+ *
+ * @example
+ * // Simple titled card
+ * <Card title="User details" subtitle="Read-only information">
+ *   <p>...</p>
+ * </Card>
+ *
+ * // Custom header with actions
+ * <Card header={<div className="flex justify-between"><h2>Users</h2><Button>Invite</Button></div>}>
+ *   <Table>...</Table>
+ * </Card>
+ *
+ * // Danger card for destructive zones
+ * <Card title="Delete account" border="danger">
+ *   <Button variant="danger">Delete</Button>
+ * </Card>
+ */
 export function Card(props: CardProps) {
   const { children, title, subtitle, header, footer, border = 'muted' } = props
 

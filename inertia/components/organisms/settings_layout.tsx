@@ -14,10 +14,39 @@ const tabs = [
 ] as const
 
 interface PageProps {
+  /** The active tab identifier — used externally to set the page context. */
   tab: (typeof tabs)[number]['id']
+  /** Page-specific content rendered inside the settings grid. */
   children: ReactNode
 }
 
+/**
+ * Shared layout for all settings pages.
+ *
+ * Renders a centred page title, a horizontal tab bar, and a content grid.
+ * The tab bar is split into two groups:
+ *
+ * - **Left** — the three main settings tabs (Profile, Account, Preferences),
+ *   always visible.
+ * - **Right** — contextual actions: an Admin link guarded by the
+ *   `admin.access` permission (hidden for regular users) and a Logout link.
+ *
+ * Active tab highlighting is handled by `<NavLink variant="setting_nav">`,
+ * which applies a bottom-border indicator when `aria-current="page"` is set.
+ *
+ * The page title and subtitle are read from the `settings` i18n namespace
+ * (`settings:title`, `settings:sub_title`).
+ *
+ * @example
+ * // Used as the layout wrapper for each settings page component
+ * export default function ProfilePage() {
+ *   return (
+ *     <SettingsLayout tab="profile">
+ *       <Card title="Profile">...</Card>
+ *     </SettingsLayout>
+ *   )
+ * }
+ */
 export function SettingsLayout(props: PageProps) {
   const { children } = props
 

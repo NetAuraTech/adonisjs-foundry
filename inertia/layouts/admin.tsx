@@ -10,6 +10,33 @@ interface LayoutProps {
   children: ReactElement<SharedProps>
 }
 
+/**
+ * Root layout for all admin pages.
+ *
+ * Composes the admin shell: a collapsible `<AdminSidebar>`, a sticky
+ * `<AdminHeader>` with the sidebar toggle, and the page content area. A
+ * `<Toaster>` is mounted at top-right to surface flash messages passed via
+ * Inertia shared props (`flash.error`, `flash.success`, `flash.info`).
+ *
+ * **Sidebar behaviour:**
+ * - Opens automatically on large viewports (`lg` breakpoint) via `useIsLarge`.
+ * - On mobile, a semi-transparent backdrop is rendered over the content area
+ *   when the sidebar is open; clicking it closes the sidebar.
+ * - Active element focus is blurred on toggle/close to prevent lingering
+ *   focus rings on the trigger button.
+ *
+ * **Flash messages:**
+ * - Displayed via `sonner` toast notifications.
+ * - All toasts are dismissed on every Inertia navigation so stale messages
+ *   never carry over to the next page.
+ *
+ * **CSRF:** The token is injected as a `<meta name="csrf-token">` tag so that
+ * non-Inertia fetch calls (e.g. the theme toggle) can read it from the DOM.
+ *
+ * @example
+ * // Attached to an admin page component
+ * UsersIndexPage.layout = (page) => <Layout>{page}</Layout>
+ */
 export default function Layout(props: LayoutProps) {
   const isLarge = useIsLarge()
   const pageProps = usePage<SharedProps>().props
@@ -67,7 +94,7 @@ export default function Layout(props: LayoutProps) {
         </div>
         {sidebarOpen && (
           <div
-            className="block lg:hidden fixed inset-0 bg-neutral-900 opacity-50 z-49"
+            className="block lg:hidden fixed inset-0 bg-ink/50 z-49"
             onClick={() => closeMenu()}
           />
         )}

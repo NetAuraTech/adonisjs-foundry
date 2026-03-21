@@ -6,9 +6,37 @@ interface JsonModule {
 }
 
 /**
- * import.meta.glob scans the locals folder.
- * - eager: true allows files to be imported immediately (no promises)
- * - { as: 'json' } is useful if these are not standard JS/TS files
+ * i18next configuration for the application.
+ *
+ * Locale files are discovered at build time via `import.meta.glob` scanning
+ * `~/locales/**\/*.json`. Each file's path is parsed to extract the language
+ * code and namespace (e.g. `locales/en/admin.json` → `lng: 'en'`, `ns: 'admin'`).
+ * All discovered namespaces are registered dynamically so adding a new JSON
+ * file is enough to make it available — no manual registration required.
+ *
+ * **Interpolation** uses `{` / `}` delimiters instead of the i18next defaults
+ * (`{{` / `}}`) to align with AdonisJS Edge template syntax. HTML escaping is
+ * disabled because React already handles XSS protection.
+ *
+ * **Date formatting** is handled via the `format` callback using
+ * `Intl.DateTimeFormat`. Pass a `Date` instance as the interpolation value
+ * and use the format key as the `dateStyle` (`'short'`, `'medium'`, `'long'`,
+ * `'full'`). Add `{ withTime: true }` to include a short time string.
+ *
+ * @example
+ * // Translating a key
+ * t('admin:users.list.title')
+ *
+ * // Formatting a date
+ * t('common:created_at', { date: new Date(), format: 'medium' })
+ *
+ * // Formatting a date with time
+ * i18n.format(new Date(), 'long', 'en', { withTime: true })
+ */
+
+/**
+ * `import.meta.glob` scans the locales folder eagerly so all JSON files are
+ * bundled and available synchronously — no async loading, no Suspense needed.
  */
 const locales = import.meta.glob<JsonModule>('~/locales/**/*.json', { eager: true })
 
@@ -16,8 +44,8 @@ const resources: Record<string, any> = {}
 const namespaces: string[] = []
 
 /**
- * We iterate over the files found by Vite.
- * The path looks like: /locales/en/admin.json
+ * Parse each discovered path to build the i18next `resources` map.
+ * Path format: `…/locales/<lng>/<namespace>.json`
  */
 Object.keys(locales).forEach((path) => {
   const parts = path.split('/')

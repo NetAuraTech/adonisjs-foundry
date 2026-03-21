@@ -238,8 +238,8 @@ export function useFormValidation(config: FormValidationConfig): UseFormValidati
   const getHelpClassName = useCallback(
     (fieldName: string): string => {
       const state = getFieldState(fieldName)
-      if (state.status === 'valid') return 'clr-green-500'
-      if (state.status === 'invalid') return 'clr-red-400'
+      if (state.status === 'valid') return 'text-success'
+      if (state.status === 'invalid') return 'text-danger'
       return ''
     },
     [getFieldState]

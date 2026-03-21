@@ -1,7 +1,23 @@
 interface AdminHeaderProps {
+  /** Callback fired when the sidebar toggle button is clicked. */
   handleClick: () => void
 }
 
+/**
+ * Sticky top bar for the admin layout.
+ *
+ * Renders a single sidebar-toggle button (hamburger icon) anchored to the
+ * top of the viewport via `sticky top-0 z-50`. The button calls `handleClick`
+ * on click, which is expected to toggle the `aria-expanded` state on the
+ * `<AdminSidebar>` from the parent layout.
+ *
+ * @example
+ * // Inside the admin layout
+ * const [sidebarOpen, setSidebarOpen] = useState(false)
+ *
+ * <AdminHeader handleClick={() => setSidebarOpen((v) => !v)} />
+ * <AdminSidebar sidebarOpen={sidebarOpen} />
+ */
 export function AdminHeader(props: AdminHeaderProps) {
   const { handleClick } = props
 
