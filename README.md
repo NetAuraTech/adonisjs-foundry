@@ -4,21 +4,28 @@ A production-ready boilerplate for AdonisJS v7 with Inertia.js and React. Foundr
 
 ## Description
 
-AdonisJS Foundry is built on AdonisJS v7 and follows a domain-driven architecture with a clean separation between services, repositories, and controllers. It ships with a complete authentication system, OAuth providers, user settings, email workflows, structured logging, and a React + Inertia frontend with SSR support — all wired up and ready to go.
+AdonisJS Foundry is built on AdonisJS v7 and follows a domain-driven architecture with a clean separation between services, repositories, and controllers. It ships with a complete authentication system, OAuth providers, user settings, email workflows, a full admin panel (CMS), role-based access control, user preferences, structured logging, and a React + Inertia frontend with SSR support — all wired up and ready to go.
 
 ## Key Features
 
 - **Complete Authentication** — Registration, login, logout, email verification, password reset
 - **OAuth Providers** — GitHub, Google, Facebook with account linking and unlinking
+- **User Invitation** — Admin-driven invitation flow with token-based acceptance
 - **User Settings** — Profile, account credentials, email change, account deletion
-- **Email Workflows** — Email change with dual confirmation (new + old address), password change notification
+- **User Preferences** — Theme (dark/light) with API-driven persistence
+- **Email Workflows** — Email change with dual confirmation (new + old address), password change notification, admin invitation
+- **Admin Panel (CMS)** — Dashboard, user management (list, create, show, edit, delete) with dedicated layout
+- **Role-Based Access Control** — Custom role/permission system with many-to-many pivot, permission checking, and frontend guards
 - **Security First** — Selector/validator tokens, attempt tracking, CSRF protection, unverified account protection
-- **Domain-Driven Architecture** — Clean separation of services, repositories, and controllers
+- **Domain-Driven Architecture** — Clean separation of services, repositories, contracts, and controllers
 - **Structured Logging** — Categorized logs (AUTH, SECURITY, BUSINESS, API, DATABASE, PERFORMANCE) with Sentry integration
 - **i18n Ready** — Full internationalization support (EN, FR) on both backend (AdonisJS i18n) and frontend (react-i18next)
 - **Inertia + React** — Modern SPA experience with SSR support, no API boilerplate
 - **Tailwind CSS v4** — Utility-first styling with a component library (atoms/molecules/organisms)
 - **Type-Safe Routing** — Tuyau integration for end-to-end type-safe route generation
+- **Pagination** — Generic pagination service with frontend pagination component
+- **Dark/Light Theme** — Client-side theme toggle with server-side preference persistence
+- **Frontend Guards** — Authenticated, role-based, and permission-based route guards
 - **Docker Ready** — Dockerfile and docker-compose for development and production environments
 - **Database Backup** — Full & differential backups with multi-storage (local, S3, Nextcloud), encryption, retention policy, and health checks
 
@@ -32,6 +39,7 @@ AdonisJS Foundry is built on AdonisJS v7 and follows a domain-driven architectur
 | **Database** | PostgreSQL (primary), SQLite (dev alternative) |
 | **Cache / Session** | Redis |
 | **Auth** | Session-based (@adonisjs/auth), OAuth (@adonisjs/ally) |
+| **Authorization** | Custom role/permission system (models, services, frontend guards) |
 | **Email** | @adonisjs/mail (SMTP) with Edge templates |
 | **Routing** | Tuyau (type-safe client) |
 | **Icons** | Lucide React |
@@ -45,7 +53,7 @@ AdonisJS Foundry is built on AdonisJS v7 and follows a domain-driven architectur
 ### Requirements
 
 | Tool | Version                     |
-|---|-----------------------------|
+|---|---|
 | Node.js | \>= 24.x                    |
 | npm | \>= 11.x                    |
 | Database | PostgreSQL / MySQL / SQLite |
@@ -192,6 +200,7 @@ Foundry ships with a complete authentication system covering every standard flow
 | OAuth Login | GitHub, Google, Facebook |
 | OAuth Linking | Link/unlink providers from settings |
 | Define Password | Prompted after OAuth-only registration |
+| Invitation | Admin sends invite → user accepts via token link and sets password |
 
 ### Token Security
 
@@ -208,6 +217,29 @@ All token-based workflows use the **selector/validator pattern**:
 | `EMAIL_CHANGE`       | 24 hours | — |
 | `PENDING_INVITE`     | 7 days | — |
 
+## Admin Panel (CMS)
+
+Foundry includes a full admin panel accessible at `/admin`, protected by authentication middleware.
+
+### Features
+
+| Feature | Description |
+|---|---|
+| Dashboard | Overview page at `/admin` |
+| User List | Paginated user list with status indicators |
+| User Create | Invite new users via email |
+| User Show | View detailed user profile |
+| User Edit | Update user information, role, and status |
+| User Delete | Remove user accounts |
+
+### Admin Layout
+
+The admin panel uses a dedicated layout (`inertia/layouts/admin.tsx`) with:
+
+- **Sidebar** — Navigation component (`admin_sidebar.tsx`)
+- **Header** — Admin-specific header (`admin_header.tsx`)
+- **Main content** — Adaptive content area (`admin_main.tsx`)
+
 ## User Settings
 
 Settings are split into domains, each backed by a dedicated service, repository, and controller.
@@ -221,6 +253,39 @@ Settings are split into domains, each backed by a dedicated service, repository,
 - Password change (requires current password verification)
 - OAuth provider linking/unlinking
 - Account deletion (requires password confirmation)
+
+### Preferences
+- Theme selection (dark/light) with API-driven persistence
+- Accessible at `/settings/preferences`
+
+## Authorization (RBAC)
+
+Foundry implements a **custom role/permission system** without external authorization libraries:
+
+### Backend
+
+| Layer | Location | Responsibility |
+|---|---|---|
+| **Role model** | `app/models/auth/role.ts` | Roles with `hasPermission()`, `isAdmin`, system role protection |
+| **Permission model** | `app/models/auth/permission.ts` | Permissions with system permission protection |
+| **Pivot table** | `role_permission` | Many-to-many relationship between roles and permissions |
+| **Role service** | `app/domain/services/auth/role_service.ts` | Role business logic |
+| **Permission service** | `app/domain/services/auth/permission_service.ts` | Permission business logic |
+| **Seeders** | `database/seeders/` | `role_seeder.ts`, `permission_seeder.ts` for default data |
+
+Permission checking is done via model methods: `role.hasPermission(slug)`, `role.assignPermission(id)`, `role.syncPermissions(ids)`.
+
+### Frontend Guards
+
+React components to protect pages and UI elements:
+
+| Guard | File | Description |
+|---|---|---|
+| `Authenticated` | `inertia/guards/authenticated.tsx` | Restrict access to authenticated users |
+| `HasRole` | `inertia/guards/has_role.tsx` | Restrict access by role |
+| `CanAccess` | `inertia/guards/can_access.tsx` | Restrict access by permission (single, any, or all) |
+
+Guards read the user's permissions from Inertia shared props via the `useAuth` hook (`can`, `canAny`, `canAll`).
 
 ## Backup
 
@@ -324,91 +389,128 @@ Foundry follows a **domain-driven architecture** with a strict layering conventi
 ```
 app/
 ├── data/
-│   ├── storage/                        # local_storage_adapter.ts, s3_storage_adapter.ts, nextcloud_storage_adapter.ts
-│   └── transformers/                   # user_transformer.ts
+│   ├── storage/                            # local_storage_adapter.ts, s3_storage_adapter.ts, nextcloud_storage_adapter.ts
+│   └── transformers/                       # user_transformer.ts, role_transformer.ts, permission_transformer.ts
 ├── domain/
 │   ├── contracts/
-│   │   └── backup/                     # storage_adapter.ts
+│   │   └── backup/                         # storage_adapter.ts
 │   ├── repositories/
-│   │   ├── auth/                       # user_repository.ts, role_repository.ts, permission_repository.ts
-│   │   └── core/                       # token_repository.ts
+│   │   ├── auth/                           # user_repository.ts, role_repository.ts, permission_repository.ts
+│   │   ├── core/                           # token_repository.ts
+│   │   └── preferences/                    # preferences_repository.ts
 │   └── services/
-│       ├── account/                    # account_service.ts
-│       ├── auth/                       # auth_service.ts, social_service.ts, password_service.ts, email_verification_service.ts
-│       ├── backup/                     # backup_service.ts
-│       ├── logging/                    # log_service.ts, error_handler_service.ts
-│       ├── mails/                      # mail_service.ts
-│       └── profile/                    # profile_service.ts
+│       ├── account/                        # account_service.ts
+│       ├── auth/                           # auth_service.ts, social_service.ts, password_service.ts,
+│       │                                   # email_verification_service.ts, invitation_service.ts,
+│       │                                   # user_service.ts, role_service.ts, permission_service.ts
+│       ├── backup/                         # backup_service.ts
+│       ├── logging/                        # log_service.ts, error_handler_service.ts
+│       ├── mails/                          # mail_service.ts
+│       ├── pagination/                     # pagination_service.ts
+│       ├── preferences/                    # preference_service.ts
+│       └── profile/                        # profile_service.ts
 ├── events/
-│   ├── account/                        # initiate_email_change.ts
-│   ├── auth/                           # forgot_password.ts, user_registered.ts
+│   ├── account/                            # initiate_email_change.ts
+│   ├── admin/                              # invite_user.ts
+│   ├── auth/                               # forgot_password.ts, user_registered.ts
 │   └── profile/
 ├── exceptions/
-│   ├── account/                        # email_already_exists_exception.ts
-│   ├── auth/                           # invalid_current_password_exception.ts, provider_already_linked_exception.ts,
-│   │                                   # provider_not_configured_exception.ts, unverified_account_exception.ts
-│   ├── core/                           # invalid_token_exception.ts, max_attempts_exceeded_exception.ts
+│   ├── account/                            # email_already_exists_exception.ts
+│   ├── auth/                               # invalid_current_password_exception.ts, provider_already_linked_exception.ts,
+│   │                                       # provider_not_configured_exception.ts, unverified_account_exception.ts
+│   ├── core/                               # invalid_token_exception.ts, max_attempts_exceeded_exception.ts, row_not_found_exception.ts
 │   └── handler.ts
 ├── helpers/
-│   ├── auth/                           # crsf.ts, oauth.ts, username.ts
-│   └── core/                           # crypto.ts, encryption.ts
+│   ├── auth/                               # crsf.ts, oauth.ts, username.ts
+│   ├── core/                               # crypto.ts, encryption.ts, strip_empty_strings.ts
+│   └── pagination/                         # extract_pagination.ts, get_pagination_params.ts
 ├── http/
 │   ├── controllers/
-│   │   ├── account/front/              # account_controller.ts, email_change_controller.ts
+│   │   ├── account/front/                  # account_controller.ts, email_change_controller.ts
 │   │   ├── auth/
-│   │   │   ├── cms/
-│   │   │   └── front/                  # session_controller.ts, register_controller.ts, forgot_password_controller.ts,
-│   │   │                               # reset_password_controller.ts, email_verification_controller.ts, social_controller.ts
-│   │   └── profile/front/              # profile_controller.ts
+│   │   │   ├── cms/                        # users_controller.ts, users_create_controller.ts,
+│   │   │   │                               # users_show_controller.ts, users_update_controller.ts
+│   │   │   └── front/                      # session_controller.ts, register_controller.ts, forgot_password_controller.ts,
+│   │   │                                   # reset_password_controller.ts, email_verification_controller.ts,
+│   │   │                                   # social_controller.ts, accept_invitation_controller.ts
+│   │   ├── core/cms/                       # dashboard_controller.ts
+│   │   ├── preferences/
+│   │   │   ├── api/                        # theme_controller.ts
+│   │   │   └── front/                      # preferences_controller.ts
+│   │   └── profile/front/                  # profile_controller.ts
 │   └── middleware/
-│       ├── auth/                       # auth_middleware.ts, guest_middleware.ts, silent_auth_middleware.ts
-│       └── core/                       # container_bindings_middleware.ts, detect_user_locale_middleware.ts, inertia_middleware.ts
+│       ├── auth/                           # auth_middleware.ts, guest_middleware.ts, silent_auth_middleware.ts
+│       └── core/                           # container_bindings_middleware.ts, detect_user_locale_middleware.ts, inertia_middleware.ts
 ├── listeners/
-│   ├── account/                        # send_change_email_confirmation_email.ts, send_change_email_notification_email.ts
-│   ├── auth/                           # send_forgot_password_email.ts, send_verification_email.ts
+│   ├── account/                            # send_change_email_confirmation_email.ts, send_change_email_notification_email.ts
+│   ├── auth/                               # send_forgot_password_email.ts, send_verification_email.ts
 │   └── profile/
 ├── mails/
-│   ├── account/                        # account_notification.ts
-│   └── auth/                           # auth_notification.ts
+│   ├── account/                            # account_notification.ts
+│   └── auth/                               # auth_notification.ts
 ├── models/
-│   ├── auth/                           # user.ts, role.ts, permission.ts
-│   └── core/                           # token.ts
-├── types/                              # auth.ts, core.ts, logging.ts, mail.ts
-└── validators/                         # auth.ts, account.ts, profile.ts
+│   ├── auth/                               # user.ts, role.ts, permission.ts
+│   └── core/                               # token.ts
+├── types/                                  # auth.ts, core.ts, logging.ts, mail.ts
+└── validators/                             # auth.ts, account.ts, profile.ts
 
 commands/
-└── backup/                             # backup_run.ts, backup_list.ts, backup_restore.ts,
-                                        # backup_cleanup.ts, backup_health_check.ts
+└── backup/                                 # backup_run.ts, backup_list.ts, backup_restore.ts,
+                                            # backup_cleanup.ts, backup_health_check.ts
+
+database/
+├── migrations/                             # create_users_table, create_roles_table, create_permissions_table,
+│                                           # create_role_permissions_table, alter_users_table,
+│                                           # create_remember_me_tokens_table, create_tokens_table,
+│                                           # create_user_preferences_table
+├── seeders/                                # role_seeder.ts, permission_seeder.ts
+├── schema.ts
+└── schema_rules.ts
 
 inertia/
 ├── app.tsx
 ├── ssr.tsx
 ├── client.ts
+├── assets/                                 # logo.png
 ├── components/
-│   ├── atoms/                          # avatar.tsx, button.tsx, card.tsx, checkbox.tsx, heading.tsx, icon.tsx,
-│   │                                   # input.tsx, label.tsx, nav_link.tsx, paragraph.tsx, section.tsx,
-│   │                                   # select.tsx, select_option.tsx, textarea.tsx
-│   ├── molecules/                      # auth_intro.tsx, auth_providers.tsx, banner.tsx, field.tsx
-│   └── organisms/                      # footer.tsx, header.tsx, settings_layout.tsx
-├── css/                                # Global styles
-├── helpers/                            # avatar.ts, sanitization.ts, validation_rules.ts
-├── hooks/                              # use_form_validation.ts
-├── layouts/                            # default.tsx
-├── lib/                                # i18n.ts, string.ts
+│   ├── atoms/                              # avatar.tsx, button.tsx, card.tsx, checkbox.tsx, heading.tsx, icon.tsx,
+│   │                                       # input.tsx, label.tsx, nav_link.tsx, paragraph.tsx, section.tsx,
+│   │                                       # select.tsx, select_option.tsx, textarea.tsx, user_status.tsx,
+│   │                                       # table/ (table.tsx, table_body.tsx, table_cell.tsx, table_header.tsx,
+│   │                                       #         table_header_cell.tsx, table_row.tsx)
+│   ├── molecules/                          # auth/ (auth_intro.tsx, auth_providers.tsx), banner.tsx, field.tsx,
+│   │                                       # pagination.tsx, theme_toggle.tsx
+│   └── organisms/                          # footer.tsx, header.tsx, settings_layout.tsx,
+│                                           # admin/ (admin_header.tsx, admin_main.tsx, admin_sidebar.tsx)
+├── css/                                    # Global styles
+├── guards/                                 # authenticated.tsx, can_access.tsx, has_role.tsx
+├── helpers/                                # authorization.ts, avatar.ts, oauth.tsx, sanitization.ts, validation_rules.ts
+├── hooks/                                  # use_admin.ts, use_auth.ts, use_form_validation.ts, use_is_large.ts, use_theme.ts
+├── layouts/                                # default.tsx, admin.tsx
+├── lib/                                    # i18n.ts, string.ts
 ├── locales/
-│   ├── en/                             # auth.json, settings.json, validation.json
-│   └── fr/                             # auth.json, settings.json, validation.json
+│   ├── en/                                 # admin.json, auth.json, core.json, settings.json, validation.json
+│   └── fr/                                 # admin.json, auth.json, core.json, settings.json, validation.json
 ├── pages/
 │   ├── home.tsx
 │   ├── auth/
-│   │   ├── cms/
-│   │   └── front/                      # login.tsx, register.tsx, forgot_password.tsx, reset_password.tsx, define_password.tsx
-│   ├── errors/                         # not_found.tsx, server_error.tsx
+│   │   ├── cms/                            # index.tsx, form.tsx, show.tsx
+│   │   └── front/                          # login.tsx, register.tsx, forgot_password.tsx, reset_password.tsx,
+│   │                                       # define_password.tsx, accept_invitation.tsx
+│   ├── core/cms/                           # dashboard.tsx
+│   ├── errors/                             # not_found.tsx, server_error.tsx
 │   └── settings/
-│       ├── account/front/              # index.tsx, email_change.tsx
-│       └── profile/front/              # index.tsx
-├── types/                              # Frontend type definitions
-└── utils/                              # font.ts
+│       ├── account/front/                  # index.tsx, email_change.tsx
+│       ├── preferences/front/              # index.tsx
+│       └── profile/front/                  # index.tsx
+├── types/                                  # Frontend type definitions
+└── utils/                                  # font.ts
+
+resources/
+├── lang/
+│   ├── en/                                 # admin.json, auth.json, core.json, settings.json, validation.json
+│   └── fr/                                 # admin.json, auth.json, core.json, settings.json, validation.json
+└── views/emails/                           # account_email.edge, admin_invite_email.edge, auth_email.edge
 ```
 
 ### Conventions
@@ -421,6 +523,7 @@ inertia/
 | **Transformers** | Shape data for the frontend (shared props) |
 | **Exceptions** | Typed, carry HTTP status and i18n-ready error codes |
 | **Events / Listeners** | Decouple side effects (emails, logging) from main flow |
+| **Guards (frontend)** | Permission / role checks via `useAuth` hook and guard components |
 
 ### Path Aliases
 
@@ -431,8 +534,10 @@ The project uses Node.js subpath imports for clean module resolution:
 | `#controllers/*` | `app/http/controllers/*` |
 | `#services/*` | `app/domain/services/*` |
 | `#repositories/*` | `app/domain/repositories/*` |
+| `#contracts/*` | `app/domain/contracts/*` |
 | `#models/*` | `app/models/*` |
 | `#transformers/*` | `app/data/transformers/*` |
+| `#storage/*` | `app/data/storage/*` |
 | `#validators/*` | `app/validators/*` |
 | `#exceptions/*` | `app/exceptions/*` |
 | `#middleware/*` | `app/http/middleware/*` |
@@ -441,10 +546,13 @@ The project uses Node.js subpath imports for clean module resolution:
 | `#mails/*` | `app/mails/*` |
 | `#helpers/*` | `app/helpers/*` |
 | `#types/*` | `app/types/*` |
+
 | `#config/*` | `config/*` |
 | `#start/*` | `start/*` |
 | `#database/*` | `database/*` |
 | `#providers/*` | `providers/*` |
+| `#tests/*` | `tests/*` |
+| `#generated/*` | `.adonisjs/server/*` |
 
 ## Routes
 
@@ -466,6 +574,8 @@ The project uses Node.js subpath imports for clean module resolution:
 | POST | `/forgot-password` | ForgotPasswordController.execute |
 | GET | `/reset-password/:token` | ResetPasswordController.render |
 | POST | `/reset-password` | ResetPasswordController.execute |
+| GET | `/accept-invitation/:token` | AcceptInvitationController.render |
+| POST | `/accept-invitation` | AcceptInvitationController.execute |
 
 ### OAuth Routes
 
@@ -491,6 +601,27 @@ The project uses Node.js subpath imports for clean module resolution:
 | DELETE | `/settings/account` | AccountController.destroy |
 | GET | `/settings/account/email_change/:token` | EmailChangeController.render |
 | POST | `/settings/account/email_change` | EmailChangeController.execute |
+| GET | `/settings/preferences` | PreferencesController.render |
+| POST | `/settings/preferences` | PreferencesController.execute |
+
+### Admin Routes (CMS)
+
+| Method | Path | Handler |
+|---|---|---|
+| GET | `/admin` | DashboardController.render |
+| GET | `/admin/users` | UsersController.render |
+| GET | `/admin/users/create` | UsersCreateController.render |
+| POST | `/admin/users/create` | UsersCreateController.execute |
+| GET | `/admin/users/:id` | UsersShowController.render |
+| GET | `/admin/users/:id/edit` | UsersUpdateController.render |
+| POST | `/admin/users/:id/edit` | UsersUpdateController.execute |
+| DELETE | `/admin/users/:id` | UsersController.destroy |
+
+### API Routes
+
+| Method | Path | Handler |
+|---|---|---|
+| POST | `/api/settings/preferences/theme` | ThemeController.execute |
 
 ## Error Codes
 
@@ -506,6 +637,7 @@ The project uses Node.js subpath imports for clean module resolution:
 | `E_INVALID_TOKEN` | 400 | Token invalid, expired, or not found |
 | `E_MAX_ATTEMPTS_EXCEEDED` | 429 | Too many token validation attempts |
 | `E_RATE_LIMIT` | 429 | Too many requests |
+| `E_ROW_NOT_FOUND` | 404 | Requested resource not found |
 
 ## Contributing
 
@@ -576,6 +708,26 @@ Move email change logic from controller to AccountService
 ```
 
 ## Changelog
+
+### v1.1.0
+
+- Admin panel (CMS) with dashboard and user management (list, create, show, edit, delete)
+- User invitation system with token-based acceptance flow
+- User preferences system with dark/light theme persistence
+- Custom role/permission system with model-level permission checking and frontend guards
+- Frontend guards (Authenticated, HasRole, CanAccess)
+- Pagination service with generic frontend component
+- Theme toggle component with API-driven persistence
+- Admin layout with sidebar, header, and main content area
+- Table component library (table, table_body, table_cell, table_header, table_header_cell, table_row)
+- User status indicator component
+- New hooks: `useAdmin`, `useAuth`, `useTheme`, `useIsLarge`
+- New locales: admin.json, core.json (EN + FR)
+- Admin invite email template
+- Additional path aliases: `#contracts/*`, `#storage/*`, `#tests/*`, `#generated/*`
+- New exception: `RowNotFoundException`
+- New helper: `strip_empty_strings`
+- Pagination helpers: `extract_pagination`, `get_pagination_params`
 
 ### v1.0.0
 
