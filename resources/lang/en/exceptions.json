@@ -11,5 +11,8 @@
   "E_SLUG_EXISTS": "Slug \"{slug}\" is already taken.",
   "E_FILE_TOO_LARGE": "File exceeds the {limit}MB limit.",
   "E_INVALID_EXTENSION": "Extension \".${ext}\" is not allowed.",
-  "E_INVALID_CREDENTIALS": "Authentication failed. Please try again."
+  "E_INVALID_CREDENTIALS": "Authentication failed. Please try again.",
+  "E_TOO_MANY_REQUESTS": "Too many attempts. Limit of {limit} requests reached. Please try again in {availableIn} minutes.",
+  "E_UNAUTHORIZED": "You must be logged in to access this resource.",
+  "E_FORBIDDEN": "You do not have permission to access this resource."
 }

@@ -439,7 +439,8 @@ app/
 │   │   │   └── front/                      # preferences_controller.ts
 │   │   └── profile/front/                  # profile_controller.ts
 │   └── middleware/
-│       ├── auth/                           # auth_middleware.ts, guest_middleware.ts, silent_auth_middleware.ts
+│       ├── auth/                           # auth_middleware.ts, guest_middleware.ts, silent_auth_middleware.ts,
+│       │                                   # permission_middleware.ts, role_middleware.ts
 │       └── core/                           # container_bindings_middleware.ts, detect_user_locale_middleware.ts, inertia_middleware.ts
 ├── listeners/
 │   ├── account/                            # send_change_email_confirmation_email.ts, send_change_email_notification_email.ts
@@ -450,9 +451,10 @@ app/
 │   └── auth/                               # auth_notification.ts
 ├── models/
 │   ├── auth/                               # user.ts, role.ts, permission.ts
-│   └── core/                               # token.ts
-├── types/                                  # auth.ts, core.ts, logging.ts, mail.ts
-└── validators/                             # auth.ts, account.ts, profile.ts
+│   ├── core/                               # token.ts
+│   └── preferences/                        # user_preference.ts
+├── types/                                  # auth.ts, core.ts, logging.ts, mail.ts, pagination.ts, preferences.ts
+└── validators/                             # auth.ts, account.ts, profile.ts, user.ts, pagination.ts, preference.ts
 
 commands/
 └── backup/                                 # backup_run.ts, backup_list.ts, backup_restore.ts,
@@ -489,8 +491,10 @@ inertia/
 ├── layouts/                                # default.tsx, admin.tsx
 ├── lib/                                    # i18n.ts, string.ts
 ├── locales/
-│   ├── en/                                 # admin.json, auth.json, core.json, settings.json, validation.json
-│   └── fr/                                 # admin.json, auth.json, core.json, settings.json, validation.json
+│   ├── en/                                 # admin.json, auth.json, pagination.json, permissions.json,
+│   │                                       # roles.json, settings.json, validation.json
+│   └── fr/                                 # admin.json, auth.json, pagination.json, permissions.json,
+│                                           # roles.json, settings.json, validation.json
 ├── pages/
 │   ├── home.tsx
 │   ├── auth/
@@ -508,8 +512,10 @@ inertia/
 
 resources/
 ├── lang/
-│   ├── en/                                 # admin.json, auth.json, core.json, settings.json, validation.json
-│   └── fr/                                 # admin.json, auth.json, core.json, settings.json, validation.json
+│   ├── en/                                 # admin.json, auth.json, exceptions.json, pagination.json,
+│   │                                       # permissions.json, roles.json, settings.json, validation.json
+│   └── fr/                                 # admin.json, auth.json, exceptions.json, pagination.json,
+│                                           # permissions.json, roles.json, settings.json, validation.json
 └── views/emails/                           # account_email.edge, admin_invite_email.edge, auth_email.edge
 ```
 
@@ -564,18 +570,18 @@ The project uses Node.js subpath imports for clean module resolution:
 
 ### Guest Routes
 
-| Method | Path | Handler |
-|---|---|---|
-| GET | `/login` | SessionController.render |
-| POST | `/login` | SessionController.execute |
-| GET | `/register` | RegisterController.render |
-| POST | `/register` | RegisterController.execute |
-| GET | `/forgot-password` | ForgotPasswordController.render |
-| POST | `/forgot-password` | ForgotPasswordController.execute |
-| GET | `/reset-password/:token` | ResetPasswordController.render |
-| POST | `/reset-password` | ResetPasswordController.execute |
-| GET | `/accept-invitation/:token` | AcceptInvitationController.render |
-| POST | `/accept-invitation` | AcceptInvitationController.execute |
+| Method | Path | Handler | Throttling |
+|---|---|---|---|
+| GET | `/login` | SessionController.render | — |
+| POST | `/login` | SessionController.execute | 5 req / 15m |
+| GET | `/register` | RegisterController.render | — |
+| POST | `/register` | RegisterController.execute | 3 req / 1h |
+| GET | `/forgot-password` | ForgotPasswordController.render | — |
+| POST | `/forgot-password` | ForgotPasswordController.execute | 3 req / 1h |
+| GET | `/reset-password/:token` | ResetPasswordController.render | — |
+| POST | `/reset-password` | ResetPasswordController.execute | 3 req / 15m |
+| GET | `/accept-invitation/:token` | AcceptInvitationController.render | — |
+| POST | `/accept-invitation` | AcceptInvitationController.execute | 3 req / 15m |
 
 ### OAuth Routes
 
@@ -606,16 +612,16 @@ The project uses Node.js subpath imports for clean module resolution:
 
 ### Admin Routes (CMS)
 
-| Method | Path | Handler |
-|---|---|---|
-| GET | `/admin` | DashboardController.render |
-| GET | `/admin/users` | UsersController.render |
-| GET | `/admin/users/create` | UsersCreateController.render |
-| POST | `/admin/users/create` | UsersCreateController.execute |
-| GET | `/admin/users/:id` | UsersShowController.render |
-| GET | `/admin/users/:id/edit` | UsersUpdateController.render |
-| POST | `/admin/users/:id/edit` | UsersUpdateController.execute |
-| DELETE | `/admin/users/:id` | UsersController.destroy |
+| Method | Path | Handler | Permission |
+|---|---|---|---|
+| GET | `/admin` | DashboardController.render | `admin.access` |
+| GET | `/admin/users` | UsersController.render | `users.view` |
+| GET | `/admin/users/create` | UsersCreateController.render | `users.create` |
+| POST | `/admin/users/create` | UsersCreateController.execute | `users.create` |
+| GET | `/admin/users/:id` | UsersShowController.render | `users.view` |
+| GET | `/admin/users/:id/edit` | UsersUpdateController.render | `users.update` |
+| POST | `/admin/users/:id/edit` | UsersUpdateController.execute | `users.update` |
+| DELETE | `/admin/users/:id` | UsersController.destroy | `users.delete` |
 
 ### API Routes
 
@@ -674,6 +680,8 @@ Each exception extends `@adonisjs/core/exceptions.Exception` and implements its 
 | `ProviderAlreadyLinkedException` | `E_PROVIDER_ALREADY_LINKED` | 409 | OAuth account already linked to another user |
 | `ProviderNotConfiguredException` | `E_PROVIDER_NOT_CONFIGURED` | 501 | OAuth provider not configured |
 | `UnverifiedAccountException` | `E_UNVERIFIED_ACCOUNT` | 403 | Account not yet verified |
+| `UnauthorizedException` | `E_UNAUTHORIZED` | 401 | Not logged in |
+| `ForbiddenException` | `E_FORBIDDEN` | 403 | Missing role or permission |
 
 #### Core
 
@@ -753,6 +761,11 @@ Move email change logic from controller to AccountService
 ```
 
 ## Changelog
+
+### v1.3.0
+
+- Added `PermissionMiddleware` and `RoleMiddleware` for robust, reusable route protection
+- New structured Auth exceptions: `UnauthorizedException` and `ForbiddenException`
 
 ### v1.2.0
 

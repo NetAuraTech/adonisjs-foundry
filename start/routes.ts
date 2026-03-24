@@ -10,6 +10,7 @@
 import { middleware } from '#start/kernel'
 import { controllers } from '#generated/controllers'
 import router from '@adonisjs/core/services/router'
+import { throttle } from '#start/limiter'
 
 router.on('/').renderInertia('home', {}).as('home')
 
@@ -20,35 +21,41 @@ router
         router
           .group(() => {
             router.get('/', [controllers.auth.front.Session, 'render'])
-            router.post('/', [controllers.auth.front.Session, 'execute'])
+            router.post('/', [controllers.auth.front.Session, 'execute']).use([throttle(5, 900)])
           })
           .prefix('login')
 
         router
           .group(() => {
             router.get('/', [controllers.auth.front.Register, 'render'])
-            router.post('/', [controllers.auth.front.Register, 'execute'])
+            router.post('/', [controllers.auth.front.Register, 'execute']).use([throttle(3, 3600)])
           })
           .prefix('register')
 
         router
           .group(() => {
             router.get('/', [controllers.auth.front.ForgotPassword, 'render'])
-            router.post('/', [controllers.auth.front.ForgotPassword, 'execute'])
+            router
+              .post('/', [controllers.auth.front.ForgotPassword, 'execute'])
+              .use([throttle(3, 3600)])
           })
           .prefix('forgot-password')
 
         router
           .group(() => {
             router.get('/:token', [controllers.auth.front.ResetPassword, 'render'])
-            router.post('/', [controllers.auth.front.ResetPassword, 'execute'])
+            router
+              .post('/', [controllers.auth.front.ResetPassword, 'execute'])
+              .use([throttle(3, 900)])
           })
           .prefix('reset-password')
 
         router
           .group(() => {
             router.get('/:token', [controllers.auth.front.AcceptInvitation, 'render'])
-            router.post('/', [controllers.auth.front.AcceptInvitation, 'execute'])
+            router
+              .post('/', [controllers.auth.front.AcceptInvitation, 'execute'])
+              .use([throttle(3, 900)])
           })
           .prefix('accept-invitation')
       })
@@ -135,23 +142,32 @@ router
 
 router
   .group(() => {
-    router.get('/', [controllers.core.cms.Dashboard, 'render'])
+    router
+      .get('/', [controllers.core.cms.Dashboard, 'render'])
+      .use([middleware.permission({ permissions: ['admin.access'] })])
 
     router
       .group(() => {
-        router.get('/', [controllers.auth.cms.Users, 'render']).use([])
+        router
+          .get('/', [controllers.auth.cms.Users, 'render'])
+          .use([middleware.permission({ permissions: ['users.view'] })])
 
         router
           .group(() => {
-            router.get('/', [controllers.auth.cms.UsersCreate, 'render']).use([])
-            router.post('/', [controllers.auth.cms.UsersCreate, 'execute']).use([])
+            router.get('/', [controllers.auth.cms.UsersCreate, 'render'])
+            router.post('/', [controllers.auth.cms.UsersCreate, 'execute'])
           })
           .prefix('create')
+          .use([middleware.permission({ permissions: ['users.create'] })])
 
         router
           .group(() => {
-            router.delete('/', [controllers.auth.cms.Users, 'destroy']).use([])
-            router.get('/', [controllers.auth.cms.UsersShow, 'render']).use([])
+            router
+              .delete('/', [controllers.auth.cms.Users, 'destroy'])
+              .use([middleware.permission({ permissions: ['users.delete'] })])
+            router
+              .get('/', [controllers.auth.cms.UsersShow, 'render'])
+              .use([middleware.permission({ permissions: ['users.view'] })])
 
             router
               .group(() => {
@@ -159,6 +175,7 @@ router
                 router.post('/', [controllers.auth.cms.UsersUpdate, 'execute']).use([])
               })
               .prefix('edit')
+              .use([middleware.permission({ permissions: ['users.update'] })])
           })
           .prefix(':id')
       })
