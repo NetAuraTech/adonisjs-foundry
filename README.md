@@ -404,7 +404,7 @@ app/
 │       │                                   # email_verification_service.ts, invitation_service.ts,
 │       │                                   # user_service.ts, role_service.ts, permission_service.ts
 │       ├── backup/                         # backup_service.ts
-│       ├── logging/                        # log_service.ts, error_handler_service.ts
+│       ├── logging/                        # log_service.ts
 │       ├── mails/                          # mail_service.ts
 │       ├── pagination/                     # pagination_service.ts
 │       ├── preferences/                    # preference_service.ts
@@ -623,21 +623,66 @@ The project uses Node.js subpath imports for clean module resolution:
 |---|---|---|
 | POST | `/api/settings/preferences/theme` | ThemeController.execute |
 
-## Error Codes
+## Logging & Exception Handling
 
-| Code | HTTP | Description |
+### LogService
+
+Foundry provides a centralised `LogService` (`app/domain/services/logging/log_service.ts`) that wraps AdonisJS's built-in logger. It offers typed convenience methods for each log level (`debug`, `info`, `warn`, `error`, `fatal`) and domain-specific helpers that automatically attach the correct category and structured context.
+
+#### Log Categories
+
+| Category | Helper Method | Description |
 |---|---|---|
-| `E_INVALID_CREDENTIALS` | 401 | Wrong email or password |
-| `E_EMAIL_EXISTS` | 409 | Email already taken |
-| `E_EMAIL_NOT_VERIFIED` | 403 | Email not verified |
-| `E_UNVERIFIED_ACCOUNT` | 403 | OAuth link attempt on unverified account |
-| `E_PROVIDER_NOT_CONFIGURED` | 501 | OAuth provider not configured |
-| `E_PROVIDER_ALREADY_LINKED` | 409 | OAuth account already linked to another user |
-| `E_INVALID_CURRENT_PASSWORD` | 400 | Current password mismatch |
-| `E_INVALID_TOKEN` | 400 | Token invalid, expired, or not found |
-| `E_MAX_ATTEMPTS_EXCEEDED` | 429 | Too many token validation attempts |
-| `E_RATE_LIMIT` | 429 | Too many requests |
-| `E_ROW_NOT_FOUND` | 404 | Requested resource not found |
+| `AUTH` | `logAuth(action, context)` | Authentication events (login, registration, OAuth linking) |
+| `SECURITY` | `logSecurity(message, context, level?)` | Suspicious activity, access violations, audit trail |
+| `API` | `logApiRequest(ctx, duration?)` | Incoming HTTP requests (method, URL, IP, user agent, status, duration) |
+| `DATABASE` | `logQuery(query, duration, context?)` | Database queries — auto-elevated to `WARN` if > 1 000 ms |
+| `PERFORMANCE` | `logPerformance(operation, duration, context?)` | Operation duration — auto-elevated to `WARN` if > 5 000 ms |
+| `BUSINESS` | `logBusiness(event, context, metadata?)` | Domain events useful for analytics and auditing |
+| `SYSTEM` | — (default) | Fallback category for `log()` calls without an explicit category |
+
+#### Log Levels
+
+`DEBUG` · `INFO` · `WARN` · `ERROR` · `FATAL`
+
+All entries include a timestamp, category, and optional context / metadata / error block.
+
+### Exception Handler
+
+The global exception handler (`app/exceptions/handler.ts`) extends AdonisJS's built-in `ExceptionHandler`:
+
+- **Debug mode** — verbose error display with stack traces (disabled in production)
+- **Status pages** — Inertia-rendered error pages (`errors/not_found` for 404, `errors/server_error` for 500–599)
+- **Sentry reporting** — unhandled exceptions are forwarded to Sentry via `@rlanz/sentry`
+
+### Typed Exceptions
+
+Each exception extends `@adonisjs/core/exceptions.Exception` and implements its own `handle` method with i18n-ready error messages. All exceptions support both JSON and session-flash responses.
+
+#### Account
+
+| Exception | Code | HTTP | Description |
+|---|---|---|---|
+| `EmailAlreadyExistsException` | `E_EMAIL_EXISTS` | 409 | Email already in use by another account |
+
+#### Auth
+
+| Exception | Code | HTTP | Description |
+|---|---|---|---|
+| `InvalidCredentialsException` | `E_INVALID_CREDENTIALS` | 401 | Wrong email or password |
+| `InvalidCurrentPasswordException` | `E_INVALID_CURRENT_PASSWORD` | 400 | Current password mismatch |
+| `ProviderAlreadyLinkedException` | `E_PROVIDER_ALREADY_LINKED` | 409 | OAuth account already linked to another user |
+| `ProviderNotConfiguredException` | `E_PROVIDER_NOT_CONFIGURED` | 501 | OAuth provider not configured |
+| `UnverifiedAccountException` | `E_UNVERIFIED_ACCOUNT` | 403 | Account not yet verified |
+
+#### Core
+
+| Exception | Code | HTTP | Description |
+|---|---|---|---|
+| `InvalidTokenException` | `E_INVALID_TOKEN` | 400 | Token invalid, expired, or not found |
+| `MaxAttemptsExceededException` | `E_MAX_ATTEMPTS_EXCEEDED` | 429 | Too many token validation attempts |
+| `RowNotFoundException` | `E_ROW_NOT_FOUND` | 404 | Requested resource not found |
+| `SlugExistsException` | `E_SLUG_EXISTS` | 409 | Slug already taken |
 
 ## Contributing
 
@@ -708,6 +753,13 @@ Move email change logic from controller to AccountService
 ```
 
 ## Changelog
+
+### v1.2.0
+
+- Removed `ErrorHandlerService` in favor of AdonisJS's built-in exception handling (`ExceptionHandler`)
+- Each exception now implements its own `handle` method with i18n-ready messages and dual response mode (JSON / session flash)
+- Sentry error reporting moved to the global exception handler's `report` method
+- New exceptions: `InvalidCredentialsException`, `SlugExistsException`
 
 ### v1.1.0
 

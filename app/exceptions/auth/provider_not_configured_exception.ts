@@ -1,15 +1,37 @@
 import { Exception } from '@adonisjs/core/exceptions'
+import type { HttpContext } from '@adonisjs/core/http'
+import app from '@adonisjs/core/services/app'
 
 export default class ProviderNotConfiguredException extends Exception {
-  provider: string
   static status = 501
   static code = 'E_PROVIDER_NOT_CONFIGURED'
 
-  constructor(provider: string) {
-    super(`The OAuth provider "${provider}" is not configured on this server.`, {
+  constructor(private provider: string) {
+    super(`${provider} authentication is not configured.`, {
       status: ProviderNotConfiguredException.status,
       code: ProviderNotConfiguredException.code,
     })
-    this.provider = provider
+  }
+
+  async handle(error: this, ctx: HttpContext) {
+    const { request, response, session, i18n } = ctx
+
+    const message = i18n.t(`exceptions.${error.code}`, { provider: error.provider })
+
+    if (request.wantsJSON()) {
+      return response.status(error.status).send({
+        error: {
+          code: error.code,
+          message: message,
+          details: {
+            provider: error.provider,
+          },
+          ...(app.inDev && { stack: error.stack }),
+        },
+      })
+    }
+
+    session.flash('error', message)
+    return response.redirect().back()
   }
 }

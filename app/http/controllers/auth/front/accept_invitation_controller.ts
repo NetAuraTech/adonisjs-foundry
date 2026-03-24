@@ -1,6 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { ErrorHandlerService } from '#services/logging/error_handler_service'
 import { InvitationService } from '#services/auth/invitation_service'
 import { acceptInvitationValidator, invitationValidator } from '#validators/auth'
 import { FullToken } from '#types/core'
@@ -8,46 +7,35 @@ import UserTransformer from '#transformers/user_transformer'
 
 @inject()
 export default class AcceptInvitationController {
-  constructor(
-    protected invitationService: InvitationService,
-    protected errorHandler: ErrorHandlerService
-  ) {}
+  constructor(protected invitationService: InvitationService) {}
 
   async render(ctx: HttpContext) {
     const { inertia, params } = ctx
 
-    try {
-      const payload = await invitationValidator.validate(params)
-      const user = await this.invitationService.get(payload.token as FullToken)
+    const payload = await invitationValidator.validate(params)
+    const user = await this.invitationService.get(payload.token as FullToken)
 
-      return inertia.render('auth/front/accept_invitation', {
-        token: payload.token,
-        user: UserTransformer.transform(user),
-      })
-    } catch (error) {
-      return this.errorHandler.handle(ctx, error)
-    }
+    return inertia.render('auth/front/accept_invitation', {
+      token: payload.token,
+      user: UserTransformer.transform(user),
+    })
   }
 
   async execute(ctx: HttpContext) {
     const { response, request, auth, session, i18n } = ctx
 
-    try {
-      const { token } = await invitationValidator.validate(request.only(['token']))
+    const { token } = await invitationValidator.validate(request.only(['token']))
 
-      const invitation = await this.invitationService.get(token as FullToken)
+    const invitation = await this.invitationService.get(token as FullToken)
 
-      const payload = await acceptInvitationValidator(invitation.id).validate(request.all())
+    const payload = await acceptInvitationValidator(invitation.id).validate(request.all())
 
-      const user = await this.invitationService.accept(token as FullToken, payload)
+    const user = await this.invitationService.accept(token as FullToken, payload)
 
-      await auth.use('web').login(user)
+    await auth.use('web').login(user)
 
-      session.flash('success', i18n.t('auth.invitation.accepted'))
+    session.flash('success', i18n.t('auth.invitation.accepted'))
 
-      return response.redirect().toRoute('settings.index')
-    } catch (error) {
-      return this.errorHandler.handle(ctx, error)
-    }
+    return response.redirect().toRoute('settings.index')
   }
 }

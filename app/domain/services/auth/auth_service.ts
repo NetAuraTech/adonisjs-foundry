@@ -1,4 +1,3 @@
-import { Exception } from '@adonisjs/core/exceptions'
 import { inject } from '@adonisjs/core'
 import User from '#models/auth/user'
 import { RegisterPayload } from '#types/auth'
@@ -9,6 +8,7 @@ import { extractNameFromEmail, generateUniqueUsername } from '#helpers/auth/user
 import EmailAlreadyExistsException from '#exceptions/account/email_already_exists_exception'
 import PreferencesRepository from '#repositories/preferences/preferences_repository'
 import { Locale } from '#types/preferences'
+import InvalidCredentialsException from '#exceptions/auth/invalid_credentials_exception'
 
 /**
  * Handles core credential-based authentication operations: login,
@@ -31,14 +31,13 @@ export class AuthService {
    * Authenticates a user by verifying their email and password.
    *
    * Any error raised by the underlying credential check is intentionally
-   * caught and re-thrown as a generic `E_INVALID_CREDENTIALS` exception to
+   * caught and re-thrown as a InvalidCredentialsException to
    * avoid leaking whether the email or the password was wrong.
    *
    * @param email - The user's email address.
    * @param password - The user's plain-text password.
    * @returns The authenticated {@link User}.
-   * @throws {Exception} With status `401` and code `E_INVALID_CREDENTIALS`
-   *   if the email/password pair is incorrect.
+   * @throws {InvalidCredentialsException} if the email/password pair is incorrect.
    *
    * @example
    * const user = await authService.login('user@example.com', 'secret')
@@ -58,10 +57,7 @@ export class AuthService {
         userEmail: email,
       })
 
-      throw new Exception('Invalid credentials', {
-        status: 401,
-        code: 'E_INVALID_CREDENTIALS',
-      })
+      throw new InvalidCredentialsException()
     }
   }
 
@@ -87,7 +83,7 @@ export class AuthService {
         userEmail: payload.email,
       })
 
-      throw new EmailAlreadyExistsException()
+      throw new EmailAlreadyExistsException(payload.email)
     }
 
     const userRole = await this.roleRepository.getUserRole()

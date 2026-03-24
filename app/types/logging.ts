@@ -1,5 +1,3 @@
-import { type HttpContext } from '@adonisjs/core/http'
-
 export enum LogLevel {
   DEBUG = 'debug',
   INFO = 'info',
@@ -37,17 +35,4 @@ export interface LogEntry {
   context?: LogContext
   error?: Error
   metadata?: Record<string, any>
-}
-
-export interface CustomErrorHandler {
-  code?: string
-  exception?: any
-  message?: string
-  callback?: (ctx: HttpContext) => any
-}
-
-export interface ErrorHandler {
-  handle(ctx: HttpContext, error: any, customHandlers?: CustomErrorHandler[]): Promise<any>
-  handleApi(ctx: HttpContext, error: any, customHandlers?: CustomErrorHandler[]): Promise<any>
-  isApiRequest(ctx: HttpContext): boolean
 }

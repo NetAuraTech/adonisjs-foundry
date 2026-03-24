@@ -5,11 +5,7 @@
       "success": "Your account has been deleted successfully."
     },
     "password": {
-      "current": {
-        "failed": "The current password is incorrect."
-      },
-      "success": "Your password has been updated successfully.",
-      "failed": "The password is incorrect."
+      "success": "Your password has been updated successfully."
     }
   },
   "profile": {

@@ -1,20 +1,24 @@
 import { Exception } from '@adonisjs/core/exceptions'
-import { type LucidModel } from '@adonisjs/lucid/types/model'
 import type { HttpContext } from '@adonisjs/core/http'
 import app from '@adonisjs/core/services/app'
 
-export default class RowNotFoundException extends Exception {
-  static readonly status: number = 404
-  static readonly code: string = 'E_ROW_NOT_FOUND'
+export default class SlugExistsException extends Exception {
+  static status = 409
+  static code = 'E_SLUG_EXISTS'
 
-  constructor(private model?: LucidModel) {
-    super('The requested resource cannot be found.')
+  constructor(private slug: string) {
+    super(`Slug "${slug}" is already taken.`, {
+      status: SlugExistsException.status,
+      code: SlugExistsException.code,
+    })
   }
 
   async handle(error: this, ctx: HttpContext) {
     const { request, response, session, i18n } = ctx
 
-    const message = i18n.t(`exceptions.${error.code}`)
+    const message = i18n.t(`exceptions.${error.code}`, {
+      slug: error.slug,
+    })
 
     if (request.wantsJSON()) {
       return response.status(error.status).send({
@@ -22,7 +26,7 @@ export default class RowNotFoundException extends Exception {
           code: error.code,
           message: message,
           details: {
-            model: error.model,
+            slug: error.slug,
           },
           ...(app.inDev && { stack: error.stack }),
         },

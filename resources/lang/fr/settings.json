@@ -5,8 +5,7 @@
       "success": "Votre compte a été supprimé avec succès."
     },
     "password": {
-      "success": "Votre mot de passe a été mis à jour avec succès.",
-      "failed": "Le mot de passe est incorrect."
+      "success": "Votre mot de passe a été mis à jour avec succès."
     }
   },
   "profile": {
