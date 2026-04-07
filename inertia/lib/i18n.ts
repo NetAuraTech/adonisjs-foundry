@@ -40,7 +40,7 @@ interface JsonModule {
  */
 const locales = import.meta.glob<JsonModule>('~/locales/**/*.json', { eager: true })
 
-const resources: Record<string, any> = {}
+export const resources: Record<string, any> = {}
 const namespaces: string[] = []
 
 /**

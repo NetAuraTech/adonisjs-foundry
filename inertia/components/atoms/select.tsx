@@ -14,7 +14,7 @@ interface SelectProps {
   disabled?: boolean
   required?: boolean
   onChange?: (event: ChangeEvent<HTMLSelectElement>) => void
-  onBlur?: (event: ChangeEvent<HTMLSelectElement>) => void
+  onBlur?: (event?: ChangeEvent<HTMLSelectElement>) => void
   /** `<SelectOption>` elements rendered as the select's option list. */
   children?: ReactNode
 }

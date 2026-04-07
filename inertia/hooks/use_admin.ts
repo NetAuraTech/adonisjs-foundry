@@ -58,8 +58,29 @@ export function useMenu(overrides: Menu = {}) {
     main: [
       {
         label: t('dashboard.value'),
+        icon: 'House',
         route: 'admin.dashboard.render',
         permission: 'admin.access',
+      },
+    ],
+    content: [
+      {
+        label: t('pages.value'),
+        icon: 'PanelsTopLeft',
+        route: 'admin.pages.render',
+        permission: 'pages.view',
+      },
+      {
+        label: t('templates.value'),
+        icon: 'LayoutTemplate',
+        route: 'admin.templates.render',
+        permission: 'templates.manage',
+      },
+      {
+        label: t('files.value'),
+        icon: 'Folder',
+        route: 'admin.files.render',
+        permission: 'files.view',
       },
     ],
     access_control: [

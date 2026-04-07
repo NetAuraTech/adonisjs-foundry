@@ -51,4 +51,27 @@ export default class User extends compose(UserSchema, withAuthFinder(hash)) {
   get isEmailVerified(): boolean {
     return this.emailVerifiedAt !== null
   }
+
+  async can(slug: string): Promise<boolean> {
+    if (!this.roleId) {
+      return false
+    }
+
+    const role = await (this as User).related('role').query().preload('permissions').first()
+
+    if (!role) {
+      return false
+    }
+
+    return role.permissions.some((p) => p.slug === slug)
+  }
+
+  async hasAnyRole(slugs: string[]): Promise<boolean> {
+    if (!this.roleId) {
+      return false
+    }
+
+    const role = await (this as User).related('role').query().first()
+    return role ? slugs.includes(role.slug) : false
+  }
 }

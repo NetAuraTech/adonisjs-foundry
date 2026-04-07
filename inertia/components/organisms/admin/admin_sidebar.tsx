@@ -63,11 +63,11 @@ export function AdminSidebar(props: AdminSidebarProps) {
         </div>
       </Card>
       <Card>
-        <nav>
+        <nav className="grid gap-1">
           {Object.entries(menu).map(([category, entries]) => (
             <div key={`admin-category-${category}`}>
               <Heading level={4}>{t(`category.${category}`)}</Heading>
-              <ul>
+              <ul className="grid gap-1">
                 {entries.map((entry) => (
                   <li key={`admin-category-${category}-${entry.label}`}>
                     <CanAccess permission={entry.permission}>
@@ -75,6 +75,7 @@ export function AdminSidebar(props: AdminSidebarProps) {
                         label={entry.label}
                         route={entry.route}
                         routeParams={entry.routeParams}
+                        variant="admin_nav"
                       >
                         {entry.icon && <Icon name={entry.icon} />}
                       </NavLink>

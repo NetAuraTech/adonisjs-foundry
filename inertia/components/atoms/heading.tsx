@@ -14,6 +14,7 @@ interface HeadingProps {
    * Defaults to `'text-ink'`.
    */
   color?: string
+  flex?: boolean
   children: ReactNode
 }
 
@@ -29,7 +30,7 @@ interface HeadingProps {
  * <Heading level={3} color="text-ink-muted">Section subtitle</Heading>
  */
 export function Heading(props: HeadingProps) {
-  const { level, color = 'text-ink', children } = props
+  const { level, color = 'text-ink', flex, children } = props
 
   const Tag = `h${level}` as ElementType
 
@@ -40,5 +41,9 @@ export function Heading(props: HeadingProps) {
     4: 'text-xl',
   }
 
-  return <Tag className={`${levels[level]} font-bold ${color}`}>{children}</Tag>
+  return (
+    <Tag className={`${levels[level]} font-bold ${color}${flex ? ' flex gap-2 items-center' : ''}`}>
+      {children}
+    </Tag>
+  )
 }

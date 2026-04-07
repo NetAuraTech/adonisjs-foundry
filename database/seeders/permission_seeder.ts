@@ -8,6 +8,9 @@ export default class extends BaseSeeder {
       users: ['view', 'create', 'update', 'delete', 'manage_roles'],
       roles: ['view', 'create', 'update', 'delete', 'manage_permissions'],
       permissions: ['view', 'create', 'update', 'delete'],
+      pages: ['view', 'create', 'update', 'delete', 'publish'],
+      templates: ['manage'],
+      files: ['view', 'upload', 'delete'],
     }
 
     const permissions = Object.entries(categories).flatMap(([category, actions]) =>

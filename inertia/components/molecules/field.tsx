@@ -6,6 +6,7 @@ import { Input } from '~/components/atoms/input'
 import { Textarea } from '~/components/atoms/textarea'
 import { Select } from '~/components/atoms/select'
 import { Checkbox } from '~/components/atoms/checkbox'
+import { ImagePicker } from '~/components/molecules/image_picker'
 
 interface FieldProps {
   /** Visible label text associated with the input. */
@@ -46,7 +47,7 @@ interface FieldProps {
   onChange?: (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => void
-  onBlur?: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void
+  onBlur?: (event?: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void
   /**
    * When `true` (default), the field value is sanitized on blur using the
    * sanitizer resolved for the given `type`. Sanitization trims whitespace
@@ -131,9 +132,9 @@ export function Field(props: FieldProps) {
 
   /** Handle blur — apply sanitization when the user leaves the field. */
   const handleBlur = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    event?: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> | null
   ) => {
-    if (type !== 'checkbox' && type !== 'radio' && sanitize) {
+    if (event && type !== 'checkbox' && type !== 'radio' && sanitize) {
       const sanitizedValue = sanitizer(event.target.value)
 
       if (sanitizedValue !== event.target.value) {
@@ -142,7 +143,7 @@ export function Field(props: FieldProps) {
       }
     }
 
-    onBlur?.(event)
+    onBlur?.(event ?? undefined)
   }
 
   const getComponentFromType = (type: string) => {
@@ -153,6 +154,8 @@ export function Field(props: FieldProps) {
         return Select
       case 'checkbox':
         return Checkbox
+      case 'image':
+        return ImagePicker
       default:
         return Input
     }

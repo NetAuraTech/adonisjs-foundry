@@ -14,6 +14,7 @@ import { StatusEnum, UserStatus } from '~/components/atoms/user_status'
 import type { OAuthProvider } from '#types/auth'
 import { getIcon } from '~/helpers/oauth'
 import { capitalize } from '~/lib/string'
+import { Separator } from '~/components/atoms/separator'
 
 type PageProps = {
   user: Data.User
@@ -85,6 +86,7 @@ export default function UsersShowPage(props: PageProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 items-start">
             <div className="grid gap-3">
               <Heading level={3}>{t('admin:users.show.info.value')}</Heading>
+              <Separator />
               <div className="grid">
                 <span className="font-bold">{t('admin:users.show.info.email')}</span>
                 <span className="flex gap-2 items-center text-ink-muted">
@@ -98,6 +100,7 @@ export default function UsersShowPage(props: PageProps) {
             </div>
             <div className="grid gap-3">
               <Heading level={3}>{t('admin:users.show.history.value')}</Heading>
+              <Separator />
               {user.createdAt && (
                 <div className="grid">
                   <span className="font-bold">{t('admin:users.show.history.created_at')}</span>
@@ -125,6 +128,7 @@ export default function UsersShowPage(props: PageProps) {
             </div>
             <div className="grid gap-3">
               <Heading level={3}>{t('admin:users.show.providers.value')}</Heading>
+              <Separator />
               {providers.map((provider) => {
                 const isConnected = user.connectedProviders[provider]
 
@@ -148,6 +152,7 @@ export default function UsersShowPage(props: PageProps) {
           </div>
           <div className="grid gap-3">
             <Heading level={3}>{t('admin:users.show.role.value')}</Heading>
+            <Separator />
             <div className="grid">
               <span className="font-bold">{t('admin:users.show.role.current')}</span>
               <span className="text-ink-muted">{t(user.role.name)}</span>

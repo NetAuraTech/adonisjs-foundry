@@ -71,8 +71,243 @@
     "value": "Utilisateurs",
     "value_one": "Utilisateur"
   },
+  "pages": {
+    "list": {
+      "action": "Créer une nouvelle page",
+      "empty": "Aucune page trouvée.",
+      "title": "Gérer les pages"
+    },
+    "show": {
+      "title": "Voir la page : {title}",
+      "translation": "Traductions ({count})",
+      "meta": {
+        "title": "A un méta-titre",
+        "id": "ID de la page",
+        "locale": "Langue par défaut",
+        "translations": "Traductions",
+        "created": "Créée le",
+        "updated": "Dernière mise à jour",
+        "value": "Métadonnées"
+      },
+      "revision": {
+        "view": "Voir la révision",
+        "value": "Historique des révisions",
+        "pin": "Épingler la révision (exclure de la suppression automatique)",
+        "unpin": "Désépingler la révision",
+        "restore": {
+          "confirm": "Restaurer cette révision ? Le contenu actuel sera d'abord sauvegardé en tant que nouvelle révision.",
+          "value": "Restaurer"
+        },
+        "latest": "Dernière en date",
+        "index": "Index",
+        "created": {
+          "at": "Créée le",
+          "by": "Créée par"
+        },
+        "back": "Retour à l'éditeur",
+        "empty": {
+          "value": "Aucune révision pour le moment",
+          "help": "Les révisions sont sauvegardées automatiquement lorsque vous mettez à jour une traduction."
+        },
+        "help": "Jusqu'à 10 révisions sont conservées automatiquement. Les révisions épinglées ne sont jamais supprimées."
+      },
+      "last_update": "Dernière mise à jour",
+      "default": "Par défaut"
+    },
+    "create": {
+      "title": "Créer une nouvelle page",
+      "details": {
+        "value": "Détails de la page"
+      },
+      "seo": {
+        "value": "SEO",
+        "help": "Optionnel - Utilise par défaut le {title} s'il est vide."
+      }
+    },
+    "edit": {
+      "title": "Modifier la page : {title}"
+    },
+    "delete": {
+      "title": "Supprimer la page : {title}",
+      "confirm": "Êtes-vous sûr de vouloir supprimer cette page ? Cela supprimera définitivement la page, ainsi que toutes ses traductions et révisions. Cette action est irréversible."
+    },
+    "status": {
+      "all": "Tous",
+      "draft": "Brouillon",
+      "published": "Publiée",
+      "archived": "Archivée",
+      "value": "Statut"
+    },
+    "locale": {
+      "all": "Toutes",
+      "value": "Langue"
+    },
+    "title": {
+      "value": "Titre"
+    },
+    "slug": {
+      "value": "Slug (URL)"
+    },
+    "form": {
+      "title": {
+        "value": "Titre",
+        "placeholder": "Ma super page"
+      },
+      "locale": {
+        "default": "Langue par défaut"
+      },
+      "slug": {
+        "value": "Slug (URL)"
+      },
+      "meta": {
+        "title": {
+          "value": "Méta-titre",
+          "placeholder": "Ma super page"
+        },
+        "description": {
+          "value": "Méta-description",
+          "placeholder": "Une courte description affichée dans les résultats de recherche."
+        }
+      },
+      "submit": "Envoyer"
+    },
+    "value": "Pages"
+  },
+  "templates": {
+    "list": {
+      "title": "Gérer les modèles",
+      "empty": {
+        "help": "Les modèles sont créés à partir des pages dans l'éditeur de page.",
+        "value": "Aucun modèle pour le moment"
+      },
+      "search": {
+        "type": {
+          "page": "Page",
+          "block": "Bloc",
+          "placeholder": "Tous",
+          "value": "Type"
+        }
+      }
+    },
+    "delete": {
+      "title": "Supprimer le modèle : {name}",
+      "confirm": "Êtes-vous sûr de vouloir supprimer ce modèle ?"
+    },
+    "value": "Modèles"
+  },
+  "files": {
+    "list": {
+      "title": "Gérer les fichiers",
+      "action": {
+        "upload": "Téléverser",
+        "folders": "Dossiers"
+      },
+      "folders": {
+        "all": "Tous"
+      },
+      "search": {
+        "type": {
+          "value": "Type de fichier",
+          "options": {
+            "placeholder": "Tous les types",
+            "image": "Images",
+            "video": "Vidéos",
+            "audio": "Audio",
+            "pdf": "PDF"
+          }
+        }
+      }
+    },
+    "show": {
+      "title": "Ouvrir",
+      "alts": {
+        "title": "Textes alternatifs",
+        "empty": "Aucun texte alternatif pour le moment.",
+        "add": "Ajouter",
+        "close": "Fermer",
+        "edit": "Modifier",
+        "delete": {
+          "value": "Supprimer",
+          "confirm": "Êtes-vous sûr de vouloir supprimer ce texte alternatif ?"
+        },
+        "form": {
+          "locale": {
+            "value": "Langue"
+          },
+          "key": {
+            "value": "Clé",
+            "placeholder": "image_principale, vignette, ..."
+          },
+          "alt_text": {
+            "value": "Texte alternatif",
+            "placeholder": "Texte descriptif"
+          },
+          "submit": "Ajouter",
+          "cancel": "Annuler",
+          "update": "Mettre à jour"
+        }
+      }
+    },
+    "delete": {
+      "title": "Supprimer le fichier : {filename}",
+      "confirm": "Êtes-vous sûr de vouloir supprimer ce fichier ?"
+    },
+    "upload": {
+      "remove": "Retirer",
+      "submit": "Téléverser le fichier",
+      "help": "Cliquez pour téléverser ou glissez-déposez",
+      "try_again": "Essayez un autre fichier",
+      "max_size": "Max {size}",
+      "error": {
+        "size": "Le fichier dépasse la limite de {max}"
+      }
+    },
+    "form": {
+      "name": {
+        "value": "Nom"
+      },
+      "type": {
+        "value": "Type"
+      },
+      "size": {
+        "value": "Taille"
+      },
+      "uploaded_at": {
+        "value": "Téléversé le"
+      }
+    },
+    "value": "Fichiers"
+  },
+  "folders": {
+    "list": {
+      "title": "Gérer les dossiers",
+      "add": "Ajouter un sous-dossier",
+      "rename": "Renommer le dossier",
+      "browse": "Parcourir les fichiers",
+      "empty": {
+        "value": "Aucun dossier pour le moment.",
+        "help": "Créez un dossier ci-dessus pour commencer à organiser vos fichiers."
+      }
+    },
+    "delete": {
+      "title": "Supprimer le dossier {folder}",
+      "confirm": "Êtes-vous sûr de vouloir supprimer ce dossier ?"
+    },
+    "form": {
+      "name": {
+        "root": "Nouveau dossier racine",
+        "sub": "Nouveau sous-dossier",
+        "placeholder": "Nom du dossier"
+      },
+      "help": "Sera créé à l'intérieur du dossier sélectionné.",
+      "create": "Créer",
+      "cancel": "Annuler",
+      "update": "Mettre à jour"
+    }
+  },
   "category": {
     "access_control": "Contrôle d'accès",
+    "content": "Contenu",
     "main": ""
   },
   "search": {

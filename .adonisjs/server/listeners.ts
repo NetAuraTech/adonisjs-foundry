@@ -15,4 +15,7 @@ export const listeners = {
     SendForgotPasswordEmail: () => import('#listeners/auth/send_forgot_password_email'),
     SendVerificationEmail: () => import('#listeners/auth/send_verification_email'),
   },
+  page: {
+    SendContactFormEmail: () => import('#listeners/page/send_contact_form_email'),
+  },
 }

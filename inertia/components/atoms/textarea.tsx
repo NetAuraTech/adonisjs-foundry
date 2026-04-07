@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react'
+import { ChangeEvent, ReactNode } from 'react'
 
 interface TextareaProps {
   /** The `name` and `id` attribute of the underlying `<textarea>`. */
@@ -12,7 +12,8 @@ interface TextareaProps {
   disabled?: boolean
   required?: boolean
   onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void
-  onBlur?: (event: ChangeEvent<HTMLTextAreaElement>) => void
+  onBlur?: (event?: ChangeEvent<HTMLTextAreaElement>) => void
+  children?: ReactNode
 }
 
 /**
@@ -39,6 +40,7 @@ export function Textarea(props: TextareaProps) {
     required,
     onChange,
     onBlur,
+    children,
     ...inputProps
   } = props
 

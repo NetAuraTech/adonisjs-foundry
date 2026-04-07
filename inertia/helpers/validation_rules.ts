@@ -339,4 +339,16 @@ export const presets = {
     rules.maxLength(255, fieldNameKey),
     rules.oneOf(allowedValues, fieldNameKey),
   ],
+
+  title: (fieldNameKey?: string) => [
+    rules.required(fieldNameKey),
+    rules.minLength(3, fieldNameKey),
+    rules.maxLength(150, fieldNameKey),
+  ],
+
+  slug: (fieldNameKey?: string) => [
+    rules.required(fieldNameKey),
+    rules.minLength(3, fieldNameKey),
+    rules.maxLength(255, fieldNameKey),
+  ],
 }

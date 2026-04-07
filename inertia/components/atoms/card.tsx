@@ -29,6 +29,8 @@ interface CardProps {
    * Defaults to `'muted'`.
    */
   border?: 'none' | 'muted' | 'danger'
+  padding?: string
+  className?: string
 }
 
 /**
@@ -56,7 +58,16 @@ interface CardProps {
  * </Card>
  */
 export function Card(props: CardProps) {
-  const { children, title, subtitle, header, footer, border = 'muted' } = props
+  const {
+    children,
+    title,
+    subtitle,
+    header,
+    footer,
+    border = 'muted',
+    padding = 'p-8',
+    className,
+  } = props
 
   const borders = {
     none: '',
@@ -65,7 +76,7 @@ export function Card(props: CardProps) {
   }
 
   return (
-    <div className={`card ${borders[border]}`}>
+    <div className={`card ${borders[border]} ${className}`}>
       {(header || title) && (
         <div className="p-8 border-b border-solid border-edge">
           {header ? (
@@ -82,7 +93,7 @@ export function Card(props: CardProps) {
           )}
         </div>
       )}
-      <div className="p-8">{children}</div>
+      <div className={padding}>{children}</div>
       {footer && <div className="p-8 border-t border-solid border-edge bg-sunken">{footer}</div>}
     </div>
   )

@@ -1,3 +1,5 @@
+import { type HttpContext } from '@adonisjs/core/http'
+
 export const TOKEN_TYPES = {
   PASSWORD_RESET: 'PASSWORD_RESET',
   EMAIL_VERIFICATION: 'EMAIL_VERIFICATION',
@@ -15,3 +17,9 @@ export interface FindOptions {
 }
 
 export type FullToken = `${string}.${string}`
+
+export interface ThrottleOptions {
+  max: number
+  window: number
+  key_generator?: (ctx: HttpContext) => string
+}

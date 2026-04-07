@@ -32,6 +32,33 @@ export const controllers = {
       Dashboard: () => import('#controllers/core/cms/dashboard_controller'),
     },
   },
+  file: {
+    api: {
+      File: () => import('#controllers/file/api/file_controller'),
+    },
+    cms: {
+      FileFolders: () => import('#controllers/file/cms/file_folders_controller'),
+      Files: () => import('#controllers/file/cms/files_controller'),
+    },
+  },
+  page: {
+    api: {
+      BuilderOperations: () => import('#controllers/page/api/builder_operations_controller'),
+    },
+    cms: {
+      PageRevisions: () => import('#controllers/page/cms/page_revisions_controller'),
+      PageTranslations: () => import('#controllers/page/cms/page_translations_controller'),
+      Pages: () => import('#controllers/page/cms/pages_controller'),
+      PagesCreate: () => import('#controllers/page/cms/pages_create_controller'),
+      PagesPreview: () => import('#controllers/page/cms/pages_preview_controller'),
+      PagesShow: () => import('#controllers/page/cms/pages_show_controller'),
+      PagesUpdate: () => import('#controllers/page/cms/pages_update_controller'),
+    },
+    front: {
+      Contact: () => import('#controllers/page/front/contact_controller'),
+      Page: () => import('#controllers/page/front/page_controller'),
+    },
+  },
   preferences: {
     api: {
       Theme: () => import('#controllers/preferences/api/theme_controller'),
@@ -43,6 +70,11 @@ export const controllers = {
   profile: {
     front: {
       Profile: () => import('#controllers/profile/front/profile_controller'),
+    },
+  },
+  template: {
+    cms: {
+      Templates: () => import('#controllers/template/cms/templates_controller'),
     },
   },
 }

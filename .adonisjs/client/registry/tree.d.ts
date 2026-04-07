@@ -2,6 +2,14 @@
 import type { routes } from './index.ts'
 
 export interface ApiDefinition {
+  drive: {
+    fs: {
+      serve: typeof routes['drive.fs.serve']
+    }
+  }
+  eventStream: typeof routes['event_stream']
+  subscribe: typeof routes['subscribe']
+  unsubscribe: typeof routes['unsubscribe']
   home: typeof routes['home']
   auth: {
     session: {
@@ -75,8 +83,83 @@ export interface ApiDefinition {
       render: typeof routes['admin.users_update.render']
       execute: typeof routes['admin.users_update.execute']
     }
+    pages: {
+      render: typeof routes['admin.pages.render']
+      destroy: typeof routes['admin.pages.destroy']
+    }
+    pagesCreate: {
+      render: typeof routes['admin.pages_create.render']
+      execute: typeof routes['admin.pages_create.execute']
+    }
+    pagesShow: {
+      render: typeof routes['admin.pages_show.render']
+    }
+    pagesUpdate: {
+      render: typeof routes['admin.pages_update.render']
+      execute: typeof routes['admin.pages_update.execute']
+      publish: typeof routes['admin.pages_update.publish']
+      unpublish: typeof routes['admin.pages_update.unpublish']
+    }
+    pageTranslations: {
+      execute: typeof routes['admin.page_translations.execute']
+    }
+    pageRevisions: {
+      index: typeof routes['admin.page_revisions.index']
+      restore: typeof routes['admin.page_revisions.restore']
+      toggleKeep: typeof routes['admin.page_revisions.toggle_keep']
+    }
+    pagesPreview: {
+      render: typeof routes['admin.pages_preview.render']
+    }
+    templates: {
+      render: typeof routes['admin.templates.render']
+      execute: typeof routes['admin.templates.execute']
+      createFromPage: typeof routes['admin.templates.create_from_page']
+      applyToPage: typeof routes['admin.templates.apply_to_page']
+      update: typeof routes['admin.templates.update']
+      destroy: typeof routes['admin.templates.destroy']
+    }
+    files: {
+      render: typeof routes['admin.files.render']
+      upload: typeof routes['admin.files.upload']
+      move: typeof routes['admin.files.move']
+      destroy: typeof routes['admin.files.destroy']
+      upsertAlt: typeof routes['admin.files.upsert_alt']
+      deleteAlt: typeof routes['admin.files.delete_alt']
+    }
+    fileFolders: {
+      render: typeof routes['admin.file_folders.render']
+      execute: typeof routes['admin.file_folders.execute']
+      update: typeof routes['admin.file_folders.update']
+      destroy: typeof routes['admin.file_folders.destroy']
+    }
   }
-  theme: {
-    execute: typeof routes['theme.execute']
+  api: {
+    theme: {
+      execute: typeof routes['api.theme.execute']
+    }
+    admin: {
+      builderOperations: {
+        execute: typeof routes['api.admin.builder_operations.execute']
+        presence: typeof routes['api.admin.builder_operations.presence']
+        saveDraft: typeof routes['api.admin.builder_operations.save_draft']
+      }
+      pagesPreview: {
+        token: typeof routes['api.admin.pages_preview.token']
+      }
+      file: {
+        list: typeof routes['api.admin.file.list']
+        find: typeof routes['api.admin.file.find']
+      }
+    }
+  }
+  contact: {
+    execute: typeof routes['contact.execute']
+  }
+  page: {
+    localised: {
+      render: typeof routes['page.localised.render']
+    }
+    render: typeof routes['page.render']
   }
 }

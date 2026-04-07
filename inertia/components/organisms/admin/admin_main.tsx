@@ -53,8 +53,8 @@ export function AdminMain(props: AdminMainBaseProps) {
   return (
     <Section className="py-8 grid gap-4">
       <Head title={title} />
-      <div className="flex justify-between items-center w-full">
-        <Heading level={2}>
+      <div className="flex gap-3 flex-col md:flex-row justify-between md:items-center w-full">
+        <Heading level={2} flex>
           {icon && <Icon name={icon} size={32} />}
           {title}
         </Heading>

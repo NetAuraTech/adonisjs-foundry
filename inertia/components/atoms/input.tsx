@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react'
+import { ChangeEvent, ReactNode } from 'react'
 
 interface InputProps {
   /** The `name` and `id` attribute of the underlying `<input>`. */
@@ -10,7 +10,8 @@ interface InputProps {
   disabled?: boolean
   required?: boolean
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void
-  onBlur?: (event: ChangeEvent<HTMLInputElement>) => void
+  onBlur?: (event?: ChangeEvent<HTMLInputElement>) => void
+  children?: ReactNode
 }
 
 /**
@@ -38,6 +39,7 @@ export function Input(props: InputProps) {
     required,
     onChange,
     onBlur,
+    children,
     ...inputProps
   } = props
 

@@ -30,6 +30,7 @@ interface ButtonBaseProps {
     | 'outline'
     | 'social'
     | 'icon'
+    | 'icon_success'
     | 'icon_danger'
     | 'icon_warning'
     | 'icon_info'
@@ -65,6 +66,21 @@ type ButtonNoRouteProps = ButtonBaseProps & {
 type ButtonProps<R extends NonNullable<LinkProps['route']>> =
   | ButtonRouteProps<R>
   | ButtonNoRouteProps
+
+export const variants = {
+  primary: 'bg-primary text-ink-inverted hover:bg-primary-deep',
+  accent: 'bg-accent text-ink-inverted hover:bg-accent-deep',
+  danger: 'bg-danger text-ink-inverted hover:opacity-90',
+  success: 'bg-success text-ink-inverted hover:opacity-90',
+  outline:
+    'border-2 border-solid border-primary text-primary hover:bg-primary hover:text-ink-inverted',
+  social: 'bg-surface border border-solid border-edge hover:border-edge-strong shadow text-ink',
+  icon: 'hover:bg-primary-soft hover:text-ink-inverted p-2',
+  icon_success: 'bg-success-soft text-success hover:bg-success hover:text-ink-inverted p-2',
+  icon_danger: 'bg-danger-soft text-danger hover:bg-danger hover:text-ink-inverted p-2',
+  icon_warning: 'bg-warning-soft text-warning hover:bg-warning hover:text-ink-inverted p-2',
+  icon_info: 'bg-info-soft text-info hover:bg-info hover:text-ink-inverted p-2',
+}
 
 /**
  * Polymorphic button component that renders as a `<button>`, an Inertia
@@ -109,20 +125,6 @@ export function Button<R extends NonNullable<LinkProps['route']>>(props: ButtonP
 
   const state = loading || disabled ? 'disabled' : 'active'
   const size = fitContent ? 'fit' : 'full'
-
-  const variants = {
-    primary: 'bg-primary text-ink-inverted hover:bg-primary-deep',
-    accent: 'bg-accent text-ink-inverted hover:bg-accent-deep',
-    danger: 'bg-danger text-ink-inverted hover:opacity-90',
-    success: 'bg-success text-ink-inverted hover:opacity-90',
-    outline:
-      'border-2 border-solid border-primary text-primary hover:bg-primary hover:text-ink-inverted',
-    social: 'bg-surface border border-solid border-edge hover:border-edge-strong shadow text-ink',
-    icon: 'hover:text-primary p-2',
-    icon_danger: 'bg-danger-soft text-danger hover:bg-danger hover:text-ink-inverted p-2',
-    icon_warning: 'bg-warning-soft text-warning hover:bg-warning hover:text-ink-inverted p-2',
-    icon_info: 'bg-info-soft text-info hover:bg-info hover:text-ink-inverted p-2',
-  }
 
   const states = {
     active: '',

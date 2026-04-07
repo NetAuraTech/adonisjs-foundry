@@ -1,5 +1,5 @@
 import { usePage } from '@inertiajs/react'
-import { ReactNode } from 'react'
+import { ReactNode, MouseEvent } from 'react'
 import type { FontSize } from '~/types/font'
 import { getFontSizeClass } from '~/utils/font'
 import { Link } from '@adonisjs/inertia/react'
@@ -13,7 +13,7 @@ type NavLinkBaseProps = {
   title?: string
   /** Optional leading content (e.g. an `<Icon>`). Rendered before `label`. */
   children?: ReactNode
-  onClick?: () => void
+  onClick?: (e: MouseEvent) => void
   /** Font size token. Defaults to `'base'`. */
   fs?: FontSize
   /**
@@ -23,14 +23,17 @@ type NavLinkBaseProps = {
    * - `'nav'` — neutral text that turns accent on hover and when active.
    * - `'setting_nav'` — tab-style link with a bottom border indicator.
    * - `'pagination'` — button-shaped link used inside `<Pagination>`.
+   * - `'admin_nav'` — button-shaped link used inside Administration.
    */
-  variant?: 'link' | 'nav' | 'setting_nav' | 'pagination'
+  variant?: 'link' | 'nav' | 'setting_nav' | 'pagination' | 'admin_nav'
   fitContent?: boolean
   /** Disables pointer events and applies a reduced-opacity style. */
   disabled?: boolean
+  /** Bypass isActive logic */
+  isActive?: boolean
 }
 
-type NavLinkProps<R extends NonNullable<LinkProps['route']>> = NavLinkBaseProps & {
+type NavLinkRouteProps<R extends NonNullable<LinkProps['route']>> = NavLinkBaseProps & {
   route: R
   /** Optional URL fragment appended to the resolved href (e.g. `'section-1'`). */
   anchor?: string
@@ -43,6 +46,34 @@ type NavLinkProps<R extends NonNullable<LinkProps['route']>> = NavLinkBaseProps 
 } & (LinkParams<R>['routeParams'] extends undefined | never
     ? { routeParams?: never }
     : { routeParams: LinkParams<R>['routeParams'] })
+
+type NavLinkNoRouteProps = NavLinkBaseProps & {
+  route?: never
+  routeParams?: never
+  /** Optional URL fragment appended to the resolved href (e.g. `'section-1'`). */
+  anchor?: string
+  /**
+   * Query-string parameters merged into the URL. When provided the link uses
+   * a plain `href` instead of an Inertia route so the query string is
+   * preserved correctly.
+   */
+  qs?: Record<string, any> | undefined
+}
+
+type NavLinkProps<R extends NonNullable<LinkProps['route']>> =
+  | NavLinkRouteProps<R>
+  | NavLinkNoRouteProps
+
+export const variants = {
+  link: 'text-accent hover:text-accent-deep',
+  nav: 'text-ink current:text-accent hover:text-accent',
+  setting_nav:
+    'px-4 py-2.5 border-b-2 -mb-px border-transparent current:border-accent hover:border-accent text-ink-muted current:text-accent hover:text-accent cursor-pointer',
+  pagination:
+    'button font-normal hover:bg-primary hover:text-ink-inverted current:bg-primary current:text-ink-inverted px-2 py-1',
+  admin_nav:
+    'flex items-center gap-2 p-3 rounded hover:text-ink-inverted hover:bg-primary-deep current:text-ink-inverted current:bg-primary-deep',
+}
 
 /**
  * Navigation link component with active-state detection.
@@ -78,36 +109,41 @@ export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLin
   const { url } = usePage()
   const fontSizeClass = getFontSizeClass(fs)
 
-  const resolvedHref = (urlFor as (route: string, params?: unknown) => string)(
-    props.route,
-    props.routeParams
-  )
+  const resolvedHref = props.route
+    ? (urlFor as (route: string, params?: unknown) => string)(props.route, props.routeParams)
+    : ''
 
   const [currentPath, currentSearch] = url.split('?')
   const currentParams = new URLSearchParams(currentSearch ?? '')
 
-  const pathMatches = currentPath === resolvedHref || currentPath.startsWith(`${resolvedHref}/`)
+  const pathMatches = currentPath === resolvedHref
 
-  const qsMatches = (() => {
-    if (!props.qs) return true
+  const qsMatches: boolean = (() => {
+    const cleanQs = Object.fromEntries(Object.entries(props.qs ?? {}).filter(([_, v]) => v != null))
 
-    return Object.entries(props.qs).every(([key, value]) => {
+    const entries = Object.entries(cleanQs)
+
+    const allPropsMatch = entries.every(([key, value]) => {
       const currentValue = currentParams.get(key)
       if (key === 'page' && value === 1 && currentValue === null) return true
       return currentValue === String(value)
     })
+
+    const activeCurrentKeys = Array.from(currentParams.keys()).filter((key) => {
+      const val = currentParams.get(key)
+      return val !== null && val !== undefined && val !== ''
+    })
+
+    const noExtraParams = activeCurrentKeys.every((key) => {
+      if (key === 'page' && currentParams.get(key) === '1' && !cleanQs['page']) return true
+
+      return key in cleanQs
+    })
+
+    return allPropsMatch && noExtraParams
   })()
 
-  const isActive = pathMatches && qsMatches
-
-  const variants = {
-    link: 'text-accent hover:text-accent-deep',
-    nav: 'text-ink current:text-accent hover:text-accent',
-    setting_nav:
-      'px-4 py-2.5 border-b-2 -mb-px border-transparent current:border-accent hover:border-accent text-ink-muted current:text-accent hover:text-accent cursor-pointer',
-    pagination:
-      'button font-normal hover:bg-primary hover:text-ink-inverted current:bg-primary current:text-ink-inverted px-2 py-1',
-  }
+  const isActive = (pathMatches && qsMatches) || props.isActive
 
   const states = {
     active: '',
@@ -116,15 +152,19 @@ export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLin
 
   const state = disabled ? 'disabled' : 'active'
 
-  const linkProps =
-    props.anchor || props.qs
-      ? {
-          href: `${urlFor(props.route as any, props.routeParams as any, { qs: props.qs })}${props.anchor ? `#${props.anchor}` : ''}`,
-        }
-      : ({
-          route: props.route,
-          routeParams: props.routeParams,
-        } as unknown as LinkProps<R>)
+  let linkProps: LinkProps<R> = { href: '#' }
+
+  if (props.route) {
+    linkProps =
+      props.anchor || props.qs
+        ? {
+            href: `${urlFor(props.route as any, props.routeParams as any, { qs: props.qs })}${props.anchor ? `#${props.anchor}` : ''}`,
+          }
+        : ({
+            route: props.route,
+            routeParams: props.routeParams,
+          } as unknown as LinkProps<R>)
+  }
 
   return (
     <Link

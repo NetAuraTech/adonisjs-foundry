@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, MouseEvent } from 'react'
 import { MetaData } from '~/types/paginated'
 import { useTranslation } from 'react-i18next'
 import type { LinkParams, LinkProps } from '@adonisjs/inertia/react'
@@ -18,15 +18,25 @@ interface PaginationBaseProps {
    * filter state.
    */
   filters?: {
-    [key: string]: string
+    [key: string]: string | number
   }
+  onClick?: (value: any) => void
 }
 
-type PaginationProps<R extends NonNullable<LinkProps['route']>> = PaginationBaseProps & {
+type PaginationRouteProps<R extends NonNullable<LinkProps['route']>> = PaginationBaseProps & {
   route: R
 } & (LinkParams<R>['routeParams'] extends undefined | never
     ? { routeParams?: never }
     : { routeParams: LinkParams<R>['routeParams'] })
+
+type PaginationNoRouteProps = PaginationBaseProps & {
+  route?: never
+  routeParams?: never
+}
+
+type PaginationProps<R extends NonNullable<LinkProps['route']>> =
+  | PaginationRouteProps<R>
+  | PaginationNoRouteProps
 
 type PageItem = number | '...'
 
@@ -56,7 +66,7 @@ type PageItem = number | '...'
  * />
  */
 export function Pagination<R extends NonNullable<LinkProps['route']>>(props: PaginationProps<R>) {
-  const { metadata, showPages = 5, filters, ...routeProps } = props
+  const { metadata, showPages = 5, filters, onClick, ...routeProps } = props
   const { lastPage, perPage, currentPage, total } = metadata
   const { t } = useTranslation('pagination')
 
@@ -82,6 +92,14 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
     return [1, ...middle, lastPage]
   }, [currentPage, lastPage, showPages])
 
+  const handleClick = (e: MouseEvent, page: number) => {
+    e.preventDefault()
+
+    if (onClick) {
+      onClick({ ...filters, page })
+    }
+  }
+
   return (
     <div className="flex flex-wrap items-center justify-between gap-4 px-1">
       <p className="text-sm text-ink-muted tabular-nums">{t('showing', { start, end, total })}</p>
@@ -94,6 +112,7 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
             {...(routeProps as any)}
             qs={{ ...filters, page: currentPage - 1 }}
             title={t('previous')}
+            onClick={(e) => handleClick(e, currentPage - 1)}
           />
         ) : (
           <NavLink
@@ -103,6 +122,7 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
             qs={{ ...filters, page: currentPage - 1 }}
             title={t('previous')}
             disabled
+            onClick={(e) => handleClick(e, currentPage - 1)}
           />
         )}
         {pages.map((page, index) =>
@@ -120,6 +140,8 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
               label={`${page}`}
               {...(routeProps as any)}
               qs={{ ...filters, page }}
+              onClick={onClick ? (e) => handleClick(e, page) : undefined}
+              isActive={currentPage === page}
             />
           )
         )}
@@ -130,6 +152,7 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
             {...(routeProps as any)}
             qs={{ ...filters, page: currentPage + 1 }}
             title={t('next')}
+            onClick={(e) => handleClick(e, currentPage + 1)}
           />
         ) : (
           <NavLink
@@ -139,6 +162,7 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
             qs={{ ...filters, page: currentPage + 1 }}
             title={t('next')}
             disabled
+            onClick={(e) => handleClick(e, currentPage + 1)}
           />
         )}
       </nav>

@@ -2,6 +2,7 @@ import { ReactNode } from 'react'
 
 interface TableRowProps {
   children: ReactNode
+  onClick?: () => void
 }
 
 /**
@@ -24,7 +25,7 @@ interface TableRowProps {
  * </TableRow>
  */
 export const TableRow = (props: TableRowProps) => {
-  const { children } = props
+  const { children, ...rowProps } = props
 
-  return <tr>{children}</tr>
+  return <tr {...rowProps}>{children}</tr>
 }

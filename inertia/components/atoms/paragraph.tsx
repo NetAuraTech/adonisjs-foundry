@@ -11,10 +11,11 @@ interface ParagraphProps {
    *
    * - `'foreground'` — primary text color (`text-ink`), default.
    * - `'muted'` — secondary text color (`text-ink-muted`).
+   * - `'subtle'` — tertiary text color (`text-ink-subtle`).
    * - `'error'` — danger text color (`text-danger`).
    * - `'custom'` — applies the class string passed in `color`.
    */
-  variant?: 'foreground' | 'muted' | 'error' | 'custom'
+  variant?: 'foreground' | 'muted' | 'subtle' | 'error' | 'custom'
   /**
    * Arbitrary Tailwind class(es) applied when `variant` is `'custom'`.
    * Ignored for all other variants.
@@ -54,6 +55,7 @@ export function Paragraph(props: ParagraphProps) {
   const variants = {
     foreground: 'text-ink',
     muted: 'text-ink-muted',
+    subtle: 'text-ink-subtle',
     error: 'text-danger',
     custom: `${color}`,
   }

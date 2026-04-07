@@ -7,6 +7,132 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+export class FileAltSchema extends BaseModel {
+  static $columns = ['createdAt', 'fileId', 'id', 'key', 'locale', 'updatedAt', 'value'] as const
+  $columns = FileAltSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare fileId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare key: string
+  @column()
+  declare locale: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare value: string
+}
+
+export class FileFolderSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'name', 'parentId', 'updatedAt'] as const
+  $columns = FileFolderSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare name: string
+  @column()
+  declare parentId: number | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class FileSchema extends BaseModel {
+  static $columns = ['createdAt', 'disk', 'extension', 'filename', 'folderId', 'id', 'mimeType', 'originalName', 'path', 'size', 'updatedAt', 'uploadedBy'] as const
+  $columns = FileSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare disk: string
+  @column()
+  declare extension: string
+  @column()
+  declare filename: string
+  @column()
+  declare folderId: number | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare mimeType: string
+  @column()
+  declare originalName: string
+  @column()
+  declare path: string
+  @column()
+  declare size: bigint | number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare uploadedBy: number | null
+}
+
+export class PageRevisionSchema extends BaseModel {
+  static $columns = ['content', 'createdAt', 'createdBy', 'id', 'keep', 'pageTranslationId'] as const
+  $columns = PageRevisionSchema.$columns
+  @column()
+  declare content: any
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare createdBy: number | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare keep: boolean
+  @column()
+  declare pageTranslationId: number
+}
+
+export class PageTranslationSchema extends BaseModel {
+  static $columns = ['content', 'createdAt', 'id', 'locale', 'metaDescription', 'metaTitle', 'pageId', 'publishedAt', 'slug', 'status', 'title', 'updatedAt'] as const
+  $columns = PageTranslationSchema.$columns
+  @column()
+  declare content: any
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare locale: string
+  @column()
+  declare metaDescription: string | null
+  @column()
+  declare metaTitle: string | null
+  @column()
+  declare pageId: number
+  @column.dateTime()
+  declare publishedAt: DateTime | null
+  @column()
+  declare slug: string
+  @column()
+  declare status: string
+  @column()
+  declare title: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class PageSchema extends BaseModel {
+  static $columns = ['createdAt', 'createdBy', 'defaultLocale', 'id', 'metaImageId', 'updatedAt'] as const
+  $columns = PageSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare createdBy: number | null
+  @column()
+  declare defaultLocale: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare metaImageId: number | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
 export class PermissionSchema extends BaseModel {
   static $columns = ['category', 'createdAt', 'description', 'id', 'isSystem', 'name', 'slug', 'updatedAt'] as const
   $columns = PermissionSchema.$columns
@@ -73,6 +199,31 @@ export class RoleSchema extends BaseModel {
   declare name: string
   @column()
   declare slug: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class TemplateSchema extends BaseModel {
+  static $columns = ['blockType', 'content', 'createdAt', 'createdBy', 'description', 'id', 'name', 'thumbnailId', 'type', 'updatedAt'] as const
+  $columns = TemplateSchema.$columns
+  @column()
+  declare blockType: string | null
+  @column()
+  declare content: any
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare createdBy: number | null
+  @column()
+  declare description: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare name: string
+  @column()
+  declare thumbnailId: number | null
+  @column()
+  declare type: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 }

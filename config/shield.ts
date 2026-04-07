@@ -62,7 +62,7 @@ const shieldConfig = defineConfig({
     /**
      * Block all framing attempts. Default value is DENY.
      */
-    action: 'DENY',
+    action: 'SAMEORIGIN',
   },
 
   /**

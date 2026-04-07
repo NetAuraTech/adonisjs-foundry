@@ -24,10 +24,20 @@ declare module '@adonisjs/inertia/types' {
     'core/cms/dashboard': ExtractProps<(typeof import('../../inertia/pages/core/cms/dashboard.tsx'))['default']>
     'errors/not_found': ExtractProps<(typeof import('../../inertia/pages/errors/not_found.tsx'))['default']>
     'errors/server_error': ExtractProps<(typeof import('../../inertia/pages/errors/server_error.tsx'))['default']>
+    'file/cms/folders': ExtractProps<(typeof import('../../inertia/pages/file/cms/folders.tsx'))['default']>
+    'file/cms/index': ExtractProps<(typeof import('../../inertia/pages/file/cms/index.tsx'))['default']>
     'home': ExtractProps<(typeof import('../../inertia/pages/home.tsx'))['default']>
+    'page/cms/create': ExtractProps<(typeof import('../../inertia/pages/page/cms/create.tsx'))['default']>
+    'page/cms/edit': ExtractProps<(typeof import('../../inertia/pages/page/cms/edit.tsx'))['default']>
+    'page/cms/index': ExtractProps<(typeof import('../../inertia/pages/page/cms/index.tsx'))['default']>
+    'page/cms/revisions': ExtractProps<(typeof import('../../inertia/pages/page/cms/revisions.tsx'))['default']>
+    'page/cms/show': ExtractProps<(typeof import('../../inertia/pages/page/cms/show.tsx'))['default']>
+    'page/front/preview': ExtractProps<(typeof import('../../inertia/pages/page/front/preview.tsx'))['default']>
+    'page/front/show': ExtractProps<(typeof import('../../inertia/pages/page/front/show.tsx'))['default']>
     'settings/account/front/email_change': ExtractProps<(typeof import('../../inertia/pages/settings/account/front/email_change.tsx'))['default']>
     'settings/account/front/index': ExtractProps<(typeof import('../../inertia/pages/settings/account/front/index.tsx'))['default']>
     'settings/preferences/front/index': ExtractProps<(typeof import('../../inertia/pages/settings/preferences/front/index.tsx'))['default']>
     'settings/profile/front/index': ExtractProps<(typeof import('../../inertia/pages/settings/profile/front/index.tsx'))['default']>
+    'template/cms/index': ExtractProps<(typeof import('../../inertia/pages/template/cms/index.tsx'))['default']>
   }
 }

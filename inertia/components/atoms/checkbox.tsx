@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react'
+import { ChangeEvent, ReactNode } from 'react'
 
 interface CheckboxProps {
   /** The `name` and `id` attribute of the underlying `<input>`. */
@@ -8,7 +8,8 @@ interface CheckboxProps {
   disabled?: boolean
   required?: boolean
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void
-  onBlur?: (event: ChangeEvent<HTMLInputElement>) => void
+  onBlur?: (event?: ChangeEvent<HTMLInputElement>) => void
+  children?: ReactNode
 }
 
 /**
@@ -26,7 +27,7 @@ interface CheckboxProps {
  * </div>
  */
 export function Checkbox(props: CheckboxProps) {
-  const { name, checked, disabled, required, onChange, onBlur, ...inputProps } = props
+  const { name, checked, disabled, required, onChange, onBlur, children, ...inputProps } = props
 
   return (
     <input
