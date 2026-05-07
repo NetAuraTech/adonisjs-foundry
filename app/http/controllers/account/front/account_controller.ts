@@ -16,13 +16,81 @@ export default class AccountController {
   constructor(protected accountService: AccountService) {}
 
   async render(ctx: HttpContext) {
-    const { auth, inertia } = ctx
+    const { inertia, auth, i18n } = ctx
 
     const user = auth.user!
 
     return inertia.render('settings/account/front/index', {
       user: UserTransformer.transform(user),
       providers: enabledProviders,
+      translations: {
+        header: {
+          title: i18n.t('settings.title'),
+          sub_title: i18n.t('settings.sub_title'),
+          tabs: {
+            profile: i18n.t('settings.profile.value'),
+            account: i18n.t('settings.account.value'),
+            preferences: i18n.t('settings.preferences.value'),
+            admin: i18n.t('cms.value'),
+            logout: i18n.t('auth.session.logout.value'),
+          },
+        },
+        email: {
+          title: i18n.t('settings.account.email.title'),
+          sub_title: i18n.t('settings.account.email.sub_title'),
+          submit: i18n.t('settings.account.email.submit'),
+          placeholder: i18n.t('settings.account.email.placeholder'),
+          value: i18n.t('settings.account.email.value'),
+          change: {
+            title: i18n.t('settings.account.email.change.title'),
+            sub_title: i18n.t('settings.account.email.change.sub_title'),
+            submit: i18n.t('settings.account.email.change.submit'),
+            cancel: i18n.t('settings.account.email.change.cancel'),
+            info: {
+              title: i18n.t('settings.account.email.change.info.title'),
+              message: i18n.t('settings.account.email.change.info.message'),
+            },
+          },
+        },
+        oauth: {
+          title: i18n.t('settings.account.oauth.title'),
+          sub_title: i18n.t('settings.account.oauth.sub_title'),
+          connected: i18n.t('settings.account.oauth.connected'),
+          not_connected: i18n.t('settings.account.oauth.not_connected'),
+          link: i18n.t('settings.account.oauth.link'),
+          unlink: {
+            confirm: i18n.t('settings.account.oauth.unlink.confirm', { provider: '{provider}' }),
+            value: i18n.t('settings.account.oauth.unlink.value'),
+          },
+        },
+        password: {
+          title: i18n.t('settings.account.password.title'),
+          sub_title: i18n.t('settings.account.password.sub_title'),
+          submit: i18n.t('settings.account.password.submit'),
+          current: {
+            value: i18n.t('settings.account.password.current.value'),
+          },
+          confirm: {
+            help: i18n.t('settings.account.password.confirm.help'),
+            value: i18n.t('settings.account.password.confirm.value'),
+          },
+          new: {
+            help: i18n.t('settings.account.password.new.help'),
+            value: i18n.t('settings.account.password.new.value'),
+          },
+        },
+        delete: {
+          title: i18n.t('settings.account.delete.title'),
+          sub_title: i18n.t('settings.account.delete.sub_title'),
+          submit: i18n.t('settings.account.delete.submit'),
+          cancel: i18n.t('settings.account.delete.cancel'),
+          password: i18n.t('settings.account.delete.password'),
+          confirm: {
+            title: i18n.t('settings.account.delete.confirm.title'),
+            sub_title: i18n.t('settings.account.delete.confirm.sub_title'),
+          },
+        },
+      },
     })
   }
 

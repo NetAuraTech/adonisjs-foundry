@@ -1,17 +1,22 @@
-import type { FileRef } from '#types/file'
+import type { FileRef, ResolvedFile } from '#types/file'
+import { type ParagraphSpacing, type ParagraphVariants } from '#types/paragraph'
+import { type FontSize } from '#types/font'
 
 export type PageStatus = 'draft' | 'published' | 'archived'
 
 export type BlockType =
   | 'section'
-  | 'hero'
-  | 'title'
-  | 'rich_text'
-  | 'image'
   | 'grid'
-  | 'button_cta'
+  | 'flex'
+  | 'title'
+  | 'paragraph'
+  | 'button'
   | 'separator'
-  | 'contact_form'
+  | 'icon'
+  | 'form'
+  | 'field'
+  | 'htmltext'
+  | 'image'
 
 /**
  * A responsive value that can vary per Tailwind breakpoint.
@@ -29,62 +34,218 @@ export interface ResponsiveValue<T> {
 }
 
 export interface SectionProps {
-  background: string
+  background:
+    | 'none'
+    | 'canvas'
+    | 'surface'
+    | 'sunken'
+    | 'primary-deep'
+    | 'primary'
+    | 'primary-soft'
+    | 'primary-light'
+    | 'secondary-deep'
+    | 'secondary'
+    | 'secondary-soft'
+    | 'secondary-light'
+    | 'tertiary-deep'
+    | 'tertiary'
+    | 'tertiary-soft'
+    | 'tertiary-light'
+    | 'transparent'
   paddingY: ResponsiveValue<'none' | 'sm' | 'md' | 'lg' | 'xl'>
   paddingX: ResponsiveValue<'none' | 'sm' | 'md' | 'lg' | 'xl'>
-  maxWidth: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full'
-  rounded: boolean
+  className?: string
+  id?: string
 }
 
-export interface HeroProps {
-  title: string
-  subtitle: string | null
-  cta: { label: string; href: string; variant: string } | null
-  image: FileRef | null
-  align: 'left' | 'center' | 'right'
-  background: string
-  minHeight: 'sm' | 'md' | 'lg' | 'screen' | 'auto'
+export interface GridProps {
+  cols: ResponsiveValue<1 | 2 | 3 | 4 | 6>
+  gap: ResponsiveValue<'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'>
+  alignItems?: 'start' | 'center' | 'end' | 'stretch'
+  className?: string
+}
+
+export interface FlexProps {
+  as?: 'div' | 'article'
+  background:
+    | 'none'
+    | 'canvas'
+    | 'surface'
+    | 'sunken'
+    | 'primary-deep'
+    | 'primary'
+    | 'primary-soft'
+    | 'primary-light'
+    | 'secondary-deep'
+    | 'secondary'
+    | 'secondary-soft'
+    | 'secondary-light'
+    | 'tertiary-deep'
+    | 'tertiary'
+    | 'tertiary-soft'
+    | 'tertiary-light'
+    | 'transparent'
+  direction: ResponsiveValue<'row' | 'col' | 'row-reverse' | 'col-reverse'>
+  gap: ResponsiveValue<'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'>
+  align: 'start' | 'center' | 'end' | 'baseline' | 'stretch'
+  justify: 'start' | 'center' | 'end' | 'between' | 'around'
+  wrap?: boolean
+  className?: string
 }
 
 export interface TitleProps {
   text: string
   level: 1 | 2 | 3 | 4
-  align: 'left' | 'center' | 'right'
-  color: string | null
+  color:
+    | 'default'
+    | 'ink-inverted'
+    | 'primary-deep'
+    | 'primary'
+    | 'primary-soft'
+    | 'primary-light'
+    | 'secondary-deep'
+    | 'secondary'
+    | 'secondary-soft'
+    | 'secondary-light'
+    | 'tertiary-deep'
+    | 'tertiary'
+    | 'tertiary-soft'
+    | 'tertiary-light'
+  highlightColor:
+    | 'default'
+    | 'primary-deep'
+    | 'primary'
+    | 'primary-soft'
+    | 'primary-light'
+    | 'secondary-deep'
+    | 'secondary'
+    | 'secondary-soft'
+    | 'secondary-light'
+    | 'tertiary-deep'
+    | 'tertiary'
+    | 'tertiary-soft'
+    | 'tertiary-light'
 }
 
-export interface RichTextProps {
+export interface ParagraphProps {
+  text: string
+  fs: FontSize
+  variant: ParagraphVariants
+  spacing: ParagraphSpacing
+  className?: string
+}
+
+export interface SeparatorProps {
+  spacing: 'none' | 'sm' | 'md' | 'lg' | 'xl'
+  color:
+    | 'none'
+    | 'canvas'
+    | 'surface'
+    | 'sunken'
+    | 'primary-deep'
+    | 'primary'
+    | 'primary-soft'
+    | 'primary-light'
+    | 'secondary-deep'
+    | 'secondary'
+    | 'secondary-soft'
+    | 'secondary-light'
+    | 'tertiary-deep'
+    | 'tertiary'
+    | 'tertiary-soft'
+    | 'tertiary-light'
+    | 'transparent'
+  className?: string
+}
+
+export interface IconProps {
+  name?: string
+  color:
+    | 'default'
+    | 'ink-inverted'
+    | 'primary-deep'
+    | 'primary'
+    | 'primary-soft'
+    | 'primary-light'
+    | 'secondary-deep'
+    | 'secondary'
+    | 'secondary-soft'
+    | 'secondary-light'
+    | 'tertiary-deep'
+    | 'tertiary'
+    | 'tertiary-soft'
+    | 'tertiary-light'
+  background:
+    | 'none'
+    | 'canvas'
+    | 'surface'
+    | 'sunken'
+    | 'primary-deep'
+    | 'primary'
+    | 'primary-soft'
+    | 'primary-light'
+    | 'secondary-deep'
+    | 'secondary'
+    | 'secondary-soft'
+    | 'secondary-light'
+    | 'tertiary-deep'
+    | 'tertiary'
+    | 'tertiary-soft'
+    | 'tertiary-light'
+    | 'transparent'
+  size: number
+  className?: string
+}
+
+export interface FormProps {
+  route?: string
+  routeParams?: Record<string, any>
+  className?: string
+}
+
+export interface FieldProps {
+  label: string
+  name: string
+  type: string
+  placeholder?: string
+  required: boolean
+  helpText?: string
+  options?: {
+    value: string
+    label: string
+  }[]
+}
+
+export interface HtmlTextProps {
   content: string
-  align: 'left' | 'center' | 'right'
 }
 
 export interface ImageProps {
   file: FileRef | null
-  caption: string | null
-  fit: 'cover' | 'contain' | 'fill'
-  rounded: boolean
-  fullWidth: boolean
+  className?: string
 }
 
-export interface GridProps {
-  cols: ResponsiveValue<1 | 2 | 3 | 4>
-  gap: ResponsiveValue<'none' | 'sm' | 'md' | 'lg'>
-}
-
-export interface ButtonCtaProps {
-  label: string
-  href: string
-  variant: 'primary' | 'accent' | 'outline' | 'danger' | 'success'
+export interface ButtonProps {
+  children: string
+  linkType: 'page' | 'route' | 'external'
+  pageId?: number | string
+  locale?: string
+  route?: string
+  routeParams?: Record<string, any>
+  anchor?: string
+  url?: string
+  variant:
+    | 'primary'
+    | 'secondary'
+    | 'outline'
+    | 'danger'
+    | 'success'
+    | 'link_muted'
+    | 'link_secondary'
   size: 'sm' | 'md' | 'lg'
   align: 'left' | 'center' | 'right'
+  fitContent: boolean
   icon: string | null
-  openInNewTab: boolean
-}
-
-export interface SeparatorProps {
-  style: 'solid' | 'dashed' | 'dotted' | 'none'
-  spacing: 'sm' | 'md' | 'lg' | 'xl'
-  color: string | null
 }
 
 export interface ContactFormField {
@@ -109,14 +270,17 @@ export interface ContactFormProps {
  */
 export interface BlockPropsMap {
   section: SectionProps
-  hero: HeroProps
-  title: TitleProps
-  rich_text: RichTextProps
-  image: ImageProps
   grid: GridProps
-  button_cta: ButtonCtaProps
+  flex: FlexProps
+  title: TitleProps
+  paragraph: ParagraphProps
+  button: ButtonProps
   separator: SeparatorProps
-  contact_form: ContactFormProps
+  icon: IconProps
+  form: FormProps
+  field: FieldProps
+  htmltext: HtmlTextProps
+  image: ImageProps
 }
 
 /**
@@ -138,11 +302,7 @@ export interface PageContent {
 }
 
 export interface ContactFormSubmission {
-  pageId: number
-  pageTitle: string
-  locale: string
-  recipientEmail: string
-  fields: Record<string, string>
+  [key: string]: string
 }
 
 // ─── Resolved types ───────────────────────────────────────────────────────────
@@ -150,32 +310,34 @@ export interface ContactFormSubmission {
 // They mirror Block/Props types but with FileRef replaced by ResolvedFile,
 // built server-side by PageResolverService before being passed to Inertia.
 
-import type { ResolvedFile } from '#types/file'
-
 export interface ResolvedSectionProps {
-  background: string
+  background:
+    | 'none'
+    | 'canvas'
+    | 'surface'
+    | 'sunken'
+    | 'primary-deep'
+    | 'primary'
+    | 'primary-soft'
+    | 'primary-light'
+    | 'secondary-deep'
+    | 'secondary'
+    | 'secondary-soft'
+    | 'secondary-light'
+    | 'tertiary-deep'
+    | 'tertiary'
+    | 'tertiary-soft'
+    | 'tertiary-light'
+    | 'transparent'
   paddingY: ResponsiveValue<'none' | 'sm' | 'md' | 'lg' | 'xl'>
   paddingX: ResponsiveValue<'none' | 'sm' | 'md' | 'lg' | 'xl'>
-  maxWidth: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full'
-  rounded: boolean
-}
-
-export interface ResolvedHeroProps {
-  title: string
-  subtitle: string | null
-  cta: { label: string; href: string; variant: string } | null
-  image: ResolvedFile | null
-  align: 'left' | 'center' | 'right'
-  background: string
-  minHeight: 'sm' | 'md' | 'lg' | 'screen' | 'auto'
+  className?: string
+  id?: string
 }
 
 export interface ResolvedImageProps {
   file: ResolvedFile | null
-  caption: string | null
-  fit: 'cover' | 'contain' | 'fill'
-  rounded: boolean
-  fullWidth: boolean
+  className?: string
 }
 
 /**
@@ -184,14 +346,17 @@ export interface ResolvedImageProps {
  */
 export interface ResolvedBlockPropsMap {
   section: ResolvedSectionProps
-  hero: ResolvedHeroProps
-  title: TitleProps
-  rich_text: RichTextProps
-  image: ResolvedImageProps
   grid: GridProps
-  button_cta: ButtonCtaProps
+  flex: FlexProps
+  title: TitleProps
+  paragraph: ParagraphProps
+  button: ButtonProps
   separator: SeparatorProps
-  contact_form: ContactFormProps
+  icon: IconProps
+  form: FormProps
+  field: FieldProps
+  htmltext: HtmlTextProps
+  image: ResolvedImageProps
 }
 
 /**

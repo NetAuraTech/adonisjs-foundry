@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
-import { Link } from '@adonisjs/inertia/react'
-import type { LinkProps, LinkParams } from '@adonisjs/inertia/react'
 import { urlFor } from '~/client'
+import type { LinkProps, LinkParams } from '@adonisjs/inertia/react'
+import { Link } from '@adonisjs/inertia/react'
 
 interface ButtonBaseProps {
   /** Shows a spinning loader and disables the button while `true`. */
@@ -12,7 +12,7 @@ interface ButtonBaseProps {
    * Visual variant.
    *
    * - `primary` — filled primary color, default CTA.
-   * - `accent` — filled accent color, secondary CTA.
+   * - `secondary` — filled secondary color, secondary CTA.
    * - `danger` — filled danger color, destructive actions.
    * - `success` — filled success color, confirmations.
    * - `outline` — transparent with a primary border.
@@ -24,7 +24,7 @@ interface ButtonBaseProps {
    */
   variant?:
     | 'primary'
-    | 'accent'
+    | 'secondary'
     | 'danger'
     | 'success'
     | 'outline'
@@ -34,6 +34,8 @@ interface ButtonBaseProps {
     | 'icon_danger'
     | 'icon_warning'
     | 'icon_info'
+    | 'link_muted'
+    | 'link_secondary'
   /** Disables the button and applies a reduced-opacity cursor-not-allowed style. */
   disabled?: boolean
   children: ReactNode
@@ -50,6 +52,7 @@ interface ButtonBaseProps {
    * provided. Use for routes that trigger a server redirect (e.g. OAuth).
    */
   external?: boolean
+  href?: string | undefined
 }
 
 type ButtonRouteProps<R extends NonNullable<LinkProps['route']>> = ButtonBaseProps & {
@@ -69,7 +72,7 @@ type ButtonProps<R extends NonNullable<LinkProps['route']>> =
 
 export const variants = {
   primary: 'bg-primary text-ink-inverted hover:bg-primary-deep',
-  accent: 'bg-accent text-ink-inverted hover:bg-accent-deep',
+  secondary: 'bg-secondary text-ink-inverted hover:bg-secondary-deep',
   danger: 'bg-danger text-ink-inverted hover:opacity-90',
   success: 'bg-success text-ink-inverted hover:opacity-90',
   outline:
@@ -80,6 +83,8 @@ export const variants = {
   icon_danger: 'bg-danger-soft text-danger hover:bg-danger hover:text-ink-inverted p-2',
   icon_warning: 'bg-warning-soft text-warning hover:bg-warning hover:text-ink-inverted p-2',
   icon_info: 'bg-info-soft text-info hover:bg-info hover:text-ink-inverted p-2',
+  link_muted: 'text-ink-muted hover:text-primary p-0 font-normal',
+  link_secondary: 'text-secondary hover:text-secondary-light  p-0',
 }
 
 /**
@@ -164,14 +169,16 @@ export function Button<R extends NonNullable<LinkProps['route']>>(props: ButtonP
     </>
   )
 
-  if (route) {
-    const linkProps = { route, routeParams } as unknown as LinkProps<R>
+  const classNames = ['button', variants[variant], states[state], sizes[size]]
+    .filter(Boolean)
+    .join(' ')
 
+  if (route || props.href) {
     if (external) {
       return (
         <a
-          href={urlFor(route as any, routeParams as any)}
-          className={`button ${variants[variant]} ${states[state]} ${sizes[size]}`}
+          href={props.href ?? urlFor(route as any, routeParams as any)}
+          className={classNames}
           title={title}
         >
           {content}
@@ -181,8 +188,8 @@ export function Button<R extends NonNullable<LinkProps['route']>>(props: ButtonP
 
     return (
       <Link
-        {...linkProps}
-        className={`button ${variants[variant]} ${states[state]} ${sizes[size]}`}
+        href={props.href ?? urlFor(route as any, routeParams as any)}
+        className={classNames}
         onClick={onClick}
         title={title}
         {...buttonProps}

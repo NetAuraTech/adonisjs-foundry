@@ -1,15 +1,24 @@
 import './css/app.css'
+import '@fontsource/jost/400.css'
+import '@fontsource/jost/700.css'
+import '@fontsource/jost/400-italic.css'
+import '@fontsource/cormorant-garamond/400.css'
+import '@fontsource/cormorant-garamond/700.css'
+import '@fontsource/cormorant-garamond/400-italic.css'
+import '@fontsource/playfair-display/400.css'
+import '@fontsource/playfair-display/700.css'
+import '@fontsource/playfair-display/400-italic.css'
+
 import { ReactElement } from 'react'
 import { client } from './client'
-import Layout from '~/layouts/default'
 import { Data } from '@generated/data'
 import { createRoot } from 'react-dom/client'
 import { createInertiaApp } from '@inertiajs/react'
 import { TuyauProvider } from '@adonisjs/inertia/react'
 import { resolvePageComponent } from '@adonisjs/inertia/helpers'
-import i18n from "~/lib/i18n";
+import Layout from '~/layouts/default'
 
-const appName = import.meta.env.APP_NAME || 'AdonisJS'
+let appName = ''
 
 createInertiaApp({
   title: (title) => (title ? `${title} - ${appName}` : appName),
@@ -21,8 +30,7 @@ createInertiaApp({
     )
   },
   setup({ el, App, props }) {
-    const locale = String(props.initialPage.props.locale || 'en')
-    i18n.changeLanguage(locale)
+    appName = props.initialPage.props.app_name as string
 
     createRoot(el).render(
       <TuyauProvider client={client}>

@@ -12,8 +12,8 @@ export interface Registry {
     pattern: '/uploads/*'
     types: {
       body: {}
-      paramsTuple: []
-      params: {}
+      paramsTuple: [ParamValue]
+      params: { '*': ParamValue[] }
       query: {}
       response: unknown
       errorResponse: unknown
@@ -46,18 +46,6 @@ export interface Registry {
   'unsubscribe': {
     methods: ["POST"]
     pattern: '/__transmit/unsubscribe'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: unknown
-      errorResponse: unknown
-    }
-  }
-  'home': {
-    methods: ["GET","HEAD"]
-    pattern: '/'
     types: {
       body: {}
       paramsTuple: []
@@ -583,6 +571,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_update_controller').default['unpublish']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'admin.pages.set_homepage': {
+    methods: ["POST"]
+    pattern: '/admin/pages/:id/homepage'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_controller').default['setHomepage']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_controller').default['setHomepage']>>>
+    }
+  }
   'admin.pages.destroy': {
     methods: ["DELETE"]
     pattern: '/admin/pages/:id'
@@ -941,6 +941,42 @@ export interface Registry {
       query: ExtractQuery<InferInput<(typeof import('#validators/contact').contactValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/front/contact_controller').default['execute']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/front/contact_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'page.sitemap': {
+    methods: ["GET","HEAD"]
+    pattern: '/sitemap.xml'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/front/page_controller').default['sitemap']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/front/page_controller').default['sitemap']>>>
+    }
+  }
+  'page.robots': {
+    methods: ["GET","HEAD"]
+    pattern: '/robots.txt'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/front/page_controller').default['robots']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/front/page_controller').default['robots']>>>
+    }
+  }
+  'page.home': {
+    methods: ["GET","HEAD"]
+    pattern: '/'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/front/page_controller').default['home']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/front/page_controller').default['home']>>>
     }
   }
   'page.localised.render': {

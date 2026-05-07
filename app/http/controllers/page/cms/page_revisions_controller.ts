@@ -14,7 +14,7 @@ export default class PageRevisionsController {
   constructor(protected pageService: PageService) {}
 
   async index(ctx: HttpContext) {
-    const { inertia, params } = ctx
+    const { inertia, params, i18n } = ctx
 
     const { translationId } = await translationIdValidator.validate(params)
     const revisions = await this.pageService.listRevisions(translationId)
@@ -23,6 +23,30 @@ export default class PageRevisionsController {
       revisions: PageRevisionTransformer.transform(revisions),
       translation_id: translationId,
       page_id: params.id,
+      translations: {
+        title: i18n.t('cms.pages.show.revision.value'),
+        actions: {
+          value: i18n.t('cms.pages.actions'),
+          back: i18n.t('cms.pages.show.revision.back'),
+          restore: {
+            value: i18n.t('cms.pages.show.revision.restore.value'),
+            confirm: i18n.t('cms.pages.show.revision.restore.confirm'),
+          },
+          unpin: i18n.t('cms.pages.show.revision.unpin'),
+          pin: i18n.t('cms.pages.show.revision.pin'),
+        },
+        help: i18n.t('cms.pages.show.revision.help'),
+        index: i18n.t('cms.pages.show.revision.index'),
+        created: {
+          at: i18n.t('cms.pages.show.revision.created.at'),
+          by: i18n.t('cms.pages.show.revision.created.by'),
+        },
+        empty: {
+          value: i18n.t('cms.pages.show.revision.empty.value'),
+          help: i18n.t('cms.pages.show.revision.empty.help'),
+        },
+        latest: i18n.t('cms.pages.show.revision.latest'),
+      },
     })
   }
 

@@ -1,13 +1,10 @@
 import { Button, variants as button_variants } from '~/components/atoms/button'
 import { AdminMain } from '~/components/organisms/admin/admin_main'
 import { Paginated } from '~/types/paginated'
-import { useTranslation } from 'react-i18next'
 import { useMenu } from '~/hooks/use_admin'
 import { CanAccess } from '~/guards/can_access'
 import { ReactElement, useState } from 'react'
-import type { SharedProps } from '@adonisjs/inertia/types'
 import Layout from '~/layouts/admin'
-import { Form } from '@adonisjs/inertia/react'
 import { Field } from '~/components/molecules/field'
 import { SelectOption } from '~/components/atoms/select_option'
 import { Icon } from '~/components/atoms/icon'
@@ -20,6 +17,11 @@ import { NavLink } from '~/components/atoms/nav_link'
 import { FileAltEditor } from '~/components/organisms/files/file_alt_editor'
 import { FileUploadInput } from '~/components/atoms/file_upload_input'
 import { Modal } from '~/components/atoms/modal'
+import { Lang, useTranslation } from '~/hooks/use_translation'
+import type { CmsFilesTranslations } from '#types/translations'
+import { usePage } from '@inertiajs/react'
+import { SharedProps } from '@adonisjs/inertia/types'
+import { Form } from '@adonisjs/inertia/react'
 
 interface Props {
   files: Paginated<Data.File>
@@ -29,11 +31,13 @@ interface Props {
     mime_type?: string
     search?: string
   }
+  translations: CmsFilesTranslations
 }
 
 export default function FilesIndexPage(props: Props) {
-  const { files, filters, folders } = props
-  const { t, i18n } = useTranslation('admin')
+  const { files, filters, folders, translations } = props
+  const pageProps = usePage<SharedProps>().props
+  const { t, format } = useTranslation(translations)
 
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [selectedId, setSelectedId] = useState<number | null>(null)
@@ -49,20 +53,20 @@ export default function FilesIndexPage(props: Props) {
 
   return (
     <AdminMain
-      title={t('files.list.title')}
+      title={t('title')}
       icon={getEntryIcon('admin.files.render')}
       action={
         <div className="flex items-center gap-3">
           <CanAccess permission="users.create">
             <Button onClick={() => setShowUploadForm(true)} variant="outline" fitContent>
               <Icon name="Upload" />
-              {t('files.list.action.upload')}
+              {t('action.upload')}
             </Button>
           </CanAccess>
           <CanAccess permission="users.create">
-            <Button route="admin.file_folders.render" variant="accent" fitContent>
+            <Button route="admin.file_folders.render" variant="secondary" fitContent>
               <Icon name="Folders" />
-              {t('files.list.action.folders')}
+              {t('action.folders')}
             </Button>
           </CanAccess>
         </div>
@@ -79,13 +83,18 @@ export default function FilesIndexPage(props: Props) {
                 )
               ),
             }}
-            label={t('files.list.folders.all')}
+            label={t('folders.all')}
             variant="admin_nav"
           />
           {folders
             .filter((f) => !f.parentId)
             .map((folder) => (
-              <FolderEntry folder={folder} depth={0} filters={filters} />
+              <FolderEntry
+                key={`folder-${folder.id}`}
+                folder={folder}
+                depth={0}
+                filters={filters}
+              />
             ))}
         </Card>
         <Card
@@ -114,18 +123,15 @@ export default function FilesIndexPage(props: Props) {
                 <Field
                   type="select"
                   name="mime_type"
-                  label={t('files.list.search.type.value')}
-                  placeholder={t('files.list.search.type.options.placeholder')}
+                  label={t('search.type.value')}
+                  placeholder={t('search.type.options.placeholder')}
                   defaultValue={filters.mime_type}
                   sanitize
                 >
-                  <SelectOption label={t('files.list.search.type.options.image')} value="image" />
-                  <SelectOption label={t('files.list.search.type.options.video')} value="video" />
-                  <SelectOption label={t('files.list.search.type.options.audio')} value="audio" />
-                  <SelectOption
-                    label={t('files.list.search.type.options.pdf')}
-                    value="application/pdf"
-                  />
+                  <SelectOption label={t('search.type.options.image')} value="image" />
+                  <SelectOption label={t('search.type.options.video')} value="video" />
+                  <SelectOption label={t('search.type.options.audio')} value="audio" />
+                  <SelectOption label={t('search.type.options.pdf')} value="application/pdf" />
                 </Field>
                 <Button type="submit" fitContent>
                   {t('search.filter')}
@@ -147,7 +153,7 @@ export default function FilesIndexPage(props: Props) {
           <div className="flex flex-col-reverse md:flex-row">
             <div className="flex-1 p-8">
               {files.data.length === 0 ? (
-                <UploadFileForm filters={filters} />
+                <UploadFileForm filters={filters} translations={translations} />
               ) : viewMode === 'grid' ? (
                 <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                   {files.data.map((file) => (
@@ -179,10 +185,10 @@ export default function FilesIndexPage(props: Props) {
                 <Table>
                   <Table.Header>
                     <Table.Row>
-                      <Table.HeaderCell>{t('files.form.name.value')}</Table.HeaderCell>
-                      <Table.HeaderCell>{t('files.form.type.value')}</Table.HeaderCell>
-                      <Table.HeaderCell>{t('files.form.size.value')}</Table.HeaderCell>
-                      <Table.HeaderCell>{t('files.form.uploaded_at.value')}</Table.HeaderCell>
+                      <Table.HeaderCell>{t('name')}</Table.HeaderCell>
+                      <Table.HeaderCell>{t('type')}</Table.HeaderCell>
+                      <Table.HeaderCell>{t('size')}</Table.HeaderCell>
+                      <Table.HeaderCell>{t('uploaded_at')}</Table.HeaderCell>
                       <Table.HeaderCell>{t('actions.value')}</Table.HeaderCell>
                     </Table.Row>
                   </Table.Header>
@@ -192,10 +198,7 @@ export default function FilesIndexPage(props: Props) {
                         key={`file-${file.id}`}
                         onClick={() => setSelectedId(selectedId === file.id ? null : file.id)}
                       >
-                        <Table.Cell
-                          className="flex flex-row"
-                          data-label={t('files.form.name.value')}
-                        >
+                        <Table.Cell className="flex flex-row" data-label={t('name')}>
                           {isImage(file.mimeType) ? (
                             <img
                               src={file.url}
@@ -211,21 +214,17 @@ export default function FilesIndexPage(props: Props) {
                             {file.originalName}
                           </span>
                         </Table.Cell>
-                        <Table.Cell data-label={t('files.form.type.value')}>
-                          {file.mimeType}
-                        </Table.Cell>
-                        <Table.Cell data-label={t('files.form.size.value')}>
-                          {humanSize(file.size)}
-                        </Table.Cell>
-                        <Table.Cell data-label={t('files.form.uploaded_at.value')}>
-                          {i18n.format(new Date(file.createdAt!), 'medium', i18n.language)}
+                        <Table.Cell data-label={t('type')}>{file.mimeType}</Table.Cell>
+                        <Table.Cell data-label={t('size')}>{humanSize(file.size)}</Table.Cell>
+                        <Table.Cell data-label={t('uploaded_at')}>
+                          {format(new Date(file.createdAt!), 'medium', pageProps.locale as Lang)}
                         </Table.Cell>
                         <Table.Cell data-label={t('actions.value')}>
                           <div className="flex items-center w-full py-4 gap-2">
                             <CanAccess permission="files.delete">
                               <Form
                                 onBefore={() => {
-                                  return window.confirm(t('files.delete.confirm'))
+                                  return window.confirm(t('actions.delete.confirm'))
                                 }}
                                 route="admin.files.destroy"
                                 routeParams={{ id: file.id }}
@@ -234,7 +233,7 @@ export default function FilesIndexPage(props: Props) {
                                   <>
                                     <Button
                                       variant="icon_danger"
-                                      title={t('files.delete.title', {
+                                      title={t('actions.delete.value', {
                                         filename: file.originalName,
                                       })}
                                       fitContent
@@ -283,14 +282,14 @@ export default function FilesIndexPage(props: Props) {
                           href={selectedFile.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          title={t('files.show.title')}
+                          title={t('actions.show')}
                         >
                           <Icon name="ExternalLink" size={18} />
                         </a>
                         <CanAccess permission="files.delete">
                           <Form
                             onBefore={() => {
-                              return window.confirm(t('files.delete.confirm'))
+                              return window.confirm(t('actions.delete.confirm'))
                             }}
                             route="admin.files.destroy"
                             routeParams={{ id: selectedFile.id }}
@@ -299,7 +298,7 @@ export default function FilesIndexPage(props: Props) {
                               <>
                                 <Button
                                   variant="icon_danger"
-                                  title={t('files.delete.title', {
+                                  title={t('actions.delete.value', {
                                     filename: selectedFile.originalName,
                                   })}
                                   fitContent
@@ -313,7 +312,7 @@ export default function FilesIndexPage(props: Props) {
                         </CanAccess>
                       </div>
                       <div className="pt-2 border-t border-edge">
-                        <FileAltEditor file={selectedFile} />
+                        <FileAltEditor file={selectedFile} translations={translations} />
                       </div>
                     </div>
                   </div>
@@ -335,7 +334,11 @@ export default function FilesIndexPage(props: Props) {
               </div>
             }
           >
-            <UploadFileForm filters={filters} callback={setShowUploadForm} />
+            <UploadFileForm
+              filters={filters}
+              callback={setShowUploadForm}
+              translations={translations}
+            />
           </Card>
         </Modal>
       )}
@@ -394,11 +397,12 @@ const FolderEntry = (props: FolderEntryProps) => {
 interface UploadFileProps {
   filters: Props['filters']
   callback?: (value: boolean) => void
+  translations: CmsFilesTranslations
 }
 
 const UploadFileForm = (props: UploadFileProps) => {
-  const { filters, callback } = props
-  const { t } = useTranslation('admin')
+  const { filters, callback, translations } = props
+  const { t } = useTranslation(translations)
 
   return (
     <Form
@@ -417,11 +421,12 @@ const UploadFileForm = (props: UploadFileProps) => {
         name="file"
         accept="image/*,.pdf,.mp4,.mp3,.zip"
         maxSize={10 * 1024 * 1024}
+        translations={translations}
         required
       />
       <div className="flex justify-center">
         <Button type="submit" variant="primary" fitContent>
-          <Icon name="Upload" /> {t('files.upload.submit')}
+          <Icon name="Upload" /> {t('upload.value')}
         </Button>
       </div>
     </Form>

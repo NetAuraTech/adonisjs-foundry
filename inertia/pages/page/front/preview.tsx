@@ -53,8 +53,7 @@ export default function PreviewPage({ page, editable }: PreviewPageProps) {
 
   return (
     <>
-      <Head>
-        <title>{page.metaTitle ?? page.title}</title>
+      <Head title={page.metaTitle ?? page.title}>
         {page.metaDescription && <meta name="description" content={page.metaDescription} />}
         {editable && <meta name="x-builder-preview" content="true" />}
       </Head>

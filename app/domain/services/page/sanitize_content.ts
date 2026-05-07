@@ -47,6 +47,7 @@ const PURIFY_CONFIG: Config = {
     'figure',
     'figcaption',
     'hr',
+    'br',
     'span',
     'div',
   ],
@@ -86,7 +87,7 @@ const PURIFY_CONFIG: Config = {
 export function sanitizePageContent(content: PageContent): PageContent {
   const sanitizeBlocks = (blocks: Block[]): Block[] =>
     blocks.map((block) => {
-      if (block.type === 'rich_text') {
+      if (block.type === 'htmltext') {
         return {
           ...block,
           props: {

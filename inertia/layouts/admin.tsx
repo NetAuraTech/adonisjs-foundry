@@ -1,10 +1,10 @@
 import { ReactElement, useEffect, useState } from 'react'
 import { toast, Toaster } from 'sonner'
-import { Head, usePage } from '@inertiajs/react'
-import type { SharedProps } from '@adonisjs/inertia/types'
 import { useIsLarge } from '~/hooks/use_is_large'
 import { AdminSidebar } from '~/components/organisms/admin/admin_sidebar'
 import { AdminHeader } from '~/components/organisms/admin/admin_header'
+import { SharedProps } from '@adonisjs/inertia/types'
+import { Head, usePage } from '@inertiajs/react'
 
 interface LayoutProps {
   children: ReactElement<SharedProps>
@@ -39,7 +39,7 @@ interface LayoutProps {
  */
 export default function Layout(props: LayoutProps) {
   const isLarge = useIsLarge()
-  const pageProps = usePage<SharedProps>().props
+  const { props: pageProps, url } = usePage<SharedProps>()
   const { children } = props
 
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -66,17 +66,17 @@ export default function Layout(props: LayoutProps) {
 
   useEffect(() => {
     toast.dismiss()
-  }, [usePage().url])
+  }, [url])
 
-  if (children.props.flash.error) {
+  if (children.props.flash?.error) {
     toast.error(children.props.flash.error)
   }
 
-  if (children.props.flash.success) {
+  if (children.props.flash?.success) {
     toast.success(children.props.flash.success)
   }
 
-  if (children.props.flash.info) {
+  if (children.props.flash?.info) {
     toast.info(children.props.flash.info)
   }
 
@@ -87,7 +87,7 @@ export default function Layout(props: LayoutProps) {
       </Head>
       <Toaster position="top-right" richColors />
       <div className="admin">
-        <AdminSidebar sidebarOpen={sidebarOpen} setIsMenuOpen={setSidebarOpen} />
+        <AdminSidebar sidebarOpen={sidebarOpen} />
         <div className="main">
           <AdminHeader handleClick={handleNavButtonClick} />
           <main>{children}</main>

@@ -1,8 +1,10 @@
 import { useMemo, MouseEvent } from 'react'
 import { MetaData } from '~/types/paginated'
-import { useTranslation } from 'react-i18next'
-import type { LinkParams, LinkProps } from '@adonisjs/inertia/react'
+import type { LinkProps, LinkParams } from '@adonisjs/inertia/react'
 import { NavLink } from '~/components/atoms/nav_link'
+import { useTranslation } from '~/hooks/use_translation'
+import { usePage } from '@inertiajs/react'
+import type { SharedProps } from '@adonisjs/inertia/types'
 
 interface PaginationBaseProps {
   /** Pagination metadata returned by the server (current page, last page, total, etc.). */
@@ -67,8 +69,10 @@ type PageItem = number | '...'
  */
 export function Pagination<R extends NonNullable<LinkProps['route']>>(props: PaginationProps<R>) {
   const { metadata, showPages = 5, filters, onClick, ...routeProps } = props
+  const pageProps = usePage<SharedProps>().props
+
   const { lastPage, perPage, currentPage, total } = metadata
-  const { t } = useTranslation('pagination')
+  const { t } = useTranslation(pageProps.common_translations)
 
   const start = (currentPage - 1) * perPage + 1
   const end = Math.min(currentPage * perPage, total)
@@ -102,7 +106,9 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-4 px-1">
-      <p className="text-sm text-ink-muted tabular-nums">{t('showing', { start, end, total })}</p>
+      <p className="text-sm text-ink-muted tabular-nums">
+        {t('pagination.showing', { start, end, total })}
+      </p>
 
       <nav aria-label="Pagination" className="flex items-center gap-1">
         {currentPage > 1 ? (
@@ -111,8 +117,8 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
             label="«"
             {...(routeProps as any)}
             qs={{ ...filters, page: currentPage - 1 }}
-            title={t('previous')}
-            onClick={(e) => handleClick(e, currentPage - 1)}
+            title={t('pagination.previous')}
+            onClick={(e: MouseEvent) => handleClick(e, currentPage - 1)}
           />
         ) : (
           <NavLink
@@ -120,9 +126,9 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
             label="«"
             {...(routeProps as any)}
             qs={{ ...filters, page: currentPage - 1 }}
-            title={t('previous')}
+            title={t('pagination.previous')}
             disabled
-            onClick={(e) => handleClick(e, currentPage - 1)}
+            onClick={(e: MouseEvent) => handleClick(e, currentPage - 1)}
           />
         )}
         {pages.map((page, index) =>
@@ -140,7 +146,7 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
               label={`${page}`}
               {...(routeProps as any)}
               qs={{ ...filters, page }}
-              onClick={onClick ? (e) => handleClick(e, page) : undefined}
+              onClick={onClick ? (e: MouseEvent) => handleClick(e, page) : undefined}
               isActive={currentPage === page}
             />
           )
@@ -151,8 +157,8 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
             label="»"
             {...(routeProps as any)}
             qs={{ ...filters, page: currentPage + 1 }}
-            title={t('next')}
-            onClick={(e) => handleClick(e, currentPage + 1)}
+            title={t('pagination.next')}
+            onClick={(e: MouseEvent) => handleClick(e, currentPage + 1)}
           />
         ) : (
           <NavLink
@@ -160,9 +166,9 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
             label="»"
             {...(routeProps as any)}
             qs={{ ...filters, page: currentPage + 1 }}
-            title={t('next')}
+            title={t('pagination.next')}
             disabled
-            onClick={(e) => handleClick(e, currentPage + 1)}
+            onClick={(e: MouseEvent) => handleClick(e, currentPage + 1)}
           />
         )}
       </nav>

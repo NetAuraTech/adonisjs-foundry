@@ -1,5 +1,5 @@
 import { PageRevisionSchema } from '#database/schema'
-import { belongsTo, column } from '@adonisjs/lucid/orm'
+import { belongsTo } from '@adonisjs/lucid/orm'
 import PageTranslation from '#models/page/page_translation'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import User from '#models/auth/user'

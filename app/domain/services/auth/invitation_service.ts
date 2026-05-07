@@ -45,7 +45,7 @@ export class InvitationService {
         userEmail: payload.email,
       })
 
-      throw new EmailAlreadyExistsException()
+      throw new EmailAlreadyExistsException(payload.email!)
     }
 
     const user = await this.userRepository.create({

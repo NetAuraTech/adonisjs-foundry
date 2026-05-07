@@ -3,7 +3,7 @@ import sinon from 'sinon'
 import { TemplateService } from '#services/template/template_service'
 import Template from '#models/template/template'
 import PageTranslation from '#models/page/page_translation'
-import type { PageContent } from '#types/page'
+import { type PageContent, type SeparatorProps } from '#types/page'
 
 /**
  * Unit tests for `TemplateService`.
@@ -167,15 +167,11 @@ test.group('TemplateService', (group) => {
       blocks: [
         {
           id: '1',
-          type: 'hero',
+          type: 'title',
           props: {
-            title: 'Hello',
-            subtitle: null,
-            cta: null,
-            image: null,
-            align: 'center',
-            background: 'canvas',
-            minHeight: 'auto',
+            color: 'primary-deep',
+            highlightColor: 'default',
+            content: 'My title',
           },
         },
       ],
@@ -210,7 +206,11 @@ test.group('TemplateService', (group) => {
   test('createFromPage() creates template with translation content', async ({ assert }) => {
     const pageContent: PageContent = {
       blocks: [
-        { id: '1', type: 'separator', props: { style: 'solid', spacing: 'md', color: null } },
+        {
+          id: '1',
+          type: 'separator',
+          props: { spacing: 'none', color: 'default' } as unknown as SeparatorProps,
+        },
       ],
     }
     const translation = makeTranslation(5, pageContent)

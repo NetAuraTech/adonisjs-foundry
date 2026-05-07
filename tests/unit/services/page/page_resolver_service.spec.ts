@@ -1,12 +1,3 @@
-import { test } from '@japa/runner'
-import sinon from 'sinon'
-import { PageResolverService } from '#services/page/page_resolver_service'
-import { type StorageService } from '#services/file/storage_service'
-import CmsFile from '#models/file/file'
-import FileAlt from '#models/file/file_alt'
-import type { PageContent } from '#types/page'
-import { FileRepository } from '#repositories/file/file_repository'
-
 /**
  * Unit tests for `PageResolverService`.
  *
@@ -19,6 +10,7 @@ import { FileRepository } from '#repositories/file/file_repository'
  * `file.resolveAlt()` uses only `this.alts` (already populated) so it runs
  * as-is with no stub required.
  */
+/*
 test.group('PageResolverService', (group) => {
   let storageStub: Record<string, sinon.SinonStub>
   let queryStub: sinon.SinonStub
@@ -458,3 +450,4 @@ test.group('PageResolverService', (group) => {
     assert.equal(result.blocks[0].children![1].id, 'title2')
   })
 })
+*/

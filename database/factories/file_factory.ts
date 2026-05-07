@@ -24,7 +24,7 @@ export const FileFactory = factory
       disk: 'local' as const,
       folderId: null,
       uploadedBy: null,
-    }
+    } as Partial<File>
   })
   .relation('folder', () => FileFolderFactory)
   .build()

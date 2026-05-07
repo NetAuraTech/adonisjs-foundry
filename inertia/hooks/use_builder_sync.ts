@@ -1,5 +1,4 @@
 import { useEffect, useRef, useCallback, useState } from 'react'
-import { usePage } from '@inertiajs/react'
 import { Transmit } from '@adonisjs/transmit-client'
 import { v4 as uuid } from 'uuid'
 import { applyOperation } from '~/utils/builder_reducer'
@@ -10,7 +9,8 @@ import type {
   ServerBroadcastEvent,
   UserSession,
 } from '#types/builder'
-import type { SharedProps } from '@adonisjs/inertia/types'
+import { usePage } from '@inertiajs/react'
+import { type SharedProps } from '@adonisjs/inertia/types'
 
 interface UseBuilderSyncOptions {
   pageId: number

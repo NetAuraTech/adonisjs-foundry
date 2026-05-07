@@ -10,7 +10,6 @@ export interface ApiDefinition {
   eventStream: typeof routes['event_stream']
   subscribe: typeof routes['subscribe']
   unsubscribe: typeof routes['unsubscribe']
-  home: typeof routes['home']
   auth: {
     session: {
       render: typeof routes['auth.session.render']
@@ -85,6 +84,7 @@ export interface ApiDefinition {
     }
     pages: {
       render: typeof routes['admin.pages.render']
+      setHomepage: typeof routes['admin.pages.set_homepage']
       destroy: typeof routes['admin.pages.destroy']
     }
     pagesCreate: {
@@ -157,6 +157,9 @@ export interface ApiDefinition {
     execute: typeof routes['contact.execute']
   }
   page: {
+    sitemap: typeof routes['page.sitemap']
+    robots: typeof routes['page.robots']
+    home: typeof routes['page.home']
     localised: {
       render: typeof routes['page.localised.render']
     }

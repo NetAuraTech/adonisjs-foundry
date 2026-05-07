@@ -7,19 +7,19 @@ import type { PageContent, Block } from '#types/page'
  *
  * No mocks needed — this is a pure function operating on plain objects.
  * Tests verify that:
- * - dangerous HTML is stripped from `rich_text` blocks
+ * - dangerous HTML is stripped from `htmltext` blocks
  * - safe HTML is preserved
- * - non-rich_text blocks are left untouched
+ * - non-htmltext blocks are left untouched
  * - the function is non-mutating (returns a new object)
  * - recursion works for nested blocks inside `section` / `grid`
  */
 test.group('sanitizePageContent', () => {
   // ─── Helpers ──────────────────────────────────────────────────────────────
 
-  function makeRichText(content: string): Block {
+  function makeHtmlText(content: string): Block {
     return {
-      id: 'rt1',
-      type: 'rich_text',
+      id: 'ht1',
+      type: 'htmltext',
       props: { content, align: 'left' },
     } as Block
   }
@@ -58,9 +58,9 @@ test.group('sanitizePageContent', () => {
 
   // ─── Script injection ─────────────────────────────────────────────────────
 
-  test('strips <script> tags from rich_text content', ({ assert }) => {
+  test('strips <script> tags from htmltext content', ({ assert }) => {
     const content: PageContent = {
-      blocks: [makeRichText('<p>Hello</p><script>alert("xss")</script>')],
+      blocks: [makeHtmlText('<p>Hello</p><script>alert("xss")</script>')],
     }
     const result = sanitizePageContent(content)
     const props = result.blocks[0].props as { content: string }
@@ -70,7 +70,7 @@ test.group('sanitizePageContent', () => {
 
   test('strips inline event handlers (onclick, onerror, onload)', ({ assert }) => {
     const content: PageContent = {
-      blocks: [makeRichText('<p onclick="evil()">Click me</p><img src="x" onerror="evil()">')],
+      blocks: [makeHtmlText('<p onclick="evil()">Click me</p><img src="x" onerror="evil()">')],
     }
     const result = sanitizePageContent(content)
     const props = result.blocks[0].props as { content: string }
@@ -81,7 +81,7 @@ test.group('sanitizePageContent', () => {
 
   test('strips <iframe> tags', ({ assert }) => {
     const content: PageContent = {
-      blocks: [makeRichText('<p>Text</p><iframe src="https://evil.com"></iframe>')],
+      blocks: [makeHtmlText('<p>Text</p><iframe src="https://evil.com"></iframe>')],
     }
     const result = sanitizePageContent(content)
     const props = result.blocks[0].props as { content: string }
@@ -90,7 +90,7 @@ test.group('sanitizePageContent', () => {
 
   test('strips <style> tags', ({ assert }) => {
     const content: PageContent = {
-      blocks: [makeRichText('<style>body { display: none }</style><p>Hello</p>')],
+      blocks: [makeHtmlText('<style>body { display: none }</style><p>Hello</p>')],
     }
     const result = sanitizePageContent(content)
     const props = result.blocks[0].props as { content: string }
@@ -99,7 +99,7 @@ test.group('sanitizePageContent', () => {
 
   test('strips javascript: href from anchor tags', ({ assert }) => {
     const content: PageContent = {
-      blocks: [makeRichText('<a href="javascript:alert(1)">Click</a>')],
+      blocks: [makeHtmlText('<a href="javascript:alert(1)">Click</a>')],
     }
     const result = sanitizePageContent(content)
     const props = result.blocks[0].props as { content: string }
@@ -110,7 +110,7 @@ test.group('sanitizePageContent', () => {
 
   test('preserves safe paragraph and formatting tags', ({ assert }) => {
     const html = '<p><strong>Bold</strong> and <em>italic</em> text.</p>'
-    const content: PageContent = { blocks: [makeRichText(html)] }
+    const content: PageContent = { blocks: [makeHtmlText(html)] }
     const result = sanitizePageContent(content)
     const props = result.blocks[0].props as { content: string }
     assert.isTrue(props.content.includes('<strong>'))
@@ -120,7 +120,7 @@ test.group('sanitizePageContent', () => {
 
   test('preserves safe anchor tags with href and target', ({ assert }) => {
     const html = '<a href="https://example.com" target="_blank">Link</a>'
-    const content: PageContent = { blocks: [makeRichText(html)] }
+    const content: PageContent = { blocks: [makeHtmlText(html)] }
     const result = sanitizePageContent(content)
     const props = result.blocks[0].props as { content: string }
     assert.isTrue(props.content.includes('href="https://example.com"'))
@@ -128,7 +128,7 @@ test.group('sanitizePageContent', () => {
 
   test('preserves lists (ul, ol, li)', ({ assert }) => {
     const html = '<ul><li>Item 1</li><li>Item 2</li></ul>'
-    const content: PageContent = { blocks: [makeRichText(html)] }
+    const content: PageContent = { blocks: [makeHtmlText(html)] }
     const result = sanitizePageContent(content)
     const props = result.blocks[0].props as { content: string }
     assert.isTrue(props.content.includes('<ul>'))
@@ -137,7 +137,7 @@ test.group('sanitizePageContent', () => {
 
   test('preserves headings (h1–h4)', ({ assert }) => {
     const html = '<h2>Section title</h2>'
-    const content: PageContent = { blocks: [makeRichText(html)] }
+    const content: PageContent = { blocks: [makeHtmlText(html)] }
     const result = sanitizePageContent(content)
     const props = result.blocks[0].props as { content: string }
     assert.isTrue(props.content.includes('<h2>'))
@@ -145,16 +145,16 @@ test.group('sanitizePageContent', () => {
 
   test('preserves blockquote and code tags', ({ assert }) => {
     const html = '<blockquote><p>Quote</p></blockquote><pre><code>const x = 1</code></pre>'
-    const content: PageContent = { blocks: [makeRichText(html)] }
+    const content: PageContent = { blocks: [makeHtmlText(html)] }
     const result = sanitizePageContent(content)
     const props = result.blocks[0].props as { content: string }
     assert.isTrue(props.content.includes('<blockquote>'))
     assert.isTrue(props.content.includes('<code>'))
   })
 
-  // ─── Non-rich_text blocks left untouched ─────────────────────────────────
+  // ─── Non-htmltext blocks left untouched ─────────────────────────────────
 
-  test('does not modify non-rich_text blocks', ({ assert }) => {
+  test('does not modify non-htmltext blocks', ({ assert }) => {
     const titleBlock = makeTitle()
     const content: PageContent = { blocks: [titleBlock] }
     const result = sanitizePageContent(content)
@@ -169,9 +169,9 @@ test.group('sanitizePageContent', () => {
 
   // ─── Recursion ────────────────────────────────────────────────────────────
 
-  test('sanitises rich_text blocks nested inside a section', ({ assert }) => {
+  test('sanitises htmltext blocks nested inside a section', ({ assert }) => {
     const content: PageContent = {
-      blocks: [makeSection([makeRichText('<p>Safe</p><script>evil()</script>')])],
+      blocks: [makeSection([makeHtmlText('<p>Safe</p><script>evil()</script>')])],
     }
     const result = sanitizePageContent(content)
     const nested = result.blocks[0].children![0].props as { content: string }
@@ -179,9 +179,9 @@ test.group('sanitizePageContent', () => {
     assert.isTrue(nested.content.includes('<p>Safe</p>'))
   })
 
-  test('sanitises deeply nested rich_text blocks', ({ assert }) => {
+  test('sanitises deeply nested htmltext blocks', ({ assert }) => {
     const content: PageContent = {
-      blocks: [makeSection([makeSection([makeRichText('<p>Deep</p><iframe src="x"></iframe>')])])],
+      blocks: [makeSection([makeSection([makeHtmlText('<p>Deep</p><iframe src="x"></iframe>')])])],
     }
     const result = sanitizePageContent(content)
     const deep = result.blocks[0].children![0].children![0].props as { content: string }
@@ -191,12 +191,12 @@ test.group('sanitizePageContent', () => {
 
   // ─── Mixed content ────────────────────────────────────────────────────────
 
-  test('processes multiple rich_text blocks in the same array', ({ assert }) => {
+  test('processes multiple htmltext blocks in the same array', ({ assert }) => {
     const content: PageContent = {
       blocks: [
-        makeRichText('<p>First</p><script>x()</script>'),
+        makeHtmlText('<p>First</p><script>x()</script>'),
         makeTitle(),
-        makeRichText('<p>Second</p><script>y()</script>'),
+        makeHtmlText('<p>Second</p><script>y()</script>'),
       ],
     }
     const result = sanitizePageContent(content)

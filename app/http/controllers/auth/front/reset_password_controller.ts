@@ -10,11 +10,27 @@ export default class ResetPasswordController {
   constructor(protected passwordService: PasswordService) {}
 
   async render(ctx: HttpContext) {
-    const { inertia, params } = ctx
+    const { inertia, params, i18n } = ctx
 
     await this.passwordService.validate(params.token)
 
-    return inertia.render('auth/front/reset_password', { token: params.token })
+    return inertia.render('auth/front/reset_password', {
+      token: params.token,
+      translations: {
+        title: i18n.t('auth.password.reset.title'),
+        sub_title: i18n.t('auth.password.reset.sub_title'),
+        password: {
+          value: i18n.t('auth.password.reset.password.value'),
+          help: i18n.t('auth.password.reset.password.help'),
+          confirmation: {
+            value: i18n.t('auth.password.reset.password.confirmation.value'),
+            help: i18n.t('auth.password.reset.password.confirmation.help'),
+          },
+        },
+        submit: i18n.t('auth.password.reset.submit'),
+        back_to_login: i18n.t('auth.password.reset.back_to_login'),
+      },
+    })
   }
 
   async execute(ctx: HttpContext) {

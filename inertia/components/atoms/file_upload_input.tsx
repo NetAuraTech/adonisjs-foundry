@@ -1,10 +1,11 @@
 import { useRef, useState, useId, ChangeEvent, DragEvent } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Icon } from '~/components/atoms/icon'
 import { Paragraph } from '~/components/atoms/paragraph'
 import { humanSize } from '~/utils/file'
 import { Label } from '~/components/atoms/label'
 import { Button } from '~/components/atoms/button'
+import type { CmsFilesTranslations } from '#types/translations'
+import { useTranslation } from '~/hooks/use_translation'
 
 interface FileUploadInputProps {
   /** Input name attribute, used when inside a native <form> */
@@ -23,6 +24,7 @@ interface FileUploadInputProps {
   label?: string
   /** Optional hint shown below the drop zone */
   hint?: string
+  translations: CmsFilesTranslations
 }
 
 /**
@@ -59,8 +61,9 @@ export function FileUploadInput(props: FileUploadInputProps) {
     disabled = false,
     label,
     hint,
+    translations,
   } = props
-  const { t } = useTranslation()
+  const { t } = useTranslation<CmsFilesTranslations>(translations)
   const id = useId()
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -195,7 +198,7 @@ export function FileUploadInput(props: FileUploadInputProps) {
               variant="icon_danger"
               fitContent
               onClick={handleClear}
-              title={t('admin:files.upload.remove')}
+              title={t('upload.remove')}
             >
               <Icon name="Trash" size={18} />
             </Button>
@@ -216,17 +219,17 @@ export function FileUploadInput(props: FileUploadInputProps) {
             <div className="text-center space-y-1">
               {sizeError ? (
                 <Paragraph variant="error">
-                  {t('admin:files.upload.error.size', {
+                  {t('upload.error.size', {
                     max: humanSize(maxSize ?? 0),
                   })}
                 </Paragraph>
               ) : (
                 <>
-                  <Paragraph variant="foreground">{t('admin:files.upload.help')}</Paragraph>
+                  <Paragraph variant="ink">{t('upload.help')}</Paragraph>
                   {accept && <Paragraph variant="muted">{accept.replace(/,/g, ', ')}</Paragraph>}
                   {maxSize && (
                     <Paragraph variant="muted">
-                      {t('admin:files.upload.max_size', {
+                      {t('upload.max_size', {
                         size: humanSize(maxSize),
                       })}
                     </Paragraph>
@@ -243,7 +246,7 @@ export function FileUploadInput(props: FileUploadInputProps) {
                 }}
                 className="text-xs text-ink-muted hover:text-ink transition-colors"
               >
-                {t('admin:files.upload.try_again')}
+                {t('upload.try_again')}
               </button>
             )}
           </>

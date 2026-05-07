@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
-import type { FontSize } from '~/types/font'
+import type { FontSize } from '#types/font'
 import { getFontSizeClass } from '~/utils/font'
+import type { ParagraphSpacing, ParagraphVariants } from '#types/paragraph'
 
 interface ParagraphProps {
   children: ReactNode
@@ -15,12 +16,7 @@ interface ParagraphProps {
    * - `'error'` — danger text color (`text-danger`).
    * - `'custom'` — applies the class string passed in `color`.
    */
-  variant?: 'foreground' | 'muted' | 'subtle' | 'error' | 'custom'
-  /**
-   * Arbitrary Tailwind class(es) applied when `variant` is `'custom'`.
-   * Ignored for all other variants.
-   */
-  color?: string
+  variant?: ParagraphVariants
   /**
    * Top margin applied when the paragraph is not the first child of its
    * container.
@@ -30,7 +26,8 @@ interface ParagraphProps {
    * - `'base'` — `mt-4`, default.
    * - `'xl'` — `mt-6`.
    */
-  spacing?: 'xs' | 'sm' | 'base' | 'xl'
+  spacing?: ParagraphSpacing
+  className?: string
 }
 
 /**
@@ -45,19 +42,37 @@ interface ParagraphProps {
  * <Paragraph>Standard body text.</Paragraph>
  * <Paragraph variant="muted" spacing="sm">Secondary description.</Paragraph>
  * <Paragraph variant="error">Validation failed.</Paragraph>
- * <Paragraph variant="custom" color="text-accent font-medium">Custom style.</Paragraph>
+ * <Paragraph variant="custom" color="text-secondary font-medium">Custom style.</Paragraph>
  */
 export function Paragraph(props: ParagraphProps) {
-  const { children, variant = 'foreground', color, fs = 'base', spacing = 'base' } = props
+  const {
+    children,
+    variant = 'ink',
+    fs = 'base',
+    spacing = 'base',
+    className = 'text-balance leading-7',
+  } = props
 
   const fontSizeClass = getFontSizeClass(fs)
 
   const variants = {
-    foreground: 'text-ink',
-    muted: 'text-ink-muted',
-    subtle: 'text-ink-subtle',
-    error: 'text-danger',
-    custom: `${color}`,
+    'ink': 'text-ink',
+    'ink-inverted': 'text-ink-inverted',
+    'muted': 'text-ink-muted',
+    'subtle': 'text-ink-subtle',
+    'error': 'text-danger',
+    'primary-light': 'text-primary-light',
+    'primary-soft': 'text-primary-soft',
+    'primary': 'text-primary',
+    'primary-deep': 'text-primary-deep',
+    'secondary-light': 'text-secondary-light',
+    'secondary-soft': 'text-secondary-soft',
+    'secondary': 'text-secondary',
+    'secondary-deep': 'text-secondary-deep',
+    'tertiary-light': 'text-tertiary-light',
+    'tertiary-soft': 'text-tertiary-soft',
+    'tertiary': 'text-tertiary',
+    'tertiary-deep': 'text-tertiary-deep',
   }
 
   const spacings = {
@@ -69,7 +84,9 @@ export function Paragraph(props: ParagraphProps) {
 
   return (
     <p
-      className={`${variants[variant]} ${fontSizeClass} text-balance leading-7 ${spacings[spacing]}`}
+      className={[variants[variant], fontSizeClass, spacings[spacing], className]
+        .filter(Boolean)
+        .join(' ')}
     >
       {children}
     </p>

@@ -1,9 +1,8 @@
 import { Section } from '~/components/atoms/section'
 import { ReactNode } from 'react'
-import { Head } from '@inertiajs/react'
 import { Heading } from '~/components/atoms/heading'
 import { Icon } from '~/components/atoms/icon'
-import type { icons } from 'lucide-react'
+import { Head } from '@inertiajs/react'
 
 interface AdminMainBaseProps {
   /** Page title shown in the `<Head>` tag and as the section heading. */
@@ -12,7 +11,7 @@ interface AdminMainBaseProps {
    * Optional Lucide icon displayed to the left of the title.
    * Must be a valid key of the Lucide `icons` map.
    */
-  icon?: keyof typeof icons
+  icon?: string
   /**
    * Optional node rendered to the right of the heading row (e.g. a primary
    * action `<Button>` or a `<NavLink>`).
@@ -38,7 +37,7 @@ interface AdminMainBaseProps {
  *   icon="Users"
  *   action={
  *     <CanAccess permission="users.create">
- *       <Button route="admin.users_create.render" variant="accent" fitContent>
+ *       <Button route="admin.users_create.render" variant="secondary" fitContent>
  *         Invite a user
  *       </Button>
  *     </CanAccess>

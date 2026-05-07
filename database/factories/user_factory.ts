@@ -9,7 +9,7 @@ export const UserFactory = factory
       email: faker.internet.email().toLowerCase(),
       password: 'Password123!',
       emailVerifiedAt: new Date(),
-    }
+    } as unknown as Partial<User>
   })
   .relation('role', () => RoleFactory)
   .build()

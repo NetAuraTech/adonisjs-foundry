@@ -1,6 +1,4 @@
-import { Form } from '@adonisjs/inertia/react'
 import { Head } from '@inertiajs/react'
-import { useTranslation } from 'react-i18next'
 import { Section } from '~/components/atoms/section'
 import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import { Card } from '~/components/atoms/card'
@@ -11,27 +9,42 @@ import { presets } from '~/helpers/validation_rules'
 import { Field } from '~/components/molecules/field'
 import { Button } from '~/components/atoms/button'
 import { useState } from 'react'
+import { useTranslation } from '~/hooks/use_translation'
+import type { RegisterTranslations } from '#types/translations'
+import { Form } from '@adonisjs/inertia/react'
+import type { OAuthProvider } from '#types/auth'
+import { AuthProviders } from '~/components/molecules/auth/auth_providers'
 
-export default function RegisterPage() {
-  const { t } = useTranslation('auth')
+interface RegisterPageProps {
+  providers: OAuthProvider[]
+  translations: RegisterTranslations
+}
+
+export default function RegisterPage(props: RegisterPageProps) {
+  const { providers, translations } = props
+  const { t } = useTranslation(translations)
 
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
   const validation = useFormValidation({
-    email: presets.email,
-    password: presets.password,
-    password_confirmation: presets.passwordConfirmation(password),
+    email: presets.email(t('email.value')),
+    password: presets.password(t('password.value')),
+    password_confirmation: presets.passwordConfirmation(
+      password,
+      t('password.confirmation.value'),
+      t('password.value')
+    ),
   })
 
   return (
-    <>
-      <Head title={t('register.title')} />
+    <main>
+      <Head title={t('title')} />
       <Section>
         <div className="container">
           <AuthIntro
-            title={t('register.title')}
-            text={t('register.subtitle')}
+            title={t('title')}
+            text={t('sub_title')}
             icon={
               <path
                 strokeLinecap="round"
@@ -45,8 +58,8 @@ export default function RegisterPage() {
             footer={
               <div className="text-center">
                 <Paragraph fs="sm">
-                  {t('register.has_account')}{' '}
-                  <NavLink route="auth.session.render" label={t('register.login')} fs="sm" />
+                  {t('account.has')}{' '}
+                  <NavLink route="auth.session.render" label={t('account.login')} fs="sm" />
                 </Paragraph>
               </div>
             }
@@ -62,22 +75,22 @@ export default function RegisterPage() {
               {({ errors, processing }) => (
                 <>
                   <Field
-                    label={t('login.email')}
+                    label={t('email.value')}
                     name="email"
                     type="email"
-                    placeholder={t('login.email_placeholder')}
+                    placeholder={t('email.placeholder')}
                     errorMessage={errors.email || validation.getValidationMessage('email')}
                     onChange={(event) => {
                       validation.handleChange('email', event.target.value)
                     }}
                     onBlur={(event) => {
-                      validation.handleBlur('email', event.target.value)
+                      validation.handleBlur('email', event!.target.value)
                     }}
                     required
                     sanitize
                   />
                   <Field
-                    label={t('register.password')}
+                    label={t('password.value')}
                     name="password"
                     type="password"
                     errorMessage={errors.password || validation.getValidationMessage('password')}
@@ -87,17 +100,17 @@ export default function RegisterPage() {
                       validation.handleChange('password_confirmation', confirmPassword)
                     }}
                     onBlur={(event) => {
-                      setPassword(event.target.value)
-                      validation.handleBlur('password', event.target.value)
+                      setPassword(event!.target.value)
+                      validation.handleBlur('password', event!.target.value)
                       validation.handleBlur('password_confirmation', confirmPassword)
                     }}
                     required
                     sanitize={false}
-                    helpText={t('register.password_help')}
+                    helpText={t('password.help')}
                     helpClassName={validation.getHelpClassName('password')}
                   />
                   <Field
-                    label={t('register.confirmation')}
+                    label={t('password.confirmation.value')}
                     name="password_confirmation"
                     type="password"
                     errorMessage={
@@ -109,23 +122,24 @@ export default function RegisterPage() {
                       validation.handleChange('password_confirmation', event.target.value)
                     }}
                     onBlur={(event) => {
-                      setConfirmPassword(event.target.value)
-                      validation.handleBlur('password_confirmation', event.target.value)
+                      setConfirmPassword(event!.target.value)
+                      validation.handleBlur('password_confirmation', event!.target.value)
                     }}
                     required
                     sanitize={false}
-                    helpText={t('register.confirmation_help')}
+                    helpText={t('password.confirmation.help')}
                     helpClassName={validation.getHelpClassName('password_confirmation')}
                   />
                   <Button loading={processing} type={'submit'} fitContent>
-                    {t('register.submit')}
+                    {t('submit')}
                   </Button>
                 </>
               )}
             </Form>
+            <AuthProviders providers={providers} translations={translations} />
           </Card>
         </div>
       </Section>
-    </>
+    </main>
   )
 }

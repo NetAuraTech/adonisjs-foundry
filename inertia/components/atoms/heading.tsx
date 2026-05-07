@@ -30,19 +30,21 @@ interface HeadingProps {
  * <Heading level={3} color="text-ink-muted">Section subtitle</Heading>
  */
 export function Heading(props: HeadingProps) {
-  const { level, color = 'text-ink', flex, children } = props
+  const { level, color = 'text-primary-deep', flex, children } = props
 
   const Tag = `h${level}` as ElementType
 
   const levels = {
-    1: 'text-4xl',
-    2: 'text-3xl',
-    3: 'text-2xl',
-    4: 'text-xl',
+    1: 'text-[clamp(2.2rem,5vw,4.2rem)]',
+    2: 'text-[clamp(1.8rem,4vw,2.4rem)]',
+    3: 'text-[clamp(1.6rem,3vw,1.9rem)]',
+    4: 'text-base',
   }
 
   return (
-    <Tag className={`${levels[level]} font-bold ${color}${flex ? ' flex gap-2 items-center' : ''}`}>
+    <Tag
+      className={`${levels[level]} font-playfair leading-tight ${color}${flex ? ' flex gap-2 items-center' : ''}`}
+    >
       {children}
     </Tag>
   )

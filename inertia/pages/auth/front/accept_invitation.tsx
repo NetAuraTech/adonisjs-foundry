@@ -1,5 +1,3 @@
-import { Form } from '@adonisjs/inertia/react'
-import { useTranslation } from 'react-i18next'
 import { Head } from '@inertiajs/react'
 import { Section } from '~/components/atoms/section'
 import { Card } from '~/components/atoms/card'
@@ -11,35 +9,39 @@ import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import { useState } from 'react'
 import { Data } from '@generated/data'
 import { Banner } from '~/components/molecules/banner'
+import type { AcceptInvitationTranslations } from '#types/translations'
+import { useTranslation } from '~/hooks/use_translation'
+import { Form } from '@adonisjs/inertia/react'
 
 interface PageProps {
   token: string
   user: Data.User
+  translations: AcceptInvitationTranslations
 }
 
 export default function AcceptInvitationPage(props: PageProps) {
-  const { t } = useTranslation('auth')
+  const { token, user, translations } = props
 
-  const { token, user } = props
+  const { t } = useTranslation(translations)
 
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
   const validation = useFormValidation({
-    email: presets.email,
-    username: presets.username,
-    password: presets.password,
-    password_confirmation: presets.passwordConfirmation(password),
+    email: presets.email(t('email.value')),
+    username: presets.username(t('username.value')),
+    password: presets.password(t('password.value')),
+    password_confirmation: presets.passwordConfirmation(password, t('password.confirmation.value')),
   })
 
   return (
-    <>
-      <Head title={t('invitation.title')} />
+    <main>
+      <Head title={t('title')} />
       <Section>
         <div className="container">
           <AuthIntro
-            title={t('invitation.title')}
-            text={t('invitation.subtitle')}
+            title={t('title')}
+            text={t('sub_title')}
             icon={
               <path
                 strokeLinecap="round"
@@ -50,11 +52,7 @@ export default function AcceptInvitationPage(props: PageProps) {
             }
           />
           <Card>
-            <Banner
-              title={t('invitation.banner.title', { email: user.email })}
-              message={t('invitation.banner.message')}
-              type="info"
-            />
+            <Banner title={t('banner.title')} message={t('banner.message')} type="info" />
             <Form
               route="auth.accept_invitation.execute"
               className="grid gap-6 mt-6"
@@ -67,40 +65,41 @@ export default function AcceptInvitationPage(props: PageProps) {
                 <>
                   <input type="hidden" id="token" name="token" value={token} />
                   <Field
-                    label={t('invitation.email')}
+                    label={t('email.value')}
                     name="email"
                     type="email"
                     defaultValue={user.email}
-                    placeholder={t('invitation.email_placeholder')}
+                    placeholder={t('email.placeholder')}
                     errorMessage={errors.email || validation.getValidationMessage('email')}
                     onChange={(event) => {
                       validation.handleChange('email', event.target.value)
                     }}
                     onBlur={(event) => {
-                      validation.handleBlur('email', event.target.value)
+                      validation.handleBlur('email', event!.target.value)
                     }}
+                    helpText={t('email.help')}
                     required
                     sanitize
                   />
                   <Field
-                    label={t('invitation.username')}
+                    label={t('username.value')}
                     name="username"
                     type="text"
                     defaultValue={user.username}
-                    placeholder={t('invitation.username_placeholder')}
+                    placeholder={t('username.placeholder')}
                     errorMessage={errors.username || validation.getValidationMessage('username')}
                     onChange={(event) => {
                       validation.handleChange('username', event.target.value)
                     }}
                     onBlur={(event) => {
-                      validation.handleBlur('username', event.target.value)
+                      validation.handleBlur('username', event!.target.value)
                     }}
-                    helpText={t('invitation.username_help')}
+                    helpText={t('username.help')}
                     required
                     sanitize
                   />
                   <Field
-                    label={t('invitation.password')}
+                    label={t('password.value')}
                     name="password"
                     type="password"
                     errorMessage={errors.password || validation.getValidationMessage('password')}
@@ -110,17 +109,17 @@ export default function AcceptInvitationPage(props: PageProps) {
                       validation.handleChange('password_confirmation', confirmPassword)
                     }}
                     onBlur={(event) => {
-                      setPassword(event.target.value)
-                      validation.handleBlur('password', event.target.value)
+                      setPassword(event!.target.value)
+                      validation.handleBlur('password', event!.target.value)
                       validation.handleBlur('password_confirmation', confirmPassword)
                     }}
                     required
                     sanitize={false}
-                    helpText={t('invitation.password_help')}
+                    helpText={t('password.help')}
                     helpClassName={validation.getHelpClassName('password')}
                   />
                   <Field
-                    label={t('invitation.confirmation')}
+                    label={t('password.confirmation.value')}
                     name="password_confirmation"
                     type="password"
                     errorMessage={
@@ -132,16 +131,16 @@ export default function AcceptInvitationPage(props: PageProps) {
                       validation.handleChange('password_confirmation', event.target.value)
                     }}
                     onBlur={(event) => {
-                      setConfirmPassword(event.target.value)
-                      validation.handleBlur('password_confirmation', event.target.value)
+                      setConfirmPassword(event!.target.value)
+                      validation.handleBlur('password_confirmation', event!.target.value)
                     }}
                     required
                     sanitize={false}
-                    helpText={t('invitation.confirmation_help')}
+                    helpText={t('password.confirmation.help')}
                     helpClassName={validation.getHelpClassName('password_confirmation')}
                   />
                   <Button loading={processing} type={'submit'} fitContent>
-                    {t('invitation.submit')}
+                    {t('submit')}
                   </Button>
                 </>
               )}
@@ -149,6 +148,6 @@ export default function AcceptInvitationPage(props: PageProps) {
           </Card>
         </div>
       </Section>
-    </>
+    </main>
   )
 }

@@ -47,15 +47,15 @@ export default class SendChangeEmailConfirmationEmail {
       },
       confirmation_link: `${env.get('APP_URL')}${urlFor('settings.email_change.render', { token: token })}`,
       translations: {
-        subject: i18n.t('settings.email_change.mail.confirm.subject'),
-        greeting: i18n.t('settings.email_change.mail.confirm.greeting'),
-        intro: i18n.t('settings.email_change.mail.confirm.intro', {
+        subject: i18n.t('settings.email.change.mail.confirm.subject'),
+        greeting: i18n.t('settings.email.change.mail.confirm.greeting'),
+        intro: i18n.t('settings.email.change.mail.confirm.intro', {
           email: event.user.pendingEmail,
         }),
-        action: i18n.t('settings.email_change.mail.confirm.action'),
-        outro: i18n.t('settings.email_change.mail.confirm.outro'),
-        expiry: i18n.t('settings.email_change.mail.confirm.expiry', { hours: 24 }),
-        footer: i18n.t('settings.email_change.mail.confirm.footer'),
+        action: i18n.t('settings.email.change.mail.confirm.action'),
+        outro: i18n.t('settings.email.change.mail.confirm.outro'),
+        expiry: i18n.t('settings.email.change.mail.confirm.expiry', { hours: 24 }),
+        footer: i18n.t('settings.email.change.mail.confirm.footer'),
       },
     })
 

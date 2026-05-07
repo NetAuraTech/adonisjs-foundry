@@ -1,4 +1,4 @@
-import type { BaseFontSize, FontSize, SingleFontSize } from '~/types/font'
+import type { BaseFontSize, FontSize, SingleFontSize } from '#types/font'
 
 /**
  * Converts a {@link FontSize} value into a space-separated Tailwind class string.

@@ -95,9 +95,23 @@ export default class SocialController {
   }
 
   async render(ctx: HttpContext) {
-    const { inertia } = ctx
+    const { inertia, i18n } = ctx
 
-    return inertia.render('auth/front/define_password', {})
+    return inertia.render('auth/front/define_password', {
+      translations: {
+        title: i18n.t('auth.password.define.title'),
+        sub_title: i18n.t('auth.password.define.sub_title'),
+        password: {
+          value: i18n.t('auth.password.define.password.value'),
+          help: i18n.t('auth.password.define.password.help'),
+          confirmation: {
+            value: i18n.t('auth.password.define.password.confirmation.value'),
+            help: i18n.t('auth.password.define.password.confirmation.help'),
+          },
+        },
+        submit: i18n.t('auth.password.define.submit'),
+      },
+    })
   }
 
   async execute(ctx: HttpContext) {

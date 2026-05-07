@@ -1,7 +1,3 @@
-import { useIsLarge } from '~/hooks/use_is_large'
-import { usePage } from '@inertiajs/react'
-import { SharedProps } from '@adonisjs/inertia/types'
-import { useTranslation } from 'react-i18next'
 import { Card } from '../../atoms/card'
 import { Avatar } from '~/components/atoms/avatar'
 import { ThemeToggle } from '~/components/molecules/theme_toggle'
@@ -10,6 +6,9 @@ import { NavLink } from '../../atoms/nav_link'
 import { CanAccess } from '~/guards/can_access'
 import { useMenu } from '~/hooks/use_admin'
 import { Icon } from '~/components/atoms/icon'
+import { Lang, useTranslation } from '~/hooks/use_translation'
+import { usePage } from '@inertiajs/react'
+import { SharedProps } from '@adonisjs/inertia/types'
 
 interface AdminSidebarProps {
   /**
@@ -18,8 +17,6 @@ interface AdminSidebarProps {
    * state change.
    */
   sidebarOpen: boolean
-  /** Setter passed down from the admin layout — reserved for future use. */
-  setIsMenuOpen: (value: boolean) => void
 }
 
 /**
@@ -41,13 +38,12 @@ interface AdminSidebarProps {
  * const [sidebarOpen, setSidebarOpen] = useState(false)
  *
  * <AdminHeader handleClick={() => setSidebarOpen((v) => !v)} />
- * <AdminSidebar sidebarOpen={sidebarOpen} setIsMenuOpen={setSidebarOpen} />
+ * <AdminSidebar sidebarOpen={sidebarOpen} />
  */
 export function AdminSidebar(props: AdminSidebarProps) {
-  const { sidebarOpen, setIsMenuOpen } = props
-  const isLarge = useIsLarge()
+  const { sidebarOpen } = props
   const pageProps = usePage<SharedProps>().props
-  const { t, i18n } = useTranslation('admin')
+  const { t, format } = useTranslation(pageProps.cms_translations!)
 
   const { menu } = useMenu()
 
@@ -59,15 +55,17 @@ export function AdminSidebar(props: AdminSidebarProps) {
             <Avatar showUsername />
             <ThemeToggle />
           </div>
-          <span>{i18n.format(new Date(), 'long', i18n.language)}</span>
+          <span>{format(new Date(), 'long', pageProps.locale as Lang)}</span>
         </div>
       </Card>
       <Card>
         <nav className="grid gap-1">
           {Object.entries(menu).map(([category, entries]) => (
             <div key={`admin-category-${category}`}>
-              <Heading level={4}>{t(`category.${category}`)}</Heading>
-              <ul className="grid gap-1">
+              {category !== 'no_category' && (
+                <Heading level={4}>{t(`category.${category}` as any)}</Heading>
+              )}
+              <ul className="grid gap-1 my-2">
                 {entries.map((entry) => (
                   <li key={`admin-category-${category}-${entry.label}`}>
                     <CanAccess permission={entry.permission}>

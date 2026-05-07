@@ -9,31 +9,35 @@ import { urlFor } from '~/client'
 import PresenceBar from '~/components/organisms/builder/PresenceBar'
 import BlockTree from '~/components/organisms/builder/BlockTree'
 import PreviewIframe from '~/components/organisms/builder/PreviewIframe'
-import { Head, useForm } from '@inertiajs/react'
-import type { SharedProps } from '@adonisjs/inertia/types'
+import { Head } from '@inertiajs/react'
 import { Icon } from '~/components/atoms/icon'
 import { Separator } from '~/components/atoms/separator'
 import { Heading } from '~/components/atoms/heading'
-
-interface Translation {
-  id: number
-  locale: string
-  slug: string
-  title: string
-  status: 'draft' | 'published' | 'archived'
-  metaTitle: string | null
-  metaDescription: string | null
-  content: PageContent
-}
-
-interface Page {
-  id: number
-  defaultLocale: string
-  translations: Translation[]
-}
+import { Data } from '@generated/data'
+import { router, useForm } from '@inertiajs/react'
+import { SharedProps } from '@adonisjs/inertia/types'
 
 interface Props {
-  page: Page
+  page: Data.Page
+  availableRoutes: {
+    name: string | undefined
+    pattern: string
+    params: string[]
+  }[]
+  availablePages: {
+    id: number
+    label: string
+    default_locale: string
+    locales: {
+      locale: string
+      slug: string
+    }[]
+  }[]
+  availablePostRoutes: {
+    name: string | undefined
+    pattern: string
+    params: string[]
+  }[]
 }
 
 type PanelMode = 'editor' | 'preview' | 'split'
@@ -92,7 +96,7 @@ export default function PagesEditPage({ page }: Props) {
   }
 
   function handleContentChange(next: PageContent) {
-    //setContent(next)
+    setContent(next)
     pushDraft(next)
   }
 
@@ -108,6 +112,27 @@ export default function PagesEditPage({ page }: Props) {
     if (saving) return
     setSaving(true)
     setSaveState('idle')
+
+    router.post(
+      urlFor('admin.pages_update.execute', { id: page.id }),
+      {
+        locale: activeLocale,
+        title,
+        slug,
+        content: content as any,
+        metaTitle: metaTitle || null,
+        metaDescription: metaDescription || null,
+      },
+      {
+        preserveScroll: true,
+        onSuccess: () => {
+          setSaveState('saved')
+          setTimeout(() => setSaveState('idle'), 2500)
+        },
+        onError: () => setSaveState('error'),
+        onFinish: () => setSaving(false),
+      }
+    )
   }, [saving, activeLocale, title, slug, content, metaTitle, metaDescription, page.id])
 
   useEffect(() => {
@@ -120,8 +145,28 @@ export default function PagesEditPage({ page }: Props) {
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [handleSave])
-  function handlePublish() {}
-  function handleUnpublish() {}
+  function handlePublish() {
+    router.post(
+      urlFor('admin.pages_update.publish', { id: page.id }),
+      {
+        locale: activeLocale,
+      },
+      {
+        preserveScroll: true,
+      }
+    )
+  }
+  function handleUnpublish() {
+    router.post(
+      urlFor('admin.pages_update.unpublish', { id: page.id }),
+      {
+        locale: activeLocale,
+      },
+      {
+        preserveScroll: true,
+      }
+    )
+  }
 
   const showEditor = panelMode === 'editor' || panelMode === 'split'
   const showPreview = panelMode === 'preview' || panelMode === 'split'
@@ -180,7 +225,7 @@ export default function PagesEditPage({ page }: Props) {
                     onClick={() => switchLocale(t.locale)}
                     className={`flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium border-b-2 transition-colors ${
                       t.locale === activeLocale
-                        ? 'border-primary-mid text-ink'
+                        ? 'border-primary text-ink'
                         : 'border-transparent text-ink-muted hover:text-ink'
                     }`}
                   >
@@ -195,7 +240,7 @@ export default function PagesEditPage({ page }: Props) {
               />
             </div>
             <div className="flex flex-1 overflow-hidden">
-              <div className="w-80 shrink-0 border-r border-edge overflow-y-auto p-3 space-y-3 bg-canvas">
+              <div className="w-80 shrink-0 border-r border-edge p-3 space-y-3 bg-canvas">
                 <div className="grid gap-2">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-ink">Status</span>
@@ -273,7 +318,7 @@ export default function PagesEditPage({ page }: Props) {
                   />
                 </div>
               </div>
-              <div className="flex-1 min-w-95 overflow-y-auto p-4">
+              <div className="flex-1 w-100">
                 <BlockTree
                   content={content}
                   onChange={handleContentChange}
@@ -353,7 +398,7 @@ function AddTranslationButton({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1 px-2 py-2 text-xs text-ink-subtle hover:text-primary-mid transition-colors"
+        className="flex items-center gap-1 px-2 py-2 text-xs text-ink-subtle hover:text-primary transition-colors"
       >
         <span className="w-4 h-4 rounded border border-dashed border-edge flex items-center justify-center">
           +
@@ -376,11 +421,15 @@ function AddTranslationButton({
             ))}
           </select>
           <Input
+            name="title"
+            type="text"
             defaultValue={form.data.title}
             onChange={(e) => form.setData('title', e.target.value)}
             placeholder="Title"
           />
           <Input
+            name="slug"
+            type="text"
             defaultValue={form.data.slug}
             onChange={(e) => form.setData('slug', e.target.value)}
             placeholder="slug"

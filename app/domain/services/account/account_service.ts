@@ -140,7 +140,7 @@ export class AccountService {
         pendingEmail: user.pendingEmail,
       })
 
-      throw new EmailAlreadyExistsException()
+      throw new EmailAlreadyExistsException(user.pendingEmail!)
     }
 
     const updated = await this.userRepository.update(user, {

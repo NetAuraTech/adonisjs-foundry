@@ -1,17 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title inertia>
-      AdonisJS
-    </title>
     <script>
-      (function () {
-        const stored = localStorage.getItem('theme')
-        const isDark = stored === 'dark' || (stored === null && window.matchMedia('(prefers-color-scheme: dark)').matches)
-        document.documentElement.classList.toggle('dark', isDark)
-      })()
+      (function() {
+        const stored = localStorage.getItem("theme");
+        const isDark = stored === "dark" || stored === null && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        document.documentElement.classList.toggle("dark", isDark);
+      })();
     </script>
     @viteReactRefresh()
     @vite(['inertia/app.tsx'])

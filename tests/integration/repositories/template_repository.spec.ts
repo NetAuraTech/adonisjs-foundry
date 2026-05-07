@@ -29,15 +29,15 @@ test.group('TemplateRepository', () => {
 
   test('create() stores block type correctly', async ({ assert }) => {
     const template = await repo.create({
-      name: 'Hero Block',
+      name: 'Section Block',
       type: 'block',
-      blockType: 'hero',
+      blockType: 'section',
       content: emptyContent,
       createdBy: null,
     })
 
     assert.equal(template.type, 'block')
-    assert.equal(template.blockType, 'hero')
+    assert.equal(template.blockType, 'section')
   })
 
   // ─── findById() ───────────────────────────────────────────────────────────
@@ -61,7 +61,7 @@ test.group('TemplateRepository', () => {
     const pageTemplate = await TemplateFactory.merge({ type: 'page' }).create()
     const blockTemplate = await TemplateFactory.merge({
       type: 'block',
-      blockType: 'hero',
+      blockType: 'section',
     }).create()
 
     const result = await repo.list({ type: 'page' })
@@ -72,10 +72,13 @@ test.group('TemplateRepository', () => {
   })
 
   test('list() filters by blockType', async ({ assert }) => {
-    const heroTemplate = await TemplateFactory.merge({ type: 'block', blockType: 'hero' }).create()
+    const heroTemplate = await TemplateFactory.merge({
+      type: 'block',
+      blockType: 'section',
+    }).create()
     const gridTemplate = await TemplateFactory.merge({ type: 'block', blockType: 'grid' }).create()
 
-    const result = await repo.list({ blockType: 'hero' })
+    const result = await repo.list({ blockType: 'section' })
     const ids = result.map((t) => t.id)
 
     assert.includeMembers(ids, [heroTemplate.id])

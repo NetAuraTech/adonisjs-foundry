@@ -1,33 +1,39 @@
-import { icons } from 'lucide-react'
+import { Icon as IconifyIcon } from '@iconify/react'
 
 interface IconProps {
-  /** Name of the Lucide icon to render. Must be a valid key of the `icons` map. */
-  name: keyof typeof icons
-  /** Icon size in pixels. Forwarded directly to the Lucide component. */
+  name: string
+  /** Icon size in pixels. */
   size?: number
-  /** Additional Tailwind classes (e.g. `text-danger`, `shrink-0`). */
+  /** Additional Tailwind classes. */
   className?: string
 }
 
 /**
- * Thin wrapper around the Lucide icon library.
+ * Converts PascalCase to kebab-case for Iconify compatibility.
+ */
+function toKebabCase(str: string) {
+  return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
+}
+
+/**
+ * Icon component using Iconify for dynamic loading.
  *
- * Looks up `name` in the Lucide `icons` map and renders the matching SVG
- * component. Returns an empty fragment when the icon is not found, so
- * invalid names fail silently rather than throwing.
+ * - Usage: Pass a string (e.g. `<Icon name="ArrowLeft" />`).
  *
- * @example
- * <Icon name="Trash" size={18} className="text-danger" />
- * <Icon name="Check" size={16} />
+ * Icons are fetched on-demand from Iconify's API without any local map/dictionary.
  */
 export function Icon(props: IconProps) {
-  const { name, size, ...iconProps } = props
+  const { name, size, className, ...iconProps } = props
 
-  const Item = icons[name]
+  const iconName = name.includes(':') ? name : `lucide:${toKebabCase(name)}`
 
-  if (Item) {
-    return <Item size={size} {...iconProps} />
-  }
-
-  return <></>
+  return (
+    <IconifyIcon
+      icon={iconName}
+      width={size}
+      height={size}
+      className={className}
+      {...(iconProps as any)}
+    />
+  )
 }

@@ -1,5 +1,3 @@
-import { Form } from '@adonisjs/inertia/react'
-import { useTranslation } from 'react-i18next'
 import { Head } from '@inertiajs/react'
 import { Section } from '~/components/atoms/section'
 import { Card } from '~/components/atoms/card'
@@ -9,26 +7,34 @@ import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets } from '~/helpers/validation_rules'
 import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import { useState } from 'react'
+import type { DefinePasswordTranslations } from '#types/translations'
+import { useTranslation } from '~/hooks/use_translation'
+import { Form } from '@adonisjs/inertia/react'
 
-export default function DefinePasswordPage() {
-  const { t } = useTranslation('auth')
+interface DefinePasswordPageProps {
+  translations: DefinePasswordTranslations
+}
+
+export default function DefinePasswordPage(props: DefinePasswordPageProps) {
+  const { translations } = props
+  const { t } = useTranslation(translations)
 
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
   const validation = useFormValidation({
-    password: presets.password,
-    password_confirmation: presets.passwordConfirmation(password),
+    password: presets.password(t('password.value')),
+    password_confirmation: presets.passwordConfirmation(password, t('password.confirmation.value')),
   })
 
   return (
-    <>
-      <Head title={t('define_password.title')} />
+    <main>
+      <Head title={t('title')} />
       <Section>
         <div className="container">
           <AuthIntro
-            title={t('define_password.title')}
-            text={t('define_password.subtitle')}
+            title={t('title')}
+            text={t('sub_title')}
             icon={
               <path
                 strokeLinecap="round"
@@ -50,7 +56,7 @@ export default function DefinePasswordPage() {
               {({ errors, processing }) => (
                 <>
                   <Field
-                    label={t('define_password.password')}
+                    label={t('password.value')}
                     name="password"
                     type="password"
                     errorMessage={errors.password || validation.getValidationMessage('password')}
@@ -60,17 +66,17 @@ export default function DefinePasswordPage() {
                       validation.handleChange('password_confirmation', confirmPassword)
                     }}
                     onBlur={(event) => {
-                      setPassword(event.target.value)
-                      validation.handleBlur('password', event.target.value)
+                      setPassword(event!.target.value)
+                      validation.handleBlur('password', event!.target.value)
                       validation.handleBlur('password_confirmation', confirmPassword)
                     }}
                     required
                     sanitize={false}
-                    helpText={t('define_password.password_help')}
+                    helpText={t('password.help')}
                     helpClassName={validation.getHelpClassName('password')}
                   />
                   <Field
-                    label={t('define_password.confirmation')}
+                    label={t('password.confirmation.value')}
                     name="password_confirmation"
                     type="password"
                     errorMessage={
@@ -82,16 +88,16 @@ export default function DefinePasswordPage() {
                       validation.handleChange('password_confirmation', event.target.value)
                     }}
                     onBlur={(event) => {
-                      setConfirmPassword(event.target.value)
-                      validation.handleBlur('password_confirmation', event.target.value)
+                      setConfirmPassword(event!.target.value)
+                      validation.handleBlur('password_confirmation', event!.target.value)
                     }}
                     required
                     sanitize={false}
-                    helpText={t('define_password.confirmation_help')}
+                    helpText={t('password.confirmation.help')}
                     helpClassName={validation.getHelpClassName('password_confirmation')}
                   />
                   <Button loading={processing} type={'submit'} fitContent>
-                    {t('define_password.submit')}
+                    {t('submit')}
                   </Button>
                 </>
               )}
@@ -99,6 +105,6 @@ export default function DefinePasswordPage() {
           </Card>
         </div>
       </Section>
-    </>
+    </main>
   )
 }

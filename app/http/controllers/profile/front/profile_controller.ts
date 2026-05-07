@@ -9,12 +9,36 @@ export default class ProfileController {
   constructor(protected profileService: ProfileService) {}
 
   async render(ctx: HttpContext) {
-    const { auth, inertia } = ctx
+    const { inertia, auth, i18n } = ctx
 
     const user = auth.user!
 
     return inertia.render('settings/profile/front/index', {
       user: UserTransformer.transform(user),
+      translations: {
+        header: {
+          title: i18n.t('settings.title'),
+          sub_title: i18n.t('settings.sub_title'),
+          tabs: {
+            profile: i18n.t('settings.profile.value'),
+            account: i18n.t('settings.account.value'),
+            preferences: i18n.t('settings.preferences.value'),
+            admin: i18n.t('cms.value'),
+            logout: i18n.t('auth.session.logout.value'),
+          },
+        },
+        avatar: {
+          change: i18n.t('settings.profile.avatar.change'),
+          value: i18n.t('settings.profile.avatar.value'),
+        },
+        username: {
+          placeholder: i18n.t('settings.profile.username.placeholder'),
+          value: i18n.t('settings.profile.username.value'),
+        },
+        title: i18n.t('settings.profile.title'),
+        sub_title: i18n.t('settings.profile.sub_title'),
+        submit: i18n.t('settings.profile.submit'),
+      },
     })
   }
 

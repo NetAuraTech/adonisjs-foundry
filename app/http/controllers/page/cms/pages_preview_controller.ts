@@ -104,7 +104,7 @@ export default class PagesPreviewController {
    * Route: GET /admin/pages/preview/:pageId?locale=en&token=xxx
    */
   async render(ctx: HttpContext) {
-    const { params, request, inertia, response, auth } = ctx
+    const { inertia, params, request, response, auth } = ctx
 
     const user = auth.getUserOrFail()
 

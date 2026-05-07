@@ -30,12 +30,6 @@ const routes = {
     tokens: [{"old":"/__transmit/unsubscribe","type":0,"val":"__transmit","end":""},{"old":"/__transmit/unsubscribe","type":0,"val":"unsubscribe","end":""}],
     types: placeholder as Registry['unsubscribe']['types'],
   },
-  'home': {
-    methods: ["GET","HEAD"],
-    pattern: '/',
-    tokens: [{"old":"/","type":0,"val":"/","end":""}],
-    types: placeholder as Registry['home']['types'],
-  },
   'auth.session.render': {
     methods: ["GET","HEAD"],
     pattern: '/login',
@@ -294,6 +288,12 @@ const routes = {
     tokens: [{"old":"/admin/pages/:id/unpublish","type":0,"val":"admin","end":""},{"old":"/admin/pages/:id/unpublish","type":0,"val":"pages","end":""},{"old":"/admin/pages/:id/unpublish","type":1,"val":"id","end":""},{"old":"/admin/pages/:id/unpublish","type":0,"val":"unpublish","end":""}],
     types: placeholder as Registry['admin.pages_update.unpublish']['types'],
   },
+  'admin.pages.set_homepage': {
+    methods: ["POST"],
+    pattern: '/admin/pages/:id/homepage',
+    tokens: [{"old":"/admin/pages/:id/homepage","type":0,"val":"admin","end":""},{"old":"/admin/pages/:id/homepage","type":0,"val":"pages","end":""},{"old":"/admin/pages/:id/homepage","type":1,"val":"id","end":""},{"old":"/admin/pages/:id/homepage","type":0,"val":"homepage","end":""}],
+    types: placeholder as Registry['admin.pages.set_homepage']['types'],
+  },
   'admin.pages.destroy': {
     methods: ["DELETE"],
     pattern: '/admin/pages/:id',
@@ -473,6 +473,24 @@ const routes = {
     pattern: '/contact',
     tokens: [{"old":"/contact","type":0,"val":"contact","end":""}],
     types: placeholder as Registry['contact.execute']['types'],
+  },
+  'page.sitemap': {
+    methods: ["GET","HEAD"],
+    pattern: '/sitemap.xml',
+    tokens: [{"old":"/sitemap.xml","type":0,"val":"sitemap.xml","end":""}],
+    types: placeholder as Registry['page.sitemap']['types'],
+  },
+  'page.robots': {
+    methods: ["GET","HEAD"],
+    pattern: '/robots.txt',
+    tokens: [{"old":"/robots.txt","type":0,"val":"robots.txt","end":""}],
+    types: placeholder as Registry['page.robots']['types'],
+  },
+  'page.home': {
+    methods: ["GET","HEAD"],
+    pattern: '/',
+    tokens: [{"old":"/","type":0,"val":"/","end":""}],
+    types: placeholder as Registry['page.home']['types'],
   },
   'page.localised.render': {
     methods: ["GET","HEAD"],

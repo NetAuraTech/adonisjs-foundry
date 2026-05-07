@@ -31,7 +31,11 @@ test.group('PageTranslation model — saveRevision()', (group) => {
   test('creates a snapshot of the current content', async ({ assert }) => {
     const content: PageContent = {
       blocks: [
-        { id: '1', type: 'title', props: { text: 'Hello', level: 1, align: 'left', color: null } },
+        {
+          id: '1',
+          type: 'title',
+          props: { text: 'Hello', level: 1, color: 'primary-deep', highlightColor: 'default' },
+        },
       ],
     }
     const translation = makeTranslation(content)

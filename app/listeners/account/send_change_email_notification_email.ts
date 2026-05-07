@@ -25,14 +25,14 @@ export default class SendChangeEmailNotificationEmail {
         locale,
       },
       translations: {
-        subject: i18n.t('settings.email_change.mail.notification.subject'),
-        greeting: i18n.t('settings.email_change.mail.notification.greeting'),
-        intro: i18n.t('settings.email_change.mail.notification.intro', {
+        subject: i18n.t('settings.email.change.mail.notification.subject'),
+        greeting: i18n.t('settings.email.change.mail.notification.greeting'),
+        intro: i18n.t('settings.email.change.mail.notification.intro', {
           old: event.user.email,
           new: event.user.pendingEmail,
         }),
-        warning: i18n.t('settings.email_change.mail.notification.warning'),
-        action: i18n.t('settings.email_change.mail.notification.action'),
+        warning: i18n.t('settings.email.change.mail.notification.warning'),
+        action: i18n.t('settings.email.change.mail.notification.action'),
         support: env.get('MAIL_FROM_ADDRESS'),
       },
     })

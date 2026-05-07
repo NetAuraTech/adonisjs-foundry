@@ -3,6 +3,7 @@ import { inject } from '@adonisjs/core'
 import { PageService } from '#services/page/page_service'
 import { showPageValidator, updatePageValidator, publishPageValidator } from '#validators/page'
 import PageTransformer from '#transformers/page_transformer'
+import router from '@adonisjs/core/services/router'
 
 @inject()
 export default class PagesUpdateController {
@@ -11,10 +12,58 @@ export default class PagesUpdateController {
   async render(ctx: HttpContext) {
     const { inertia, params } = ctx
 
+    const allRoutes = router.toJSON().root
+    const availableRoutes = allRoutes
+      .filter((r) => {
+        if (!r.methods.includes('GET')) return false
+        if (!r.name) return false
+        const isExcluded =
+          r.name.startsWith('admin.') ||
+          r.name.startsWith('api.') ||
+          r.name.startsWith('auth.') ||
+          r.name.startsWith('pages.show') ||
+          r.name.startsWith('settings.')
+
+        return !isExcluded
+      })
+      .map((r) => ({
+        name: r.name,
+        pattern: r.pattern,
+        params: r.pattern.match(/:(\w+)/g)?.map((p) => p.replace(':', '')) || [],
+      }))
+
+    const availablePostRoutes = allRoutes
+      .filter((r) => {
+        if (!r.methods.includes('POST')) return false
+        if (!r.name) return false
+        const isExcluded =
+          r.name.startsWith('admin.') ||
+          r.name.startsWith('api.') ||
+          r.name.startsWith('auth.') ||
+          r.name.startsWith('subscribe') ||
+          r.name.startsWith('unsubscribe') ||
+          r.name.startsWith('pages.show') ||
+          r.name.startsWith('settings.')
+
+        return !isExcluded
+      })
+      .map((r) => ({
+        name: r.name,
+        pattern: r.pattern,
+        params: r.pattern.match(/:(\w+)/g)?.map((p) => p.replace(':', '')) || [],
+      }))
+
+    const availablePages = await this.pageService.getAvailablePagesForLink()
+
     const { id } = await showPageValidator.validate(params)
     const page = await this.pageService.detail(id)
 
-    return inertia.render('page/cms/edit', { page: PageTransformer.transform(page) })
+    return inertia.render('page/cms/edit', {
+      page: PageTransformer.transform(page),
+      availableRoutes,
+      availablePages,
+      availablePostRoutes,
+    })
   }
 
   async execute(ctx: HttpContext) {

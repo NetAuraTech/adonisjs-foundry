@@ -12,8 +12,6 @@ import { controllers } from '#generated/controllers'
 import router from '@adonisjs/core/services/router'
 import { throttle } from '#start/limiter'
 
-router.on('/').renderInertia('home', {}).as('home')
-
 router
   .group(() => {
     router
@@ -201,6 +199,7 @@ router
               router.post('/edit', [controllers.page.cms.PagesUpdate, 'execute'])
               router.post('/publish', [controllers.page.cms.PagesUpdate, 'publish'])
               router.post('/unpublish', [controllers.page.cms.PagesUpdate, 'unpublish'])
+              router.post('/homepage', [controllers.page.cms.Pages, 'setHomepage'])
               router.delete('/', [controllers.page.cms.Pages, 'destroy'])
               router.post('/translations', [controllers.page.cms.PageTranslations, 'execute'])
               router
@@ -304,6 +303,11 @@ router
   .as('api')
 
 router.post('/contact', [controllers.page.front.Contact, 'execute'])
+
+router.get('/sitemap.xml', [controllers.page.front.Page, 'sitemap'])
+router.get('/robots.txt', [controllers.page.front.Page, 'robots'])
+
+router.get('/', [controllers.page.front.Page, 'home']).as('page.home')
 
 router
   .get('/:locale/:slug', [controllers.page.front.Page, 'render'])

@@ -1,7 +1,5 @@
 import { SettingsLayout } from '~/components/organisms/settings_layout'
-import { useTranslation } from 'react-i18next'
 import { Card } from '~/components/atoms/card'
-import { Form } from '@adonisjs/inertia/react'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets } from '~/helpers/validation_rules'
 import { Field } from '~/components/molecules/field'
@@ -13,40 +11,44 @@ import { urlFor } from '~/client'
 import { useState } from 'react'
 import { Banner } from '~/components/molecules/banner'
 import { getIcon } from '~/helpers/oauth'
+import type { SettingsAccountTranslations } from '#types/translations'
+import { useTranslation } from '~/hooks/use_translation'
+import { Form } from '@adonisjs/inertia/react'
 
 interface PageProps {
   user: Data.User
   providers: OAuthProvider[]
+  translations: SettingsAccountTranslations
 }
 
 export default function AccountPage(props: PageProps) {
-  const { user, providers } = props
+  const { user, providers, translations } = props
 
-  const { t } = useTranslation('settings')
+  const { t } = useTranslation(translations)
 
   const validationEmailForm = useFormValidation({
-    email: presets.email,
+    email: presets.email(t('email.value')),
   })
 
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
   const validationPasswordForm = useFormValidation({
-    current_password: presets.password,
-    password: presets.password,
-    password_confirmation: presets.passwordConfirmation(password),
+    current_password: presets.password(t('password.current.value')),
+    password: presets.password(t('password.new.value')),
+    password_confirmation: presets.passwordConfirmation(password, t('password.confirm.value')),
   })
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   const validationDeleteForm = useFormValidation({
-    password: presets.password,
+    password: presets.password(t('delete.password')),
   })
 
   return (
-    <>
-      <SettingsLayout tab="account">
-        <Card title={t('account.email.title')} subtitle={t('account.email.sub_title')}>
+    <main>
+      <SettingsLayout tab="account" translations={translations}>
+        <Card title={t('email.title')} subtitle={t('email.sub_title')}>
           <Form
             route="settings.account.execute"
             className="grid gap-6"
@@ -59,29 +61,29 @@ export default function AccountPage(props: PageProps) {
               <>
                 <input type="hidden" name="_action" value="update_email" />
                 <Field
-                  label={t('account.email.value')}
+                  label={t('email.value')}
                   name="email"
                   type="email"
                   defaultValue={user.email || ''}
-                  placeholder={t('account.email.placeholder')}
+                  placeholder={t('email.placeholder')}
                   errorMessage={errors.email || validationEmailForm.getValidationMessage('email')}
                   onChange={(event) => {
                     validationEmailForm.handleChange('email', event.target.value)
                   }}
                   onBlur={(event) => {
-                    validationEmailForm.handleBlur('email', event.target.value)
+                    validationEmailForm.handleBlur('email', event!.target.value)
                   }}
                   required
                   sanitize
                 />
                 <Button loading={processing} type={'submit'} fitContent>
-                  {t('account.email.submit')}
+                  {t('email.submit')}
                 </Button>
               </>
             )}
           </Form>
         </Card>
-        <Card title={t('account.oauth.title')} subtitle={t('account.oauth.sub_title')}>
+        <Card title={t('oauth.title')} subtitle={t('oauth.sub_title')}>
           <div className="divide-y divide-edge">
             {providers.map((provider) => {
               const isConnected = user.connectedProviders[provider]
@@ -93,9 +95,7 @@ export default function AccountPage(props: PageProps) {
                     <div>
                       <p className="text-sm font-medium text-ink">{capitalize(provider)}</p>
                       <p className={`text-xs ${isConnected ? 'text-success' : 'text-ink-muted'}`}>
-                        {isConnected
-                          ? t('account.oauth.connected')
-                          : t('account.oauth.not_connected')}
+                        {isConnected ? t('oauth.connected') : t('oauth.not_connected')}
                       </p>
                     </div>
                   </div>
@@ -105,26 +105,24 @@ export default function AccountPage(props: PageProps) {
                       route="auth.social.unlink"
                       routeParams={{ provider: provider }}
                       onBefore={() =>
-                        confirm(
-                          t('account.oauth.unlink.confirm', { provider: capitalize(provider) })
-                        )
+                        confirm(t('oauth.unlink.confirm', { provider: capitalize(provider) }))
                       }
                     >
                       <button
                         type="submit"
                         className="cursor-pointer text-sm px-3 py-1.5 border border-danger text-danger rounded-lg hover:bg-danger-soft transition"
-                        title={t('account.oauth.unlink')}
+                        title={t('oauth.unlink')}
                       >
-                        {t('account.oauth.unlink.value')}
+                        {t('oauth.unlink.value')}
                       </button>
                     </Form>
                   ) : (
                     <a
                       href={urlFor('auth.social.redirect', { provider: provider })}
                       className="text-sm px-3 py-1.5 border text-ink-muted border-edge rounded-lg hover:bg-sunken transition"
-                      title={t('account.oauth.link')}
+                      title={t('oauth.link')}
                     >
-                      {t('account.oauth.link')}
+                      {t('oauth.link')}
                     </a>
                   )}
                 </div>
@@ -132,7 +130,7 @@ export default function AccountPage(props: PageProps) {
             })}
           </div>
         </Card>
-        <Card title={t('account.password.title')} subtitle={t('account.password.sub_title')}>
+        <Card title={t('password.title')} subtitle={t('password.sub_title')}>
           <Form
             route="settings.account.execute"
             className="grid gap-6"
@@ -145,7 +143,7 @@ export default function AccountPage(props: PageProps) {
               <>
                 <input type="hidden" name="_action" value="update_password" />
                 <Field
-                  label={t('account.password.current.value')}
+                  label={t('password.current.value')}
                   name="current_password"
                   type="password"
                   errorMessage={
@@ -156,13 +154,13 @@ export default function AccountPage(props: PageProps) {
                     validationPasswordForm.handleChange('current_password', event.target.value)
                   }}
                   onBlur={(event) => {
-                    validationPasswordForm.handleBlur('current_password', event.target.value)
+                    validationPasswordForm.handleBlur('current_password', event!.target.value)
                   }}
                   required
                   sanitize
                 />
                 <Field
-                  label={t('account.password.new.value')}
+                  label={t('password.new.value')}
                   name="password"
                   type="password"
                   errorMessage={
@@ -174,17 +172,17 @@ export default function AccountPage(props: PageProps) {
                     validationPasswordForm.handleChange('password_confirmation', confirmPassword)
                   }}
                   onBlur={(event) => {
-                    setPassword(event.target.value)
-                    validationPasswordForm.handleBlur('password', event.target.value)
+                    setPassword(event!.target.value)
+                    validationPasswordForm.handleBlur('password', event!.target.value)
                     validationPasswordForm.handleBlur('password_confirmation', confirmPassword)
                   }}
                   required
                   sanitize={false}
-                  helpText={t('account.password.new.help')}
+                  helpText={t('password.new.help')}
                   helpClassName={validationPasswordForm.getHelpClassName('password')}
                 />
                 <Field
-                  label={t('account.password.confirm.value')}
+                  label={t('password.confirm.value')}
                   name="password_confirmation"
                   type="password"
                   errorMessage={
@@ -196,35 +194,31 @@ export default function AccountPage(props: PageProps) {
                     validationPasswordForm.handleChange('password_confirmation', event.target.value)
                   }}
                   onBlur={(event) => {
-                    setConfirmPassword(event.target.value)
-                    validationPasswordForm.handleBlur('password_confirmation', event.target.value)
+                    setConfirmPassword(event!.target.value)
+                    validationPasswordForm.handleBlur('password_confirmation', event!.target.value)
                   }}
                   required
                   sanitize={false}
-                  helpText={t('account.password.confirm.help')}
+                  helpText={t('password.confirm.help')}
                   helpClassName={validationPasswordForm.getHelpClassName('password_confirmation')}
                 />
                 <Button loading={processing} type={'submit'} fitContent>
-                  {t('account.password.submit')}
+                  {t('password.submit')}
                 </Button>
               </>
             )}
           </Form>
         </Card>
-        <Card
-          title={t('account.delete.title')}
-          subtitle={t('account.delete.sub_title')}
-          border="danger"
-        >
+        <Card title={t('delete.title')} subtitle={t('delete.sub_title')} border="danger">
           {!showDeleteConfirm ? (
             <Button variant="danger" fitContent onClick={() => setShowDeleteConfirm(true)}>
-              {t('account.delete.submit')}
+              {t('delete.submit')}
             </Button>
           ) : (
             <div className="grid gap-4">
               <Banner
-                title={t('account.delete.confirm.title')}
-                message={t('account.delete.confirm.sub_title')}
+                title={t('delete.confirm.title')}
+                message={t('delete.confirm.sub_title')}
                 type="danger"
               />
               <Form
@@ -240,7 +234,7 @@ export default function AccountPage(props: PageProps) {
                 {({ errors, processing, reset }) => (
                   <>
                     <Field
-                      label={t('account.delete.password')}
+                      label={t('delete.password')}
                       name="password"
                       type="password"
                       errorMessage={
@@ -250,7 +244,7 @@ export default function AccountPage(props: PageProps) {
                         validationDeleteForm.handleChange('password', event.target.value)
                       }}
                       onBlur={(event) => {
-                        validationDeleteForm.handleBlur('password', event.target.value)
+                        validationDeleteForm.handleBlur('password', event!.target.value)
                       }}
                       required
                       sanitize={false}
@@ -267,10 +261,10 @@ export default function AccountPage(props: PageProps) {
                           validationDeleteForm.reset()
                         }}
                       >
-                        {t('account.delete.cancel')}
+                        {t('delete.cancel')}
                       </Button>
                       <Button loading={processing} type={'submit'} fitContent variant="danger">
-                        {t('account.delete.submit')}
+                        {t('delete.submit')}
                       </Button>
                     </div>
                   </>
@@ -280,6 +274,6 @@ export default function AccountPage(props: PageProps) {
           )}
         </Card>
       </SettingsLayout>
-    </>
+    </main>
   )
 }

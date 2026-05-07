@@ -1,21 +1,18 @@
 import { inject } from '@adonisjs/core'
 import { FileRepository } from '#repositories/file/file_repository'
 import { StorageService } from '#services/file/storage_service'
+import { ImageOptimizerService } from '#services/file/image_optimizer_service'
 import type CmsFile from '#models/file/file'
-import type { Block, PageContent, BlockType, HeroProps, ImageProps } from '#types/page'
-import type {
-  ResolvedBlock,
-  ResolvedPageContent,
-  ResolvedHeroProps,
-  ResolvedImageProps,
-} from '#types/page'
+import type { Block, PageContent, BlockType, ImageProps } from '#types/page'
+import type { ResolvedBlock, ResolvedPageContent, ResolvedImageProps } from '#types/page'
 import type { FileRef, ResolvedFile } from '#types/file'
 
 @inject()
 export class PageResolverService {
   constructor(
     protected fileRepository: FileRepository,
-    protected storageService: StorageService
+    protected storageService: StorageService,
+    protected imageOptimizerService: ImageOptimizerService
   ) {}
 
   /**
@@ -50,11 +47,6 @@ export class PageResolverService {
     const ids = new Set<number>()
 
     const visit = (block: Block) => {
-      if (block.type === 'hero') {
-        const props = block.props as HeroProps
-        if (props.image?.fileId) ids.add(props.image.fileId)
-      }
-
       if (block.type === 'image') {
         const props = block.props as ImageProps
         if (props.file?.fileId) ids.add(props.file.fileId)
@@ -123,14 +115,6 @@ export class PageResolverService {
     fileMap: Map<number, CmsFile>
   ): Promise<ResolvedBlock['props']> {
     switch (block.type as BlockType) {
-      case 'hero': {
-        const props = block.props as HeroProps
-        return {
-          ...props,
-          image: props.image ? await this.resolveFileRef(props.image, locale, fileMap) : null,
-        } satisfies ResolvedHeroProps
-      }
-
       case 'image': {
         const props = block.props as ImageProps
         return {
@@ -166,6 +150,8 @@ export class PageResolverService {
     const url = await file.url()
     const alt = file.resolveAlt(locale, ref.altKey ?? null, ref.altOverride)
 
+    const optimized = await this.imageOptimizerService.optimize(file)
+
     return {
       id: file.id,
       url,
@@ -174,6 +160,9 @@ export class PageResolverService {
       extension: file.extension,
       size: file.size as number,
       alt,
+      width: optimized.width,
+      height: optimized.height,
+      variants: optimized.variants,
     }
   }
 }

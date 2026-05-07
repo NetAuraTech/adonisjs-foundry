@@ -11,7 +11,7 @@ export default class PageTransformer extends BaseTransformer<Page> {
     )
 
     return {
-      ...this.pick(this.resource, ['id', 'defaultLocale', 'createdAt', 'updatedAt']),
+      ...this.pick(this.resource, ['id', 'defaultLocale', 'isHomepage', 'createdAt', 'updatedAt']),
       translations,
     }
   }

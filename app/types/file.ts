@@ -38,4 +38,7 @@ export interface ResolvedFile {
   extension: string
   size: number
   alt: string
+  width?: number
+  height?: number
+  variants?: Record<number, string>
 }

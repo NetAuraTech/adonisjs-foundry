@@ -8,6 +8,7 @@ import type Page from '#models/page/page'
 import type PageTranslation from '#models/page/page_translation'
 import type { PageContent } from '#types/page'
 import type { PaginationFilters } from '#types/pagination'
+import { urlFor } from '@adonisjs/core/services/url_builder'
 
 interface ListFilters {
   status?: 'draft' | 'published' | 'archived'
@@ -333,5 +334,81 @@ export class PageService {
    */
   async toggleRevisionKeep(revisionId: number) {
     return this.revisionRepository.toggleKeep(revisionId)
+  }
+
+  /**
+   * Returns the current homepage page, or null.
+   */
+  async findHomepage(): Promise<Page | null> {
+    return this.pageRepository.findHomepage()
+  }
+
+  /**
+   * Sets the given page as the global homepage.
+   * Logs a business event for auditability.
+   */
+  async setHomepage(pageId: number, userId: number): Promise<void> {
+    await this.pageRepository.setHomepage(pageId)
+    this.logService.logBusiness('page.homepage.set', { pageId, userId })
+  }
+
+  async getAvailablePagesForLink() {
+    const pages = await this.pageRepository.listForLinks()
+
+    return pages.map((page) => ({
+      id: page.id,
+      label: page.translations[0]?.title,
+      default_locale: page.defaultLocale,
+      locales: page.translations.map((t) => ({ locale: t.locale, slug: t.slug })),
+    }))
+  }
+
+  /**
+   * Generates an XML sitemap for search engine indexing.
+   * Only includes published translations.
+   */
+  async generateSitemap(): Promise<string> {
+    const pages = await this.pageRepository.listPublishedForSitemap()
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`
+    const appUrl = process.env.APP_URL
+
+    pages.forEach((page) => {
+      page.translations.forEach((t) => {
+        let url: string
+
+        if (page.isHomepage) {
+          url = t.locale === page.defaultLocale ? `${appUrl}/` : `${appUrl}/${t.locale}/`
+        } else {
+          url =
+            t.locale === page.defaultLocale
+              ? `${appUrl}${urlFor('page.render', { slug: t.slug })}`
+              : `${appUrl}${urlFor('page.localised.render', { locale: t.locale, slug: t.slug })}`
+        }
+
+        xml += `\n  <url>
+                      <loc>${url}</loc>
+                      <lastmod>${t.updatedAt?.toISODate()}</lastmod>
+                      <priority>${page.isHomepage ? '1.0' : '0.8'}</priority>
+                    </url>`
+      })
+    })
+
+    return xml + `\n</urlset>`
+  }
+
+  /**
+   * Returns a basic robots.txt file content.
+   */
+  getRobotsTxt(): string {
+    const appUrl = process.env.APP_URL
+
+    return [
+      'User-agent: *',
+      'Allow: /',
+      'Disallow: /admin/*',
+      'Disallow: /settings/*',
+      '',
+      `Sitemap: ${appUrl}${urlFor('page.sitemap')}`,
+    ].join('\n')
   }
 }

@@ -47,17 +47,17 @@ export default class SendInvitationEmail {
       },
       accept_link: `${env.get('APP_URL')}${urlFor('auth.accept_invitation.render', { token: token })}`,
       translations: {
-        subject: i18n.t('admin.users.mail.subject', {
+        subject: i18n.t('cms.users.mail.subject', {
           app: env.get('APP_NAME'),
         }),
-        greeting: i18n.t('admin.users.mail.greeting'),
-        intro: i18n.t('admin.users.mail.intro', {
+        greeting: i18n.t('cms.users.mail.greeting'),
+        intro: i18n.t('cms.users.mail.intro', {
           app: env.get('APP_NAME'),
         }),
-        action: i18n.t('admin.users.mail.action'),
-        outro: i18n.t('admin.users.mail.outro'),
-        expiry: i18n.t('admin.users.mail.expiry', { days: 7 }),
-        footer: i18n.t('admin.users.mail.footer'),
+        action: i18n.t('cms.users.mail.action'),
+        outro: i18n.t('cms.users.mail.outro'),
+        expiry: i18n.t('cms.users.mail.expiry', { days: 7 }),
+        footer: i18n.t('cms.users.mail.footer'),
       },
     })
 

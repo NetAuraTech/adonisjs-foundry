@@ -17,14 +17,14 @@ FROM base AS build
 WORKDIR /app
 COPY --from=deps /app/node_modules /app/node_modules
 ADD . .
-RUN node ace build --ignore-ts-errors
+RUN npm run build
 
 # Production stage
 FROM base
 ENV NODE_ENV=production
-WORKDIR /app
-COPY --from=production-deps /app/node_modules /app/node_modules
-COPY --from=build /app/build /app/build
+WORKDIR /app/build
+COPY --from=production-deps /app/node_modules ./node_modules
+COPY --from=build /app/build .
 EXPOSE 3333
-CMD ["node", "build/bin/server.js"]
+CMD ["node", "bin/server.js"]
 

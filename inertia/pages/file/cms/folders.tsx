@@ -2,51 +2,53 @@ import { ReactElement, useState } from 'react'
 import { Button } from '~/components/atoms/button'
 import { Input } from '~/components/atoms/input'
 import { Field } from '~/components/molecules/field'
-import { Form } from '@adonisjs/inertia/react'
 import { AdminMain } from '~/components/organisms/admin/admin_main'
 import { Card } from '~/components/atoms/card'
-import type { SharedProps } from '@adonisjs/inertia/types'
 import Layout from '~/layouts/admin'
 import { Paragraph } from '~/components/atoms/paragraph'
 import { Data } from '@generated/data'
 import { NavLink } from '~/components/atoms/nav_link'
-import { useTranslation } from 'react-i18next'
 import { Icon } from '~/components/atoms/icon'
 import { CanAccess } from '~/guards/can_access'
+import type { CmsFileFoldersTranslations } from '#types/translations'
+import { useTranslation } from '~/hooks/use_translation'
+import { Form } from '@adonisjs/inertia/react'
+import { SharedProps } from '@adonisjs/inertia/types'
 
 interface PageProps {
   roots: Data.FileFolder[]
+  translations: CmsFileFoldersTranslations
 }
 
 export default function FileFoldersPage(props: PageProps) {
-  const { roots } = props
-  const { t } = useTranslation('admin')
+  const { roots, translations } = props
+  const { t } = useTranslation(translations)
 
   return (
     <>
       <AdminMain
-        title={t('folders.list.title')}
+        title={t('title')}
         icon="Folders"
         action={
           <CanAccess permission="files.view">
-            <Button variant="accent" route="admin.files.render" fitContent>
+            <Button variant="secondary" route="admin.files.render" fitContent>
               <Icon name="Folder" />
-              {t('admin:files.list.title')}
+              {t('action')}
             </Button>
           </CanAccess>
         }
       >
         <div className="grid gap-6">
-          <CreateFolderForm parentId={null} label={t('folders.form.name.root')} />
+          <CreateFolderForm parentId={null} label={t('name.root')} translations={translations} />
           {roots.length === 0 ? (
             <div className="text-center py-16 rounded-xl border border-dashed border-edge">
-              <Paragraph variant="muted">{t('folders.list.empty.value')}</Paragraph>
-              <Paragraph variant="subtle">{t('folders.list.empty.help')}</Paragraph>
+              <Paragraph variant="muted">{t('empty.value')}</Paragraph>
+              <Paragraph variant="subtle">{t('empty.help')}</Paragraph>
             </div>
           ) : (
             <div className="grid gap-2">
               {roots.map((folder) => (
-                <FolderNode key={folder.id} folder={folder} depth={0} />
+                <FolderNode key={folder.id} folder={folder} depth={0} translations={translations} />
               ))}
             </div>
           )}
@@ -58,11 +60,12 @@ export default function FileFoldersPage(props: PageProps) {
 interface FolderNodeProps {
   folder: Data.FileFolder
   depth: 0 | 1 | 2 | 3 | 4 | 5
+  translations: CmsFileFoldersTranslations
 }
 
 function FolderNode(props: FolderNodeProps) {
-  const { folder, depth } = props
-  const { t } = useTranslation('admin')
+  const { folder, depth, translations } = props
+  const { t } = useTranslation(translations)
   const [expanded, setExpanded] = useState(false)
   const [renaming, setRenaming] = useState(false)
   const [addingChild, setAddingChild] = useState(false)
@@ -111,10 +114,10 @@ function FolderNode(props: FolderNodeProps) {
                 <>
                   <Input type="text" name="name" defaultValue={folder.name} />
                   <Button type="submit" variant="primary" disabled={processing}>
-                    {t('folders.form.update')}
+                    {t('actions.update')}
                   </Button>
                   <Button type="button" variant="outline" onClick={() => setRenaming(false)}>
-                    {t('folders.form.cancel')}
+                    {t('actions.cancel')}
                   </Button>
                 </>
               )}
@@ -133,13 +136,13 @@ function FolderNode(props: FolderNodeProps) {
           )}
           <div className="flex items-center gap-1 shrink-0">
             <NavLink label="" route="admin.files.render" qs={{ folder_id: folder.id }}>
-              <Button variant="icon" title={t('folders.list.browse')}>
+              <Button variant="icon" title={t('browse')}>
                 <Icon name="SquareMenu" size={18} />
               </Button>
             </NavLink>
             <Button
               variant="icon"
-              title={t('folders.list.add')}
+              title={t('actions.add')}
               onClick={() => {
                 setAddingChild(!addingChild)
                 setExpanded(true)
@@ -149,14 +152,14 @@ function FolderNode(props: FolderNodeProps) {
             </Button>
             <Button
               variant="icon_warning"
-              title={t('folders.list.rename')}
+              title={t('actions.rename')}
               onClick={() => setRenaming(true)}
             >
               <Icon name="Pen" size={18} />
             </Button>
             <Form
               onBefore={() => {
-                return window.confirm(t('folders.delete.confirm'))
+                return window.confirm(t('actions.delete.confirm'))
               }}
               route="admin.file_folders.destroy"
               routeParams={{ id: folder.id }}
@@ -165,7 +168,7 @@ function FolderNode(props: FolderNodeProps) {
                 <>
                   <Button
                     variant="icon_danger"
-                    title={t('folders.delete.title', { folder: folder.name })}
+                    title={t('actions.delete.value', { folder: folder.name })}
                     type="submit"
                     disabled={processing}
                   >
@@ -183,8 +186,9 @@ function FolderNode(props: FolderNodeProps) {
             <div className={indentClass[depth]}>
               <CreateFolderForm
                 parentId={folder.id}
-                label={t('folders.form.name.sub')}
+                label={t('name.sub')}
                 onSuccess={() => setAddingChild(false)}
+                translations={translations}
               />
             </div>
           )}
@@ -194,6 +198,7 @@ function FolderNode(props: FolderNodeProps) {
                 key={child.id}
                 folder={child}
                 depth={Math.min(depth + 1, 5) as FolderNodeProps['depth']}
+                translations={translations}
               />
             ))}
         </div>
@@ -206,11 +211,12 @@ interface CreateFolderFormProps {
   parentId: number | null
   label: string
   onSuccess?: () => void
+  translations: CmsFileFoldersTranslations
 }
 
 function CreateFolderForm(props: CreateFolderFormProps) {
-  const { parentId, label, onSuccess } = props
-  const { t } = useTranslation('admin')
+  const { parentId, label, onSuccess, translations } = props
+  const { t } = useTranslation(translations)
   return (
     <Card>
       <Form
@@ -229,11 +235,9 @@ function CreateFolderForm(props: CreateFolderFormProps) {
             )}
             <Field type="text" label={label} name="name" placeholder="Folder name" sanitize />
             <Button type="submit" variant="primary" disabled={processing} fitContent>
-              {t('folders.form.create')}
+              {t('actions.create')}
             </Button>
-            {parentId !== null && (
-              <p className="text-xs text-ink-subtle mt-1.5">{t('folders.form.help')}</p>
-            )}
+            {parentId !== null && <p className="text-xs text-ink-subtle mt-1.5">{t('help')}</p>}
           </>
         )}
       </Form>

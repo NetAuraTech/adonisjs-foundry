@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { usePage } from '@inertiajs/react'
 import type { Theme } from '#types/preferences'
-import { type SharedProps } from '@adonisjs/inertia/types'
 import { toast } from 'sonner'
 import { useAuth } from '~/hooks/use_auth'
+import { type SharedProps } from '@adonisjs/inertia/types'
+import { usePage } from '@inertiajs/react'
 
 /**
  * Applies or removes the `dark` class on `<html>` and syncs `localStorage`.
@@ -62,16 +62,9 @@ async function switchTheme(theme: Theme, element: HTMLElement): Promise<void> {
  * 3. OS `prefers-color-scheme` (first visit)
  */
 function resolveInitialTheme(serverTheme: Theme | undefined, isAuthenticated: boolean): Theme {
-  const stored = localStorage.getItem('theme')
-
   if (isAuthenticated && serverTheme) {
-    if (stored !== serverTheme) {
-      applyTheme(serverTheme)
-    }
     return serverTheme
   }
-
-  if (stored === 'light' || stored === 'dark') return stored
 
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }

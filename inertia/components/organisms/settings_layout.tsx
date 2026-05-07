@@ -1,16 +1,17 @@
 import { Section } from '~/components/atoms/section'
 import { ReactNode } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Head } from '@inertiajs/react'
 import { Heading } from '~/components/atoms/heading'
 import { NavLink } from '~/components/atoms/nav_link'
 import { Paragraph } from '~/components/atoms/paragraph'
 import { CanAccess } from '~/guards/can_access'
+import type { TranslationNodes } from '#types/translations'
+import { useTranslation } from '~/hooks/use_translation'
+import { Head } from '@inertiajs/react'
 
 const tabs = [
-  { id: 'profile', label: 'settings:profile.value', route: 'settings.profile.render' },
-  { id: 'account', label: 'settings:account.value', route: 'settings.account.render' },
-  { id: 'preferences', label: 'settings:preferences.value', route: 'settings.preferences.render' },
+  { id: 'profile', label: 'header.tabs.profile', route: 'settings.profile.render' },
+  { id: 'account', label: 'header.tabs.account', route: 'settings.account.render' },
+  { id: 'preferences', label: 'header.tabs.preferences', route: 'settings.preferences.render' },
 ] as const
 
 interface PageProps {
@@ -18,6 +19,7 @@ interface PageProps {
   tab: (typeof tabs)[number]['id']
   /** Page-specific content rendered inside the settings grid. */
   children: ReactNode
+  translations: TranslationNodes
 }
 
 /**
@@ -35,7 +37,7 @@ interface PageProps {
  * which applies a bottom-border indicator when `aria-current="page"` is set.
  *
  * The page title and subtitle are read from the `settings` i18n namespace
- * (`settings:title`, `settings:sub_title`).
+ * (`header.title`, `header.sub_title`).
  *
  * @example
  * // Used as the layout wrapper for each settings page component
@@ -48,19 +50,19 @@ interface PageProps {
  * }
  */
 export function SettingsLayout(props: PageProps) {
-  const { children } = props
+  const { children, translations } = props
 
-  const { t } = useTranslation()
+  const { t } = useTranslation(translations)
 
   return (
     <>
-      <Head title={t('settings:title')} />
+      <Head title={t('header.title')} />
       <Section>
         <div className="container">
           <div className="text-center mb-8">
-            <Heading level={1}>{t('settings:title')}</Heading>
+            <Heading level={1}>{t('header.title')}</Heading>
             <Paragraph variant="muted" spacing="sm">
-              {t('settings:sub_title')}
+              {t('header.sub_title')}
             </Paragraph>
           </div>
           <div className="flex gap-1 justify-between border-b border-edge mb-8">
@@ -77,13 +79,13 @@ export function SettingsLayout(props: PageProps) {
             <div className="flex gap-1">
               <CanAccess permission={'admin.access'}>
                 <NavLink
-                  label={t('admin:value')}
+                  label={t('header.tabs.admin')}
                   route="admin.dashboard.render"
                   variant="setting_nav"
                 />
               </CanAccess>
               <NavLink
-                label={t('auth:logout.value')}
+                label={t('header.tabs.logout')}
                 route="auth.session.destroy"
                 variant="setting_nav"
               />

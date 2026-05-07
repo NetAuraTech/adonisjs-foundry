@@ -282,7 +282,11 @@ test.group('PageService', (group) => {
   test('createTranslation() deep-copies content from seedFromLocale', async ({ assert }) => {
     const sourceContent: PageContent = {
       blocks: [
-        { id: '1', type: 'title', props: { text: 'Hello', level: 1, align: 'left', color: null } },
+        {
+          id: '1',
+          type: 'title',
+          props: { text: 'Hello', level: 1, color: 'primary-deep', highlightColor: 'default' },
+        },
       ],
     }
     const source = makeTranslation(1, 1, 'en')

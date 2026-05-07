@@ -1,12 +1,9 @@
 import { ReactElement } from 'react'
 import { Button } from '~/components/atoms/button'
 import { Pagination } from '~/components/molecules/pagination'
-import { Form } from '@adonisjs/inertia/react'
 import { AdminMain } from '~/components/organisms/admin/admin_main'
 import { Paginated } from '~/types/paginated'
 import { Data } from '@generated/data'
-import { useTranslation } from 'react-i18next'
-import type { SharedProps } from '@adonisjs/inertia/types'
 import Layout from '~/layouts/admin'
 import { useMenu } from '~/hooks/use_admin'
 import { CanAccess } from '~/guards/can_access'
@@ -14,9 +11,12 @@ import { Card } from '~/components/atoms/card'
 import Table from '~/components/atoms/table/table'
 import { Icon } from '~/components/atoms/icon'
 import { Field } from '~/components/molecules/field'
-import { resources } from '~/lib/i18n'
 import { SelectOption } from '~/components/atoms/select_option'
 import type { PageStatus } from '#types/page'
+import { locales, useTranslation } from '~/hooks/use_translation'
+import type { CmsPagesIndexTranslations } from '#types/translations'
+import { Form } from '@adonisjs/inertia/react'
+import { SharedProps } from '@adonisjs/inertia/types'
 
 interface Props {
   pages: Paginated<Data.Page>
@@ -25,31 +25,32 @@ interface Props {
     locale?: string
     search?: string
   }
+  translations: CmsPagesIndexTranslations
 }
 
 const PAGE_STATUSES: PageStatus[] = ['draft', 'published', 'archived']
 
 const statusesClass = {
   published: 'text-success border-success bg-success-soft',
-  draft: 'text-accent border-accent bg-accent-light/20',
+  draft: 'text-secondary border-secondary bg-secondary-light/20',
   archived: 'text-warning border-warning bg-warning-soft',
 } as const
 
 export default function PagesIndexPage(props: Props) {
-  const { pages, filters } = props
-  const { t } = useTranslation()
+  const { pages, filters, translations } = props
+  const { t } = useTranslation(translations)
 
   const { getEntryIcon } = useMenu()
 
   return (
     <>
       <AdminMain
-        title={t('admin:pages.list.title')}
+        title={t('title')}
         icon={getEntryIcon('admin.pages.render')}
         action={
           <CanAccess permission="pages.create">
-            <Button route="admin.pages_create.render" variant="accent" fitContent>
-              {t('admin:pages.list.action')}
+            <Button route="admin.pages_create.render" variant="secondary" fitContent>
+              {t('action')}
             </Button>
           </CanAccess>
         }
@@ -63,28 +64,28 @@ export default function PagesIndexPage(props: Props) {
               <Field
                 type="text"
                 name="search"
-                label={t('admin:search.value')}
-                placeholder={t('admin:search.placeholder')}
+                label={t('search.value')}
+                placeholder={t('search.placeholder')}
                 defaultValue={filters.search}
                 sanitize
               />
               <Field
                 type="select"
-                label={t(`admin:pages.locale.value`)}
+                label={t(`locale.value`)}
                 name="locale"
-                placeholder={t(`admin:pages.locale.all`)}
+                placeholder={t(`locale.all`)}
                 defaultValue={filters.locale}
                 sanitize
               >
-                {Object.keys(resources).map((l) => (
+                {locales.map((l) => (
                   <SelectOption key={l} value={l} label={l.toUpperCase()} />
                 ))}
               </Field>
               <Field
                 type="select"
-                label={t(`admin:pages.status.value`)}
+                label={t(`status.value`)}
                 name="status"
-                placeholder={t(`admin:pages.status.all`)}
+                placeholder={t(`status.all`)}
                 defaultValue={filters.status}
                 sanitize
               >
@@ -92,12 +93,12 @@ export default function PagesIndexPage(props: Props) {
                   <SelectOption
                     key={`status-${status}`}
                     value={status}
-                    label={t(`admin:pages.status.${status}`)}
+                    label={t(`status.${status}`)}
                   />
                 ))}
               </Field>
               <Button type="submit" fitContent>
-                {t('admin:search.filter')}
+                {t('search.filter')}
               </Button>
             </Form>
           }
@@ -108,18 +109,18 @@ export default function PagesIndexPage(props: Props) {
           <Table>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell>{t('admin:pages.title.value')}</Table.HeaderCell>
-                <Table.HeaderCell>{t(`admin:pages.slug.value`)}</Table.HeaderCell>
-                <Table.HeaderCell>{t(`admin:pages.status.value`)}</Table.HeaderCell>
-                <Table.HeaderCell>{t(`admin:pages.locale.value`)}</Table.HeaderCell>
-                <Table.HeaderCell>{t('admin:actions.value')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('page_title')}</Table.HeaderCell>
+                <Table.HeaderCell>{t(`slug`)}</Table.HeaderCell>
+                <Table.HeaderCell>{t(`status.value`)}</Table.HeaderCell>
+                <Table.HeaderCell>{t(`locale.value`)}</Table.HeaderCell>
+                <Table.HeaderCell>{t('actions.value')}</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
               {pages.data.length === 0 ? (
                 <Table.Row>
                   <Table.Cell colSpan={5} className="text-center! p-12!">
-                    {t('admin:pages.list.empty')}
+                    {t('empty')}
                   </Table.Cell>
                 </Table.Row>
               ) : (
@@ -130,22 +131,22 @@ export default function PagesIndexPage(props: Props) {
 
                   return (
                     <Table.Row key={`page-${page.id}`}>
-                      <Table.Cell data-label={t('admin:pages.value', { count: 1 })}>
+                      <Table.Cell data-label={t('value', { count: 1 })}>
                         {primary?.title ?? '—'}
                       </Table.Cell>
-                      <Table.Cell data-label={t(`admin:pages.slug.value`)}>
+                      <Table.Cell data-label={t(`slug`)}>
                         <code>/{primary?.slug ?? '—'}</code>
                       </Table.Cell>
-                      <Table.Cell data-label={t(`admin:pages.status.value`)}>
+                      <Table.Cell data-label={t(`status.value`)}>
                         {primary && (
                           <span
                             className={`px-4 py-1 border rounded ${statusesClass[primary.status]}`}
                           >
-                            {t(`admin:pages.status.${primary.status}`)}
+                            {t(`status.${primary.status}` as any)}
                           </span>
                         )}
                       </Table.Cell>
-                      <Table.Cell data-label={t(`admin:pages.locale.value`)}>
+                      <Table.Cell data-label={t(`locale.value`)}>
                         <div className="flex gap-1 flex-wrap">
                           {page.translations.map((t) => (
                             <span
@@ -160,14 +161,14 @@ export default function PagesIndexPage(props: Props) {
                           ))}
                         </div>
                       </Table.Cell>
-                      <Table.Cell data-label={t('admin:actions.value')}>
+                      <Table.Cell data-label={t('actions.value')}>
                         <div className="flex items-center w-full py-4 gap-2">
                           <CanAccess permission="pages.view">
                             <Button
                               variant="icon_info"
                               route="admin.pages_show.render"
                               routeParams={{ id: page.id }}
-                              title={t('admin:pages.show.title', { title: primary?.title ?? '—' })}
+                              title={t('actions.show', { title: primary?.title ?? '—' })}
                               fitContent
                             >
                               <Icon name="Eye" size={18} />
@@ -178,7 +179,7 @@ export default function PagesIndexPage(props: Props) {
                               variant="icon_warning"
                               route="admin.pages_update.render"
                               routeParams={{ id: page.id }}
-                              title={t('admin:pages.edit.title', { title: primary?.title ?? '—' })}
+                              title={t('actions.edit', { title: primary?.title ?? '—' })}
                               fitContent
                             >
                               <Icon name="Pen" size={18} />
@@ -187,14 +188,14 @@ export default function PagesIndexPage(props: Props) {
                           <CanAccess permission="pages.delete">
                             <Form
                               onBefore={() => {
-                                return window.confirm(t('admin:pages.delete.confirm'))
+                                return window.confirm(t('actions.delete.confirm'))
                               }}
                               route="admin.pages.destroy"
                               routeParams={{ id: page.id }}
                             >
                               <Button
                                 variant="icon_danger"
-                                title={t('admin:pages.delete.title', {
+                                title={t('actions.delete.value', {
                                   title: primary?.title ?? `Page #${page.id}`,
                                 })}
                                 fitContent

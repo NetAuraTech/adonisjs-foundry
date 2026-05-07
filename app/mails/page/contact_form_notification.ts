@@ -1,30 +1,25 @@
 import { BaseMail } from '@adonisjs/mail'
-import env from '#start/env'
-import { type ContactFormSubmission } from '#types/page'
+import type { MailPayload } from '#types/mail'
 
 export default class ContactFormNotification extends BaseMail {
-  constructor(
-    private submission: ContactFormSubmission,
-    private translations: {
-      subject: string
-      title: string
-      intro: string
-      footer: string
-    }
-  ) {
+  constructor(private payload: MailPayload) {
     super()
   }
 
   prepare() {
+    const { user, translations, ...rest } = this.payload
+    const { email, locale } = user
+    const { subject, ...translated } = translations
+
     this.message
-      .to(this.submission.recipientEmail)
-      .subject(this.translations.subject)
+      .to(email)
+      .subject(subject || '')
       .htmlView('emails/contact_form_email', {
-        locale: this.submission.locale,
-        app_name: env.get('APP_NAME'),
-        page_title: this.submission.pageTitle,
-        fields: this.submission.fields,
-        ...this.translations,
+        locale: locale,
+        app_name: process.env.APP_NAME || 'AdonisJS',
+        subject,
+        ...translated,
+        ...rest,
       })
   }
 }

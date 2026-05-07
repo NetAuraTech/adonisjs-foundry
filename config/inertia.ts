@@ -1,19 +1,20 @@
 import { defineConfig } from '@adonisjs/inertia'
+import app from '@adonisjs/core/services/app'
 
 const inertiaConfig = defineConfig({
   /**
-   * Server-side rendering options.
+   * Server-side rendering options
    */
   ssr: {
     /**
      * Toggle SSR mode for Inertia pages.
      */
-    enabled: false,
+    enabled: true,
 
     /**
      * Entry file used by the SSR server build.
      */
-    entrypoint: 'inertia/ssr.tsx',
+    entrypoint: `${app.inProduction ? 'ssr/ssr.js' : 'inertia/ssr.tsx'}`,
   },
 })
 

@@ -1,25 +1,31 @@
 import type { ResolvedBlock } from '#types/page'
 
 const spacingMap: Record<string, string> = {
+  none: '',
   sm: 'my-4',
   md: 'my-8',
   lg: 'my-12',
   xl: 'my-16',
 }
 
-const styleMap: Record<string, string> = {
-  solid: 'border-solid',
-  dashed: 'border-dashed',
-  dotted: 'border-dotted',
-  none: 'border-none',
-}
-
 const colorMap: Record<string, string> = {
-  'default': 'border-edge',
-  'strong': 'border-edge-strong',
-  'primary': 'border-primary-mid',
-  'primary-soft': 'border-primary-soft',
-  'transparent': 'border-transparent',
+  'none': '',
+  'canvas': 'text-canvas',
+  'surface': 'text-surface',
+  'sunken': 'text-sunken',
+  'primary-deep': 'text-primary-deep',
+  'primary': 'text-primary',
+  'primary-soft': 'text-primary-soft',
+  'primary-light': 'text-primary-light',
+  'secondary-deep': 'text-secondary-deep',
+  'secondary': 'text-secondary',
+  'secondary-soft': 'text-secondary-soft',
+  'secondary-light': 'text-secondary-light',
+  'tertiary-deep': 'text-tertiary-deep',
+  'tertiary': 'text-tertiary',
+  'tertiary-soft': 'text-tertiary-soft',
+  'tertiary-light': 'text-tertiary-light',
+  'transparent': 'text-transparent',
 }
 
 interface SeparatorBlockProps {
@@ -30,17 +36,15 @@ interface SeparatorBlockProps {
  * A simple horizontal rule with configurable style, spacing, and colour.
  */
 export default function SeparatorBlock({ block }: SeparatorBlockProps) {
-  const { style, spacing, color } = block.props
+  const { spacing, color, className = 'w-full' } = block.props
 
-  const spacingClass = spacingMap[spacing ?? 'md'] ?? 'my-8'
-  const styleClass = styleMap[style ?? 'solid'] ?? 'border-solid'
-  const colorClass = colorMap[color ?? 'default'] ?? 'border-edge'
-
-  if (style === 'none') {
-    return <div className={spacingClass} aria-hidden="true" />
-  }
+  const spacingClass = spacingMap[spacing ?? 'none'] ?? ''
+  const colorClass = colorMap[color ?? 'none']
 
   return (
-    <hr className={`${spacingClass} border-t ${styleClass} ${colorClass}`} aria-hidden="true" />
+    <hr
+      className={['h-px', spacingClass, colorClass, className].filter(Boolean).join(' ')}
+      aria-hidden="true"
+    />
   )
 }

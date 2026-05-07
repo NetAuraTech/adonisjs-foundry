@@ -1,25 +1,24 @@
 import type { ResolvedBlock } from '#types/page'
-
-const alignMap: Record<string, string> = {
-  left: 'text-left',
-  center: 'text-center',
-  right: 'text-right',
-}
+import { Heading } from '~/components/atoms/heading'
+import { Fragment } from 'react'
+import ReactMarkdown from 'react-markdown'
+import rehypeRaw from 'rehype-raw'
 
 const colorMap: Record<string, string> = {
   'default': 'text-ink',
-  'muted': 'text-ink-muted',
-  'subtle': 'text-ink-subtle',
-  'primary': 'text-primary-mid',
+  'ink-inverted': 'text-ink-inverted',
   'primary-deep': 'text-primary-deep',
-  'accent': 'text-accent-mid',
-}
-
-const sizeMap: Record<number, string> = {
-  1: 'text-4xl md:text-5xl font-bold tracking-tight',
-  2: 'text-3xl md:text-4xl font-bold tracking-tight',
-  3: 'text-2xl md:text-3xl font-semibold',
-  4: 'text-xl md:text-2xl font-semibold',
+  'primary': 'text-primary',
+  'primary-soft': 'text-primary-soft',
+  'primary-light': 'text-primary-light',
+  'secondary-deep': 'text-secondary-deep',
+  'secondary': 'text-secondary',
+  'secondary-soft': 'text-secondary-soft',
+  'secondary-light': 'text-secondary-light',
+  'tertiary-deep': 'text-tertiary-deep',
+  'tertiary': 'text-tertiary',
+  'tertiary-soft': 'text-tertiary-soft',
+  'tertiary-light': 'text-tertiary-light',
 }
 
 interface TitleBlockProps {
@@ -31,15 +30,22 @@ interface TitleBlockProps {
  * Reuses the semantic HTML heading element so the page outline stays correct.
  */
 export default function TitleBlock({ block }: TitleBlockProps) {
-  const { text, level, align, color } = block.props
+  const { text, level, color, highlightColor } = block.props
 
-  const Tag = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4'
-
-  const classes = [
-    sizeMap[level] ?? sizeMap[2],
-    alignMap[align] ?? 'text-left',
-    colorMap[color ?? 'default'] ?? 'text-ink',
-  ].join(' ')
-
-  return <Tag className={classes}>{text}</Tag>
+  return (
+    <Heading level={level} color={colorMap[color ?? 'default'] ?? 'text-ink'}>
+      <ReactMarkdown
+        rehypePlugins={[rehypeRaw]}
+        components={{
+          em: ({ node, ...props }) => <em className={`${colorMap[highlightColor]}`} {...props} />,
+          strong: ({ node, ...props }) => (
+            <strong className={`${colorMap[highlightColor]}`} {...props} />
+          ),
+          p: Fragment,
+        }}
+      >
+        {text}
+      </ReactMarkdown>
+    </Heading>
+  )
 }

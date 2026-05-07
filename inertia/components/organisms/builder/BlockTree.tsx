@@ -1,12 +1,13 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import BlockPicker from './BlockPicker'
-import BlockPropsEditor from './BlockPropsEditor'
+import BlockPropsEditor from './editor/BlockPropsEditor'
 import { createBlock, getBlockDescriptor } from './block_types'
 import type { Block, BlockType, PageContent } from '#types/page'
 import type { BuilderOperation } from '#types/builder'
 import type { LockState } from '~/hooks/use_builder_sync'
 import { Button } from '~/components/atoms/button'
 import { Icon } from '~/components/atoms/icon'
+import { FloatingPortal } from '~/components/atoms/floating_portal'
 
 interface LockHelpers {
   getLock: (blockId: string, fieldKey: string) => LockState | null
@@ -91,35 +92,40 @@ export default function BlockTree({
   }
 
   return (
-    <div className="flex gap-4 h-full min-h-0">
-      <div className="w-auto flex flex-col gap-3 overflow-hidden">
-        <div className="flex gap-3 h-1/2 overflow-y-scroll">
+    <div className="flex flex-col h-full min-h-0 bg-canvas border-r border-edge">
+      {/* ── SECTION TREE (HAUT) ── */}
+      <div className="flex-1 flex flex-col min-h-0 border-b border-edge">
+        <div className="px-4 py-3 flex items-center justify-between shrink-0">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-ink-subtle">
+            Structure
+          </span>
           <div className="relative">
             <Button
               type="button"
               variant="icon"
               onClick={() => setPickerParentId(pickerParentId === 'root' ? null : 'root')}
               fitContent
-              title="Add block to translate"
+              title="Add block"
             >
-              <Icon name="Plus" size={18} />
+              <Icon name="Plus" size={16} />
             </Button>
             {pickerParentId === 'root' && (
               <BlockPicker
                 onSelect={(t) => addBlock(t, 'root')}
                 handleClose={handleCloseBlockPicker}
-                className="absolute top-7 left-0 z-30 w-72"
+                className="absolute top-8 right-0 z-30 w-72 shadow-xl"
               />
             )}
           </div>
+        </div>
 
+        <div className="flex-1 overflow-y-auto px-2 pb-4 custom-scrollbar">
           {content.blocks.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 rounded-xl border-2 border-dashed border-edge text-center">
-              <p className="text-sm text-ink-muted">No blocks yet</p>
-              <p className="text-xs text-ink-subtle mt-1">Click "Add block" to start building</p>
+            <div className="flex flex-col items-center justify-center py-12 px-4 rounded-xl border-2 border-dashed border-edge text-center m-2">
+              <p className="text-xs text-ink-muted">No blocks yet</p>
             </div>
           ) : (
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               {content.blocks.map((block, i) => (
                 <BlockNode
                   key={block.id}
@@ -140,43 +146,47 @@ export default function BlockTree({
             </div>
           )}
         </div>
-        <div className="h-1/2 shrink-0 items-end">
-          {selectedBlock ? (
-            <div className="rounded-xl border border-edge bg-canvas top-4">
-              <div className="px-4 py-3 border-b border-edge flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-semibold text-ink">
-                    {getBlockDescriptor(selectedBlock.type)?.label ?? selectedBlock.type}
-                  </p>
-                  <p className="text-xs text-ink-subtle font-mono mt-0.5 truncate max-w-47.5">
-                    {selectedBlock.id}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setSelectedId(null)}
-                  className="text-ink-subtle hover:text-ink text-xs p-1"
-                >
-                  ✕
-                </button>
+      </div>
+
+      {/* ── SECTION EDITEUR (BAS) ── */}
+      <div className="h-1/2 flex flex-col min-h-0 bg-sunken/10">
+        {selectedBlock ? (
+          <div className="flex flex-col h-full">
+            <div className="h-10 px-4 flex items-center justify-between border-b border-edge shrink-0 bg-canvas">
+              <div className="flex items-center gap-2 overflow-hidden">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary-mid shrink-0" />
+                <span className="text-[11px] font-semibold text-ink uppercase tracking-tight truncate">
+                  {getBlockDescriptor(selectedBlock.type)?.label ?? selectedBlock.type}
+                </span>
               </div>
-              <div className="p-4 overflow max-h-[calc(100vh-18rem)]">
-                <BlockPropsEditor
-                  block={selectedBlock}
-                  onChange={(props) => updateBlockProps(selectedBlock.id, props)}
-                  getLock={getLock}
-                  acquireLock={acquireLock}
-                  releaseLock={releaseLock}
-                  currentUserId={currentUserId}
-                />
-              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedId(null)}
+                className="text-ink-subtle hover:text-ink transition-colors"
+              >
+                <Icon name="X" size={14} />
+              </button>
             </div>
-          ) : (
-            <div className="rounded-xl border border-dashed border-edge p-6 text-center">
-              <p className="text-xs text-ink-subtle">Select a block to edit its properties </p>
+
+            <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
+              <BlockPropsEditor
+                block={selectedBlock}
+                onChange={(props) => updateBlockProps(selectedBlock.id, props)}
+                getLock={getLock}
+                acquireLock={acquireLock}
+                releaseLock={releaseLock}
+                currentUserId={currentUserId}
+              />
             </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center opacity-50">
+            <Icon name="MousePointer2" size={20} className="text-ink-subtle mb-2" />
+            <p className="text-[11px] text-ink-subtle uppercase tracking-wider">
+              Select a block to configure
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )
@@ -210,28 +220,37 @@ function BlockNode(props: {
     onPickBlock,
     handleCloseBlockPicker,
   } = props
+
   const [expanded, setExpanded] = useState(true)
+  const anchorRef = useRef<HTMLButtonElement>(null)
+
   const descriptor = getBlockDescriptor(block.type)
   const isContainer = descriptor?.isContainer ?? false
   const isSelected = selectedId === block.id
   const showPicker = pickerParentId === block.id
 
-  const preview =
-    block.type === 'title'
-      ? ` — ${(block.props as any).text ?? ''}`
-      : block.type === 'hero'
-        ? ` — ${(block.props as any).title ?? ''}`
-        : block.type === 'rich_text'
-          ? ' — rich text'
-          : ''
+  const preview = block.type === 'title' ? ` — ${(block.props as any).text ?? ''}` : ''
+
+  // Ferme le picker s'il sort de l'écran lors du scroll
+  useEffect(() => {
+    if (!showPicker || !anchorRef.current) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) handleCloseBlockPicker()
+      },
+      { threshold: 0 }
+    )
+    observer.observe(anchorRef.current)
+    return () => observer.disconnect()
+  }, [showPicker, handleCloseBlockPicker])
 
   return (
-    <div className={depth > 0 ? 'ml-5 pl-2 border-l border-edge' : ''}>
+    <div className={depth > 0 ? 'ml-4 pl-2 border-l border-edge/50' : ''}>
       <div
-        className={`group flex items-center gap-2 rounded-lg px-3 py-2 cursor-pointer transition-colors ${
+        className={`group flex items-center gap-2 rounded-md px-2 py-1.5 cursor-pointer transition-all ${
           isSelected
-            ? 'bg-primary-soft border border-primary-mid/20'
-            : 'hover:bg-sunken border border-transparent'
+            ? 'bg-primary-soft/30 text-primary-mid'
+            : 'hover:bg-sunken text-ink-muted hover:text-ink'
         }`}
         onClick={() => onSelect(block.id)}
       >
@@ -242,7 +261,7 @@ function BlockNode(props: {
               e.stopPropagation()
               setExpanded(!expanded)
             }}
-            className="w-4 h-4 flex items-center justify-center text-ink-muted shrink-0"
+            className="w-4 h-4 flex items-center justify-center shrink-0 hover:bg-edge rounded"
           >
             <svg
               className={`w-3 h-3 transition-transform ${expanded ? 'rotate-90' : ''}`}
@@ -257,60 +276,54 @@ function BlockNode(props: {
           <span className="w-4 shrink-0" />
         )}
 
-        <span className="text-xs font-medium flex-1 min-w-0 truncate">
+        <span className="text-[12px] font-medium flex-1 min-w-0 truncate">
           {descriptor?.label ?? block.type}
           {preview && (
-            <span className="text-ink-subtle font-normal">
-              {preview.slice(0, 28)}
-              {preview.length > 28 ? '…' : ''}
+            <span className="text-ink-subtle font-normal opacity-60">
+              {preview.slice(0, 20)}
+              {preview.length > 20 ? '...' : ''}
             </span>
           )}
         </span>
 
-        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-          {(['up', 'down'] as const).map((dir) => (
-            <button
-              key={dir}
-              type="button"
-              disabled={dir === 'up' ? index === 0 : index === total - 1}
-              onClick={(e) => {
-                e.stopPropagation()
-                onMove(block.id, dir)
-              }}
-              className="p-1 rounded text-ink-subtle hover:text-ink disabled:opacity-30"
-            >
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d={dir === 'up' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7'}
-                />
-              </svg>
-            </button>
-          ))}
+        <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              onMove(block.id, 'up')
+            }}
+            disabled={index === 0}
+            className="p-1 hover:text-ink disabled:opacity-0"
+          >
+            <Icon name="ChevronUp" size={12} />
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              onMove(block.id, 'down')
+            }}
+            disabled={index === total - 1}
+            className="p-1 hover:text-ink disabled:opacity-0"
+          >
+            <Icon name="ChevronDown" size={12} />
+          </button>
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation()
               onDelete(block.id)
             }}
-            className="p-1 rounded text-ink-subtle hover:text-danger"
+            className="p-1 hover:text-danger"
           >
-            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <Icon name="Trash2" size={12} />
           </button>
         </div>
       </div>
 
       {isContainer && expanded && (
-        <div className="mt-1 space-y-1 ml-2">
+        <div className="mt-0.5 space-y-0.5">
           {(block.children ?? []).map((child, i) => (
             <BlockNode
               key={child.id}
@@ -328,26 +341,29 @@ function BlockNode(props: {
               handleCloseBlockPicker={handleCloseBlockPicker}
             />
           ))}
-          <div className="relative ml-4">
+
+          <div className="relative ml-4 mt-1">
             <button
+              ref={anchorRef}
               type="button"
               onClick={(e) => {
                 e.stopPropagation()
                 onAddChild(block.id)
               }}
-              className="flex items-center gap-1.5 text-xs text-ink-subtle hover:text-primary-mid transition-colors py-1"
+              className="flex items-center gap-2 text-[11px] text-ink-subtle hover:text-primary-mid transition-colors py-1 px-2 rounded hover:bg-sunken w-full text-left"
             >
-              <span className="w-4 h-4 rounded border border-dashed border-edge flex items-center justify-center text-sm leading-none">
-                +
-              </span>
-              Add child block
+              <Icon name="Plus" size={12} />
+              <span>Add child</span>
             </button>
+
             {showPicker && (
-              <BlockPicker
-                onSelect={(type) => onPickBlock(type, block.id)}
-                handleClose={handleCloseBlockPicker}
-                className="absolute top-7 left-0 z-30 w-72"
-              />
+              <FloatingPortal anchorRef={anchorRef}>
+                <BlockPicker
+                  onSelect={(type) => onPickBlock(type, block.id)}
+                  handleClose={handleCloseBlockPicker}
+                  className="w-72 mt-1 shadow-2xl border border-edge rounded-xl overflow-hidden"
+                />
+              </FloatingPortal>
             )}
           </div>
         </div>
@@ -356,8 +372,7 @@ function BlockNode(props: {
   )
 }
 
-// ─── Pure helpers ─────────────────────────────────────────────────────────────
-
+// ─── Pure helpers (Inchangés) ──────────────────────────────────────────────────
 function findById(blocks: Block[], id: string): Block | null {
   for (const b of blocks) {
     if (b.id === id) return b

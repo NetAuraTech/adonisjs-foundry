@@ -22,7 +22,7 @@ export default class FilesController {
   ) {}
 
   async render(ctx: HttpContext) {
-    const { inertia, request } = ctx
+    const { inertia, request, i18n } = ctx
 
     const pagination = await extractPagination(request)
     const data = stripEmptyStrings(request.all())
@@ -43,6 +43,80 @@ export default class FilesController {
       files: FileTransformer.paginate(files.all(), files.getMeta()),
       folders: FileFolderTransformer.transform(folders),
       filters: payload,
+      translations: {
+        title: i18n.t('cms.files.list.title'),
+        action: {
+          folders: i18n.t('cms.files.list.action.folders'),
+          upload: i18n.t('cms.files.list.action.upload'),
+        },
+        name: i18n.t('cms.files.form.name.value'),
+        type: i18n.t('cms.files.form.type.value'),
+        size: i18n.t('cms.files.form.size.value'),
+        uploaded_at: i18n.t('cms.files.form.uploaded_at.value'),
+        upload: {
+          value: i18n.t('cms.files.upload.submit'),
+          help: i18n.t('cms.files.upload.help'),
+          remove: i18n.t('cms.files.upload.remove'),
+          max_size: i18n.t('cms.files.upload.max_size', { size: '{size}' }),
+          try_again: i18n.t('cms.files.upload.try_again'),
+          error: {
+            size: i18n.t('cms.files.upload.error.size', { max: '{max}' }),
+          },
+        },
+        actions: {
+          value: i18n.t('cms.files.actions'),
+          show: i18n.t('cms.files.show.title'),
+          delete: {
+            value: i18n.t('cms.files.delete.title', { filename: '{filename}' }),
+            confirm: i18n.t('cms.files.delete.confirm'),
+          },
+        },
+        folders: {
+          all: i18n.t('cms.files.list.folders.all'),
+        },
+        search: {
+          filter: i18n.t('cms.files.search.filter'),
+          value: i18n.t('cms.files.search.value'),
+          placeholder: i18n.t('cms.files.search.placeholder'),
+          type: {
+            value: i18n.t('cms.files.search.type.value'),
+            options: {
+              placeholder: i18n.t('cms.files.search.type.options.placeholder'),
+              image: i18n.t('cms.files.search.type.options.image'),
+              video: i18n.t('cms.files.search.type.options.video'),
+              audio: i18n.t('cms.files.search.type.options.audio'),
+              pdf: i18n.t('cms.files.search.type.options.pdf'),
+            },
+          },
+        },
+        alts: {
+          title: i18n.t('cms.files.show.alts.title'),
+          add: i18n.t('cms.files.show.alts.add'),
+          edit: i18n.t('cms.files.show.alts.edit'),
+          empty: i18n.t('cms.files.show.alts.empty'),
+          close: i18n.t('cms.files.show.alts.close'),
+          delete: {
+            value: i18n.t('cms.files.show.alts.delete.value'),
+            confirm: i18n.t('cms.files.show.alts.delete.confirm'),
+          },
+          form: {
+            update: i18n.t('cms.files.show.alts.form.update'),
+            submit: i18n.t('cms.files.show.alts.form.submit'),
+            cancel: i18n.t('cms.files.show.alts.form.cancel'),
+            locale: {
+              value: i18n.t('cms.files.show.alts.form.locale.value'),
+            },
+            key: {
+              value: i18n.t('cms.files.show.alts.form.key.value'),
+              placeholder: i18n.t('cms.files.show.alts.form.key.placeholder'),
+            },
+            alt_text: {
+              value: i18n.t('cms.files.show.alts.form.alt_text.value'),
+              placeholder: i18n.t('cms.files.show.alts.form.alt_text.placeholder'),
+            },
+          },
+        },
+      },
     })
   }
 

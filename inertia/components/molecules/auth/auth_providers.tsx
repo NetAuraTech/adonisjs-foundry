@@ -1,8 +1,9 @@
-import { useTranslation } from 'react-i18next'
 import { Button } from '~/components/atoms/button'
 import type { OAuthProvider } from '#types/auth'
 import { capitalize } from '~/lib/string'
 import { getIcon } from '~/helpers/oauth'
+import type { TranslationNodes } from '#types/translations'
+import { useTranslation } from '~/hooks/use_translation'
 
 interface AuthProviderProps {
   /**
@@ -11,6 +12,7 @@ interface AuthProviderProps {
    * Pass an empty array to render nothing (the divider is still shown).
    */
   providers: OAuthProvider[]
+  translations: TranslationNodes
 }
 
 /**
@@ -34,35 +36,36 @@ interface AuthProviderProps {
  * </Card>
  */
 export function AuthProviders(props: AuthProviderProps) {
-  const { providers } = props
-  const { t } = useTranslation('auth')
+  const { providers, translations } = props
+  const { t } = useTranslation(translations)
 
-  return (
+  return providers && providers.length > 0 ? (
     <>
       <div className="relative my-8">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-solid border-edge" />
         </div>
         <div className="relative flex justify-center text-lg">
-          <span className="px-4 bg-canvas text-ink-muted">{t('login.or_continue_with')}</span>
+          <span className="px-4 bg-surface text-ink-muted">{t('or_continue_with')}</span>
         </div>
       </div>
       <div className="grid grid-auto-fit-[250px] gap-3">
-        {providers &&
-          providers.map((provider) => (
-            <Button
-              variant="social"
-              route="auth.social.redirect"
-              routeParams={{ provider: provider }}
-              key={`provider-${provider}`}
-              title={capitalize(provider)}
-              external
-            >
-              {getIcon(provider)}
-              {capitalize(provider)}
-            </Button>
-          ))}
+        {providers.map((provider) => (
+          <Button
+            variant="social"
+            route="auth.social.redirect"
+            routeParams={{ provider: provider }}
+            key={`provider-${provider}`}
+            title={capitalize(provider)}
+            external
+          >
+            {getIcon(provider)}
+            {capitalize(provider)}
+          </Button>
+        ))}
       </div>
     </>
+  ) : (
+    <></>
   )
 }

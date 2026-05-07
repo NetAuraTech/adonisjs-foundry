@@ -4,6 +4,7 @@ import { belongsTo, hasMany, scope } from '@adonisjs/lucid/orm'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import User from '#models/auth/user'
 import File from '#models/file/file'
+import { ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
 
 export default class Page extends PageSchema {
   @hasMany(() => PageTranslation, { foreignKey: 'pageId' })
@@ -20,7 +21,7 @@ export default class Page extends PageSchema {
   /**
    * Filters pages that have at least one published translation.
    */
-  static published = scope((query) => {
+  public static published = scope((query: ModelQueryBuilderContract<typeof Page>) => {
     query.whereHas('translations', (t) => {
       t.where('status', 'published')
     })

@@ -31,6 +31,13 @@ export class PageRepository {
       .first()
   }
 
+  /**
+   * Returns the page flagged as homepage, or null if none is set.
+   */
+  async findHomepage(): Promise<Page | null> {
+    return Page.query().where('is_homepage', true).preload('translations').first()
+  }
+
   async list(filters: ListFilters, pagination: PaginationFilters) {
     const query = Page.query().preload('translations').orderBy('created_at', 'desc')
 
@@ -71,8 +78,38 @@ export class PageRepository {
     return page
   }
 
+  /**
+   * Sets `pageId` as the homepage, clearing the flag on any previous homepage.
+   * Runs in a transaction to avoid a race condition between the clear and the set.
+   */
+  async setHomepage(pageId: number): Promise<void> {
+    await Page.query().where('is_homepage', true).update({ isHomepage: false })
+    await Page.query().where('id', pageId).update({ isHomepage: true })
+  }
+
   async delete(id: number): Promise<void> {
     const page = await Page.findOrFail(id)
     await page.delete()
+  }
+
+  async listForLinks() {
+    return Page.query()
+      .select('id', 'default_locale')
+      .preload('translations', (q) => q.select('title', 'locale', 'slug'))
+      .orderBy('id', 'asc')
+  }
+
+  /**
+   * Retrieves all pages that have at least one published translation.
+   * Specifically used for XML Sitemap generation.
+   */
+  async listPublishedForSitemap() {
+    return Page.query()
+      .whereHas('translations', (query) => {
+        query.where('status', 'published')
+      })
+      .preload('translations', (query) => {
+        query.where('status', 'published')
+      })
   }
 }

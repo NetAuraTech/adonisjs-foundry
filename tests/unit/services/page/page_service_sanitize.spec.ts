@@ -27,7 +27,7 @@ test.group('PageService — sanitization wiring', (group) => {
     blocks: [
       {
         id: '1',
-        type: 'rich_text',
+        type: 'htmltext',
         props: { content: '<p>Hello</p><script>alert("xss")</script>', align: 'left' },
       },
     ],
@@ -42,13 +42,11 @@ test.group('PageService — sanitization wiring', (group) => {
           background: 'canvas',
           paddingY: { default: 'md' },
           paddingX: { default: 'md' },
-          maxWidth: 'xl',
-          rounded: false,
         },
         children: [
           {
             id: 'rt1',
-            type: 'rich_text',
+            type: 'htmltext',
             props: { content: '<p>Safe</p><script>evil()</script>', align: 'left' },
           },
         ],

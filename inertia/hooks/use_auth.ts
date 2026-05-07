@@ -1,7 +1,7 @@
-import { usePage } from '@inertiajs/react'
 import * as authHelpers from '~/helpers/authorization'
-import type { SharedProps } from '@adonisjs/inertia/types'
 import { type Data } from '@generated/data'
+import { usePage } from '@inertiajs/react'
+import { type SharedProps } from '@adonisjs/inertia/types'
 
 type SharedPropsWithAuth = Omit<SharedProps, 'currentUser'> & {
   currentUser: Data.User | undefined

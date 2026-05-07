@@ -1,6 +1,6 @@
-import { usePage } from '@inertiajs/react'
-import { ReactNode, MouseEvent } from 'react'
-import type { FontSize } from '~/types/font'
+import { router, usePage } from '@inertiajs/react'
+import { ReactNode, MouseEvent, useState, useEffect } from 'react'
+import type { FontSize } from '#types/font'
 import { getFontSizeClass } from '~/utils/font'
 import { Link } from '@adonisjs/inertia/react'
 import type { LinkProps, LinkParams } from '@adonisjs/inertia/react'
@@ -19,13 +19,13 @@ type NavLinkBaseProps = {
   /**
    * Visual variant.
    *
-   * - `'link'` — accent underline-style link, default.
-   * - `'nav'` — neutral text that turns accent on hover and when active.
+   * - `'link'` — secondary underline-style link, default.
+   * - `'nav'` — neutral text that turns secondary on hover and when active.
    * - `'setting_nav'` — tab-style link with a bottom border indicator.
    * - `'pagination'` — button-shaped link used inside `<Pagination>`.
    * - `'admin_nav'` — button-shaped link used inside Administration.
    */
-  variant?: 'link' | 'nav' | 'setting_nav' | 'pagination' | 'admin_nav'
+  variant?: 'link' | 'nav' | 'setting_nav' | 'pagination' | 'admin_nav' | 'external' | 'footer'
   fitContent?: boolean
   /** Disables pointer events and applies a reduced-opacity style. */
   disabled?: boolean
@@ -40,7 +40,7 @@ type NavLinkRouteProps<R extends NonNullable<LinkProps['route']>> = NavLinkBaseP
   /**
    * Query-string parameters merged into the URL. When provided the link uses
    * a plain `href` instead of an Inertia route so the query string is
-   * preserved correctly.
+   * preserved correctly
    */
   qs?: Record<string, any> | undefined
 } & (LinkParams<R>['routeParams'] extends undefined | never
@@ -55,7 +55,7 @@ type NavLinkNoRouteProps = NavLinkBaseProps & {
   /**
    * Query-string parameters merged into the URL. When provided the link uses
    * a plain `href` instead of an Inertia route so the query string is
-   * preserved correctly.
+   * preserved correctly
    */
   qs?: Record<string, any> | undefined
 }
@@ -65,14 +65,17 @@ type NavLinkProps<R extends NonNullable<LinkProps['route']>> =
   | NavLinkNoRouteProps
 
 export const variants = {
-  link: 'text-accent hover:text-accent-deep',
-  nav: 'text-ink current:text-accent hover:text-accent',
+  link: 'text-secondary hover:text-secondary-deep',
+  nav: 'uppercase text-xs text-ink current:text-secondary hover:text-secondary',
   setting_nav:
-    'px-4 py-2.5 border-b-2 -mb-px border-transparent current:border-accent hover:border-accent text-ink-muted current:text-accent hover:text-accent cursor-pointer',
+    'px-4 py-2.5 border-b-2 -mb-px border-transparent current:border-secondary hover:border-secondary text-ink-muted current:text-secondary hover:text-secondary cursor-pointer',
   pagination:
     'button font-normal hover:bg-primary hover:text-ink-inverted current:bg-primary current:text-ink-inverted px-2 py-1',
   admin_nav:
     'flex items-center gap-2 p-3 rounded hover:text-ink-inverted hover:bg-primary-deep current:text-ink-inverted current:bg-primary-deep',
+  external:
+    'text-secondary hover:text-secondary-light font-semibold font-cormorant tracking-wide italic text-lg',
+  footer: 'text-ink-inverted hover:text-primary-light text-sm flex items-center',
 }
 
 /**
@@ -95,7 +98,7 @@ export const variants = {
  *
  * @example
  * // Simple nav link
- * <NavLink route="home" label="Home" variant="nav" />
+ * <NavLink route="page.home" label="Home" variant="nav" />
  *
  * // Settings tab
  * <NavLink route="settings.profile.render" label="Profile" variant="setting_nav" />
@@ -105,54 +108,45 @@ export const variants = {
  */
 export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLinkProps<R>) {
   const { label, title, children, onClick, fs = 'base', variant = 'link', disabled } = props
-
   const { url } = usePage()
-  const fontSizeClass = getFontSizeClass(fs)
+  const [isActive, setIsActive] = useState(false)
 
-  const resolvedHref = props.route
-    ? (urlFor as (route: string, params?: unknown) => string)(props.route, props.routeParams)
-    : ''
+  useEffect(() => {
+    const determineActive = () => {
+      const currentPath = window.location.pathname
 
-  const [currentPath, currentSearch] = url.split('?')
-  const currentParams = new URLSearchParams(currentSearch ?? '')
+      const resolvedHref = props.route ? (urlFor as any)(props.route, props.routeParams) : ''
 
-  const pathMatches = currentPath === resolvedHref
+      const pathMatches = currentPath === resolvedHref
 
-  const qsMatches: boolean = (() => {
-    const cleanQs = Object.fromEntries(Object.entries(props.qs ?? {}).filter(([_, v]) => v != null))
+      const currentHash = window.location.hash.replace('#', '')
+      const targetAnchor = props.anchor ?? ''
+      const anchorMatches = targetAnchor === currentHash
 
-    const entries = Object.entries(cleanQs)
+      setIsActive((pathMatches && anchorMatches) || (props.isActive ?? false))
+    }
 
-    const allPropsMatch = entries.every(([key, value]) => {
-      const currentValue = currentParams.get(key)
-      if (key === 'page' && value === 1 && currentValue === null) return true
-      return currentValue === String(value)
+    determineActive()
+
+    const removeFinishEventListener = router.on('finish', () => {
+      determineActive()
     })
 
-    const activeCurrentKeys = Array.from(currentParams.keys()).filter((key) => {
-      const val = currentParams.get(key)
-      return val !== null && val !== undefined && val !== ''
-    })
-
-    const noExtraParams = activeCurrentKeys.every((key) => {
-      if (key === 'page' && currentParams.get(key) === '1' && !cleanQs['page']) return true
-
-      return key in cleanQs
-    })
-
-    return allPropsMatch && noExtraParams
-  })()
-
-  const isActive = (pathMatches && qsMatches) || props.isActive
+    return () => {
+      removeFinishEventListener()
+    }
+  }, [url, props.anchor, props.route, props.routeParams])
 
   const states = {
     active: '',
     disabled: 'opacity-50 cursor-not-allowed pointer-events-none',
   }
 
+  const fontSizeClass = getFontSizeClass(fs)
+
   const state = disabled ? 'disabled' : 'active'
 
-  let linkProps: LinkProps<R> = { href: '#' }
+  let linkProps: any = { href: '#' }
 
   if (props.route) {
     linkProps =

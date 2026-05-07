@@ -17,8 +17,14 @@ export default function PageRenderer({ content, pageId, locale }: PageRendererPr
 
   return (
     <main>
-      {content.blocks.map((block) => (
-        <BlockRenderer key={block.id} block={block} pageId={pageId} locale={locale} />
+      {content.blocks.map((block, index) => (
+        <BlockRenderer
+          key={block.id}
+          block={block}
+          pageId={pageId}
+          locale={locale}
+          isPriority={index < 2}
+        />
       ))}
     </main>
   )

@@ -1,39 +1,52 @@
 import { resolveResponsive } from '~/utils/responsive'
 import type { ResolvedBlock } from '#types/page'
+import { ReactNode } from 'react'
 
-// ─── Tailwind maps ────────────────────────────────────────────────────────────
-// All classes listed statically for the Tailwind compiler.
-
-const colsMap = {
-  1: { default: 'grid-cols-1', sm: 'sm:grid-cols-1', md: 'md:grid-cols-1', lg: 'lg:grid-cols-1' },
-  2: { default: 'grid-cols-2', sm: 'sm:grid-cols-2', md: 'md:grid-cols-2', lg: 'lg:grid-cols-2' },
-  3: { default: 'grid-cols-3', sm: 'sm:grid-cols-2', md: 'md:grid-cols-3', lg: 'lg:grid-cols-3' },
-  4: { default: 'grid-cols-4', sm: 'sm:grid-cols-2', md: 'md:grid-cols-4', lg: 'lg:grid-cols-4' },
+const colsMap: Record<number, Partial<Record<'default' | 'md' | 'lg', string>>> = {
+  1: { default: 'grid-cols-1', md: 'md:grid-cols-1', lg: 'lg:grid-cols-1' },
+  2: { default: 'grid-cols-2', md: 'md:grid-cols-2', lg: 'lg:grid-cols-2' },
+  3: { default: 'grid-cols-3', md: 'md:grid-cols-3', lg: 'lg:grid-cols-3' },
+  4: { default: 'grid-cols-4', md: 'md:grid-cols-4', lg: 'lg:grid-cols-4' },
+  6: { default: 'grid-cols-6', md: 'md:grid-cols-6', lg: 'lg:grid-cols-6' },
 }
 
-const gapMap = {
-  none: { default: 'gap-0', md: 'md:gap-0', lg: 'lg:gap-0' },
-  sm: { default: 'gap-2', md: 'md:gap-3', lg: 'lg:gap-4' },
-  md: { default: 'gap-4', md: 'md:gap-6', lg: 'lg:gap-8' },
-  lg: { default: 'gap-6', md: 'md:gap-8', lg: 'lg:gap-12' },
+const gapMap: Record<string, Partial<Record<'default' | 'md' | 'lg', string>>> = {
+  'none': { default: 'gap-0', md: 'md:gap-0', lg: 'lg:gap-0' },
+  'xs': { default: 'gap-0.5', md: 'md:gap-0.5', lg: 'lg:gap-0.5' },
+  'sm': { default: 'gap-4', md: 'md:gap-6', lg: 'lg:gap-8' },
+  'md': { default: 'gap-8', md: 'md:gap-12', lg: 'lg:gap-16' },
+  'lg': { default: 'gap-10', md: 'md:gap-16', lg: 'lg:gap-20' },
+  'xl': { default: 'gap-12', md: 'md:gap-20', lg: 'lg:gap-24' },
+  '2xl': { default: 'gap-16', md: 'md:gap-24', lg: 'lg:gap-32' },
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+const alignMap = {
+  start: 'items-start',
+  center: 'items-center',
+  end: 'items-end',
+  stretch: 'items-stretch',
+}
 
 interface GridBlockProps {
   block: ResolvedBlock<'grid'>
-  children?: React.ReactNode
+  children: ReactNode
 }
 
-/**
- * CSS grid container block. Accepts responsive column counts and gaps.
- * On mobile, 2–4 column layouts collapse to 1 column and step up at `sm`/`md`.
- */
-export default function GridBlock({ block, children }: GridBlockProps) {
-  const { cols, gap } = block.props
+export default function GridBlock(props: GridBlockProps) {
+  const { block, children } = props
+  const { cols, gap, alignItems, className } = block.props
 
-  const colsClasses = resolveResponsive(cols, colsMap)
-  const gapClasses = resolveResponsive(gap, gapMap)
+  const colClasses = resolveResponsive(cols || { default: 1 }, colsMap)
 
-  return <div className={`grid ${colsClasses} ${gapClasses}`}>{children}</div>
+  const gapClasses = resolveResponsive(gap || { default: 'none' }, gapMap)
+
+  const alignClass = alignMap[alignItems || 'start']
+
+  return (
+    <div
+      className={['grid', colClasses, gapClasses, alignClass, className].filter(Boolean).join(' ')}
+    >
+      {children}
+    </div>
+  )
 }

@@ -10,10 +10,21 @@ export default class EmailChangeController {
   constructor(protected accountService: AccountService) {}
 
   async render(ctx: HttpContext) {
-    const { params, inertia } = ctx
+    const { inertia, params, i18n } = ctx
 
     return inertia.render('settings/account/front/email_change', {
       token: params.token,
+      translations: {
+        title: i18n.t('settings.email.change.title'),
+        sub_title: i18n.t('settings.email.change.sub_title'),
+        submit: i18n.t('settings.email.change.submit'),
+        cancel: i18n.t('settings.email.change.cancel'),
+        token: i18n.t('settings.email.change.token'),
+        info: {
+          title: i18n.t('settings.email.change.info.title'),
+          message: i18n.t('settings.email.change.info.message'),
+        },
+      },
     })
   }
 
@@ -30,7 +41,7 @@ export default class EmailChangeController {
 
     regenerateCsrfToken(ctx)
 
-    session.flash('success', i18n.t('settings.email_change.success'))
+    session.flash('success', i18n.t('settings.email.change.success'))
 
     return response.redirect().toRoute('settings.account.render')
   }
