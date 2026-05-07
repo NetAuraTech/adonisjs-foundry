@@ -47,12 +47,10 @@ export default class BackupHealthCheck extends BaseCommand {
 
       this.logger.info('')
       this.logger.info('Storage Status:')
-      for (const [storage, available] of Object.entries(result.storages)) {
-        if (available) {
-          this.logger.info(`  ✓ ${storage}`)
-        } else {
-          this.logger.error(`  ✗ ${storage} (unavailable)`)
-        }
+      if (result.storage.available) {
+        this.logger.info(`  ✓ ${result.storage.disk}`)
+      } else {
+        this.logger.error(`  ✗ ${result.storage.disk} (unavailable)`)
       }
 
       if (result.lastBackup) {

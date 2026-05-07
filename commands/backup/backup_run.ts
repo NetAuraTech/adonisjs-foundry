@@ -58,15 +58,7 @@ export default class BackupRun extends BaseCommand {
         this.logger.info(`  Type: ${result.type}`)
         this.logger.info(`  Size: ${(result.size / 1024 / 1024).toFixed(2)} MB`)
         this.logger.info(`  Duration: ${(result.duration / 1000).toFixed(2)}s`)
-        this.logger.info(`  Storages:`)
-
-        for (const [storage, success] of Object.entries(result.storages)) {
-          if (success) {
-            this.logger.info(`    ✓ ${storage}`)
-          } else {
-            this.logger.warning(`    ✗ ${storage} (failed)`)
-          }
-        }
+        this.logger.info(`  Storage: ${result.storage}`)
       } else {
         this.logger.error('Backup failed!')
         this.logger.error(`  Error: ${result.error}`)

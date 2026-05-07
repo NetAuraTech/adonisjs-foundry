@@ -84,33 +84,9 @@ export default await Env.create(new URL('../', import.meta.url), {
   | Variables for Backup Configuration
   |----------------------------------------------------------
   */
+  BACKUP_STORAGE_DISK: Env.schema.enum.optional(['fs', 's3', 'r2'] as const),
   BACKUP_TIME: Env.schema.string.optional(),
   BACKUP_ENCRYPTION_ENABLED: Env.schema.boolean.optional(),
-  BACKUP_LOCAL_PATH: Env.schema.string.optional(),
-
-  /*
-  |----------------------------------------------------------
-  | Variables for Backup Configuration: S3 Storage
-  |----------------------------------------------------------
-  */
-  BACKUP_S3_ENABLED: Env.schema.boolean.optional(),
-  BACKUP_S3_BUCKET: Env.schema.string.optional(),
-  BACKUP_S3_REGION: Env.schema.string.optional(),
-  BACKUP_S3_ENDPOINT: Env.schema.string.optional(),
-  BACKUP_S3_ACCESS_KEY_ID: Env.schema.string.optional(),
-  BACKUP_S3_SECRET_ACCESS_KEY: Env.schema.string.optional(),
-  BACKUP_S3_PATH: Env.schema.string.optional(),
-
-  /*
-  |----------------------------------------------------------
-  | Variables for Backup Configuration: Nextcloud Storage
-  |----------------------------------------------------------
-  */
-  BACKUP_NEXTCLOUD_ENABLED: Env.schema.boolean.optional(),
-  BACKUP_NEXTCLOUD_URL: Env.schema.string.optional(),
-  BACKUP_NEXTCLOUD_USERNAME: Env.schema.string.optional(),
-  BACKUP_NEXTCLOUD_PASSWORD: Env.schema.string.optional(),
-  BACKUP_NEXTCLOUD_PATH: Env.schema.string.optional(),
 
   /*
   |----------------------------------------------------------

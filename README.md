@@ -488,7 +488,7 @@ Guards read the user's permissions from Inertia shared props via the `useAuth` h
 
 ## Backup
 
-Foundry includes a full database backup system with automatic strategy selection, multiple storage providers, encryption, and retention policy.
+Foundry includes a full database backup system with automatic strategy selection, encryption, and retention policy. Backup storage uses the same `@adonisjs/drive` package as the CMS file system — all backup files are stored under the `backup/` prefix on the configured disk.
 
 ### Strategy
 
@@ -511,19 +511,19 @@ If no full backup exists when a differential is requested, a full backup is perf
 | `node ace backup:cleanup`                 | Apply retention policy and delete old backups                                  |
 | `node ace backup:health-check`            | Check backup system health (storage availability, last backup age, disk space) |
 
-### Storage Providers
+### Storage
 
-| Provider      | Description                                          |
-| ------------- | ---------------------------------------------------- |
-| **Local**     | Always enabled, stores in `storage/backups`          |
-| **S3**        | S3/S3-compatible (MinIO, etc.), enabled via env vars |
-| **Nextcloud** | WebDAV-based, enabled via env vars                   |
+Backups use the same Drive disks as the CMS file system (`fs`, `s3`, `r2`), configured via `BACKUP_STORAGE_DISK` (defaults to `fs`). All backup files are stored under the `backup/` prefix to avoid colliding with the `cms/` prefix used by file uploads.
 
-All providers implement the `StorageAdapter` contract (`app/domain/contracts/backup/storage_adapter.ts`).
+| Disk | Description                          | Config                            |
+| ---- | ------------------------------------ | --------------------------------- |
+| `fs` | Local filesystem (`storage/backup/`) | Default, `BACKUP_STORAGE_DISK=fs` |
+| `s3` | Amazon S3 or S3-compatible           | `BACKUP_STORAGE_DISK=s3`          |
+| `r2` | Cloudflare R2                        | `BACKUP_STORAGE_DISK=r2`          |
 
 ### Pipeline
 
-Each backup goes through: **pg_dump → gzip compression → AES-256-CBC encryption (optional) → upload to all storages → manifest written**.
+Each backup goes through: **pg_dump → gzip compression → AES-256-CBC encryption (optional) → upload to Drive → manifest written**.
 
 ### Retention Policy
 
@@ -537,24 +537,8 @@ Each backup goes through: **pg_dump → gzip compression → AES-256-CBC encrypt
 ### Backup Environment Variables
 
 ```env
-# Storage - Local
-BACKUP_LOCAL_PATH=storage/backups
-
-# Storage - S3
-BACKUP_S3_ENABLED=false
-BACKUP_S3_BUCKET=
-BACKUP_S3_REGION=us-east-1
-BACKUP_S3_ENDPOINT=
-BACKUP_S3_ACCESS_KEY_ID=
-BACKUP_S3_SECRET_ACCESS_KEY=
-BACKUP_S3_PATH=backups
-
-# Storage - Nextcloud
-BACKUP_NEXTCLOUD_ENABLED=false
-BACKUP_NEXTCLOUD_URL=
-BACKUP_NEXTCLOUD_USERNAME=
-BACKUP_NEXTCLOUD_PASSWORD=
-BACKUP_NEXTCLOUD_PATH=/backups
+# Storage — uses the same Drive disks as CMS (fs, s3, r2)
+BACKUP_STORAGE_DISK=fs
 
 # Schedule & Encryption
 BACKUP_TIME=02:00
@@ -588,13 +572,11 @@ Foundry follows a **domain-driven architecture** with a strict layering conventi
 ```
 app/
 ├── data/
-│   ├── storage/                            # local_storage_adapter.ts, s3_storage_adapter.ts, nextcloud_storage_adapter.ts
 │   └── transformers/                       # user_transformer.ts, role_transformer.ts, permission_transformer.ts,
 │                                           # page_transformer.ts, page_translation_transformer.ts, page_revision_transformer.ts,
 │                                           # file_transformer.ts, file_folder_transformer.ts, template_transformer.ts
 ├── domain/
 │   ├── contracts/
-│   │   ├── backup/                         # storage_adapter.ts
 │   │   └── cache/                          # cache_driver.ts
 │   ├── repositories/
 │   │   ├── auth/                           # user_repository.ts, role_repository.ts, permission_repository.ts
@@ -808,7 +790,6 @@ The project uses Node.js subpath imports for clean module resolution:
 | `#contracts/*`    | `app/domain/contracts/*`    |
 | `#models/*`       | `app/models/*`              |
 | `#transformers/*` | `app/data/transformers/*`   |
-| `#storage/*`      | `app/data/storage/*`        |
 | `#validators/*`   | `app/validators/*`          |
 | `#exceptions/*`   | `app/exceptions/*`          |
 | `#middleware/*`   | `app/http/middleware/*`     |
@@ -1260,7 +1241,7 @@ Move email change logic from controller to AccountService
 - New hooks: `useAdmin`, `useAuth`, `useTheme`, `useIsLarge`
 - New locales: admin.json, core.json (EN + FR)
 - Admin invite email template
-- Additional path aliases: `#contracts/*`, `#storage/*`, `#tests/*`, `#generated/*`
+- Additional path aliases: `#contracts/*`, `#tests/*`, `#generated/*`
 - New exception: `RowNotFoundException`
 - New helper: `strip_empty_strings`
 - Pagination helpers: `extract_pagination`, `get_pagination_params`

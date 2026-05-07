@@ -3,10 +3,9 @@ import env from '#start/env'
 /**
  * Configuration for the backup system
  *
- * Supports multiple storage providers:
- * - Local: Always enabled (primary storage)
- * - S3: Enabled if credentials provided
- * - Nextcloud: Enabled if credentials provided
+ * Storage is handled by @adonisjs/drive — the same driver used for
+ * CMS file uploads. Backup files are stored under the `backup/` prefix
+ * on the configured disk.
  *
  * Backup strategy:
  * - Full backup: Weekly (Sunday)
@@ -24,6 +23,16 @@ const backupConfig = {
    */
   database: {
     connection: env.get('DB_CONNECTION', 'pg'),
+  },
+
+  /**
+   * Storage configuration — uses @adonisjs/drive.
+   * The disk must match one of the keys in config/drive.ts (fs, s3, r2).
+   * All backup files are stored under the `backup/` prefix.
+   */
+  storage: {
+    disk: env.get('BACKUP_STORAGE_DISK', 'fs') as 'fs' | 's3' | 'r2',
+    prefix: 'backup',
   },
 
   /**
@@ -77,43 +86,6 @@ const backupConfig = {
   },
 
   /**
-   * Storage providers configuration
-   */
-  storages: {
-    /**
-     * Local storage (always enabled)
-     */
-    local: {
-      enabled: true,
-      path: env.get('BACKUP_LOCAL_PATH', 'storage/backups'),
-    },
-
-    /**
-     * S3 storage (enabled if credentials provided)
-     */
-    s3: {
-      enabled: env.get('BACKUP_S3_ENABLED', false),
-      bucket: env.get('BACKUP_S3_BUCKET', ''),
-      region: env.get('BACKUP_S3_REGION', 'us-east-1'),
-      endpoint: env.get('BACKUP_S3_ENDPOINT', ''), // For S3-compatible services
-      accessKeyId: env.get('BACKUP_S3_ACCESS_KEY_ID', ''),
-      secretAccessKey: env.get('BACKUP_S3_SECRET_ACCESS_KEY', ''),
-      path: env.get('BACKUP_S3_PATH', 'backups'),
-    },
-
-    /**
-     * Nextcloud storage (WebDAV)
-     */
-    nextcloud: {
-      enabled: env.get('BACKUP_NEXTCLOUD_ENABLED', false),
-      url: env.get('BACKUP_NEXTCLOUD_URL', ''),
-      username: env.get('BACKUP_NEXTCLOUD_USERNAME', ''),
-      password: env.get('BACKUP_NEXTCLOUD_PASSWORD', ''), // App password recommended
-      path: env.get('BACKUP_NEXTCLOUD_PATH', '/backups'),
-    },
-  },
-
-  /**
    * Rotation policy (Spatie-like)
    */
   retention: {
@@ -154,7 +126,7 @@ const backupConfig = {
     maxBackupSize: env.get('BACKUP_MAX_SIZE_MB', 500),
 
     /**
-     * Minimum free disk space (in GB)
+     * Minimum free disk space (in GB) — only checked for local (fs) disk
      */
     minFreeSpace: env.get('BACKUP_MIN_FREE_SPACE_GB', 5),
   },

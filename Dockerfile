@@ -23,6 +23,7 @@ RUN npm run build
 FROM base
 ENV NODE_ENV=production
 WORKDIR /app/build
+RUN apk add --no-cache postgresql-client
 COPY --from=production-deps /app/node_modules ./node_modules
 COPY --from=build /app/build .
 EXPOSE 3333

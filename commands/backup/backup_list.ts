@@ -3,8 +3,8 @@ import { inject } from '@adonisjs/core'
 import BackupService from '#services/backup/backup_service'
 
 /**
- * Ace command that lists all backup archives found in local storage,
- * sorted from most recent to oldest.
+ * Ace command that lists all backup archives found on the configured
+ * Drive disk, sorted from most recent to oldest.
  *
  * Results are rendered as a table showing filename, type, size, and
  * creation date. The `--limit` flag can be used to cap the number of
@@ -38,22 +38,12 @@ export default class BackupList extends BaseCommand {
     const backupService = await this.app.container.make(BackupService)
 
     try {
-      const localStorage = backupService['storages'].find((s: any) => s.name === 'local')
-
-      if (!localStorage) {
-        this.logger.error('Local storage not available')
-        this.exitCode = 1
-        return
-      }
-
-      let backups = await localStorage.list()
+      let backups = await backupService.listBackups()
 
       if (backups.length === 0) {
         this.logger.info('No backups found')
         return
       }
-
-      backups = backups.sort((a: any, b: any) => b.createdAt.getTime() - a.createdAt.getTime())
 
       if (this.limit) {
         backups = backups.slice(0, this.limit)

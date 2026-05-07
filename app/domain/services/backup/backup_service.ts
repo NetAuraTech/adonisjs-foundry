@@ -1,22 +1,45 @@
 import { inject } from '@adonisjs/core'
 import db from '@adonisjs/lucid/services/db'
+import drive from '@adonisjs/drive/services/main'
 import backupConfig from '#config/backup'
 import { spawn, type ChildProcess } from 'node:child_process'
 import { createReadStream, createWriteStream } from 'node:fs'
-import { mkdir, stat, unlink, writeFile } from 'node:fs/promises'
+import { mkdir, stat, unlink, writeFile, readFile, statfs } from 'node:fs/promises'
 import { join } from 'node:path'
 import { createGunzip, createGzip } from 'node:zlib'
 import { pipeline } from 'node:stream/promises'
 import { DateTime } from 'luxon'
 import env from '#start/env'
-import { Exception } from '@adonisjs/core/exceptions'
-import { BackupMetadata, StorageAdapter } from '#contracts/backup/storage_adapter'
 import { LogService } from '#services/logging/log_service'
-import LocalStorageAdapter from '#storage/local_storage_adapter'
-import S3StorageAdapter from '#storage/s3_storage_adapter'
-import NextcloudStorageAdapter from '#storage/nextcloud_storage_adapter'
 import { LogCategory } from '#types/logging'
 import { createEncryptionHelper } from '#helpers/core/encryption'
+import app from '@adonisjs/core/services/app'
+
+/**
+ * Metadata describing a backup file, as stored or returned by the backup service.
+ *
+ * The `path` field contains the full Drive key (e.g. `backup/backup-full-2024-01-15-120000.sql.gz.enc`).
+ */
+export interface BackupMetadata {
+  /** Original filename of the backup archive (e.g. `backup-2024-01-15.zip`). */
+  filename: string
+
+  /**
+   * Backup strategy used to produce this file.
+   * - `full` — complete snapshot of the database.
+   * - `differential` — only the changes since the last full backup.
+   */
+  type: 'full' | 'differential'
+
+  /** File size in bytes. */
+  size: number
+
+  /** Date and time at which the backup was created. */
+  createdAt: Date
+
+  /** Full Drive key path to the backup file. */
+  path: string
+}
 
 /**
  * Result returned by a backup operation.
@@ -37,12 +60,8 @@ export interface BackupResult {
   /** Total duration of the backup operation in milliseconds. */
   duration: number
 
-  /**
-   * Per-storage upload result map.
-   * Keys are storage adapter names (e.g. `'local'`, `'s3'`);
-   * values indicate whether the upload to that storage succeeded.
-   */
-  storages: { [key: string]: boolean }
+  /** Drive disk used for storage (e.g. `'fs'`, `'s3'`, `'r2'`). */
+  storage: string
 
   /** Human-readable error message. Present only when `success` is `false`. */
   error?: string
@@ -51,9 +70,8 @@ export interface BackupResult {
 /**
  * Manifest file written alongside each backup archive.
  *
- * Stored as a `.manifest.json` file in every configured storage so that
- * the backup system can reconstruct what was backed up and when, without
- * having to inspect the archive itself.
+ * Stored as a `.manifest.json` file on Drive so that the backup system can
+ * reconstruct what was backed up and when, without inspecting the archive itself.
  */
 export interface BackupManifest {
   /** Backup strategy used to produce this archive. */
@@ -79,9 +97,9 @@ export interface BackupManifest {
  * Orchestrates the full backup lifecycle: dump, compress, encrypt, upload,
  * cleanup, restoration, health checks, and retention policy enforcement.
  *
- * Supports multiple concurrent storage adapters (local, S3, Nextcloud).
- * All configured adapters receive every backup — if any adapter fails,
- * the operation throws to prevent silent data loss.
+ * Storage is handled by `@adonisjs/drive` — the same package used for CMS
+ * file uploads. All backup files are stored under the `backup/` prefix on
+ * the configured Drive disk (`fs`, `s3`, or `r2`).
  *
  * Two backup strategies are available:
  * - **Full** — complete `pg_dump` of the entire database.
@@ -100,61 +118,23 @@ export interface BackupManifest {
  */
 @inject()
 export default class BackupService {
-  private storages: StorageAdapter[] = []
   private encryptionHelper = createEncryptionHelper(backupConfig.encryption.key.release())
   private tempDir = 'storage/temp/backups'
 
-  constructor(protected logService: LogService) {
-    this.initializeStorages()
+  constructor(protected logService: LogService) {}
+
+  /**
+   * Returns the configured Drive disk for backups.
+   */
+  private getDisk() {
+    return drive.use(backupConfig.storage.disk as Parameters<typeof drive.use>[0])
   }
 
   /**
-   * Instantiates and registers all storage adapters enabled in `config/backup.ts`.
-   *
-   * Local storage is always considered first. S3 and Nextcloud adapters are
-   * added only when their respective `enabled` flag is set. Called once during
-   * construction.
+   * Builds the full storage path for a backup file.
    */
-  private initializeStorages(): void {
-    if (backupConfig.storages.local.enabled) {
-      this.storages.push(new LocalStorageAdapter(backupConfig.storages.local.path, this.logService))
-    }
-
-    if (backupConfig.storages.s3.enabled) {
-      this.storages.push(
-        new S3StorageAdapter(
-          {
-            bucket: backupConfig.storages.s3.bucket,
-            region: backupConfig.storages.s3.region,
-            endpoint: backupConfig.storages.s3.endpoint || undefined,
-            accessKeyId: backupConfig.storages.s3.accessKeyId,
-            secretAccessKey: backupConfig.storages.s3.secretAccessKey,
-            path: backupConfig.storages.s3.path,
-          },
-          this.logService
-        )
-      )
-    }
-
-    if (backupConfig.storages.nextcloud.enabled) {
-      this.storages.push(
-        new NextcloudStorageAdapter(
-          {
-            url: backupConfig.storages.nextcloud.url,
-            username: backupConfig.storages.nextcloud.username,
-            password: backupConfig.storages.nextcloud.password,
-            path: backupConfig.storages.nextcloud.path,
-          },
-          this.logService
-        )
-      )
-    }
-
-    this.logService.info({
-      message: 'Backup storage adapters initialized',
-      category: LogCategory.SYSTEM,
-      metadata: { storages: this.storages.map((s) => s.name) },
-    })
+  private buildPath(filename: string): string {
+    return `${backupConfig.storage.prefix}/${filename}`
   }
 
   /**
@@ -171,7 +151,6 @@ export default class BackupService {
   async run(): Promise<BackupResult> {
     const today = DateTime.now()
     const isFullBackupDay = today.weekday === backupConfig.schedule.fullBackupDay
-
     return isFullBackupDay ? this.runFullBackup() : this.runDifferentialBackup()
   }
 
@@ -182,7 +161,7 @@ export default class BackupService {
    * 1. `pg_dump` → plain SQL file
    * 2. gzip compression
    * 3. AES-256-CBC encryption (if enabled)
-   * 4. Upload to all configured storages
+   * 4. Upload to Drive
    * 5. Manifest file written and uploaded
    * 6. Temp files cleaned up
    *
@@ -227,8 +206,7 @@ export default class BackupService {
         tables,
       })
 
-      const storageResults = await this.uploadToStorages(encryptedPath, filename)
-
+      await this.uploadToDrive(encryptedPath, filename)
       await unlink(encryptedPath)
 
       const duration = Date.now() - startTime
@@ -243,7 +221,14 @@ export default class BackupService {
         await this.notifySuccess(filename, size, duration)
       }
 
-      return { success: true, filename, type: 'full', size, duration, storages: storageResults }
+      return {
+        success: true,
+        filename,
+        type: 'full',
+        size,
+        duration,
+        storage: backupConfig.storage.disk,
+      }
     } catch (error) {
       const duration = Date.now() - startTime
 
@@ -262,7 +247,7 @@ export default class BackupService {
         type: 'full',
         size: 0,
         duration,
-        storages: {},
+        storage: backupConfig.storage.disk,
         error: error.message,
       }
     }
@@ -277,12 +262,12 @@ export default class BackupService {
    * empty filename and zero size.
    *
    * Pipeline:
-   * 1. Locate last full backup via local storage
+   * 1. Locate last full backup via Drive listing
    * 2. Detect modified tables (`pg_stat_user_tables` + `updated_at` scan)
    * 3. `pg_dump -t` scoped to modified tables → plain SQL file
    * 4. gzip compression
    * 5. AES-256-CBC encryption (if enabled)
-   * 6. Upload to all configured storages
+   * 6. Upload to Drive
    * 7. Manifest file written and uploaded
    * 8. Temp files cleaned up
    *
@@ -327,7 +312,7 @@ export default class BackupService {
           type: 'differential',
           size: 0,
           duration: Date.now() - startTime,
-          storages: {},
+          storage: backupConfig.storage.disk,
         }
       }
 
@@ -355,8 +340,7 @@ export default class BackupService {
         fullBackupReference: lastFullBackup.filename,
       })
 
-      const storageResults = await this.uploadToStorages(encryptedPath, filename)
-
+      await this.uploadToDrive(encryptedPath, filename)
       await unlink(encryptedPath)
 
       const duration = Date.now() - startTime
@@ -373,7 +357,7 @@ export default class BackupService {
         type: 'differential',
         size,
         duration,
-        storages: storageResults,
+        storage: backupConfig.storage.disk,
       }
     } catch (error) {
       const duration = Date.now() - startTime
@@ -393,7 +377,7 @@ export default class BackupService {
         type: 'differential',
         size: 0,
         duration,
-        storages: {},
+        storage: backupConfig.storage.disk,
         error: error.message,
       }
     }
@@ -412,18 +396,12 @@ export default class BackupService {
   private async createDatabaseDump(outputPath: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const args = [
-        '-h',
-        env.get('PG_HOST')!,
-        '-p',
-        String(env.get('PG_PORT') || 5432),
-        '-U',
-        env.get('PG_USER')!,
-        '-d',
-        env.get('PG_DB_NAME')!,
-        '-F',
-        'p',
-        '-f',
-        outputPath,
+        '-h', env.get('PG_HOST')!,
+        '-p', String(env.get('PG_PORT') || 5432),
+        '-U', env.get('PG_USER')!,
+        '-d', env.get('PG_DB_NAME')!,
+        '-F', 'p',
+        '-f', outputPath,
       ]
 
       const pgDump: ChildProcess = spawn('pg_dump', args, {
@@ -431,14 +409,9 @@ export default class BackupService {
       })
 
       let errorOutput = ''
-
-      pgDump.stderr!.on('data', (data) => {
-        errorOutput += data.toString()
-      })
+      pgDump.stderr!.on('data', (data) => { errorOutput += data.toString() })
       pgDump.on('close', (code) => {
-        code === 0
-          ? resolve()
-          : reject(new Error(`pg_dump failed with code ${code}: ${errorOutput}`))
+        code === 0 ? resolve() : reject(new Error(`pg_dump failed with code ${code}: ${errorOutput}`))
       })
       pgDump.on('error', (error) => {
         reject(new Error(`Failed to start pg_dump: ${error.message}`))
@@ -460,18 +433,12 @@ export default class BackupService {
   private async createDifferentialDump(outputPath: string, tables: string[]): Promise<void> {
     return new Promise((resolve, reject) => {
       const args = [
-        '-h',
-        env.get('PG_HOST')!,
-        '-p',
-        String(env.get('PG_PORT') || 5432),
-        '-U',
-        env.get('PG_USER')!,
-        '-d',
-        env.get('PG_DB_NAME')!,
-        '-F',
-        'p',
-        '-f',
-        outputPath,
+        '-h', env.get('PG_HOST')!,
+        '-p', String(env.get('PG_PORT') || 5432),
+        '-U', env.get('PG_USER')!,
+        '-d', env.get('PG_DB_NAME')!,
+        '-F', 'p',
+        '-f', outputPath,
       ]
 
       for (const table of tables) {
@@ -483,14 +450,9 @@ export default class BackupService {
       })
 
       let errorOutput = ''
-
-      pgDump.stderr!.on('data', (data) => {
-        errorOutput += data.toString()
-      })
+      pgDump.stderr!.on('data', (data) => { errorOutput += data.toString() })
       pgDump.on('close', (code) => {
-        code === 0
-          ? resolve()
-          : reject(new Error(`pg_dump failed with code ${code}: ${errorOutput}`))
+        code === 0 ? resolve() : reject(new Error(`pg_dump failed with code ${code}: ${errorOutput}`))
       })
       pgDump.on('error', (error) => {
         reject(new Error(`Failed to start pg_dump: ${error.message}`))
@@ -512,9 +474,7 @@ export default class BackupService {
     const input = createReadStream(inputPath)
     const output = createWriteStream(outputPath)
     const gzip = createGzip({ level: backupConfig.compression.level })
-
     await pipeline(input, gzip, output)
-
     return outputPath
   }
 
@@ -530,7 +490,6 @@ export default class BackupService {
     const input = createReadStream(inputPath)
     const output = createWriteStream(outputPath)
     const gunzip = createGunzip()
-
     await pipeline(input, gunzip, output)
   }
 
@@ -547,14 +506,10 @@ export default class BackupService {
    *   encryption is disabled.
    */
   private async encryptFile(inputPath: string): Promise<string> {
-    if (!backupConfig.encryption.enabled) {
-      return inputPath
-    }
-
+    if (!backupConfig.encryption.enabled) return inputPath
     const outputPath = `${inputPath}.enc`
     await this.encryptionHelper.encryptFile(inputPath, outputPath)
     await unlink(inputPath)
-
     return outputPath
   }
 
@@ -568,58 +523,54 @@ export default class BackupService {
    * @param outputPath - Absolute path where the decrypted file will be written.
    */
   private async decryptFile(inputPath: string, outputPath: string): Promise<void> {
-    if (!backupConfig.encryption.enabled) {
-      return
-    }
-
+    if (!backupConfig.encryption.enabled) return
     await this.encryptionHelper.decryptFile(inputPath, outputPath)
   }
 
   /**
-   * Uploads a local backup file to all registered storage adapters.
+   * Uploads a local backup file to the configured Drive disk.
    *
-   * For each adapter, availability is checked before uploading. If an adapter
-   * is unavailable or the upload fails, the error is logged and re-thrown to
-   * abort the backup operation — ensuring no backup silently skips a storage.
+   * The file contents are read into memory and written to Drive under the
+   * `backup/` prefix. Logs the upload via `logBusiness`.
    *
    * @param localPath - Absolute path to the backup archive to upload.
-   * @param filename - Destination filename used as the remote key/path.
-   * @returns A map of storage adapter names to their upload success status.
-   * @throws If any storage is unavailable or any upload fails.
+   * @param filename - Destination filename used as the Drive key.
+   * @throws If the underlying Drive adapter fails to write the file.
    */
-  private async uploadToStorages(
-    localPath: string,
-    filename: string
-  ): Promise<{ [key: string]: boolean }> {
-    const results: { [key: string]: boolean } = {}
+  private async uploadToDrive(localPath: string, filename: string): Promise<void> {
+    const disk = this.getDisk()
+    const remotePath = this.buildPath(filename)
+    const contents = await readFile(localPath)
 
-    for (const storage of this.storages) {
-      try {
-        const available = await storage.isAvailable()
-        if (!available) {
-          this.logService.warn({
-            message: 'Storage not available',
-            category: LogCategory.SYSTEM,
-            metadata: { storage: storage.name },
-          })
-          results[storage.name] = false
-          throw new Exception(`Storage not available. Path: ${localPath}`)
-        }
+    await disk.put(remotePath, contents, {
+      contentType: 'application/octet-stream',
+    })
 
-        results[storage.name] = await storage.upload(localPath, filename)
-      } catch (error) {
-        this.logService.error({
-          message: 'Failed to upload to storage',
-          category: LogCategory.SYSTEM,
-          error,
-          metadata: { storage: storage.name },
-        })
-        results[storage.name] = false
-        throw error
-      }
-    }
+    this.logService.logBusiness('backup.uploaded', {
+      disk: backupConfig.storage.disk,
+      path: remotePath,
+    })
+  }
 
-    return results
+  /**
+   * Downloads a backup file from Drive and streams it to a local path.
+   *
+   * The destination directory is created recursively if it does not exist.
+   * The response body is piped directly to disk to avoid buffering the
+   * entire archive in memory.
+   *
+   * @param filename - Filename of the backup within the `backup/` prefix.
+   * @param localPath - Absolute local path where the file should be written.
+   * @throws If the file cannot be retrieved from Drive.
+   */
+  private async downloadFromDrive(filename: string, localPath: string): Promise<void> {
+    const disk = this.getDisk()
+    const remotePath = this.buildPath(filename)
+    const stream = await disk.getStream(remotePath)
+
+    await mkdir(join(localPath, '..'), { recursive: true })
+    const writeStream = createWriteStream(localPath)
+    await pipeline(stream as any, writeStream)
   }
 
   /**
@@ -644,19 +595,14 @@ export default class BackupService {
 
     let filename = `backup-${type}-${date}-${time}.sql`
 
-    if (backupConfig.compression.enabled) {
-      filename += '.gz'
-    }
-
-    if (backupConfig.encryption.enabled) {
-      filename += '.enc'
-    }
+    if (backupConfig.compression.enabled) filename += '.gz'
+    if (backupConfig.encryption.enabled) filename += '.enc'
 
     return filename
   }
 
   /**
-   * Writes a JSON manifest file for a backup and uploads it to all storages.
+   * Writes a JSON manifest file for a backup and uploads it to Drive.
    *
    * The manifest filename is derived from the backup filename by stripping
    * the archive extensions and appending `.manifest.json`. The local temp
@@ -673,17 +619,14 @@ export default class BackupService {
 
     await writeFile(manifestPath, JSON.stringify(data, null, 2))
 
-    for (const storage of this.storages) {
-      try {
-        await storage.upload(manifestPath, manifestFilename)
-      } catch (error) {
-        this.logService.error({
-          message: 'Failed to upload manifest',
-          category: LogCategory.SYSTEM,
-          error,
-          metadata: { storage: storage.name },
-        })
-      }
+    try {
+      await this.uploadToDrive(manifestPath, manifestFilename)
+    } catch (error) {
+      this.logService.error({
+        message: 'Failed to upload manifest',
+        category: LogCategory.SYSTEM,
+        error,
+      })
     }
 
     await unlink(manifestPath)
@@ -700,7 +643,6 @@ export default class BackupService {
     const result = await connection.rawQuery(
       `SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename`
     )
-
     return result.rows.map((row: any) => row.tablename)
   }
 
@@ -749,9 +691,7 @@ export default class BackupService {
     const modifiedFromUpdatedAt: string[] = []
 
     for (const table of allTables) {
-      if (backupConfig.differential.excludedTables.includes(table)) {
-        continue
-      }
+      if (backupConfig.differential.excludedTables.includes(table)) continue
 
       try {
         const hasUpdatedAt = await connection.rawQuery(
@@ -789,27 +729,71 @@ export default class BackupService {
   }
 
   /**
-   * Finds the most recent full backup by querying the local storage adapter.
+   * Finds the most recent full backup by listing files on Drive.
    *
-   * Returns `null` if no local storage adapter is configured or if no full
-   * backups exist yet.
+   * Returns `null` if no full backups exist yet.
    *
    * @returns The {@link BackupMetadata} of the latest full backup, or `null`.
    */
   private async findLastFullBackup(): Promise<BackupMetadata | null> {
-    const localStorage = this.storages.find((s) => s.name === 'local')
-    if (!localStorage) return null
-
-    const backups = await localStorage.list()
+    const backups = await this.listBackups()
     const fullBackups = backups.filter((b) => b.type === 'full')
-
-    if (fullBackups.length === 0) return null
-
-    return fullBackups[0]
+    return fullBackups.length > 0 ? fullBackups[0] : null
   }
 
   /**
-   * Deletes backup files from all storages that fall outside the configured
+   * Lists all backups stored on Drive, sorted by date (most recent first).
+   *
+   * Only files whose names match the pattern
+   * `backup-(full|differential)-YYYY-MM-DD-HHmmss` are included.
+   * Results are sorted by `createdAt` in descending order.
+   *
+   * @returns An array of {@link BackupMetadata} objects. Returns an empty array
+   *   if the listing fails or contains no matching files.
+   *
+   * @example
+   * const backups = await backupService.listBackups()
+   * console.log(backups[0].filename) // most recent backup
+   */
+  async listBackups(): Promise<BackupMetadata[]> {
+    try {
+      const disk = this.getDisk()
+      const prefix = `${backupConfig.storage.prefix}/`
+      const { objects } = await disk.listAll(prefix)
+      const backups: BackupMetadata[] = []
+
+      for (const object of objects) {
+        if (object.isDirectory) continue
+
+        const filename = object.key.replace(prefix, '')
+        const match = filename.match(/backup-(full|differential)-(\d{4}-\d{2}-\d{2})-(\d{6})/)
+        if (!match) continue
+
+        const meta = await disk.getMetaData(object.key)
+
+        backups.push({
+          filename,
+          type: match[1] as 'full' | 'differential',
+          size: meta.contentLength || 0,
+          createdAt: meta.lastModified || this.parseFilenameDate(match[2], match[3]),
+          path: object.key,
+        })
+      }
+
+      return backups.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    } catch (error) {
+      this.logService.error({
+        message: 'Failed to list backups from Drive',
+        category: LogCategory.SYSTEM,
+        error,
+        context: { disk: backupConfig.storage.disk },
+      })
+      return []
+    }
+  }
+
+  /**
+   * Deletes backup files from Drive that fall outside the configured
    * retention windows.
    *
    * Retention policy applied (from `backupConfig.retention`):
@@ -835,44 +819,38 @@ export default class BackupService {
     let kept = 0
     let errors = 0
 
-    for (const storage of this.storages) {
-      try {
-        const backups = await storage.list()
-        const toDelete = this.getBackupsToDelete(backups)
+    try {
+      const disk = this.getDisk()
+      const backups = await this.listBackups()
+      const toDelete = this.getBackupsToDelete(backups)
 
-        for (const backup of toDelete) {
-          try {
-            const success = await storage.delete(backup.filename)
-            if (success) {
-              deleted++
-              this.logService.debug({
-                message: 'Backup deleted',
-                category: LogCategory.SYSTEM,
-                metadata: { storage: storage.name, filename: backup.filename },
-              })
-            } else {
-              errors++
-            }
-          } catch (error) {
-            errors++
-            this.logService.error({
-              message: 'Failed to delete backup',
-              category: LogCategory.SYSTEM,
-              error,
-              metadata: { storage: storage.name, filename: backup.filename },
-            })
-          }
+      for (const backup of toDelete) {
+        try {
+          await disk.delete(this.buildPath(backup.filename))
+          deleted++
+          this.logService.debug({
+            message: 'Backup deleted',
+            category: LogCategory.SYSTEM,
+            metadata: { filename: backup.filename },
+          })
+        } catch (error) {
+          errors++
+          this.logService.error({
+            message: 'Failed to delete backup',
+            category: LogCategory.SYSTEM,
+            error,
+            metadata: { filename: backup.filename },
+          })
         }
-
-        kept += backups.length - toDelete.length
-      } catch (error) {
-        this.logService.error({
-          message: 'Failed to cleanup storage',
-          category: LogCategory.SYSTEM,
-          error,
-          metadata: { storage: storage.name },
-        })
       }
+
+      kept = backups.length - toDelete.length
+    } catch (error) {
+      this.logService.error({
+        message: 'Failed to cleanup backups',
+        category: LogCategory.SYSTEM,
+        error,
+      })
     }
 
     this.logService.info({
@@ -940,8 +918,8 @@ export default class BackupService {
    * Performs a health check on the backup system.
    *
    * Checks performed:
-   * - Each storage adapter is pinged via `isAvailable()`.
-   * - Free disk space on local storage is compared against
+   * - The configured Drive disk is pinged via `listAll()`.
+   * - Free disk space on local storage (when disk is `fs`) is compared against
    *   `backupConfig.health.minFreeSpace` (in GB).
    * - The age of the most recent backup is compared against
    *   `backupConfig.health.maxBackupAge` (in hours).
@@ -950,7 +928,7 @@ export default class BackupService {
    * is enabled, an admin notification is triggered.
    *
    * @returns An object with `healthy` flag, `issues` array, `lastBackup`
-   *   metadata, and per-storage availability status.
+   *   metadata, and storage availability status.
    *
    * @example
    * const { healthy, issues } = await backupService.healthCheck()
@@ -959,51 +937,52 @@ export default class BackupService {
     healthy: boolean
     issues: string[]
     lastBackup: BackupMetadata | null
-    storages: { [key: string]: boolean }
+    storage: { disk: string; available: boolean }
   }> {
     const issues: string[] = []
-    const storageStatus: { [key: string]: boolean } = {}
+    let available = false
 
-    for (const storage of this.storages) {
-      const available = await storage.isAvailable()
-      storageStatus[storage.name] = available
+    try {
+      const disk = this.getDisk()
+      // Check availability by listing the prefix
+      await disk.listAll(`${backupConfig.storage.prefix}/`)
+      available = true
+    } catch {
+      issues.push(`Storage disk "${backupConfig.storage.disk}" is not available`)
+    }
 
-      if (!available) {
-        issues.push(`Storage ${storage.name} is not available`)
-      }
-
-      if (storage.name === 'local') {
-        const freeSpace = await storage.getFreeSpace()
-        if (freeSpace !== null) {
-          const freeSpaceGB = freeSpace / (1024 * 1024 * 1024)
-          if (freeSpaceGB < backupConfig.health.minFreeSpace) {
-            issues.push(
-              `Low disk space: ${freeSpaceGB.toFixed(2)}GB (minimum: ${backupConfig.health.minFreeSpace}GB)`
-            )
-          }
+    // Check free space for local disk
+    if (backupConfig.storage.disk === 'fs' && available) {
+      try {
+        const storagePath = app.makePath('storage')
+        const stats = await statfs(storagePath)
+        const freeSpaceGB = (stats.bavail * stats.bsize) / (1024 * 1024 * 1024)
+        if (freeSpaceGB < backupConfig.health.minFreeSpace) {
+          issues.push(
+            `Low disk space: ${freeSpaceGB.toFixed(2)}GB (minimum: ${backupConfig.health.minFreeSpace}GB)`
+          )
         }
+      } catch {
+        // Cannot determine free space — non-fatal
       }
     }
 
-    const localStorage = this.storages.find((s) => s.name === 'local')
+    const backups = await this.listBackups()
     let lastBackup: BackupMetadata | null = null
 
-    if (localStorage) {
-      const backups = await localStorage.list()
-      if (backups.length > 0) {
-        lastBackup = backups[0]
+    if (backups.length > 0) {
+      lastBackup = backups[0]
 
-        const hoursSinceLastBackup =
-          (Date.now() - lastBackup.createdAt.getTime()) / (1000 * 60 * 60)
+      const hoursSinceLastBackup =
+        (Date.now() - lastBackup.createdAt.getTime()) / (1000 * 60 * 60)
 
-        if (hoursSinceLastBackup > backupConfig.health.maxBackupAge) {
-          issues.push(
-            `Last backup is too old: ${hoursSinceLastBackup.toFixed(1)} hours (max: ${backupConfig.health.maxBackupAge} hours)`
-          )
-        }
-      } else {
-        issues.push('No backups found')
+      if (hoursSinceLastBackup > backupConfig.health.maxBackupAge) {
+        issues.push(
+          `Last backup is too old: ${hoursSinceLastBackup.toFixed(1)} hours (max: ${backupConfig.health.maxBackupAge} hours)`
+        )
       }
+    } else {
+      issues.push('No backups found')
     }
 
     const healthy = issues.length === 0
@@ -1012,14 +991,19 @@ export default class BackupService {
       await this.notifyHealthCheckFailure(issues)
     }
 
-    return { healthy, issues, lastBackup, storages: storageStatus }
+    return {
+      healthy,
+      issues,
+      lastBackup,
+      storage: { disk: backupConfig.storage.disk, available },
+    }
   }
 
   /**
-   * Restores a database from a backup archive stored in local storage.
+   * Restores a database from a backup archive stored on Drive.
    *
    * Pipeline:
-   * 1. Download archive from local storage to temp directory
+   * 1. Download archive from Drive to temp directory
    * 2. Decrypt (if encryption is enabled)
    * 3. Decompress (if compression is enabled)
    * 4. Restore via `psql`
@@ -1039,12 +1023,10 @@ export default class BackupService {
     })
 
     try {
-      const localStorage = this.storages.find((s) => s.name === 'local')
-      if (!localStorage) {
-        throw new Error('Local storage not available for restoration')
-      }
+      const disk = this.getDisk()
+      const remotePath = this.buildPath(filename)
+      const exists = await disk.exists(remotePath)
 
-      const exists = await localStorage.exists(filename)
       if (!exists) {
         throw new Error(`Backup file not found: ${filename}`)
       }
@@ -1052,10 +1034,7 @@ export default class BackupService {
       const tempPath = join(this.tempDir, filename)
       await mkdir(this.tempDir, { recursive: true })
 
-      const success = await localStorage.download(filename, tempPath)
-      if (!success) {
-        throw new Error('Failed to download backup file')
-      }
+      await this.downloadFromDrive(filename, tempPath)
 
       const decryptedPath = tempPath.replace(/\.enc$/, '')
 
@@ -1103,16 +1082,11 @@ export default class BackupService {
   private async restoreDatabase(sqlPath: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const args = [
-        '-h',
-        env.get('PG_HOST')!,
-        '-p',
-        String(env.get('PG_PORT') || 5432),
-        '-U',
-        env.get('PG_USER')!,
-        '-d',
-        env.get('PG_DB_NAME')!,
-        '-f',
-        sqlPath,
+        '-h', env.get('PG_HOST')!,
+        '-p', String(env.get('PG_PORT') || 5432),
+        '-U', env.get('PG_USER')!,
+        '-d', env.get('PG_DB_NAME')!,
+        '-f', sqlPath,
       ]
 
       const psql: ChildProcess = spawn('psql', args, {
@@ -1120,10 +1094,7 @@ export default class BackupService {
       })
 
       let errorOutput = ''
-
-      psql.stderr!.on('data', (data) => {
-        errorOutput += data.toString()
-      })
+      psql.stderr!.on('data', (data) => { errorOutput += data.toString() })
       psql.on('close', (code) => {
         code === 0 ? resolve() : reject(new Error(`psql failed with code ${code}: ${errorOutput}`))
       })
@@ -1131,6 +1102,25 @@ export default class BackupService {
         reject(new Error(`Failed to start psql: ${error.message}`))
       })
     })
+  }
+
+  /**
+   * Reconstructs a `Date` object from the date and time fragments extracted
+   * from a backup filename.
+   *
+   * @param date - Date segment in `YYYY-MM-DD` format.
+   * @param time - Time segment as a 6-digit string `HHmmss` (e.g. `143022`).
+   * @returns The corresponding `Date` in local time.
+   *
+   * @example
+   * this.parseFilenameDate('2024-01-15', '143022') // 2024-01-15 14:30:22
+   */
+  private parseFilenameDate(date: string, time: string): Date {
+    const [year, month, day] = date.split('-').map(Number)
+    const hour = Number.parseInt(time.slice(0, 2))
+    const minute = Number.parseInt(time.slice(2, 4))
+    const second = Number.parseInt(time.slice(4, 6))
+    return new Date(year, month - 1, day, hour, minute, second)
   }
 
   /**
@@ -1162,7 +1152,6 @@ export default class BackupService {
    */
   private async notifyFailure(filename: string, error: Error): Promise<void> {
     if (!backupConfig.notifications.onFailure) return
-
     this.logService.error({
       message: 'Sending backup failure notification',
       category: LogCategory.SYSTEM,
