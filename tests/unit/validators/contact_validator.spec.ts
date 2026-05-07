@@ -4,6 +4,9 @@ import { contactValidator } from '#validators/contact'
 /**
  * Unit tests for `contactValidator`.
  * No database required — pure schema validation.
+ *
+ * The validator is a `vine.record()` that accepts a flat dictionary of
+ * string values (trimmed, max 2000 chars each).
  */
 test.group('Contact validator', () => {
   const validPayload = {
@@ -13,10 +16,8 @@ test.group('Contact validator', () => {
 
   test('accepts a fully valid payload', async ({ assert }) => {
     const result = await contactValidator.validate(validPayload)
-    assert.equal(result.pageId, 1)
-    assert.equal(result.locale, 'en')
-    assert.equal(result.recipientEmail, 'contact@example.com')
-    assert.lengthOf(result.fields, 2)
+    assert.equal(result.name, 'John Doe')
+    assert.equal(result.message, 'Hello there!')
   })
 
   // ─── fields ───────────────────────────────────────────────────────────────
@@ -44,6 +45,8 @@ test.group('Contact validator', () => {
       email: 'alice@example.com',
       message: 'Hi there!',
     })
-    assert.lengthOf(result.fields, 3)
+    assert.equal(result.name, 'Alice')
+    assert.equal(result.email, 'alice@example.com')
+    assert.equal(result.message, 'Hi there!')
   })
 })
