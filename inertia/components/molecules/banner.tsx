@@ -55,12 +55,10 @@ export function Banner(props: BannerProps) {
 
   return (
     <div className={`p-4 rounded border ${config[type].bg} ${config[type].border}`}>
-      <Paragraph variant="custom" color={`font-bold ${config[type].text}`}>
+      <Paragraph className={`font-bold ${config[type].text} text-balance leading-7`}>
         {title}
       </Paragraph>
-      <Paragraph variant="custom" color={config[type].text}>
-        {message}
-      </Paragraph>
+      <Paragraph className={`${config[type].text} text-balance leading-7`}>{message}</Paragraph>
       {children}
     </div>
   )

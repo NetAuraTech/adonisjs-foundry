@@ -38,6 +38,18 @@ test.group('FileRepository', () => {
     assert.isNull(result)
   })
 
+  // ─── findByIdOrFail() ─────────────────────────────────────────────────────
+
+  test('findByIdOrFail() returns file when found', async ({ assert }) => {
+    const file = await FileFactory.create()
+    const found = await repo.findByIdOrFail(file.id)
+    assert.equal(found.id, file.id)
+  })
+
+  test('findByIdOrFail() throws when not found', async ({ assert }) => {
+    await assert.rejects(() => repo.findByIdOrFail(999999))
+  })
+
   // ─── list() ───────────────────────────────────────────────────────────────
 
   test('list() filters by folderId', async ({ assert }) => {
@@ -89,6 +101,34 @@ test.group('FileRepository', () => {
 
     assert.includeMembers(ids, [file.id])
     assert.lengthOf(ids, 1)
+  })
+
+  test('list() filters by disk', async ({ assert }) => {
+    const fileFs = await FileFactory.merge({ disk: 'fs' }).create()
+    await FileFactory.merge({ disk: 's3' }).create()
+
+    const result = await repo.list({ disk: 'fs' }, { page: 1, perPage: 20 })
+    const ids = result.all().map((f: any) => f.id)
+
+    assert.includeMembers(ids, [fileFs.id])
+    for (const file of result.all()) {
+      assert.equal((file as any).disk, 'fs')
+    }
+  })
+
+  // ─── update() ─────────────────────────────────────────────────────────────
+
+  test('update() modifies existing file', async ({ assert }) => {
+    const file = await FileFactory.create()
+    const folder = await FileFolderFactory.create()
+
+    const updated = await repo.update(file, { originalName: 'new-name.png', folderId: folder.id })
+
+    assert.equal(updated.originalName, 'new-name.png')
+    assert.equal(updated.folderId, folder.id)
+
+    const reloaded = await repo.findById(file.id)
+    assert.equal(reloaded!.originalName, 'new-name.png')
   })
 
   // ─── upsertAlt() ──────────────────────────────────────────────────────────

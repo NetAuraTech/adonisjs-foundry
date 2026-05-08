@@ -66,7 +66,7 @@ export class ImageOptimizerService {
       if (file.disk === 'fs') {
         sharpInstance = sharp(app.makePath('storage', originalPath), { failOn: 'none' })
       } else {
-        const rawData = await d.get(originalPath)
+        const rawData = await d.getBytes(originalPath)
         sharpInstance = sharp(Buffer.from(rawData), { failOn: 'none' })
       }
 

@@ -86,10 +86,10 @@ test.group('TemplateRepository', () => {
   })
 
   test('list() filters by name search (case-insensitive)', async ({ assert }) => {
-    const portfolio = await TemplateFactory.merge({ name: 'Portfolio Layout' }).create()
+    const portfolio = await TemplateFactory.merge({ name: 'Unique Portfolio Layout' }).create()
     await TemplateFactory.merge({ name: 'Contact Page' }).create()
 
-    const result = await repo.list({ search: 'portfolio' })
+    const result = await repo.list({ search: 'unique portfolio' })
     const ids = result.map((t) => t.id)
 
     assert.includeMembers(ids, [portfolio.id])

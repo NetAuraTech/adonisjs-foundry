@@ -22,7 +22,7 @@ export const PageTranslationFactory = factory
     return {
       pageId: 0, // overridden at call site
       locale: 'en',
-      slug: faker.helpers.slugify(faker.lorem.words(3)).toLowerCase(),
+      slug: `${faker.helpers.slugify(faker.lorem.words(3)).toLowerCase()}-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
       title: faker.lorem.sentence(4),
       metaTitle: null,
       metaDescription: null,

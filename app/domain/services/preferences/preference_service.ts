@@ -61,8 +61,8 @@ export default class PreferencesService {
     const preference = await this.preferencesRepository.upsert(user, data)
 
     return {
-      theme: preference.theme,
-      locale: preference.locale,
+      theme: preference.theme ?? DEFAULT_PREFERENCES.theme,
+      locale: preference.locale ?? DEFAULT_PREFERENCES.locale,
     }
   }
 }

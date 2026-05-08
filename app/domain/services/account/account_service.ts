@@ -88,7 +88,7 @@ export class AccountService {
       })
     }
 
-    if (user.email !== payload.email) {
+    if (payload.email && user.email !== payload.email) {
       updated = await this.userRepository.update(user, {
         pendingEmail: payload.email,
       })

@@ -234,8 +234,6 @@ test.group('BuilderSessionService — locks', (group) => {
   test('getLock() returns null for an unlocked field', async ({ assert }) => {
     assert.isNull(await service.getLock(T, BLOCK, FIELD))
   })
-
-
 })
 
 test.group('BuilderSessionService — isolation between translations', (group) => {

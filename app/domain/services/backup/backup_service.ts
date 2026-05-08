@@ -396,12 +396,18 @@ export default class BackupService {
   private async createDatabaseDump(outputPath: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const args = [
-        '-h', env.get('PG_HOST')!,
-        '-p', String(env.get('PG_PORT') || 5432),
-        '-U', env.get('PG_USER')!,
-        '-d', env.get('PG_DB_NAME')!,
-        '-F', 'p',
-        '-f', outputPath,
+        '-h',
+        env.get('PG_HOST')!,
+        '-p',
+        String(env.get('PG_PORT') || 5432),
+        '-U',
+        env.get('PG_USER')!,
+        '-d',
+        env.get('PG_DB_NAME')!,
+        '-F',
+        'p',
+        '-f',
+        outputPath,
       ]
 
       const pgDump: ChildProcess = spawn('pg_dump', args, {
@@ -409,9 +415,13 @@ export default class BackupService {
       })
 
       let errorOutput = ''
-      pgDump.stderr!.on('data', (data) => { errorOutput += data.toString() })
+      pgDump.stderr!.on('data', (data) => {
+        errorOutput += data.toString()
+      })
       pgDump.on('close', (code) => {
-        code === 0 ? resolve() : reject(new Error(`pg_dump failed with code ${code}: ${errorOutput}`))
+        code === 0
+          ? resolve()
+          : reject(new Error(`pg_dump failed with code ${code}: ${errorOutput}`))
       })
       pgDump.on('error', (error) => {
         reject(new Error(`Failed to start pg_dump: ${error.message}`))
@@ -433,12 +443,18 @@ export default class BackupService {
   private async createDifferentialDump(outputPath: string, tables: string[]): Promise<void> {
     return new Promise((resolve, reject) => {
       const args = [
-        '-h', env.get('PG_HOST')!,
-        '-p', String(env.get('PG_PORT') || 5432),
-        '-U', env.get('PG_USER')!,
-        '-d', env.get('PG_DB_NAME')!,
-        '-F', 'p',
-        '-f', outputPath,
+        '-h',
+        env.get('PG_HOST')!,
+        '-p',
+        String(env.get('PG_PORT') || 5432),
+        '-U',
+        env.get('PG_USER')!,
+        '-d',
+        env.get('PG_DB_NAME')!,
+        '-F',
+        'p',
+        '-f',
+        outputPath,
       ]
 
       for (const table of tables) {
@@ -450,9 +466,13 @@ export default class BackupService {
       })
 
       let errorOutput = ''
-      pgDump.stderr!.on('data', (data) => { errorOutput += data.toString() })
+      pgDump.stderr!.on('data', (data) => {
+        errorOutput += data.toString()
+      })
       pgDump.on('close', (code) => {
-        code === 0 ? resolve() : reject(new Error(`pg_dump failed with code ${code}: ${errorOutput}`))
+        code === 0
+          ? resolve()
+          : reject(new Error(`pg_dump failed with code ${code}: ${errorOutput}`))
       })
       pgDump.on('error', (error) => {
         reject(new Error(`Failed to start pg_dump: ${error.message}`))
@@ -973,8 +993,7 @@ export default class BackupService {
     if (backups.length > 0) {
       lastBackup = backups[0]
 
-      const hoursSinceLastBackup =
-        (Date.now() - lastBackup.createdAt.getTime()) / (1000 * 60 * 60)
+      const hoursSinceLastBackup = (Date.now() - lastBackup.createdAt.getTime()) / (1000 * 60 * 60)
 
       if (hoursSinceLastBackup > backupConfig.health.maxBackupAge) {
         issues.push(
@@ -1082,11 +1101,16 @@ export default class BackupService {
   private async restoreDatabase(sqlPath: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const args = [
-        '-h', env.get('PG_HOST')!,
-        '-p', String(env.get('PG_PORT') || 5432),
-        '-U', env.get('PG_USER')!,
-        '-d', env.get('PG_DB_NAME')!,
-        '-f', sqlPath,
+        '-h',
+        env.get('PG_HOST')!,
+        '-p',
+        String(env.get('PG_PORT') || 5432),
+        '-U',
+        env.get('PG_USER')!,
+        '-d',
+        env.get('PG_DB_NAME')!,
+        '-f',
+        sqlPath,
       ]
 
       const psql: ChildProcess = spawn('psql', args, {
@@ -1094,7 +1118,9 @@ export default class BackupService {
       })
 
       let errorOutput = ''
-      psql.stderr!.on('data', (data) => { errorOutput += data.toString() })
+      psql.stderr!.on('data', (data) => {
+        errorOutput += data.toString()
+      })
       psql.on('close', (code) => {
         code === 0 ? resolve() : reject(new Error(`psql failed with code ${code}: ${errorOutput}`))
       })

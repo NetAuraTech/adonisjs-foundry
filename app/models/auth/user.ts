@@ -52,7 +52,7 @@ export default class User extends compose(UserSchema, withAuthFinder(hash)) {
   }
 
   get isEmailVerified(): boolean {
-    return this.emailVerifiedAt !== null
+    return this.emailVerifiedAt !== null && this.emailVerifiedAt !== undefined
   }
 
   async can(slug: string): Promise<boolean> {

@@ -21,7 +21,7 @@ export const FileFactory = factory
       extension: ext,
       size: faker.number.int({ min: 1024, max: 10 * 1024 * 1024 }),
       path: `cms/files/${filename}`,
-      disk: 'local' as const,
+      disk: 'fs' as const,
       folderId: null,
       uploadedBy: null,
     } as Partial<File>
