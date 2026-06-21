@@ -1,0 +1,51 @@
+# Domain Services
+
+One service = one bounded context. Lives in `app/domain/services/{area}/{name}_service.ts`. Owns business logic, delegates persistence to a repository, never returns HTTP responses — only models, primitives, or `void`.
+
+Method names describe the action, not a fixed CRUD contract. A service exposes
+whatever operations its bounded context needs. Don't force
+`list/detail/create/update/delete` onto every service.
+
+## Structure (shape, not a fixed method list)
+
+```typescript
+@inject()
+export class FooService {
+  constructor(
+    protected fooRepository: FooRepository,
+    protected logService: LogService
+  ) {}
+
+  async someAction(payload, userId) {
+    // 1. validate / check invariants, throw typed exception or
+    //    Object.assign(new Error(msg), { code: 'E_...' }) if violated
+    // 2. delegate persistence to this.fooRepository
+    // 3. this.logService.logBusiness/logAuth/logSecurity(event, { userId, userEmail }, metadata?)
+    // 4. return a model, primitive, or void — never an HTTP response
+  }
+}
+```
+
+## Variants
+
+| Variant | Trait |
+|---|---|
+| **Standard service** | DI of repo(s) + LogService, methods named per use case |
+| **Facade over contract** | No `@inject()`; dependency injected via manual container binding; adds key namespacing on top of a generic driver interface |
+| **Infra wrapper** | Single pass-through method to a framework-provided service, no repo |
+| **Plain injectable, no deps** | Empty constructor, auto-resolved by IoC, used as a dependency of other services |
+| **Function module** | Exported function, not a class — no DI at all |
+| **Read-only** | Queries the model directly, no mutation repo, exposes listing/lookup only |
+| **Direct infra access** (exception to layering) | Bypasses the repository layer entirely for OS-level operations (raw SQL, child processes, filesystem) — document why in the file header when used |
+| **Stateful/cache-backed** | No DB repo; state lives in a cache service, namespaced per concern, often TTL-based |
+
+## Decision rule
+
+DB-backed with custom logic → Standard service. Wraps one external system → Infra wrapper. No state/deps → plain injectable. Pure transform, no I/O → function module. Read-only catalogue → Read-only. Needs OS-level tools (CLI, fs) → direct infra access, document why. Ephemeral/real-time state → cache-backed, no repository.
+
+## Conventions
+
+- Errors: typed exception class or `Object.assign(new Error(msg), { code: 'E_...' })` — both used, no strict preference enforced yet.
+- Logging: see /docs/agents/logging.md for conventions and categories.
+- Services may call other services directly when one operation depends on another's logic.
+- Swappable infrastructure (cache, storage, etc.) goes through a contract interface in `app/domain/contracts/` — changing backend = new container binding, no call-site changes.
