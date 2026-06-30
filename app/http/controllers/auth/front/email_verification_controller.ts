@@ -1,14 +1,16 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { EmailVerificationService } from '#services/auth/email_verification_service'
+import { VerifyEmailAction } from '#actions/email_verification/verify_email_action'
+import { FullToken } from '#types/core'
 
 @inject()
 export default class EmailVerificationController {
-  constructor(protected emailVerificationService: EmailVerificationService) {}
+  constructor(protected verifyEmailAction: VerifyEmailAction) {}
+
   async execute(ctx: HttpContext) {
     const { params, response, session, auth, i18n } = ctx
 
-    const user = await this.emailVerificationService.verify(params.token)
+    const user = await this.verifyEmailAction.execute({ token: params.token as FullToken })
 
     if (!user) {
       session.flash('error', i18n.t('core.token.invalid'))

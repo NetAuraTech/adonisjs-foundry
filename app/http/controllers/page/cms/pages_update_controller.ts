@@ -1,13 +1,21 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { PageService } from '#services/page/page_service'
 import { showPageValidator, updatePageValidator, publishPageValidator } from '#validators/page'
 import PageTransformer from '#transformers/page_transformer'
 import router from '@adonisjs/core/services/router'
+import { GetPageDetailAction } from '#actions/page/get_page_detail_action'
+import { UpdatePageAction } from '#actions/page/update_page_action'
+import { ChangePageStatusAction } from '#actions/page/change_page_status_action'
+import { GetAvailablePagesForLinkAction } from '#actions/page/get_available_pages_for_link_action'
 
 @inject()
 export default class PagesUpdateController {
-  constructor(protected pageService: PageService) {}
+  constructor(
+    protected getPageDetailAction: GetPageDetailAction,
+    protected updatePageAction: UpdatePageAction,
+    protected changePageStatusAction: ChangePageStatusAction,
+    protected getAvailablePagesForLinkAction: GetAvailablePagesForLinkAction
+  ) {}
 
   async render(ctx: HttpContext) {
     const { inertia, params } = ctx
@@ -53,10 +61,10 @@ export default class PagesUpdateController {
         params: r.pattern.match(/:(\w+)/g)?.map((p) => p.replace(':', '')) || [],
       }))
 
-    const availablePages = await this.pageService.getAvailablePagesForLink()
+    const availablePages = await this.getAvailablePagesForLinkAction.execute()
 
     const { id } = await showPageValidator.validate(params)
-    const page = await this.pageService.detail(id)
+    const page = await this.getPageDetailAction.execute({ id })
 
     return inertia.render('page/cms/edit', {
       page: PageTransformer.transform(page),
@@ -75,7 +83,17 @@ export default class PagesUpdateController {
 
     const { locale, ...data } = payload
 
-    await this.pageService.update(id, locale, data, user.id)
+    await this.updatePageAction.execute({
+      pageId: id,
+      locale,
+      slug: data.slug,
+      title: data.title,
+      content: data.content,
+      metaTitle: data.metaTitle,
+      metaDescription: data.metaDescription,
+      metaImageId: data.metaImageId,
+      userId: user.id,
+    })
 
     session.flash('success', i18n.t('page.saved'))
 
@@ -88,7 +106,7 @@ export default class PagesUpdateController {
     const { id } = await showPageValidator.validate(params)
     const { locale } = await publishPageValidator.validate(request.all())
 
-    await this.pageService.publish(id, locale)
+    await this.changePageStatusAction.execute({ pageId: id, locale, status: 'published' })
 
     session.flash('success', i18n.t('page.published'))
 
@@ -101,7 +119,7 @@ export default class PagesUpdateController {
     const { id } = await showPageValidator.validate(params)
     const { locale } = await publishPageValidator.validate(request.all())
 
-    await this.pageService.unpublish(id, locale)
+    await this.changePageStatusAction.execute({ pageId: id, locale, status: 'draft' })
 
     session.flash('success', i18n.t('page.unpublished'))
 

@@ -14,5 +14,7 @@
   "E_INVALID_CREDENTIALS": "Authentication failed. Please try again.",
   "E_TOO_MANY_REQUESTS": "Too many attempts. Limit of {limit} requests reached. Please try again in {availableIn} minutes.",
   "E_UNAUTHORIZED": "You must be logged in to access this resource.",
-  "E_FORBIDDEN": "You do not have permission to access this resource."
+  "E_FORBIDDEN": "You do not have permission to access this resource.",
+  "E_INVALID_TEMPLATE_TYPE": "Only page templates can be applied to a full page.",
+  "E_MISSING_REVISION": "Revision {revisionId} not found."
 }

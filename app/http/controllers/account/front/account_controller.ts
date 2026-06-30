@@ -9,11 +9,15 @@ import { Exception } from '@adonisjs/core/exceptions'
 import { regenerateCsrfToken } from '#helpers/auth/crsf'
 import { enabledProviders } from '#helpers/auth/oauth'
 import UserTransformer from '#transformers/user_transformer'
-import { AccountService } from '#services/account/account_service'
+import { UpdateUserAccountAction } from '#actions/account/update_user_account_action'
+import { DeleteUserAccountAction } from '#actions/account/delete_user_account_action'
 
 @inject()
 export default class AccountController {
-  constructor(protected accountService: AccountService) {}
+  constructor(
+    protected updateUserAccountAction: UpdateUserAccountAction,
+    protected deleteUserAccountAction: DeleteUserAccountAction
+  ) {}
 
   async render(ctx: HttpContext) {
     const { inertia, auth, i18n } = ctx
@@ -105,7 +109,7 @@ export default class AccountController {
       case 'update_email': {
         const payload = await updateEmailValidator(user.id).validate(request.all())
 
-        const updated = await this.accountService.update(user, payload)
+        const updated = await this.updateUserAccountAction.execute({ user, email: payload.email })
 
         regenerateCsrfToken(ctx)
 
@@ -118,7 +122,11 @@ export default class AccountController {
       case 'update_password': {
         const payload = await updatePasswordValidator.validate(request.all())
 
-        await this.accountService.update(user, payload)
+        await this.updateUserAccountAction.execute({
+          user,
+          currentPassword: payload.current_password,
+          password: payload.password,
+        })
 
         regenerateCsrfToken(ctx)
 
@@ -138,7 +146,7 @@ export default class AccountController {
 
     const payload = await deleteAccountValidator.validate(request.all())
 
-    await this.accountService.delete(user, payload)
+    await this.deleteUserAccountAction.execute({ user, password: payload.password })
 
     await auth.use('web').logout()
 

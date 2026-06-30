@@ -1,18 +1,18 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import { UserService } from '#services/auth/user_service'
+import { GetUserDetailAction } from '#actions/user/get_user_detail_action'
 import { inject } from '@adonisjs/core'
 import { showValidator } from '#validators/user'
 import UserTransformer from '#transformers/user_transformer'
 import { enabledProviders } from '#helpers/auth/oauth'
-import { PermissionService } from '#services/auth/permission_service'
+import { ListAllPermissionsAction } from '#actions/permission/list_all_permissions_action'
 import PermissionTransformer from '#transformers/permission_transformer'
 import { TranslationNodes } from '#types/translations'
 
 @inject()
 export default class UsersShowsController {
   constructor(
-    protected userService: UserService,
-    protected permissionService: PermissionService
+    protected getUserDetailAction: GetUserDetailAction,
+    protected listAllPermissionsAction: ListAllPermissionsAction
   ) {}
 
   async render(ctx: HttpContext) {
@@ -20,11 +20,11 @@ export default class UsersShowsController {
 
     const payload = await showValidator.validate(params)
 
-    const user = await this.userService.detail(payload.id)
+    const user = await this.getUserDetailAction.execute({ id: payload.id })
 
     const role = user.role
 
-    const permissions = await this.permissionService.findAll()
+    const permissions = await this.listAllPermissionsAction.execute()
 
     return inertia.render('auth/cms/show', {
       user: UserTransformer.transform(user),

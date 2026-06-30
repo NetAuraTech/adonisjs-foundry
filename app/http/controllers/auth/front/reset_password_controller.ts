@@ -1,18 +1,22 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { PasswordService } from '#services/auth/password_service'
 import { resetPasswordValidator } from '#validators/auth'
 import { regenerateCsrfToken } from '#helpers/auth/crsf'
 import { FullToken } from '#types/core'
+import { ValidatePasswordTokenAction } from '#actions/password/validate_password_token_action'
+import { ResetPasswordAction } from '#actions/password/reset_password_action'
 
 @inject()
 export default class ResetPasswordController {
-  constructor(protected passwordService: PasswordService) {}
+  constructor(
+    protected validatePasswordTokenAction: ValidatePasswordTokenAction,
+    protected resetPasswordAction: ResetPasswordAction
+  ) {}
 
   async render(ctx: HttpContext) {
     const { inertia, params, i18n } = ctx
 
-    await this.passwordService.validate(params.token)
+    await this.validatePasswordTokenAction.execute({ token: params.token as FullToken })
 
     return inertia.render('auth/front/reset_password', {
       token: params.token,
@@ -38,7 +42,7 @@ export default class ResetPasswordController {
 
     const payload = await resetPasswordValidator.validate(request.all())
 
-    const user = await this.passwordService.reset({
+    const user = await this.resetPasswordAction.execute({
       ...payload,
       token: payload.token as FullToken,
     })

@@ -1,5 +1,5 @@
 import { MailService } from '#services/mails/mail_service'
-import PreferencesService from '#services/preferences/preference_service'
+import { GetPreferencesAction } from '#actions/preferences/get_preferences_action'
 import { TokenRepository } from '#repositories/core/token_repository'
 import { inject } from '@adonisjs/core'
 import InviteUser from '#events/admin/invite_user'
@@ -16,12 +16,12 @@ import { urlFor } from '@adonisjs/core/services/url_builder'
 export default class SendInvitationEmail {
   constructor(
     protected mailService: MailService,
-    protected preferencesService: PreferencesService,
+    protected getPreferencesAction: GetPreferencesAction,
     protected tokenRepository: TokenRepository
   ) {}
 
   async handle(event: InviteUser) {
-    const preferences = await this.preferencesService.get(event.user)
+    const preferences = await this.getPreferencesAction.execute({ user: event.user })
 
     const locale = preferences.locale || 'en'
     const i18n = i18nManager.locale(locale)

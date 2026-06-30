@@ -1,16 +1,22 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import { SocialService } from '#services/auth/social_service'
 import { inject } from '@adonisjs/core'
 import { OAuthProvider } from '#types/auth'
 import { validateProvider } from '#helpers/auth/oauth'
 import { regenerateCsrfToken } from '#helpers/auth/crsf'
 import { definePasswordValidator } from '#validators/auth'
 import { UserRepository } from '#repositories/auth/user_repository'
+import { FindOrCreateSocialUserAction } from '#actions/social/find_or_create_social_user_action'
+import { LinkSocialProviderAction } from '#actions/social/link_social_provider_action'
+import { UnlinkSocialProviderAction } from '#actions/social/unlink_social_provider_action'
+import { NeedsPasswordSetupAction } from '#actions/social/needs_password_setup_action'
 
 @inject()
 export default class SocialController {
   constructor(
-    protected socialService: SocialService,
+    protected findOrCreateSocialUserAction: FindOrCreateSocialUserAction,
+    protected linkSocialProviderAction: LinkSocialProviderAction,
+    protected unlinkSocialProviderAction: UnlinkSocialProviderAction,
+    protected needsPasswordSetupAction: NeedsPasswordSetupAction,
     protected userRepository: UserRepository
   ) {}
 
@@ -52,16 +58,16 @@ export default class SocialController {
     const authenticatedUser = auth.user
 
     if (authenticatedUser) {
-      await this.socialService.linkProvider(authenticatedUser, allyUser, provider)
+      await this.linkSocialProviderAction.execute({ user: authenticatedUser, allyUser, provider })
       regenerateCsrfToken(ctx)
       session.flash('success', i18n.t('auth.social.linked', { provider }))
       return response.redirect().toRoute('settings.account.render')
     }
 
-    const user = await this.socialService.findOrCreateUser(allyUser, provider)
+    const user = await this.findOrCreateSocialUserAction.execute({ allyUser, provider })
     await auth.use('web').login(user)
 
-    if (this.socialService.needsPasswordSetup(user)) {
+    if (await this.needsPasswordSetupAction.execute({ user })) {
       session.flash('info', i18n.t('auth.social.set_password_info'))
       return response.redirect().toRoute('auth.social.render')
     }
@@ -78,12 +84,9 @@ export default class SocialController {
     validateProvider(provider)
 
     const user = auth.getUserOrFail()
-    await this.socialService.unlinkProvider(user, provider)
+    await this.unlinkSocialProviderAction.execute({ user, provider })
 
-    // Safety net: should not happen in practice since users are always
-    // prompted to set a password during registration, but guards against
-    // any edge case that would leave the account inaccessible.
-    if (this.socialService.needsPasswordSetup(user)) {
+    if (await this.needsPasswordSetupAction.execute({ user })) {
       session.flash('warning', i18n.t('auth.social.password_required_after_unlink'))
       return response.redirect().toRoute('auth.social.render')
     }

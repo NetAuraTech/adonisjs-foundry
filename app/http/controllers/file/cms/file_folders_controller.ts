@@ -1,17 +1,25 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { FileFolderService } from '#services/file/file_folder_service'
 import { createFolderValidator, updateFolderValidator, showFileValidator } from '#validators/file'
 import FileFolderTransformer from '#transformers/file_folder_transformer'
+import { ListRootFoldersAction } from '#actions/file_folder/list_root_folders_action'
+import { CreateFolderAction } from '#actions/file_folder/create_folder_action'
+import { RenameFolderAction } from '#actions/file_folder/rename_folder_action'
+import { DeleteFolderAction } from '#actions/file_folder/delete_folder_action'
 
 @inject()
 export default class FileFoldersController {
-  constructor(protected folderService: FileFolderService) {}
+  constructor(
+    protected listRootFoldersAction: ListRootFoldersAction,
+    protected createFolderAction: CreateFolderAction,
+    protected renameFolderAction: RenameFolderAction,
+    protected deleteFolderAction: DeleteFolderAction
+  ) {}
 
   async render(ctx: HttpContext) {
     const { inertia, i18n } = ctx
 
-    const roots = await this.folderService.listRoots()
+    const roots = await this.listRootFoldersAction.execute()
 
     return inertia.render('file/cms/folders', {
       roots: FileFolderTransformer.transform(roots),
@@ -48,7 +56,10 @@ export default class FileFoldersController {
 
     const payload = await createFolderValidator.validate(request.all())
 
-    await this.folderService.create(payload.name, payload.parentId ?? null)
+    await this.createFolderAction.execute({
+      name: payload.name,
+      parentId: payload.parentId ?? null,
+    })
 
     session.flash('success', i18n.t('file.folder.created'))
 
@@ -61,7 +72,7 @@ export default class FileFoldersController {
     const { id } = await showFileValidator.validate(params)
     const payload = await updateFolderValidator.validate({ ...request.all(), id })
 
-    await this.folderService.rename(id, payload.name)
+    await this.renameFolderAction.execute({ id, name: payload.name })
 
     session.flash('success', i18n.t('file.folder.updated'))
 
@@ -73,7 +84,7 @@ export default class FileFoldersController {
 
     const { id } = await showFileValidator.validate(params)
 
-    await this.folderService.delete(id)
+    await this.deleteFolderAction.execute({ id })
 
     session.flash('success', i18n.t('file.folder.deleted'))
 

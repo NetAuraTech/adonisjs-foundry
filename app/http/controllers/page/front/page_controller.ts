@@ -1,6 +1,9 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { PageService } from '#services/page/page_service'
+import { FindHomepageAction } from '#actions/page/find_homepage_action'
+import { FindPageBySlugAction } from '#actions/page/find_page_by_slug_action'
+import { GenerateSitemapAction } from '#actions/page/generate_sitemap_action'
+import { GetRobotsTxtAction } from '#actions/page/get_robots_txt_action'
 import { StorageService } from '#services/file/storage_service'
 import { PageResolverService } from '#services/page/page_resolver_service'
 import { CacheService } from '#services/cache/cache_service'
@@ -9,7 +12,10 @@ import { ResolvedPageContent } from '#types/page'
 @inject()
 export default class PageController {
   constructor(
-    protected pageService: PageService,
+    protected findHomepageAction: FindHomepageAction,
+    protected findPageBySlugAction: FindPageBySlugAction,
+    protected generateSitemapAction: GenerateSitemapAction,
+    protected getRobotsTxtAction: GetRobotsTxtAction,
     protected resolverService: PageResolverService,
     protected storageService: StorageService,
     protected cache: CacheService
@@ -24,7 +30,7 @@ export default class PageController {
 
     const locale: string = request.input('locale', ctx.i18n?.locale ?? 'en')
 
-    const page = await this.pageService.findHomepage()
+    const page = await this.findHomepageAction.execute()
 
     if (!page) {
       return response.notFound()
@@ -72,7 +78,7 @@ export default class PageController {
   async render(ctx: HttpContext) {
     const { inertia, params, request, response } = ctx
 
-    const page = await this.pageService.findBySlug(params.slug)
+    const page = await this.findPageBySlugAction.execute({ slug: params.slug })
 
     if (!page) {
       return response.notFound()
@@ -116,7 +122,7 @@ export default class PageController {
    * Generates and serves the XML sitemap for search engines.
    */
   async sitemap({ response }: HttpContext) {
-    const xml = await this.pageService.generateSitemap()
+    const xml = await this.generateSitemapAction.execute()
 
     return response
       .header('Content-Type', 'application/xml')
@@ -128,7 +134,7 @@ export default class PageController {
    * Generates and serves the robots.txt configuration file.
    */
   async robots({ response }: HttpContext) {
-    const robotsTxt = this.pageService.getRobotsTxt()
+    const robotsTxt = this.getRobotsTxtAction.execute()
 
     return response.header('Content-Type', 'text/plain').send(robotsTxt)
   }

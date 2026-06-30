@@ -42,20 +42,7 @@ export class FileFolderSchema extends BaseModel {
 }
 
 export class FileSchema extends BaseModel {
-  static $columns = [
-    'createdAt',
-    'disk',
-    'extension',
-    'filename',
-    'folderId',
-    'id',
-    'mimeType',
-    'originalName',
-    'path',
-    'size',
-    'updatedAt',
-    'uploadedBy',
-  ] as const
+  static $columns = ['createdAt', 'disk', 'extension', 'filename', 'folderId', 'id', 'mimeType', 'originalName', 'path', 'size', 'updatedAt', 'uploadedBy'] as const
   $columns = FileSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -84,14 +71,7 @@ export class FileSchema extends BaseModel {
 }
 
 export class PageRevisionSchema extends BaseModel {
-  static $columns = [
-    'content',
-    'createdAt',
-    'createdBy',
-    'id',
-    'keep',
-    'pageTranslationId',
-  ] as const
+  static $columns = ['content', 'createdAt', 'createdBy', 'id', 'keep', 'pageTranslationId'] as const
   $columns = PageRevisionSchema.$columns
   @column()
   declare content: any
@@ -108,20 +88,7 @@ export class PageRevisionSchema extends BaseModel {
 }
 
 export class PageTranslationSchema extends BaseModel {
-  static $columns = [
-    'content',
-    'createdAt',
-    'id',
-    'locale',
-    'metaDescription',
-    'metaTitle',
-    'pageId',
-    'publishedAt',
-    'slug',
-    'status',
-    'title',
-    'updatedAt',
-  ] as const
+  static $columns = ['content', 'createdAt', 'id', 'locale', 'metaDescription', 'metaTitle', 'pageId', 'publishedAt', 'slug', 'status', 'title', 'updatedAt'] as const
   $columns = PageTranslationSchema.$columns
   @column()
   declare content: any
@@ -150,15 +117,7 @@ export class PageTranslationSchema extends BaseModel {
 }
 
 export class PageSchema extends BaseModel {
-  static $columns = [
-    'createdAt',
-    'createdBy',
-    'defaultLocale',
-    'id',
-    'isHomepage',
-    'metaImageId',
-    'updatedAt',
-  ] as const
+  static $columns = ['createdAt', 'createdBy', 'defaultLocale', 'id', 'isHomepage', 'metaImageId', 'updatedAt'] as const
   $columns = PageSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -177,16 +136,7 @@ export class PageSchema extends BaseModel {
 }
 
 export class PermissionSchema extends BaseModel {
-  static $columns = [
-    'category',
-    'createdAt',
-    'description',
-    'id',
-    'isSystem',
-    'name',
-    'slug',
-    'updatedAt',
-  ] as const
+  static $columns = ['category', 'createdAt', 'description', 'id', 'isSystem', 'name', 'slug', 'updatedAt'] as const
   $columns = PermissionSchema.$columns
   @column()
   declare category: string
@@ -237,15 +187,7 @@ export class RolePermissionSchema extends BaseModel {
 }
 
 export class RoleSchema extends BaseModel {
-  static $columns = [
-    'createdAt',
-    'description',
-    'id',
-    'isSystem',
-    'name',
-    'slug',
-    'updatedAt',
-  ] as const
+  static $columns = ['createdAt', 'description', 'id', 'isSystem', 'name', 'slug', 'updatedAt'] as const
   $columns = RoleSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
@@ -264,18 +206,7 @@ export class RoleSchema extends BaseModel {
 }
 
 export class TemplateSchema extends BaseModel {
-  static $columns = [
-    'blockType',
-    'content',
-    'createdAt',
-    'createdBy',
-    'description',
-    'id',
-    'name',
-    'thumbnailId',
-    'type',
-    'updatedAt',
-  ] as const
+  static $columns = ['blockType', 'content', 'createdAt', 'createdBy', 'description', 'id', 'name', 'thumbnailId', 'type', 'updatedAt'] as const
   $columns = TemplateSchema.$columns
   @column()
   declare blockType: string | null
@@ -300,17 +231,7 @@ export class TemplateSchema extends BaseModel {
 }
 
 export class TokenSchema extends BaseModel {
-  static $columns = [
-    'attempts',
-    'createdAt',
-    'expiresAt',
-    'id',
-    'selector',
-    'token',
-    'type',
-    'updatedAt',
-    'userId',
-  ] as const
+  static $columns = ['attempts', 'createdAt', 'expiresAt', 'id', 'selector', 'token', 'type', 'updatedAt', 'userId'] as const
   $columns = TokenSchema.$columns
   @column()
   declare attempts: number
@@ -350,20 +271,7 @@ export class UserPreferenceSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = [
-    'createdAt',
-    'email',
-    'emailVerifiedAt',
-    'facebookId',
-    'githubId',
-    'googleId',
-    'id',
-    'password',
-    'pendingEmail',
-    'roleId',
-    'updatedAt',
-    'username',
-  ] as const
+  static $columns = ['createdAt', 'email', 'emailVerifiedAt', 'facebookId', 'githubId', 'googleId', 'id', 'password', 'pendingEmail', 'roleId', 'updatedAt', 'username'] as const
   $columns = UserSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

@@ -44,7 +44,7 @@ export const invitationValidator = vine.create({
   token: vine.string(),
 })
 
-export const acceptInvitationValidator = (id: User['id']) =>
+export const acceptInvitationValidator = (id?: User['id']) =>
   vine.create({
     email: email().unique(async (query, value) => {
       const user = await query.from('users').where('email', value).whereNot('id', id!).first()

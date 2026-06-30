@@ -1,6 +1,5 @@
 import { inject } from '@adonisjs/core'
 import { FileRepository } from '#repositories/file/file_repository'
-import { StorageService } from '#services/file/storage_service'
 import { ImageOptimizerService } from '#services/file/image_optimizer_service'
 import type CmsFile from '#models/file/file'
 import type { Block, PageContent, BlockType, ImageProps } from '#types/page'
@@ -11,7 +10,6 @@ import type { FileRef, ResolvedFile } from '#types/file'
 export class PageResolverService {
   constructor(
     protected fileRepository: FileRepository,
-    protected storageService: StorageService,
     protected imageOptimizerService: ImageOptimizerService
   ) {}
 

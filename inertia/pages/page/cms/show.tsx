@@ -227,10 +227,6 @@ function HomepageSection({
   translations: CmsPagesShowTranslations
 }) {
   const { t } = useTranslation(translations)
-  function handleSetHomepage() {
-    if (page.isHomepage) return
-    if (!confirm('Set this page as the homepage? The current homepage will be unset.')) return
-  }
 
   return (
     <div className="grid gap-3">
@@ -257,7 +253,7 @@ function HomepageSection({
             route="admin.pages.set_homepage"
             routeParams={{ id: page.id }}
           >
-            <Button variant="secondary" onClick={handleSetHomepage} fitContent>
+            <Button variant="secondary" fitContent>
               {t('homepage.submit')}
             </Button>
           </Form>

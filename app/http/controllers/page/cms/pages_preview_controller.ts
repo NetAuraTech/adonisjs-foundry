@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import { createHmac, timingSafeEqual } from 'node:crypto'
-import { PageService } from '#services/page/page_service'
+import { GetPageDetailAction } from '#actions/page/get_page_detail_action'
 import { PageResolverService } from '#services/page/page_resolver_service'
 import vine from '@vinejs/vine'
 import env from '#start/env'
@@ -65,7 +65,7 @@ function validatePreviewToken(
 @inject()
 export default class PagesPreviewController {
   constructor(
-    protected pageService: PageService,
+    protected getPageDetailAction: GetPageDetailAction,
     protected sessionService: BuilderSessionService,
     protected resolverService: PageResolverService
   ) {}
@@ -120,7 +120,7 @@ export default class PagesPreviewController {
       })
     }
 
-    const page = await this.pageService.detail(payload.pageId)
+    const page = await this.getPageDetailAction.execute({ id: payload.pageId })
     const translation = page.translationFor(payload.locale)
 
     if (!translation) {

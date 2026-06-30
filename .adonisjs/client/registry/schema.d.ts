@@ -599,10 +599,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/admin/pages/:id/translations'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/page').showPageValidator)>|InferInput<(typeof import('#validators/page').createTranslationValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#validators/page').showPageValidator)>>
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/page').showPageValidator)>|InferInput<(typeof import('#validators/page').createTranslationValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#validators/page').showPageValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/cms/page_translations_controller').default['execute']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/page_translations_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }

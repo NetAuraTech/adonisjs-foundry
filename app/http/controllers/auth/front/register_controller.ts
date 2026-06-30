@@ -1,16 +1,16 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import { AuthService } from '#services/auth/auth_service'
-import { registerValidator } from '#validators/auth'
 import { inject } from '@adonisjs/core'
+import { registerValidator } from '#validators/auth'
 import { regenerateCsrfToken } from '#helpers/auth/crsf'
-import { EmailVerificationService } from '#services/auth/email_verification_service'
 import { enabledProviders } from '#helpers/auth/oauth'
+import { RegisterUserAction } from '#actions/auth/register_user_action'
+import { SendEmailVerificationAction } from '#actions/email_verification/send_email_verification_action'
 
 @inject()
 export default class RegisterController {
   constructor(
-    protected authService: AuthService,
-    protected emailVerificationService: EmailVerificationService
+    protected registerUserAction: RegisterUserAction,
+    protected sendEmailVerificationAction: SendEmailVerificationAction
   ) {}
 
   render(ctx: HttpContext) {
@@ -48,7 +48,7 @@ export default class RegisterController {
 
     const payload = await registerValidator.validate(request.all())
 
-    const user = await this.authService.register({
+    const user = await this.registerUserAction.execute({
       ...payload,
       locale: ctx.i18n.locale,
     })
@@ -56,7 +56,7 @@ export default class RegisterController {
     await auth.use('web').login(user)
     regenerateCsrfToken(ctx)
 
-    await this.emailVerificationService.send(user)
+    await this.sendEmailVerificationAction.execute({ user })
 
     session.flash('success', i18n.t('auth.session.register.success'))
 

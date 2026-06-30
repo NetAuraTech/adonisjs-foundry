@@ -1,13 +1,18 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { loginValidator } from '#validators/auth'
 import { inject } from '@adonisjs/core'
-import { AuthService } from '#services/auth/auth_service'
+import { LoginAction } from '#actions/auth/login_action'
+import { LogoutAction } from '#actions/auth/logout_action'
 import { regenerateCsrfToken } from '#helpers/auth/crsf'
 import { enabledProviders } from '#helpers/auth/oauth'
 
 @inject()
 export default class SessionController {
-  constructor(protected authService: AuthService) {}
+  constructor(
+    protected loginAction: LoginAction,
+    protected logoutAction: LogoutAction
+  ) {}
+
   render(ctx: HttpContext) {
     const { inertia, i18n } = ctx
 
@@ -40,7 +45,10 @@ export default class SessionController {
 
     const payload = await loginValidator.validate(request.all())
 
-    const user = await this.authService.login(payload.email, payload.password)
+    const user = await this.loginAction.execute({
+      email: payload.email,
+      password: payload.password,
+    })
 
     await auth.use('web').login(user, payload.remember_me)
     regenerateCsrfToken(ctx)
@@ -58,7 +66,7 @@ export default class SessionController {
     await auth.use('web').logout()
 
     if (userId) {
-      await this.authService.logout(userId)
+      await this.logoutAction.execute({ userId })
     }
 
     session.flash('success', i18n.t('auth.session.logout.success'))

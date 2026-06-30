@@ -1,14 +1,20 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { PageService } from '#services/page/page_service'
 import { listPageValidator, showPageValidator } from '#validators/page'
 import { stripEmptyStrings } from '#helpers/core/strip_empty_strings'
 import { extractPagination } from '#helpers/pagination/extract_pagination'
 import PageTransformer from '#transformers/page_transformer'
+import { ListPagesAction } from '#actions/page/list_pages_action'
+import { DeletePageAction } from '#actions/page/delete_page_action'
+import { SetHomepageAction } from '#actions/page/set_homepage_action'
 
 @inject()
 export default class PagesController {
-  constructor(protected pageService: PageService) {}
+  constructor(
+    protected listPagesAction: ListPagesAction,
+    protected deletePageAction: DeletePageAction,
+    protected setHomepageAction: SetHomepageAction
+  ) {}
 
   async render(ctx: HttpContext) {
     const { inertia, request, i18n } = ctx
@@ -17,7 +23,12 @@ export default class PagesController {
     const data = stripEmptyStrings(request.all())
     const payload = await listPageValidator.validate(data)
 
-    const pages = await this.pageService.list(payload, pagination)
+    const pages = await this.listPagesAction.execute({
+      status: payload.status,
+      locale: payload.locale,
+      search: payload.search,
+      pagination,
+    })
 
     return inertia.render('page/cms/index', {
       pages: PageTransformer.paginate(pages.all(), pages.getMeta()),
@@ -64,21 +75,17 @@ export default class PagesController {
 
     const payload = await showPageValidator.validate(params)
 
-    await this.pageService.delete(payload.id)
+    await this.deletePageAction.execute({ id: payload.id })
 
     session.flash('success', i18n.t('page.deleted'))
 
     return response.redirect().toRoute('admin.pages.render')
   }
 
-  /**
-   * POST /admin/pages/:id/homepage
-   * Flags this page as the global homepage.
-   */
   async setHomepage(ctx: HttpContext) {
     const { params, response, auth } = ctx
     const user = auth.getUserOrFail()
-    await this.pageService.setHomepage(Number(params.id), user.id)
+    await this.setHomepageAction.execute({ pageId: Number(params.id), userId: user.id })
     return response.redirect().toRoute('admin.pages_show.render', { id: params.id })
   }
 }

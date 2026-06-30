@@ -15,6 +15,8 @@ import SlugExistsException from '#exceptions/core/slug_exists_exception'
 import FileTooLargeException from '#exceptions/file/file_too_large_exception'
 import InvalidExtensionException from '#exceptions/file/invalid_extension_exception'
 import MissingTranslationException from '#exceptions/page/missing_translation_exception'
+import MissingRevisionException from '#exceptions/page/missing_revision_exception'
+import InvalidTemplateTypeException from '#exceptions/template/invalid_template_type_exception'
 
 async function testExceptionHandle(error: any, assert: any) {
   // --- JSON Request Simulation ---
@@ -176,6 +178,20 @@ test.group('Exceptions', () => {
     const error = new MissingTranslationException('fr', 1)
     assert.equal(error.status, 404)
     assert.equal(error.code, 'E_MISSING_TRANSLATION')
+    await testExceptionHandle(error, assert)
+  })
+
+  test('MissingRevisionException properties and handle()', async ({ assert }) => {
+    const error = new MissingRevisionException(42)
+    assert.equal(error.status, 404)
+    assert.equal(error.code, 'E_MISSING_REVISION')
+    await testExceptionHandle(error, assert)
+  })
+
+  test('InvalidTemplateTypeException properties and handle()', async ({ assert }) => {
+    const error = new InvalidTemplateTypeException()
+    assert.equal(error.status, 422)
+    assert.equal(error.code, 'E_INVALID_TEMPLATE_TYPE')
     await testExceptionHandle(error, assert)
   })
 })

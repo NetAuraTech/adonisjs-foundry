@@ -1,6 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { FileService } from '#services/file/file_service'
 import {
   listFileValidator,
   showFileValidator,
@@ -11,14 +10,27 @@ import {
 import { stripEmptyStrings } from '#helpers/core/strip_empty_strings'
 import { extractPagination } from '#helpers/pagination/extract_pagination'
 import FileTransformer from '#transformers/file_transformer'
-import { FileFolderService } from '#services/file/file_folder_service'
 import FileFolderTransformer from '#transformers/file_folder_transformer'
+import { ListFilesAction } from '#actions/file/list_files_action'
+import { GetFileDetailAction } from '#actions/file/get_file_detail_action'
+import { UploadFileAction } from '#actions/file/upload_file_action'
+import { MoveFileAction } from '#actions/file/move_file_action'
+import { DeleteFileAction } from '#actions/file/delete_file_action'
+import { UpsertFileAltAction } from '#actions/file/upsert_file_alt_action'
+import { DeleteFileAltAction } from '#actions/file/delete_file_alt_action'
+import { ListRootFoldersAction } from '#actions/file_folder/list_root_folders_action'
 
 @inject()
 export default class FilesController {
   constructor(
-    protected fileService: FileService,
-    protected fileFolderService: FileFolderService
+    protected listFilesAction: ListFilesAction,
+    protected getFileDetailAction: GetFileDetailAction,
+    protected uploadFileAction: UploadFileAction,
+    protected moveFileAction: MoveFileAction,
+    protected deleteFileAction: DeleteFileAction,
+    protected upsertFileAltAction: UpsertFileAltAction,
+    protected deleteFileAltAction: DeleteFileAltAction,
+    protected listRootFoldersAction: ListRootFoldersAction
   ) {}
 
   async render(ctx: HttpContext) {
@@ -28,16 +40,14 @@ export default class FilesController {
     const data = stripEmptyStrings(request.all())
     const payload = await listFileValidator.validate(data)
 
-    const files = await this.fileService.list(
-      {
-        folderId: payload.folder_id,
-        mimeType: payload.mime_type,
-        search: payload.search,
-      },
-      pagination
-    )
+    const files = await this.listFilesAction.execute({
+      folderId: payload.folder_id,
+      mimeType: payload.mime_type,
+      search: payload.search,
+      pagination,
+    })
 
-    const folders = await this.fileFolderService.listRoots()
+    const folders = await this.listRootFoldersAction.execute()
 
     return inertia.render('file/cms/index', {
       files: FileTransformer.paginate(files.all(), files.getMeta()),
@@ -120,6 +130,58 @@ export default class FilesController {
     })
   }
 
+  async show(ctx: HttpContext) {
+    const { inertia, params, i18n } = ctx
+
+    const { id } = await showFileValidator.validate(params)
+    const file = await this.getFileDetailAction.execute({ id })
+
+    return (inertia.render as any)('file/cms/show', {
+      file: FileTransformer.transform(file),
+      translations: {
+        title: i18n.t('cms.files.show.title', { name: '{name}' }),
+        actions: {
+          back: i18n.t('cms.files.list.title'),
+          delete: {
+            value: i18n.t('cms.files.delete.title', { name: '{name}' }),
+            confirm: i18n.t('cms.files.delete.confirm'),
+          },
+        },
+        info: {
+          name: i18n.t('cms.files.show.info.name'),
+          type: i18n.t('cms.files.show.info.type'),
+          size: i18n.t('cms.files.show.info.size'),
+          uploaded_at: i18n.t('cms.files.show.info.uploaded_at'),
+          value: i18n.t('cms.files.show.info.value'),
+        },
+        alts: {
+          value: i18n.t('cms.files.show.alts.value'),
+          add: i18n.t('cms.files.show.alts.add'),
+          delete: {
+            value: i18n.t('cms.files.show.alts.delete.value'),
+            confirm: i18n.t('cms.files.show.alts.delete.confirm'),
+          },
+          form: {
+            update: i18n.t('cms.files.show.alts.form.update'),
+            submit: i18n.t('cms.files.show.alts.form.submit'),
+            cancel: i18n.t('cms.files.show.alts.form.cancel'),
+            locale: {
+              value: i18n.t('cms.files.show.alts.form.locale.value'),
+            },
+            key: {
+              value: i18n.t('cms.files.show.alts.form.key.value'),
+              placeholder: i18n.t('cms.files.show.alts.form.key.placeholder'),
+            },
+            alt_text: {
+              value: i18n.t('cms.files.show.alts.form.alt_text.value'),
+              placeholder: i18n.t('cms.files.show.alts.form.alt_text.placeholder'),
+            },
+          },
+        },
+      },
+    })
+  }
+
   async upload(ctx: HttpContext) {
     const { request, response, auth, session, i18n } = ctx
 
@@ -132,7 +194,11 @@ export default class FilesController {
       return response.redirect().back()
     }
 
-    await this.fileService.upload(file, folderId ? Number(folderId) : null, user.id)
+    await this.uploadFileAction.execute({
+      file,
+      folderId: folderId ? Number(folderId) : null,
+      uploadedBy: user.id,
+    })
 
     session.flash('success', i18n.t('file.uploaded'))
 
@@ -145,7 +211,7 @@ export default class FilesController {
     const { id } = await showFileValidator.validate(params)
     const payload = await moveFileValidator.validate(request.all())
 
-    await this.fileService.move(id, payload.folder_id ?? null)
+    await this.moveFileAction.execute({ id, folderId: payload.folder_id ?? null })
 
     session.flash('success', i18n.t('file.moved'))
 
@@ -157,7 +223,7 @@ export default class FilesController {
 
     const { id } = await showFileValidator.validate(params)
 
-    await this.fileService.delete(id)
+    await this.deleteFileAction.execute({ id })
 
     session.flash('success', i18n.t('file.deleted'))
 
@@ -170,7 +236,12 @@ export default class FilesController {
     const { id } = await showFileValidator.validate(params)
     const payload = await upsertAltValidator.validate(request.all())
 
-    await this.fileService.upsertAlt(id, payload.locale, payload.key, payload.value)
+    await this.upsertFileAltAction.execute({
+      fileId: id,
+      locale: payload.locale,
+      key: payload.key,
+      value: payload.value,
+    })
 
     return response.ok({ message: i18n.t('file.alt.updated') })
   }
@@ -181,7 +252,7 @@ export default class FilesController {
     const { id } = await showFileValidator.validate(params)
     const payload = await deleteAltValidator.validate(request.all())
 
-    await this.fileService.deleteAlt(id, payload.locale, payload.key)
+    await this.deleteFileAltAction.execute({ fileId: id, locale: payload.locale, key: payload.key })
 
     return response.ok({ message: i18n.t('file.alt.deleted') })
   }

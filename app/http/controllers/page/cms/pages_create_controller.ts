@@ -1,11 +1,11 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { PageService } from '#services/page/page_service'
 import { createPageValidator } from '#validators/page'
+import { CreatePageAction } from '#actions/page/create_page_action'
 
 @inject()
 export default class PagesCreateController {
-  constructor(protected pageService: PageService) {}
+  constructor(protected createPageAction: CreatePageAction) {}
 
   async render(ctx: HttpContext) {
     const { inertia, i18n } = ctx
@@ -57,9 +57,10 @@ export default class PagesCreateController {
         metaTitle: data.metaTitle,
         metaDescription: data.metaDescription,
       },
+      userId: user.id,
     }
 
-    const page = await this.pageService.create(payload, user.id)
+    const page = await this.createPageAction.execute(payload)
 
     session.flash('success', i18n.t('page.created'))
 

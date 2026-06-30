@@ -14,5 +14,7 @@
   "E_INVALID_CREDENTIALS": "Échec de l'authentification. Veuillez réessayer.",
   "E_TOO_MANY_REQUESTS": "Trop de tentatives. Limite de {limit} requêtes atteinte. Veuillez réessayer dans {availableIn} minutes.",
   "E_UNAUTHORIZED": "Vous devez être connecté pour accéder à cette ressource.",
-  "E_FORBIDDEN": "Vous n'avez pas l'autorisation d'accéder à cette ressource."
+  "E_FORBIDDEN": "Vous n'avez pas l'autorisation d'accéder à cette ressource.",
+  "E_INVALID_TEMPLATE_TYPE": "Seuls les modèles de page peuvent être appliqués à une page complète.",
+  "E_MISSING_REVISION": "La révision {revisionId} est introuvable."
 }

@@ -1,11 +1,11 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import { updateValidator } from '#validators/preference'
-import PreferencesService from '#services/preferences/preference_service'
+import { UpdatePreferencesAction } from '#actions/preferences/update_preferences_action'
 
 @inject()
 export default class PreferencesController {
-  constructor(private preferencesService: PreferencesService) {}
+  constructor(private updatePreferencesAction: UpdatePreferencesAction) {}
 
   async render(ctx: HttpContext) {
     const { inertia, i18n } = ctx
@@ -48,7 +48,7 @@ export default class PreferencesController {
     const user = auth.getUserOrFail()
     const payload = await updateValidator.validate(request.all())
 
-    await this.preferencesService.update(user, payload)
+    await this.updatePreferencesAction.execute({ user, data: payload })
 
     await user.refresh()
 

@@ -1,27 +1,32 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { PageService } from '#services/page/page_service'
 import { revisionValidator } from '#validators/page'
-import vine from '@vinejs/vine'
 import PageRevisionTransformer from '#transformers/page_revision_transformer'
-
-const translationIdValidator = vine.compile(
-  vine.object({ translationId: vine.number().positive() })
-)
+import { extractPagination } from '#helpers/pagination/extract_pagination'
+import { ListRevisionsAction } from '#actions/page/list_revisions_action'
+import { RestoreRevisionAction } from '#actions/page/restore_revision_action'
+import { ToggleRevisionKeepAction } from '#actions/page/toggle_revision_keep_action'
 
 @inject()
 export default class PageRevisionsController {
-  constructor(protected pageService: PageService) {}
+  constructor(
+    protected listRevisionsAction: ListRevisionsAction,
+    protected restoreRevisionAction: RestoreRevisionAction,
+    protected toggleRevisionKeepAction: ToggleRevisionKeepAction
+  ) {}
 
   async index(ctx: HttpContext) {
-    const { inertia, params, i18n } = ctx
+    const { inertia, params, request, i18n } = ctx
 
-    const { translationId } = await translationIdValidator.validate(params)
-    const revisions = await this.pageService.listRevisions(translationId)
+    const pagination = await extractPagination(request)
+    const revisions = await this.listRevisionsAction.execute({
+      pageId: Number(params.translationId),
+      pagination,
+    })
 
     return inertia.render('page/cms/revisions', {
-      revisions: PageRevisionTransformer.transform(revisions),
-      translation_id: translationId,
+      revisions: PageRevisionTransformer.transform(revisions.all()),
+      translation_id: params.translationId,
       page_id: params.id,
       translations: {
         title: i18n.t('cms.pages.show.revision.value'),
@@ -35,17 +40,6 @@ export default class PageRevisionsController {
           unpin: i18n.t('cms.pages.show.revision.unpin'),
           pin: i18n.t('cms.pages.show.revision.pin'),
         },
-        help: i18n.t('cms.pages.show.revision.help'),
-        index: i18n.t('cms.pages.show.revision.index'),
-        created: {
-          at: i18n.t('cms.pages.show.revision.created.at'),
-          by: i18n.t('cms.pages.show.revision.created.by'),
-        },
-        empty: {
-          value: i18n.t('cms.pages.show.revision.empty.value'),
-          help: i18n.t('cms.pages.show.revision.empty.help'),
-        },
-        latest: i18n.t('cms.pages.show.revision.latest'),
       },
     })
   }
@@ -56,7 +50,11 @@ export default class PageRevisionsController {
     const payload = await revisionValidator.validate(params)
     const user = auth.getUserOrFail()
 
-    await this.pageService.restoreRevision(payload.translationId, payload.revisionId, user.id)
+    await this.restoreRevisionAction.execute({
+      translationId: payload.translationId,
+      revisionId: payload.revisionId,
+      userId: user.id,
+    })
 
     session.flash('success', i18n.t('page.revision.restored'))
 
@@ -68,12 +66,9 @@ export default class PageRevisionsController {
 
     const payload = await revisionValidator.validate(params)
 
-    const revision = await this.pageService.toggleRevisionKeep(payload.revisionId)
+    await this.toggleRevisionKeepAction.execute({ revisionId: payload.revisionId })
 
-    session.flash(
-      'success',
-      revision.keep ? i18n.t('page.revision.pinned') : i18n.t('page.revision.unpinned')
-    )
+    session.flash('success', i18n.t('page.revision.keep_toggled'))
 
     return response.redirect().back()
   }

@@ -1,8 +1,9 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { UserService } from '#services/auth/user_service'
+import { ListUsersAction } from '#actions/user/list_users_action'
+import { DeleteUserAction } from '#actions/user/delete_user_action'
 import { deleteValidator, listValidator } from '#validators/user'
-import { RoleService } from '#services/auth/role_service'
+import { ListAllRolesAction } from '#actions/role/list_all_roles_action'
 import UserTransformer from '#transformers/user_transformer'
 import RoleTransformer from '#transformers/role_transformer'
 import { stripEmptyStrings } from '#helpers/core/strip_empty_strings'
@@ -12,8 +13,9 @@ import { TranslationNodes } from '#types/translations'
 @inject()
 export default class UsersController {
   constructor(
-    protected userService: UserService,
-    protected roleService: RoleService
+    protected listUsersAction: ListUsersAction,
+    protected deleteUserAction: DeleteUserAction,
+    protected listAllRolesAction: ListAllRolesAction
   ) {}
 
   async render(ctx: HttpContext) {
@@ -21,14 +23,18 @@ export default class UsersController {
 
     const pagination = await extractPagination(request)
 
-    const roles = await this.roleService.findAll()
+    const roles = await this.listAllRolesAction.execute()
     const allowed = roles.map((role) => String(role.id))
 
     const data = stripEmptyStrings(request.all())
 
     const payload = await listValidator(allowed).validate(data)
 
-    const users = await this.userService.list(payload, pagination)
+    const users = await this.listUsersAction.execute({
+      search: payload.search,
+      role: payload.role,
+      pagination,
+    })
 
     return inertia.render('auth/cms/index', {
       users: UserTransformer.paginate(users.all(), users.getMeta()),
@@ -78,7 +84,7 @@ export default class UsersController {
 
     const payload = await deleteValidator.validate(params)
 
-    await this.userService.delete(payload.id)
+    await this.deleteUserAction.execute({ id: payload.id })
 
     session.flash('success', i18n.t('cms.users.deleted'))
 

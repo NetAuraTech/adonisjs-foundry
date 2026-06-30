@@ -1,8 +1,9 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import { UserService } from '#services/auth/user_service'
+import { GetUserDetailAction } from '#actions/user/get_user_detail_action'
+import { UpdateUserAction } from '#actions/user/update_user_action'
 import { inject } from '@adonisjs/core'
 import { editValidator, updateValidator } from '#validators/user'
-import { RoleService } from '#services/auth/role_service'
+import { ListAllRolesAction } from '#actions/role/list_all_roles_action'
 import UserTransformer from '#transformers/user_transformer'
 import RoleTransformer from '#transformers/role_transformer'
 import { TranslationNodes } from '#types/translations'
@@ -10,8 +11,9 @@ import { TranslationNodes } from '#types/translations'
 @inject()
 export default class UsersUpdateController {
   constructor(
-    protected userService: UserService,
-    protected roleService: RoleService
+    protected getUserDetailAction: GetUserDetailAction,
+    protected updateUserAction: UpdateUserAction,
+    protected listAllRolesAction: ListAllRolesAction
   ) {}
 
   async render(ctx: HttpContext) {
@@ -19,9 +21,9 @@ export default class UsersUpdateController {
 
     const payload = await editValidator.validate(params)
 
-    const user = await this.userService.detail(payload.id)
+    const user = await this.getUserDetailAction.execute({ id: payload.id })
 
-    const roles = await this.roleService.findAll()
+    const roles = await this.listAllRolesAction.execute()
 
     return inertia.render('auth/cms/form', {
       user: UserTransformer.transform(user),
@@ -63,12 +65,17 @@ export default class UsersUpdateController {
 
     const { id } = await editValidator.validate(params)
 
-    const roles = await this.roleService.findAll()
+    const roles = await this.listAllRolesAction.execute()
     const allowed = roles.map((role) => String(role.id))
 
     const payload = await updateValidator(id, allowed).validate(request.all())
 
-    const updated = await this.userService.update(id, payload)
+    const updated = await this.updateUserAction.execute({
+      id,
+      email: payload.email,
+      username: payload.username,
+      roleId: payload.role_id ? Number(payload.role_id) : undefined,
+    })
 
     let flash = i18n.t('cms.users.updated')
 

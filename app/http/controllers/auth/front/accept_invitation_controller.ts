@@ -1,19 +1,23 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { InvitationService } from '#services/auth/invitation_service'
 import { acceptInvitationValidator, invitationValidator } from '#validators/auth'
 import { FullToken } from '#types/core'
 import UserTransformer from '#transformers/user_transformer'
+import { GetInvitationAction } from '#actions/invitation/get_invitation_action'
+import { AcceptInvitationAction } from '#actions/invitation/accept_invitation_action'
 
 @inject()
 export default class AcceptInvitationController {
-  constructor(protected invitationService: InvitationService) {}
+  constructor(
+    protected getInvitationAction: GetInvitationAction,
+    protected acceptInvitationAction: AcceptInvitationAction
+  ) {}
 
   async render(ctx: HttpContext) {
     const { inertia, params, i18n } = ctx
 
     const payload = await invitationValidator.validate(params)
-    const user = await this.invitationService.get(payload.token as FullToken)
+    const user = await this.getInvitationAction.execute({ token: payload.token as FullToken })
 
     return inertia.render('auth/front/accept_invitation', {
       token: payload.token,
@@ -53,11 +57,14 @@ export default class AcceptInvitationController {
 
     const { token } = await invitationValidator.validate(request.only(['token']))
 
-    const invitation = await this.invitationService.get(token as FullToken)
+    const invitedUser = await this.getInvitationAction.execute({ token: token as FullToken })
 
-    const payload = await acceptInvitationValidator(invitation.id).validate(request.all())
+    const payload = await acceptInvitationValidator(invitedUser.id).validate(request.all())
 
-    const user = await this.invitationService.accept(token as FullToken, payload)
+    const user = await this.acceptInvitationAction.execute({
+      token: token as FullToken,
+      password: payload.password,
+    })
 
     await auth.use('web').login(user)
 

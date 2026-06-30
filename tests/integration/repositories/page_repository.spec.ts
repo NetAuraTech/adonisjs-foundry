@@ -59,6 +59,10 @@ test.group('PageRepository', () => {
   // ─── findHomepage() & setHomepage() ───────────────────────────────────────
 
   test('findHomepage() returns the homepage if set', async ({ assert }) => {
+    // Clear any existing homepage to avoid unique constraint conflicts
+    const { default: Page } = await import('#models/page/page')
+    await Page.query().where('is_homepage', true).update({ isHomepage: false })
+
     await PageFactory.create() // Not homepage
     const homepage = await PageFactory.merge({ isHomepage: true }).create()
 

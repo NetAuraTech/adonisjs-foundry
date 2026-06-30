@@ -10,18 +10,18 @@ import env from '#start/env'
 import { urlFor } from '@adonisjs/core/services/url_builder'
 import ForgotPassword from '#events/auth/forgot_password'
 import { inject } from '@adonisjs/core'
-import PreferencesService from '#services/preferences/preference_service'
+import { GetPreferencesAction } from '#actions/preferences/get_preferences_action'
 
 @inject()
 export default class SendForgotPasswordEmail {
   constructor(
     protected mailService: MailService,
-    protected preferencesService: PreferencesService,
+    protected getPreferencesAction: GetPreferencesAction,
     protected tokenRepository: TokenRepository
   ) {}
 
   async handle(event: ForgotPassword) {
-    const preferences = await this.preferencesService.get(event.user)
+    const preferences = await this.getPreferencesAction.execute({ user: event.user })
 
     const locale = preferences.locale || 'en'
     const i18n = i18nManager.locale(locale)

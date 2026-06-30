@@ -4,14 +4,14 @@ import i18nManager from '@adonisjs/i18n/services/main'
 import ContactFormNotification from '#mails/page/contact_form_notification'
 import env from '#start/env'
 import { inject } from '@adonisjs/core'
-import PreferencesService from '#services/preferences/preference_service'
+import { GetPreferencesAction } from '#actions/preferences/get_preferences_action'
 import { UserRepository } from '#repositories/auth/user_repository'
 
 @inject()
 export default class SendContactFormEmail {
   constructor(
     protected mailService: MailService,
-    protected preferencesService: PreferencesService,
+    protected getPreferencesAction: GetPreferencesAction,
     protected userRepository: UserRepository
   ) {}
 
@@ -22,7 +22,7 @@ export default class SendContactFormEmail {
     let locale = 'en'
 
     if (admin) {
-      const preferences = await this.preferencesService.get(admin)
+      const preferences = await this.getPreferencesAction.execute({ user: admin })
 
       locale = preferences.locale
     }

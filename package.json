@@ -39,9 +39,11 @@
     "#abilities/*": "./app/abilities/*.js",
     "#database/*": "./database/*.js",
     "#factories/*": "./database/factories/*.js",
+    "#shared/*": "./app/shared/*.js",
     "#tests/*": "./tests/*.js",
     "#start/*": "./start/*.js",
-    "#config/*": "./config/*.js"
+    "#config/*": "./config/*.js",
+    "#actions/*": "./app/domain/actions/*.js"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^8.0.0",

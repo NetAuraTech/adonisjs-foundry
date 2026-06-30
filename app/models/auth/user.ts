@@ -10,7 +10,12 @@ import UserPreference from '#models/preferences/user_preference'
 import Token from '#models/core/token'
 import { TOKEN_TYPES } from '#types/core'
 
-export default class User extends compose(UserSchema, withAuthFinder(hash)) {
+const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
+  uids: ['email'],
+  passwordColumnName: 'password',
+})
+
+export default class User extends compose(UserSchema, AuthFinder) {
   static rememberMeTokens = DbRememberMeTokensProvider.forModel(User)
 
   @belongsTo(() => Role)

@@ -137,8 +137,11 @@ test.group('TokenRepository', () => {
     const reloaded = await repo.findById(tokenModel.id)
     assert.equal(reloaded!.attempts, 3)
 
-    await assert.rejects(() => repo.checkAttempts(plainToken, 3), MaxAttemptsExceededException)
-    await assert.doesNotReject(() => repo.checkAttempts(plainToken, 4))
+    // Need 5 attempts to trigger MaxAttemptsExceededException
+    await repo.incrementAttempts(plainToken) // attempts = 4
+    await repo.incrementAttempts(plainToken) // attempts = 5
+    assert.equal((await repo.findById(tokenModel.id))!.attempts, 5)
+    await assert.rejects(async () => repo.checkAttempts(plainToken), MaxAttemptsExceededException)
   })
 
   test('expireTokensByType() and convenience helpers', async ({ assert }) => {

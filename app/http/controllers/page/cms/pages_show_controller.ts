@@ -1,18 +1,18 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { PageService } from '#services/page/page_service'
 import { showPageValidator } from '#validators/page'
 import PageTransformer from '#transformers/page_transformer'
+import { GetPageDetailAction } from '#actions/page/get_page_detail_action'
 
 @inject()
 export default class PagesShowController {
-  constructor(protected pageService: PageService) {}
+  constructor(protected getPageDetailAction: GetPageDetailAction) {}
 
   async render(ctx: HttpContext) {
     const { inertia, params, i18n } = ctx
 
     const { id } = await showPageValidator.validate(params)
-    const page = await this.pageService.detail(id)
+    const page = await this.getPageDetailAction.execute({ id })
 
     return inertia.render('page/cms/show', {
       page: PageTransformer.transform(page),

@@ -3,14 +3,14 @@ import type { NextFn } from '@adonisjs/core/types/http'
 import UserTransformer from '#transformers/user_transformer'
 import BaseInertiaMiddleware from '@adonisjs/inertia/inertia_middleware'
 import { inject } from '@adonisjs/core'
-import PreferencesService from '#services/preferences/preference_service'
+import { GetPreferencesAction } from '#actions/preferences/get_preferences_action'
 import { DEFAULT_PREFERENCES } from '#types/preferences'
 import env from '#start/env'
 import { CmsTranslations, CommonTranslations } from '#types/translations'
 
 @inject()
 export default class InertiaMiddleware extends BaseInertiaMiddleware {
-  constructor(private preferencesService: PreferencesService) {
+  constructor(private getPreferencesAction: GetPreferencesAction) {
     super()
   }
 
@@ -46,7 +46,7 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
     const error: string | undefined = session?.flashMessages.get('error') || errorFromBag
 
     const preferences = ctx.inertia.always(
-      user ? await this.preferencesService.get(user) : DEFAULT_PREFERENCES
+      user ? await this.getPreferencesAction.execute({ user }) : DEFAULT_PREFERENCES
     )
 
     const routeName = ctx.route?.name ?? ''

@@ -1,6 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { TemplateService } from '#services/template/template_service'
 import {
   listTemplateValidator,
   createTemplateValidator,
@@ -11,10 +10,23 @@ import {
 } from '#validators/template'
 import { stripEmptyStrings } from '#helpers/core/strip_empty_strings'
 import TemplateTransformer from '#transformers/template_transformer'
+import { ListTemplatesAction } from '#actions/template/list_templates_action'
+import { CreateTemplateAction } from '#actions/template/create_template_action'
+import { UpdateTemplateAction } from '#actions/template/update_template_action'
+import { DeleteTemplateAction } from '#actions/template/delete_template_action'
+import { ApplyToPageAction } from '#actions/template/apply_to_page_action'
+import { CreateFromPageAction } from '#actions/template/create_from_page_action'
 
 @inject()
 export default class TemplatesController {
-  constructor(protected templateService: TemplateService) {}
+  constructor(
+    protected listTemplatesAction: ListTemplatesAction,
+    protected createTemplateAction: CreateTemplateAction,
+    protected updateTemplateAction: UpdateTemplateAction,
+    protected deleteTemplateAction: DeleteTemplateAction,
+    protected applyToPageAction: ApplyToPageAction,
+    protected createFromPageAction: CreateFromPageAction
+  ) {}
 
   async render(ctx: HttpContext) {
     const { inertia, request, i18n } = ctx
@@ -22,7 +34,7 @@ export default class TemplatesController {
     const data = stripEmptyStrings(request.all())
     const payload = await listTemplateValidator.validate(data)
 
-    const templates = await this.templateService.list({
+    const templates = await this.listTemplatesAction.execute({
       type: payload.type,
       blockType: payload.block_type as any,
       search: payload.search,
@@ -62,7 +74,7 @@ export default class TemplatesController {
     const payload = await createTemplateValidator.validate(request.all())
     const user = auth.getUserOrFail()
 
-    await this.templateService.create(payload as any, user.id)
+    await this.createTemplateAction.execute({ ...(payload as any), userId: user.id })
 
     session.flash('success', i18n.t('template.created'))
 
@@ -75,7 +87,7 @@ export default class TemplatesController {
     const { id } = await showTemplateValidator.validate(params)
     const payload = await updateTemplateValidator.validate(request.all())
 
-    await this.templateService.update(id, payload)
+    await this.updateTemplateAction.execute({ id, ...payload })
 
     session.flash('success', i18n.t('template.updated'))
 
@@ -87,7 +99,7 @@ export default class TemplatesController {
 
     const { id } = await showTemplateValidator.validate(params)
 
-    await this.templateService.delete(id)
+    await this.deleteTemplateAction.execute({ id })
 
     session.flash('success', i18n.t('template.deleted'))
 
@@ -101,7 +113,12 @@ export default class TemplatesController {
     const payload = await applyTemplateValidator.validate(request.all())
     const user = auth.getUserOrFail()
 
-    await this.templateService.applyToPage(id, payload.pageId, payload.locale, user.id)
+    await this.applyToPageAction.execute({
+      templateId: id,
+      pageId: payload.pageId,
+      locale: payload.locale,
+      userId: user.id,
+    })
 
     session.flash('success', i18n.t('template.applied'))
 
@@ -114,7 +131,12 @@ export default class TemplatesController {
     const payload = await createFromPageValidator.validate(request.all())
     const user = auth.getUserOrFail()
 
-    await this.templateService.createFromPage(payload.name, payload.pageId, payload.locale, user.id)
+    await this.createFromPageAction.execute({
+      name: payload.name,
+      pageId: payload.pageId,
+      locale: payload.locale,
+      userId: user.id,
+    })
 
     session.flash('success', i18n.t('template.created_from_page', { name: payload.name }))
 

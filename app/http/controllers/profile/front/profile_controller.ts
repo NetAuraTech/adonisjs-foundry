@@ -2,11 +2,11 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import UserTransformer from '#transformers/user_transformer'
 import { profileValidator } from '#validators/profile'
-import { ProfileService } from '#services/profile/profile_service'
+import { UpdateUserProfileAction } from '#actions/profile/update_user_profile_action'
 
 @inject()
 export default class ProfileController {
-  constructor(protected profileService: ProfileService) {}
+  constructor(protected updateUserProfileAction: UpdateUserProfileAction) {}
 
   async render(ctx: HttpContext) {
     const { inertia, auth, i18n } = ctx
@@ -49,7 +49,7 @@ export default class ProfileController {
 
     const payload = await profileValidator(user.id).validate(request.all())
 
-    await this.profileService.update(user, payload)
+    await this.updateUserProfileAction.execute({ user, username: payload.username })
 
     await user.refresh()
 

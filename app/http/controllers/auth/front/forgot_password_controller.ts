@@ -2,11 +2,11 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import { forgotPasswordValidator } from '#validators/auth'
 import User from '#models/auth/user'
-import { PasswordService } from '#services/auth/password_service'
+import { SendPasswordResetAction } from '#actions/password/send_password_reset_action'
 
 @inject()
 export default class ForgotPasswordController {
-  constructor(protected passwordService: PasswordService) {}
+  constructor(protected sendPasswordResetAction: SendPasswordResetAction) {}
 
   render(ctx: HttpContext) {
     const { inertia, i18n } = ctx
@@ -33,7 +33,7 @@ export default class ForgotPasswordController {
     const user = await User.findBy('email', payload.email)
 
     if (user) {
-      await this.passwordService.send(user)
+      await this.sendPasswordResetAction.execute({ user })
     }
 
     session.flash('success', i18n.t('auth.password.forgot.email_sent'))
