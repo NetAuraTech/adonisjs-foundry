@@ -1,6 +1,6 @@
 import { BaseCommand, flags } from '@adonisjs/core/ace'
 import type { CommandOptions } from '@adonisjs/core/types/ace'
-import { RunBackupAction } from '#actions/backup/run_backup_action'
+import RunBackupAction from '#actions/backup/run_backup_action'
 
 /**
  * Ace command that triggers a database backup via {@link RunBackupAction}.

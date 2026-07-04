@@ -34,8 +34,18 @@ test.group('ListBackupsAction', (group) => {
     const result = await action.execute()
 
     assert.lengthOf(result, 2)
-    assert.equal(result[0].type, 'differential')
-    assert.equal(result[1].type, 'full')
+
+    // Verify both backup types are present (order-independent assertion to avoid flakiness)
+    const types = result.map((b) => b.type)
+    assert.include(types, 'full')
+    assert.include(types, 'differential')
+
+    // Verify descending date order: the differential (Jan 16) must come before full (Jan 15)
+    assert.isBelow(
+      result[1].createdAt.getTime(),
+      result[0].createdAt.getTime(),
+      'Backups should be sorted newest first'
+    )
   })
 
   test('execute() filters by type when specified', async ({ assert }) => {

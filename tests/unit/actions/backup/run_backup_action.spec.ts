@@ -1,6 +1,6 @@
 ﻿import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
-import { RunBackupAction } from '#actions/backup/run_backup_action'
+import RunBackupAction from '#actions/backup/run_backup_action'
 import drive from '@adonisjs/drive/services/main'
 import backupConfig from '#config/backup'
 
