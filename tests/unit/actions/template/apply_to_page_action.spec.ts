@@ -6,6 +6,7 @@ import { ApplyToPageAction } from '#actions/template/apply_to_page_action'
 import Template from '#models/template/template'
 import Page from '#models/page/page'
 import PageTranslation from '#models/page/page_translation'
+import type { BlockType } from '#types/page'
 import { PageContent } from '#types/page'
 
 test.group('ApplyToPageAction', () => {
@@ -54,7 +55,13 @@ test.group('ApplyToPageAction', () => {
     })
 
     const templateContent: PageContent = {
-      blocks: [{ id: '1', type: 'title', props: { text: 'Template Title', level: 1 } }],
+      blocks: [
+        {
+          id: '1',
+          type: 'title' as BlockType,
+          props: { text: 'Template Title', level: 1, color: 'default', highlightColor: 'default' } as any,
+        },
+      ],
     }
     const template = await Template.create({
       name: `Apply Template 2 ${Date.now()}`,

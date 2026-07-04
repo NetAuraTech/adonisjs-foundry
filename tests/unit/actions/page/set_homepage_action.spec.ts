@@ -1,5 +1,4 @@
 import { test } from '@japa/runner'
-import RowNotFoundException from '#exceptions/core/row_not_found_exception'
 import app from '@adonisjs/core/services/app'
 import { SetHomepageAction } from '#actions/page/set_homepage_action'
 import Page from '#models/page/page'

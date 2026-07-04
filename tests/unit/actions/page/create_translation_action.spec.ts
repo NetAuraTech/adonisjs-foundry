@@ -1,10 +1,10 @@
 import { test } from '@japa/runner'
-import RowNotFoundException from '#exceptions/core/row_not_found_exception'
 import SlugExistsException from '#exceptions/core/slug_exists_exception'
 import app from '@adonisjs/core/services/app'
 import { CreateTranslationAction } from '#actions/page/create_translation_action'
 import Page from '#models/page/page'
 import PageTranslation from '#models/page/page_translation'
+import type { BlockType, PageContent } from '#types/page'
 
 test.group('CreateTranslationAction', () => {
   test('execute() creates a new translation for existing page', async ({ assert }) => {
@@ -53,7 +53,9 @@ test.group('CreateTranslationAction', () => {
     const action = await app.container.make(CreateTranslationAction)
 
     const page = await Page.create({ defaultLocale: 'en', createdBy: null })
-    const sourceContent = { blocks: [{ id: '1', type: 'title', props: { text: 'Hello' } }] }
+    const sourceContent: PageContent = {
+      blocks: [{ id: '1', type: 'title' as BlockType, props: { text: 'Hello' } as any }],
+    }
     await PageTranslation.create({
       pageId: page.id,
       locale: 'en',

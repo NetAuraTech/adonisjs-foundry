@@ -7,7 +7,7 @@ test.group('ListFilesAction', () => {
   test('execute() returns paginated files with filters', async ({ assert }) => {
     const action = await app.container.make(ListFilesAction)
 
-    const file1 = await CmsFile.create({
+    await CmsFile.create({
       filename: 'file1_list.jpg',
       originalName: 'photo1.jpg',
       mimeType: 'image/jpeg',

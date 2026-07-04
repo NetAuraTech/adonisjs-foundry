@@ -2,7 +2,6 @@ import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
 import { UpdatePreferencesAction } from '#actions/preferences/update_preferences_action'
 import User from '#models/auth/user'
-import { DEFAULT_PREFERENCES } from '#types/preferences'
 
 test.group('UpdatePreferencesAction', () => {
   test('execute() upserts preferences and returns updated values', async ({ assert }) => {
