@@ -2,6 +2,7 @@ import { transactionContext } from '#shared/context/transaction_context'
 import Page from '#models/page/page'
 import type { PaginationFilters } from '#types/pagination'
 import type { PageStatus } from '#types/page'
+import { BaseRepository } from '#repositories/base_repository'
 
 interface ListFilters {
   status?: PageStatus
@@ -14,13 +15,7 @@ interface ListFilters {
  *
  * Manages page metadata, homepage flagging, and published page listings.
  */
-export class PageRepository {
-  /** Resolve the active database client, preferring an ambient transaction if one exists. */
-  #client() {
-    const trx = transactionContext.get()
-    return trx ? { client: trx } : undefined
-  }
-
+export class PageRepository extends BaseRepository {
   /**
    * Finds a page by its primary key, preloading translations and meta image.
    *
@@ -31,7 +26,7 @@ export class PageRepository {
    * const page = await pageRepository.findById(1)
    */
   async findById(id: number): Promise<Page | null> {
-    return Page.query(this.#client())
+    return Page.query(this.client())
       .where('id', id)
       .preload('translations')
       .preload('metaImage')
@@ -50,7 +45,7 @@ export class PageRepository {
    * const page = await pageRepository.findByIdOrFail(1)
    */
   async findByIdOrFail(id: number): Promise<Page> {
-    return Page.query(this.#client())
+    return Page.query(this.client())
       .where('id', id)
       .preload('translations')
       .preload('metaImage')
@@ -68,7 +63,7 @@ export class PageRepository {
    * const page = await pageRepository.findBySlug('about-us')
    */
   async findBySlug(slug: string): Promise<Page | null> {
-    return Page.query(this.#client())
+    return Page.query(this.client())
       .whereHas('translations', (t) => {
         t.where('slug', slug).where('status', 'published')
       })
@@ -86,7 +81,7 @@ export class PageRepository {
    * const homepage = await pageRepository.findHomepage()
    */
   async findHomepage(): Promise<Page | null> {
-    return Page.query(this.#client()).where('is_homepage', true).preload('translations').first()
+    return Page.query(this.client()).where('is_homepage', true).preload('translations').first()
   }
 
   /**
@@ -100,7 +95,7 @@ export class PageRepository {
    * const result = await pageRepository.list({ status: 'published' }, { page: 1, perPage: 20 })
    */
   async list(filters: ListFilters, pagination: PaginationFilters) {
-    const query = Page.query(this.#client()).preload('translations').orderBy('created_at', 'desc')
+    const query = Page.query(this.client()).preload('translations').orderBy('created_at', 'desc')
 
     if (filters.status) {
       query.whereHas('translations', (t) => t.where('status', filters.status!))
@@ -133,7 +128,7 @@ export class PageRepository {
     createdBy: number
     metaImageId?: number | null
   }): Promise<Page> {
-    return Page.create(data, this.#client())
+    return Page.create(data, this.client())
   }
 
   /**
@@ -169,8 +164,8 @@ export class PageRepository {
    * await pageRepository.setHomepage(5)
    */
   async setHomepage(pageId: number): Promise<void> {
-    await Page.query(this.#client()).where('is_homepage', true).update({ isHomepage: false })
-    await Page.query(this.#client()).where('id', pageId).update({ isHomepage: true })
+    await Page.query(this.client()).where('is_homepage', true).update({ isHomepage: false })
+    await Page.query(this.client()).where('id', pageId).update({ isHomepage: true })
   }
 
   /**
@@ -182,7 +177,7 @@ export class PageRepository {
    * await pageRepository.delete(1)
    */
   async delete(id: number): Promise<void> {
-    const page = await Page.query(this.#client()).where('id', id).firstOrFail()
+    const page = await Page.query(this.client()).where('id', id).firstOrFail()
     await page.delete()
   }
 
@@ -196,7 +191,7 @@ export class PageRepository {
    * const pages = await pageRepository.listForLinks()
    */
   async listForLinks() {
-    return Page.query(this.#client())
+    return Page.query(this.client())
       .select('id', 'default_locale')
       .preload('translations', (q) => q.select('title', 'locale', 'slug'))
       .orderBy('id', 'asc')
@@ -212,7 +207,7 @@ export class PageRepository {
    * const pages = await pageRepository.listPublishedForSitemap()
    */
   async listPublishedForSitemap() {
-    return Page.query(this.#client())
+    return Page.query(this.client())
       .whereHas('translations', (query) => {
         query.where('status', 'published')
       })

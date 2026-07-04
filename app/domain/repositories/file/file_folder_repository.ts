@@ -1,19 +1,14 @@
 import { transactionContext } from '#shared/context/transaction_context'
 import FileFolder from '#models/file/file_folder'
+import { BaseRepository } from '#repositories/base_repository'
 
 /**
  * Handles all database operations for the {@link FileFolder} model.
  *
- * Manages folder hierarchy � files inside a folder are NOT deleted when the
+ * Manages folder hierarchy files inside a folder are NOT deleted when the
  * folder is removed; they are moved to root via the SET NULL FK constraint.
  */
-export class FileFolderRepository {
-  /** Resolve the active database client, preferring an ambient transaction if one exists. */
-  #client() {
-    const trx = transactionContext.get()
-    return trx ? { client: trx } : undefined
-  }
-
+export class FileFolderRepository extends BaseRepository {
   /**
    * Finds a folder by its primary key.
    *
@@ -24,7 +19,7 @@ export class FileFolderRepository {
    * const folder = await fileFolderRepository.findById(1)
    */
   async findById(id: number): Promise<FileFolder | null> {
-    return FileFolder.query(this.#client()).where('id', id).first()
+    return FileFolder.query(this.client()).where('id', id).first()
   }
 
   /**
@@ -36,7 +31,7 @@ export class FileFolderRepository {
    * const roots = await fileFolderRepository.listRoots()
    */
   async listRoots(): Promise<FileFolder[]> {
-    return FileFolder.query(this.#client())
+    return FileFolder.query(this.client())
       .apply((s) => s.roots())
       .orderBy('name', 'asc')
   }
@@ -51,7 +46,7 @@ export class FileFolderRepository {
    * const children = await fileFolderRepository.listChildren(5)
    */
   async listChildren(parentId: number): Promise<FileFolder[]> {
-    return FileFolder.query(this.#client()).where('parent_id', parentId).orderBy('name', 'asc')
+    return FileFolder.query(this.client()).where('parent_id', parentId).orderBy('name', 'asc')
   }
 
   /**
@@ -69,7 +64,7 @@ export class FileFolderRepository {
         name: data.name,
         parentId: data.parentId ?? null,
       },
-      this.#client()
+      this.client()
     )
   }
 
@@ -104,7 +99,7 @@ export class FileFolderRepository {
    * await fileFolderRepository.delete(3)
    */
   async delete(id: number): Promise<boolean> {
-    const folder = await FileFolder.query(this.#client()).where('id', id).firstOrFail()
+    const folder = await FileFolder.query(this.client()).where('id', id).firstOrFail()
     await folder.delete()
     return true
   }

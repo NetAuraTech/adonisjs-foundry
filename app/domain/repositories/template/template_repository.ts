@@ -2,6 +2,7 @@
 import Template from '#models/template/template'
 import type { BlockType, PageContent } from '#types/page'
 import type { TemplateType } from '#types/template'
+import { BaseRepository } from '#repositories/base_repository'
 
 interface ListFilters {
   type?: TemplateType
@@ -15,13 +16,7 @@ interface ListFilters {
  * Manages reusable content templates that can be applied to pages or used
  * as building blocks for page compositions.
  */
-export class TemplateRepository {
-  /** Resolve the active database client, preferring an ambient transaction if one exists. */
-  #client() {
-    const trx = transactionContext.get()
-    return trx ? { client: trx } : undefined
-  }
-
+export class TemplateRepository extends BaseRepository {
   /**
    * Finds a template by its primary key, preloading the thumbnail image.
    *
@@ -32,7 +27,7 @@ export class TemplateRepository {
    * const template = await templateRepository.findById(1)
    */
   async findById(id: number): Promise<Template | null> {
-    return Template.query(this.#client()).where('id', id).preload('thumbnail').first()
+    return Template.query(this.client()).where('id', id).preload('thumbnail').first()
   }
 
   /**
@@ -47,7 +42,7 @@ export class TemplateRepository {
    * const template = await templateRepository.findByIdOrFail(1)
    */
   async findByIdOrFail(id: number): Promise<Template> {
-    return Template.query(this.#client()).where('id', id).preload('thumbnail').firstOrFail()
+    return Template.query(this.client()).where('id', id).preload('thumbnail').firstOrFail()
   }
 
   /**
@@ -60,7 +55,7 @@ export class TemplateRepository {
    * const templates = await templateRepository.list({ type: 'page' })
    */
   async list(filters: ListFilters): Promise<Template[]> {
-    const query = Template.query(this.#client()).preload('thumbnail').orderBy('name', 'asc')
+    const query = Template.query(this.client()).preload('thumbnail').orderBy('name', 'asc')
 
     if (filters.type) {
       query.where('type', filters.type)
@@ -95,7 +90,7 @@ export class TemplateRepository {
     content: PageContent
     createdBy: number | null
   }): Promise<Template> {
-    return Template.create(data, this.#client())
+    return Template.create(data, this.client())
   }
 
   /**
@@ -132,7 +127,7 @@ export class TemplateRepository {
    * await templateRepository.delete(1)
    */
   async delete(id: number): Promise<void> {
-    const template = await Template.query(this.#client()).where('id', id).firstOrFail()
+    const template = await Template.query(this.client()).where('id', id).firstOrFail()
     await template.delete()
   }
 }

@@ -1,6 +1,7 @@
 ﻿import { transactionContext } from '#shared/context/transaction_context'
 import Permission from '#models/auth/permission'
 import { type FindOptions } from '#types/core'
+import { BaseRepository } from '#repositories/base_repository'
 
 /**
  * Handles all database operations for the {@link Permission} model.
@@ -9,13 +10,7 @@ import { type FindOptions } from '#types/core'
  * callers never interact with the ORM directly, making the data layer easy
  * to test and swap.
  */
-export class PermissionRepository {
-  /** Resolve the active database client, preferring an ambient transaction if one exists. */
-  #client() {
-    const trx = transactionContext.get()
-    return trx ? { client: trx } : undefined
-  }
-
+export class PermissionRepository extends BaseRepository {
   /**
    * Finds a permission by its primary key.
    *
@@ -26,7 +21,7 @@ export class PermissionRepository {
    * const permission = await permissionRepository.findById(1)
    */
   async findById(id: number): Promise<Permission | null> {
-    return await Permission.query(this.#client()).where('id', id).first()
+    return await Permission.query(this.client()).where('id', id).first()
   }
 
   /**
@@ -39,7 +34,7 @@ export class PermissionRepository {
    * const permissions = await permissionRepository.findAll({ orderBy: 'slug', limit: 20 })
    */
   async findAll(options?: FindOptions): Promise<Permission[]> {
-    let query = Permission.query(this.#client())
+    let query = Permission.query(this.client())
 
     if (options?.orderBy) {
       query = query.orderBy(options.orderBy, options.orderDirection || 'asc')
@@ -66,7 +61,7 @@ export class PermissionRepository {
    * const permission = await permissionRepository.findBySlug('users.create')
    */
   async findBySlug(slug: string): Promise<Permission | null> {
-    return await Permission.query(this.#client()).where('slug', slug).first()
+    return await Permission.query(this.client()).where('slug', slug).first()
   }
 
   /**
@@ -79,7 +74,7 @@ export class PermissionRepository {
    * const permissions = await permissionRepository.findByCategory('users')
    */
   async findByCategory(category: string): Promise<Permission[]> {
-    return await Permission.query(this.#client()).where('category', category)
+    return await Permission.query(this.client()).where('category', category)
   }
 
   /**
@@ -93,7 +88,7 @@ export class PermissionRepository {
    * const permission = await permissionRepository.findByIdOrFail(1)
    */
   async findByIdOrFail(id: number): Promise<Permission> {
-    return await Permission.query(this.#client()).where('id', id).firstOrFail()
+    return await Permission.query(this.client()).where('id', id).firstOrFail()
   }
 
   /**
@@ -106,7 +101,7 @@ export class PermissionRepository {
    * const permission = await permissionRepository.create({ slug: 'users.delete', category: 'users' })
    */
   async create(data: Partial<Permission>): Promise<Permission> {
-    return Permission.create(data as any, this.#client())
+    return Permission.create(data as any, this.client())
   }
 
   /**
@@ -162,7 +157,7 @@ export class PermissionRepository {
    * const userPerms = await permissionRepository.count({ category: 'users' })
    */
   async count(criteria?: Record<string, any>): Promise<number> {
-    let query = Permission.query(this.#client())
+    let query = Permission.query(this.client())
 
     if (criteria) {
       Object.entries(criteria).forEach(([key, value]) => {
@@ -204,7 +199,7 @@ export class PermissionRepository {
    * // ['admin', 'billing', 'users']
    */
   async getCategories(): Promise<string[]> {
-    const rows = await Permission.query(this.#client())
+    const rows = await Permission.query(this.client())
       .distinct('category')
       .orderBy('category', 'asc')
     return rows.map((r) => r.category)

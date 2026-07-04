@@ -9,6 +9,7 @@ import { inject } from '@adonisjs/core'
 import { LogService } from '#services/logging/log_service'
 import { maskToken } from '#helpers/core/crypto'
 import MaxAttemptsExceededException from '#exceptions/core/max_attempts_exceeded_exception'
+import { BaseRepository } from '#repositories/base_repository'
 
 /**
  * Handles all database operations for the {@link Token} model.
@@ -30,13 +31,9 @@ import MaxAttemptsExceededException from '#exceptions/core/max_attempts_exceeded
  *   so that callers never need to handle a `null` return.
  */
 @inject()
-export class TokenRepository {
-  constructor(protected logService: LogService) {}
-
-  /** Resolve the active database client, preferring an ambient transaction if one exists. */
-  #client() {
-    const trx = transactionContext.get()
-    return trx ? { client: trx } : undefined
+export class TokenRepository extends BaseRepository {
+  constructor(protected logService: LogService) {
+    super()
   }
 
   /**
@@ -49,7 +46,7 @@ export class TokenRepository {
    * const token = await tokenRepository.findById(1)
    */
   async findById(id: number): Promise<Token | null> {
-    return await Token.query(this.#client()).where('id', id).first()
+    return await Token.query(this.client()).where('id', id).first()
   }
 
   /**
@@ -62,7 +59,7 @@ export class TokenRepository {
    * const tokens = await tokenRepository.findAll({ orderBy: 'createdAt', limit: 50 })
    */
   async findAll(options?: FindOptions): Promise<Token[]> {
-    let query = Token.query(this.#client())
+    let query = Token.query(this.client())
 
     if (options?.orderBy) {
       query = query.orderBy(options.orderBy, options.orderDirection || 'asc')
@@ -91,7 +88,7 @@ export class TokenRepository {
    * const token = await tokenRepository.findOne({ userId: 1, type: TOKEN_TYPES.PASSWORD_RESET })
    */
   async findOne(criteria: Record<string, any>): Promise<Token | null> {
-    let query = Token.query(this.#client())
+    let query = Token.query(this.client())
 
     Object.entries(criteria).forEach(([key, value]) => {
       query = query.where(key, value)
@@ -114,7 +111,7 @@ export class TokenRepository {
    * const tokens = await tokenRepository.findMany({ userId: 1 }, { orderBy: 'expiresAt' })
    */
   async findMany(criteria: Record<string, any>, options?: FindOptions): Promise<Token[]> {
-    let query = Token.query(this.#client())
+    let query = Token.query(this.client())
 
     Object.entries(criteria).forEach(([key, value]) => {
       query = query.where(key, value)
@@ -148,7 +145,7 @@ export class TokenRepository {
    * const token = await tokenRepository.create({ userId, type, selector, token: hashedValidator })
    */
   async create(data: Partial<Token>): Promise<Token> {
-    return Token.create(data as any, this.#client())
+    return Token.create(data as any, this.client())
   }
 
   /**
@@ -174,7 +171,7 @@ export class TokenRepository {
    * @returns The matching {@link Token}, or `null`.
    */
   async findBySelector(selector: string, type: TokenType): Promise<Token | null> {
-    return await Token.query(this.#client())
+    return await Token.query(this.client())
       .where('selector', selector)
       .where('type', type)
       .where('expires_at', '>', DateTime.now().toSQL())
@@ -221,7 +218,7 @@ export class TokenRepository {
 
     if (!parts) return
 
-    const record = await Token.query(this.#client()).where('selector', parts.selector).first()
+    const record = await Token.query(this.client()).where('selector', parts.selector).first()
 
     if (!record) return
 
@@ -263,7 +260,7 @@ export class TokenRepository {
    * @param userId - The primary key of the user whose tokens should be expired.
    */
   async expireEmailVerificationTokens(user: User): Promise<void> {
-    const tokens = await Token.query(this.#client())
+    const tokens = await Token.query(this.client())
       .where('user_id', user.id)
       .where('type', TOKEN_TYPES.EMAIL_VERIFICATION)
 
@@ -283,7 +280,7 @@ export class TokenRepository {
    * @param userId - The primary key of the user whose tokens should be expired.
    */
   async expirePasswordResetTokens(user: User): Promise<void> {
-    const tokens = await Token.query(this.#client())
+    const tokens = await Token.query(this.client())
       .where('user_id', user.id)
       .where('type', TOKEN_TYPES.PASSWORD_RESET)
 
@@ -311,7 +308,7 @@ export class TokenRepository {
 
     if (!parts) return null
 
-    const data = await Token.query(this.#client())
+    const data = await Token.query(this.client())
       .where('selector', parts.selector)
       .where('type', type)
       .where('expires_at', '>', DateTime.now().toSQL())
@@ -322,7 +319,7 @@ export class TokenRepository {
     const isValid = await hash.verify(data.token, parts.validator)
     if (!isValid) return null
 
-    const client = this.#client()
+    const client = this.client()
     if (!data.userId) return null
     const user = await User.query(client).where('id', data.userId).first()
     if (!user) return null
@@ -431,7 +428,7 @@ export class TokenRepository {
       throw new InvalidTokenException()
     }
 
-    const data = await Token.query(this.#client())
+    const data = await Token.query(this.client())
       .where('selector', parts.selector)
       .where('type', TOKEN_TYPES.PENDING_INVITE)
       .where('expires_at', '>', DateTime.now().toSQL())
@@ -470,7 +467,7 @@ export class TokenRepository {
    * await tokenRepository.deleteInvitationTokens(user.id)
    */
   async deleteInvitationTokens(userId: number): Promise<void> {
-    await Token.query(this.#client())
+    await Token.query(this.client())
       .where('type', TOKEN_TYPES.PENDING_INVITE)
       .where('user_id', userId)
       .delete()
@@ -547,7 +544,7 @@ export class TokenRepository {
    * @returns The number of matching records.
    */
   async count(criteria?: Record<string, any>): Promise<number> {
-    let query = Token.query(this.#client())
+    let query = Token.query(this.client())
 
     if (criteria) {
       Object.entries(criteria).forEach(([key, value]) => {
@@ -577,7 +574,7 @@ export class TokenRepository {
    * @returns The number of deleted records.
    */
   async deleteMany(criteria: Record<string, any>): Promise<number> {
-    let query = Token.query(this.#client())
+    let query = Token.query(this.client())
 
     Object.entries(criteria).forEach(([key, value]) => {
       query = query.where(key, value)
@@ -598,7 +595,7 @@ export class TokenRepository {
     const parts = this.#splitToken(token)
     if (!parts) return
 
-    const data = await Token.query(this.#client()).where('selector', parts.selector).first()
+    const data = await Token.query(this.client()).where('selector', parts.selector).first()
     if (!data) return
 
     data.attempts = (data.attempts || 0) + 1
@@ -612,7 +609,7 @@ export class TokenRepository {
    * @param user - The user whose email change tokens should be expired.
    */
   async expireEmailChangeTokens(user: User): Promise<void> {
-    const tokens = await Token.query(this.#client())
+    const tokens = await Token.query(this.client())
       .where('user_id', user.id)
       .where('type', TOKEN_TYPES.EMAIL_CHANGE)
 
@@ -629,7 +626,7 @@ export class TokenRepository {
    * @param user - The user whose invitation tokens should be expired.
    */
   async expireInviteTokens(user: User): Promise<void> {
-    const tokens = await Token.query(this.#client())
+    const tokens = await Token.query(this.client())
       .where('user_id', user.id)
       .where('type', TOKEN_TYPES.PENDING_INVITE)
 

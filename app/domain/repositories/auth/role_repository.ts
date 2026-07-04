@@ -1,6 +1,7 @@
 ﻿import { transactionContext } from '#shared/context/transaction_context'
 import Role from '#models/auth/role'
 import { type FindOptions } from '#types/core'
+import { BaseRepository } from '#repositories/base_repository'
 
 /**
  * Handles all database operations for the {@link Role} model.
@@ -9,13 +10,7 @@ import { type FindOptions } from '#types/core'
  * callers never interact with the ORM directly, making the data layer easy
  * to test and swap.
  */
-export class RoleRepository {
-  /** Resolve the active database client, preferring an ambient transaction if one exists. */
-  #client() {
-    const trx = transactionContext.get()
-    return trx ? { client: trx } : undefined
-  }
-
+export class RoleRepository extends BaseRepository {
   /**
    * Finds a role by its primary key.
    *
@@ -26,7 +21,7 @@ export class RoleRepository {
    * const role = await roleRepository.findById(1)
    */
   async findById(id: number): Promise<Role | null> {
-    return await Role.query(this.#client()).where('id', id).first()
+    return await Role.query(this.client()).where('id', id).first()
   }
 
   /**
@@ -39,7 +34,7 @@ export class RoleRepository {
    * const roles = await roleRepository.findAll({ orderBy: 'name', limit: 10 })
    */
   async findAll(options?: FindOptions): Promise<Role[]> {
-    let query = Role.query(this.#client())
+    let query = Role.query(this.client())
 
     if (options?.orderBy) {
       query = query.orderBy(options.orderBy, options.orderDirection || 'asc')
@@ -68,7 +63,7 @@ export class RoleRepository {
    * const role = await roleRepository.findOne({ isSystem: true })
    */
   async findOne(criteria: Record<string, any>): Promise<Role | null> {
-    let query = Role.query(this.#client())
+    let query = Role.query(this.client())
 
     Object.entries(criteria).forEach(([key, value]) => {
       query = query.where(key, value)
@@ -91,7 +86,7 @@ export class RoleRepository {
    * const roles = await roleRepository.findMany({ isSystem: false }, { orderBy: 'name' })
    */
   async findMany(criteria: Record<string, any>, options?: FindOptions): Promise<Role[]> {
-    let query = Role.query(this.#client())
+    let query = Role.query(this.client())
 
     Object.entries(criteria).forEach(([key, value]) => {
       query = query.where(key, value)
@@ -122,7 +117,7 @@ export class RoleRepository {
    * const role = await roleRepository.findBySlug('admin')
    */
   async findBySlug(slug: string): Promise<Role | null> {
-    return await Role.query(this.#client()).where('slug', slug).first()
+    return await Role.query(this.client()).where('slug', slug).first()
   }
 
   /**
@@ -135,7 +130,7 @@ export class RoleRepository {
    * const role = await roleRepository.findByName('Administrator')
    */
   async findByName(name: string): Promise<Role | null> {
-    return await Role.query(this.#client()).where('name', name).first()
+    return await Role.query(this.client()).where('name', name).first()
   }
 
   /**
@@ -148,7 +143,7 @@ export class RoleRepository {
    * const role = await roleRepository.create({ name: 'Editor', slug: 'editor' })
    */
   async create(data: Partial<Role>): Promise<Role> {
-    return Role.create(data as any, this.#client())
+    return Role.create(data as any, this.client())
   }
 
   /**
@@ -204,7 +199,7 @@ export class RoleRepository {
    * const systemRoles = await roleRepository.count({ isSystem: true })
    */
   async count(criteria?: Record<string, any>): Promise<number> {
-    let query = Role.query(this.#client())
+    let query = Role.query(this.client())
 
     if (criteria) {
       Object.entries(criteria).forEach(([key, value]) => {
@@ -284,6 +279,6 @@ export class RoleRepository {
    * const role = await roleRepository.findByIdOrFail(1)
    */
   async findByIdOrFail(id: number): Promise<Role> {
-    return await Role.query(this.#client()).where('id', id).firstOrFail()
+    return await Role.query(this.client()).where('id', id).firstOrFail()
   }
 }

@@ -1,6 +1,7 @@
 import { transactionContext } from '#shared/context/transaction_context'
 import PageTranslation from '#models/page/page_translation'
 import type { PageContent, PageStatus } from '#types/page'
+import { BaseRepository } from '#repositories/base_repository'
 
 /**
  * Handles all database operations for the {@link PageTranslation} model.
@@ -8,13 +9,7 @@ import type { PageContent, PageStatus } from '#types/page'
  * Manages localized page content including slug uniqueness validation
  * and upsert operations for cross-locale copying.
  */
-export class PageTranslationRepository {
-  /** Resolve the active database client, preferring an ambient transaction if one exists. */
-  #client() {
-    const trx = transactionContext.get()
-    return trx ? { client: trx } : undefined
-  }
-
+export class PageTranslationRepository extends BaseRepository {
   /**
    * Finds a translation by its primary key.
    *
@@ -25,7 +20,7 @@ export class PageTranslationRepository {
    * const translation = await pageTranslationRepository.findById(1)
    */
   async findById(id: number): Promise<PageTranslation | null> {
-    return PageTranslation.query(this.#client()).where('id', id).first()
+    return PageTranslation.query(this.client()).where('id', id).first()
   }
 
   /**
@@ -39,7 +34,7 @@ export class PageTranslationRepository {
    * const translation = await pageTranslationRepository.findByPageAndLocale(1, 'fr')
    */
   async findByPageAndLocale(pageId: number, locale: string): Promise<PageTranslation | null> {
-    return PageTranslation.query(this.#client())
+    return PageTranslation.query(this.client())
       .where('page_id', pageId)
       .where('locale', locale)
       .first()
@@ -55,7 +50,7 @@ export class PageTranslationRepository {
    * const translation = await pageTranslationRepository.findBySlug('about-us')
    */
   async findBySlug(slug: string): Promise<PageTranslation | null> {
-    return PageTranslation.query(this.#client()).where('slug', slug).preload('page').first()
+    return PageTranslation.query(this.client()).where('slug', slug).preload('page').first()
   }
 
   /**
@@ -82,7 +77,7 @@ export class PageTranslationRepository {
         ...data,
         status: data.status ?? 'draft',
       },
-      this.#client()
+      this.client()
     )
   }
 
@@ -143,7 +138,7 @@ export class PageTranslationRepository {
         ...data,
         status: data.status ?? 'draft',
       },
-      this.#client()
+      this.client()
     )
   }
 
@@ -158,7 +153,7 @@ export class PageTranslationRepository {
    * const taken = await pageTranslationRepository.slugExists('about-us')
    */
   async slugExists(slug: string, excludeId?: number): Promise<boolean> {
-    const query = PageTranslation.query(this.#client()).where('slug', slug)
+    const query = PageTranslation.query(this.client()).where('slug', slug)
     if (excludeId) query.whereNot('id', excludeId)
     const result = await query.first()
     return !!result

@@ -1,6 +1,7 @@
 import { transactionContext } from '#shared/context/transaction_context'
 import File from '#models/file/file'
 import type { PaginationFilters } from '#types/pagination'
+import { BaseRepository } from '#repositories/base_repository'
 
 interface ListFilters {
   folderId?: number | null
@@ -14,13 +15,7 @@ interface ListFilters {
  *
  * Manages file metadata, folder associations, and localized alt text entries.
  */
-export class FileRepository {
-  /** Resolve the active database client, preferring an ambient transaction if one exists. */
-  #client() {
-    const trx = transactionContext.get()
-    return trx ? { client: trx } : undefined
-  }
-
+export class FileRepository extends BaseRepository {
   /**
    * Finds a file by its primary key, preloading alt text entries.
    *
@@ -31,7 +26,7 @@ export class FileRepository {
    * const file = await fileRepository.findById(1)
    */
   async findById(id: number): Promise<File | null> {
-    return File.query(this.#client()).where('id', id).preload('alts').first()
+    return File.query(this.client()).where('id', id).preload('alts').first()
   }
 
   /**
@@ -46,7 +41,7 @@ export class FileRepository {
    * const file = await fileRepository.findByIdOrFail(1)
    */
   async findByIdOrFail(id: number): Promise<File> {
-    return File.query(this.#client()).where('id', id).preload('alts').firstOrFail()
+    return File.query(this.client()).where('id', id).preload('alts').firstOrFail()
   }
 
   /**
@@ -60,7 +55,7 @@ export class FileRepository {
    * const result = await fileRepository.list({ folderId: 1 }, { page: 1, perPage: 20 })
    */
   async list(filters: ListFilters, pagination: PaginationFilters) {
-    const query = File.query(this.#client())
+    const query = File.query(this.client())
       .preload('folder')
       .preload('alts')
       .orderBy('created_at', 'desc')
@@ -108,7 +103,7 @@ export class FileRepository {
     folderId?: number | null
     uploadedBy?: number | null
   }): Promise<File> {
-    return File.create(data as any, this.#client())
+    return File.create(data as any, this.client())
   }
 
   /**
@@ -143,7 +138,7 @@ export class FileRepository {
    * await fileRepository.delete(1)
    */
   async delete(id: number): Promise<boolean> {
-    const file = await File.query(this.#client()).where('id', id).firstOrFail()
+    const file = await File.query(this.client()).where('id', id).firstOrFail()
     await file.delete()
     return true
   }
@@ -162,7 +157,7 @@ export class FileRepository {
   async upsertAlt(fileId: number, locale: string, key: string, value: string): Promise<void> {
     const { default: FileAlt } = await import('#models/file/file_alt')
 
-    await FileAlt.updateOrCreate({ fileId, locale, key }, { value }, this.#client())
+    await FileAlt.updateOrCreate({ fileId, locale, key }, { value }, this.client())
   }
 
   /**
@@ -178,7 +173,7 @@ export class FileRepository {
   async deleteAlt(fileId: number, locale: string, key: string): Promise<void> {
     const { default: FileAlt } = await import('#models/file/file_alt')
 
-    await FileAlt.query(this.#client())
+    await FileAlt.query(this.client())
       .where('file_id', fileId)
       .where('locale', locale)
       .where('key', key)
@@ -197,6 +192,6 @@ export class FileRepository {
   async listAlts(fileId: number): Promise<{ locale: string; key: string; value: string }[]> {
     const { default: FileAlt } = await import('#models/file/file_alt')
 
-    return FileAlt.query(this.#client()).where('file_id', fileId).orderBy('locale').orderBy('key')
+    return FileAlt.query(this.client()).where('file_id', fileId).orderBy('locale').orderBy('key')
   }
 }

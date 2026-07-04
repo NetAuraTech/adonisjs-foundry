@@ -1,6 +1,7 @@
 import { transactionContext } from '#shared/context/transaction_context'
 import PageRevision from '#models/page/page_revision'
 import type { PageContent } from '#types/page'
+import { BaseRepository } from '#repositories/base_repository'
 
 /**
  * Handles all database operations for the {@link PageRevision} model.
@@ -8,13 +9,7 @@ import type { PageContent } from '#types/page'
  * Manages page revision history, including creation, toggling pinned status,
  * and purging old revisions beyond a retention limit.
  */
-export class PageRevisionRepository {
-  /** Resolve the active database client, preferring an ambient transaction if one exists. */
-  #client() {
-    const trx = transactionContext.get()
-    return trx ? { client: trx } : undefined
-  }
-
+export class PageRevisionRepository extends BaseRepository {
   /**
    * Finds a revision by its primary key.
    *
@@ -25,7 +20,7 @@ export class PageRevisionRepository {
    * const revision = await pageRevisionRepository.findById(1)
    */
   async findById(id: number): Promise<PageRevision | null> {
-    return PageRevision.query(this.#client()).where('id', id).first()
+    return PageRevision.query(this.client()).where('id', id).first()
   }
 
   /**
@@ -39,7 +34,7 @@ export class PageRevisionRepository {
    * const revision = await pageRevisionRepository.findByIdOrFail(1)
    */
   async findByIdOrFail(id: number): Promise<PageRevision> {
-    return PageRevision.query(this.#client()).where('id', id).firstOrFail()
+    return PageRevision.query(this.client()).where('id', id).firstOrFail()
   }
 
   /**
@@ -53,7 +48,7 @@ export class PageRevisionRepository {
    * const revisions = await pageRevisionRepository.listByTranslation(5, 10)
    */
   async listByTranslation(translationId: number, limit?: number): Promise<PageRevision[]> {
-    const query = PageRevision.query(this.#client())
+    const query = PageRevision.query(this.client())
       .preload('author')
       .where('page_translation_id', translationId)
       .orderBy('created_at', 'desc')
@@ -78,7 +73,7 @@ export class PageRevisionRepository {
     keep: boolean
     createdBy: number | null
   }): Promise<PageRevision> {
-    return PageRevision.create(data, this.#client())
+    return PageRevision.create(data, this.client())
   }
 
   /**
@@ -92,7 +87,7 @@ export class PageRevisionRepository {
    * const revision = await pageRevisionRepository.toggleKeep(3)
    */
   async toggleKeep(id: number): Promise<PageRevision> {
-    const revision = await PageRevision.query(this.#client()).where('id', id).firstOrFail()
+    const revision = await PageRevision.query(this.client()).where('id', id).firstOrFail()
     revision.keep = !revision.keep
     await transactionContext.merge(revision)
     await revision.save()
@@ -110,7 +105,7 @@ export class PageRevisionRepository {
    * await pageRevisionRepository.purgeOld(5, 10)
    */
   async purgeOld(translationId: number, keepCount: number): Promise<void> {
-    const unpinned = await PageRevision.query(this.#client())
+    const unpinned = await PageRevision.query(this.client())
       .where('page_translation_id', translationId)
       .where('keep', false)
       .orderBy('created_at', 'desc')
@@ -119,7 +114,7 @@ export class PageRevisionRepository {
 
     const toDelete = unpinned.slice(keepCount).map((r) => r.id)
 
-    await PageRevision.query(this.#client()).whereIn('id', toDelete).delete()
+    await PageRevision.query(this.client()).whereIn('id', toDelete).delete()
   }
 
   /**
@@ -131,10 +126,10 @@ export class PageRevisionRepository {
    */
   async list(pageId: number, pagination: { page?: number; perPage?: number }) {
     const { default: PageTranslation } = await import('#models/page/page_translation')
-    const translations = await PageTranslation.query(this.#client()).where('page_id', pageId)
+    const translations = await PageTranslation.query(this.client()).where('page_id', pageId)
     const translationIds = translations.map((t: { id: number }) => t.id)
 
-    const query = PageRevision.query(this.#client())
+    const query = PageRevision.query(this.client())
       .preload('author')
       .whereIn('page_translation_id', translationIds)
       .orderBy('created_at', 'desc')

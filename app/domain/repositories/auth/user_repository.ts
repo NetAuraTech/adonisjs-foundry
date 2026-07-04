@@ -2,6 +2,7 @@ import { transactionContext } from '#shared/context/transaction_context'
 import User from '#models/auth/user'
 import { type OAuthProvider } from '#types/auth'
 import { type FindOptions } from '#types/core'
+import { BaseRepository } from '#repositories/base_repository'
 
 /**
  * Handles all database operations for the {@link User} model.
@@ -10,13 +11,7 @@ import { type FindOptions } from '#types/core'
  * callers never interact with the ORM directly, making the data layer easy
  * to test and swap.
  */
-export class UserRepository {
-  /** Resolve the active database client, preferring an ambient transaction if one exists. */
-  #client() {
-    const trx = transactionContext.get()
-    return trx ? { client: trx } : undefined
-  }
-
+export class UserRepository extends BaseRepository {
   /**
    * Finds a user by their primary key.
    *
@@ -27,7 +22,7 @@ export class UserRepository {
    * const user = await userRepository.findById(1)
    */
   async findById(id: number): Promise<User | null> {
-    return await User.query(this.#client()).where('id', id).first()
+    return await User.query(this.client()).where('id', id).first()
   }
 
   /**
@@ -40,7 +35,7 @@ export class UserRepository {
    * const users = await userRepository.findAll({ orderBy: 'email', limit: 20 })
    */
   async findAll(options?: FindOptions): Promise<User[]> {
-    let query = User.query(this.#client())
+    let query = User.query(this.client())
 
     if (options?.orderBy) {
       query = query.orderBy(options.orderBy, options.orderDirection || 'asc')
@@ -69,7 +64,7 @@ export class UserRepository {
    * const user = await userRepository.findOne({ emailVerifiedAt: null })
    */
   async findOne(criteria: Record<string, any>): Promise<User | null> {
-    let query = User.query(this.#client())
+    let query = User.query(this.client())
 
     Object.entries(criteria).forEach(([key, value]) => {
       query = query.where(key, value)
@@ -92,7 +87,7 @@ export class UserRepository {
    * const users = await userRepository.findMany({ roleId: 1 }, { orderBy: 'email' })
    */
   async findMany(criteria: Record<string, any>, options?: FindOptions): Promise<User[]> {
-    let query = User.query(this.#client())
+    let query = User.query(this.client())
 
     Object.entries(criteria).forEach(([key, value]) => {
       query = query.where(key, value)
@@ -123,7 +118,7 @@ export class UserRepository {
    * const user = await userRepository.findByEmail('user@example.com')
    */
   async findByEmail(email: string): Promise<User | null> {
-    return await User.query(this.#client()).where('email', email).first()
+    return await User.query(this.client()).where('email', email).first()
   }
 
   /**
@@ -141,7 +136,7 @@ export class UserRepository {
    */
   async findByProviderId(provider: OAuthProvider, providerId: string): Promise<User | null> {
     const providerIdColumn = `${provider}Id` as 'githubId' | 'googleId' | 'facebookId'
-    return await User.query(this.#client()).where(providerIdColumn, providerId).first()
+    return await User.query(this.client()).where(providerIdColumn, providerId).first()
   }
 
   /**
@@ -167,7 +162,7 @@ export class UserRepository {
     excludeUserId: number
   ): Promise<User | null> {
     const providerIdColumn = `${provider}Id` as 'githubId' | 'googleId' | 'facebookId'
-    return await User.query(this.#client())
+    return await User.query(this.client())
       .where(providerIdColumn, providerId)
       .whereNot('id', excludeUserId)
       .first()
@@ -201,7 +196,7 @@ export class UserRepository {
    * const user = await userRepository.create({ email: 'user@example.com', password: 'secret' })
    */
   async create(data: Partial<User>): Promise<User> {
-    return User.create(data as any, this.#client())
+    return User.create(data as any, this.client())
   }
 
   /**
@@ -272,7 +267,7 @@ export class UserRepository {
    * const recent = await userRepository.count({ createdAt: { operator: '>=', value: lastWeek } })
    */
   async count(criteria?: Record<string, any>): Promise<number> {
-    let query = User.query(this.#client())
+    let query = User.query(this.client())
 
     if (criteria) {
       Object.entries(criteria).forEach(([key, value]) => {
@@ -335,7 +330,7 @@ export class UserRepository {
    * const user = await userRepository.findByIdOrFail(1)
    */
   async findByIdOrFail(id: number): Promise<User> {
-    return await User.query(this.#client()).where('id', id).firstOrFail()
+    return await User.query(this.client()).where('id', id).firstOrFail()
   }
 
   /**
