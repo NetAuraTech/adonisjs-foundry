@@ -4,6 +4,7 @@ import { showPageValidator } from '#validators/page'
 import vine from '@vinejs/vine'
 import { GetPageDetailAction } from '#actions/page/get_page_detail_action'
 import { CreateTranslationAction } from '#actions/page/create_translation_action'
+import { I18nService } from '#services/i18n_service'
 
 const createTranslationValidator = vine.compile(
   vine.object({
@@ -16,12 +17,13 @@ const createTranslationValidator = vine.compile(
 @inject()
 export default class PageTranslationsController {
   constructor(
+    protected i18n: I18nService,
     protected getPageDetailAction: GetPageDetailAction,
     protected createTranslationAction: CreateTranslationAction
   ) {}
 
   async execute(ctx: HttpContext) {
-    const { params, request, response, session, i18n } = ctx
+    const { params, request, response, session } = ctx
 
     const { id } = await showPageValidator.validate(params)
     const payload = await createTranslationValidator.validate(request.all())
@@ -33,7 +35,7 @@ export default class PageTranslationsController {
       title: payload.title,
     })
 
-    session.flash('success', i18n.t('page.translation.created'))
+    session.flash('success', this.i18n.translate('page.translation.created'))
 
     return response.redirect().back()
   }

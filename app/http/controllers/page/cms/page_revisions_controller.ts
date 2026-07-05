@@ -6,17 +6,19 @@ import { extractPagination } from '#helpers/pagination/extract_pagination'
 import { ListRevisionsAction } from '#actions/page/list_revisions_action'
 import { RestoreRevisionAction } from '#actions/page/restore_revision_action'
 import { ToggleRevisionKeepAction } from '#actions/page/toggle_revision_keep_action'
+import { I18nService } from '#services/i18n_service'
 
 @inject()
 export default class PageRevisionsController {
   constructor(
+    protected i18n: I18nService,
     protected listRevisionsAction: ListRevisionsAction,
     protected restoreRevisionAction: RestoreRevisionAction,
     protected toggleRevisionKeepAction: ToggleRevisionKeepAction
   ) {}
 
   async index(ctx: HttpContext) {
-    const { inertia, params, request, i18n } = ctx
+    const { inertia, params, request } = ctx
 
     const pagination = await extractPagination(request)
     const revisions = await this.listRevisionsAction.execute({
@@ -29,23 +31,25 @@ export default class PageRevisionsController {
       translation_id: params.translationId,
       page_id: params.id,
       translations: {
-        title: i18n.t('cms.pages.show.revision.value'),
-        actions: {
-          value: i18n.t('cms.pages.actions'),
-          back: i18n.t('cms.pages.show.revision.back'),
-          restore: {
-            value: i18n.t('cms.pages.show.revision.restore.value'),
-            confirm: i18n.t('cms.pages.show.revision.restore.confirm'),
+        ...this.i18n.buildPayload({
+          title: 'cms.pages.show.revision.value',
+          actions: {
+            value: 'cms.pages.actions',
+            back: 'cms.pages.show.revision.back',
+            restore: {
+              value: 'cms.pages.show.revision.restore.value',
+              confirm: 'cms.pages.show.revision.restore.confirm',
+            },
+            unpin: 'cms.pages.show.revision.unpin',
+            pin: 'cms.pages.show.revision.pin',
           },
-          unpin: i18n.t('cms.pages.show.revision.unpin'),
-          pin: i18n.t('cms.pages.show.revision.pin'),
-        },
+        }),
       },
     })
   }
 
   async restore(ctx: HttpContext) {
-    const { params, response, auth, session, i18n } = ctx
+    const { params, response, auth, session } = ctx
 
     const payload = await revisionValidator.validate(params)
     const user = auth.getUserOrFail()
@@ -56,19 +60,19 @@ export default class PageRevisionsController {
       userId: user.id,
     })
 
-    session.flash('success', i18n.t('page.revision.restored'))
+    session.flash('success', this.i18n.translate('page.revision.restored'))
 
     return response.redirect().back()
   }
 
   async toggleKeep(ctx: HttpContext) {
-    const { params, response, session, i18n } = ctx
+    const { params, response, session } = ctx
 
     const payload = await revisionValidator.validate(params)
 
     await this.toggleRevisionKeepAction.execute({ revisionId: payload.revisionId })
 
-    session.flash('success', i18n.t('page.revision.keep_toggled'))
+    session.flash('success', this.i18n.translate('page.revision.keep_toggled'))
 
     return response.redirect().back()
   }

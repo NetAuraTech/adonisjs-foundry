@@ -6,10 +6,12 @@ import { ListRootFoldersAction } from '#actions/file_folder/list_root_folders_ac
 import { CreateFolderAction } from '#actions/file_folder/create_folder_action'
 import { RenameFolderAction } from '#actions/file_folder/rename_folder_action'
 import { DeleteFolderAction } from '#actions/file_folder/delete_folder_action'
+import { I18nService } from '#services/i18n_service'
 
 @inject()
 export default class FileFoldersController {
   constructor(
+    protected i18n: I18nService,
     protected listRootFoldersAction: ListRootFoldersAction,
     protected createFolderAction: CreateFolderAction,
     protected renameFolderAction: RenameFolderAction,
@@ -17,34 +19,46 @@ export default class FileFoldersController {
   ) {}
 
   async render(ctx: HttpContext) {
-    const { inertia, i18n } = ctx
+    const { inertia } = ctx
 
     const roots = await this.listRootFoldersAction.execute()
 
     return inertia.render('file/cms/folders', {
       roots: FileFolderTransformer.transform(roots),
       translations: {
-        title: i18n.t('cms.folders.list.title'),
-        action: i18n.t('cms.files.list.title'),
-        browse: i18n.t('cms.folders.list.browse'),
-        help: i18n.t('cms.folders.form.help'),
-        name: {
-          root: i18n.t('cms.folders.form.name.root'),
-          sub: i18n.t('cms.folders.form.name.sub'),
-        },
-        empty: {
-          value: i18n.t('cms.folders.list.empty.value'),
-          help: i18n.t('cms.folders.list.empty.help'),
-        },
+        ...this.i18n.buildPayload({
+          title: 'cms.folders.list.title',
+          action: 'cms.files.list.title',
+          browse: 'cms.folders.list.browse',
+          help: 'cms.folders.form.help',
+          name: {
+            root: 'cms.folders.form.name.root',
+            sub: 'cms.folders.form.name.sub',
+          },
+          empty: {
+            value: 'cms.folders.list.empty.value',
+            help: 'cms.folders.list.empty.help',
+          },
+          actions: {
+            add: 'cms.folders.list.add',
+            create: 'cms.folders.form.create',
+            update: 'cms.folders.form.update',
+            cancel: 'cms.folders.form.cancel',
+            rename: 'cms.folders.list.rename',
+            delete: {
+              confirm: 'cms.folders.delete.confirm',
+            },
+          },
+        }),
         actions: {
-          add: i18n.t('cms.folders.list.add'),
-          create: i18n.t('cms.folders.form.create'),
-          update: i18n.t('cms.folders.form.update'),
-          cancel: i18n.t('cms.folders.form.cancel'),
-          rename: i18n.t('cms.folders.list.rename'),
+          add: this.i18n.translate('cms.folders.list.add'),
+          create: this.i18n.translate('cms.folders.form.create'),
+          update: this.i18n.translate('cms.folders.form.update'),
+          cancel: this.i18n.translate('cms.folders.form.cancel'),
+          rename: this.i18n.translate('cms.folders.list.rename'),
           delete: {
-            value: i18n.t('cms.folders.delete.title', { folder: '{folder}' }),
-            confirm: i18n.t('cms.folders.delete.confirm'),
+            value: this.i18n.translate('cms.folders.delete.title', { folder: '{folder}' }),
+            confirm: this.i18n.translate('cms.folders.delete.confirm'),
           },
         },
       },
@@ -52,7 +66,7 @@ export default class FileFoldersController {
   }
 
   async execute(ctx: HttpContext) {
-    const { request, response, session, i18n } = ctx
+    const { request, response, session } = ctx
 
     const payload = await createFolderValidator.validate(request.all())
 
@@ -61,32 +75,32 @@ export default class FileFoldersController {
       parentId: payload.parentId ?? null,
     })
 
-    session.flash('success', i18n.t('file.folder.created'))
+    session.flash('success', this.i18n.translate('file.folder.created'))
 
     return response.redirect().toRoute('admin.file_folders.render')
   }
 
   async update(ctx: HttpContext) {
-    const { params, request, response, session, i18n } = ctx
+    const { params, request, response, session } = ctx
 
     const { id } = await showFileValidator.validate(params)
     const payload = await updateFolderValidator.validate({ ...request.all(), id })
 
     await this.renameFolderAction.execute({ id, name: payload.name })
 
-    session.flash('success', i18n.t('file.folder.updated'))
+    session.flash('success', this.i18n.translate('file.folder.updated'))
 
     return response.redirect().toRoute('admin.file_folders.render')
   }
 
   async destroy(ctx: HttpContext) {
-    const { params, response, session, i18n } = ctx
+    const { params, response, session } = ctx
 
     const { id } = await showFileValidator.validate(params)
 
     await this.deleteFolderAction.execute({ id })
 
-    session.flash('success', i18n.t('file.folder.deleted'))
+    session.flash('success', this.i18n.translate('file.folder.deleted'))
 
     return response.redirect().toRoute('admin.file_folders.render')
   }

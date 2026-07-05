@@ -7,10 +7,12 @@ import { GetPageDetailAction } from '#actions/page/get_page_detail_action'
 import { UpdatePageAction } from '#actions/page/update_page_action'
 import { ChangePageStatusAction } from '#actions/page/change_page_status_action'
 import { GetAvailablePagesForLinkAction } from '#actions/page/get_available_pages_for_link_action'
+import { I18nService } from '#services/i18n_service'
 
 @inject()
 export default class PagesUpdateController {
   constructor(
+    protected i18n: I18nService,
     protected getPageDetailAction: GetPageDetailAction,
     protected updatePageAction: UpdatePageAction,
     protected changePageStatusAction: ChangePageStatusAction,
@@ -75,7 +77,7 @@ export default class PagesUpdateController {
   }
 
   async execute(ctx: HttpContext) {
-    const { params, request, response, auth, session, i18n } = ctx
+    const { params, request, response, auth, session } = ctx
 
     const { id } = await showPageValidator.validate(params)
     const payload = await updatePageValidator.validate(request.all())
@@ -95,33 +97,33 @@ export default class PagesUpdateController {
       userId: user.id,
     })
 
-    session.flash('success', i18n.t('page.saved'))
+    session.flash('success', this.i18n.translate('page.saved'))
 
     return response.redirect().back()
   }
 
   async publish(ctx: HttpContext) {
-    const { params, request, response, session, i18n } = ctx
+    const { params, request, response, session } = ctx
 
     const { id } = await showPageValidator.validate(params)
     const { locale } = await publishPageValidator.validate(request.all())
 
     await this.changePageStatusAction.execute({ pageId: id, locale, status: 'published' })
 
-    session.flash('success', i18n.t('page.published'))
+    session.flash('success', this.i18n.translate('page.published'))
 
     return response.redirect().back()
   }
 
   async unpublish(ctx: HttpContext) {
-    const { params, request, response, session, i18n } = ctx
+    const { params, request, response, session } = ctx
 
     const { id } = await showPageValidator.validate(params)
     const { locale } = await publishPageValidator.validate(request.all())
 
     await this.changePageStatusAction.execute({ pageId: id, locale, status: 'draft' })
 
-    session.flash('success', i18n.t('page.unpublished'))
+    session.flash('success', this.i18n.translate('page.unpublished'))
 
     return response.redirect().back()
   }

@@ -4,32 +4,38 @@ import { changeEmailValidator } from '#validators/account'
 import { FullToken } from '#types/core'
 import { regenerateCsrfToken } from '#helpers/auth/crsf'
 import { ConfirmEmailChangeAction } from '#actions/account/confirm_email_change_action'
+import { I18nService } from '#services/i18n_service'
 
 @inject()
 export default class EmailChangeController {
-  constructor(protected confirmEmailChangeAction: ConfirmEmailChangeAction) {}
+  constructor(
+    protected i18n: I18nService,
+    protected confirmEmailChangeAction: ConfirmEmailChangeAction
+  ) {}
 
   async render(ctx: HttpContext) {
-    const { inertia, params, i18n } = ctx
+    const { inertia, params } = ctx
 
     return inertia.render('settings/account/front/email_change', {
       token: params.token,
       translations: {
-        title: i18n.t('settings.email.change.title'),
-        sub_title: i18n.t('settings.email.change.sub_title'),
-        submit: i18n.t('settings.email.change.submit'),
-        cancel: i18n.t('settings.email.change.cancel'),
-        token: i18n.t('settings.email.change.token'),
-        info: {
-          title: i18n.t('settings.email.change.info.title'),
-          message: i18n.t('settings.email.change.info.message'),
-        },
+        ...this.i18n.buildPayload({
+          title: 'settings.email.change.title',
+          sub_title: 'settings.email.change.sub_title',
+          submit: 'settings.email.change.submit',
+          cancel: 'settings.email.change.cancel',
+          token: 'settings.email.change.token',
+          info: {
+            title: 'settings.email.change.info.title',
+            message: 'settings.email.change.info.message',
+          },
+        }),
       },
     })
   }
 
   async execute(ctx: HttpContext) {
-    const { request, response, session, auth, i18n } = ctx
+    const { request, response, session, auth } = ctx
 
     await changeEmailValidator.validate(request.all())
 
@@ -43,7 +49,7 @@ export default class EmailChangeController {
 
     regenerateCsrfToken(ctx)
 
-    session.flash('success', i18n.t('settings.email.change.success'))
+    session.flash('success', this.i18n.translate('settings.email.change.success'))
 
     return response.redirect().toRoute('settings.account.render')
   }

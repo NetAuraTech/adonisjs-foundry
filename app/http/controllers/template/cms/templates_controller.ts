@@ -16,10 +16,12 @@ import { UpdateTemplateAction } from '#actions/template/update_template_action'
 import { DeleteTemplateAction } from '#actions/template/delete_template_action'
 import { ApplyToPageAction } from '#actions/template/apply_to_page_action'
 import { CreateFromPageAction } from '#actions/template/create_from_page_action'
+import { I18nService } from '#services/i18n_service'
 
 @inject()
 export default class TemplatesController {
   constructor(
+    protected i18n: I18nService,
     protected listTemplatesAction: ListTemplatesAction,
     protected createTemplateAction: CreateTemplateAction,
     protected updateTemplateAction: UpdateTemplateAction,
@@ -29,7 +31,7 @@ export default class TemplatesController {
   ) {}
 
   async render(ctx: HttpContext) {
-    const { inertia, request, i18n } = ctx
+    const { inertia, request } = ctx
 
     const data = stripEmptyStrings(request.all())
     const payload = await listTemplateValidator.validate(data)
@@ -44,70 +46,76 @@ export default class TemplatesController {
       templates: TemplateTransformer.transform(templates),
       filters: payload,
       translations: {
-        title: i18n.t('cms.templates.list.title'),
-        empty: {
-          value: i18n.t('cms.templates.list.empty.value'),
-          help: i18n.t('cms.templates.list.empty.help'),
-        },
-        search: {
-          value: i18n.t('cms.templates.search.value'),
-          placeholder: i18n.t('cms.templates.search.placeholder'),
-          type: {
-            value: i18n.t('cms.templates.search.type.value'),
-            placeholder: i18n.t('cms.templates.search.type.placeholder'),
-            page: i18n.t('cms.templates.search.type.page'),
-            block: i18n.t('cms.templates.search.type.block'),
+        ...this.i18n.buildPayload({
+          title: 'cms.templates.list.title',
+          empty: {
+            value: 'cms.templates.list.empty.value',
+            help: 'cms.templates.list.empty.help',
           },
-          filter: i18n.t('cms.templates.search.filter'),
-        },
+          search: {
+            value: 'cms.templates.search.value',
+            placeholder: 'cms.templates.search.placeholder',
+            type: {
+              value: 'cms.templates.search.type.value',
+              placeholder: 'cms.templates.search.type.placeholder',
+              page: 'cms.templates.search.type.page',
+              block: 'cms.templates.search.type.block',
+            },
+            filter: 'cms.templates.search.filter',
+          },
+          delete: {
+            value: 'cms.templates.delete.title',
+            confirm: 'cms.templates.delete.confirm',
+          },
+        }),
         delete: {
-          value: i18n.t('cms.templates.delete.title', { name: '{name}' }),
-          confirm: i18n.t('cms.templates.delete.confirm'),
+          value: this.i18n.translate('cms.templates.delete.title', { name: '{name}' }),
+          confirm: this.i18n.translate('cms.templates.delete.confirm'),
         },
       },
     })
   }
 
   async execute(ctx: HttpContext) {
-    const { request, response, auth, session, i18n } = ctx
+    const { request, response, auth, session } = ctx
 
     const payload = await createTemplateValidator.validate(request.all())
     const user = auth.getUserOrFail()
 
     await this.createTemplateAction.execute({ ...(payload as any), userId: user.id })
 
-    session.flash('success', i18n.t('template.created'))
+    session.flash('success', this.i18n.translate('template.created'))
 
     return response.redirect().toRoute('admin.templates.render')
   }
 
   async update(ctx: HttpContext) {
-    const { params, request, response, session, i18n } = ctx
+    const { params, request, response, session } = ctx
 
     const { id } = await showTemplateValidator.validate(params)
     const payload = await updateTemplateValidator.validate(request.all())
 
     await this.updateTemplateAction.execute({ id, ...payload })
 
-    session.flash('success', i18n.t('template.updated'))
+    session.flash('success', this.i18n.translate('template.updated'))
 
     return response.redirect().back()
   }
 
   async destroy(ctx: HttpContext) {
-    const { params, response, session, i18n } = ctx
+    const { params, response, session } = ctx
 
     const { id } = await showTemplateValidator.validate(params)
 
     await this.deleteTemplateAction.execute({ id })
 
-    session.flash('success', i18n.t('template.deleted'))
+    session.flash('success', this.i18n.translate('template.deleted'))
 
     return response.redirect().toRoute('admin.templates.render')
   }
 
   async applyToPage(ctx: HttpContext) {
-    const { params, request, response, auth, session, i18n } = ctx
+    const { params, request, response, auth, session } = ctx
 
     const { id } = await showTemplateValidator.validate(params)
     const payload = await applyTemplateValidator.validate(request.all())
@@ -120,13 +128,13 @@ export default class TemplatesController {
       userId: user.id,
     })
 
-    session.flash('success', i18n.t('template.applied'))
+    session.flash('success', this.i18n.translate('template.applied'))
 
     return response.redirect().back()
   }
 
   async createFromPage(ctx: HttpContext) {
-    const { request, response, auth, session, i18n } = ctx
+    const { request, response, auth, session } = ctx
 
     const payload = await createFromPageValidator.validate(request.all())
     const user = auth.getUserOrFail()
@@ -138,7 +146,7 @@ export default class TemplatesController {
       userId: user.id,
     })
 
-    session.flash('success', i18n.t('template.created_from_page', { name: payload.name }))
+    session.flash('success', this.i18n.translate('template.created_from_page', { name: payload.name }))
 
     return response.redirect().back()
   }

@@ -4,6 +4,7 @@ import { FindHomepageAction } from '#actions/page/find_homepage_action'
 import { FindPageBySlugAction } from '#actions/page/find_page_by_slug_action'
 import { GenerateSitemapAction } from '#actions/page/generate_sitemap_action'
 import { GetRobotsTxtAction } from '#actions/page/get_robots_txt_action'
+import { I18nService } from '#services/i18n_service'
 import { StorageService } from '#services/file/storage_service'
 import { PageResolverService } from '#services/page/page_resolver_service'
 import { CacheService } from '#services/cache/cache_service'
@@ -12,6 +13,7 @@ import { ResolvedPageContent } from '#types/page'
 @inject()
 export default class PageController {
   constructor(
+    protected i18n: I18nService,
     protected findHomepageAction: FindHomepageAction,
     protected findPageBySlugAction: FindPageBySlugAction,
     protected generateSitemapAction: GenerateSitemapAction,
@@ -28,7 +30,7 @@ export default class PageController {
   async home(ctx: HttpContext) {
     const { inertia, request, response } = ctx
 
-    const locale: string = request.input('locale', ctx.i18n?.locale ?? 'en')
+    const locale: string = request.input('locale', this.i18n.getLocale())
 
     const page = await this.findHomepageAction.execute()
 

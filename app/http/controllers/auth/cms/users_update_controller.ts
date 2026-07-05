@@ -3,6 +3,7 @@ import { GetUserDetailAction } from '#actions/user/get_user_detail_action'
 import { UpdateUserAction } from '#actions/user/update_user_action'
 import { inject } from '@adonisjs/core'
 import { editValidator, updateValidator } from '#validators/user'
+import { I18nService } from '#services/i18n_service'
 import { ListAllRolesAction } from '#actions/role/list_all_roles_action'
 import UserTransformer from '#transformers/user_transformer'
 import RoleTransformer from '#transformers/role_transformer'
@@ -11,13 +12,14 @@ import { TranslationNodes } from '#types/translations'
 @inject()
 export default class UsersUpdateController {
   constructor(
+    protected i18n: I18nService,
     protected getUserDetailAction: GetUserDetailAction,
     protected updateUserAction: UpdateUserAction,
     protected listAllRolesAction: ListAllRolesAction
   ) {}
 
   async render(ctx: HttpContext) {
-    const { inertia, params, i18n } = ctx
+    const { inertia, params } = ctx
 
     const payload = await editValidator.validate(params)
 
@@ -29,39 +31,45 @@ export default class UsersUpdateController {
       user: UserTransformer.transform(user),
       roles: RoleTransformer.transform(roles),
       translations: {
+        ...this.i18n.buildPayload({
+          email: {
+            value: 'cms.users.form.email.value',
+            placeholder: 'cms.users.form.email.placeholder',
+          },
+          username: {
+            value: 'cms.users.form.username.value',
+            placeholder: 'cms.users.form.username.placeholder',
+          },
+          submit: 'cms.users.form.submit',
+        }),
         title: {
-          create: i18n.t('cms.users.create.title'),
-          edit: i18n.t('cms.users.edit.title', { username: '{username}' }),
-        },
-        email: {
-          value: i18n.t('cms.users.form.email.value'),
-          placeholder: i18n.t('cms.users.form.email.placeholder'),
-        },
-        username: {
-          value: i18n.t('cms.users.form.username.value'),
-          placeholder: i18n.t('cms.users.form.username.placeholder'),
+          create: this.i18n.translate('cms.users.create.title'),
+          edit: this.i18n.translate('cms.users.edit.title', { username: '{username}' }),
         },
         roles: {
-          value: i18n.t('cms.users.form.role.value'),
-          placeholder: i18n.t('cms.users.form.role.placeholder'),
+          ...this.i18n.buildPayload({
+            roles: {
+              value: 'cms.users.form.role.value',
+              placeholder: 'cms.users.form.role.placeholder',
+            },
+          }).roles,
           ...roles.reduce((acc, role) => {
             acc[role.slug] = {
-              value: i18n.t(`cms.users.roles.${role.slug}.value`),
-              description: i18n.t(`cms.users.roles.${role.slug}.description`),
+              value: this.i18n.translate(`cms.users.roles.${role.slug}.value`),
+              description: this.i18n.translate(`cms.users.roles.${role.slug}.description`),
             }
             return acc
           }, {} as TranslationNodes),
         },
-        submit: i18n.t('cms.users.form.submit'),
         actions: {
-          list: i18n.t('cms.users.list.title'),
+          list: this.i18n.translate('cms.users.list.title'),
         },
       },
     })
   }
 
   async execute(ctx: HttpContext) {
-    const { params, request, response, session, i18n } = ctx
+    const { params, request, response, session } = ctx
 
     const { id } = await editValidator.validate(params)
 
@@ -77,10 +85,10 @@ export default class UsersUpdateController {
       roleId: payload.role_id ? Number(payload.role_id) : undefined,
     })
 
-    let flash = i18n.t('cms.users.updated')
+    let flash = this.i18n.translate('cms.users.updated')
 
     if (updated?.pendingEmail === payload.email) {
-      flash = `${flash} ${i18n.t('cms.users.updated_email')}`
+      flash = `${flash} ${this.i18n.translate('cms.users.updated_email')}`
     }
 
     session.flash('success', flash)

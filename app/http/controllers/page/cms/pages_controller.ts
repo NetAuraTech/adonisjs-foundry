@@ -7,17 +7,19 @@ import PageTransformer from '#transformers/page_transformer'
 import { ListPagesAction } from '#actions/page/list_pages_action'
 import { DeletePageAction } from '#actions/page/delete_page_action'
 import { SetHomepageAction } from '#actions/page/set_homepage_action'
+import { I18nService } from '#services/i18n_service'
 
 @inject()
 export default class PagesController {
   constructor(
+    protected i18n: I18nService,
     protected listPagesAction: ListPagesAction,
     protected deletePageAction: DeletePageAction,
     protected setHomepageAction: SetHomepageAction
   ) {}
 
   async render(ctx: HttpContext) {
-    const { inertia, request, i18n } = ctx
+    const { inertia, request } = ctx
 
     const pagination = await extractPagination(request)
     const data = stripEmptyStrings(request.all())
@@ -34,36 +36,44 @@ export default class PagesController {
       pages: PageTransformer.paginate(pages.all(), pages.getMeta()),
       filters: payload,
       translations: {
-        title: i18n.t('cms.pages.list.title'),
-        action: i18n.t('cms.pages.list.action'),
-        search: {
-          value: i18n.t('cms.pages.search.value'),
-          placeholder: i18n.t('cms.pages.search.placeholder'),
-          filter: i18n.t('cms.pages.search.filter'),
-        },
-        status: {
-          all: i18n.t('cms.pages.status.all'),
-          draft: i18n.t('cms.pages.status.draft'),
-          published: i18n.t('cms.pages.status.published'),
-          archived: i18n.t('cms.pages.status.archived'),
-          value: i18n.t('cms.pages.status.value'),
-        },
-        locale: {
-          value: i18n.t('cms.pages.locale.value'),
-          all: i18n.t('cms.pages.locale.all'),
-        },
-        page_title: i18n.t('cms.pages.form.title.value'),
-        slug: i18n.t('cms.pages.form.slug.value'),
-        empty: i18n.t('cms.pages.list.empty'),
-        value: i18n.t('cms.pages.value'),
-        value_one: i18n.t('cms.pages.value_one'),
+        ...this.i18n.buildPayload({
+          title: 'cms.pages.list.title',
+          action: 'cms.pages.list.action',
+          search: {
+            value: 'cms.pages.search.value',
+            placeholder: 'cms.pages.search.placeholder',
+            filter: 'cms.pages.search.filter',
+          },
+          status: {
+            all: 'cms.pages.status.all',
+            draft: 'cms.pages.status.draft',
+            published: 'cms.pages.status.published',
+            archived: 'cms.pages.status.archived',
+            value: 'cms.pages.status.value',
+          },
+          locale: {
+            value: 'cms.pages.locale.value',
+            all: 'cms.pages.locale.all',
+          },
+          page_title: 'cms.pages.form.title.value',
+          slug: 'cms.pages.form.slug.value',
+          empty: 'cms.pages.list.empty',
+          value: 'cms.pages.value',
+          value_one: 'cms.pages.value_one',
+          actions: {
+            value: 'cms.pages.actions',
+            delete: {
+              confirm: 'cms.pages.delete.confirm',
+            },
+          },
+        }),
         actions: {
-          value: i18n.t('cms.pages.actions'),
-          show: i18n.t('cms.pages.show.title', { title: '{title}' }),
-          edit: i18n.t('cms.pages.edit.title', { title: '{title}' }),
+          value: this.i18n.translate('cms.pages.actions'),
+          show: this.i18n.translate('cms.pages.show.title', { title: '{title}' }),
+          edit: this.i18n.translate('cms.pages.edit.title', { title: '{title}' }),
           delete: {
-            value: i18n.t('cms.pages.delete.title', { title: '{title}' }),
-            confirm: i18n.t('cms.pages.delete.confirm'),
+            value: this.i18n.translate('cms.pages.delete.title', { title: '{title}' }),
+            confirm: this.i18n.translate('cms.pages.delete.confirm'),
           },
         },
       },
@@ -71,13 +81,13 @@ export default class PagesController {
   }
 
   async destroy(ctx: HttpContext) {
-    const { response, params, session, i18n } = ctx
+    const { response, params, session } = ctx
 
     const payload = await showPageValidator.validate(params)
 
     await this.deletePageAction.execute({ id: payload.id })
 
-    session.flash('success', i18n.t('page.deleted'))
+    session.flash('success', this.i18n.translate('page.deleted'))
 
     return response.redirect().toRoute('admin.pages.render')
   }

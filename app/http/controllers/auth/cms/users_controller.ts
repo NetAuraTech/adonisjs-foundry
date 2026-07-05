@@ -3,6 +3,7 @@ import { inject } from '@adonisjs/core'
 import { ListUsersAction } from '#actions/user/list_users_action'
 import { DeleteUserAction } from '#actions/user/delete_user_action'
 import { deleteValidator, listValidator } from '#validators/user'
+import { I18nService } from '#services/i18n_service'
 import { ListAllRolesAction } from '#actions/role/list_all_roles_action'
 import UserTransformer from '#transformers/user_transformer'
 import RoleTransformer from '#transformers/role_transformer'
@@ -13,13 +14,14 @@ import { TranslationNodes } from '#types/translations'
 @inject()
 export default class UsersController {
   constructor(
+    protected i18n: I18nService,
     protected listUsersAction: ListUsersAction,
     protected deleteUserAction: DeleteUserAction,
     protected listAllRolesAction: ListAllRolesAction
   ) {}
 
   async render(ctx: HttpContext) {
-    const { inertia, request, i18n } = ctx
+    const { inertia, request } = ctx
 
     const pagination = await extractPagination(request)
 
@@ -41,52 +43,63 @@ export default class UsersController {
       roles: RoleTransformer.transform(roles),
       filters: payload,
       translations: {
-        title: i18n.t('cms.users.list.title'),
-        action: i18n.t('cms.users.list.action'),
-        search: {
-          value: i18n.t('cms.users.search.value'),
-          placeholder: i18n.t('cms.users.search.placeholder'),
-          filter: i18n.t('cms.users.search.filter'),
-        },
+        ...this.i18n.buildPayload({
+          title: 'cms.users.list.title',
+          action: 'cms.users.list.action',
+          search: {
+            value: 'cms.users.search.value',
+            placeholder: 'cms.users.search.placeholder',
+            filter: 'cms.users.search.filter',
+          },
+          roles: {
+            value: 'cms.users.roles.value',
+            placeholder: 'cms.users.roles.placeholder',
+          },
+          status: {
+            verified: 'cms.users.status.verified',
+            unverified: 'cms.users.status.unverified',
+            pending_invite: 'cms.users.status.pending_invite',
+            value: 'cms.users.status.value',
+          },
+          empty: 'cms.users.list.empty',
+          register_on: 'cms.users.list.register_on',
+          value: 'cms.users.value',
+          value_one: 'cms.users.value_one',
+        }),
+        // Dynamic role keys — can't use buildPayload for runtime-constructed keys
         roles: {
-          value: i18n.t('cms.users.roles.value'),
-          placeholder: i18n.t('cms.users.roles.placeholder'),
+          ...this.i18n.buildPayload({
+            roles: {
+              value: 'cms.users.roles.value',
+              placeholder: 'cms.users.roles.placeholder',
+            },
+          }).roles,
           ...roles.reduce((acc, role) => {
             acc[role.slug] = {
-              value: i18n.t(`cms.users.roles.${role.slug}.value`),
-              description: i18n.t(`cms.users.roles.${role.slug}.description`),
+              value: this.i18n.translate(`cms.users.roles.${role.slug}.value`),
+              description: this.i18n.translate(`cms.users.roles.${role.slug}.description`),
             }
             return acc
           }, {} as TranslationNodes),
         },
-        status: {
-          verified: i18n.t('cms.users.status.verified'),
-          unverified: i18n.t('cms.users.status.unverified'),
-          pending_invite: i18n.t('cms.users.status.pending_invite'),
-          value: i18n.t('cms.users.status.value'),
-        },
-        empty: i18n.t('cms.users.list.empty'),
-        register_on: i18n.t('cms.users.list.register_on'),
-        value: i18n.t('cms.users.value'),
-        value_one: i18n.t('cms.users.value_one'),
         actions: {
-          value: i18n.t('cms.users.actions'),
-          show: i18n.t('cms.users.show.title', { username: '{username}' }),
-          edit: i18n.t('cms.users.edit.title', { username: '{username}' }),
-          delete: i18n.t('cms.users.delete.title', { username: '{username}' }),
+          value: this.i18n.translate('cms.users.actions'),
+          show: this.i18n.translate('cms.users.show.title', { username: '{username}' }),
+          edit: this.i18n.translate('cms.users.edit.title', { username: '{username}' }),
+          delete: this.i18n.translate('cms.users.delete.title', { username: '{username}' }),
         },
       },
     })
   }
 
   async destroy(ctx: HttpContext) {
-    const { response, params, session, i18n } = ctx
+    const { response, params, session } = ctx
 
     const payload = await deleteValidator.validate(params)
 
     await this.deleteUserAction.execute({ id: payload.id })
 
-    session.flash('success', i18n.t('cms.users.deleted'))
+    session.flash('success', this.i18n.translate('cms.users.deleted'))
 
     return response.redirect().toRoute('admin.users.render')
   }

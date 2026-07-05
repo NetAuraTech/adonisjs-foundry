@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { loginValidator } from '#validators/auth'
 import { inject } from '@adonisjs/core'
+import { I18nService } from '#services/i18n_service'
 import { LoginAction } from '#actions/auth/login_action'
 import { LogoutAction } from '#actions/auth/logout_action'
 import { regenerateCsrfToken } from '#helpers/auth/crsf'
@@ -9,39 +10,40 @@ import { enabledProviders } from '#helpers/auth/oauth'
 @inject()
 export default class SessionController {
   constructor(
+    protected i18n: I18nService,
     protected loginAction: LoginAction,
     protected logoutAction: LogoutAction
   ) {}
 
   render(ctx: HttpContext) {
-    const { inertia, i18n } = ctx
+    const { inertia } = ctx
 
     return inertia.render('auth/front/login', {
       providers: enabledProviders,
-      translations: {
-        title: i18n.t('auth.session.login.title'),
-        sub_title: i18n.t('auth.session.login.sub_title'),
+      translations: this.i18n.buildPayload({
+        title: 'auth.session.login.title',
+        sub_title: 'auth.session.login.sub_title',
         account: {
-          no: i18n.t('auth.session.login.account.no'),
-          create: i18n.t('auth.session.login.account.create'),
+          no: 'auth.session.login.account.no',
+          create: 'auth.session.login.account.create',
         },
         email: {
-          value: i18n.t('auth.session.login.email.value'),
-          placeholder: i18n.t('auth.session.login.email.placeholder'),
+          value: 'auth.session.login.email.value',
+          placeholder: 'auth.session.login.email.placeholder',
         },
         password: {
-          value: i18n.t('auth.session.login.password.value'),
-          forgot: i18n.t('auth.session.login.password.forgot'),
+          value: 'auth.session.login.password.value',
+          forgot: 'auth.session.login.password.forgot',
         },
-        remember_me: i18n.t('auth.session.login.remember_me'),
-        submit: i18n.t('auth.session.login.submit'),
-        or_continue_with: i18n.t('auth.session.login.or_continue_with'),
-      },
+        remember_me: 'auth.session.login.remember_me',
+        submit: 'auth.session.login.submit',
+        or_continue_with: 'auth.session.login.or_continue_with',
+      }),
     })
   }
 
   async execute(ctx: HttpContext) {
-    const { request, response, session, auth, i18n } = ctx
+    const { request, response, session, auth } = ctx
 
     const payload = await loginValidator.validate(request.all())
 
@@ -53,13 +55,13 @@ export default class SessionController {
     await auth.use('web').login(user, payload.remember_me)
     regenerateCsrfToken(ctx)
 
-    session.flash('success', i18n.t('auth.session.login.success'))
+    session.flash('success', this.i18n.translate('auth.session.login.success'))
 
     return response.redirect().toRoute('settings.profile.render')
   }
 
   async destroy(ctx: HttpContext) {
-    const { auth, response, session, i18n } = ctx
+    const { auth, response, session } = ctx
 
     const userId = auth.user?.id
 
@@ -69,7 +71,7 @@ export default class SessionController {
       await this.logoutAction.execute({ userId })
     }
 
-    session.flash('success', i18n.t('auth.session.logout.success'))
+    session.flash('success', this.i18n.translate('auth.session.logout.success'))
 
     return response.redirect().toRoute('auth.session.render')
   }
