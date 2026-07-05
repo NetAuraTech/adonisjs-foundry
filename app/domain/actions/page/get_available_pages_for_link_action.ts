@@ -14,14 +14,7 @@ export class GetAvailablePagesForLinkAction {
    *
    * @returns Array of page summaries with translations suitable for link selectors.
    */
-  async execute(): Promise<
-    Array<{
-      id: number
-      label: string | undefined
-      default_locale: string
-      locales: Array<{ locale: string; slug: string }>
-    }>
-  > {
+  async execute(): Promise<{ id: number; label: any; default_locale: string; locales: any }[]> {
     const pages = await this.pageRepository.getLinkablePages()
     return pages.map((page: Page) => ({
       id: page.id,

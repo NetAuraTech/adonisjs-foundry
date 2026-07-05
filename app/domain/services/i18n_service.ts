@@ -31,6 +31,14 @@ import { I18n } from '@adonisjs/i18n'
  *   sub_title: 'auth.session.login.sub_title',
  * })
  * // → { title: "Welcome back!", sub_title: "Please log in to continue." }
+ * ```
+ *
+ * @example Mix plain keys and entry() markers (replacements resolved inside buildPayload)
+ * ```ts
+ * const translations = this.i18n.buildPayload({
+ *   email: 'cms.users.form.email.value',
+ *   title: this.i18n.entry('cms.users.edit.title', { username }),
+ * })
  */
 @inject()
 export class I18nService {
@@ -54,6 +62,25 @@ export class I18nService {
   }
 
   /**
+   * Create a translation entry marker for use inside `buildPayload`.
+   *
+   * Unlike plain string keys, entries carry their replacements so that
+   * `_build` resolves them in a single pass — no need to call `translate()`
+   * outside of `buildPayload`.
+   *
+   * @example
+   * ```ts
+   * this.i18n.buildPayload({
+   *   email: 'cms.users.form.email.value',
+   *   title: this.i18n.entry('cms.users.edit.title', { username }),
+   * })
+   * ```
+   */
+  entry(key: string, replacements?: Record<string, any>): I18nEntry {
+    return { __i18n_key: key, __replacements: replacements ?? {} }
+  }
+
+  /**
    * Build a nested translation payload from a flat key mapping.
    *
    * Each property of `mapping` is a dot-notation i18n key. The returned object
@@ -68,17 +95,19 @@ export class I18nService {
    * // → { title: "Welcome back!", account: { has: "Do you already have an account?" } }
    * ```
    */
-  buildPayload<T extends Record<string, string | object>>(mapping: T): BuildPayloadResult<T> {
+  buildPayload<T extends Record<string, string | I18nEntry | object>>(mapping: T): BuildPayloadResult<T> {
     return this._build(mapping) as BuildPayloadResult<T>
   }
 
-  private _build(obj: Record<string, string | object>): any {
+  private _build(obj: Record<string, string | I18nEntry | object>): any {
     const result: Record<string, unknown> = {}
     for (const [key, value] of Object.entries(obj)) {
       if (typeof value === 'string') {
         result[key] = this.translate(value)
+      } else if (isI18nEntry(value)) {
+        result[key] = this.translate(value.__i18n_key, value.__replacements)
       } else {
-        result[key] = this._build(value as Record<string, string | object>)
+        result[key] = this._build(value as Record<string, string | I18nEntry | object>)
       }
     }
     return result
@@ -88,11 +117,28 @@ export class I18nService {
 // ─── Type helpers for buildPayload ──────────────────────────────────────────
 
 /**
- * Recursively replaces leaf `string` values with their translated `string`.
+ * Marker type returned by `entry()`. Recognized by `_build()` which calls
+ * `translate(key, replacements)` in a single pass.
+ */
+export type I18nEntry = { __i18n_key: string; __replacements: Record<string, any> }
+
+function isI18nEntry(value: unknown): value is I18nEntry {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    '__i18n_key' in value &&
+    '__replacements' in value
+  )
+}
+
+/**
+ * Recursively replaces leaf `string` and `I18nEntry` values with their translated `string`.
  * Since `translate()` returns `string`, the shape is preserved.
  */
 type BuildPayloadResult<T> = T extends string
   ? string
-  : T extends object
-    ? { [K in keyof T]: BuildPayloadResult<T[K]> }
-    : T
+  : T extends I18nEntry
+    ? string
+    : T extends object
+      ? { [K in keyof T]: BuildPayloadResult<T[K]> }
+      : T

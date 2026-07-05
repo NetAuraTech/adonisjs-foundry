@@ -30,41 +30,35 @@ export default class UsersUpdateController {
     return inertia.render('auth/cms/form', {
       user: UserTransformer.transform(user),
       roles: RoleTransformer.transform(roles),
-      translations: {
-        ...this.i18n.buildPayload({
-          email: {
-            value: 'cms.users.form.email.value',
-            placeholder: 'cms.users.form.email.placeholder',
-          },
-          username: {
-            value: 'cms.users.form.username.value',
-            placeholder: 'cms.users.form.username.placeholder',
-          },
-          submit: 'cms.users.form.submit',
-        }),
+      translations: this.i18n.buildPayload({
         title: {
-          create: this.i18n.translate('cms.users.create.title'),
-          edit: this.i18n.translate('cms.users.edit.title', { username: '{username}' }),
+          create: 'cms.users.create.title',
+          edit: this.i18n.entry('cms.users.edit.title', { username: '{username}' }),
+        },
+        email: {
+          value: 'cms.users.form.email.value',
+          placeholder: 'cms.users.form.email.placeholder',
+        },
+        username: {
+          value: 'cms.users.form.username.value',
+          placeholder: 'cms.users.form.username.placeholder',
         },
         roles: {
-          ...this.i18n.buildPayload({
-            roles: {
-              value: 'cms.users.form.role.value',
-              placeholder: 'cms.users.form.role.placeholder',
-            },
-          }).roles,
+          value: 'cms.users.form.role.value',
+          placeholder: 'cms.users.form.role.placeholder',
           ...roles.reduce((acc, role) => {
             acc[role.slug] = {
-              value: this.i18n.translate(`cms.users.roles.${role.slug}.value`),
-              description: this.i18n.translate(`cms.users.roles.${role.slug}.description`),
+              value: `cms.users.roles.${role.slug}.value`,
+              description: `cms.users.roles.${role.slug}.description`,
             }
             return acc
           }, {} as TranslationNodes),
         },
+        submit: 'cms.users.form.submit',
         actions: {
-          list: this.i18n.translate('cms.users.list.title'),
+          list: 'cms.users.list.title',
         },
-      },
+      }),
     })
   }
 

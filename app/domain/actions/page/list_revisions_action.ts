@@ -1,6 +1,8 @@
 ﻿import { inject } from '@adonisjs/core'
 import { PageRevisionRepository } from '#repositories/page/page_revision_repository'
 import type { PaginationFilters } from '#types/pagination'
+import { ModelPaginatorContract } from '@adonisjs/lucid/types/model'
+import PageRevision from '#models/page/page_revision'
 
 interface ListRevisionsPayload {
   pageId: number
@@ -20,7 +22,7 @@ export class ListRevisionsAction {
    * @param payload - Page ID and pagination filters.
    * @returns Paginated list of revisions (newest first).
    */
-  async execute(payload: ListRevisionsPayload): Promise<any> {
+  async execute(payload: ListRevisionsPayload): Promise<ModelPaginatorContract<PageRevision>> {
     return this.revisionRepository.list(payload.pageId, payload.pagination)
   }
 }

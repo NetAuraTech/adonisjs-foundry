@@ -35,48 +35,40 @@ export default class PagesController {
     return inertia.render('page/cms/index', {
       pages: PageTransformer.paginate(pages.all(), pages.getMeta()),
       filters: payload,
-      translations: {
-        ...this.i18n.buildPayload({
-          title: 'cms.pages.list.title',
-          action: 'cms.pages.list.action',
-          search: {
-            value: 'cms.pages.search.value',
-            placeholder: 'cms.pages.search.placeholder',
-            filter: 'cms.pages.search.filter',
-          },
-          status: {
-            all: 'cms.pages.status.all',
-            draft: 'cms.pages.status.draft',
-            published: 'cms.pages.status.published',
-            archived: 'cms.pages.status.archived',
-            value: 'cms.pages.status.value',
-          },
-          locale: {
-            value: 'cms.pages.locale.value',
-            all: 'cms.pages.locale.all',
-          },
-          page_title: 'cms.pages.form.title.value',
-          slug: 'cms.pages.form.slug.value',
-          empty: 'cms.pages.list.empty',
-          value: 'cms.pages.value',
-          value_one: 'cms.pages.value_one',
-          actions: {
-            value: 'cms.pages.actions',
-            delete: {
-              confirm: 'cms.pages.delete.confirm',
-            },
-          },
-        }),
+      translations: this.i18n.buildPayload({
+        title: 'cms.pages.list.title',
+        action: 'cms.pages.list.action',
+        search: {
+          value: 'cms.pages.search.value',
+          placeholder: 'cms.pages.search.placeholder',
+          filter: 'cms.pages.search.filter',
+        },
+        status: {
+          all: 'cms.pages.status.all',
+          draft: 'cms.pages.status.draft',
+          published: 'cms.pages.status.published',
+          archived: 'cms.pages.status.archived',
+          value: 'cms.pages.status.value',
+        },
+        locale: {
+          value: 'cms.pages.locale.value',
+          all: 'cms.pages.locale.all',
+        },
+        page_title: 'cms.pages.form.title.value',
+        slug: 'cms.pages.form.slug.value',
+        empty: 'cms.pages.list.empty',
+        value: 'cms.pages.value',
+        value_one: 'cms.pages.value_one',
         actions: {
-          value: this.i18n.translate('cms.pages.actions'),
-          show: this.i18n.translate('cms.pages.show.title', { title: '{title}' }),
-          edit: this.i18n.translate('cms.pages.edit.title', { title: '{title}' }),
+          value: 'cms.pages.actions',
+          show: this.i18n.entry('cms.pages.show.title', { title: '{title}' }),
+          edit: this.i18n.entry('cms.pages.edit.title', { title: '{title}' }),
           delete: {
-            value: this.i18n.translate('cms.pages.delete.title', { title: '{title}' }),
-            confirm: this.i18n.translate('cms.pages.delete.confirm'),
+            value: this.i18n.entry('cms.pages.delete.title', { title: '{title}' }),
+            confirm: 'cms.pages.delete.confirm',
           },
         },
-      },
+      }),
     })
   }
 

@@ -10,8 +10,14 @@ class FakeI18n implements Partial<I18n> {
     this.translations = translations ?? {}
   }
 
-  t(key: string, _replacements?: Record<string, any>): string {
-    return this.translations[key] ?? key
+  t(key: string, replacements?: Record<string, any>): string {
+    let result = this.translations[key] ?? key
+    if (replacements) {
+      for (const [k, v] of Object.entries(replacements)) {
+        result = result.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v))
+      }
+    }
+    return result
   }
 }
 
@@ -123,5 +129,72 @@ test.group('I18nService', () => {
     })
 
     assert.deepEqual(result, { title: 'missing.key' })
+  })
+
+  test('entry() creates a marker that buildPayload resolves with replacements', ({ assert }) => {
+    i18n = new FakeI18n({
+      'cms.users.edit.title': 'Edit user {username}',
+    })
+    service = new I18nService(i18n as unknown as I18n)
+
+    const result = service.buildPayload({
+      title: service.entry('cms.users.edit.title', { username: 'alice' }),
+    })
+
+    assert.deepEqual(result, { title: 'Edit user alice' })
+  })
+
+  test('entry() works without replacements', ({ assert }) => {
+    i18n = new FakeI18n({
+      'cms.common.submit': 'Submit',
+    })
+    service = new I18nService(i18n as unknown as I18n)
+
+    const result = service.buildPayload({
+      submit: service.entry('cms.common.submit'),
+    })
+
+    assert.deepEqual(result, { submit: 'Submit' })
+  })
+
+  test('buildPayload() mixes plain strings and entry markers', ({ assert }) => {
+    i18n = new FakeI18n({
+      'cms.users.form.email.value': 'Email',
+      'cms.users.edit.title': 'Edit user {username}',
+      'cms.common.submit': 'Submit',
+    })
+    service = new I18nService(i18n as unknown as I18n)
+
+    const result = service.buildPayload({
+      email: 'cms.users.form.email.value',
+      title: service.entry('cms.users.edit.title', { username: 'bob' }),
+      submit: service.entry('cms.common.submit'),
+    })
+
+    assert.deepEqual(result, {
+      email: 'Email',
+      title: 'Edit user bob',
+      submit: 'Submit',
+    })
+  })
+
+  test('buildPayload() resolves entry markers in nested objects', ({ assert }) => {
+    i18n = new FakeI18n({
+      'auth.session.login.title': 'Welcome back!',
+      'cms.users.edit.title': 'Edit user {username}',
+    })
+    service = new I18nService(i18n as unknown as I18n)
+
+    const result = service.buildPayload({
+      title: 'auth.session.login.title',
+      user: {
+        name: service.entry('cms.users.edit.title', { username: 'carol' }),
+      },
+    })
+
+    assert.deepEqual(result, {
+      title: 'Welcome back!',
+      user: { name: 'Edit user carol' },
+    })
   })
 })

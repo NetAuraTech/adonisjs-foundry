@@ -92,10 +92,7 @@ export default class SocialController {
     await this.unlinkSocialProviderAction.execute({ user, provider })
 
     if (await this.needsPasswordSetupAction.execute({ user })) {
-      session.flash(
-        'warning',
-        this.i18n.translate('auth.social.password_required_after_unlink')
-      )
+      session.flash('warning', this.i18n.translate('auth.social.password_required_after_unlink'))
       return response.redirect().toRoute('auth.social.render')
     }
 

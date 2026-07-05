@@ -2,7 +2,6 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import { showPageValidator } from '#validators/page'
 import vine from '@vinejs/vine'
-import { GetPageDetailAction } from '#actions/page/get_page_detail_action'
 import { CreateTranslationAction } from '#actions/page/create_translation_action'
 import { I18nService } from '#services/i18n_service'
 
@@ -18,7 +17,6 @@ const createTranslationValidator = vine.compile(
 export default class PageTranslationsController {
   constructor(
     protected i18n: I18nService,
-    protected getPageDetailAction: GetPageDetailAction,
     protected createTranslationAction: CreateTranslationAction
   ) {}
 

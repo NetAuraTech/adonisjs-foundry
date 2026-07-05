@@ -24,35 +24,33 @@ export default class AcceptInvitationController {
     return inertia.render('auth/front/accept_invitation', {
       token: payload.token,
       user: UserTransformer.transform(user),
-      translations: {
-        ...this.i18n.buildPayload({
-          title: 'auth.invitation.title',
-          sub_title: 'auth.invitation.sub_title',
-          email: {
-            value: 'auth.invitation.email.value',
-            placeholder: 'auth.invitation.email.placeholder',
-            help: 'auth.invitation.email.help',
-          },
-          username: {
-            value: 'auth.invitation.username.value',
-            placeholder: 'auth.invitation.username.placeholder',
-            help: 'auth.invitation.username.help',
-          },
-          password: {
-            confirmation: {
-              help: 'auth.invitation.password.confirmation.help',
-              value: 'auth.invitation.password.confirmation.value',
-            },
-            help: 'auth.invitation.password.help',
-            value: 'auth.invitation.password.value',
-          },
-          submit: 'auth.invitation.submit',
-        }),
-        banner: {
-          title: this.i18n.translate('auth.invitation.banner.title', { email: user.email }),
-          message: this.i18n.translate('auth.invitation.banner.message'),
+      translations: this.i18n.buildPayload({
+        title: 'auth.invitation.title',
+        sub_title: 'auth.invitation.sub_title',
+        email: {
+          value: 'auth.invitation.email.value',
+          placeholder: 'auth.invitation.email.placeholder',
+          help: 'auth.invitation.email.help',
         },
-      },
+        username: {
+          value: 'auth.invitation.username.value',
+          placeholder: 'auth.invitation.username.placeholder',
+          help: 'auth.invitation.username.help',
+        },
+        password: {
+          confirmation: {
+            help: 'auth.invitation.password.confirmation.help',
+            value: 'auth.invitation.password.confirmation.value',
+          },
+          help: 'auth.invitation.password.help',
+          value: 'auth.invitation.password.value',
+        },
+        banner: {
+          title: this.i18n.entry('auth.invitation.banner.title', { email: user.email }),
+          message: 'auth.invitation.banner.message',
+        },
+        submit: 'auth.invitation.submit',
+      }),
     })
   }
 

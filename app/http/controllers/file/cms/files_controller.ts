@@ -19,10 +19,12 @@ import { DeleteFileAction } from '#actions/file/delete_file_action'
 import { UpsertFileAltAction } from '#actions/file/upsert_file_alt_action'
 import { DeleteFileAltAction } from '#actions/file/delete_file_alt_action'
 import { ListRootFoldersAction } from '#actions/file_folder/list_root_folders_action'
+import { I18nService } from '#services/i18n_service'
 
 @inject()
 export default class FilesController {
   constructor(
+    protected i18n: I18nService,
     protected listFilesAction: ListFilesAction,
     protected getFileDetailAction: GetFileDetailAction,
     protected uploadFileAction: UploadFileAction,
@@ -34,7 +36,7 @@ export default class FilesController {
   ) {}
 
   async render(ctx: HttpContext) {
-    const { inertia, request, i18n } = ctx
+    const { inertia, request } = ctx
 
     const pagination = await extractPagination(request)
     const data = stripEmptyStrings(request.all())
@@ -53,144 +55,143 @@ export default class FilesController {
       files: FileTransformer.paginate(files.all(), files.getMeta()),
       folders: FileFolderTransformer.transform(folders),
       filters: payload,
-      translations: {
-        title: i18n.t('cms.files.list.title'),
+      translations: this.i18n.buildPayload({
+        title: 'cms.files.list.title',
         action: {
-          folders: i18n.t('cms.files.list.action.folders'),
-          upload: i18n.t('cms.files.list.action.upload'),
+          folders: 'cms.files.list.action.folders',
+          upload: 'cms.files.list.action.upload',
         },
-        name: i18n.t('cms.files.form.name.value'),
-        type: i18n.t('cms.files.form.type.value'),
-        size: i18n.t('cms.files.form.size.value'),
-        uploaded_at: i18n.t('cms.files.form.uploaded_at.value'),
+        name: 'cms.files.form.name.value',
+        type: 'cms.files.form.type.value',
+        size: 'cms.files.form.size.value',
+        uploaded_at: 'cms.files.form.uploaded_at.value',
         upload: {
-          value: i18n.t('cms.files.upload.submit'),
-          help: i18n.t('cms.files.upload.help'),
-          remove: i18n.t('cms.files.upload.remove'),
-          max_size: i18n.t('cms.files.upload.max_size', { size: '{size}' }),
-          try_again: i18n.t('cms.files.upload.try_again'),
+          value: 'cms.files.upload.submit',
+          help: 'cms.files.upload.help',
+          remove: 'cms.files.upload.remove',
+          max_size: this.i18n.translate('cms.files.upload.max_size', { size: '{size}' }),
+          try_again: 'cms.files.upload.try_again',
           error: {
-            size: i18n.t('cms.files.upload.error.size', { max: '{max}' }),
+            size: this.i18n.translate('cms.files.upload.error.size', { max: '{max}' }),
           },
         },
         actions: {
-          value: i18n.t('cms.files.actions'),
-          show: i18n.t('cms.files.show.title'),
+          value: 'cms.files.actions',
+          show: 'cms.files.show.title',
           delete: {
-            value: i18n.t('cms.files.delete.title', { filename: '{filename}' }),
-            confirm: i18n.t('cms.files.delete.confirm'),
+            value: this.i18n.translate('cms.files.delete.title', { filename: '{filename}' }),
+            confirm: 'cms.files.delete.confirm',
           },
         },
         folders: {
-          all: i18n.t('cms.files.list.folders.all'),
+          all: 'cms.files.list.folders.all',
         },
         search: {
-          filter: i18n.t('cms.files.search.filter'),
-          value: i18n.t('cms.files.search.value'),
-          placeholder: i18n.t('cms.files.search.placeholder'),
+          filter: 'cms.files.search.filter',
+          value: 'cms.files.search.value',
+          placeholder: 'cms.files.search.placeholder',
           type: {
-            value: i18n.t('cms.files.search.type.value'),
+            value: 'cms.files.search.type.value',
             options: {
-              placeholder: i18n.t('cms.files.search.type.options.placeholder'),
-              image: i18n.t('cms.files.search.type.options.image'),
-              video: i18n.t('cms.files.search.type.options.video'),
-              audio: i18n.t('cms.files.search.type.options.audio'),
-              pdf: i18n.t('cms.files.search.type.options.pdf'),
+              placeholder: 'cms.files.search.type.options.placeholder',
+              image: 'cms.files.search.type.options.image',
+              video: 'cms.files.search.type.options.video',
+              audio: 'cms.files.search.type.options.audio',
+              pdf: 'cms.files.search.type.options.pdf',
             },
           },
         },
         alts: {
-          title: i18n.t('cms.files.show.alts.title'),
-          add: i18n.t('cms.files.show.alts.add'),
-          edit: i18n.t('cms.files.show.alts.edit'),
-          empty: i18n.t('cms.files.show.alts.empty'),
-          close: i18n.t('cms.files.show.alts.close'),
+          title: 'cms.files.show.alts.title',
+          add: 'cms.files.show.alts.add',
+          edit: 'cms.files.show.alts.edit',
+          empty: 'cms.files.show.alts.empty',
+          close: 'cms.files.show.alts.close',
           delete: {
-            value: i18n.t('cms.files.show.alts.delete.value'),
-            confirm: i18n.t('cms.files.show.alts.delete.confirm'),
+            value: 'cms.files.show.alts.delete.value',
+            confirm: 'cms.files.show.alts.delete.confirm',
           },
           form: {
-            update: i18n.t('cms.files.show.alts.form.update'),
-            submit: i18n.t('cms.files.show.alts.form.submit'),
-            cancel: i18n.t('cms.files.show.alts.form.cancel'),
+            update: 'cms.files.show.alts.form.update',
+            submit: 'cms.files.show.alts.form.submit',
+            cancel: 'cms.files.show.alts.form.cancel',
             locale: {
-              value: i18n.t('cms.files.show.alts.form.locale.value'),
+              value: 'cms.files.show.alts.form.locale.value',
             },
             key: {
-              value: i18n.t('cms.files.show.alts.form.key.value'),
-              placeholder: i18n.t('cms.files.show.alts.form.key.placeholder'),
+              value: 'cms.files.show.alts.form.key.value',
+              placeholder: 'cms.files.show.alts.form.key.placeholder',
             },
             alt_text: {
-              value: i18n.t('cms.files.show.alts.form.alt_text.value'),
-              placeholder: i18n.t('cms.files.show.alts.form.alt_text.placeholder'),
+              value: 'cms.files.show.alts.form.alt_text.value',
+              placeholder: 'cms.files.show.alts.form.alt_text.placeholder',
             },
           },
         },
-      },
+      }),
     })
   }
 
   async show(ctx: HttpContext) {
-    const { inertia, params, i18n } = ctx
+    const { inertia, params } = ctx
 
     const { id } = await showFileValidator.validate(params)
     const file = await this.getFileDetailAction.execute({ id })
 
     return (inertia.render as any)('file/cms/show', {
       file: FileTransformer.transform(file),
-      translations: {
-        title: i18n.t('cms.files.show.title', { name: '{name}' }),
+      translations: this.i18n.buildPayload({
+        title: this.i18n.entry('cms.files.show.title', { name: '{name}' }),
         actions: {
-          back: i18n.t('cms.files.list.title'),
+          back: 'cms.files.list.title',
           delete: {
-            value: i18n.t('cms.files.delete.title', { name: '{name}' }),
-            confirm: i18n.t('cms.files.delete.confirm'),
+            value: this.i18n.entry('cms.files.delete.title', { name: '{name}' }),
+            confirm: 'cms.files.delete.confirm',
           },
         },
         info: {
-          name: i18n.t('cms.files.show.info.name'),
-          type: i18n.t('cms.files.show.info.type'),
-          size: i18n.t('cms.files.show.info.size'),
-          uploaded_at: i18n.t('cms.files.show.info.uploaded_at'),
-          value: i18n.t('cms.files.show.info.value'),
+          name: 'cms.files.show.info.name',
+          type: 'cms.files.show.info.type',
+          size: 'cms.files.show.info.size',
+          uploaded_at: 'cms.files.show.info.uploaded_at',
+          value: 'cms.files.show.info.value',
         },
         alts: {
-          value: i18n.t('cms.files.show.alts.value'),
-          add: i18n.t('cms.files.show.alts.add'),
+          value: 'cms.files.show.alts.value',
+          add: 'cms.files.show.alts.add',
           delete: {
-            value: i18n.t('cms.files.show.alts.delete.value'),
-            confirm: i18n.t('cms.files.show.alts.delete.confirm'),
+            confirm: 'cms.files.show.alts.delete.confirm',
           },
           form: {
-            update: i18n.t('cms.files.show.alts.form.update'),
-            submit: i18n.t('cms.files.show.alts.form.submit'),
-            cancel: i18n.t('cms.files.show.alts.form.cancel'),
+            update: 'cms.files.show.alts.form.update',
+            submit: 'cms.files.show.alts.form.submit',
+            cancel: 'cms.files.show.alts.form.cancel',
             locale: {
-              value: i18n.t('cms.files.show.alts.form.locale.value'),
+              value: 'cms.files.show.alts.form.locale.value',
             },
             key: {
-              value: i18n.t('cms.files.show.alts.form.key.value'),
-              placeholder: i18n.t('cms.files.show.alts.form.key.placeholder'),
+              value: 'cms.files.show.alts.form.key.value',
+              placeholder: 'cms.files.show.alts.form.key.placeholder',
             },
             alt_text: {
-              value: i18n.t('cms.files.show.alts.form.alt_text.value'),
-              placeholder: i18n.t('cms.files.show.alts.form.alt_text.placeholder'),
+              value: 'cms.files.show.alts.form.alt_text.value',
+              placeholder: 'cms.files.show.alts.form.alt_text.placeholder',
             },
           },
         },
-      },
+      }),
     })
   }
 
   async upload(ctx: HttpContext) {
-    const { request, response, auth, session, i18n } = ctx
+    const { request, response, auth, session } = ctx
 
     const file = request.file('file')
     const folderId = request.input('folder_id', null)
     const user = auth.getUserOrFail()
 
     if (!file) {
-      session.flash('error', i18n.t('file.no_file_provided'))
+      session.flash('error', this.i18n.translate('file.no_file_provided'))
       return response.redirect().back()
     }
 
@@ -200,38 +201,38 @@ export default class FilesController {
       uploadedBy: user.id,
     })
 
-    session.flash('success', i18n.t('file.uploaded'))
+    session.flash('success', this.i18n.translate('file.uploaded'))
 
     return response.redirect().back()
   }
 
   async move(ctx: HttpContext) {
-    const { params, request, response, session, i18n } = ctx
+    const { params, request, response, session } = ctx
 
     const { id } = await showFileValidator.validate(params)
     const payload = await moveFileValidator.validate(request.all())
 
     await this.moveFileAction.execute({ id, folderId: payload.folder_id ?? null })
 
-    session.flash('success', i18n.t('file.moved'))
+    session.flash('success', this.i18n.translate('file.moved'))
 
     return response.redirect().back()
   }
 
   async destroy(ctx: HttpContext) {
-    const { params, response, session, i18n } = ctx
+    const { params, response, session } = ctx
 
     const { id } = await showFileValidator.validate(params)
 
     await this.deleteFileAction.execute({ id })
 
-    session.flash('success', i18n.t('file.deleted'))
+    session.flash('success', this.i18n.translate('file.deleted'))
 
     return response.redirect().toRoute('admin.files.render')
   }
 
   async upsertAlt(ctx: HttpContext) {
-    const { params, request, response, i18n } = ctx
+    const { params, request, response } = ctx
 
     const { id } = await showFileValidator.validate(params)
     const payload = await upsertAltValidator.validate(request.all())
@@ -243,17 +244,17 @@ export default class FilesController {
       value: payload.value,
     })
 
-    return response.ok({ message: i18n.t('file.alt.updated') })
+    return response.ok({ message: this.i18n.translate('file.alt.updated') })
   }
 
   async deleteAlt(ctx: HttpContext) {
-    const { params, request, response, i18n } = ctx
+    const { params, request, response } = ctx
 
     const { id } = await showFileValidator.validate(params)
     const payload = await deleteAltValidator.validate(request.all())
 
     await this.deleteFileAltAction.execute({ fileId: id, locale: payload.locale, key: payload.key })
 
-    return response.ok({ message: i18n.t('file.alt.deleted') })
+    return response.ok({ message: this.i18n.translate('file.alt.deleted') })
   }
 }

@@ -45,34 +45,28 @@ export default class TemplatesController {
     return inertia.render('template/cms/index', {
       templates: TemplateTransformer.transform(templates),
       filters: payload,
-      translations: {
-        ...this.i18n.buildPayload({
-          title: 'cms.templates.list.title',
-          empty: {
-            value: 'cms.templates.list.empty.value',
-            help: 'cms.templates.list.empty.help',
-          },
-          search: {
-            value: 'cms.templates.search.value',
-            placeholder: 'cms.templates.search.placeholder',
-            type: {
-              value: 'cms.templates.search.type.value',
-              placeholder: 'cms.templates.search.type.placeholder',
-              page: 'cms.templates.search.type.page',
-              block: 'cms.templates.search.type.block',
-            },
-            filter: 'cms.templates.search.filter',
-          },
-          delete: {
-            value: 'cms.templates.delete.title',
-            confirm: 'cms.templates.delete.confirm',
-          },
-        }),
-        delete: {
-          value: this.i18n.translate('cms.templates.delete.title', { name: '{name}' }),
-          confirm: this.i18n.translate('cms.templates.delete.confirm'),
+      translations: this.i18n.buildPayload({
+        title: 'cms.templates.list.title',
+        empty: {
+          value: 'cms.templates.list.empty.value',
+          help: 'cms.templates.list.empty.help',
         },
-      },
+        search: {
+          value: 'cms.templates.search.value',
+          placeholder: 'cms.templates.search.placeholder',
+          type: {
+            value: 'cms.templates.search.type.value',
+            placeholder: 'cms.templates.search.type.placeholder',
+            page: 'cms.templates.search.type.page',
+            block: 'cms.templates.search.type.block',
+          },
+          filter: 'cms.templates.search.filter',
+        },
+        delete: {
+          value: this.i18n.entry('cms.templates.delete.title', { name: '{name}' }),
+          confirm: 'cms.templates.delete.confirm',
+        },
+      }),
     })
   }
 
@@ -146,7 +140,10 @@ export default class TemplatesController {
       userId: user.id,
     })
 
-    session.flash('success', this.i18n.translate('template.created_from_page', { name: payload.name }))
+    session.flash(
+      'success',
+      this.i18n.translate('template.created_from_page', { name: payload.name })
+    )
 
     return response.redirect().back()
   }
