@@ -1,39 +1,18 @@
-﻿import { Exception } from '@adonisjs/core/exceptions'
-import type { HttpContext } from '@adonisjs/core/http'
-import app from '@adonisjs/core/services/app'
+import { BaseHttpException } from '#exceptions/base_http_exception'
 
-export default class MissingRevisionException extends Exception {
+export default class MissingRevisionException extends BaseHttpException {
   static status = 404
   static code = 'E_MISSING_REVISION'
 
-  constructor(private revisionId: number) {
-    super(`Revision ${revisionId} not found.`, {
-      status: MissingRevisionException.status,
-      code: MissingRevisionException.code,
-    })
+  constructor(protected revisionId: number) {
+    super(`Revision ${revisionId} not found.`)
   }
 
-  async handle(error: this, ctx: HttpContext) {
-    const { request, response, session, i18n } = ctx
+  protected details() {
+    return { revisionId: this.revisionId }
+  }
 
-    const message = i18n.t(`exceptions.${error.code}`, {
-      revisionId: error.revisionId,
-    })
-
-    if (request.wantsJSON()) {
-      return response.status(error.status).send({
-        error: {
-          code: error.code,
-          message: message,
-          details: {
-            revisionId: error.revisionId,
-          },
-          ...(app.inDev && { stack: error.stack }),
-        },
-      })
-    }
-
-    session.flash('error', message)
-    return response.redirect().back()
+  protected i18nParams() {
+    return { revisionId: this.revisionId }
   }
 }

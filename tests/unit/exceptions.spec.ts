@@ -1,3 +1,6 @@
+import fs from 'node:fs/promises'
+import path from 'node:path'
+
 import { test } from '@japa/runner'
 import { HttpContextFactory } from '@adonisjs/core/factories/http'
 import EmailAlreadyExistsException from '#exceptions/account/email_already_exists_exception'
@@ -193,5 +196,48 @@ test.group('Exceptions', () => {
     assert.equal(error.status, 422)
     assert.equal(error.code, 'E_INVALID_TEMPLATE_TYPE')
     await testExceptionHandle(error, assert)
+  })
+
+  // ─── Cross-cutting: all exception codes have translation keys ───
+
+  test('all exception codes have corresponding i18n translation keys', async ({ assert }) => {
+    const exceptionCodes = [
+      'E_EMAIL_EXISTS',
+      'E_FORBIDDEN',
+      'E_INVALID_CREDENTIALS',
+      'E_INVALID_CURRENT_PASSWORD',
+      'E_PROVIDER_ALREADY_LINKED',
+      'E_PROVIDER_NOT_CONFIGURED',
+      'E_UNAUTHORIZED',
+      'E_UNVERIFIED_ACCOUNT',
+      'E_INVALID_TOKEN',
+      'E_MAX_ATTEMPTS_EXCEEDED',
+      'E_ROW_NOT_FOUND',
+      'E_SLUG_EXISTS',
+      'E_FILE_TOO_LARGE',
+      'E_INVALID_EXTENSION',
+      'E_MISSING_TRANSLATION',
+      'E_MISSING_REVISION',
+      'E_INVALID_TEMPLATE_TYPE',
+    ]
+
+    const langDir = path.join(process.cwd(), 'resources/lang')
+    const entries = await fs.readdir(langDir, { withFileTypes: true })
+    const locales = entries.filter((e) => e.isDirectory()).map((e) => e.name)
+
+    for (const locale of locales) {
+      const exceptionsFile = path.join(langDir, locale, 'exceptions.json')
+      let keys: Record<string, unknown> = {}
+      try {
+        keys = JSON.parse(await fs.readFile(exceptionsFile, 'utf-8'))
+      } catch {
+        assert.fail(`Missing exceptions.json for locale "${locale}"`)
+        return
+      }
+
+      for (const code of exceptionCodes) {
+        assert.isDefined(keys[code], `Expected translation key "${code}" in ${locale}/exceptions.json`)
+      }
+    }
   })
 })
