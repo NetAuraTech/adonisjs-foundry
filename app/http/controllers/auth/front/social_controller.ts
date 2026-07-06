@@ -5,7 +5,7 @@ import { validateProvider } from '#helpers/auth/oauth'
 import { regenerateCsrfToken } from '#helpers/auth/crsf'
 import { I18nService } from '#services/i18n_service'
 import { definePasswordValidator } from '#validators/auth'
-import { UserRepository } from '#repositories/auth/user_repository'
+import { DefineSocialPasswordAction } from '#actions/social/define_social_password_action'
 import { FindOrCreateSocialUserAction } from '#actions/social/find_or_create_social_user_action'
 import { LinkSocialProviderAction } from '#actions/social/link_social_provider_action'
 import { UnlinkSocialProviderAction } from '#actions/social/unlink_social_provider_action'
@@ -15,11 +15,11 @@ import { NeedsPasswordSetupAction } from '#actions/social/needs_password_setup_a
 export default class SocialController {
   constructor(
     protected i18n: I18nService,
+    protected defineSocialPasswordAction: DefineSocialPasswordAction,
     protected findOrCreateSocialUserAction: FindOrCreateSocialUserAction,
     protected linkSocialProviderAction: LinkSocialProviderAction,
     protected unlinkSocialProviderAction: UnlinkSocialProviderAction,
-    protected needsPasswordSetupAction: NeedsPasswordSetupAction,
-    protected userRepository: UserRepository
+    protected needsPasswordSetupAction: NeedsPasswordSetupAction
   ) {}
 
   async redirect(ctx: HttpContext) {
@@ -128,7 +128,7 @@ export default class SocialController {
     const user = auth.getUserOrFail()
     const payload = await definePasswordValidator.validate(request.all())
 
-    await this.userRepository.updatePassword(user, payload.password)
+    await this.defineSocialPasswordAction.execute({ user, password: payload.password })
 
     regenerateCsrfToken(ctx)
     session.flash('success', this.i18n.translate('auth.social.password_defined'))
