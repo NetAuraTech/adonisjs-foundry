@@ -1,11 +1,6 @@
 import vine from '@vinejs/vine'
 import type User from '#models/auth/user'
-
-/**
- * Shared rules for email and password.
- */
-const email = () => vine.string().trim().toLowerCase().email().maxLength(254)
-const password = () => vine.string().minLength(8).maxLength(32)
+import { email, password } from '#validators/rules'
 
 /**
  * Validator to use when performing self-register
