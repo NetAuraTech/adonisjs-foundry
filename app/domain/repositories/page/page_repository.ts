@@ -222,49 +222,4 @@ export class PageRepository extends BaseRepository {
   async getLinkablePages() {
     return this.listForLinks()
   }
-
-  /**
-   * Generates an XML sitemap string from all published page translations.
-   *
-   * @param appUrl - The base URL of the application.
-   * @returns The complete sitemap XML string.
-   */
-  async generateSitemap(appUrl: string): Promise<string> {
-    const pages = await this.listPublishedForSitemap()
-    let xml =
-      '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-
-    for (const page of pages) {
-      const translations = (page as any).translations ?? []
-      for (const t of translations) {
-        let url: string
-        if ((page as any).isHomepage) {
-          url = t.locale === (page as any).defaultLocale ? `${appUrl}/` : `${appUrl}/${t.locale}/`
-        } else {
-          url =
-            t.locale === (page as any).defaultLocale
-              ? `${appUrl}/${t.slug}`
-              : `${appUrl}/${t.locale}/${t.slug}`
-        }
-        xml += `\n  <url><loc>${url}</loc></url>`
-      }
-    }
-
-    xml += '\n</urlset>'
-    return xml
-  }
-
-  /**
-   * Returns a basic robots.txt content string.
-   *
-   * @param appUrl - The base URL of the application (for sitemap reference).
-   * @returns The robots.txt content.
-   */
-  getRobotsTxt(appUrl?: string): string {
-    const lines = ['User-agent: *', 'Allow: /']
-    if (appUrl) {
-      lines.push(`Sitemap: ${appUrl}/sitemap.xml`)
-    }
-    return lines.join('\n') + '\n'
-  }
 }

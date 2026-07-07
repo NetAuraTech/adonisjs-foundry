@@ -1,19 +1,26 @@
-﻿import { inject } from '@adonisjs/core'
-import { PageRepository } from '#repositories/page/page_repository'
+import { inject } from '@adonisjs/core'
+import env from '#start/env'
 
 /**
  * Generate a robots.txt string for the site.
  */
 @inject()
 export class GetRobotsTxtAction {
-  constructor(protected pageRepository: PageRepository) {}
-
   /**
    * Execute robots.txt generation.
    *
    * @returns The complete robots.txt string.
    */
   async execute(): Promise<string> {
-    return this.pageRepository.getRobotsTxt(process.env.APP_URL ?? 'http://localhost:3000')
+    const appUrl = env.get('APP_URL') ?? 'http://localhost:3000'
+    return this.buildRobotsTxt(appUrl)
+  }
+
+  /**
+   * Constructs the robots.txt content.
+   */
+  buildRobotsTxt(appUrl: string): string {
+    const lines = ['User-agent: *', 'Allow: /', `Sitemap: ${appUrl}/sitemap.xml`]
+    return lines.join('\n') + '\n'
   }
 }
