@@ -1,12 +1,12 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { createHmac, timingSafeEqual } from 'node:crypto'
 import { GetPageDetailAction } from '#actions/page/get_page_detail_action'
 import { PageResolverService } from '#services/page/page_resolver_service'
 import vine from '@vinejs/vine'
-import env from '#start/env'
 import PageTranslationTransformer from '#transformers/page_translation_transformer'
 import { BuilderSessionService } from '#services/page/builder_session_service'
+import { PreviewTokenHelper } from '#helpers/core/preview_token'
+import env from '#start/env'
 import { PageContent } from '#types/page'
 
 const previewParamsValidator = vine.create({
@@ -16,59 +16,17 @@ const previewParamsValidator = vine.create({
   translationId: vine.number().positive().optional(),
 })
 
-/** Token validity window in seconds */
-const TOKEN_TTL_S = 300
-
-/**
- * Generates a short-lived HMAC token for iframe preview access.
- * Called from `edit.tsx` before rendering the iframe.
- *
- * @param pageId  - Page being previewed
- * @param userId  - Authenticated editor's ID
- * @param locale  - Locale being previewed
- */
-export function generatePreviewToken(pageId: number, userId: number, locale: string): string {
-  const expires = Math.floor(Date.now() / 1000) + TOKEN_TTL_S
-  const payload = `${pageId}:${userId}:${locale}:${expires}`
-  const secret = env.get('APP_KEY')
-  const sig = createHmac('sha256', secret.release()).update(payload).digest('hex')
-  return `${expires}.${sig}`
-}
-
-/**
- * Validates a preview token against the expected HMAC.
- * Returns `null` on invalid / expired token.
- */
-function validatePreviewToken(
-  token: string,
-  pageId: number,
-  userId: number,
-  locale: string
-): boolean {
-  const [expiresStr, sig] = token.split('.')
-  if (!expiresStr || !sig) return false
-
-  const expires = Number(expiresStr)
-  if (Number.isNaN(expires) || Math.floor(Date.now() / 1000) > expires) return false
-
-  const payload = `${pageId}:${userId}:${locale}:${expires}`
-  const secret = env.get('APP_KEY')
-  const expected = createHmac('sha256', secret.release()).update(payload).digest('hex')
-
-  try {
-    return timingSafeEqual(Buffer.from(sig), Buffer.from(expected))
-  } catch {
-    return false
-  }
-}
-
 @inject()
 export default class PagesPreviewController {
+  protected previewTokenHelper: PreviewTokenHelper
+
   constructor(
     protected getPageDetailAction: GetPageDetailAction,
     protected sessionService: BuilderSessionService,
     protected resolverService: PageResolverService
-  ) {}
+  ) {
+    this.previewTokenHelper = new PreviewTokenHelper(env.get('APP_KEY').release())
+  }
 
   /**
    * Generates and returns a short-lived preview token for the current user.
@@ -89,7 +47,7 @@ export default class PagesPreviewController {
       })
     }
 
-    const token = generatePreviewToken(pageId, user.id, locale)
+    const token = this.previewTokenHelper.generate(pageId, user.id, locale)
     return response.ok({ token })
   }
 
@@ -114,7 +72,7 @@ export default class PagesPreviewController {
       token: request.input('token', ''),
     })
 
-    if (!validatePreviewToken(payload.token, payload.pageId, user.id, payload.locale)) {
+    if (!this.previewTokenHelper.validate(payload.token, payload.pageId, user.id, payload.locale)) {
       return response.unauthorized({
         error: { code: 'E_INVALID_TOKEN', message: 'Preview token is invalid or expired.' },
       })
