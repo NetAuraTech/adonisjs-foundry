@@ -252,17 +252,19 @@ export class TokenRepository extends BaseRepository {
   }
 
   /**
-   * @param user - The user whose email verification tokens should be expired.
+   * Expires all tokens of a given type for a user.
    *
-   * Called after the user's email has been successfully verified, to
-   * invalidate any remaining unverified tokens.
+   * Generic implementation used by {@link BaseTokenListener} and the
+   * convenience helpers below. Sets `expiresAt` to now so that an audit
+   * trail is preserved — records are not deleted.
    *
-   * @param userId - The primary key of the user whose tokens should be expired.
+   * @param user - The user whose tokens should be expired.
+   * @param type - The token type to filter by.
    */
-  async expireEmailVerificationTokens(user: User): Promise<void> {
+  async expireTokensByType(user: User, type: TokenType): Promise<void> {
     const tokens = await Token.query(this.client())
       .where('user_id', user.id)
-      .where('type', TOKEN_TYPES.EMAIL_VERIFICATION)
+      .where('type', type)
 
     for (const token of tokens) {
       token.expiresAt = DateTime.now()
@@ -272,23 +274,23 @@ export class TokenRepository extends BaseRepository {
   }
 
   /**
+   * @param user - The user whose email verification tokens should be expired.
+   *
+   * Called after the user's email has been successfully verified, to
+   * invalidate any remaining unverified tokens.
+   */
+  async expireEmailVerificationTokens(user: User): Promise<void> {
+    await this.expireTokensByType(user, TOKEN_TYPES.EMAIL_VERIFICATION)
+  }
+
+  /**
    * Expires all password reset tokens for a given user.
    * @param user - The user whose password reset tokens should be expired.
    * Called after the user's password has been successfully changed, to
    * invalidate any remaining unverified tokens.
-   *
-   * @param userId - The primary key of the user whose tokens should be expired.
    */
   async expirePasswordResetTokens(user: User): Promise<void> {
-    const tokens = await Token.query(this.client())
-      .where('user_id', user.id)
-      .where('type', TOKEN_TYPES.PASSWORD_RESET)
-
-    for (const token of tokens) {
-      token.expiresAt = DateTime.now()
-      await transactionContext.merge(token)
-      await token.save()
-    }
+    await this.expireTokensByType(user, TOKEN_TYPES.PASSWORD_RESET)
   }
 
   /**
@@ -609,15 +611,7 @@ export class TokenRepository extends BaseRepository {
    * @param user - The user whose email change tokens should be expired.
    */
   async expireEmailChangeTokens(user: User): Promise<void> {
-    const tokens = await Token.query(this.client())
-      .where('user_id', user.id)
-      .where('type', TOKEN_TYPES.EMAIL_CHANGE)
-
-    for (const token of tokens) {
-      token.expiresAt = DateTime.now()
-      await transactionContext.merge(token)
-      await token.save()
-    }
+    await this.expireTokensByType(user, TOKEN_TYPES.EMAIL_CHANGE)
   }
 
   /**
@@ -626,14 +620,6 @@ export class TokenRepository extends BaseRepository {
    * @param user - The user whose invitation tokens should be expired.
    */
   async expireInviteTokens(user: User): Promise<void> {
-    const tokens = await Token.query(this.client())
-      .where('user_id', user.id)
-      .where('type', TOKEN_TYPES.PENDING_INVITE)
-
-    for (const token of tokens) {
-      token.expiresAt = DateTime.now()
-      await transactionContext.merge(token)
-      await token.save()
-    }
+    await this.expireTokensByType(user, TOKEN_TYPES.PENDING_INVITE)
   }
 }
