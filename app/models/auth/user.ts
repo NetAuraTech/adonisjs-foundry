@@ -2,7 +2,7 @@ import { UserSchema } from '#database/schema'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
-import { afterFetch, afterFind, belongsTo, computed, hasMany, hasOne } from '@adonisjs/lucid/orm'
+import { afterFetch, afterFind, beforeSave, belongsTo, computed, hasMany, hasOne } from '@adonisjs/lucid/orm'
 import Role from '#models/auth/role'
 import type { BelongsTo, HasMany, HasOne } from '@adonisjs/lucid/types/relations'
 import { DbRememberMeTokensProvider } from '@adonisjs/auth/session'
@@ -28,6 +28,17 @@ export default class User extends compose(UserSchema, AuthFinder) {
   declare tokens: HasMany<typeof Token>
 
   declare hasPendingInvite: boolean
+
+  /** In-memory cache of the role + permissions loaded by can() / checkAny(). */
+  private _loadedRole: Role | null | undefined = undefined
+
+  @beforeSave()
+  static invalidateRoleCache(user: User, event: 'update' | 'create') {
+    // Invalidate the in-memory role cache on updates so a changed roleId is picked up.
+    if (event === 'update') {
+      user._loadedRole = undefined
+    }
+  }
 
   @afterFind()
   static async loadPendingInvite(user: User) {
@@ -60,18 +71,46 @@ export default class User extends compose(UserSchema, AuthFinder) {
     return this.emailVerifiedAt !== null && this.emailVerifiedAt !== undefined
   }
 
-  async can(slug: string): Promise<boolean> {
+  /**
+   * Load the role with permissions once, caching it on the instance.
+   */
+  async _loadRole(): Promise<Role | null> {
+    if (this._loadedRole !== undefined) {
+      return this._loadedRole
+    }
+
     if (!this.roleId) {
-      return false
+      this._loadedRole = null
+      return null
     }
 
     const role = await (this as User).related('role').query().preload('permissions').first()
+    this._loadedRole = role ?? null
+    return role
+  }
 
+  /**
+   * Check if the user has a specific permission slug.
+   * Reuses the cached role on subsequent calls to avoid N+1 queries.
+   */
+  async can(slug: string): Promise<boolean> {
+    const role = await this._loadRole()
     if (!role) {
       return false
     }
-
     return role.permissions.some((p) => p.slug === slug)
+  }
+
+  /**
+   * Check if the user has any of the given permission slugs.
+   * Loads the role + permissions once and checks all slugs in a single pass.
+   */
+  async checkAny(slugs: string[]): Promise<boolean> {
+    const role = await this._loadRole()
+    if (!role) {
+      return false
+    }
+    return slugs.some((slug) => role.permissions.some((p) => p.slug === slug))
   }
 
   async hasAnyRole(slugs: string[]): Promise<boolean> {
