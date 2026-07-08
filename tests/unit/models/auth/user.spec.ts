@@ -4,7 +4,6 @@ import Role from '#models/auth/role'
 import Permission from '#models/auth/permission'
 import Token from '#models/core/token'
 import { TOKEN_TYPES } from '#types/core'
-import db from '@adonisjs/lucid/services/db'
 import { DateTime } from 'luxon'
 
 test.group('User Model', () => {
@@ -43,8 +42,13 @@ test.group('User Model', () => {
       password: 'pwd',
     })
 
-    // Create a pending invite token
-    await Token.create({ userId: user.id, type: TOKEN_TYPES.PENDING_INVITE, token: 'abc' })
+    // Create a valid (non-expired) pending invite token
+    await Token.create({
+      userId: user.id,
+      type: TOKEN_TYPES.PENDING_INVITE,
+      token: 'abc',
+      expiresAt: DateTime.now().plus({ days: 1 }),
+    })
 
     await User.loadPendingInvite(user)
     assert.isTrue(user.hasPendingInvite)
@@ -56,6 +60,110 @@ test.group('User Model', () => {
       user.hasPendingInvite,
       'Should be false if user is verified even if token exists'
     )
+  })
+
+  test('loadPendingInviteAll batch-loads pending invites with a single query', async ({
+    assert,
+  }) => {
+    // Create 5 users
+    const users = await Promise.all(
+      Array.from({ length: 5 }, (_, i) =>
+        User.create({ email: `batch${i}@example.com`, username: `batch${i}`, password: 'pwd' })
+      )
+    )
+
+    // Give only users 0, 2, 4 a valid (non-expired) pending invite token
+    await Token.create({
+      userId: users[0].id,
+      type: TOKEN_TYPES.PENDING_INVITE,
+      token: 't1',
+      expiresAt: DateTime.now().plus({ days: 1 }),
+    })
+    await Token.create({
+      userId: users[2].id,
+      type: TOKEN_TYPES.PENDING_INVITE,
+      token: 't2',
+      expiresAt: DateTime.now().plus({ days: 1 }),
+    })
+    await Token.create({
+      userId: users[4].id,
+      type: TOKEN_TYPES.PENDING_INVITE,
+      token: 't3',
+      expiresAt: DateTime.now().plus({ days: 1 }),
+    })
+
+    // Mark user 0 as verified — should NOT have hasPendingInvite = true
+    users[0].emailVerifiedAt = DateTime.now()
+
+    await User.loadPendingInviteAll(users)
+
+    // Assert correct flags:
+    // User 0: has token BUT verified → false
+    // User 1: no token → false
+    // User 2: has token, not verified → true
+    // User 3: no token → false
+    // User 4: has token, not verified → true
+    assert.isFalse(users[0].hasPendingInvite, 'Verified user should be false despite token')
+    assert.isFalse(users[1].hasPendingInvite, 'No token → false')
+    assert.isTrue(users[2].hasPendingInvite, 'Has token + unverified → true')
+    assert.isFalse(users[3].hasPendingInvite, 'No token → false')
+    assert.isTrue(users[4].hasPendingInvite, 'Has token + unverified → true')
+  })
+
+  test('loadPendingInviteAll handles empty user list', async ({ assert }) => {
+    await User.loadPendingInviteAll([])
+    assert.isTrue(true, 'No error on empty list')
+  })
+
+  test('loadPendingInvite ignores expired tokens', async ({ assert }) => {
+    const user = await User.create({
+      email: 'expired@example.com',
+      username: 'expired',
+      password: 'pwd',
+    })
+
+    // Create a pending invite token that is already expired
+    await Token.create({
+      userId: user.id,
+      type: TOKEN_TYPES.PENDING_INVITE,
+      token: 'abc',
+      expiresAt: DateTime.now().minus({ days: 1 }),
+    })
+
+    await User.loadPendingInvite(user)
+    assert.isFalse(user.hasPendingInvite, 'Expired token should not count as pending invite')
+  })
+
+  test('loadPendingInviteAll ignores expired tokens in batch', async ({ assert }) => {
+    const users = await Promise.all(
+      Array.from({ length: 3 }, (_, i) =>
+        User.create({ email: `exp${i}@example.com`, username: `exp${i}`, password: 'pwd' })
+      )
+    )
+
+    // User 0: valid (non-expired) token
+    await Token.create({
+      userId: users[0].id,
+      type: TOKEN_TYPES.PENDING_INVITE,
+      token: 'valid',
+      expiresAt: DateTime.now().plus({ days: 1 }),
+    })
+
+    // User 1: expired token
+    await Token.create({
+      userId: users[1].id,
+      type: TOKEN_TYPES.PENDING_INVITE,
+      token: 'expired',
+      expiresAt: DateTime.now().minus({ days: 1 }),
+    })
+
+    // User 2: no token at all
+
+    await User.loadPendingInviteAll(users)
+
+    assert.isTrue(users[0].hasPendingInvite, 'Valid non-expired token → true')
+    assert.isFalse(users[1].hasPendingInvite, 'Expired token → false')
+    assert.isFalse(users[2].hasPendingInvite, 'No token → false')
   })
 
   test('can() returns true if user role has the permission', async ({ assert }) => {

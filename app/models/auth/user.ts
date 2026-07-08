@@ -9,6 +9,7 @@ import { DbRememberMeTokensProvider } from '@adonisjs/auth/session'
 import UserPreference from '#models/preferences/user_preference'
 import Token from '#models/core/token'
 import { TOKEN_TYPES } from '#types/core'
+import { DateTime } from 'luxon'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -50,6 +51,7 @@ export default class User extends compose(UserSchema, AuthFinder) {
     const token = await Token.query()
       .where('type', TOKEN_TYPES.PENDING_INVITE)
       .where('user_id', user.id)
+      .where('expires_at', '>', DateTime.now().toSQL())
       .first()
 
     user.hasPendingInvite = !!token && !user.isEmailVerified
@@ -57,7 +59,23 @@ export default class User extends compose(UserSchema, AuthFinder) {
 
   @afterFetch()
   static async loadPendingInviteAll(users: User[]) {
-    await Promise.all(users.map(User.loadPendingInvite))
+    const userIds = users.map((u) => u.id).filter(Boolean)
+    if (!userIds.length) {
+      return
+    }
+
+    // Single batched query — replaces the N+1 Promise.all(map(single-query)) pattern.
+    const tokens = await Token.query()
+      .where('type', TOKEN_TYPES.PENDING_INVITE)
+      .whereIn('user_id', userIds)
+      .where('expires_at', '>', DateTime.now().toSQL())
+
+    // Build a lookup set of user-ids that have a pending invite token.
+    const pendingUserIds = new Set(tokens.map((t) => t.userId))
+
+    for (const user of users) {
+      user.hasPendingInvite = pendingUserIds.has(user.id) && !user.isEmailVerified
+    }
   }
 
   @computed()
