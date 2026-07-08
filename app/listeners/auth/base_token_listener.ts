@@ -55,6 +55,15 @@ export abstract class BaseTokenListener {
     protected tokenRepository: TokenRepository
   ) {}
 
+  /** Expose protected parameters for testing. */
+  public get getTokenType(): TokenType {
+    return this.tokenType
+  }
+
+  public get getExpiresInHours(): number {
+    return this.expiresInHours
+  }
+
   /**
    * Build the type-specific mail payload extras.
    *

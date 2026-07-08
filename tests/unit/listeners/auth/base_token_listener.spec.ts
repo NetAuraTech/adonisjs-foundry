@@ -1,7 +1,7 @@
 import { test } from '@japa/runner'
 import { BaseMail } from '@adonisjs/mail'
 import type User from '#models/auth/user'
-import { TOKEN_TYPES } from '#types/core'
+import { TOKEN_TYPES, type TokenType } from '#types/core'
 import { MailService } from '#services/mails/mail_service'
 import { GetPreferencesAction } from '#actions/preferences/get_preferences_action'
 import { TokenRepository } from '#repositories/core/token_repository'
@@ -73,7 +73,7 @@ test.group('BaseTokenListener', () => {
   test('handle() executes full 7-step flow', async ({ assert }) => {
     const fakeUser = { id: 1, email: 'test@example.com' } as User
 
-    const createdToken = { symbol: null as any }
+    const createdToken = {} as { userId: number; type: TokenType; selector: string; token: string; expiresAt: Date }
     const mockTokenRepo = {
       expireTokensByType: async () => {},
       create: async (data: any) => {
@@ -143,7 +143,6 @@ test.group('BaseTokenListener', () => {
       },
     }
 
-    let capturedLocale = null as any
     class FrListener extends TestTokenListener {
       protected getTranslationKeys(
         _event: any,

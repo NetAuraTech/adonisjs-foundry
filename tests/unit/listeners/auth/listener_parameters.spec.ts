@@ -9,25 +9,25 @@ import { TOKEN_TYPES } from '#types/core'
 test.group('Token Listeners - Parameter Verification', () => {
   test('SendVerificationEmail provides correct parameters', async ({ assert }) => {
     const listener = await app.container.make(SendVerificationEmail)
-    assert.equal(listener.tokenType, TOKEN_TYPES.EMAIL_VERIFICATION)
-    assert.equal(listener.expiresInHours, 24)
+    assert.equal(listener.getTokenType, TOKEN_TYPES.EMAIL_VERIFICATION)
+    assert.equal(listener.getExpiresInHours, 24)
   })
 
   test('SendForgotPasswordEmail provides correct parameters', async ({ assert }) => {
     const listener = await app.container.make(SendForgotPasswordEmail)
-    assert.equal(listener.tokenType, TOKEN_TYPES.PASSWORD_RESET)
-    assert.equal(listener.expiresInHours, 1)
+    assert.equal(listener.getTokenType, TOKEN_TYPES.PASSWORD_RESET)
+    assert.equal(listener.getExpiresInHours, 1)
   })
 
   test('SendInvitationEmail provides correct parameters', async ({ assert }) => {
     const listener = await app.container.make(SendInvitationEmail)
-    assert.equal(listener.tokenType, TOKEN_TYPES.PENDING_INVITE)
-    assert.equal(listener.expiresInHours, 7 * 24)
+    assert.equal(listener.getTokenType, TOKEN_TYPES.PENDING_INVITE)
+    assert.equal(listener.getExpiresInHours, 7 * 24)
   })
 
   test('SendChangeEmailConfirmationEmail provides correct parameters', async ({ assert }) => {
     const listener = await app.container.make(SendChangeEmailConfirmationEmail)
-    assert.equal(listener.tokenType, TOKEN_TYPES.EMAIL_CHANGE)
-    assert.equal(listener.expiresInHours, 24)
+    assert.equal(listener.getTokenType, TOKEN_TYPES.EMAIL_CHANGE)
+    assert.equal(listener.getExpiresInHours, 24)
   })
 })
