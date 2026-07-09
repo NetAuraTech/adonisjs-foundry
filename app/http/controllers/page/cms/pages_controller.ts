@@ -8,6 +8,7 @@ import { ListPagesAction } from '#actions/page/list_pages_action'
 import { DeletePageAction } from '#actions/page/delete_page_action'
 import { SetHomepageAction } from '#actions/page/set_homepage_action'
 import { I18nService } from '#services/i18n_service'
+import { buildPagesIndexPayload } from '#helpers/i18n_payloads/pages_index'
 
 @inject()
 export default class PagesController {
@@ -35,40 +36,7 @@ export default class PagesController {
     return inertia.render('page/cms/index', {
       pages: PageTransformer.paginate(pages.all(), pages.getMeta()),
       filters: payload,
-      translations: this.i18n.buildPayload({
-        title: 'cms.pages.list.title',
-        action: 'cms.pages.list.action',
-        search: {
-          value: 'cms.pages.search.value',
-          placeholder: 'cms.pages.search.placeholder',
-          filter: 'cms.pages.search.filter',
-        },
-        status: {
-          all: 'cms.pages.status.all',
-          draft: 'cms.pages.status.draft',
-          published: 'cms.pages.status.published',
-          archived: 'cms.pages.status.archived',
-          value: 'cms.pages.status.value',
-        },
-        locale: {
-          value: 'cms.pages.locale.value',
-          all: 'cms.pages.locale.all',
-        },
-        page_title: 'cms.pages.form.title.value',
-        slug: 'cms.pages.form.slug.value',
-        empty: 'cms.pages.list.empty',
-        value: 'cms.pages.value',
-        value_one: 'cms.pages.value_one',
-        actions: {
-          value: 'cms.pages.actions',
-          show: this.i18n.entry('cms.pages.show.title', { title: '{title}' }),
-          edit: this.i18n.entry('cms.pages.edit.title', { title: '{title}' }),
-          delete: {
-            value: this.i18n.entry('cms.pages.delete.title', { title: '{title}' }),
-            confirm: 'cms.pages.delete.confirm',
-          },
-        },
-      }),
+      translations: buildPagesIndexPayload(this.i18n),
     })
   }
 

@@ -5,7 +5,7 @@ import { createValidator } from '#validators/user'
 import { I18nService } from '#services/i18n_service'
 import { ListAllRolesAction } from '#actions/role/list_all_roles_action'
 import RoleTransformer from '#transformers/role_transformer'
-import { TranslationNodes } from '#types/translations'
+import { buildUsersFormPayload } from '#helpers/i18n_payloads/users_form'
 
 @inject()
 export default class UsersCreateController {
@@ -22,35 +22,7 @@ export default class UsersCreateController {
 
     return inertia.render('auth/cms/form', {
       roles: RoleTransformer.transform(roles),
-      translations: this.i18n.buildPayload({
-        title: {
-          create: 'cms.users.create.title',
-          edit: this.i18n.entry('cms.users.edit.title', { username: '{username}' }),
-        },
-        email: {
-          value: 'cms.users.form.email.value',
-          placeholder: 'cms.users.form.email.placeholder',
-        },
-        username: {
-          value: 'cms.users.form.username.value',
-          placeholder: 'cms.users.form.username.placeholder',
-        },
-        submit: 'cms.users.form.submit',
-        roles: {
-          value: 'cms.users.form.role.value',
-          placeholder: 'cms.users.form.role.placeholder',
-          ...roles.reduce((acc, role) => {
-            acc[role.slug] = {
-              value: `cms.users.roles.${role.slug}.value`,
-              description: `cms.users.roles.${role.slug}.description`,
-            }
-            return acc
-          }, {} as TranslationNodes),
-        },
-        actions: {
-          list: 'cms.users.list.title',
-        },
-      }),
+      translations: buildUsersFormPayload(this.i18n, roles),
     })
   }
 

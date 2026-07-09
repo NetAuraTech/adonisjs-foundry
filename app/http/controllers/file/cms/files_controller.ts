@@ -20,6 +20,8 @@ import { UpsertFileAltAction } from '#actions/file/upsert_file_alt_action'
 import { DeleteFileAltAction } from '#actions/file/delete_file_alt_action'
 import { ListRootFoldersAction } from '#actions/file_folder/list_root_folders_action'
 import { I18nService } from '#services/i18n_service'
+import { buildFilesIndexPayload } from '#helpers/i18n_payloads/files_index'
+import { buildFilesShowPayload } from '#helpers/i18n_payloads/files_show'
 
 @inject()
 export default class FilesController {
@@ -55,80 +57,7 @@ export default class FilesController {
       files: FileTransformer.paginate(files.all(), files.getMeta()),
       folders: FileFolderTransformer.transform(folders),
       filters: payload,
-      translations: this.i18n.buildPayload({
-        title: 'cms.files.list.title',
-        action: {
-          folders: 'cms.files.list.action.folders',
-          upload: 'cms.files.list.action.upload',
-        },
-        name: 'cms.files.form.name.value',
-        type: 'cms.files.form.type.value',
-        size: 'cms.files.form.size.value',
-        uploaded_at: 'cms.files.form.uploaded_at.value',
-        upload: {
-          value: 'cms.files.upload.submit',
-          help: 'cms.files.upload.help',
-          remove: 'cms.files.upload.remove',
-          max_size: this.i18n.translate('cms.files.upload.max_size', { size: '{size}' }),
-          try_again: 'cms.files.upload.try_again',
-          error: {
-            size: this.i18n.translate('cms.files.upload.error.size', { max: '{max}' }),
-          },
-        },
-        actions: {
-          value: 'cms.files.actions',
-          show: 'cms.files.show.title',
-          delete: {
-            value: this.i18n.translate('cms.files.delete.title', { filename: '{filename}' }),
-            confirm: 'cms.files.delete.confirm',
-          },
-        },
-        folders: {
-          all: 'cms.files.list.folders.all',
-        },
-        search: {
-          filter: 'cms.files.search.filter',
-          value: 'cms.files.search.value',
-          placeholder: 'cms.files.search.placeholder',
-          type: {
-            value: 'cms.files.search.type.value',
-            options: {
-              placeholder: 'cms.files.search.type.options.placeholder',
-              image: 'cms.files.search.type.options.image',
-              video: 'cms.files.search.type.options.video',
-              audio: 'cms.files.search.type.options.audio',
-              pdf: 'cms.files.search.type.options.pdf',
-            },
-          },
-        },
-        alts: {
-          title: 'cms.files.show.alts.title',
-          add: 'cms.files.show.alts.add',
-          edit: 'cms.files.show.alts.edit',
-          empty: 'cms.files.show.alts.empty',
-          close: 'cms.files.show.alts.close',
-          delete: {
-            value: 'cms.files.show.alts.delete.value',
-            confirm: 'cms.files.show.alts.delete.confirm',
-          },
-          form: {
-            update: 'cms.files.show.alts.form.update',
-            submit: 'cms.files.show.alts.form.submit',
-            cancel: 'cms.files.show.alts.form.cancel',
-            locale: {
-              value: 'cms.files.show.alts.form.locale.value',
-            },
-            key: {
-              value: 'cms.files.show.alts.form.key.value',
-              placeholder: 'cms.files.show.alts.form.key.placeholder',
-            },
-            alt_text: {
-              value: 'cms.files.show.alts.form.alt_text.value',
-              placeholder: 'cms.files.show.alts.form.alt_text.placeholder',
-            },
-          },
-        },
-      }),
+      translations: buildFilesIndexPayload(this.i18n),
     })
   }
 
@@ -140,46 +69,7 @@ export default class FilesController {
 
     return (inertia.render as any)('file/cms/show', {
       file: FileTransformer.transform(file),
-      translations: this.i18n.buildPayload({
-        title: this.i18n.entry('cms.files.show.title', { name: '{name}' }),
-        actions: {
-          back: 'cms.files.list.title',
-          delete: {
-            value: this.i18n.entry('cms.files.delete.title', { name: '{name}' }),
-            confirm: 'cms.files.delete.confirm',
-          },
-        },
-        info: {
-          name: 'cms.files.show.info.name',
-          type: 'cms.files.show.info.type',
-          size: 'cms.files.show.info.size',
-          uploaded_at: 'cms.files.show.info.uploaded_at',
-          value: 'cms.files.show.info.value',
-        },
-        alts: {
-          value: 'cms.files.show.alts.value',
-          add: 'cms.files.show.alts.add',
-          delete: {
-            confirm: 'cms.files.show.alts.delete.confirm',
-          },
-          form: {
-            update: 'cms.files.show.alts.form.update',
-            submit: 'cms.files.show.alts.form.submit',
-            cancel: 'cms.files.show.alts.form.cancel',
-            locale: {
-              value: 'cms.files.show.alts.form.locale.value',
-            },
-            key: {
-              value: 'cms.files.show.alts.form.key.value',
-              placeholder: 'cms.files.show.alts.form.key.placeholder',
-            },
-            alt_text: {
-              value: 'cms.files.show.alts.form.alt_text.value',
-              placeholder: 'cms.files.show.alts.form.alt_text.placeholder',
-            },
-          },
-        },
-      }),
+      translations: buildFilesShowPayload(this.i18n),
     })
   }
 

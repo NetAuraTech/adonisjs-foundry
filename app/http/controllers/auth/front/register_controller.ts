@@ -3,6 +3,7 @@ import { inject } from '@adonisjs/core'
 import { registerValidator } from '#validators/auth'
 import { regenerateCsrfToken } from '#helpers/auth/crsf'
 import { I18nService } from '#services/i18n_service'
+import { buildRegisterPayload } from '#helpers/i18n_payloads/register'
 import { enabledProviders } from '#helpers/auth/oauth'
 import { RegisterUserAction } from '#actions/auth/register_user_action'
 import { SendEmailVerificationAction } from '#actions/email_verification/send_email_verification_action'
@@ -20,28 +21,7 @@ export default class RegisterController {
 
     return inertia.render('auth/front/register', {
       providers: enabledProviders,
-      translations: this.i18n.buildPayload({
-        title: 'auth.register.title',
-        sub_title: 'auth.register.sub_title',
-        account: {
-          has: 'auth.register.account.has',
-          login: 'auth.register.account.login',
-        },
-        email: {
-          value: 'auth.register.email.value',
-          placeholder: 'auth.register.email.placeholder',
-        },
-        password: {
-          value: 'auth.register.password.value',
-          help: 'auth.register.password.help',
-          confirmation: {
-            value: 'auth.register.password.confirmation.value',
-            help: 'auth.register.password.confirmation.help',
-          },
-        },
-        submit: 'auth.register.submit',
-        or_continue_with: 'auth.register.or_continue_with',
-      }),
+      translations: buildRegisterPayload(this.i18n),
     })
   }
 

@@ -4,6 +4,7 @@ import { OAuthProvider } from '#types/auth'
 import { validateProvider } from '#helpers/auth/oauth'
 import { regenerateCsrfToken } from '#helpers/auth/crsf'
 import { I18nService } from '#services/i18n_service'
+import { buildSocialDefinePasswordPayload } from '#helpers/i18n_payloads/social_define_password'
 import { definePasswordValidator } from '#validators/auth'
 import { DefineSocialPasswordAction } from '#actions/social/define_social_password_action'
 import { FindOrCreateSocialUserAction } from '#actions/social/find_or_create_social_user_action'
@@ -106,19 +107,7 @@ export default class SocialController {
     const { inertia } = ctx
 
     return inertia.render('auth/front/define_password', {
-      translations: this.i18n.buildPayload({
-        title: 'auth.password.define.title',
-        sub_title: 'auth.password.define.sub_title',
-        password: {
-          value: 'auth.password.define.password.value',
-          help: 'auth.password.define.password.help',
-          confirmation: {
-            value: 'auth.password.define.password.confirmation.value',
-            help: 'auth.password.define.password.confirmation.help',
-          },
-        },
-        submit: 'auth.password.define.submit',
-      }),
+      translations: buildSocialDefinePasswordPayload(this.i18n),
     })
   }
 

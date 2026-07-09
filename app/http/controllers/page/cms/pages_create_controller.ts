@@ -3,6 +3,7 @@ import { inject } from '@adonisjs/core'
 import { createPageValidator } from '#validators/page'
 import { CreatePageAction } from '#actions/page/create_page_action'
 import { I18nService } from '#services/i18n_service'
+import { buildPagesCreatePayload } from '#helpers/i18n_payloads/pages_create'
 
 @inject()
 export default class PagesCreateController {
@@ -15,32 +16,7 @@ export default class PagesCreateController {
     const { inertia } = ctx
 
     return inertia.render('page/cms/create', {
-      translations: this.i18n.buildPayload({
-        title: 'cms.pages.create.title',
-        action: 'cms.pages.list.title',
-        details: 'cms.pages.create.details.value',
-        locale: 'cms.pages.form.locale.default',
-        slug: 'cms.pages.form.slug.value',
-        page_title: {
-          value: 'cms.pages.form.title.value',
-          placeholder: 'cms.pages.form.title.placeholder',
-        },
-        seo: {
-          value: 'cms.pages.create.seo.value',
-          help: this.i18n.entry('cms.pages.create.seo.help', { title: '{title}' }),
-        },
-        meta: {
-          title: {
-            value: 'cms.pages.form.meta.title.value',
-            placeholder: 'cms.pages.form.meta.title.placeholder',
-          },
-          description: {
-            value: 'cms.pages.form.meta.description.value',
-            placeholder: 'cms.pages.form.meta.description.placeholder',
-          },
-        },
-        submit: 'cms.pages.form.submit',
-      }),
+      translations: buildPagesCreatePayload(this.i18n),
     })
   }
 

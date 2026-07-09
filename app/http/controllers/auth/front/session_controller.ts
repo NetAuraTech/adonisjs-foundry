@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { loginValidator } from '#validators/auth'
 import { inject } from '@adonisjs/core'
 import { I18nService } from '#services/i18n_service'
+import { buildSessionPayload } from '#helpers/i18n_payloads/session'
 import { LoginAction } from '#actions/auth/login_action'
 import { LogoutAction } from '#actions/auth/logout_action'
 import { regenerateCsrfToken } from '#helpers/auth/crsf'
@@ -20,25 +21,7 @@ export default class SessionController {
 
     return inertia.render('auth/front/login', {
       providers: enabledProviders,
-      translations: this.i18n.buildPayload({
-        title: 'auth.session.login.title',
-        sub_title: 'auth.session.login.sub_title',
-        account: {
-          no: 'auth.session.login.account.no',
-          create: 'auth.session.login.account.create',
-        },
-        email: {
-          value: 'auth.session.login.email.value',
-          placeholder: 'auth.session.login.email.placeholder',
-        },
-        password: {
-          value: 'auth.session.login.password.value',
-          forgot: 'auth.session.login.password.forgot',
-        },
-        remember_me: 'auth.session.login.remember_me',
-        submit: 'auth.session.login.submit',
-        or_continue_with: 'auth.session.login.or_continue_with',
-      }),
+      translations: buildSessionPayload(this.i18n),
     })
   }
 

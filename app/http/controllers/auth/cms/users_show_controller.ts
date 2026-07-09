@@ -4,10 +4,11 @@ import { inject } from '@adonisjs/core'
 import { showValidator } from '#validators/user'
 import { I18nService } from '#services/i18n_service'
 import UserTransformer from '#transformers/user_transformer'
+import Role from '#models/auth/role'
 import { enabledProviders } from '#helpers/auth/oauth'
 import { ListAllPermissionsAction } from '#actions/permission/list_all_permissions_action'
 import PermissionTransformer from '#transformers/permission_transformer'
-import { TranslationNodes } from '#types/translations'
+import { buildUsersShowPayload } from '#helpers/i18n_payloads/users_show'
 
 @inject()
 export default class UsersShowsController {
@@ -24,7 +25,7 @@ export default class UsersShowsController {
 
     const user = await this.getUserDetailAction.execute({ id: payload.id })
 
-    const role = user.role
+    const role = user.role as unknown as Role
 
     const permissions = await this.listAllPermissionsAction.execute()
 
@@ -32,65 +33,7 @@ export default class UsersShowsController {
       user: UserTransformer.transform(user),
       providers: enabledProviders,
       permissions: PermissionTransformer.transform(permissions),
-      translations: this.i18n.buildPayload({
-        title: 'cms.users.list.title',
-        info: {
-          email: 'cms.users.show.info.email',
-          username: 'cms.users.show.info.username',
-          value: 'cms.users.show.info.value',
-        },
-        history: {
-          created_at: 'cms.users.show.history.created_at',
-          updated_at: 'cms.users.show.history.updated_at',
-          verified_at: 'cms.users.show.history.verified_at',
-          value: 'cms.users.show.history.value',
-        },
-        providers: {
-          connected: 'cms.users.show.providers.connected',
-          not_connected: 'cms.users.show.providers.not_connected',
-          value: 'cms.users.show.providers.value',
-        },
-        status: {
-          verified: 'cms.users.status.verified',
-          unverified: 'cms.users.status.unverified',
-          pending_invite: 'cms.users.status.pending_invite',
-        },
-        actions: {
-          edit: this.i18n.entry('cms.users.edit.title', { username: '{username}' }),
-          delete: this.i18n.entry('cms.users.delete.title', { username: '{username}' }),
-        },
-        roles: {
-          value: 'cms.users.show.role.value',
-          current: 'cms.users.show.role.current',
-          ...[role].reduce((acc, r) => {
-            acc[r.slug] = {
-              value: `cms.users.roles.${r.slug}.value`,
-              description: `cms.users.roles.${r.slug}.description`,
-            }
-            return acc
-          }, {} as TranslationNodes),
-        },
-        permissions: {
-          value: this.i18n.entry('cms.users.show.permission.value', { amount: '{amount}' }),
-          ...permissions.reduce(
-            (acc, permission) => {
-              const [section, action] = permission.slug.split('.')
-
-              if (!acc.category[section]) {
-                acc.category[section] = `cms.users.permissions.category.${section}`
-              }
-
-              if (!acc[section]) acc[section] = {}
-              acc[section][action] = {
-                value: `cms.users.permissions.${section}.${action}.value`,
-              }
-
-              return acc
-            },
-            { category: {} } as { category: Record<string, string>; [key: string]: any }
-          ),
-        },
-      }),
+      translations: buildUsersShowPayload(this.i18n, role, permissions),
     })
   }
 }

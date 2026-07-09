@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import { forgotPasswordValidator } from '#validators/auth'
 import { I18nService } from '#services/i18n_service'
+import { buildForgotPasswordPayload } from '#helpers/i18n_payloads/forgot_password'
 import User from '#models/auth/user'
 import { SendPasswordResetAction } from '#actions/password/send_password_reset_action'
 
@@ -16,16 +17,7 @@ export default class ForgotPasswordController {
     const { inertia } = ctx
 
     return inertia.render('auth/front/forgot_password', {
-      translations: this.i18n.buildPayload({
-        title: 'auth.password.forgot.title',
-        sub_title: 'auth.password.forgot.sub_title',
-        email: {
-          value: 'auth.password.forgot.email.value',
-          placeholder: 'auth.password.forgot.email.placeholder',
-        },
-        submit: 'auth.password.forgot.submit',
-        back_to_login: 'auth.password.forgot.back_to_login',
-      }),
+      translations: buildForgotPasswordPayload(this.i18n),
     })
   }
 

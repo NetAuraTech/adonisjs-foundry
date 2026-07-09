@@ -9,7 +9,7 @@ import UserTransformer from '#transformers/user_transformer'
 import RoleTransformer from '#transformers/role_transformer'
 import { stripEmptyStrings } from '#helpers/core/strip_empty_strings'
 import { extractPagination } from '#helpers/pagination/extract_pagination'
-import { TranslationNodes } from '#types/translations'
+import { buildUsersListPayload } from '#helpers/i18n_payloads/users_list'
 
 @inject()
 export default class UsersController {
@@ -42,42 +42,7 @@ export default class UsersController {
       users: UserTransformer.paginate(users.all(), users.getMeta()),
       roles: RoleTransformer.transform(roles),
       filters: payload,
-      translations: this.i18n.buildPayload({
-        title: 'cms.users.list.title',
-        action: 'cms.users.list.action',
-        search: {
-          value: 'cms.users.search.value',
-          placeholder: 'cms.users.search.placeholder',
-          filter: 'cms.users.search.filter',
-        },
-        roles: {
-          value: 'cms.users.roles.value',
-          placeholder: 'cms.users.roles.placeholder',
-          ...roles.reduce((acc, role) => {
-            acc[role.slug] = {
-              value: `cms.users.roles.${role.slug}.value`,
-              description: `cms.users.roles.${role.slug}.description`,
-            }
-            return acc
-          }, {} as TranslationNodes),
-        },
-        status: {
-          verified: 'cms.users.status.verified',
-          unverified: 'cms.users.status.unverified',
-          pending_invite: 'cms.users.status.pending_invite',
-          value: 'cms.users.status.value',
-        },
-        empty: 'cms.users.list.empty',
-        register_on: 'cms.users.list.register_on',
-        value: 'cms.users.value',
-        value_one: 'cms.users.value_one',
-        actions: {
-          value: 'cms.users.actions',
-          show: this.i18n.entry('cms.users.show.title', { username: '{username}' }),
-          edit: this.i18n.entry('cms.users.edit.title', { username: '{username}' }),
-          delete: this.i18n.entry('cms.users.delete.title', { username: '{username}' }),
-        },
-      }),
+      translations: buildUsersListPayload(this.i18n, roles),
     })
   }
 

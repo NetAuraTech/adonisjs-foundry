@@ -3,6 +3,7 @@ import { inject } from '@adonisjs/core'
 import { resetPasswordValidator } from '#validators/auth'
 import { regenerateCsrfToken } from '#helpers/auth/crsf'
 import { I18nService } from '#services/i18n_service'
+import { buildResetPasswordPayload } from '#helpers/i18n_payloads/reset_password'
 import { FullToken } from '#types/core'
 import { ValidatePasswordTokenAction } from '#actions/password/validate_password_token_action'
 import { ResetPasswordAction } from '#actions/password/reset_password_action'
@@ -22,20 +23,7 @@ export default class ResetPasswordController {
 
     return inertia.render('auth/front/reset_password', {
       token: params.token,
-      translations: this.i18n.buildPayload({
-        title: 'auth.password.reset.title',
-        sub_title: 'auth.password.reset.sub_title',
-        password: {
-          value: 'auth.password.reset.password.value',
-          help: 'auth.password.reset.password.help',
-          confirmation: {
-            value: 'auth.password.reset.password.confirmation.value',
-            help: 'auth.password.reset.password.confirmation.help',
-          },
-        },
-        submit: 'auth.password.reset.submit',
-        back_to_login: 'auth.password.reset.back_to_login',
-      }),
+      translations: buildResetPasswordPayload(this.i18n),
     })
   }
 

@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import { acceptInvitationValidator, invitationValidator } from '#validators/auth'
 import { I18nService } from '#services/i18n_service'
+import { buildAcceptInvitationPayload } from '#helpers/i18n_payloads/accept_invitation'
 import { FullToken } from '#types/core'
 import UserTransformer from '#transformers/user_transformer'
 import { GetInvitationAction } from '#actions/invitation/get_invitation_action'
@@ -24,33 +25,7 @@ export default class AcceptInvitationController {
     return inertia.render('auth/front/accept_invitation', {
       token: payload.token,
       user: UserTransformer.transform(user),
-      translations: this.i18n.buildPayload({
-        title: 'auth.invitation.title',
-        sub_title: 'auth.invitation.sub_title',
-        email: {
-          value: 'auth.invitation.email.value',
-          placeholder: 'auth.invitation.email.placeholder',
-          help: 'auth.invitation.email.help',
-        },
-        username: {
-          value: 'auth.invitation.username.value',
-          placeholder: 'auth.invitation.username.placeholder',
-          help: 'auth.invitation.username.help',
-        },
-        password: {
-          confirmation: {
-            help: 'auth.invitation.password.confirmation.help',
-            value: 'auth.invitation.password.confirmation.value',
-          },
-          help: 'auth.invitation.password.help',
-          value: 'auth.invitation.password.value',
-        },
-        banner: {
-          title: this.i18n.entry('auth.invitation.banner.title', { email: user.email }),
-          message: 'auth.invitation.banner.message',
-        },
-        submit: 'auth.invitation.submit',
-      }),
+      translations: buildAcceptInvitationPayload(this.i18n, user.email),
     })
   }
 

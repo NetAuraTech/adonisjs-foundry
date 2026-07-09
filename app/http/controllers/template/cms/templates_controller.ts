@@ -17,6 +17,7 @@ import { DeleteTemplateAction } from '#actions/template/delete_template_action'
 import { ApplyToPageAction } from '#actions/template/apply_to_page_action'
 import { CreateFromPageAction } from '#actions/template/create_from_page_action'
 import { I18nService } from '#services/i18n_service'
+import { buildTemplatesIndexPayload } from '#helpers/i18n_payloads/templates_index'
 
 @inject()
 export default class TemplatesController {
@@ -45,28 +46,7 @@ export default class TemplatesController {
     return inertia.render('template/cms/index', {
       templates: TemplateTransformer.transform(templates),
       filters: payload,
-      translations: this.i18n.buildPayload({
-        title: 'cms.templates.list.title',
-        empty: {
-          value: 'cms.templates.list.empty.value',
-          help: 'cms.templates.list.empty.help',
-        },
-        search: {
-          value: 'cms.templates.search.value',
-          placeholder: 'cms.templates.search.placeholder',
-          type: {
-            value: 'cms.templates.search.type.value',
-            placeholder: 'cms.templates.search.type.placeholder',
-            page: 'cms.templates.search.type.page',
-            block: 'cms.templates.search.type.block',
-          },
-          filter: 'cms.templates.search.filter',
-        },
-        delete: {
-          value: this.i18n.entry('cms.templates.delete.title', { name: '{name}' }),
-          confirm: 'cms.templates.delete.confirm',
-        },
-      }),
+      translations: buildTemplatesIndexPayload(this.i18n),
     })
   }
 

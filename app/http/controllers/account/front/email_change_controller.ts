@@ -5,6 +5,7 @@ import { FullToken } from '#types/core'
 import { regenerateCsrfToken } from '#helpers/auth/crsf'
 import { ConfirmEmailChangeAction } from '#actions/account/confirm_email_change_action'
 import { I18nService } from '#services/i18n_service'
+import { buildEmailChangePayload } from '#helpers/i18n_payloads/email_change'
 
 @inject()
 export default class EmailChangeController {
@@ -18,17 +19,7 @@ export default class EmailChangeController {
 
     return inertia.render('settings/account/front/email_change', {
       token: params.token,
-      translations: this.i18n.buildPayload({
-        title: 'settings.email.change.title',
-        sub_title: 'settings.email.change.sub_title',
-        submit: 'settings.email.change.submit',
-        cancel: 'settings.email.change.cancel',
-        token: 'settings.email.change.token',
-        info: {
-          title: 'settings.email.change.info.title',
-          message: 'settings.email.change.info.message',
-        },
-      }),
+      translations: buildEmailChangePayload(this.i18n),
     })
   }
 
