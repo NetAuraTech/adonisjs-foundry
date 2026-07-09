@@ -2,7 +2,15 @@ import { UserSchema } from '#database/schema'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
-import { afterFetch, afterFind, beforeSave, belongsTo, computed, hasMany, hasOne } from '@adonisjs/lucid/orm'
+import {
+  afterFetch,
+  afterFind,
+  beforeSave,
+  belongsTo,
+  computed,
+  hasMany,
+  hasOne,
+} from '@adonisjs/lucid/orm'
 import Role from '#models/auth/role'
 import type { BelongsTo, HasMany, HasOne } from '@adonisjs/lucid/types/relations'
 import { DbRememberMeTokensProvider } from '@adonisjs/auth/session'

@@ -46,7 +46,8 @@ export class GenerateSitemapAction {
       }
     }
 
-    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+    let xml =
+      '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
     for (const url of urls) {
       xml += `\n  <url><loc>${url}</loc></url>`
     }

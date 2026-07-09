@@ -2,10 +2,10 @@ import { test } from '@japa/runner'
 import { BaseMail } from '@adonisjs/mail'
 import type User from '#models/auth/user'
 import { TOKEN_TYPES, type TokenType } from '#types/core'
-import { MailService } from '#services/mails/mail_service'
-import { GetPreferencesAction } from '#actions/preferences/get_preferences_action'
-import { TokenRepository } from '#repositories/core/token_repository'
-import i18nManager from '@adonisjs/i18n/services/main'
+import { type MailService } from '#services/mails/mail_service'
+import { type GetPreferencesAction } from '#actions/preferences/get_preferences_action'
+import { type TokenRepository } from '#repositories/core/token_repository'
+import type i18nManager from '@adonisjs/i18n/services/main'
 
 /* ------------------------------------------------------------------ */
 /*  Doubles                                                            */
@@ -39,11 +39,7 @@ class TestTokenListener extends BaseTokenListener {
     super(mailService, getPreferencesAction, tokenRepository)
   }
 
-  protected buildMailPayload(
-    _event: any,
-    _locale: string,
-    token: string
-  ): Record<string, any> {
+  protected buildMailPayload(_event: any, _locale: string, token: string): Record<string, any> {
     return { test_link: `https://test.com/link?token=${token}` }
   }
 
@@ -73,7 +69,13 @@ test.group('BaseTokenListener', () => {
   test('handle() executes full 7-step flow', async ({ assert }) => {
     const fakeUser = { id: 1, email: 'test@example.com' } as User
 
-    const createdToken = {} as { userId: number; type: TokenType; selector: string; token: string; expiresAt: Date }
+    const createdToken = {} as {
+      userId: number
+      type: TokenType
+      selector: string
+      token: string
+      expiresAt: Date
+    }
     const mockTokenRepo = {
       expireTokensByType: async () => {},
       create: async (data: any) => {
@@ -82,7 +84,11 @@ test.group('BaseTokenListener', () => {
     }
 
     let capturedPayload: any = null
-    const mockMailService = { send: async (payload: any) => { capturedPayload = payload } }
+    const mockMailService = {
+      send: async (payload: any) => {
+        capturedPayload = payload
+      },
+    }
 
     const mockPrefsAction = {
       execute: async () => ({ theme: 'light', locale: 'en' }),
@@ -175,7 +181,11 @@ test.group('BaseTokenListener', () => {
 
   test('handle() builds mail payload with user, translations, and extras', async ({ assert }) => {
     let capturedPayload: any = null
-    const mockMailService = { send: async (payload: any) => { capturedPayload = payload } }
+    const mockMailService = {
+      send: async (payload: any) => {
+        capturedPayload = payload
+      },
+    }
 
     const fakeUser = { id: 4, email: 'payload@test.com' } as User
 
@@ -220,9 +230,15 @@ test.group('BaseTokenListener', () => {
     assert.isTrue(diffHours >= 23.5 && diffHours <= 24.5, `expected ~24h, got ${diffHours}`)
   })
 
-  test('handle() generates a split token (selector.validator) in the mail link', async ({ assert }) => {
+  test('handle() generates a split token (selector.validator) in the mail link', async ({
+    assert,
+  }) => {
     let capturedPayload: any = null
-    const mockMailService = { send: async (payload: any) => { capturedPayload = payload } }
+    const mockMailService = {
+      send: async (payload: any) => {
+        capturedPayload = payload
+      },
+    }
 
     const fakeUser = { id: 6, email: 'split@test.com' } as User
 

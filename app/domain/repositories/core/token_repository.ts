@@ -262,9 +262,7 @@ export class TokenRepository extends BaseRepository {
    * @param type - The token type to filter by.
    */
   async expireTokensByType(user: User, type: TokenType): Promise<void> {
-    const tokens = await Token.query(this.client())
-      .where('user_id', user.id)
-      .where('type', type)
+    const tokens = await Token.query(this.client()).where('user_id', user.id).where('type', type)
 
     for (const token of tokens) {
       token.expiresAt = DateTime.now()

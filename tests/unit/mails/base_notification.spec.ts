@@ -50,9 +50,8 @@ test.group('BaseNotification', () => {
     class BadNotification extends BaseNotification {}
     const notif = new (BadNotification as any)({} as MailPayload)
 
-    assert.throws(
-      () => { void notif.templatePath },
-      'templatePath must be overridden by subclass'
-    )
+    assert.throws(() => {
+      void notif.templatePath
+    }, 'templatePath must be overridden by subclass')
   })
 })

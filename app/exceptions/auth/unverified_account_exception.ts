@@ -5,7 +5,9 @@ export default class UnverifiedAccountException extends BaseHttpException {
   static code = 'E_UNVERIFIED_ACCOUNT'
 
   constructor(protected email: string) {
-    super('This account has not yet been verified. Please verify your email address before continuing.')
+    super(
+      'This account has not yet been verified. Please verify your email address before continuing.'
+    )
   }
 
   protected details() {

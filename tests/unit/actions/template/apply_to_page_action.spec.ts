@@ -7,7 +7,7 @@ import Template from '#models/template/template'
 import Page from '#models/page/page'
 import PageTranslation from '#models/page/page_translation'
 import type { BlockType } from '#types/page'
-import { PageContent } from '#types/page'
+import { type PageContent } from '#types/page'
 
 test.group('ApplyToPageAction', () => {
   test('execute() throws E_INVALID_TEMPLATE_TYPE for block templates', async ({ assert }) => {
@@ -59,7 +59,12 @@ test.group('ApplyToPageAction', () => {
         {
           id: '1',
           type: 'title' as BlockType,
-          props: { text: 'Template Title', level: 1, color: 'default', highlightColor: 'default' } as any,
+          props: {
+            text: 'Template Title',
+            level: 1,
+            color: 'default',
+            highlightColor: 'default',
+          } as any,
         },
       ],
     }

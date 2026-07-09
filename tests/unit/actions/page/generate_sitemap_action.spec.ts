@@ -14,7 +14,9 @@ test.group('GenerateSitemapAction', () => {
     assert.notInclude(xml, '<url>')
   })
 
-  test('buildSitemapXml() generates correct URL for a subpage in default locale', async ({ assert }) => {
+  test('buildSitemapXml() generates correct URL for a subpage in default locale', async ({
+    assert,
+  }) => {
     const action = await app.container.make(GenerateSitemapAction)
 
     const pages = [
@@ -30,7 +32,9 @@ test.group('GenerateSitemapAction', () => {
     assert.include(xml, '<loc>http://localhost:3000/about</loc>')
   })
 
-  test('buildSitemapXml() generates correct URL for a subpage in non-default locale', async ({ assert }) => {
+  test('buildSitemapXml() generates correct URL for a subpage in non-default locale', async ({
+    assert,
+  }) => {
     const action = await app.container.make(GenerateSitemapAction)
 
     const pages = [
@@ -46,7 +50,9 @@ test.group('GenerateSitemapAction', () => {
     assert.include(xml, '<loc>http://localhost:3000/fr/a-propos</loc>')
   })
 
-  test('buildSitemapXml() generates root URL for homepage in default locale', async ({ assert }) => {
+  test('buildSitemapXml() generates root URL for homepage in default locale', async ({
+    assert,
+  }) => {
     const action = await app.container.make(GenerateSitemapAction)
 
     const pages = [
@@ -62,7 +68,9 @@ test.group('GenerateSitemapAction', () => {
     assert.include(xml, '<loc>http://localhost:3000/</loc>')
   })
 
-  test('buildSitemapXml() generates locale-prefixed URL for homepage in non-default locale', async ({ assert }) => {
+  test('buildSitemapXml() generates locale-prefixed URL for homepage in non-default locale', async ({
+    assert,
+  }) => {
     const action = await app.container.make(GenerateSitemapAction)
 
     const pages = [

@@ -236,7 +236,10 @@ test.group('Exceptions', () => {
       }
 
       for (const code of exceptionCodes) {
-        assert.isDefined(keys[code], `Expected translation key "${code}" in ${locale}/exceptions.json`)
+        assert.isDefined(
+          keys[code],
+          `Expected translation key "${code}" in ${locale}/exceptions.json`
+        )
       }
     }
   })

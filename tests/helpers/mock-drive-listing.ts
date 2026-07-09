@@ -28,7 +28,6 @@ export function mockDriveListing(disk: Disk): Map<string, string> {
     storedFiles.set(key, content)
     return originalPut(key, value)
   }
-
   ;(disk as any).listAll = async (prefix?: string) => {
     const prefixStr = String(prefix || '')
     const objects = Array.from(storedFiles.entries())

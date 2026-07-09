@@ -95,7 +95,9 @@ export class I18nService {
    * // → { title: "Welcome back!", account: { has: "Do you already have an account?" } }
    * ```
    */
-  buildPayload<T extends Record<string, string | I18nEntry | object>>(mapping: T): BuildPayloadResult<T> {
+  buildPayload<T extends Record<string, string | I18nEntry | object>>(
+    mapping: T
+  ): BuildPayloadResult<T> {
     return this._build(mapping) as BuildPayloadResult<T>
   }
 

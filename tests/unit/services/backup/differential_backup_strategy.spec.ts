@@ -33,7 +33,9 @@ test.group('DifferentialBackupStrategy', (group) => {
     const createDumpStub = sinon.stub().resolves()
 
     const snapshotModule = await import('#services/backup/snapshot_helper')
-    sinon.stub(snapshotModule.SnapshotHelper, 'generateFilename').returns('backup-full-2024.sql.gz.enc')
+    sinon
+      .stub(snapshotModule.SnapshotHelper, 'generateFilename')
+      .returns('backup-full-2024.sql.gz.enc')
     sinon.stub(snapshotModule.SnapshotHelper, 'manifestFilename').returns('m.manifest.json')
 
     // Mock FullBackupStrategy.execute so the fallback path resolves cleanly

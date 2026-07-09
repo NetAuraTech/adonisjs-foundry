@@ -21,9 +21,7 @@ export abstract class BaseHttpException extends Exception {
   }
 
   /** Redirect behavior when not JSON. Override if needed. */
-  protected redirectPath(
-    response: HttpContext['response']
-  ): ReturnType<typeof response.redirect> {
+  protected redirectPath(response: HttpContext['response']): ReturnType<typeof response.redirect> {
     return response.redirect().back()
   }
 

@@ -4,7 +4,10 @@ export default class MissingTranslationException extends BaseHttpException {
   static status = 404
   static code = 'E_MISSING_TRANSLATION'
 
-  constructor(protected locale: string, protected pageId: number) {
+  constructor(
+    protected locale: string,
+    protected pageId: number
+  ) {
     super(`No translation for locale "${locale}" on page ${pageId}`)
   }
 
