@@ -2,6 +2,8 @@
 import { PageRepository } from '#repositories/page/page_repository'
 import type { PaginationFilters } from '#types/pagination'
 import type { PageStatus } from '#types/page'
+import { ModelPaginatorContract } from '@adonisjs/lucid/types/model'
+import Page from '#models/page/page'
 
 interface ListPagesPayload {
   status?: PageStatus
@@ -26,7 +28,7 @@ export class ListPagesAction {
    * @example
    * const result = await listPagesAction.execute({ status: 'published', pagination: { page: 1, perPage: 20 } })
    */
-  async execute(payload: ListPagesPayload): Promise<any> {
+  async execute(payload: ListPagesPayload): Promise<ModelPaginatorContract<Page>> {
     return this.pageRepository.list(
       { status: payload.status, locale: payload.locale, search: payload.search },
       payload.pagination

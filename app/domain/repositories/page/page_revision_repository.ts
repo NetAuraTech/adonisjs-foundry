@@ -1,5 +1,6 @@
 import { transactionContext } from '#shared/context/transaction_context'
 import PageRevision from '#models/page/page_revision'
+import type { ModelPaginatorContract } from '@adonisjs/lucid/types/model'
 import type { PageContent } from '#types/page'
 import { BaseRepository } from '#repositories/base_repository'
 
@@ -124,7 +125,10 @@ export class PageRevisionRepository extends BaseRepository {
    * @param pagination - Page number and items per page.
    * @returns A paginated result set ordered newest first.
    */
-  async list(pageId: number, pagination: { page?: number; perPage?: number }) {
+  async list(
+    pageId: number,
+    pagination: { page?: number; perPage?: number }
+  ): Promise<ModelPaginatorContract<PageRevision>> {
     const { default: PageTranslation } = await import('#models/page/page_translation')
     const translations = await PageTranslation.query(this.client()).where('page_id', pageId)
     const translationIds = translations.map((t: { id: number }) => t.id)

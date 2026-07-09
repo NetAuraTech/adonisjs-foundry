@@ -1,6 +1,8 @@
 ﻿import { inject } from '@adonisjs/core'
 import { FileRepository } from '#repositories/file/file_repository'
 import type { PaginationFilters } from '#types/pagination'
+import { ModelPaginatorContract } from '@adonisjs/lucid/types/model'
+import File from '#models/file/file'
 
 interface ListFilesPayload {
   folderId?: number | null
@@ -25,7 +27,7 @@ export class ListFilesAction {
    * @example
    * const result = await listFilesAction.execute({ folderId: 1, pagination: { page: 1, perPage: 20 } })
    */
-  async execute(payload: ListFilesPayload): Promise<any> {
+  async execute(payload: ListFilesPayload): Promise<ModelPaginatorContract<File>> {
     return this.fileRepository.list(
       { folderId: payload.folderId, mimeType: payload.mimeType, search: payload.search },
       payload.pagination

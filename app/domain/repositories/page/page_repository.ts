@@ -1,5 +1,6 @@
 import { transactionContext } from '#shared/context/transaction_context'
 import Page from '#models/page/page'
+import type { ModelPaginatorContract } from '@adonisjs/lucid/types/model'
 import type { PaginationFilters } from '#types/pagination'
 import type { PageStatus } from '#types/page'
 import { BaseRepository } from '#repositories/base_repository'
@@ -94,7 +95,10 @@ export class PageRepository extends BaseRepository {
    * @example
    * const result = await pageRepository.list({ status: 'published' }, { page: 1, perPage: 20 })
    */
-  async list(filters: ListFilters, pagination: PaginationFilters) {
+  async list(
+    filters: ListFilters,
+    pagination: PaginationFilters
+  ): Promise<ModelPaginatorContract<Page>> {
     const query = Page.query(this.client()).preload('translations').orderBy('created_at', 'desc')
 
     if (filters.status) {

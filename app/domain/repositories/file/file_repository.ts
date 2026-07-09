@@ -1,5 +1,6 @@
 import { transactionContext } from '#shared/context/transaction_context'
 import File from '#models/file/file'
+import type { ModelPaginatorContract } from '@adonisjs/lucid/types/model'
 import type { PaginationFilters } from '#types/pagination'
 import { BaseRepository } from '#repositories/base_repository'
 
@@ -54,7 +55,10 @@ export class FileRepository extends BaseRepository {
    * @example
    * const result = await fileRepository.list({ folderId: 1 }, { page: 1, perPage: 20 })
    */
-  async list(filters: ListFilters, pagination: PaginationFilters) {
+  async list(
+    filters: ListFilters,
+    pagination: PaginationFilters
+  ): Promise<ModelPaginatorContract<File>> {
     const query = File.query(this.client())
       .preload('folder')
       .preload('alts')
