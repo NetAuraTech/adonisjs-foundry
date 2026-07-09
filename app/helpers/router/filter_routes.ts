@@ -12,21 +12,18 @@ export function filterRoutes(
   method: string,
   exclusions: string[] = []
 ): { name: string; pattern: string; params: string[] }[] {
-  const filtered = allRoutes.filter(
-    (r): r is typeof r & { name: string } => {
-      if (!r.methods.includes(method)) return false
-      if (!r.name) return false
+  const filtered = allRoutes.filter((r): r is typeof r & { name: string } => {
+    if (!r.methods.includes(method)) return false
+    if (!r.name) return false
 
-      const name = r.name
-      const isExcluded = exclusions.some((ex) => name.startsWith(ex))
-      return !isExcluded
-    }
-  )
+    const name = r.name
+    const isExcluded = exclusions.some((ex) => name.startsWith(ex))
+    return !isExcluded
+  })
 
   return filtered.map((r) => ({
-      name: r.name,
-      pattern: r.pattern,
-      params: r.pattern.match(/:(\w+)/g)?.map((p) => p.replace(':', '')) ?? [],
-    })
-  )
+    name: r.name,
+    pattern: r.pattern,
+    params: r.pattern.match(/:(\w+)/g)?.map((p) => p.replace(':', '')) ?? [],
+  }))
 }
