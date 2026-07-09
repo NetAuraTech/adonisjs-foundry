@@ -1,14 +1,18 @@
 import app from '@adonisjs/core/services/app'
+import { BackupEngine } from '#services/backup/backup_engine'
 import { CacheService } from '#services/cache/cache_service'
 import { RedisCacheDriver } from '#services/cache/drivers/redis_cache_driver'
 import { BuilderSessionService } from '#services/page/builder_session_service'
+import { LogService } from '#services/logging/log_service'
 
 /**
- * IoC container singleton bindings.
+ * IoC container bindings.
  *
- * Services registered here are instantiated exactly once per process and
- * reused across every request — which is what makes in-flight state (locks,
- * sessions) work correctly without serialising to a database on every call.
+ * Singleton services are instantiated exactly once per process and reused
+ * across every request — which is what makes in-flight state (locks, sessions)
+ * work correctly without serialising to a database on every call.
+ * Factory bindings are re-created on each resolution with runtime arguments
+ * supplied via {@link app.container.make}.
  *
  * Add this file to `adonisrc.ts` preloads if it isn't already:
  *
@@ -18,6 +22,24 @@ import { BuilderSessionService } from '#services/page/builder_session_service'
  *   () => import('#start/container'),
  * ]
  */
+
+// ─── BackupEngine (factory) ──────────────────────────────────────────────────
+
+/**
+ * Factory binding for {@link BackupEngine} so that callers can resolve it
+ * through the container instead of using `new`.  Runtime arguments
+ * (`strategyType`, `tempDir`) are supplied at resolution time which keeps
+ * the strategy dynamic while still being mockable in tests via
+ * {@link app.container.swap}.
+ *
+ * @example
+ * const engine = await app.container.make(BackupEngine, ['full', 'storage/temp/backups'])
+ */
+app.container.bind(BackupEngine, async (resolver, runtimeValues) => {
+  const [strategyType, tempDir] = runtimeValues ?? []
+  const logService = await resolver.make(LogService)
+  return new BackupEngine(strategyType, tempDir, logService)
+})
 
 // ─── CacheService (singleton) ─────────────────────────────────────────────────
 

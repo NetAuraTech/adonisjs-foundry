@@ -1,6 +1,6 @@
+import app from '@adonisjs/core/services/app'
 import { inject } from '@adonisjs/core'
 import { BackupEngine } from '#services/backup/backup_engine'
-import { LogService } from '#services/logging/log_service'
 import type { BackupResult } from '#services/backup/backup_strategy'
 
 export interface RunBackupPayload {
@@ -18,8 +18,6 @@ export interface RunBackupPayload {
 export default class RunBackupAction {
   private readonly tempDir = 'storage/temp/backups'
 
-  constructor(private readonly logService: LogService) {}
-
   /**
    * Execute a backup run.
    *
@@ -32,7 +30,7 @@ export default class RunBackupAction {
    */
   public async execute(payload?: RunBackupPayload): Promise<BackupResult> {
     const strategyType = payload?.strategy ?? 'auto'
-    const engine = new BackupEngine(strategyType, this.tempDir, this.logService)
+    const engine = await app.container.make(BackupEngine, [strategyType, this.tempDir])
     return engine.execute()
   }
 }

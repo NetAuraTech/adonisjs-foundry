@@ -1,27 +1,104 @@
-﻿import { test } from '@japa/runner'
+import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
+import { BackupEngine } from '#services/backup/backup_engine'
 import RunBackupAction from '#actions/backup/run_backup_action'
-import drive from '@adonisjs/drive/services/main'
-import backupConfig from '#config/backup'
+import type { BackupResult } from '#services/backup/backup_strategy'
 
 test.group('RunBackupAction', (group) => {
-  group.each.setup(() => {
-    drive.fake(backupConfig.storage.disk as any)
-  })
+	group.each.teardown(() => {
+		app.container.restore(BackupEngine)
+	})
 
-  group.each.teardown(() => {
-    drive.restore(backupConfig.storage.disk as any)
-  })
+	test('execute() delegates to BackupEngine and returns its result', async ({ assert }) => {
+		const mockResult: BackupResult = {
+			success: true,
+			filename: 'backup_full_20240101.zip',
+			type: 'full',
+			size: 1024,
+			duration: 5000,
+			storage: 'backups/backup_full_20240101.zip',
+		}
 
-  test('execute() returns result with expected shape on failure', async ({ assert }) => {
-    const action = await app.container.make(RunBackupAction)
-    const result = await action.execute({ strategy: 'full' })
+		app.container.swap(BackupEngine, () => ({
+			execute: () => Promise.resolve(mockResult),
+		}) as unknown as BackupEngine)
 
-    assert.property(result, 'success')
-    assert.property(result, 'filename')
-    assert.property(result, 'type')
-    assert.property(result, 'size')
-    assert.property(result, 'duration')
-    assert.property(result, 'storage')
-  })
+		const action = await app.container.make(RunBackupAction)
+		const result = await action.execute({ strategy: 'full' })
+
+		assert.strictEqual(result, mockResult)
+	})
+
+	test('execute() defaults to auto strategy when no payload is given', async ({ assert }) => {
+		let resolvedStrategy: string | null = null
+
+		app.container.swap(
+			BackupEngine,
+			(_resolver, runtimeValues) => {
+				resolvedStrategy = (runtimeValues ?? [])[0] ?? null
+				return {
+					execute: () => Promise.resolve({
+						success: true,
+						filename: 'backup.zip',
+						type: 'full',
+						size: 100,
+						duration: 100,
+						storage: 'backups/backup.zip',
+					}),
+				} as unknown as BackupEngine
+			}
+		)
+
+		const action = await app.container.make(RunBackupAction)
+		await action.execute()
+
+		assert.strictEqual(resolvedStrategy, 'auto')
+	})
+
+	test('execute() passes the strategy type to BackupEngine', async ({ assert }) => {
+		let resolvedStrategy: string | null = null
+
+		app.container.swap(
+			BackupEngine,
+			(_resolver, runtimeValues) => {
+				resolvedStrategy = (runtimeValues ?? [])[0] ?? null
+				return {
+					execute: () => Promise.resolve({
+						success: true,
+						filename: 'backup.zip',
+						type: 'differential',
+						size: 50,
+						duration: 200,
+						storage: 'backups/backup.zip',
+					}),
+				} as unknown as BackupEngine
+			}
+		)
+
+		const action = await app.container.make(RunBackupAction)
+		await action.execute({ strategy: 'differential' })
+
+		assert.strictEqual(resolvedStrategy, 'differential')
+	})
+
+	test('execute() propagates failure results from BackupEngine', async ({ assert }) => {
+		const failureResult: BackupResult = {
+			success: false,
+			filename: '',
+			type: 'full',
+			size: 0,
+			duration: 0,
+			storage: '',
+			error: 'Backup failed',
+		}
+
+		app.container.swap(BackupEngine, () => ({
+			execute: () => Promise.resolve(failureResult),
+		}) as unknown as BackupEngine)
+
+		const action = await app.container.make(RunBackupAction)
+		const result = await action.execute({ strategy: 'full' })
+
+		assert.strictEqual(result.success, false)
+	})
 })
