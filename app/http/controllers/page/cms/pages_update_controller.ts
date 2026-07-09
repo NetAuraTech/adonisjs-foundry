@@ -3,11 +3,14 @@ import { inject } from '@adonisjs/core'
 import { showPageValidator, updatePageValidator, publishPageValidator } from '#validators/page'
 import PageTransformer from '#transformers/page_transformer'
 import router from '@adonisjs/core/services/router'
+import { filterRoutes } from '#helpers/router/filter_routes'
 import { GetPageDetailAction } from '#actions/page/get_page_detail_action'
 import { UpdatePageAction } from '#actions/page/update_page_action'
 import { ChangePageStatusAction } from '#actions/page/change_page_status_action'
 import { GetAvailablePagesForLinkAction } from '#actions/page/get_available_pages_for_link_action'
 import { I18nService } from '#services/i18n_service'
+
+const SHARED_EXCLUSIONS = ['admin.', 'api.', 'auth.', 'pages.show', 'settings.']
 
 @inject()
 export default class PagesUpdateController {
@@ -23,45 +26,14 @@ export default class PagesUpdateController {
     const { inertia, params } = ctx
 
     const allRoutes = router.toJSON().root
-    const availableRoutes = allRoutes
-      .filter((r) => {
-        if (!r.methods.includes('GET')) return false
-        if (!r.name) return false
-        const isExcluded =
-          r.name.startsWith('admin.') ||
-          r.name.startsWith('api.') ||
-          r.name.startsWith('auth.') ||
-          r.name.startsWith('pages.show') ||
-          r.name.startsWith('settings.')
 
-        return !isExcluded
-      })
-      .map((r) => ({
-        name: r.name,
-        pattern: r.pattern,
-        params: r.pattern.match(/:(\w+)/g)?.map((p) => p.replace(':', '')) || [],
-      }))
+    const availableRoutes = filterRoutes(allRoutes, 'GET', SHARED_EXCLUSIONS)
 
-    const availablePostRoutes = allRoutes
-      .filter((r) => {
-        if (!r.methods.includes('POST')) return false
-        if (!r.name) return false
-        const isExcluded =
-          r.name.startsWith('admin.') ||
-          r.name.startsWith('api.') ||
-          r.name.startsWith('auth.') ||
-          r.name.startsWith('subscribe') ||
-          r.name.startsWith('unsubscribe') ||
-          r.name.startsWith('pages.show') ||
-          r.name.startsWith('settings.')
-
-        return !isExcluded
-      })
-      .map((r) => ({
-        name: r.name,
-        pattern: r.pattern,
-        params: r.pattern.match(/:(\w+)/g)?.map((p) => p.replace(':', '')) || [],
-      }))
+    const availablePostRoutes = filterRoutes(allRoutes, 'POST', [
+      ...SHARED_EXCLUSIONS,
+      'subscribe',
+      'unsubscribe',
+    ])
 
     const availablePages = await this.getAvailablePagesForLinkAction.execute()
 
