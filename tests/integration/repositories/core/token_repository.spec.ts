@@ -137,7 +137,7 @@ test.group('TokenRepository', () => {
     const reloaded = await repo.findById(tokenModel.id)
     assert.equal(reloaded!.attempts, 3)
 
-    // Need 5 attempts to trigger MaxAttemptsExceededException
+    // MAX_ATTEMPTS is 3 — after incrementing to 3, next checkAttempts throws
     await repo.incrementAttempts(plainToken) // attempts = 4
     await repo.incrementAttempts(plainToken) // attempts = 5
     assert.equal((await repo.findById(tokenModel.id))!.attempts, 5)

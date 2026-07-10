@@ -32,6 +32,11 @@ import { BaseRepository } from '#repositories/base_repository'
  */
 @inject()
 export class TokenRepository extends BaseRepository {
+  /**
+   * Maximum verification attempts allowed for any token type.
+   */
+  readonly MAX_ATTEMPTS = 3
+
   constructor(protected logService: LogService) {
     super()
   }
@@ -222,7 +227,7 @@ export class TokenRepository extends BaseRepository {
 
     if (!record) return
 
-    if (record.attempts >= 5) {
+    if (record.attempts >= this.MAX_ATTEMPTS) {
       throw new MaxAttemptsExceededException()
     }
 
@@ -294,8 +299,8 @@ export class TokenRepository extends BaseRepository {
   /**
    * Resolves a token to its associated {@link User}.
    *
-   * Splits the raw token, finds the matching record by selector and type,
-   * verifies the validator hash, and loads the associated user with their
+   * Delegates verification to {@link verify} so that attempt tracking is
+   * always applied before hash comparison. Loads the associated user with
    * role and permissions preloaded. Returns `null` if any step fails — it
    * does not throw.
    *
@@ -308,20 +313,24 @@ export class TokenRepository extends BaseRepository {
 
     if (!parts) return null
 
+    // Delegate to verify() so attempt tracking is always applied.
+    // catch swallows MaxAttemptsExceededException — we return null, not throw.
+    try {
+      const isValid = await this.verify(token, type)
+      if (!isValid) return null
+    } catch {
+      return null
+    }
+
     const data = await Token.query(this.client())
       .where('selector', parts.selector)
       .where('type', type)
       .where('expires_at', '>', DateTime.now().toSQL())
       .first()
 
-    if (!data) return null
+    if (!data || !data.userId) return null
 
-    const isValid = await hash.verify(data.token, parts.validator)
-    if (!isValid) return null
-
-    const client = this.client()
-    if (!data.userId) return null
-    const user = await User.query(client).where('id', data.userId).first()
+    const user = await User.query(this.client()).where('id', data.userId).first()
     if (!user) return null
 
     await user.load('role', (query) => {
@@ -410,9 +419,10 @@ export class TokenRepository extends BaseRepository {
   /**
    * Retrieves a valid invitation token record by its raw `selector.validator` string.
    *
-   * Unlike the `getUser*` helpers, this method returns the {@link Token} itself
-   * rather than the associated user, allowing the caller to inspect token metadata
-   * (e.g. invited email, expiration) before loading the user.
+   * Delegates verification to {@link verify} so that attempt tracking is always
+   * applied before hash comparison. Unlike the `getUser*` helpers, this method
+   * returns the {@link Token} itself rather than the associated user, allowing
+   * the caller to inspect token metadata (e.g. invited email, expiration).
    *
    * @param token - The raw `selector.validator` invitation token.
    * @returns The matching {@link Token} if valid and not expired.
@@ -428,6 +438,17 @@ export class TokenRepository extends BaseRepository {
       throw new InvalidTokenException()
     }
 
+    // Delegate to verify() so attempt tracking is always applied.
+    try {
+      const isValid = await this.verify(token, TOKEN_TYPES.PENDING_INVITE)
+      if (!isValid) {
+        throw new InvalidTokenException()
+      }
+    } catch (e) {
+      if (e instanceof MaxAttemptsExceededException) throw e
+      throw new InvalidTokenException()
+    }
+
     const data = await Token.query(this.client())
       .where('selector', parts.selector)
       .where('type', TOKEN_TYPES.PENDING_INVITE)
@@ -435,12 +456,6 @@ export class TokenRepository extends BaseRepository {
       .first()
 
     if (!data) {
-      throw new InvalidTokenException()
-    }
-
-    const isValid = await hash.verify(data.token, parts.validator)
-
-    if (!isValid) {
       throw new InvalidTokenException()
     }
 
