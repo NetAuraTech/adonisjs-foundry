@@ -7,8 +7,9 @@ export default class HttpExceptionHandler extends ExceptionHandler {
   /**
    * In debug mode, the exception handler will display verbose errors
    * with pretty printed stack traces.
+   * Only enabled in local development (NODE_ENV=development).
    */
-  protected debug = !app.inProduction
+  protected debug = app.inDev
 
   /**
    * Status pages are used to display a custom HTML pages for certain error

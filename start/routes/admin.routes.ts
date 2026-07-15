@@ -43,8 +43,8 @@ export function registerAdminRoutes(): void {
 
               router
                 .group(() => {
-                  router.get('/', [controllers.auth.cms.UsersUpdate, 'render']).use([])
-                  router.post('/', [controllers.auth.cms.UsersUpdate, 'execute']).use([])
+                  router.get('/', [controllers.auth.cms.UsersUpdate, 'render'])
+                  router.post('/', [controllers.auth.cms.UsersUpdate, 'execute'])
                 })
                 .prefix('edit')
                 .use([middleware.permission({ permissions: ['users.update'] })])
