@@ -1,3 +1,4 @@
+import app from '@adonisjs/core/services/app'
 import { defineConfig } from '@adonisjs/shield'
 
 const shieldConfig = defineConfig({
@@ -9,17 +10,64 @@ const shieldConfig = defineConfig({
     /**
      * Enable the Content-Security-Policy header.
      */
-    enabled: false,
+    enabled: true,
+
+    /**
+     * Report violations without blocking resources in dev.
+     * Enforce in production.
+     */
+    reportOnly: app.inDev,
 
     /**
      * Per-resource CSP directives.
      */
-    directives: {},
+    directives: {
+      // Default: only same-origin
+      defaultSrc: ["'self'"],
 
-    /**
-     * Report violations without blocking resources.
-     */
-    reportOnly: false,
+      // Scripts: self + Vite HMR in dev
+      scriptSrc: [
+        "'self'",
+        ...(app.inDev ? ["'unsafe-eval'", "'unsafe-inline'"] : []), // Vite HMR needs these in dev
+      ],
+
+      // Styles: self + Tailwind JIT inline styles
+      styleSrc: ["'self'", "'unsafe-inline'"],
+
+      // Images: self + data: URIs + HTTPS
+      imgSrc: ["'self'", 'data:', 'https:'],
+
+      // Fonts: self + data: (for inline fonts)
+      fontSrc: ["'self'", 'data:'],
+
+      // Connect: self + SSE + Vite HMR websocket + Sentry
+      connectSrc: [
+        "'self'",
+        ...(app.inDev ? ['ws:', 'wss:'] : []), // Vite HMR websocket
+        'https://*.sentry.io', // Sentry error reporting
+      ],
+
+      // Frames: deny (xFrame also set to SAMEORIGIN)
+      frameAncestors: ["'none'"],
+
+      // Forms: self only
+      formAction: ["'self'"],
+
+      // Base URI: self
+      baseUri: ["'self'"],
+
+      // Object/embed: none
+      objectSrc: ["'none'"],
+
+      // Media: self
+      mediaSrc: ["'self'"],
+
+      // Workers: self
+      workerSrc: ["'self'"],
+
+      // Manifest: self
+      manifestSrc: ["'self'"],
+    },
   },
 
   /**
