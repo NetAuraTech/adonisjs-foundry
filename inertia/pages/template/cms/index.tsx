@@ -35,7 +35,17 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
 
   return (
     <>
-      <AdminMain title={t('title')} icon={getEntryIcon('admin.templates.render')}>
+      <AdminMain
+        title={t('title')}
+        icon={getEntryIcon('admin.templates.render')}
+        action={
+          <CanAccess permission="templates.create">
+            <Button route="admin.templates.render" variant="secondary" fitContent>
+              {t('action')}
+            </Button>
+          </CanAccess>
+        }
+      >
         <Card
           header={
             <Form
@@ -106,7 +116,18 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
                     <span className="text-ink-subtle">
                       {format(new Date(template.createdAt!), 'medium', pageProps.locale as Lang)}
                     </span>
-                    <CanAccess permission="templates.manage">
+                    <CanAccess permission="templates.update">
+                      <Button
+                        variant="icon_warning"
+                        route="admin.templates.update"
+                        routeParams={{ id: template.id }}
+                        title={t('actions.edit', { name: template.name })}
+                        fitContent
+                      >
+                        <Icon name="Pen" size={18} />
+                      </Button>
+                    </CanAccess>
+                    <CanAccess permission="templates.delete">
                       <Form
                         onBefore={() => {
                           return window.confirm(t('delete.confirm'))

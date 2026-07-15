@@ -57,13 +57,13 @@ export default function FilesIndexPage(props: Props) {
       icon={getEntryIcon('admin.files.render')}
       action={
         <div className="flex items-center gap-3">
-          <CanAccess permission="users.create">
+          <CanAccess permission="files.create">
             <Button onClick={() => setShowUploadForm(true)} variant="outline" fitContent>
               <Icon name="Upload" />
               {t('action.upload')}
             </Button>
           </CanAccess>
-          <CanAccess permission="users.create">
+          <CanAccess permission="folders.view">
             <Button route="admin.file_folders.render" variant="secondary" fitContent>
               <Icon name="Folders" />
               {t('action.folders')}

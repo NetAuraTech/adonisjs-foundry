@@ -30,8 +30,8 @@ export default function FileFoldersPage(props: PageProps) {
         title={t('title')}
         icon="Folders"
         action={
-          <CanAccess permission="files.view">
-            <Button variant="secondary" route="admin.files.render" fitContent>
+          <CanAccess permission="folders.create">
+            <Button variant="secondary" route="admin.file_folders.render" fitContent>
               <Icon name="Folder" />
               {t('action')}
             </Button>
@@ -39,7 +39,9 @@ export default function FileFoldersPage(props: PageProps) {
         }
       >
         <div className="grid gap-6">
-          <CreateFolderForm parentId={null} label={t('name.root')} translations={translations} />
+          <CanAccess permission="folders.create">
+            <CreateFolderForm parentId={null} label={t('name.root')} translations={translations} />
+          </CanAccess>
           {roots.length === 0 ? (
             <div className="text-center py-16 rounded-xl border border-dashed border-edge">
               <Paragraph variant="muted">{t('empty.value')}</Paragraph>
@@ -140,43 +142,49 @@ function FolderNode(props: FolderNodeProps) {
                 <Icon name="SquareMenu" size={18} />
               </Button>
             </NavLink>
-            <Button
-              variant="icon"
-              title={t('actions.add')}
-              onClick={() => {
-                setAddingChild(!addingChild)
-                setExpanded(true)
-              }}
-            >
-              <Icon name="Plus" size={18} />
-            </Button>
-            <Button
-              variant="icon_warning"
-              title={t('actions.rename')}
-              onClick={() => setRenaming(true)}
-            >
-              <Icon name="Pen" size={18} />
-            </Button>
-            <Form
-              onBefore={() => {
-                return window.confirm(t('actions.delete.confirm'))
-              }}
-              route="admin.file_folders.destroy"
-              routeParams={{ id: folder.id }}
-            >
-              {({ processing }) => (
-                <>
-                  <Button
-                    variant="icon_danger"
-                    title={t('actions.delete.value', { folder: folder.name })}
-                    type="submit"
-                    disabled={processing}
-                  >
-                    <Icon name="Trash" size={18} />
-                  </Button>
-                </>
-              )}
-            </Form>
+            <CanAccess permission="folders.create">
+              <Button
+                variant="icon"
+                title={t('actions.add')}
+                onClick={() => {
+                  setAddingChild(!addingChild)
+                  setExpanded(true)
+                }}
+              >
+                <Icon name="Plus" size={18} />
+              </Button>
+            </CanAccess>
+            <CanAccess permission="folders.update">
+              <Button
+                variant="icon_warning"
+                title={t('actions.rename')}
+                onClick={() => setRenaming(true)}
+              >
+                <Icon name="Pen" size={18} />
+              </Button>
+            </CanAccess>
+            <CanAccess permission="folders.delete">
+              <Form
+                onBefore={() => {
+                  return window.confirm(t('actions.delete.confirm'))
+                }}
+                route="admin.file_folders.destroy"
+                routeParams={{ id: folder.id }}
+              >
+                {({ processing }) => (
+                  <>
+                    <Button
+                      variant="icon_danger"
+                      title={t('actions.delete.value', { folder: folder.name })}
+                      type="submit"
+                      disabled={processing}
+                    >
+                      <Icon name="Trash" size={18} />
+                    </Button>
+                  </>
+                )}
+              </Form>
+            </CanAccess>
           </div>
         </div>
       </div>

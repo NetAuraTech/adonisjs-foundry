@@ -59,8 +59,12 @@ export function registerAdminApiRoutes(): void {
             .prefix('page')
           router
             .group(() => {
-              router.get('/', [controllers.file.api.File, 'list'])
-              router.get('/:id', [controllers.file.api.File, 'find'])
+              router
+                .get('/', [controllers.file.api.File, 'list'])
+                .use([middleware.permission({ permissions: ['files.view'] })])
+              router
+                .get('/:id', [controllers.file.api.File, 'find'])
+                .use([middleware.permission({ permissions: ['files.view'] })])
             })
             .prefix('files')
         })

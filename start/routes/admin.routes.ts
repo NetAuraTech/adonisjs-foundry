@@ -57,7 +57,9 @@ export function registerAdminRoutes(): void {
         // Pages
         router
           .group(() => {
-            router.get('/', [controllers.page.cms.Pages, 'render'])
+            router
+              .get('/', [controllers.page.cms.Pages, 'render'])
+              .use([middleware.permission({ permissions: ['pages.view'] })])
 
             router
               .group(() => {
@@ -65,58 +67,121 @@ export function registerAdminRoutes(): void {
                 router.post('/', [controllers.page.cms.PagesCreate, 'execute'])
               })
               .prefix('create')
+              .use([middleware.permission({ permissions: ['pages.create'] })])
 
             router
               .group(() => {
-                router.get('/', [controllers.page.cms.PagesShow, 'render'])
-                router.get('/edit', [controllers.page.cms.PagesUpdate, 'render'])
-                router.post('/edit', [controllers.page.cms.PagesUpdate, 'execute'])
-                router.post('/publish', [controllers.page.cms.PagesUpdate, 'publish'])
-                router.post('/unpublish', [controllers.page.cms.PagesUpdate, 'unpublish'])
-                router.post('/homepage', [controllers.page.cms.Pages, 'setHomepage'])
-                router.delete('/', [controllers.page.cms.Pages, 'destroy'])
-                router.post('/translations', [controllers.page.cms.PageTranslations, 'execute'])
+                router
+                  .get('/', [controllers.page.cms.PagesShow, 'render'])
+                  .use([middleware.permission({ permissions: ['pages.view'] })])
+                router
+                  .get('/edit', [controllers.page.cms.PagesUpdate, 'render'])
+                  .use([middleware.permission({ permissions: ['pages.update'] })])
+                router
+                  .post('/edit', [controllers.page.cms.PagesUpdate, 'execute'])
+                  .use([middleware.permission({ permissions: ['pages.update'] })])
+                router
+                  .post('/publish', [controllers.page.cms.PagesUpdate, 'publish'])
+                  .use([middleware.permission({ permissions: ['pages.update'] })])
+                router
+                  .post('/unpublish', [controllers.page.cms.PagesUpdate, 'unpublish'])
+                  .use([middleware.permission({ permissions: ['pages.update'] })])
+                router
+                  .post('/homepage', [controllers.page.cms.Pages, 'setHomepage'])
+                  .use([middleware.permission({ permissions: ['pages.update'] })])
+                router
+                  .delete('/', [controllers.page.cms.Pages, 'destroy'])
+                  .use([middleware.permission({ permissions: ['pages.delete'] })])
+                router
+                  .post('/translations', [controllers.page.cms.PageTranslations, 'execute'])
+                  .use([middleware.permission({ permissions: ['pages.update'] })])
                 router
                   .group(() => {
-                    router.get('/', [controllers.page.cms.PageRevisions, 'index'])
-                    router.post('/:revisionId/restore', [
-                      controllers.page.cms.PageRevisions,
-                      'restore',
-                    ])
-                    router.post('/:revisionId/keep', [
-                      controllers.page.cms.PageRevisions,
-                      'toggleKeep',
-                    ])
+                    router
+                      .get('/', [controllers.page.cms.PageRevisions, 'index'])
+                      .use([middleware.permission({ permissions: ['pages.view'] })])
+                    router
+                      .post('/:revisionId/restore', [controllers.page.cms.PageRevisions, 'restore'])
+                      .use([middleware.permission({ permissions: ['pages.update'] })])
+                    router
+                      .post('/:revisionId/keep', [controllers.page.cms.PageRevisions, 'toggleKeep'])
+                      .use([middleware.permission({ permissions: ['pages.update'] })])
                   })
                   .prefix('translations/:translationId/revisions')
               })
               .prefix(':id')
 
-            router.get('/preview/:pageId', [controllers.page.cms.PagesPreview, 'render'])
+            router
+              .get('/preview/:pageId', [controllers.page.cms.PagesPreview, 'render'])
+              .use([middleware.permission({ permissions: ['pages.view'] })])
           })
           .prefix('pages')
 
         // Templates
-        router.get('/templates', [controllers.template.cms.Templates, 'render'])
-        router.post('/templates', [controllers.template.cms.Templates, 'execute'])
-        router.post('/templates/from-page', [controllers.template.cms.Templates, 'createFromPage'])
-        router.post('/templates/:id/apply', [controllers.template.cms.Templates, 'applyToPage'])
-        router.put('/templates/:id', [controllers.template.cms.Templates, 'update'])
-        router.delete('/templates/:id', [controllers.template.cms.Templates, 'destroy'])
+        router
+          .group(() => {
+            router
+              .get('/', [controllers.template.cms.Templates, 'render'])
+              .use([middleware.permission({ permissions: ['templates.view'] })])
+            router
+              .post('/', [controllers.template.cms.Templates, 'execute'])
+              .use([middleware.permission({ permissions: ['templates.create'] })])
+            router
+              .post('/from-page', [controllers.template.cms.Templates, 'createFromPage'])
+              .use([middleware.permission({ permissions: ['templates.create'] })])
+            router
+              .post('/:id/apply', [controllers.template.cms.Templates, 'applyToPage'])
+              .use([middleware.permission({ permissions: ['templates.update'] })])
+            router
+              .put('/:id', [controllers.template.cms.Templates, 'update'])
+              .use([middleware.permission({ permissions: ['templates.update'] })])
+            router
+              .delete('/:id', [controllers.template.cms.Templates, 'destroy'])
+              .use([middleware.permission({ permissions: ['templates.delete'] })])
+          })
+          .prefix('templates')
 
         // Files
-        router.get('/files', [controllers.file.cms.Files, 'render'])
-        router.post('/files/upload', [controllers.file.cms.Files, 'upload'])
-        router.post('/files/:id/move', [controllers.file.cms.Files, 'move'])
-        router.delete('/files/:id', [controllers.file.cms.Files, 'destroy'])
-        router.post('/files/:id/alts', [controllers.file.cms.Files, 'upsertAlt'])
-        router.delete('/files/:id/alts', [controllers.file.cms.Files, 'deleteAlt'])
+        router
+          .group(() => {
+            router
+              .get('/', [controllers.file.cms.Files, 'render'])
+              .use([middleware.permission({ permissions: ['files.view'] })])
+            router
+              .post('/upload', [controllers.file.cms.Files, 'upload'])
+              .use([middleware.permission({ permissions: ['files.create'] })])
+            router
+              .post('/:id/move', [controllers.file.cms.Files, 'move'])
+              .use([middleware.permission({ permissions: ['files.update'] })])
+            router
+              .delete('/:id', [controllers.file.cms.Files, 'destroy'])
+              .use([middleware.permission({ permissions: ['files.delete'] })])
+            router
+              .post('/:id/alts', [controllers.file.cms.Files, 'upsertAlt'])
+              .use([middleware.permission({ permissions: ['files.update'] })])
+            router
+              .delete('/:id/alts', [controllers.file.cms.Files, 'deleteAlt'])
+              .use([middleware.permission({ permissions: ['files.update'] })])
+          })
+          .prefix('files')
 
         // File folders
-        router.get('/files/folders', [controllers.file.cms.FileFolders, 'render'])
-        router.post('/files/folders', [controllers.file.cms.FileFolders, 'execute'])
-        router.put('/files/folders/:id', [controllers.file.cms.FileFolders, 'update'])
-        router.delete('/files/folders/:id', [controllers.file.cms.FileFolders, 'destroy'])
+        router
+          .group(() => {
+            router
+              .get('/', [controllers.file.cms.FileFolders, 'render'])
+              .use([middleware.permission({ permissions: ['folders.view'] })])
+            router
+              .post('/', [controllers.file.cms.FileFolders, 'execute'])
+              .use([middleware.permission({ permissions: ['folders.create'] })])
+            router
+              .put('/:id', [controllers.file.cms.FileFolders, 'update'])
+              .use([middleware.permission({ permissions: ['folders.update'] })])
+            router
+              .delete('/:id', [controllers.file.cms.FileFolders, 'destroy'])
+              .use([middleware.permission({ permissions: ['folders.delete'] })])
+          })
+          .prefix('files/folders')
       })
     })
     .prefix('admin')

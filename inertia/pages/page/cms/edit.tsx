@@ -16,6 +16,7 @@ import { Heading } from '~/components/atoms/heading'
 import { Data } from '@generated/data'
 import { router, useForm } from '@inertiajs/react'
 import { SharedProps } from '@adonisjs/inertia/types'
+import { CanAccess } from '~/guards/can_access'
 
 interface Props {
   page: Data.Page
@@ -176,9 +177,11 @@ export default function PagesEditPage({ page }: Props) {
       <Head title={`Edit — ${currentTranslation?.title ?? 'Page'}`} />
       <div className="flex items-center justify-between h-18 gap-3 p-3">
         <div className="flex items-center gap-3">
-          <Button variant="icon" fitContent>
-            <Icon name="ArrowLeft" size={24} />
-          </Button>
+          <CanAccess permission="pages.view">
+            <Button variant="icon" fitContent>
+              <Icon name="ArrowLeft" size={24} />
+            </Button>
+          </CanAccess>
           <div className="w-px h-4 bg-edge" />
           <PresenceBar presence={presence} connected={connected} />
           <div className="w-px h-4 bg-edge" />
@@ -259,24 +262,30 @@ export default function PagesEditPage({ page }: Props) {
                   </div>
                   <div className="flex items-center gap-2">
                     {currentTranslation?.status === 'published' ? (
-                      <Button variant="icon_warning" onClick={handleUnpublish}>
-                        Unpublish
-                      </Button>
+                      <CanAccess permission="pages.update">
+                        <Button variant="icon_warning" onClick={handleUnpublish}>
+                          Unpublish
+                        </Button>
+                      </CanAccess>
                     ) : (
-                      <Button variant="icon_success" onClick={handlePublish}>
-                        Publish
-                      </Button>
+                      <CanAccess permission="pages.update">
+                        <Button variant="icon_success" onClick={handlePublish}>
+                          Publish
+                        </Button>
+                      </CanAccess>
                     )}
-                    <Button
-                      variant="outline"
-                      route="admin.page_revisions.index"
-                      routeParams={{
-                        id: page.id,
-                        translationId: currentTranslation?.id,
-                      }}
-                    >
-                      Revisions
-                    </Button>
+                    <CanAccess permission="pages.view">
+                      <Button
+                        variant="outline"
+                        route="admin.page_revisions.index"
+                        routeParams={{
+                          id: page.id,
+                          translationId: currentTranslation?.id,
+                        }}
+                      >
+                        Revisions
+                      </Button>
+                    </CanAccess>
                   </div>
                 </div>
                 <Separator />
