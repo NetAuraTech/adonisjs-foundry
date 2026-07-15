@@ -103,10 +103,7 @@ test.group('Token Model — via TokenRepository', () => {
     await repo.checkAttempts(fullToken as any) // attempts -> 2
     await repo.checkAttempts(fullToken as any) // attempts -> 3
 
-    await assert.rejects(
-      () => repo.checkAttempts(fullToken as any),
-      MaxAttemptsExceededException
-    )
+    await assert.rejects(() => repo.checkAttempts(fullToken as any), MaxAttemptsExceededException)
   })
 
   test('MAX_ATTEMPTS is unified at 3', async ({ assert }) => {

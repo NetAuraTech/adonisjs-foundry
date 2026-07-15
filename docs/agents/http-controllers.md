@@ -13,7 +13,11 @@ export default class ExampleController {
   constructor(protected service: SomeService) {}
 
   async render(ctx: HttpContext) {
-    return ctx.inertia.render('path/to/page', { translations: { /* i18n */ } })
+    return ctx.inertia.render('path/to/page', {
+      translations: {
+        /* i18n */
+      },
+    })
   }
 
   async execute(ctx: HttpContext) {

@@ -18,7 +18,9 @@ export default class Foo extends FooSchema {
   public static active = scope((query) => query.where('is_active', true))
 
   // ── Helpers ──
-  displayName(): string { return this.name || 'Untitled' }
+  displayName(): string {
+    return this.name || 'Untitled'
+  }
 }
 ```
 
@@ -47,10 +49,10 @@ This is a framework convention, not an anti-pattern. The lazy import breaks circ
 
 A model may expose helper methods when they are simple delegations or read-only transformations:
 
-| Rule | Example |
-|------|---------|
-| **Single helper** → keep on the model | `File.url()`, `Page.translationFor(locale)` |
-| **Multiple related helpers** → extract to a service | If a model needs 3+ helpers, create a dedicated service |
+| Rule                                                 | Example                                                            |
+| ---------------------------------------------------- | ------------------------------------------------------------------ |
+| **Single helper** → keep on the model                | `File.url()`, `Page.translationFor(locale)`                        |
+| **Multiple related helpers** → extract to a service  | If a model needs 3+ helpers, create a dedicated service            |
 | **Helper with side effects** → use a hook or service | Mutation logic belongs in services; hooks are for lifecycle events |
 
 A helper should be lightweight — if it requires multiple repository calls or complex orchestration, it belongs in a service.

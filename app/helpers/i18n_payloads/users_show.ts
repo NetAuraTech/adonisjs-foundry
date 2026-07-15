@@ -3,11 +3,7 @@ import type Role from '#models/auth/role'
 import type Permission from '#models/auth/permission'
 import type { TranslationNodes } from '#types/translations'
 
-export function buildUsersShowPayload(
-  i18n: I18nService,
-  role: Role,
-  permissions: Permission[]
-) {
+export function buildUsersShowPayload(i18n: I18nService, role: Role, permissions: Permission[]) {
   return i18n.buildPayload({
     title: 'cms.users.list.title',
     info: {

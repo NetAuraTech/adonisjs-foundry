@@ -28,16 +28,16 @@ export class FooService {
 
 ## Variants
 
-| Variant | Trait |
-|---|---|
-| **Standard service** | DI of repo(s) + LogService, methods named per use case |
-| **Facade over contract** | No `@inject()`; dependency injected via manual container binding; adds key namespacing on top of a generic driver interface |
-| **Infra wrapper** | Single pass-through method to a framework-provided service, no repo |
-| **Plain injectable, no deps** | Empty constructor, auto-resolved by IoC, used as a dependency of other services |
-| **Function module** | Exported function, not a class — no DI at all |
-| **Read-only** | Queries the model directly, no mutation repo, exposes listing/lookup only |
+| Variant                                         | Trait                                                                                                                                             |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Standard service**                            | DI of repo(s) + LogService, methods named per use case                                                                                            |
+| **Facade over contract**                        | No `@inject()`; dependency injected via manual container binding; adds key namespacing on top of a generic driver interface                       |
+| **Infra wrapper**                               | Single pass-through method to a framework-provided service, no repo                                                                               |
+| **Plain injectable, no deps**                   | Empty constructor, auto-resolved by IoC, used as a dependency of other services                                                                   |
+| **Function module**                             | Exported function, not a class — no DI at all                                                                                                     |
+| **Read-only**                                   | Queries the model directly, no mutation repo, exposes listing/lookup only                                                                         |
 | **Direct infra access** (exception to layering) | Bypasses the repository layer entirely for OS-level operations (raw SQL, child processes, filesystem) — document why in the file header when used |
-| **Stateful/cache-backed** | No DB repo; state lives in a cache service, namespaced per concern, often TTL-based |
+| **Stateful/cache-backed**                       | No DB repo; state lives in a cache service, namespaced per concern, often TTL-based                                                               |
 
 ## Decision rule
 

@@ -73,8 +73,8 @@ A short-lived credential following the selector/validator pattern (plain-text se
 _Avoid_: Code, OTP, link token
 
 **Invitation**:
-The admin-driven flow of creating a passwordless User and sending them a PENDING_INVITE Token to set their own password and activate the account.
-_Avoid_: Onboarding, signup link
+The admin-driven flow of creating a passwordless User and sending them a PENDING*INVITE Token to set their own password and activate the account.
+\_Avoid*: Onboarding, signup link
 
 ### Operations
 

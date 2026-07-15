@@ -8,14 +8,14 @@ All structured logging goes through a central `LogService`, injected via DI (`@i
 
 ## Domain-specific helpers (preferred over generic levels)
 
-| Method | Category | Use for |
-|---|---|---|
-| `logAuth(action, context)` | AUTH | Login, registration, logout, token verification — dot-notation action (e.g. `login.success`, `social.linked`) |
-| `logSecurity(message, context, level?)` | SECURITY | Suspicious activity, access violations, anything needing an audit trail. Defaults to WARN. |
-| `logBusiness(event, context, metadata?)` | BUSINESS | Meaningful domain actions worth auditing or analytics (e.g. `page.created`, `template.applied`) |
-| `logApiRequest(ctx, duration?)` | API | One call per HTTP request, typically from middleware |
-| `logQuery(query, duration, context?)` | DATABASE | Raw SQL logging; auto-escalates to WARN above 1000ms |
-| `logPerformance(operation, duration, context?)` | PERFORMANCE | Any measured operation; auto-escalates to WARN above 5000ms |
+| Method                                          | Category    | Use for                                                                                                       |
+| ----------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------- |
+| `logAuth(action, context)`                      | AUTH        | Login, registration, logout, token verification — dot-notation action (e.g. `login.success`, `social.linked`) |
+| `logSecurity(message, context, level?)`         | SECURITY    | Suspicious activity, access violations, anything needing an audit trail. Defaults to WARN.                    |
+| `logBusiness(event, context, metadata?)`        | BUSINESS    | Meaningful domain actions worth auditing or analytics (e.g. `page.created`, `template.applied`)               |
+| `logApiRequest(ctx, duration?)`                 | API         | One call per HTTP request, typically from middleware                                                          |
+| `logQuery(query, duration, context?)`           | DATABASE    | Raw SQL logging; auto-escalates to WARN above 1000ms                                                          |
+| `logPerformance(operation, duration, context?)` | PERFORMANCE | Any measured operation; auto-escalates to WARN above 5000ms                                                   |
 
 Prefer the domain helper that matches your context over calling `info`/`warn` directly — it standardizes the category and keeps log filtering meaningful.
 

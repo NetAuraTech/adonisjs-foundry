@@ -10,18 +10,18 @@ node ace <command>
 
 ## Scaffolding
 
-| Command | Creates | Location |
-|---------|---------|----------|
-| `node ace make:model <Name>` | Model + migration | `app/models/` + database migrations |
-| `node ace make:controller <Name>` | Controller class | `app/http/controllers/` |
-| `node ace make:migration <name>` | Migration file | `database/migrations/` |
-| `node ace make:service <Name>` | Service class | Use manually in correct domain path |
-| `node ace make:repository <Name>` | Repository class | Use manually in correct domain path |
-| `node ace make:exception <Name>` | Exception class | `app/exceptions/` |
-| `node ace make:validator <Name>` | Validator file | `app/validators/` |
-| `node ace make:middleware <Name>` | Middleware class | `app/http/middleware/` |
-| `node ace make:event <Name>` | Event class | `app/events/` |
-| `node ace make:listener <Name>` | Listener class | `app/listeners/` |
+| Command                           | Creates           | Location                            |
+| --------------------------------- | ----------------- | ----------------------------------- |
+| `node ace make:model <Name>`      | Model + migration | `app/models/` + database migrations |
+| `node ace make:controller <Name>` | Controller class  | `app/http/controllers/`             |
+| `node ace make:migration <name>`  | Migration file    | `database/migrations/`              |
+| `node ace make:service <Name>`    | Service class     | Use manually in correct domain path |
+| `node ace make:repository <Name>` | Repository class  | Use manually in correct domain path |
+| `node ace make:exception <Name>`  | Exception class   | `app/exceptions/`                   |
+| `node ace make:validator <Name>`  | Validator file    | `app/validators/`                   |
+| `node ace make:middleware <Name>` | Middleware class  | `app/http/middleware/`              |
+| `node ace make:event <Name>`      | Event class       | `app/events/`                       |
+| `node ace make:listener <Name>`   | Listener class    | `app/listeners/`                    |
 
 ### Model scaffolding
 
@@ -35,23 +35,23 @@ After running migrations with `node ace migration:run`, the schema file (`databa
 
 ## Migrations
 
-| Command | Description |
-|---------|-------------|
-| `node ace make:migration add_column_to_table` | Create a new migration |
-| `node ace migration:run` | Run pending migrations (regenerates `database/schema.ts`) |
-| `node ace migration:rollback` | Rollback last batch |
-| `node ace migration:status` | Show migration status |
+| Command                                       | Description                                               |
+| --------------------------------------------- | --------------------------------------------------------- |
+| `node ace make:migration add_column_to_table` | Create a new migration                                    |
+| `node ace migration:run`                      | Run pending migrations (regenerates `database/schema.ts`) |
+| `node ace migration:rollback`                 | Rollback last batch                                       |
+| `node ace migration:status`                   | Show migration status                                     |
 
 Always run `node ace migration:run` after creating or modifying a migration — this regenerates the schema classes that models extend.
 
 ## Development
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start dev server with HMR (`node ace serve --hmr`) |
-| `npm run build` | Build for production (`node ace build`) |
-| `npm start` | Run production server |
-| `npm test` | Run tests (`node ace test`) |
+| Command         | Description                                        |
+| --------------- | -------------------------------------------------- |
+| `npm run dev`   | Start dev server with HMR (`node ace serve --hmr`) |
+| `npm run build` | Build for production (`node ace build`)            |
+| `npm start`     | Run production server                              |
+| `npm test`      | Run tests (`node ace test`)                        |
 
 ## Quality gates
 

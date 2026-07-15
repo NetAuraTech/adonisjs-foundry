@@ -13,10 +13,10 @@ AdonisJS provides built-in drivers for caching (Redis via `@adonisjs/redis`) and
 
 Two abstraction patterns exist in this codebase:
 
-| Pattern | Example | Trait |
-|---------|---------|-------|
-| **Contract + Facade** | `CacheDriver` interface + `CacheService` | Full abstraction; driver injected via IoC; facade adds namespacing |
-| **Thin wrapper** | `StorageService` | Wraps AdonisJS Drive directly; adds path prefixing and env-based disk resolution |
+| Pattern               | Example                                  | Trait                                                                            |
+| --------------------- | ---------------------------------------- | -------------------------------------------------------------------------------- |
+| **Contract + Facade** | `CacheDriver` interface + `CacheService` | Full abstraction; driver injected via IoC; facade adds namespacing               |
+| **Thin wrapper**      | `StorageService`                         | Wraps AdonisJS Drive directly; adds path prefixing and env-based disk resolution |
 
 ## Decision
 

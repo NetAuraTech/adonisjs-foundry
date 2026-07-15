@@ -8,7 +8,7 @@ The "check-then-act" pattern is used throughout this codebase:
 
 ```typescript
 // Check
-if (!await User.findBy('slug', slug)) {
+if (!(await User.findBy('slug', slug))) {
   throw new ResourceNotFoundException()
 }
 

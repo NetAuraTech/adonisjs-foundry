@@ -7,17 +7,17 @@ This is `adonisjs-foundry` — a production-ready AdonisJS v7 + Inertia/React bo
 
 ## Stack
 
-| Layer       | Technology                                  |
-| ----------- | -------------------------------------------- |
-| Backend     | AdonisJS v7, Lucid ORM, VineJS                |
-| Frontend    | React 19, Inertia.js, Tailwind CSS v4         |
-| Language    | TypeScript 5.9                                |
-| Database    | PostgreSQL (primary), SQLite (dev)            |
-| Cache       | Redis                                         |
-| Auth        | Session-based (@adonisjs/auth), OAuth (Ally)  |
-| Storage     | @adonisjs/drive (local, S3, R2)               |
-| Real-time   | @adonisjs/transmit (SSE)                      |
-| Testing     | Japa                                          |
+| Layer     | Technology                                   |
+| --------- | -------------------------------------------- |
+| Backend   | AdonisJS v7, Lucid ORM, VineJS               |
+| Frontend  | React 19, Inertia.js, Tailwind CSS v4        |
+| Language  | TypeScript 5.9                               |
+| Database  | PostgreSQL (primary), SQLite (dev)           |
+| Cache     | Redis                                        |
+| Auth      | Session-based (@adonisjs/auth), OAuth (Ally) |
+| Storage   | @adonisjs/drive (local, S3, R2)              |
+| Real-time | @adonisjs/transmit (SSE)                     |
+| Testing   | Japa                                         |
 
 ## Working Agreements
 
@@ -28,10 +28,10 @@ This is `adonisjs-foundry` — a production-ready AdonisJS v7 + Inertia/React bo
 
 - Run `npm run lint`, `npm run format`, and `npm run typecheck` before committing code.
 - Use Conventional Commits, with the description in the commit body rather than the title:
-	type(scope)
-	short description
-	Optional body listing what was added, changed, or removed.
-	
+  type(scope)
+  short description
+  Optional body listing what was added, changed, or removed.
+
 Types: `feat`, `fix`, `refactor`, `docs`, `chore`, `test`, `perf`. Prefer scopes that match the touched feature, e.g. `feat(auth)`, `fix(token)`, `refactor(account)`.
 
 ## Agent skills
