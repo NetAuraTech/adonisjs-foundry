@@ -3,6 +3,7 @@ import { Fragment } from 'react'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import { Paragraph } from '~/components/atoms/paragraph'
+import { sanitizeHtml } from '~/utils/purify'
 
 interface ParagraphBlockProps {
   block: ResolvedBlock<'paragraph'>
@@ -15,6 +16,8 @@ interface ParagraphBlockProps {
 export default function ParagraphBlock({ block }: ParagraphBlockProps) {
   const { text, fs, variant, spacing, className } = block.props
 
+  const safeText = sanitizeHtml(text)
+
   return (
     <Paragraph variant={variant} fs={fs} className={className} spacing={spacing}>
       <ReactMarkdown
@@ -25,7 +28,7 @@ export default function ParagraphBlock({ block }: ParagraphBlockProps) {
           p: Fragment,
         }}
       >
-        {text}
+        {safeText}
       </ReactMarkdown>
     </Paragraph>
   )

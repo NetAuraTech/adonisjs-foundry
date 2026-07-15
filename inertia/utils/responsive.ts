@@ -17,17 +17,20 @@ import type { ResponsiveValue } from '#types/page'
  * // → 'py-4 md:py-8'
  */
 export function resolveResponsive<T extends string | number>(
-  value: ResponsiveValue<T>,
+  value: ResponsiveValue<T> | undefined | null,
   map: Record<string | number, Partial<Record<'default' | 'sm' | 'md' | 'lg' | 'xl', string>>>
 ): string {
+  if (!value || typeof value !== 'object') return ''
+
   const classes: string[] = []
 
   const breakpoints = ['default', 'sm', 'md', 'lg', 'xl'] as const
 
   for (const bp of breakpoints) {
-    const val = (value as any)[bp]
-    if (val === undefined) continue
-    const cls = map[val]?.[bp]
+    const val: T = value[bp as keyof ResponsiveValue<T>]
+    if (val === undefined || val === null) continue
+    const valStr = String(val)
+    const cls = map[valStr]?.[bp]
     if (cls) classes.push(cls)
   }
 

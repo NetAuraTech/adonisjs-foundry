@@ -1,10 +1,17 @@
+import vine from '@vinejs/vine'
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import { randomUUID } from 'node:crypto'
 import transmit from '@adonisjs/transmit/services/main'
 import { BuilderSessionService } from '#services/page/builder_session_service'
-import { builderOperationValidator, builderPresenceValidator } from '#validators/builder'
+import {
+  builderOperationValidator,
+  builderPresenceValidator,
+  OP_SCHEMAS,
+} from '#validators/builder'
+import { sanitizeBuilderOperation, sanitizeDraftContent } from '#services/page/builder_sanitize'
 import type { BroadcastPayload } from '#types/builder'
+import type { PageContent, Block } from '#types/page'
 
 @inject()
 export default class BuilderOperationsController {
@@ -15,7 +22,29 @@ export default class BuilderOperationsController {
 
     const user = auth.getUserOrFail()
     const raw = request.all()
-    const payload = await builderOperationValidator.validate(raw)
+
+    // Pass 1: Validate common envelope
+    const envelope = await builderOperationValidator.validate(raw)
+
+    // Pass 2: Validate op-specific payload
+    const opSchema = OP_SCHEMAS[envelope.op as keyof typeof OP_SCHEMAS]
+    const opPayload = await vine.validate({
+      schema: opSchema,
+      data: raw,
+    })
+
+    // Merge envelope (common fields) with op-specific validated payload
+    const payload = { ...envelope, ...opPayload } as typeof envelope & {
+      blockId?: string
+      props?: Record<string, unknown>
+      newParentId?: string
+      parentId?: string
+      newIndex?: number
+      index?: number
+      block?: Block
+      fieldKey?: string
+    }
+
     // Use client-provided operationId if present — SSE can arrive before the
     // HTTP response, so we need the ID registered client-side before the fetch.
     const operationId =
@@ -136,11 +165,16 @@ export default class BuilderOperationsController {
             },
           })
         }
+        // Sanitize props before broadcasting to prevent XSS in real-time
+        const sanitizedPayload = sanitizeBuilderOperation('UPDATE_PROPS', {
+          blockId: payload.blockId,
+          props: payload.props,
+        })
         const broadcastPayload: BroadcastPayload = {
           operationId,
           op: 'UPDATE_PROPS',
           blockId: payload.blockId,
-          props: payload.props,
+          props: sanitizedPayload.props as Record<string, unknown>,
           userId: user.id,
           userName: session.userName,
           userColor: session.color,
@@ -187,10 +221,16 @@ export default class BuilderOperationsController {
             },
           })
         }
+        // Sanitize block before broadcasting to prevent XSS in real-time
+        const sanitizedPayload = sanitizeBuilderOperation('ADD_BLOCK', {
+          block: payload.block,
+          parentId: payload.parentId,
+          index: payload.index,
+        })
         const broadcastPayload: BroadcastPayload = {
           operationId,
           op: 'ADD_BLOCK',
-          block: payload.block,
+          block: sanitizedPayload.block as Block,
           parentId: payload.parentId,
           index: payload.index,
           userId: user.id,
@@ -265,7 +305,9 @@ export default class BuilderOperationsController {
     if (!body.content) {
       return response.badRequest({ error: { code: 'E_MISSING_CONTENT' } })
     }
-    await this.sessionService.saveDraft(translationId, body.content)
+    // Sanitize draft content before storing in Redis
+    const safeContent = sanitizeDraftContent(body.content as PageContent)
+    await this.sessionService.saveDraft(translationId, safeContent)
     return response.ok({ saved: true })
   }
 }

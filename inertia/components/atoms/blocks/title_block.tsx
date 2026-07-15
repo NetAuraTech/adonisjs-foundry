@@ -3,6 +3,7 @@ import { Heading } from '~/components/atoms/heading'
 import { Fragment } from 'react'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
+import { sanitizeHtml } from '~/utils/purify'
 
 const colorMap: Record<string, string> = {
   'default': 'text-ink',
@@ -32,19 +33,23 @@ interface TitleBlockProps {
 export default function TitleBlock({ block }: TitleBlockProps) {
   const { text, level, color, highlightColor } = block.props
 
+  // Default to level 2 if not provided (e.g., new block from builder)
+  const safeLevel = (level ?? 2) as 1 | 2 | 3 | 4
+  const safeText = sanitizeHtml(text)
+
   return (
-    <Heading level={level} color={colorMap[color ?? 'default'] ?? 'text-ink'}>
+    <Heading level={safeLevel} color={colorMap[color ?? 'default'] ?? 'text-ink'}>
       <ReactMarkdown
         rehypePlugins={[rehypeRaw]}
         components={{
-          em: ({ node, ...props }) => <em className={`${colorMap[highlightColor]}`} {...props} />,
+          em: ({ node, ...props }) => <em className={colorMap[highlightColor]} {...props} />,
           strong: ({ node, ...props }) => (
-            <strong className={`${colorMap[highlightColor]}`} {...props} />
+            <strong className={colorMap[highlightColor]} {...props} />
           ),
           p: Fragment,
         }}
       >
-        {text}
+        {safeText}
       </ReactMarkdown>
     </Heading>
   )

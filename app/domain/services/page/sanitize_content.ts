@@ -6,6 +6,9 @@ import DOMPurify, { type Config } from 'dompurify'
 const { window } = new JSDOM('')
 const purify = DOMPurify(window as unknown as Window & typeof globalThis)
 
+// Export for reuse in builder_sanitize.ts and client-side utilities
+export { purify, PURIFY_CONFIG }
+
 /**
  * DOMPurify configuration used for CMS rich-text content.
  *
@@ -68,13 +71,12 @@ const PURIFY_CONFIG: Config = {
   ],
   FORBID_TAGS: ['script', 'style', 'iframe', 'object', 'embed', 'form', 'input'],
   FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'onsubmit'],
-  // Force all links to be safe
-  FORCE_BODY: true,
 }
 
 /**
  * Recursively walks the block tree and sanitises the `content` field of every
- * `rich_text` block using DOMPurify (server-side, via jsdom).
+ * `htmltext` block, and the `text` field of every `paragraph` and `title` block
+ * using DOMPurify (server-side, via jsdom).
  *
  * Called in `PageService` before any `create` or `update` that persists
  * `PageContent` to the database. This is the first line of defence; the
@@ -94,6 +96,19 @@ export function sanitizePageContent(content: PageContent): PageContent {
             ...block.props,
             content: purify.sanitize(
               (block.props as { content: string }).content ?? '',
+              PURIFY_CONFIG
+            ) as unknown as string,
+          },
+        }
+      }
+
+      if (block.type === 'paragraph' || block.type === 'title') {
+        return {
+          ...block,
+          props: {
+            ...block.props,
+            text: purify.sanitize(
+              (block.props as { text: string }).text ?? '',
               PURIFY_CONFIG
             ) as unknown as string,
           },

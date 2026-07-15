@@ -863,10 +863,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/api/admin/builder/operations'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/builder').builderOperationValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#validators/builder').builderOperationValidator)>|InferInput<(typeof import('@vinejs/vine').default)>>
       paramsTuple: []
       params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/builder').builderOperationValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#validators/builder').builderOperationValidator)>|InferInput<(typeof import('@vinejs/vine').default)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/api/builder_operations_controller').default['execute']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/api/builder_operations_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
