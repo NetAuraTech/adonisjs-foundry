@@ -3,10 +3,12 @@ import app from '@adonisjs/core/services/app'
 import { ListRevisionsAction } from '#actions/page/list_revisions_action'
 import Page from '#models/page/page'
 import PageTranslation from '#models/page/page_translation'
+import { UserFactory } from '#database/factories/user_factory'
 
 test.group('ListRevisionsAction', () => {
   test('execute() returns revisions for a page', async ({ assert }) => {
     const action = await app.container.make(ListRevisionsAction)
+    const user = await UserFactory.create()
 
     const page = await Page.create({ defaultLocale: 'en', createdBy: null })
     const translation = await PageTranslation.create({
@@ -18,7 +20,7 @@ test.group('ListRevisionsAction', () => {
       status: 'draft' as any,
     })
 
-    await (translation as any).saveRevision(1)
+    await (translation as any).saveRevision(user.id)
 
     const result = await action.execute({
       pageId: translation.id,

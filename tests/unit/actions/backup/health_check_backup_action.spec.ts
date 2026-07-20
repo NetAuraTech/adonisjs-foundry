@@ -3,7 +3,7 @@ import app from '@adonisjs/core/services/app'
 import { HealthCheckBackupAction } from '#actions/backup/health_check_backup_action'
 import drive from '@adonisjs/drive/services/main'
 import backupConfig from '#config/backup'
-import { mockDriveListing } from '#tests/helpers/mock-drive-listing'
+import { mockDriveListing } from '#tests/helpers/mock_drive_listing'
 
 test.group('HealthCheckBackupAction', (group) => {
   group.each.setup(() => {

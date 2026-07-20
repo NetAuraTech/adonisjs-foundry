@@ -25,7 +25,7 @@ export default class extends BaseSeeder {
 
     const homePage = await Page.updateOrCreate(
       { defaultLocale: 'en' },
-      { defaultLocale: 'en', metaImageId: null, createdBy: null }
+      { defaultLocale: 'en', metaImageId: null, createdBy: null, isHomepage: true }
     )
 
     const homeContent: PageContent = {

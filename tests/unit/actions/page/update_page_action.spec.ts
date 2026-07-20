@@ -5,10 +5,12 @@ import app from '@adonisjs/core/services/app'
 import { UpdatePageAction } from '#actions/page/update_page_action'
 import Page from '#models/page/page'
 import PageTranslation from '#models/page/page_translation'
+import { UserFactory } from '#database/factories/user_factory'
 
 test.group('UpdatePageAction', () => {
   test('execute() updates page translation fields', async ({ assert }) => {
     const action = await app.container.make(UpdatePageAction)
+    const user = await UserFactory.create()
 
     const page = await Page.create({ defaultLocale: 'en', createdBy: null })
     await PageTranslation.create({
@@ -24,7 +26,7 @@ test.group('UpdatePageAction', () => {
       pageId: page.id,
       locale: 'en',
       title: 'New Title',
-      userId: 1,
+      userId: user.id,
     })
 
     assert.equal(updated.title, 'New Title')
@@ -34,14 +36,16 @@ test.group('UpdatePageAction', () => {
     assert,
   }) => {
     const action = await app.container.make(UpdatePageAction)
+    const user = await UserFactory.create()
 
     await assert.rejects(async () => {
-      await action.execute({ pageId: 999999, locale: 'en', title: 'New Title', userId: 1 })
+      await action.execute({ pageId: 999999, locale: 'en', title: 'New Title', userId: user.id })
     }, MissingTranslationException)
   })
 
   test('execute() throws E_SLUG_EXISTS when new slug is taken', async ({ assert }) => {
     const action = await app.container.make(UpdatePageAction)
+    const user = await UserFactory.create()
 
     const page1 = await Page.create({ defaultLocale: 'en', createdBy: null })
     const page2 = await Page.create({ defaultLocale: 'en', createdBy: null })
@@ -68,7 +72,7 @@ test.group('UpdatePageAction', () => {
         pageId: page2.id,
         locale: 'en',
         slug: `taken-slug-${page1.id}`,
-        userId: 1,
+        userId: user.id,
       })
     }, SlugExistsException)
   })

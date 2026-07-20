@@ -4,10 +4,12 @@ import { ToggleRevisionKeepAction } from '#actions/page/toggle_revision_keep_act
 import Page from '#models/page/page'
 import PageTranslation from '#models/page/page_translation'
 import PageRevision from '#models/page/page_revision'
+import { UserFactory } from '#database/factories/user_factory'
 
 test.group('ToggleRevisionKeepAction', () => {
   test('execute() toggles the keep flag on a revision', async ({ assert }) => {
     const action = await app.container.make(ToggleRevisionKeepAction)
+    const user = await UserFactory.create()
 
     const page = await Page.create({ defaultLocale: 'en', createdBy: null })
     const translation = await PageTranslation.create({
@@ -19,7 +21,7 @@ test.group('ToggleRevisionKeepAction', () => {
       status: 'draft' as any,
     })
 
-    await (translation as any).saveRevision(1)
+    await (translation as any).saveRevision(user.id)
     const revision = await PageRevision.query().where('page_translation_id', translation.id).first()
     assert.isNotNull(revision)
 

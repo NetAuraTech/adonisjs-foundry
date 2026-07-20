@@ -6,6 +6,7 @@ import testUtils from '@adonisjs/core/services/test_utils'
 import { browserClient } from '@japa/browser-client'
 import { authBrowserClient } from '@adonisjs/auth/plugins/browser_client'
 import { sessionBrowserClient } from '@adonisjs/session/plugins/browser_client'
+import limiter from '@adonisjs/limiter/services/main'
 
 /**
  * This file is imported by the "bin/test.ts" entrypoint file
@@ -41,6 +42,37 @@ export const runnerHooks: Required<Pick<Config, 'setup' | 'teardown'>> = {
  */
 export const configureSuite: Config['configureSuite'] = (suite) => {
   if (['browser', 'functional', 'e2e'].includes(suite.name)) {
-    return suite.setup(() => testUtils.httpServer().start())
+    return suite
+      .setup(() => testUtils.httpServer().start())
+      .onTest(async () => {
+        // Clear limiter stores before each test to avoid rate limiting from previous tests
+        try {
+          await limiter.clear()
+        } catch {}
+      })
+      .onGroup((group) => {
+        group.teardown(async () => {
+          // Clear limiter stores after each test group to avoid rate limiting issues
+          try {
+            await limiter.clear()
+          } catch {}
+        })
+      })
+      .teardown(async () => {
+        // Clear limiter stores after each test suite to avoid rate limiting issues
+        try {
+          await limiter.clear()
+        } catch {}
+      })
   }
+}
+
+// Clear limiter stores before each test group to avoid rate limiting issues
+if (app.inDev || process.env.NODE_ENV === 'test') {
+  ;(async () => {
+    try {
+      const limiterManager = await app.container.make('limiter.manager')
+      await limiterManager.clear()
+    } catch {}
+  })()
 }

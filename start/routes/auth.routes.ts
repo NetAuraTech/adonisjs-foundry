@@ -73,7 +73,7 @@ export function registerAuthRoutes(): void {
 
       router
         .get('/verify/:token', [controllers.auth.front.EmailVerification, 'execute'])
-        .use([middleware.auth()])
+        .use([middleware.guest()])
 
       router
         .group(() => {

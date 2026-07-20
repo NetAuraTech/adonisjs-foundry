@@ -5,10 +5,12 @@ import { RestoreRevisionAction } from '#actions/page/restore_revision_action'
 import Page from '#models/page/page'
 import PageTranslation from '#models/page/page_translation'
 import PageRevision from '#models/page/page_revision'
+import { UserFactory } from '#database/factories/user_factory'
 
 test.group('RestoreRevisionAction', () => {
   test('execute() restores translation to previous revision content', async ({ assert }) => {
     const action = await app.container.make(RestoreRevisionAction)
+    const user = await UserFactory.create()
 
     const page = await Page.create({ defaultLocale: 'en', createdBy: null })
     const translation = await PageTranslation.create({
@@ -20,18 +22,19 @@ test.group('RestoreRevisionAction', () => {
       status: 'draft' as any,
     })
 
-    await (translation as any).saveRevision(1)
+    await (translation as any).saveRevision(user.id)
     const revision = await PageRevision.query().where('pageTranslationId', translation.id).first()
     assert.isNotNull(revision)
 
-    await action.execute({ translationId: translation.id, revisionId: revision!.id, userId: 1 })
+    await action.execute({ translationId: translation.id, revisionId: revision!.id, userId: user.id })
   })
 
   test('execute() throws E_ROW_NOT_FOUND when translation does not exist', async ({ assert }) => {
     const action = await app.container.make(RestoreRevisionAction)
+    const user = await UserFactory.create()
 
     await assert.rejects(async () => {
-      await action.execute({ translationId: 999999, revisionId: 1, userId: 1 })
+      await action.execute({ translationId: 999999, revisionId: 1, userId: user.id })
     }, RowNotFoundException)
   })
 })

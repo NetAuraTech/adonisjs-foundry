@@ -13,10 +13,10 @@ const shieldConfig = defineConfig({
     enabled: true,
 
     /**
-     * Report violations without blocking resources in dev.
+     * Report violations without blocking resources in dev/test.
      * Enforce in production.
      */
-    reportOnly: app.inDev,
+    reportOnly: app.inDev || app.inTest,
 
     /**
      * Per-resource CSP directives.
@@ -25,10 +25,10 @@ const shieldConfig = defineConfig({
       // Default: only same-origin
       defaultSrc: ["'self'"],
 
-      // Scripts: self + Vite HMR in dev
+      // Scripts: self + Vite HMR in dev/test
       scriptSrc: [
         "'self'",
-        ...(app.inDev ? ["'unsafe-eval'", "'unsafe-inline'"] : []), // Vite HMR needs these in dev
+        ...(app.inDev || app.inTest ? ["'unsafe-eval'", "'unsafe-inline'"] : []), // Vite HMR needs these in dev/test
       ],
 
       // Styles: self + Tailwind JIT inline styles
@@ -43,7 +43,7 @@ const shieldConfig = defineConfig({
       // Connect: self + SSE + Vite HMR websocket + Sentry
       connectSrc: [
         "'self'",
-        ...(app.inDev ? ['ws:', 'wss:'] : []), // Vite HMR websocket
+        ...(app.inDev || app.inTest ? ['ws:', 'wss:'] : []), // Vite HMR websocket
         'https://*.sentry.io', // Sentry error reporting
       ],
 

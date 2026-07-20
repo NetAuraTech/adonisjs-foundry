@@ -8,10 +8,12 @@ import Page from '#models/page/page'
 import PageTranslation from '#models/page/page_translation'
 import type { BlockType } from '#types/page'
 import { type PageContent } from '#types/page'
+import { UserFactory } from '#database/factories/user_factory'
 
 test.group('ApplyToPageAction', () => {
   test('execute() throws E_INVALID_TEMPLATE_TYPE for block templates', async ({ assert }) => {
     const action = await app.container.make(ApplyToPageAction)
+    const user = await UserFactory.create()
 
     const template = await Template.create({
       name: `Block Template ${Date.now()}`,
@@ -22,12 +24,13 @@ test.group('ApplyToPageAction', () => {
     })
 
     await assert.rejects(async () => {
-      await action.execute({ templateId: template.id, pageId: 1, locale: 'en', userId: 1 })
+      await action.execute({ templateId: template.id, pageId: 1, locale: 'en', userId: user.id })
     }, InvalidTemplateTypeException)
   })
 
   test('execute() throws E_MISSING_TRANSLATION when translation not found', async ({ assert }) => {
     const action = await app.container.make(ApplyToPageAction)
+    const user = await UserFactory.create()
 
     const template = await Template.create({
       name: `Apply Template ${Date.now()}`,
@@ -37,12 +40,13 @@ test.group('ApplyToPageAction', () => {
     })
 
     await assert.rejects(async () => {
-      await action.execute({ templateId: template.id, pageId: 999999, locale: 'en', userId: 1 })
+      await action.execute({ templateId: template.id, pageId: 999999, locale: 'en', userId: user.id })
     }, MissingTranslationException)
   })
 
   test('execute() replaces translation content with template content', async ({ assert }) => {
     const action = await app.container.make(ApplyToPageAction)
+    const user = await UserFactory.create()
 
     const page = await Page.create({ defaultLocale: 'en', createdBy: null })
     await PageTranslation.create({
@@ -75,7 +79,7 @@ test.group('ApplyToPageAction', () => {
       createdBy: null,
     })
 
-    await action.execute({ templateId: template.id, pageId: page.id, locale: 'en', userId: 1 })
+    await action.execute({ templateId: template.id, pageId: page.id, locale: 'en', userId: user.id })
 
     const translation = await PageTranslation.findBy('pageId', page.id)
     assert.deepEqual(translation!.content, templateContent)

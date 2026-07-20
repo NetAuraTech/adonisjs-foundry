@@ -7,6 +7,7 @@ import type { LinkProps, LinkParams } from '@adonisjs/inertia/react'
 import { urlFor } from '~/client'
 
 type NavLinkBaseProps = {
+  name?: string,
   /** Visible link text. */
   label: string
   /** Tooltip / accessible title attribute. */
@@ -107,7 +108,7 @@ export const variants = {
  * <NavLink route="admin.users.render" label="2" variant="pagination" qs={{ page: 2 }} />
  */
 export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLinkProps<R>) {
-  const { label, title, children, onClick, fs = 'base', variant = 'link', disabled } = props
+  const { name, label, title, children, onClick, fs = 'base', variant = 'link', disabled } = props
   const { url } = usePage()
   const [isActive, setIsActive] = useState(false)
 
@@ -162,6 +163,8 @@ export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLin
 
   return (
     <Link
+      name={name}
+      id={name}
       {...linkProps}
       aria-current={isActive ? 'page' : undefined}
       onClick={onClick}

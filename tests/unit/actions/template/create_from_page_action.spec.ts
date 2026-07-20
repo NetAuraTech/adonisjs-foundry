@@ -4,10 +4,12 @@ import { CreateFromPageAction } from '#actions/template/create_from_page_action'
 import Page from '#models/page/page'
 import PageTranslation from '#models/page/page_translation'
 import { type PageContent } from '#types/page'
+import { UserFactory } from '#database/factories/user_factory'
 
 test.group('CreateFromPageAction', () => {
   test('execute() creates template with page translation content', async ({ assert }) => {
     const action = await app.container.make(CreateFromPageAction)
+    const user = await UserFactory.create()
 
     const pageContent: PageContent = {
       blocks: [{ id: '1', type: 'separator', props: { spacing: 'none', color: 'primary' } }],
@@ -27,7 +29,7 @@ test.group('CreateFromPageAction', () => {
       name: templateName,
       pageId: page.id,
       locale: 'en',
-      userId: 1,
+      userId: user.id,
     })
 
     assert.equal(template.name, templateName)
@@ -37,10 +39,11 @@ test.group('CreateFromPageAction', () => {
 
   test('execute() throws E_ROW_NOT_FOUND when translation not found', async ({ assert }) => {
     const action = await app.container.make(CreateFromPageAction)
+    const user = await UserFactory.create()
 
     let threw = false
     try {
-      await action.execute({ name: 'Test', pageId: 999999, locale: 'en', userId: 1 })
+      await action.execute({ name: 'Test', pageId: 999999, locale: 'en', userId: user.id })
     } catch (err: any) {
       threw = true
       assert.equal(err.code, 'E_ROW_NOT_FOUND')

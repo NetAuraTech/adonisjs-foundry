@@ -34,23 +34,32 @@ export default class AccountController {
     })
   }
 
-  async execute(ctx: HttpContext) {
+    async execute(ctx: HttpContext) {
     const { auth, request, response, session } = ctx
 
     const action = request.input('_action')
 
     const user = auth.getUserOrFail()
 
+    console.log('AccountController.execute action:', action)
+
     switch (action) {
       case 'update_email': {
         const payload = await updateEmailValidator(user.id).validate(request.all())
 
+        console.log('update_email payload:', payload)
+
         const updated = await this.updateUserAccountAction.execute({ user, email: payload.email })
+
+        console.log('updated user pendingEmail:', updated.pendingEmail)
 
         regenerateCsrfToken(ctx)
 
         if (payload.email === updated.pendingEmail) {
+          console.log('Setting flash success for email change')
           session.flash('success', this.i18n.translate('settings.account.success'))
+        } else {
+          console.log('NOT setting flash - email same as current')
         }
 
         return response.redirect().toRoute('settings.account.render')
