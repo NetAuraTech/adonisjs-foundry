@@ -15,4 +15,5 @@ export default {
   admin: true,
   adminApi: true,
   public: true,
+  maintenance: true,
 } as const

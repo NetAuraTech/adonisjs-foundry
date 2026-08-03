@@ -22,7 +22,7 @@ test.group('Reset Password E2E', (group) => {
     await page.waitForURL(/\/.*/)
     const url = page.url()
     // The InvalidTokenException redirects back, which goes to home (/) when no referrer
-    // PRD expects /login but actual behavior is redirect to home
+    // Expected /login but actual behavior is redirect to home
     assert.isTrue(url.includes('/login') || url.endsWith('/'))
   })
 
@@ -50,7 +50,7 @@ test.group('Reset Password E2E', (group) => {
     await page.waitForURL(/\/.*/)
     const url = page.url()
     // The InvalidTokenException redirects back, which goes to home (/) when no referrer
-    // PRD expects /login but actual behavior is redirect to home
+    // Expected /login but actual behavior is redirect to home
     assert.isTrue(url.includes('/login') || url.endsWith('/'))
   })
 

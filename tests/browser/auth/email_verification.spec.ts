@@ -29,7 +29,7 @@ test.group('Email Verification E2E', (group) => {
     const validator = 'verify-validator'
     const hashedValidator = await hash.make(validator)
 
-    const token = await Token.create({
+    await Token.create({
       selector,
       token: hashedValidator,
       type: TOKEN_TYPES.EMAIL_VERIFICATION,

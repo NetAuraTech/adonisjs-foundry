@@ -30,6 +30,18 @@ const routes = {
     tokens: [{"old":"/__transmit/unsubscribe","type":0,"val":"__transmit","end":""},{"old":"/__transmit/unsubscribe","type":0,"val":"unsubscribe","end":""}],
     types: placeholder as Registry['unsubscribe']['types'],
   },
+  'health.liveness': {
+    methods: ["GET","HEAD"],
+    pattern: '/health',
+    tokens: [{"old":"/health","type":0,"val":"health","end":""}],
+    types: placeholder as Registry['health.liveness']['types'],
+  },
+  'health.readiness': {
+    methods: ["GET","HEAD"],
+    pattern: '/health/ready',
+    tokens: [{"old":"/health/ready","type":0,"val":"health","end":""},{"old":"/health/ready","type":0,"val":"ready","end":""}],
+    types: placeholder as Registry['health.readiness']['types'],
+  },
   'auth.session.render': {
     methods: ["GET","HEAD"],
     pattern: '/login',
@@ -425,6 +437,24 @@ const routes = {
     pattern: '/admin/files/folders/:id',
     tokens: [{"old":"/admin/files/folders/:id","type":0,"val":"admin","end":""},{"old":"/admin/files/folders/:id","type":0,"val":"files","end":""},{"old":"/admin/files/folders/:id","type":0,"val":"folders","end":""},{"old":"/admin/files/folders/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['admin.file_folders.destroy']['types'],
+  },
+  'admin.settings.maintenance.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/settings/maintenance',
+    tokens: [{"old":"/admin/settings/maintenance","type":0,"val":"admin","end":""},{"old":"/admin/settings/maintenance","type":0,"val":"settings","end":""},{"old":"/admin/settings/maintenance","type":0,"val":"maintenance","end":""}],
+    types: placeholder as Registry['admin.settings.maintenance.render']['types'],
+  },
+  'admin.settings.maintenance.update': {
+    methods: ["POST"],
+    pattern: '/admin/settings/maintenance',
+    tokens: [{"old":"/admin/settings/maintenance","type":0,"val":"admin","end":""},{"old":"/admin/settings/maintenance","type":0,"val":"settings","end":""},{"old":"/admin/settings/maintenance","type":0,"val":"maintenance","end":""}],
+    types: placeholder as Registry['admin.settings.maintenance.update']['types'],
+  },
+  'admin.settings.maintenance.toggle': {
+    methods: ["POST"],
+    pattern: '/admin/settings/maintenance/toggle',
+    tokens: [{"old":"/admin/settings/maintenance/toggle","type":0,"val":"admin","end":""},{"old":"/admin/settings/maintenance/toggle","type":0,"val":"settings","end":""},{"old":"/admin/settings/maintenance/toggle","type":0,"val":"maintenance","end":""},{"old":"/admin/settings/maintenance/toggle","type":0,"val":"toggle","end":""}],
+    types: placeholder as Registry['admin.settings.maintenance.toggle']['types'],
   },
   'api.theme.execute': {
     methods: ["POST"],

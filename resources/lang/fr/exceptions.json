@@ -16,5 +16,6 @@
   "E_UNAUTHORIZED": "Vous devez être connecté pour accéder à cette ressource.",
   "E_FORBIDDEN": "Vous n'avez pas l'autorisation d'accéder à cette ressource.",
   "E_INVALID_TEMPLATE_TYPE": "Seuls les modèles de page peuvent être appliqués à une page complète.",
-  "E_MISSING_REVISION": "La révision {revisionId} est introuvable."
+  "E_MISSING_REVISION": "La révision {revisionId} est introuvable.",
+  "E_MAINTENANCE": "Le site est actuellement en maintenance. Veuillez réessayer dans {retryAfter} minutes."
 }

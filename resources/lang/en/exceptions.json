@@ -16,5 +16,6 @@
   "E_UNAUTHORIZED": "You must be logged in to access this resource.",
   "E_FORBIDDEN": "You do not have permission to access this resource.",
   "E_INVALID_TEMPLATE_TYPE": "Only page templates can be applied to a full page.",
-  "E_MISSING_REVISION": "Revision {revisionId} not found."
+  "E_MISSING_REVISION": "Revision {revisionId} not found.",
+  "E_MAINTENANCE": "The site is currently down for maintenance. Please try again in {retryAfter} minutes."
 }

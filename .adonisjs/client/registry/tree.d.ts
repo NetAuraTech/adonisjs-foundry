@@ -10,6 +10,10 @@ export interface ApiDefinition {
   eventStream: typeof routes['event_stream']
   subscribe: typeof routes['subscribe']
   unsubscribe: typeof routes['unsubscribe']
+  health: {
+    liveness: typeof routes['health.liveness']
+    readiness: typeof routes['health.readiness']
+  }
   auth: {
     session: {
       render: typeof routes['auth.session.render']
@@ -132,6 +136,13 @@ export interface ApiDefinition {
       execute: typeof routes['admin.file_folders.execute']
       update: typeof routes['admin.file_folders.update']
       destroy: typeof routes['admin.file_folders.destroy']
+    }
+    settings: {
+      maintenance: {
+        render: typeof routes['admin.settings.maintenance.render']
+        update: typeof routes['admin.settings.maintenance.update']
+        toggle: typeof routes['admin.settings.maintenance.toggle']
+      }
     }
   }
   api: {

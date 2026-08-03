@@ -198,7 +198,7 @@ test.group('Accept Invitation E2E', (group) => {
     await fillField(page, 'input', 'password_confirmation', 'NewPassword123!')
 
     // Submit the form and wait for Inertia response
-    const response = await waitForInertiaResponse(page, '/settings/profile', () =>
+    await waitForInertiaResponse(page, '/settings/profile', () =>
       page.locator('button[type="submit"]').click()
     )
 

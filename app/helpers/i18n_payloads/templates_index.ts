@@ -3,6 +3,10 @@ import type { I18nService } from '#services/i18n_service'
 export function buildTemplatesIndexPayload(i18n: I18nService) {
   return i18n.buildPayload({
     title: 'cms.templates.list.title',
+    action: 'cms.templates.list.action',
+    actions: {
+      edit: i18n.entry('cms.templates.list.actions.edit', { name: '{name}' }),
+    },
     empty: {
       value: 'cms.templates.list.empty.value',
       help: 'cms.templates.list.empty.help',

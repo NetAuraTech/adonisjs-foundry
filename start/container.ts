@@ -4,6 +4,7 @@ import { CacheService } from '#services/cache/cache_service'
 import { RedisCacheDriver } from '#services/cache/drivers/redis_cache_driver'
 import { BuilderSessionService } from '#services/page/builder_session_service'
 import { LogService } from '#services/logging/log_service'
+import { MaintenanceService } from '#services/maintenance/maintenance_service'
 
 /**
  * IoC container bindings.
@@ -67,4 +68,17 @@ app.container.singleton(CacheService, () => {
 app.container.singleton(BuilderSessionService, async () => {
   const cache = await app.container.make(CacheService)
   return new BuilderSessionService(cache)
+})
+
+// ─── MaintenanceService (singleton) ──────────────────────────────────────────
+
+/**
+ * Maintenance service singleton.
+ * Handles Redis + memory fallback for maintenance mode configuration.
+ * Initializes memory fallback on first resolution.
+ */
+app.container.singleton(MaintenanceService, async () => {
+  const service = MaintenanceService.getInstance()
+  await service.initializeMemoryFallback()
+  return service
 })

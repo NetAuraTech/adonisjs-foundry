@@ -52,4 +52,5 @@ export const middleware = router.named({
   permission: () => import('#middleware/auth/permission_middleware'),
   guest: () => import('#middleware/auth/guest_middleware'),
   auth: () => import('#middleware/auth/auth_middleware'),
+  maintenance: () => import('#middleware/maintenance_middleware'),
 })

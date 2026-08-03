@@ -27,7 +27,7 @@ export function resolveResponsive<T extends string | number>(
   const breakpoints = ['default', 'sm', 'md', 'lg', 'xl'] as const
 
   for (const bp of breakpoints) {
-    const val: T = value[bp as keyof ResponsiveValue<T>]
+    const val: T | undefined = value[bp as keyof ResponsiveValue<T>]
     if (val === undefined || val === null) continue
     const valStr = String(val)
     const cls = map[valStr]?.[bp]

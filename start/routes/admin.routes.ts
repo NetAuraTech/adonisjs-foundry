@@ -182,6 +182,27 @@ export function registerAdminRoutes(): void {
               .use([middleware.permission({ permissions: ['folders.delete'] })])
           })
           .prefix('files/folders')
+
+        // Settings - Maintenance
+        router
+          .group(() => {
+            router
+              .group(() => {
+                router
+                  .get('/maintenance', [controllers.maintenance.cms.Maintenance, 'render'])
+                  .as('maintenance.render')
+                router
+                  .post('/maintenance', [controllers.maintenance.cms.Maintenance, 'update'])
+                  .as('maintenance.update')
+                router
+                  .post('/maintenance/toggle', [controllers.maintenance.cms.Maintenance, 'toggle'])
+                  .as('maintenance.toggle')
+              })
+              .prefix('settings')
+              .as('settings')
+              .use([middleware.permission({ permissions: ['settings.maintenance'] })])
+          })
+          .use([middleware.auth()])
       })
     })
     .prefix('admin')

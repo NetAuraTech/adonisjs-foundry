@@ -1,15 +1,10 @@
 import { test } from '@japa/runner'
 import testUtils from '@adonisjs/core/services/test_utils'
 import { visitPage } from '#tests/helpers/browser/visit_page'
-import { createVerifiedUser } from '#tests/helpers/browser/create_verified_user'
-import { fillField } from '#tests/helpers/browser/fill_field'
-import { waitForInertiaResponse } from '#tests/helpers/browser/wait_for_inertia_response'
 import { HttpContextFactory } from '@adonisjs/core/factories/http'
-import { AllyManager } from '@adonisjs/ally'
-import { GithubDriver } from '@adonisjs/ally/github'
 
 /**
- * These tests mock the OAuth provider to test all 8 PRD cases:
+ * These tests mock the OAuth provider to cover the 8 OAuth scenarios:
  * 1. oauth-callback-new-user - New OAuth user created and logged in
  * 2. oauth-callback-existing-user - Existing OAuth user logged in
  * 3. oauth-callback-link-existing - OAuth email matches existing local account
@@ -25,36 +20,36 @@ function createMockAllyContext(provider: 'github' | 'google' = 'github') {
   const ctxFactory = new HttpContextFactory()
   const ctx = ctxFactory.create()
 
-  // Create a mock driver that we can control
-  const mockDriver = {
+  // Create a mock driver that we can control.
+  // Typed with the minimal subset used by the controller-logic assertions:
+  // each method is reassigned per-scenario, so their return values stay open.
+  const mockDriver: {
+    redirect: () => Promise<void>
+    user: () => Promise<unknown>
+    accessDenied: () => boolean
+    stateMisMatch: () => boolean
+    hasError: () => boolean
+    getError: () => unknown
+  } = {
     redirect: async () => ctx.response.redirect(`https://${provider}.com/oauth/authorize`),
     user: async () => null,
     accessDenied: () => false,
     stateMisMatch: () => false,
     hasError: () => false,
     getError: () => null,
-    original: null,
-    setCallbackUrl: () => mockDriver,
-    setState: () => mockDriver,
-    setScopes: () => mockDriver,
-    fields: () => mockDriver,
-    setFields: () => mockDriver,
   }
 
-  const ally = new AllyManager(
-    {
-      [provider]: () => mockDriver,
-    },
-    ctx
-  )
-
-  return { ctx, ally, mockDriver }
+  return { ctx, mockDriver }
 }
 
 test.group('OAuth Mocked Flow', (group) => {
   group.each.setup(() => testUtils.db().truncate())
 
-  test('oauth-redirect: visit /oauth/github redirects to provider', async ({ visit, route, assert }) => {
+  test('oauth-redirect: visit /oauth/github redirects to provider', async ({
+    visit,
+    route,
+    assert,
+  }) => {
     const page = await visitPage(route('auth.social.redirect', { provider: 'github' }), visit)
 
     await page.waitForTimeout(1000)
@@ -109,7 +104,11 @@ test.group('OAuth Mocked Flow', (group) => {
     )
   })
 
-  test('oauth-define-password page loads or redirects to login', async ({ visit, route, assert }) => {
+  test('oauth-define-password page loads or redirects to login', async ({
+    visit,
+    route,
+    assert,
+  }) => {
     const page = await visitPage(route('auth.social.render'), visit)
 
     const url = page.url()
@@ -130,7 +129,11 @@ test.group('OAuth Mocked Flow', (group) => {
     )
   })
 
-  test('oauth-state-mismatch: invalid state redirects to login', async ({ visit, route, assert }) => {
+  test('oauth-state-mismatch: invalid state redirects to login', async ({
+    visit,
+    route,
+    assert,
+  }) => {
     const page = await visitPage(route('auth.social.callback', { provider: 'github' }), visit)
 
     await page.waitForTimeout(1000)
@@ -238,7 +241,7 @@ test.group('OAuth Controller Logic (Mocked)', (group) => {
   })
 
   test('oauth-unlink: unlinks provider from user', async ({ assert }) => {
-    const { ctx, mockDriver } = createMockAllyContext('github')
+    const { ctx } = createMockAllyContext('github')
 
     // For unlink, we don't need the provider user
     assert.isNotNull(ctx)
@@ -246,7 +249,7 @@ test.group('OAuth Controller Logic (Mocked)', (group) => {
   })
 
   test('oauth-define-password: sets password for social-only user', async ({ assert }) => {
-    const { ctx, mockDriver } = createMockAllyContext('github')
+    const { ctx } = createMockAllyContext('github')
 
     // This tests the define password flow
     assert.isNotNull(ctx)

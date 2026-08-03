@@ -55,6 +55,30 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'health.liveness': {
+    methods: ["GET","HEAD"]
+    pattern: '/health'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/health/health_controller').default['liveness']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/health/health_controller').default['liveness']>>>
+    }
+  }
+  'health.readiness': {
+    methods: ["GET","HEAD"]
+    pattern: '/health/ready'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/health/health_controller').default['readiness']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/health/health_controller').default['readiness']>>>
+    }
+  }
   'auth.session.render': {
     methods: ["GET","HEAD"]
     pattern: '/login'
@@ -845,6 +869,42 @@ export interface Registry {
       query: ExtractQuery<InferInput<(typeof import('#validators/file').showFileValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/cms/file_folders_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/cms/file_folders_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.settings.maintenance.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/settings/maintenance'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/maintenance/cms/maintenance_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/maintenance/cms/maintenance_controller').default['render']>>>
+    }
+  }
+  'admin.settings.maintenance.update': {
+    methods: ["POST"]
+    pattern: '/admin/settings/maintenance'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/maintenance/cms/maintenance_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/maintenance/cms/maintenance_controller').default['update']>>>
+    }
+  }
+  'admin.settings.maintenance.toggle': {
+    methods: ["POST"]
+    pattern: '/admin/settings/maintenance/toggle'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/maintenance/cms/maintenance_controller').default['toggle']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/maintenance/cms/maintenance_controller').default['toggle']>>>
     }
   }
   'api.theme.execute': {

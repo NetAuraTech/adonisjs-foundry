@@ -10,5 +10,11 @@
       "email": "Email: {value}",
       "message": "Message: {value}"
     }
+  },
+  "maintenance": {
+    "title": "Maintenance Mode",
+    "default_message": "We're performing scheduled maintenance. Please check back soon.",
+    "retry_in": "Retry in:",
+    "retry_now": "Retry Now"
   }
 }

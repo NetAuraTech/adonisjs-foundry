@@ -92,6 +92,14 @@ export function useMenu(overrides: Menu = {}) {
         permission: 'users.view',
       },
     ],
+    settings: [
+      {
+        label: t('maintenance'),
+        icon: 'Wrench',
+        route: 'admin.settings.maintenance.render',
+        permission: 'settings.maintenance',
+      },
+    ],
   }
 
   const menu = useMemo(() => {

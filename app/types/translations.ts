@@ -445,6 +445,10 @@ export type CmsFileFoldersTranslations = {
 
 export type CmsTemplatesTranslations = {
   title: string
+  action: string
+  actions: {
+    edit: string
+  }
   empty: {
     value: string
     help: string
@@ -622,10 +626,70 @@ export type CmsTranslations = {
   category: {
     content: string
     access_control: string
+    settings: string
   }
   dashboard: string
   pages: string
   templates: string
   files: string
   users: string
+  maintenance: string
+}
+
+export type MaintenanceTranslations = {
+  title: string
+  default_message: string
+  retry_in: string
+  retry_now: string
+}
+
+export type CmsMaintenanceTranslations = {
+  title: string
+  sub_title: string
+  status: {
+    label: string
+    inactive: string
+    active_redis: string
+    active_memory: string
+  }
+  source: {
+    redis: string
+    memory: string
+    memory_warning: string
+    redis_unavailable: string
+  }
+  toggle: {
+    label: string
+    enable: string
+    disable: string
+    is_enabled: string
+    is_disabled: string
+  }
+  message: {
+    label: string
+    placeholder: string
+    value: string
+  }
+  allowed_ips: {
+    label: string
+    placeholder: string
+    help: string
+  }
+  schedule: {
+    title: string
+    enable: string
+    start: string
+    end: string
+    help: string
+  }
+  submit: string
+  memory: {
+    title: string
+    description: string
+  }
+  redis_down: {
+    title: string
+    description: string
+    help: string
+  }
 }

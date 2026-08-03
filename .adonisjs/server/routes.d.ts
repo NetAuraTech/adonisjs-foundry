@@ -8,6 +8,8 @@ export type ScannedRoutes = {
     'event_stream': { paramsTuple?: []; params?: {} }
     'subscribe': { paramsTuple?: []; params?: {} }
     'unsubscribe': { paramsTuple?: []; params?: {} }
+    'health.liveness': { paramsTuple?: []; params?: {} }
+    'health.readiness': { paramsTuple?: []; params?: {} }
     'auth.session.render': { paramsTuple?: []; params?: {} }
     'auth.session.execute': { paramsTuple?: []; params?: {} }
     'auth.register.render': { paramsTuple?: []; params?: {} }
@@ -74,6 +76,9 @@ export type ScannedRoutes = {
     'admin.file_folders.execute': { paramsTuple?: []; params?: {} }
     'admin.file_folders.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.file_folders.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.settings.maintenance.render': { paramsTuple?: []; params?: {} }
+    'admin.settings.maintenance.update': { paramsTuple?: []; params?: {} }
+    'admin.settings.maintenance.toggle': { paramsTuple?: []; params?: {} }
     'api.theme.execute': { paramsTuple?: []; params?: {} }
     'api.admin.builder_operations.execute': { paramsTuple?: []; params?: {} }
     'api.admin.builder_operations.presence': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
@@ -91,6 +96,8 @@ export type ScannedRoutes = {
   GET: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
     'event_stream': { paramsTuple?: []; params?: {} }
+    'health.liveness': { paramsTuple?: []; params?: {} }
+    'health.readiness': { paramsTuple?: []; params?: {} }
     'auth.session.render': { paramsTuple?: []; params?: {} }
     'auth.register.render': { paramsTuple?: []; params?: {} }
     'auth.forgot_password.render': { paramsTuple?: []; params?: {} }
@@ -119,6 +126,7 @@ export type ScannedRoutes = {
     'admin.templates.render': { paramsTuple?: []; params?: {} }
     'admin.files.render': { paramsTuple?: []; params?: {} }
     'admin.file_folders.render': { paramsTuple?: []; params?: {} }
+    'admin.settings.maintenance.render': { paramsTuple?: []; params?: {} }
     'api.admin.builder_operations.presence': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
     'api.admin.pages_preview.token': { paramsTuple?: []; params?: {} }
     'api.admin.file.list': { paramsTuple?: []; params?: {} }
@@ -132,6 +140,8 @@ export type ScannedRoutes = {
   HEAD: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
     'event_stream': { paramsTuple?: []; params?: {} }
+    'health.liveness': { paramsTuple?: []; params?: {} }
+    'health.readiness': { paramsTuple?: []; params?: {} }
     'auth.session.render': { paramsTuple?: []; params?: {} }
     'auth.register.render': { paramsTuple?: []; params?: {} }
     'auth.forgot_password.render': { paramsTuple?: []; params?: {} }
@@ -160,6 +170,7 @@ export type ScannedRoutes = {
     'admin.templates.render': { paramsTuple?: []; params?: {} }
     'admin.files.render': { paramsTuple?: []; params?: {} }
     'admin.file_folders.render': { paramsTuple?: []; params?: {} }
+    'admin.settings.maintenance.render': { paramsTuple?: []; params?: {} }
     'api.admin.builder_operations.presence': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
     'api.admin.pages_preview.token': { paramsTuple?: []; params?: {} }
     'api.admin.file.list': { paramsTuple?: []; params?: {} }
@@ -202,6 +213,8 @@ export type ScannedRoutes = {
     'admin.files.move': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.files.upsert_alt': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.file_folders.execute': { paramsTuple?: []; params?: {} }
+    'admin.settings.maintenance.update': { paramsTuple?: []; params?: {} }
+    'admin.settings.maintenance.toggle': { paramsTuple?: []; params?: {} }
     'api.theme.execute': { paramsTuple?: []; params?: {} }
     'api.admin.builder_operations.execute': { paramsTuple?: []; params?: {} }
     'api.admin.builder_operations.save_draft': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }

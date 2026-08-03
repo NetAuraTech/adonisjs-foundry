@@ -41,6 +41,14 @@ export const controllers = {
       Files: () => import('#controllers/file/cms/files_controller'),
     },
   },
+  health: {
+    Health: () => import('#controllers/health/health_controller'),
+  },
+  maintenance: {
+    cms: {
+      Maintenance: () => import('#controllers/maintenance/cms/maintenance_controller'),
+    },
+  },
   page: {
     api: {
       BuilderOperations: () => import('#controllers/page/api/builder_operations_controller'),

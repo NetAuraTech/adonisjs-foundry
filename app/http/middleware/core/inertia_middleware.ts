@@ -102,12 +102,14 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
               access_control: ctx.i18n.t('cms.category.access_control'),
               main: ctx.i18n.t('cms.category.main'),
               content: ctx.i18n.t('cms.category.content'),
+              settings: ctx.i18n.t('cms.category.settings'),
             },
             dashboard: ctx.i18n.t('cms.dashboard'),
             pages: ctx.i18n.t('cms.pages.value'),
             templates: ctx.i18n.t('cms.templates.value'),
             users: ctx.i18n.t('cms.users.value'),
             files: ctx.i18n.t('cms.files.value'),
+            maintenance: ctx.i18n.t('cms.settings.maintenance.value'),
           } as CmsTranslations)
         : undefined,
     }
