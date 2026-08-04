@@ -178,9 +178,30 @@ export const BLOCK_CATALOG: BlockDescriptor[] = [
   },
 ]
 
-/** Returns the descriptor for a given block type, or undefined */
-export function getBlockDescriptor(type: BlockType): BlockDescriptor | undefined {
-  return BLOCK_CATALOG.find((b) => b.type === type)
+/** Returns the descriptor for a given block type, optionally with translated labels */
+export function getBlockDescriptor(
+  type: BlockType,
+  blockTranslations?: Record<string, { label: string; description: string }>
+): BlockDescriptor | undefined {
+  const descriptor = BLOCK_CATALOG.find((b) => b.type === type)
+  if (!descriptor || !blockTranslations) return descriptor
+  return {
+    ...descriptor,
+    label: blockTranslations[type]?.label ?? descriptor.label,
+    description: blockTranslations[type]?.description ?? descriptor.description,
+  }
+}
+
+/** Returns the full catalog, optionally with translated labels */
+export function getBlockCatalog(
+  blockTranslations?: Record<string, { label: string; description: string }>
+): BlockDescriptor[] {
+  if (!blockTranslations) return BLOCK_CATALOG
+  return BLOCK_CATALOG.map((b) => ({
+    ...b,
+    label: blockTranslations[b.type]?.label ?? b.label,
+    description: blockTranslations[b.type]?.description ?? b.description,
+  }))
 }
 
 /** Generates a unique block ID */

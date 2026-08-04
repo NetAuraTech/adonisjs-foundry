@@ -110,6 +110,7 @@ export class TemplateRepository extends BaseRepository {
       description: string | null
       thumbnailId: number | null
       content: PageContent
+      blockType: BlockType | null
     }>
   ): Promise<Template> {
     template.merge(data as any)

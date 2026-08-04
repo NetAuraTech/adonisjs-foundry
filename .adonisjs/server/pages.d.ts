@@ -39,6 +39,8 @@ declare module '@adonisjs/inertia/types' {
     'settings/account/front/index': ExtractProps<(typeof import('../../inertia/pages/settings/account/front/index.tsx'))['default']>
     'settings/preferences/front/index': ExtractProps<(typeof import('../../inertia/pages/settings/preferences/front/index.tsx'))['default']>
     'settings/profile/front/index': ExtractProps<(typeof import('../../inertia/pages/settings/profile/front/index.tsx'))['default']>
+    'template/cms/edit': ExtractProps<(typeof import('../../inertia/pages/template/cms/edit.tsx'))['default']>
     'template/cms/index': ExtractProps<(typeof import('../../inertia/pages/template/cms/index.tsx'))['default']>
+    'template/preview': ExtractProps<(typeof import('../../inertia/pages/template/preview.tsx'))['default']>
   }
 }

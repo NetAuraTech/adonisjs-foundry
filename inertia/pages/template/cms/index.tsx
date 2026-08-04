@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, useState } from 'react'
 import { Button } from '~/components/atoms/button'
 import { AdminMain } from '~/components/organisms/admin/admin_main'
 import { Data } from '@generated/data'
@@ -12,9 +12,11 @@ import { useMenu } from '~/hooks/use_admin'
 import { Paragraph } from '~/components/atoms/paragraph'
 import { Lang, useTranslation } from '~/hooks/use_translation'
 import type { CmsTemplatesTranslations } from '#types/translations'
-import { usePage } from '@inertiajs/react'
+import { router, usePage } from '@inertiajs/react'
 import { SharedProps } from '@adonisjs/inertia/types'
 import { Form } from '@adonisjs/inertia/react'
+import { captureTemplateThumbnail } from '~/utils/template_thumbnail'
+import { urlFor } from '~/client'
 
 interface TemplatesIndexPageProps {
   templates: Data.Template[]
@@ -30,65 +32,86 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
   const { templates, filters, translations } = props
   const pageProps = usePage<SharedProps>().props
   const { t, format } = useTranslation(translations)
-
   const { getEntryIcon } = useMenu()
 
+  const [regeneratingId, setRegeneratingId] = useState<number | null>(null)
+
+  async function handleRegenerate(template: Data.Template) {
+    setRegeneratingId(template.id)
+    try {
+      const { fileId } = await captureTemplateThumbnail({
+        templateId: template.id,
+        locale: (pageProps.locale as string) ?? 'en',
+        csrfToken: pageProps.csrfToken,
+      })
+      router.put(
+        urlFor('admin.templates.update', { id: template.id }),
+        { thumbnailId: fileId },
+        { preserveScroll: true }
+      )
+    } catch (error) {
+      console.error('[TemplatesIndex] thumbnail regeneration failed', error)
+    } finally {
+      setRegeneratingId(null)
+    }
+  }
+
   return (
-    <>
-      <AdminMain
-        title={t('title')}
-        icon={getEntryIcon('admin.templates.render')}
-        action={
-          <CanAccess permission="templates.create">
-            <Button route="admin.templates.render" variant="secondary" fitContent>
-              {t('action')}
+    <AdminMain
+      title={t('title')}
+      icon={getEntryIcon('admin.templates.render')}
+      action={
+        <div className="max-w-xs text-right">
+          <p className="text-xs font-medium text-ink">{t('create_guidance.value')}</p>
+          <p className="text-xs text-ink-subtle mt-0.5">{t('create_guidance.from_page')}</p>
+        </div>
+      }
+    >
+      <Card
+        header={
+          <Form
+            route="admin.templates.render"
+            className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end"
+          >
+            <Field
+              type="text"
+              name="search"
+              label={t('search.value')}
+              placeholder={t('search.placeholder')}
+              defaultValue={filters.search}
+              sanitize
+            />
+            <Field
+              type="select"
+              name="type"
+              label={t('search.type.value')}
+              placeholder={t('search.type.placeholder')}
+              defaultValue={filters.type}
+              sanitize
+            >
+              <SelectOption label={t('search.type.page')} value="page" />
+              <SelectOption label={t('search.type.block')} value="block" />
+            </Field>
+            <Button type="submit" fitContent>
+              {t('search.filter')}
             </Button>
-          </CanAccess>
+          </Form>
         }
       >
-        <Card
-          header={
-            <Form
-              route="admin.templates.render"
-              className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end"
-            >
-              <Field
-                type="text"
-                name="search"
-                label={t('search.value')}
-                placeholder={t('search.placeholder')}
-                defaultValue={filters.search}
-                sanitize
-              />
-              <Field
-                type="select"
-                name="type"
-                label={t('search.type.value')}
-                placeholder={t('search.type.placeholder')}
-                defaultValue={filters.type}
-                sanitize
+        {templates.length === 0 ? (
+          <div className="text-center py-20 rounded-xl border border-dashed border-edge">
+            <Paragraph variant="muted">{t('empty.value')}</Paragraph>
+            <Paragraph variant="subtle">{t('empty.help')}</Paragraph>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {templates.map((template) => (
+              <div
+                key={template.id}
+                className="rounded-xl border border-edge bg-canvas flex flex-col justify-between overflow-hidden"
               >
-                <SelectOption label={t('search.type.page')} value="page" />
-                <SelectOption label={t('search.type.block')} value="block" />
-              </Field>
-              <Button type="submit" fitContent>
-                {t('search.filter')}
-              </Button>
-            </Form>
-          }
-        >
-          {templates.length === 0 ? (
-            <div className="text-center py-20 rounded-xl border border-dashed border-edge">
-              <Paragraph variant="muted">{t('empty.value')}</Paragraph>
-              <Paragraph variant="subtle">{t('empty.help')}</Paragraph>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {templates.map((template) => (
-                <div
-                  key={template.id}
-                  className="rounded-xl border border-edge bg-canvas p-4 flex flex-col gap-3 justify-between"
-                >
+                <div className="flex-1 flex flex-col gap-3 p-4">
+                  <ThumbnailCanvas template={template} placeholder={t('thumbnail.placeholder')} />
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <p className="text-sm font-medium text-ink truncate">
@@ -112,14 +135,30 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
                         : t(template.type as any, { defaultValue: template.type })}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between pt-1 border-t border-edge">
-                    <span className="text-ink-subtle">
-                      {format(new Date(template.createdAt!), 'medium', pageProps.locale as Lang)}
-                    </span>
+                </div>
+                <div className="flex items-center justify-between px-4 py-3 border-t border-edge">
+                  <span className="text-ink-subtle">
+                    {format(new Date(template.createdAt!), 'medium', pageProps.locale as Lang)}
+                  </span>
+                  <div className="flex items-center gap-1">
                     <CanAccess permission="templates.update">
                       <Button
-                        variant="icon_warning"
-                        route="admin.templates.update"
+                        variant="icon"
+                        fitContent
+                        disabled={regeneratingId === template.id}
+                        onClick={() => handleRegenerate(template)}
+                        title={t('actions.regenerate', { name: template.name })}
+                      >
+                        <Icon
+                          name={regeneratingId === template.id ? 'Loader' : 'RefreshCcw'}
+                          size={18}
+                        />
+                      </Button>
+                    </CanAccess>
+                    <CanAccess permission="templates.view">
+                      <Button
+                        variant="icon"
+                        route="admin.templates.edit"
                         routeParams={{ id: template.id }}
                         title={t('actions.edit', { name: template.name })}
                         fitContent
@@ -148,12 +187,38 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
                     </CanAccess>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </Card>
-      </AdminMain>
-    </>
+              </div>
+            ))}
+          </div>
+        )}
+      </Card>
+    </AdminMain>
+  )
+}
+
+function ThumbnailCanvas({
+  template,
+  placeholder,
+}: {
+  template: Data.Template
+  placeholder: string
+}) {
+  if (!template.thumbnail?.url) {
+    return (
+      <div className="h-40 w-full rounded-lg border border-dashed border-edge bg-sunken flex flex-col items-center justify-center gap-1">
+        <Icon name="Image" size={22} className="text-ink-subtle" />
+        <span className="text-xs text-ink-subtle">{placeholder}</span>
+      </div>
+    )
+  }
+  return (
+    <div className="h-40 w-full rounded-lg overflow-hidden border border-edge bg-sunken">
+      <img
+        src={template.thumbnail.url}
+        alt={template.name}
+        className="w-full h-full object-cover"
+      />
+    </div>
   )
 }
 

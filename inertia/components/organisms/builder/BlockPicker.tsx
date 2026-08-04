@@ -1,6 +1,7 @@
 import React from 'react'
-import { BLOCK_CATALOG } from './block_types'
+import { getBlockCatalog } from './block_types'
 import type { BlockType } from '#types/page'
+import type { PageEditorTranslations } from '#types/translations'
 import { Button } from '~/components/atoms/button'
 import { Icon } from '~/components/atoms/icon'
 
@@ -86,6 +87,7 @@ interface BlockPickerProps {
   /** If true, only shows container blocks (section, grid) */
   containersOnly?: boolean
   className?: string
+  blockTranslations?: PageEditorTranslations['blocks']
 }
 
 /**
@@ -93,8 +95,9 @@ interface BlockPickerProps {
  * Displayed when the user clicks "Add block" inside the page builder.
  */
 export default function BlockPicker(props: BlockPickerProps) {
-  const { onSelect, handleClose, containersOnly = false, className = '' } = props
-  const blocks = containersOnly ? BLOCK_CATALOG.filter((b) => b.isContainer) : BLOCK_CATALOG
+  const { onSelect, handleClose, containersOnly = false, className = '', blockTranslations } = props
+  const blocks = getBlockCatalog(blockTranslations)
+  const filteredBlocks = containersOnly ? blocks.filter((b) => b.isContainer) : blocks
 
   return (
     <div className={`rounded-xl border border-edge bg-canvas shadow-lg ${className}`}>
@@ -102,18 +105,12 @@ export default function BlockPicker(props: BlockPickerProps) {
         <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider">
           {containersOnly ? 'Choose container' : 'Add a block'}
         </p>
-        <Button
-          type="button"
-          variant="icon"
-          title="Close to translate"
-          fitContent
-          onClick={handleClose}
-        >
+        <Button type="button" variant="icon" title="Close" fitContent onClick={handleClose}>
           <Icon name="X" size={18} />
         </Button>
       </div>
       <div className="p-2 grid grid-cols-2 gap-1 max-h-80 overflow-y-auto">
-        {blocks.map((block) => (
+        {filteredBlocks.map((block) => (
           <button
             key={block.type}
             type="button"

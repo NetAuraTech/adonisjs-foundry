@@ -62,10 +62,11 @@ export type ScannedRoutes = {
     'admin.pages_preview.render': { paramsTuple: [ParamValue]; params: {'pageId': ParamValue} }
     'admin.templates.render': { paramsTuple?: []; params?: {} }
     'admin.templates.execute': { paramsTuple?: []; params?: {} }
-    'admin.templates.create_from_page': { paramsTuple?: []; params?: {} }
     'admin.templates.apply_to_page': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.templates.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.templates.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.templates_preview.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.templates.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.files.render': { paramsTuple?: []; params?: {} }
     'admin.files.upload': { paramsTuple?: []; params?: {} }
     'admin.files.move': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -84,8 +85,14 @@ export type ScannedRoutes = {
     'api.admin.builder_operations.presence': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
     'api.admin.builder_operations.save_draft': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
     'api.admin.pages_preview.token': { paramsTuple?: []; params?: {} }
+    'api.admin.templates.index': { paramsTuple?: []; params?: {} }
+    'api.admin.templates.store': { paramsTuple?: []; params?: {} }
+    'api.admin.templates.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.admin.templates.create_from_page': { paramsTuple?: []; params?: {} }
+    'api.admin.templates_preview.token': { paramsTuple?: []; params?: {} }
     'api.admin.file.list': { paramsTuple?: []; params?: {} }
     'api.admin.file.find': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.admin.file.upload': { paramsTuple?: []; params?: {} }
     'contact.execute': { paramsTuple?: []; params?: {} }
     'page.sitemap': { paramsTuple?: []; params?: {} }
     'page.robots': { paramsTuple?: []; params?: {} }
@@ -124,11 +131,15 @@ export type ScannedRoutes = {
     'admin.page_revisions.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
     'admin.pages_preview.render': { paramsTuple: [ParamValue]; params: {'pageId': ParamValue} }
     'admin.templates.render': { paramsTuple?: []; params?: {} }
+    'admin.templates_preview.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.templates.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.files.render': { paramsTuple?: []; params?: {} }
     'admin.file_folders.render': { paramsTuple?: []; params?: {} }
     'admin.settings.maintenance.render': { paramsTuple?: []; params?: {} }
     'api.admin.builder_operations.presence': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
     'api.admin.pages_preview.token': { paramsTuple?: []; params?: {} }
+    'api.admin.templates.index': { paramsTuple?: []; params?: {} }
+    'api.admin.templates_preview.token': { paramsTuple?: []; params?: {} }
     'api.admin.file.list': { paramsTuple?: []; params?: {} }
     'api.admin.file.find': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'page.sitemap': { paramsTuple?: []; params?: {} }
@@ -168,11 +179,15 @@ export type ScannedRoutes = {
     'admin.page_revisions.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
     'admin.pages_preview.render': { paramsTuple: [ParamValue]; params: {'pageId': ParamValue} }
     'admin.templates.render': { paramsTuple?: []; params?: {} }
+    'admin.templates_preview.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.templates.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.files.render': { paramsTuple?: []; params?: {} }
     'admin.file_folders.render': { paramsTuple?: []; params?: {} }
     'admin.settings.maintenance.render': { paramsTuple?: []; params?: {} }
     'api.admin.builder_operations.presence': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
     'api.admin.pages_preview.token': { paramsTuple?: []; params?: {} }
+    'api.admin.templates.index': { paramsTuple?: []; params?: {} }
+    'api.admin.templates_preview.token': { paramsTuple?: []; params?: {} }
     'api.admin.file.list': { paramsTuple?: []; params?: {} }
     'api.admin.file.find': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'page.sitemap': { paramsTuple?: []; params?: {} }
@@ -207,8 +222,8 @@ export type ScannedRoutes = {
     'admin.page_revisions.restore': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
     'admin.page_revisions.toggle_keep': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
     'admin.templates.execute': { paramsTuple?: []; params?: {} }
-    'admin.templates.create_from_page': { paramsTuple?: []; params?: {} }
     'admin.templates.apply_to_page': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.templates.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.files.upload': { paramsTuple?: []; params?: {} }
     'admin.files.move': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.files.upsert_alt': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -218,6 +233,9 @@ export type ScannedRoutes = {
     'api.theme.execute': { paramsTuple?: []; params?: {} }
     'api.admin.builder_operations.execute': { paramsTuple?: []; params?: {} }
     'api.admin.builder_operations.save_draft': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
+    'api.admin.templates.store': { paramsTuple?: []; params?: {} }
+    'api.admin.templates.create_from_page': { paramsTuple?: []; params?: {} }
+    'api.admin.file.upload': { paramsTuple?: []; params?: {} }
     'contact.execute': { paramsTuple?: []; params?: {} }
   }
   DELETE: {
@@ -230,8 +248,8 @@ export type ScannedRoutes = {
     'admin.file_folders.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PUT: {
-    'admin.templates.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.file_folders.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.admin.templates.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

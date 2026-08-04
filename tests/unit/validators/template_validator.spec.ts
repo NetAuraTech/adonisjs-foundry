@@ -6,6 +6,8 @@ import {
   updateTemplateValidator,
   applyTemplateValidator,
   createFromPageValidator,
+  createBlockTemplateValidator,
+  templatePreviewValidator,
 } from '#validators/template'
 
 /**
@@ -141,5 +143,85 @@ test.group('Template validators', () => {
     assert.equal(result.name, 'My Template')
     assert.equal(result.pageId, 3)
     assert.equal(result.locale, 'en')
+  })
+
+  // ─── createBlockTemplateValidator ─────────────────────────────────────────
+
+  test('createBlockTemplateValidator accepts a valid single-root submission', async ({
+    assert,
+  }) => {
+    const result = await createBlockTemplateValidator.validate({
+      name: 'Card',
+      description: 'Reusable card',
+      blockType: 'section',
+      content: { blocks: [{ id: 'a', type: 'section', props: {}, children: [] }] },
+    })
+    assert.equal(result.name, 'Card')
+    assert.equal(result.blockType, 'section')
+  })
+
+  test('createBlockTemplateValidator requires a single root block', async ({ assert }) => {
+    // Empty array rejected (minLength 1).
+    await assert.rejects(() =>
+      createBlockTemplateValidator.validate({
+        name: 'Card',
+        blockType: 'section',
+        content: { blocks: [] },
+      })
+    )
+    // More than one root block rejected (maxLength 1).
+    await assert.rejects(() =>
+      createBlockTemplateValidator.validate({
+        name: 'Card',
+        blockType: 'section',
+        content: {
+          blocks: [
+            { id: 'a', type: 'section', props: {} },
+            { id: 'b', type: 'section', props: {} },
+          ],
+        },
+      })
+    )
+  })
+
+  test('createBlockTemplateValidator rejects unknown blockType', async ({ assert }) => {
+    await assert.rejects(() =>
+      createBlockTemplateValidator.validate({
+        name: 'Card',
+        blockType: 'hero',
+        content: { blocks: [{ id: 'a', type: 'section', props: {} }] },
+      })
+    )
+  })
+
+  test('createBlockTemplateValidator accepts optional overwriteId', async ({ assert }) => {
+    const result = await createBlockTemplateValidator.validate({
+      name: 'Card',
+      blockType: 'section',
+      content: { blocks: [{ id: 'a', type: 'section', props: {} }] },
+      overwriteId: 12,
+    })
+    assert.equal(result.overwriteId, 12)
+  })
+
+  // ─── templatePreviewValidator ─────────────────────────────────────────────
+
+  test('templatePreviewValidator accepts valid id, locale, token', async ({ assert }) => {
+    const result = await templatePreviewValidator.validate({
+      id: 5,
+      locale: 'en',
+      token: 'preview-token',
+    })
+    assert.equal(result.id, 5)
+    assert.equal(result.locale, 'en')
+    assert.equal(result.token, 'preview-token')
+  })
+
+  test('templatePreviewValidator requires positive id, locale, and token', async ({ assert }) => {
+    await assert.rejects(() =>
+      templatePreviewValidator.validate({ id: 0, locale: 'en', token: 'x' })
+    )
+    await assert.rejects(() => templatePreviewValidator.validate({ id: 5, token: 'x' }))
+    await assert.rejects(() => templatePreviewValidator.validate({ id: 5, locale: 'en' }))
   })
 })

@@ -183,7 +183,7 @@ test.group('Login E2E', (group) => {
 
     // Verify the session cookie exists (remember me sets long-lived cookie)
     const cookies = await page.context().cookies()
-    const sessionCookie = cookies.find(c => c.name === 'adonis-session')
+    const sessionCookie = cookies.find((c) => c.name === 'adonis-session')
     assert.exists(sessionCookie)
     // Remember me cookie should have an expiration (not session cookie)
     if (sessionCookie) {

@@ -118,10 +118,13 @@ export interface ApiDefinition {
     templates: {
       render: typeof routes['admin.templates.render']
       execute: typeof routes['admin.templates.execute']
-      createFromPage: typeof routes['admin.templates.create_from_page']
       applyToPage: typeof routes['admin.templates.apply_to_page']
       update: typeof routes['admin.templates.update']
       destroy: typeof routes['admin.templates.destroy']
+      edit: typeof routes['admin.templates.edit']
+    }
+    templatesPreview: {
+      render: typeof routes['admin.templates_preview.render']
     }
     files: {
       render: typeof routes['admin.files.render']
@@ -158,9 +161,19 @@ export interface ApiDefinition {
       pagesPreview: {
         token: typeof routes['api.admin.pages_preview.token']
       }
+      templates: {
+        index: typeof routes['api.admin.templates.index']
+        store: typeof routes['api.admin.templates.store']
+        update: typeof routes['api.admin.templates.update']
+        createFromPage: typeof routes['api.admin.templates.create_from_page']
+      }
+      templatesPreview: {
+        token: typeof routes['api.admin.templates_preview.token']
+      }
       file: {
         list: typeof routes['api.admin.file.list']
         find: typeof routes['api.admin.file.find']
+        upload: typeof routes['api.admin.file.upload']
       }
     }
   }

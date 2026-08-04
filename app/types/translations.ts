@@ -445,13 +445,20 @@ export type CmsFileFoldersTranslations = {
 
 export type CmsTemplatesTranslations = {
   title: string
-  action: string
   actions: {
     edit: string
+    regenerate: string
+  }
+  create_guidance: {
+    value: string
+    from_page: string
   }
   empty: {
     value: string
     help: string
+  }
+  thumbnail: {
+    placeholder: string
   }
   search: {
     value: string
@@ -467,6 +474,31 @@ export type CmsTemplatesTranslations = {
   delete: {
     value: string
     confirm: string
+  }
+}
+
+export type CmsTemplatesEditTranslations = {
+  title: string
+  back: string
+  form: {
+    name: string
+    description: string
+    thumbnail: {
+      value: string
+      replace: string
+      remove: string
+      regenerate: string
+      regenerating: string
+      placeholder: string
+    }
+    submit: string
+    cancel: string
+  }
+  preview: {
+    value: string
+    empty: string
+    block: string
+    page: string
   }
 }
 
@@ -604,6 +636,114 @@ export type CmsPagesRevisionTranslations = {
     help: string
   }
   latest: string
+}
+
+export type PageEditorTranslations = {
+  status: {
+    value: string
+    draft: string
+    published: string
+    archived: string
+  }
+  mode: {
+    editor: string
+    split: string
+    preview: string
+  }
+  toolbar: {
+    apply_template: string
+    save_as_template: string
+    unpublish: string
+    publish: string
+    revisions: string
+  }
+  sidebar: {
+    details: string
+    seo: string
+  }
+  form: {
+    title: {
+      value: string
+      placeholder: string
+      slug_placeholder: string
+    }
+    meta_title: {
+      value: string
+      placeholder: string
+    }
+    meta_description: {
+      value: string
+      placeholder: string
+    }
+  }
+  save: {
+    button: string
+    saving: string
+    saved: string
+    retry: string
+  }
+  locale: {
+    add: string
+    new_translation: string
+    select: string
+    empty_content: string
+    copy_from: string
+    add_button: string
+  }
+  blocktree: {
+    select_to_configure: string
+    insert_template: string
+    add_block: string
+    save_as_template: string
+  }
+  block_picker: {
+    title: string
+    search_placeholder: string
+    no_results: string
+  }
+  template_picker: {
+    title: string
+    empty: string
+    type_placeholder: string
+    page: string
+    block: string
+  }
+  save_page_template: {
+    title: string
+    name_label: string
+    name_placeholder: string
+    submit: string
+    error: string
+    reminder: string
+  }
+  apply_page_template: {
+    title: string
+    warning: string
+    apply_button: string
+  }
+  save_block_template: {
+    title: string
+    name_label: string
+    name_placeholder: string
+    submit: string
+    exists_warning: string
+    overwrite: string
+    cancel: string
+  }
+  blocks: {
+    section: { label: string; description: string }
+    grid: { label: string; description: string }
+    flex: { label: string; description: string }
+    title: { label: string; description: string }
+    paragraph: { label: string; description: string }
+    button: { label: string; description: string }
+    separator: { label: string; description: string }
+    icon: { label: string; description: string }
+    form: { label: string; description: string }
+    field: { label: string; description: string }
+    htmltext: { label: string; description: string }
+    image: { label: string; description: string }
+  }
 }
 
 export type CommonTranslations = {

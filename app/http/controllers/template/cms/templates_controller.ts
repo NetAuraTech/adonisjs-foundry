@@ -5,7 +5,6 @@ import {
   createTemplateValidator,
   updateTemplateValidator,
   applyTemplateValidator,
-  createFromPageValidator,
   showTemplateValidator,
 } from '#validators/template'
 import { stripEmptyStrings } from '#helpers/core/strip_empty_strings'
@@ -15,9 +14,10 @@ import { CreateTemplateAction } from '#actions/template/create_template_action'
 import { UpdateTemplateAction } from '#actions/template/update_template_action'
 import { DeleteTemplateAction } from '#actions/template/delete_template_action'
 import { ApplyToPageAction } from '#actions/template/apply_to_page_action'
-import { CreateFromPageAction } from '#actions/template/create_from_page_action'
+import { GetTemplateDetailAction } from '#actions/template/get_template_detail_action'
 import { I18nService } from '#services/i18n_service'
 import { buildTemplatesIndexPayload } from '#helpers/i18n_payloads/templates_index'
+import { buildTemplatesEditPayload } from '#helpers/i18n_payloads/templates_edit'
 
 @inject()
 export default class TemplatesController {
@@ -28,7 +28,7 @@ export default class TemplatesController {
     protected updateTemplateAction: UpdateTemplateAction,
     protected deleteTemplateAction: DeleteTemplateAction,
     protected applyToPageAction: ApplyToPageAction,
-    protected createFromPageAction: CreateFromPageAction
+    protected getTemplateDetailAction: GetTemplateDetailAction
   ) {}
 
   async render(ctx: HttpContext) {
@@ -61,6 +61,18 @@ export default class TemplatesController {
     session.flash('success', this.i18n.translate('template.created'))
 
     return response.redirect().toRoute('admin.templates.render')
+  }
+
+  async edit(ctx: HttpContext) {
+    const { inertia, params } = ctx
+
+    const { id } = await showTemplateValidator.validate(params)
+    const template = await this.getTemplateDetailAction.execute({ id })
+
+    return inertia.render('template/cms/edit', {
+      template: TemplateTransformer.transform(template),
+      translations: buildTemplatesEditPayload(this.i18n),
+    })
   }
 
   async update(ctx: HttpContext) {
@@ -103,27 +115,6 @@ export default class TemplatesController {
     })
 
     session.flash('success', this.i18n.translate('template.applied'))
-
-    return response.redirect().back()
-  }
-
-  async createFromPage(ctx: HttpContext) {
-    const { request, response, auth, session } = ctx
-
-    const payload = await createFromPageValidator.validate(request.all())
-    const user = auth.getUserOrFail()
-
-    await this.createFromPageAction.execute({
-      name: payload.name,
-      pageId: payload.pageId,
-      locale: payload.locale,
-      userId: user.id,
-    })
-
-    session.flash(
-      'success',
-      this.i18n.translate('template.created_from_page', { name: payload.name })
-    )
 
     return response.redirect().back()
   }

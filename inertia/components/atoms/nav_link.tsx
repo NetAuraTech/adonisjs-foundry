@@ -7,7 +7,7 @@ import type { LinkProps, LinkParams } from '@adonisjs/inertia/react'
 import { urlFor } from '~/client'
 
 type NavLinkBaseProps = {
-  name?: string,
+  name?: string
   /** Visible link text. */
   label: string
   /** Tooltip / accessible title attribute. */

@@ -1,4 +1,16 @@
 {
+  "created": "Page created successfully.",
+  "saved": "Page saved successfully.",
+  "published": "Page published successfully.",
+  "unpublished": "Page unpublished successfully.",
+  "deleted": "Page deleted successfully.",
+  "translation": {
+    "created": "Translation created successfully."
+  },
+  "revision": {
+    "restored": "Revision restored successfully.",
+    "keep_toggled": "Revision pin toggled successfully."
+  },
   "contact_form": {
     "submitted": "Your contact request has been successfully sent.",
     "mail": {

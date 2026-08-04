@@ -7,6 +7,8 @@ import { browserClient } from '@japa/browser-client'
 import { apiClient } from '@japa/api-client'
 import { authBrowserClient } from '@adonisjs/auth/plugins/browser_client'
 import { sessionBrowserClient } from '@adonisjs/session/plugins/browser_client'
+import { authApiClient } from '@adonisjs/auth/plugins/api_client'
+import { sessionApiClient } from '@adonisjs/session/plugins/api_client'
 import limiter from '@adonisjs/limiter/services/main'
 
 /**
@@ -24,6 +26,8 @@ export const plugins: Config['plugins'] = [
   browserClient({ runInSuites: ['browser'] }),
   sessionBrowserClient(app),
   authBrowserClient(app),
+  sessionApiClient(app),
+  authApiClient(app),
 ]
 
 /**

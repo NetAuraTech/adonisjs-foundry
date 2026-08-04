@@ -115,7 +115,7 @@ export const addBlockSchema = vine.object({
     id: vine.string().trim().minLength(1),
     type: vine.enum(BLOCK_TYPES),
     props: vine.any().optional(), // Allow any props - strict validation per block type in future
-    children: vine.array(vine.object({})).optional(), // Loose children - recursive validation in future
+    children: vine.array(vine.any()).optional(),
   }),
   parentId: parentIdValidator,
   index: indexValidator,

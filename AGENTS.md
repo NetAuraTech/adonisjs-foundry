@@ -17,7 +17,7 @@ This is `adonisjs-foundry` — a production-ready AdonisJS v7 + Inertia/React bo
 | Auth      | Session-based (@adonisjs/auth), OAuth (Ally) |
 | Storage   | @adonisjs/drive (local, S3, R2)              |
 | Real-time | @adonisjs/transmit (SSE)                     |
-| Testing   | Japa                                         |
+| Testing   | Japa (backend), Vitest (frontend)            |
 
 ## Working Agreements
 
@@ -26,7 +26,7 @@ This is `adonisjs-foundry` — a production-ready AdonisJS v7 + Inertia/React bo
 
 ## Repository Expectations
 
-- Run `npm run lint`, `npm run format`, and `npm run typecheck` before committing code.
+- Run `npm run lint`, `npm run format`, `npm run typecheck`, and `npm run test:front` before committing code.
 - Use Conventional Commits, with the description in the commit body rather than the title:
   type(scope)
   short description

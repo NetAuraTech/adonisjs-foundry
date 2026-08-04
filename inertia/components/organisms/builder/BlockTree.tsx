@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import BlockPicker from './BlockPicker'
+import TemplatePicker from './TemplatePicker'
+import SaveBlockTemplateModal from './SaveBlockTemplateModal'
 import BlockPropsEditor from './editor/BlockPropsEditor'
 import { createBlock, getBlockDescriptor } from './block_types'
 import type { Block, BlockType, PageContent } from '#types/page'
@@ -8,6 +10,12 @@ import type { LockState } from '~/hooks/use_builder_sync'
 import { Button } from '~/components/atoms/button'
 import { Icon } from '~/components/atoms/icon'
 import { FloatingPortal } from '~/components/atoms/floating_portal'
+import { usePage } from '@inertiajs/react'
+import { SharedProps } from '@adonisjs/inertia/types'
+import { cloneBlock } from '~/utils/clone_block'
+import { useTranslation } from '~/hooks/use_translation'
+import type { PageEditorTranslations } from '#types/translations'
+import type { Data } from '@generated/data'
 
 interface LockHelpers {
   getLock: (blockId: string, fieldKey: string) => LockState | null
@@ -24,6 +32,7 @@ interface BlockTreeProps {
   acquireLock?: LockHelpers['acquireLock']
   releaseLock?: LockHelpers['releaseLock']
   currentUserId?: number
+  translations: PageEditorTranslations
 }
 
 export default function BlockTree({
@@ -34,7 +43,10 @@ export default function BlockTree({
   acquireLock,
   releaseLock,
   currentUserId = 0,
+  translations,
 }: BlockTreeProps) {
+  const { t } = useTranslation(translations)
+  const blockTranslations = translations.blocks
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [pickerParentId, setPickerParentId] = useState<string | 'root' | null>(null)
 
@@ -85,10 +97,43 @@ export default function BlockTree({
     onOperation?.({ op: 'UPDATE_PROPS', blockId: id, props })
   }
 
+  const [templatePickerParentId, setTemplatePickerParentId] = useState<string | 'root' | null>(null)
+  const [saveTemplateTarget, setSaveTemplateTarget] = useState<Block | null>(null)
+  const pageProps = usePage<SharedProps>().props
+  const csrfToken = pageProps.csrfToken
+  const locale = (pageProps.locale as string) ?? 'en'
+
+  function insertTemplateBlock(template: Data.Template, parentId: 'root' | string) {
+    const rootBlock = template?.content?.blocks?.[0]
+    if (!rootBlock) return
+
+    setTemplatePickerParentId(null)
+    const newBlock = cloneBlock(rootBlock)
+    setSelectedId(newBlock.id)
+    if (parentId === 'root') {
+      const next = [...content.blocks, newBlock]
+      applyBlocks(() => next)
+      onOperation?.({ op: 'ADD_BLOCK', block: newBlock, parentId: 'root', index: next.length - 1 })
+    } else {
+      applyBlocks((b) => insertChild(b, parentId, newBlock))
+      const parent = findById(content.blocks, parentId)
+      onOperation?.({
+        op: 'ADD_BLOCK',
+        block: newBlock,
+        parentId,
+        index: parent?.children?.length ?? 0,
+      })
+    }
+  }
+
   const selectedBlock = selectedId ? findById(content.blocks, selectedId) : null
 
   const handleCloseBlockPicker = () => {
     setPickerParentId(null)
+  }
+
+  const handleCloseTemplatePicker = () => {
+    setTemplatePickerParentId(null)
   }
 
   return (
@@ -99,23 +144,45 @@ export default function BlockTree({
           <span className="text-[10px] font-bold uppercase tracking-widest text-ink-subtle">
             Structure
           </span>
-          <div className="relative">
-            <Button
-              type="button"
-              variant="icon"
-              onClick={() => setPickerParentId(pickerParentId === 'root' ? null : 'root')}
-              fitContent
-              title="Add block"
-            >
-              <Icon name="Plus" size={16} />
-            </Button>
-            {pickerParentId === 'root' && (
-              <BlockPicker
-                onSelect={(t) => addBlock(t, 'root')}
-                handleClose={handleCloseBlockPicker}
-                className="absolute top-8 right-0 z-30 w-72 shadow-xl"
-              />
-            )}
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <Button
+                type="button"
+                variant="icon"
+                onClick={() =>
+                  setTemplatePickerParentId(templatePickerParentId === 'root' ? null : 'root')
+                }
+                fitContent
+                title={t('blocktree.insert_template')}
+              >
+                <Icon name="LayoutTemplate" size={16} />
+              </Button>
+              {templatePickerParentId === 'root' && (
+                <TemplatePicker
+                  handleSelect={(t) => insertTemplateBlock(t, 'root')}
+                  handleClose={() => setTemplatePickerParentId(null)}
+                />
+              )}
+            </div>
+            <div className="relative">
+              <Button
+                type="button"
+                variant="icon"
+                onClick={() => setPickerParentId(pickerParentId === 'root' ? null : 'root')}
+                fitContent
+                title={t('blocktree.add_block')}
+              >
+                <Icon name="Plus" size={16} />
+              </Button>
+              {pickerParentId === 'root' && (
+                <BlockPicker
+                  onSelect={(t) => addBlock(t, 'root')}
+                  handleClose={handleCloseBlockPicker}
+                  className="absolute top-8 right-0 z-30 w-72 shadow-xl"
+                  blockTranslations={blockTranslations}
+                />
+              )}
+            </div>
           </div>
         </div>
 
@@ -135,12 +202,19 @@ export default function BlockTree({
                   depth={0}
                   selectedId={selectedId}
                   pickerParentId={pickerParentId}
+                  templatePickerParentId={templatePickerParentId}
+                  blockTranslations={blockTranslations}
                   onSelect={setSelectedId}
                   onDelete={deleteBlock}
                   onMove={moveBlock}
                   onAddChild={(pid) => setPickerParentId(pickerParentId === pid ? null : pid)}
                   onPickBlock={addBlock}
+                  onAddTemplateChild={(pid) =>
+                    setTemplatePickerParentId(templatePickerParentId === pid ? null : pid)
+                  }
+                  onPickTemplate={insertTemplateBlock}
                   handleCloseBlockPicker={handleCloseBlockPicker}
+                  handleCloseTemplatePicker={handleCloseTemplatePicker}
                 />
               ))}
             </div>
@@ -156,16 +230,27 @@ export default function BlockTree({
               <div className="flex items-center gap-2 overflow-hidden">
                 <div className="w-1.5 h-1.5 rounded-full bg-primary-mid shrink-0" />
                 <span className="text-[11px] font-semibold text-ink uppercase tracking-tight truncate">
-                  {getBlockDescriptor(selectedBlock.type)?.label ?? selectedBlock.type}
+                  {getBlockDescriptor(selectedBlock.type, blockTranslations)?.label ??
+                    selectedBlock.type}
                 </span>
               </div>
-              <button
-                type="button"
-                onClick={() => setSelectedId(null)}
-                className="text-ink-subtle hover:text-ink transition-colors"
-              >
-                <Icon name="X" size={14} />
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => setSaveTemplateTarget(selectedBlock)}
+                  className="text-ink-subtle hover:text-ink transition-colors"
+                  title={t('blocktree.save_as_template')}
+                >
+                  <Icon name="Bookmark" size={14} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedId(null)}
+                  className="text-ink-subtle hover:text-ink transition-colors"
+                >
+                  <Icon name="X" size={14} />
+                </button>
+              </div>
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
@@ -183,11 +268,23 @@ export default function BlockTree({
           <div className="flex-1 flex flex-col items-center justify-center p-6 text-center opacity-50">
             <Icon name="MousePointer2" size={20} className="text-ink-subtle mb-2" />
             <p className="text-[11px] text-ink-subtle uppercase tracking-wider">
-              Select a block to configure
+              {t('blocktree.select_to_configure')}
             </p>
           </div>
         )}
       </div>
+
+      {/* ── SAVE AS TEMPLATE MODAL ── */}
+      {saveTemplateTarget && (
+        <SaveBlockTemplateModal
+          block={saveTemplateTarget}
+          blockType={saveTemplateTarget.type}
+          csrfToken={csrfToken}
+          locale={locale}
+          handleClose={() => setSaveTemplateTarget(null)}
+          onSaved={() => setSaveTemplateTarget(null)}
+        />
+      )}
     </div>
   )
 }
@@ -199,12 +296,17 @@ function BlockNode(props: {
   depth: number
   selectedId: string | null
   pickerParentId: string | 'root' | null
+  templatePickerParentId: string | 'root' | null
+  blockTranslations: PageEditorTranslations['blocks']
   onSelect: (id: string) => void
   onDelete: (id: string) => void
   onMove: (id: string, d: 'up' | 'down') => void
   onAddChild: (pid: string) => void
   onPickBlock: (type: BlockType, pid: string) => void
+  onAddTemplateChild: (pid: string) => void
+  onPickTemplate: (template: Data.Template, pid: string) => void
   handleCloseBlockPicker: () => void
+  handleCloseTemplatePicker: () => void
 }) {
   const {
     block,
@@ -213,21 +315,26 @@ function BlockNode(props: {
     depth,
     selectedId,
     pickerParentId,
+    templatePickerParentId,
     onSelect,
     onDelete,
     onMove,
     onAddChild,
     onPickBlock,
+    onAddTemplateChild,
+    onPickTemplate,
     handleCloseBlockPicker,
+    handleCloseTemplatePicker,
   } = props
 
   const [expanded, setExpanded] = useState(true)
   const anchorRef = useRef<HTMLButtonElement>(null)
 
-  const descriptor = getBlockDescriptor(block.type)
+  const descriptor = getBlockDescriptor(block.type, props.blockTranslations)
   const isContainer = descriptor?.isContainer ?? false
   const isSelected = selectedId === block.id
   const showPicker = pickerParentId === block.id
+  const showTemplatePicker = templatePickerParentId === block.id
 
   const preview = block.type === 'title' ? ` — ${(block.props as any).text ?? ''}` : ''
 
@@ -294,7 +401,7 @@ function BlockNode(props: {
               onMove(block.id, 'up')
             }}
             disabled={index === 0}
-            className="p-1 hover:text-ink disabled:opacity-0"
+            className="p-1 cursor-pointer hover:text-ink disabled:opacity-0"
           >
             <Icon name="ChevronUp" size={12} />
           </button>
@@ -305,7 +412,7 @@ function BlockNode(props: {
               onMove(block.id, 'down')
             }}
             disabled={index === total - 1}
-            className="p-1 hover:text-ink disabled:opacity-0"
+            className="p-1 cursor-pointer hover:text-ink disabled:opacity-0"
           >
             <Icon name="ChevronDown" size={12} />
           </button>
@@ -315,9 +422,9 @@ function BlockNode(props: {
               e.stopPropagation()
               onDelete(block.id)
             }}
-            className="p-1 hover:text-danger"
+            className="p-1 cursor-pointer hover:text-danger"
           >
-            <Icon name="Trash2" size={12} />
+            <Icon name="Trash" size={12} />
           </button>
         </div>
       </div>
@@ -333,16 +440,21 @@ function BlockNode(props: {
               depth={depth + 1}
               selectedId={selectedId}
               pickerParentId={pickerParentId}
+              templatePickerParentId={templatePickerParentId}
+              blockTranslations={props.blockTranslations}
               onSelect={onSelect}
               onDelete={onDelete}
               onMove={onMove}
               onAddChild={onAddChild}
               onPickBlock={onPickBlock}
+              onAddTemplateChild={onAddTemplateChild}
+              onPickTemplate={onPickTemplate}
               handleCloseBlockPicker={handleCloseBlockPicker}
+              handleCloseTemplatePicker={handleCloseTemplatePicker}
             />
           ))}
 
-          <div className="relative ml-4 mt-1">
+          <div className="relative ml-4 mt-1 flex items-center gap-1">
             <button
               ref={anchorRef}
               type="button"
@@ -350,10 +462,22 @@ function BlockNode(props: {
                 e.stopPropagation()
                 onAddChild(block.id)
               }}
-              className="flex items-center gap-2 text-[11px] text-ink-subtle hover:text-primary-mid transition-colors py-1 px-2 rounded hover:bg-sunken w-full text-left"
+              className="flex items-center gap-2 text-[11px] text-ink-subtle hover:text-primary-mid transition-colors py-1 px-2 rounded hover:bg-sunken text-left"
             >
               <Icon name="Plus" size={12} />
               <span>Add child</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                onAddTemplateChild(block.id)
+              }}
+              className="flex items-center gap-2 text-[11px] text-ink-subtle hover:text-primary-mid transition-colors py-1 px-2 rounded hover:bg-sunken text-left"
+            >
+              <Icon name="LayoutTemplate" size={12} />
+              <span>Template</span>
             </button>
 
             {showPicker && (
@@ -362,8 +486,16 @@ function BlockNode(props: {
                   onSelect={(type) => onPickBlock(type, block.id)}
                   handleClose={handleCloseBlockPicker}
                   className="w-72 mt-1 shadow-2xl border border-edge rounded-xl overflow-hidden"
+                  blockTranslations={props.blockTranslations}
                 />
               </FloatingPortal>
+            )}
+
+            {showTemplatePicker && (
+              <TemplatePicker
+                handleSelect={(t) => onPickTemplate(t, block.id)}
+                handleClose={handleCloseTemplatePicker}
+              />
             )}
           </div>
         </div>

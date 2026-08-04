@@ -60,11 +60,33 @@ export function registerAdminApiRoutes(): void {
           router
             .group(() => {
               router
+                .get('/', [controllers.template.api.Templates, 'index'])
+                .use([middleware.permission({ permissions: ['templates.view'] })])
+              router
+                .post('/', [controllers.template.api.Templates, 'store'])
+                .use([middleware.permission({ permissions: ['templates.create'] })])
+              router
+                .put('/:id', [controllers.template.api.Templates, 'update'])
+                .use([middleware.permission({ permissions: ['templates.update'] })])
+              router
+                .post('/from-page', [controllers.template.api.Templates, 'createFromPage'])
+                .use([middleware.permission({ permissions: ['templates.create'] })])
+              router
+                .get('/preview/token', [controllers.template.cms.TemplatesPreview, 'token'])
+                .use([middleware.permission({ permissions: ['templates.view'] })])
+            })
+            .prefix('templates')
+          router
+            .group(() => {
+              router
                 .get('/', [controllers.file.api.File, 'list'])
                 .use([middleware.permission({ permissions: ['files.view'] })])
               router
                 .get('/:id', [controllers.file.api.File, 'find'])
                 .use([middleware.permission({ permissions: ['files.view'] })])
+              router
+                .post('/upload', [controllers.file.api.File, 'upload'])
+                .use([middleware.permission({ permissions: ['files.create'] })])
             })
             .prefix('files')
         })

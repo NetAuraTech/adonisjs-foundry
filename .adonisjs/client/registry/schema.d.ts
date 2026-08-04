@@ -703,18 +703,6 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
-  'admin.templates.create_from_page': {
-    methods: ["POST"]
-    pattern: '/admin/templates/from-page'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/template').createFromPageValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/template').createFromPageValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_controller').default['createFromPage']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_controller').default['createFromPage']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
   'admin.templates.apply_to_page': {
     methods: ["POST"]
     pattern: '/admin/templates/:id/apply'
@@ -728,7 +716,7 @@ export interface Registry {
     }
   }
   'admin.templates.update': {
-    methods: ["PUT"]
+    methods: ["POST"]
     pattern: '/admin/templates/:id'
     types: {
       body: ExtractBody<InferInput<(typeof import('#validators/template').showTemplateValidator)>|InferInput<(typeof import('#validators/template').updateTemplateValidator)>>
@@ -749,6 +737,30 @@ export interface Registry {
       query: ExtractQuery<InferInput<(typeof import('#validators/template').showTemplateValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.templates_preview.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/templates/preview/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/template').templatePreviewValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_preview_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_preview_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.templates.edit': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/templates/:id/edit'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/template').showTemplateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_controller').default['edit']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_controller').default['edit']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.files.render': {
@@ -967,6 +979,66 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_preview_controller').default['token']>>>
     }
   }
+  'api.admin.templates.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/admin/templates'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/template').listTemplateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/api/templates_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/api/templates_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.admin.templates.store': {
+    methods: ["POST"]
+    pattern: '/api/admin/templates'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/template').createBlockTemplateValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/template').createBlockTemplateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/api/templates_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/api/templates_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.admin.templates.update': {
+    methods: ["PUT"]
+    pattern: '/api/admin/templates/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/template').updateTemplateValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/template').updateTemplateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/api/templates_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/api/templates_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.admin.templates.create_from_page': {
+    methods: ["POST"]
+    pattern: '/api/admin/templates/from-page'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/template').createFromPageValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/template').createFromPageValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/api/templates_controller').default['createFromPage']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/api/templates_controller').default['createFromPage']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.admin.templates_preview.token': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/admin/templates/preview/token'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_preview_controller').default['token']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_preview_controller').default['token']>>>
+    }
+  }
   'api.admin.file.list': {
     methods: ["GET","HEAD"]
     pattern: '/api/admin/files'
@@ -989,6 +1061,18 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/api/file_controller').default['find']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/api/file_controller').default['find']>>>
+    }
+  }
+  'api.admin.file.upload': {
+    methods: ["POST"]
+    pattern: '/api/admin/files/upload'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/api/file_controller').default['upload']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/api/file_controller').default['upload']>>>
     }
   }
   'contact.execute': {

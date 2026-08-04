@@ -29,7 +29,11 @@ export default function MaintenancePage(props: PageProps) {
     const hrs = Math.floor(seconds / 3600)
     const mins = Math.floor((seconds % 3600) / 60)
     const secs = seconds % 60
-    return [hrs > 0 ? `${hrs.toString().padStart(2, '0')}` : '00', mins.toString().padStart(2, '0'), secs.toString().padStart(2, '0')].join(':')
+    return [
+      hrs > 0 ? `${hrs.toString().padStart(2, '0')}` : '00',
+      mins.toString().padStart(2, '0'),
+      secs.toString().padStart(2, '0'),
+    ].join(':')
   }
 
   const handleRetry = () => {
@@ -44,10 +48,10 @@ export default function MaintenancePage(props: PageProps) {
     <>
       <Section className="min-h-screen flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md text-center">
-          <div className="text-6xl mb-6" aria-hidden="true">🛠️</div>
-          <Heading level={1}>
-            {t('title')}
-          </Heading>
+          <div className="text-6xl mb-6" aria-hidden="true">
+            🛠️
+          </div>
+          <Heading level={1}>{t('title')}</Heading>
           <Paragraph variant="muted" className="mb-8">
             {message || t('default_message')}
           </Paragraph>

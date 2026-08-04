@@ -4,22 +4,30 @@ import Permission from '#models/auth/permission'
 import { DateTime } from 'luxon'
 import { extractNameFromEmail } from '#helpers/auth/username'
 
-/**
- * Creates an administrator user with a role granted `admin.access` and
- * `settings.maintenance`, and a verified email address.
- *
- * Used by browser tests that need to reach the admin maintenance settings
- * page (`/admin/settings/maintenance`).
- *
- * @param overrides - User attributes. `email` is required; `password` is
- *   optional and defaults to a strong test password.
- * @returns The newly created admin user instance.
- */
-export async function createAdminUser(overrides: { email: string; password?: string }) {
-  const password = overrides.password ?? 'TestPassword123!'
+export const MAINTENANCE_PERMISSIONS = ['settings.maintenance'] as const
 
-  // Idempotent create: test DBs are truncated after each test, so a previous
-  // test may have already inserted the fixed-name role and permissions.
+export const CMS_PERMISSIONS = [
+  'pages.view',
+  'pages.create',
+  'pages.update',
+  'templates.view',
+  'templates.create',
+  'templates.update',
+  'templates.delete',
+] as const
+
+/**
+ * Creates an administrator user with a role granted `admin.access` and any
+ * additional permissions passed via `permissionSlugs`, with a verified email.
+ */
+export async function createAdminUser(overrides: {
+  email: string
+  password?: string
+  permissionSlugs?: ReadonlyArray<string>
+}) {
+  const password = overrides.password ?? 'TestPassword123!'
+  const permissionSlugs = overrides.permissionSlugs ?? []
+
   const role = await Role.updateOrCreate(
     { slug: 'admin' },
     {
@@ -30,9 +38,9 @@ export async function createAdminUser(overrides: { email: string; password?: str
     }
   )
 
-  const permissionSlugs = ['admin.access', 'settings.maintenance']
+  const allSlugs = ['admin.access', ...permissionSlugs]
   const permissions = await Promise.all(
-    permissionSlugs.map((slug) => {
+    allSlugs.map((slug) => {
       const category = slug.split('.')[0]
       return Permission.updateOrCreate(
         { slug },

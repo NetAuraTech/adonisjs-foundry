@@ -354,12 +354,6 @@ const routes = {
     tokens: [{"old":"/admin/templates","type":0,"val":"admin","end":""},{"old":"/admin/templates","type":0,"val":"templates","end":""}],
     types: placeholder as Registry['admin.templates.execute']['types'],
   },
-  'admin.templates.create_from_page': {
-    methods: ["POST"],
-    pattern: '/admin/templates/from-page',
-    tokens: [{"old":"/admin/templates/from-page","type":0,"val":"admin","end":""},{"old":"/admin/templates/from-page","type":0,"val":"templates","end":""},{"old":"/admin/templates/from-page","type":0,"val":"from-page","end":""}],
-    types: placeholder as Registry['admin.templates.create_from_page']['types'],
-  },
   'admin.templates.apply_to_page': {
     methods: ["POST"],
     pattern: '/admin/templates/:id/apply',
@@ -367,7 +361,7 @@ const routes = {
     types: placeholder as Registry['admin.templates.apply_to_page']['types'],
   },
   'admin.templates.update': {
-    methods: ["PUT"],
+    methods: ["POST"],
     pattern: '/admin/templates/:id',
     tokens: [{"old":"/admin/templates/:id","type":0,"val":"admin","end":""},{"old":"/admin/templates/:id","type":0,"val":"templates","end":""},{"old":"/admin/templates/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['admin.templates.update']['types'],
@@ -377,6 +371,18 @@ const routes = {
     pattern: '/admin/templates/:id',
     tokens: [{"old":"/admin/templates/:id","type":0,"val":"admin","end":""},{"old":"/admin/templates/:id","type":0,"val":"templates","end":""},{"old":"/admin/templates/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['admin.templates.destroy']['types'],
+  },
+  'admin.templates_preview.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/templates/preview/:id',
+    tokens: [{"old":"/admin/templates/preview/:id","type":0,"val":"admin","end":""},{"old":"/admin/templates/preview/:id","type":0,"val":"templates","end":""},{"old":"/admin/templates/preview/:id","type":0,"val":"preview","end":""},{"old":"/admin/templates/preview/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['admin.templates_preview.render']['types'],
+  },
+  'admin.templates.edit': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/templates/:id/edit',
+    tokens: [{"old":"/admin/templates/:id/edit","type":0,"val":"admin","end":""},{"old":"/admin/templates/:id/edit","type":0,"val":"templates","end":""},{"old":"/admin/templates/:id/edit","type":1,"val":"id","end":""},{"old":"/admin/templates/:id/edit","type":0,"val":"edit","end":""}],
+    types: placeholder as Registry['admin.templates.edit']['types'],
   },
   'admin.files.render': {
     methods: ["GET","HEAD"],
@@ -486,6 +492,36 @@ const routes = {
     tokens: [{"old":"/api/admin/page/preview/token","type":0,"val":"api","end":""},{"old":"/api/admin/page/preview/token","type":0,"val":"admin","end":""},{"old":"/api/admin/page/preview/token","type":0,"val":"page","end":""},{"old":"/api/admin/page/preview/token","type":0,"val":"preview","end":""},{"old":"/api/admin/page/preview/token","type":0,"val":"token","end":""}],
     types: placeholder as Registry['api.admin.pages_preview.token']['types'],
   },
+  'api.admin.templates.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/admin/templates',
+    tokens: [{"old":"/api/admin/templates","type":0,"val":"api","end":""},{"old":"/api/admin/templates","type":0,"val":"admin","end":""},{"old":"/api/admin/templates","type":0,"val":"templates","end":""}],
+    types: placeholder as Registry['api.admin.templates.index']['types'],
+  },
+  'api.admin.templates.store': {
+    methods: ["POST"],
+    pattern: '/api/admin/templates',
+    tokens: [{"old":"/api/admin/templates","type":0,"val":"api","end":""},{"old":"/api/admin/templates","type":0,"val":"admin","end":""},{"old":"/api/admin/templates","type":0,"val":"templates","end":""}],
+    types: placeholder as Registry['api.admin.templates.store']['types'],
+  },
+  'api.admin.templates.update': {
+    methods: ["PUT"],
+    pattern: '/api/admin/templates/:id',
+    tokens: [{"old":"/api/admin/templates/:id","type":0,"val":"api","end":""},{"old":"/api/admin/templates/:id","type":0,"val":"admin","end":""},{"old":"/api/admin/templates/:id","type":0,"val":"templates","end":""},{"old":"/api/admin/templates/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['api.admin.templates.update']['types'],
+  },
+  'api.admin.templates.create_from_page': {
+    methods: ["POST"],
+    pattern: '/api/admin/templates/from-page',
+    tokens: [{"old":"/api/admin/templates/from-page","type":0,"val":"api","end":""},{"old":"/api/admin/templates/from-page","type":0,"val":"admin","end":""},{"old":"/api/admin/templates/from-page","type":0,"val":"templates","end":""},{"old":"/api/admin/templates/from-page","type":0,"val":"from-page","end":""}],
+    types: placeholder as Registry['api.admin.templates.create_from_page']['types'],
+  },
+  'api.admin.templates_preview.token': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/admin/templates/preview/token',
+    tokens: [{"old":"/api/admin/templates/preview/token","type":0,"val":"api","end":""},{"old":"/api/admin/templates/preview/token","type":0,"val":"admin","end":""},{"old":"/api/admin/templates/preview/token","type":0,"val":"templates","end":""},{"old":"/api/admin/templates/preview/token","type":0,"val":"preview","end":""},{"old":"/api/admin/templates/preview/token","type":0,"val":"token","end":""}],
+    types: placeholder as Registry['api.admin.templates_preview.token']['types'],
+  },
   'api.admin.file.list': {
     methods: ["GET","HEAD"],
     pattern: '/api/admin/files',
@@ -497,6 +533,12 @@ const routes = {
     pattern: '/api/admin/files/:id',
     tokens: [{"old":"/api/admin/files/:id","type":0,"val":"api","end":""},{"old":"/api/admin/files/:id","type":0,"val":"admin","end":""},{"old":"/api/admin/files/:id","type":0,"val":"files","end":""},{"old":"/api/admin/files/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['api.admin.file.find']['types'],
+  },
+  'api.admin.file.upload': {
+    methods: ["POST"],
+    pattern: '/api/admin/files/upload',
+    tokens: [{"old":"/api/admin/files/upload","type":0,"val":"api","end":""},{"old":"/api/admin/files/upload","type":0,"val":"admin","end":""},{"old":"/api/admin/files/upload","type":0,"val":"files","end":""},{"old":"/api/admin/files/upload","type":0,"val":"upload","end":""}],
+    types: placeholder as Registry['api.admin.file.upload']['types'],
   },
   'contact.execute': {
     methods: ["POST"],

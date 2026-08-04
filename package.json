@@ -14,6 +14,7 @@
     "docker:up": "docker compose up -d",
     "docker:stop": "docker compose stop -d",
     "test": "node ace test",
+    "test:front": "vitest run",
     "lint": "eslint . --fix",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit && tsc --noEmit --project inertia/tsconfig.json"
@@ -71,6 +72,7 @@
     "prettier": "^3.8.1",
     "typescript": "~5.9.3",
     "vite": "^7.3.1",
+    "vitest": "^4.1.10",
     "youch": "^4.1.0"
   },
   "dependencies": {
@@ -105,6 +107,7 @@
     "better-sqlite3": "^12.6.2",
     "dompurify": "^3.3.3",
     "edge.js": "^6.5.0",
+    "html-to-image": "^1.11.13",
     "ipaddr.js": "^2.4.0",
     "jsdom": "^29.0.1",
     "luxon": "^3.7.2",

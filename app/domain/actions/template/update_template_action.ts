@@ -2,7 +2,7 @@
 import type Template from '#models/template/template'
 import { TemplateRepository } from '#repositories/template/template_repository'
 import { withTransaction } from '#shared/utils/with_transaction'
-import type { PageContent } from '#types/page'
+import type { BlockType, PageContent } from '#types/page'
 
 interface UpdateTemplatePayload {
   id: number
@@ -10,6 +10,7 @@ interface UpdateTemplatePayload {
   description?: string | null
   thumbnailId?: number | null
   content?: PageContent
+  blockType?: BlockType | null
 }
 
 /**
@@ -32,11 +33,13 @@ export class UpdateTemplateAction {
       description: string | null
       thumbnailId: number | null
       content: PageContent
+      blockType: BlockType | null
     }> = {}
     if (payload.name !== undefined) data.name = payload.name
     if (payload.description !== undefined) data.description = payload.description
     if (payload.thumbnailId !== undefined) data.thumbnailId = payload.thumbnailId
     if (payload.content !== undefined) data.content = payload.content
+    if (payload.blockType !== undefined) data.blockType = payload.blockType
 
     return withTransaction(async () => {
       return this.templateRepository.update(template, data)

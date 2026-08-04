@@ -9,6 +9,8 @@ import { urlFor } from '~/client'
 import PresenceBar from '~/components/organisms/builder/PresenceBar'
 import BlockTree from '~/components/organisms/builder/BlockTree'
 import PreviewIframe from '~/components/organisms/builder/PreviewIframe'
+import ApplyPageTemplateModal from '~/components/organisms/builder/ApplyPageTemplateModal'
+import SavePageTemplateModal from '~/components/organisms/builder/SavePageTemplateModal'
 import { Head } from '@inertiajs/react'
 import { Icon } from '~/components/atoms/icon'
 import { Separator } from '~/components/atoms/separator'
@@ -17,9 +19,12 @@ import { Data } from '@generated/data'
 import { router, useForm } from '@inertiajs/react'
 import { SharedProps } from '@adonisjs/inertia/types'
 import { CanAccess } from '~/guards/can_access'
+import { useTranslation } from '~/hooks/use_translation'
+import type { PageEditorTranslations } from '#types/translations'
 
 interface Props {
   page: Data.Page
+  translations: PageEditorTranslations
   availableRoutes: {
     name: string | undefined
     pattern: string
@@ -43,17 +48,20 @@ interface Props {
 
 type PanelMode = 'editor' | 'preview' | 'split'
 
-const STATUS_LABELS = {
-  draft: { label: 'Draft', dot: 'bg-edge-strong' },
-  published: { label: 'Published', dot: 'bg-success' },
-  archived: { label: 'Archived', dot: 'bg-warning' },
+const STATUS_CSS = {
+  draft: { dot: 'bg-edge-strong' },
+  published: { dot: 'bg-success' },
+  archived: { dot: 'bg-warning' },
 } as const
 
-export default function PagesEditPage({ page }: Props) {
+export default function PagesEditPage({ page, translations }: Props) {
+  const { t } = useTranslation(translations)
   const [activeLocale, setActiveLocale] = useState(page.defaultLocale)
   const [panelMode, setPanelMode] = useState<PanelMode>('split')
   const [saving, setSaving] = useState(false)
   const [saveState, setSaveState] = useState<'idle' | 'saved' | 'error'>('idle')
+  const [applyTemplateOpen, setApplyTemplateOpen] = useState(false)
+  const [saveTemplateOpen, setSaveTemplateOpen] = useState(false)
 
   const currentTranslation =
     page.translations.find((t) => t.locale === activeLocale) ?? page.translations[0]
@@ -174,7 +182,7 @@ export default function PagesEditPage({ page }: Props) {
 
   return (
     <>
-      <Head title={`Edit — ${currentTranslation?.title ?? 'Page'}`} />
+      <Head title={`${t('mode.editor')} — ${currentTranslation?.title ?? t('status.published')}`} />
       <div className="flex items-center justify-between h-18 gap-3 p-3">
         <div className="flex items-center gap-3">
           <CanAccess permission="pages.view">
@@ -196,20 +204,43 @@ export default function PagesEditPage({ page }: Props) {
                     ? 'bg-primary-soft text-ink-inverted'
                     : 'text-ink-muted hover:bg-sunken'
                 }`}
-                title={mode.charAt(0).toUpperCase() + mode.slice(1)}
+                title={`${mode === 'editor' ? t('mode.editor') : mode === 'split' ? t('mode.split') : t('mode.preview')}`}
               >
                 {mode === 'editor' ? (
                   <Icon name="ListTree" size={18} />
                 ) : mode === 'split' ? (
-                  <Icon name="Columns2" size={18} />
+                  <Icon name="Columns" size={18} />
                 ) : (
                   <Icon name="ScanEye" size={18} />
                 )}
               </button>
             ))}
           </div>
+          <div className="w-px h-4 bg-edge" />
+          <CanAccess permission="templates.view">
+            <Button
+              variant="outline"
+              fitContent
+              name="apply-template-open"
+              onClick={() => setApplyTemplateOpen(true)}
+            >
+              <Icon name="LayoutTemplate" size={16} />
+              {t('toolbar.apply_template')}
+            </Button>
+          </CanAccess>
+          <CanAccess permission="templates.create">
+            <Button variant="outline" fitContent onClick={() => setSaveTemplateOpen(true)}>
+              <Icon name="Bookmark" size={16} />
+              {t('toolbar.save_as_template')}
+            </Button>
+          </CanAccess>
         </div>
-        <SaveButton state={saveState} saving={saving} onClick={handleSave} />
+        <SaveButton
+          state={saveState}
+          saving={saving}
+          onClick={handleSave}
+          translations={translations}
+        />
       </div>
       <div className="flex h-[calc(100vh-4.5rem)] overflow-hidden">
         {showEditor && (
@@ -220,7 +251,7 @@ export default function PagesEditPage({ page }: Props) {
           >
             <div className="flex items-center gap-0 border-b border-edge bg-canvas px-4 shrink-0">
               {page.translations.map((t) => {
-                const cfg = STATUS_LABELS[t.status]
+                const cfg = STATUS_CSS[t.status]
                 return (
                   <button
                     key={t.locale}
@@ -240,13 +271,14 @@ export default function PagesEditPage({ page }: Props) {
               <AddTranslationButton
                 pageId={page.id}
                 existingLocales={page.translations.map((t) => t.locale)}
+                translations={translations}
               />
             </div>
             <div className="flex flex-1 overflow-hidden">
               <div className="w-80 shrink-0 border-r border-edge p-3 space-y-3 bg-canvas">
                 <div className="grid gap-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-ink">Status</span>
+                    <span className="text-xs font-semibold text-ink">{t('status.value')}</span>
                     <span
                       className={`inline-flex items-center gap-1 text-xs font-medium ${
                         currentTranslation?.status === 'published'
@@ -255,22 +287,27 @@ export default function PagesEditPage({ page }: Props) {
                       }`}
                     >
                       <span
-                        className={`w-1.5 h-1.5 rounded-full ${STATUS_LABELS[currentTranslation?.status ?? 'draft'].dot}`}
+                        className={`w-1.5 h-1.5 rounded-full ${STATUS_CSS[currentTranslation?.status ?? 'draft'].dot}`}
                       />
-                      {STATUS_LABELS[currentTranslation?.status ?? 'draft'].label}
+                      {
+                        translations.status[
+                          (currentTranslation?.status as keyof typeof translations.status) ??
+                            'draft'
+                        ]
+                      }
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     {currentTranslation?.status === 'published' ? (
                       <CanAccess permission="pages.update">
                         <Button variant="icon_warning" onClick={handleUnpublish}>
-                          Unpublish
+                          {t('toolbar.unpublish')}
                         </Button>
                       </CanAccess>
                     ) : (
                       <CanAccess permission="pages.update">
                         <Button variant="icon_success" onClick={handlePublish}>
-                          Publish
+                          {t('toolbar.publish')}
                         </Button>
                       </CanAccess>
                     )}
@@ -283,23 +320,23 @@ export default function PagesEditPage({ page }: Props) {
                           translationId: currentTranslation?.id,
                         }}
                       >
-                        Revisions
+                        {t('toolbar.revisions')}
                       </Button>
                     </CanAccess>
                   </div>
                 </div>
                 <Separator />
                 <div className="grid gap-2">
-                  <Heading level={4}>Details</Heading>
+                  <Heading level={4}>{t('sidebar.details')}</Heading>
                   <Field
-                    label="Title"
+                    label={t('form.title.value')}
                     type="text"
                     name="title"
                     defaultValue={title}
                     onChange={(e) => setTitle(e.target.value)}
                   />
                   <Field
-                    label="Slug"
+                    label={t('form.title.slug_placeholder')}
                     type="text"
                     name="slug"
                     defaultValue={slug}
@@ -308,17 +345,17 @@ export default function PagesEditPage({ page }: Props) {
                 </div>
                 <Separator />
                 <div className="grid gap-2">
-                  <Heading level={4}>SEO</Heading>
+                  <Heading level={4}>{t('sidebar.seo')}</Heading>
                   <Field
-                    label="Meta title"
+                    label={t('form.meta_title.value')}
                     type="text"
                     name="metaTitle"
                     defaultValue={metaTitle}
                     onChange={(e) => setMetaTitle(e.target.value)}
-                    placeholder="Fallback to title"
+                    placeholder={t('form.meta_title.placeholder')}
                   />
                   <Field
-                    label="Meta desc."
+                    label={t('form.meta_description.value')}
                     type="textarea"
                     name="metaDescription"
                     defaultValue={metaDescription}
@@ -336,6 +373,7 @@ export default function PagesEditPage({ page }: Props) {
                   acquireLock={acquireLock}
                   releaseLock={releaseLock}
                   currentUserId={currentUserId}
+                  translations={translations}
                 />
               </div>
             </div>
@@ -352,6 +390,24 @@ export default function PagesEditPage({ page }: Props) {
           </div>
         )}
       </div>
+
+      {applyTemplateOpen && (
+        <ApplyPageTemplateModal
+          pageId={page.id}
+          locale={activeLocale}
+          handleClose={() => setApplyTemplateOpen(false)}
+          translations={translations}
+        />
+      )}
+      {saveTemplateOpen && (
+        <SavePageTemplateModal
+          pageId={page.id}
+          locale={activeLocale}
+          content={content}
+          handleClose={() => setSaveTemplateOpen(false)}
+          translations={translations}
+        />
+      )}
     </>
   )
 }
@@ -360,31 +416,34 @@ function SaveButton({
   state,
   saving,
   onClick,
+  translations,
 }: {
   state: string
   saving: boolean
   onClick: () => void
+  translations: PageEditorTranslations
 }) {
+  const { t } = useTranslation(translations)
   if (state === 'saved') {
     return (
       <span className="inline-flex items-center gap-1.5 text-xs font-medium text-success px-3 py-1.5 bg-success-soft rounded-lg border border-success/20">
         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
         </svg>
-        Saved
+        {t('save.saved')}
       </span>
     )
   }
   if (state === 'error') {
     return (
       <Button variant="icon_danger" onClick={onClick} fitContent>
-        Retry
+        {t('save.retry')}
       </Button>
     )
   }
   return (
     <Button variant="primary" onClick={onClick} disabled={saving} fitContent>
-      {saving ? 'Saving…' : 'Save'}
+      {saving ? t('save.saving') : t('save.button')}
     </Button>
   )
 }
@@ -392,10 +451,13 @@ function SaveButton({
 function AddTranslationButton({
   pageId,
   existingLocales,
+  translations,
 }: {
   pageId: number
   existingLocales: string[]
+  translations: PageEditorTranslations
 }) {
+  const { t } = useTranslation(translations)
   const [open, setOpen] = useState(false)
   const form = useForm({ locale: '', slug: '', title: '', seedFromLocale: '' })
   const ALL = ['en', 'fr', 'de', 'es', 'it', 'pt']
@@ -412,17 +474,17 @@ function AddTranslationButton({
         <span className="w-4 h-4 rounded border border-dashed border-edge flex items-center justify-center">
           +
         </span>
-        Add locale
+        {t('locale.add')}
       </button>
       {open && (
         <div className="absolute top-10 right-0 z-30 w-52 rounded-xl border border-edge bg-canvas shadow-lg p-3 space-y-2">
-          <p className="text-xs font-semibold text-ink">New translation</p>
+          <p className="text-xs font-semibold text-ink">{t('locale.new_translation')}</p>
           <select
             value={form.data.locale}
             onChange={(e) => form.setData('locale', e.target.value)}
             className="w-full text-xs rounded-lg border border-edge bg-canvas px-2 py-1.5 text-ink"
           >
-            <option value="">Select locale…</option>
+            <option value="">{t('locale.select')}</option>
             {avail.map((l) => (
               <option key={l} value={l}>
                 {l.toUpperCase()}
@@ -434,24 +496,24 @@ function AddTranslationButton({
             type="text"
             defaultValue={form.data.title}
             onChange={(e) => form.setData('title', e.target.value)}
-            placeholder="Title"
+            placeholder={t('form.title.placeholder')}
           />
           <Input
             name="slug"
             type="text"
             defaultValue={form.data.slug}
             onChange={(e) => form.setData('slug', e.target.value)}
-            placeholder="slug"
+            placeholder={t('form.title.slug_placeholder')}
           />
           <select
             value={form.data.seedFromLocale}
             onChange={(e) => form.setData('seedFromLocale', e.target.value)}
             className="w-full text-xs rounded-lg border border-edge bg-canvas px-2 py-1.5 text-ink"
           >
-            <option value="">Empty content</option>
+            <option value="">{t('locale.empty_content')}</option>
             {existingLocales.map((l) => (
               <option key={l} value={l}>
-                Copy from {l.toUpperCase()}
+                {t('locale.copy_from' as any, { locale: l.toUpperCase() })}
               </option>
             ))}
           </select>
@@ -464,7 +526,7 @@ function AddTranslationButton({
               })
             }
           >
-            Add
+            {t('locale.add_button')}
           </Button>
         </div>
       )}

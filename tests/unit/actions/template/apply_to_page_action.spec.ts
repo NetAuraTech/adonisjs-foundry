@@ -40,7 +40,12 @@ test.group('ApplyToPageAction', () => {
     })
 
     await assert.rejects(async () => {
-      await action.execute({ templateId: template.id, pageId: 999999, locale: 'en', userId: user.id })
+      await action.execute({
+        templateId: template.id,
+        pageId: 999999,
+        locale: 'en',
+        userId: user.id,
+      })
     }, MissingTranslationException)
   })
 
@@ -79,7 +84,12 @@ test.group('ApplyToPageAction', () => {
       createdBy: null,
     })
 
-    await action.execute({ templateId: template.id, pageId: page.id, locale: 'en', userId: user.id })
+    await action.execute({
+      templateId: template.id,
+      pageId: page.id,
+      locale: 'en',
+      userId: user.id,
+    })
 
     const translation = await PageTranslation.findBy('pageId', page.id)
     assert.deepEqual(translation!.content, templateContent)

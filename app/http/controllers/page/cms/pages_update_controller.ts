@@ -9,6 +9,7 @@ import { UpdatePageAction } from '#actions/page/update_page_action'
 import { ChangePageStatusAction } from '#actions/page/change_page_status_action'
 import { GetAvailablePagesForLinkAction } from '#actions/page/get_available_pages_for_link_action'
 import { I18nService } from '#services/i18n_service'
+import { buildPageEditorPayload } from '#helpers/i18n_payloads/page_editor'
 
 const SHARED_EXCLUSIONS = ['admin.', 'api.', 'auth.', 'pages.show', 'settings.']
 
@@ -45,6 +46,7 @@ export default class PagesUpdateController {
       availableRoutes,
       availablePages,
       availablePostRoutes,
+      translations: buildPageEditorPayload(this.i18n),
     })
   }
 

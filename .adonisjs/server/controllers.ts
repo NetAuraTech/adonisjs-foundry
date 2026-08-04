@@ -81,8 +81,12 @@ export const controllers = {
     },
   },
   template: {
+    api: {
+      Templates: () => import('#controllers/template/api/templates_controller'),
+    },
     cms: {
       Templates: () => import('#controllers/template/cms/templates_controller'),
+      TemplatesPreview: () => import('#controllers/template/cms/templates_preview_controller'),
     },
   },
 }

@@ -26,7 +26,11 @@ test.group('RestoreRevisionAction', () => {
     const revision = await PageRevision.query().where('pageTranslationId', translation.id).first()
     assert.isNotNull(revision)
 
-    await action.execute({ translationId: translation.id, revisionId: revision!.id, userId: user.id })
+    await action.execute({
+      translationId: translation.id,
+      revisionId: revision!.id,
+      userId: user.id,
+    })
   })
 
   test('execute() throws E_ROW_NOT_FOUND when translation does not exist', async ({ assert }) => {

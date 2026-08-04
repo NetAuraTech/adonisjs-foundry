@@ -34,7 +34,7 @@ export default class AccountController {
     })
   }
 
-    async execute(ctx: HttpContext) {
+  async execute(ctx: HttpContext) {
     const { auth, request, response, session } = ctx
 
     const action = request.input('_action')

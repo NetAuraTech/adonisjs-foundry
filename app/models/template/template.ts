@@ -13,6 +13,7 @@ export default class Template extends TemplateSchema {
   @column()
   declare blockType: BlockType | null
 
+  @column()
   declare content: PageContent
 
   @belongsTo(() => File, { foreignKey: 'thumbnailId' })

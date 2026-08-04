@@ -202,7 +202,12 @@ export default function AccountPage(props: PageProps) {
                   helpText={t('password.confirm.help')}
                   helpClassName={validationPasswordForm.getHelpClassName('password_confirmation')}
                 />
-                <Button loading={processing} type={'submit'} fitContent name="update_password_submit">
+                <Button
+                  loading={processing}
+                  type={'submit'}
+                  fitContent
+                  name="update_password_submit"
+                >
                   {t('password.submit')}
                 </Button>
               </>
@@ -211,7 +216,12 @@ export default function AccountPage(props: PageProps) {
         </Card>
         <Card title={t('delete.title')} subtitle={t('delete.sub_title')} border="danger">
           {!showDeleteConfirm ? (
-            <Button variant="danger" fitContent onClick={() => setShowDeleteConfirm(true)} name="delete_account_show">
+            <Button
+              variant="danger"
+              fitContent
+              onClick={() => setShowDeleteConfirm(true)}
+              name="delete_account_show"
+            >
               {t('delete.submit')}
             </Button>
           ) : (
@@ -264,7 +274,13 @@ export default function AccountPage(props: PageProps) {
                       >
                         {t('delete.cancel')}
                       </Button>
-                      <Button loading={processing} type={'submit'} fitContent variant="danger" name="delete_account_submit">
+                      <Button
+                        loading={processing}
+                        type={'submit'}
+                        fitContent
+                        variant="danger"
+                        name="delete_account_submit"
+                      >
                         {t('delete.submit')}
                       </Button>
                     </div>

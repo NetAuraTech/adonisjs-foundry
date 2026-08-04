@@ -5,12 +5,14 @@ import { PageTranslationRepository } from '#repositories/page/page_translation_r
 import { LogService } from '#services/logging/log_service'
 import RowNotFoundException from '#exceptions/core/row_not_found_exception'
 import { withTransaction } from '#shared/utils/with_transaction'
+import type { PageContent } from '#types/page'
 
 interface CreateFromPagePayload {
   name: string
   pageId: number
   locale: string
   userId: number
+  content?: PageContent
 }
 
 /**
@@ -37,12 +39,14 @@ export class CreateFromPageAction {
     )
     if (!translation) throw new RowNotFoundException()
 
+    const content = payload.content ?? translation.content
+
     const template = await withTransaction(async () => {
       return this.templateRepository.create({
         name: payload.name,
         type: 'page',
         blockType: null,
-        content: translation.content,
+        content,
         createdBy: payload.userId,
       })
     })

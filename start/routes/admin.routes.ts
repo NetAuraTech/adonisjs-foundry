@@ -127,17 +127,20 @@ export function registerAdminRoutes(): void {
               .post('/', [controllers.template.cms.Templates, 'execute'])
               .use([middleware.permission({ permissions: ['templates.create'] })])
             router
-              .post('/from-page', [controllers.template.cms.Templates, 'createFromPage'])
-              .use([middleware.permission({ permissions: ['templates.create'] })])
-            router
               .post('/:id/apply', [controllers.template.cms.Templates, 'applyToPage'])
               .use([middleware.permission({ permissions: ['templates.update'] })])
             router
-              .put('/:id', [controllers.template.cms.Templates, 'update'])
+              .post('/:id', [controllers.template.cms.Templates, 'update'])
               .use([middleware.permission({ permissions: ['templates.update'] })])
             router
               .delete('/:id', [controllers.template.cms.Templates, 'destroy'])
               .use([middleware.permission({ permissions: ['templates.delete'] })])
+            router
+              .get('/preview/:id', [controllers.template.cms.TemplatesPreview, 'render'])
+              .use([middleware.permission({ permissions: ['templates.view'] })])
+            router
+              .get('/:id/edit', [controllers.template.cms.Templates, 'edit'])
+              .use([middleware.permission({ permissions: ['templates.view'] })])
           })
           .prefix('templates')
 

@@ -6,7 +6,7 @@ import { login } from '#tests/helpers/browser/login'
 import { visitPage } from '#tests/helpers/browser/visit_page'
 import { fillField } from '#tests/helpers/browser/fill_field'
 import { waitForInertiaResponse } from '#tests/helpers/browser/wait_for_inertia_response'
-import { createAdminUser } from '#tests/helpers/browser/create_admin_user'
+import { createAdminUser, MAINTENANCE_PERMISSIONS } from '#tests/helpers/browser/create_admin_user'
 import { MaintenanceService } from '#services/maintenance/maintenance_service'
 
 /**
@@ -56,7 +56,10 @@ test.group('Maintenance E2E', (group) => {
     assert,
     browser,
   }) => {
-    const admin = await createAdminUser({ email: 'maint-enable@example.com' })
+    const admin = await createAdminUser({
+      email: 'maint-enable@example.com',
+      permissionSlugs: MAINTENANCE_PERMISSIONS,
+    })
 
     const page = await login(route('auth.session.render'), visit, admin.email, 'TestPassword123!')
     await page.assertPath('/settings/profile')
@@ -82,7 +85,10 @@ test.group('Maintenance E2E', (group) => {
     assert,
     browser,
   }) => {
-    const admin = await createAdminUser({ email: 'maint-allowlist@example.com' })
+    const admin = await createAdminUser({
+      email: 'maint-allowlist@example.com',
+      permissionSlugs: ['settings.maintenance'],
+    })
 
     const page = await login(route('auth.session.render'), visit, admin.email, 'TestPassword123!')
     await page.assertPath('/settings/profile')
@@ -108,7 +114,10 @@ test.group('Maintenance E2E', (group) => {
     assert,
     browser,
   }) => {
-    const admin = await createAdminUser({ email: 'maint-disable@example.com' })
+    const admin = await createAdminUser({
+      email: 'maint-disable@example.com',
+      permissionSlugs: ['settings.maintenance'],
+    })
 
     // Pre-enable maintenance so the admin UI shows an active state.
     const service = await app.container.make(MaintenanceService)

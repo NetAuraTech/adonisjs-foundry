@@ -1,4 +1,16 @@
 {
+  "created": "Page créée avec succès.",
+  "saved": "Page sauvegardée avec succès.",
+  "published": "Page publiée avec succès.",
+  "unpublished": "Page dépubliée avec succès.",
+  "deleted": "Page supprimée avec succès.",
+  "translation": {
+    "created": "Traduction créée avec succès."
+  },
+  "revision": {
+    "restored": "Révision restaurée avec succès.",
+    "keep_toggled": "Épinglage de la révision modifié avec succès."
+  },
   "contact_form": {
     "submitted": "Votre demande de contact a bien été envoyée.",
     "mail": {
