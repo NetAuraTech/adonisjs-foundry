@@ -110,6 +110,7 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
             users: ctx.i18n.t('cms.users.value'),
             files: ctx.i18n.t('cms.files.value'),
             maintenance: ctx.i18n.t('cms.settings.maintenance.value'),
+            logs: ctx.i18n.t('cms.logs.value'),
           } as CmsTranslations)
         : undefined,
     }

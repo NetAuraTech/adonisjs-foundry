@@ -2,6 +2,7 @@
 import { DateTime } from 'luxon'
 import type PageTranslation from '#models/page/page_translation'
 import { PageTranslationRepository } from '#repositories/page/page_translation_repository'
+import { LogService } from '#services/logging/log_service'
 import { withTransaction } from '#shared/utils/with_transaction'
 import type { PageStatus } from '#types/page'
 import MissingTranslationException from '#exceptions/page/missing_translation_exception'
@@ -10,6 +11,7 @@ interface ChangePageStatusPayload {
   pageId: number
   locale: string
   status: PageStatus
+  userId?: number
 }
 
 /**
@@ -21,12 +23,15 @@ interface ChangePageStatusPayload {
  */
 @inject()
 export class ChangePageStatusAction {
-  constructor(protected translationRepository: PageTranslationRepository) {}
+  constructor(
+    protected translationRepository: PageTranslationRepository,
+    protected logService: LogService
+  ) {}
 
   /**
    * Execute status change.
    *
-   * @param payload - Page ID, locale, and target status.
+   * @param payload - Page ID, locale, target status, and optional actor ID.
    * @returns The updated {@link PageTranslation}.
    */
   async execute(payload: ChangePageStatusPayload): Promise<PageTranslation> {
@@ -36,11 +41,20 @@ export class ChangePageStatusAction {
     )
     if (!translation) throw new MissingTranslationException(payload.locale, payload.pageId)
 
-    return withTransaction(async () => {
+    const updated = await withTransaction(async () => {
       return this.translationRepository.update(translation, {
         status: payload.status,
         ...(payload.status === 'published' ? { publishedAt: DateTime.now() } : {}),
       })
     })
+
+    // Log only after the status change actually succeeded.
+    this.logService.logBusiness(
+      payload.status === 'published' ? 'page.published' : 'page.unpublished',
+      { userId: payload.userId },
+      { pageId: payload.pageId, locale: payload.locale, status: payload.status }
+    )
+
+    return updated
   }
 }

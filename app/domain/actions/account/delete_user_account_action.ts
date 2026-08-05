@@ -35,15 +35,18 @@ export class DeleteUserAccountAction {
       throw new InvalidCurrentPasswordException()
     }
 
-    this.logService.logBusiness(
-      'account.deleted',
-      { userId: payload.user.id, userEmail: payload.user.email },
-      { deletedAt: new Date().toISOString() }
-    )
-
     await withTransaction(async () => {
       await payload.user.delete()
     })
+
+    // Log only after the deletion actually succeeded. The deleted user can no
+    // longer be referenced as actor (FK), so the id goes to metadata and the
+    // email — the durable identifier — to the context.
+    this.logService.logBusiness(
+      'account.deleted',
+      { userEmail: payload.user.email },
+      { deletedUserId: payload.user.id, deletedAt: new Date().toISOString() }
+    )
     return true
   }
 }

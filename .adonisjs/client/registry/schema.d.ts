@@ -919,6 +919,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/maintenance/cms/maintenance_controller').default['toggle']>>>
     }
   }
+  'admin.logs.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/logs'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/log').listLogsValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/log/cms/logs_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/log/cms/logs_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'api.theme.execute': {
     methods: ["POST"]
     pattern: '/api/settings/preferences/theme'

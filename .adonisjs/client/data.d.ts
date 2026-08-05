@@ -9,6 +9,7 @@ import type { InferSharedProps } from '@adonisjs/inertia/types'
 import type DashboardTransformer from '#transformers/dashboard_transformer'
 import type FileFolderTransformer from '#transformers/file_folder_transformer'
 import type FileTransformer from '#transformers/file_transformer'
+import type LogEntryTransformer from '#transformers/log_entry_transformer'
 import type PageRevisionTransformer from '#transformers/page_revision_transformer'
 import type PageTransformer from '#transformers/page_transformer'
 import type PageTranslationTransformer from '#transformers/page_translation_transformer'
@@ -30,6 +31,10 @@ export namespace Data {
   export type File = InferData<FileTransformer>
   export namespace File {
     export type Variants = InferVariants<FileTransformer>
+  }
+  export type LogEntry = InferData<LogEntryTransformer>
+  export namespace LogEntry {
+    export type Variants = InferVariants<LogEntryTransformer>
   }
   export type PageRevision = InferData<PageRevisionTransformer>
   export namespace PageRevision {

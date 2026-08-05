@@ -99,6 +99,12 @@ export function useMenu(overrides: Menu = {}) {
         route: 'admin.settings.maintenance.render',
         permission: 'settings.maintenance',
       },
+      {
+        label: t('logs'),
+        icon: 'ScrollText',
+        route: 'admin.logs.render',
+        permission: 'logs.view',
+      },
     ],
   }
 

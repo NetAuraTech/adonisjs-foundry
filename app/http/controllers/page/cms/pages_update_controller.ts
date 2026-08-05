@@ -77,12 +77,17 @@ export default class PagesUpdateController {
   }
 
   async publish(ctx: HttpContext) {
-    const { params, request, response, session } = ctx
+    const { params, request, response, session, auth } = ctx
 
     const { id } = await showPageValidator.validate(params)
     const { locale } = await publishPageValidator.validate(request.all())
 
-    await this.changePageStatusAction.execute({ pageId: id, locale, status: 'published' })
+    await this.changePageStatusAction.execute({
+      pageId: id,
+      locale,
+      status: 'published',
+      userId: auth.user?.id,
+    })
 
     session.flash('success', this.i18n.translate('page.published'))
 
@@ -90,12 +95,17 @@ export default class PagesUpdateController {
   }
 
   async unpublish(ctx: HttpContext) {
-    const { params, request, response, session } = ctx
+    const { params, request, response, session, auth } = ctx
 
     const { id } = await showPageValidator.validate(params)
     const { locale } = await publishPageValidator.validate(request.all())
 
-    await this.changePageStatusAction.execute({ pageId: id, locale, status: 'draft' })
+    await this.changePageStatusAction.execute({
+      pageId: id,
+      locale,
+      status: 'draft',
+      userId: auth.user?.id,
+    })
 
     session.flash('success', this.i18n.translate('page.unpublished'))
 

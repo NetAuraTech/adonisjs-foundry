@@ -2,6 +2,7 @@
 import RowNotFoundException from '#exceptions/core/row_not_found_exception'
 import User from '#models/auth/user'
 import { UserRepository } from '#repositories/auth/user_repository'
+import { LogService } from '#services/logging/log_service'
 import { withTransaction } from '#shared/utils/with_transaction'
 
 interface DeleteUserPayload {
@@ -13,7 +14,10 @@ interface DeleteUserPayload {
  */
 @inject()
 export class DeleteUserAction {
-  constructor(protected userRepository: UserRepository) {}
+  constructor(
+    protected userRepository: UserRepository,
+    protected logService: LogService
+  ) {}
 
   /**
    * Execute user deletion.
@@ -29,6 +33,14 @@ export class DeleteUserAction {
       throw new RowNotFoundException(User)
     }
 
-    return withTransaction(async () => this.userRepository.delete(payload.id))
+    const deleted = await withTransaction(async () => this.userRepository.delete(payload.id))
+
+    // Log only after the deletion actually succeeded.
+    this.logService.logBusiness(
+      'user.deleted',
+      {},
+      { userId: user.id, email: user.email, username: user.username }
+    )
+    return deleted
   }
 }

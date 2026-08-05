@@ -147,6 +147,9 @@ export interface ApiDefinition {
         toggle: typeof routes['admin.settings.maintenance.toggle']
       }
     }
+    logs: {
+      render: typeof routes['admin.logs.render']
+    }
   }
   api: {
     theme: {

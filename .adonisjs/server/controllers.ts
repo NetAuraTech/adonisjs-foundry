@@ -44,6 +44,11 @@ export const controllers = {
   health: {
     Health: () => import('#controllers/health/health_controller'),
   },
+  log: {
+    cms: {
+      Logs: () => import('#controllers/log/cms/logs_controller'),
+    },
+  },
   maintenance: {
     cms: {
       Maintenance: () => import('#controllers/maintenance/cms/maintenance_controller'),

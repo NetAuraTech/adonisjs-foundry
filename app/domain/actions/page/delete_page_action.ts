@@ -32,8 +32,9 @@ export class DeletePageAction {
       throw new RowNotFoundException(Page)
     }
 
-    this.logService.logBusiness('page.deleted', {}, { pageId: payload.id })
+    await withTransaction(async () => this.pageRepository.delete(payload.id))
 
-    return withTransaction(async () => this.pageRepository.delete(payload.id))
+    // Log only after the deletion actually succeeded.
+    this.logService.logBusiness('page.deleted', {}, { pageId: payload.id })
   }
 }

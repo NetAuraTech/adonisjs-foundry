@@ -13,6 +13,7 @@
 /// <reference path="../../config/i18n.ts" />
 /// <reference path="../../config/limiter.ts" />
 /// <reference path="../../config/logger.ts" />
+/// <reference path="../../config/logging.ts" />
 /// <reference path="../../config/mail.ts" />
 /// <reference path="../../config/redis.ts" />
 /// <reference path="../../config/sentry.ts" />

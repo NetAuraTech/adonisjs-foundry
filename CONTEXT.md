@@ -82,6 +82,28 @@ The admin-driven flow of creating a passwordless User and sending them a PENDING
 A point-in-time database export (full or differential), stored on a Drive disk under the `backup/` prefix — entirely separate from CMS file storage and from PageRevisions.
 _Avoid_: Snapshot, dump (when referring to the feature as a whole; "dump" is fine for the literal `pg_dump` step)
 
+### Logging & Audit
+
+**Log Entry**:
+A single persisted row of the audit trail (`log_entries` table), written by `LogService` alongside its usual pino output (write-through). Carries a Level, a Category, a Message, an optional Actor, and a JSON context.
+_Avoid_: Audit record, event row
+
+**Category**:
+The broad classification of a Log Entry (`auth`, `api`, `database`, `security`, `performance`, `business`, `system`), deciding both its admin tab and its persistence/retention rules. Security and business entries are always persisted.
+_Avoid_: Channel, stream
+
+**Event (slug)**:
+The dot-notation identifier of a business or security occurrence embedded in a Log Entry's message (e.g. `page.published`, `user.invited`, `logs.pruned`). It answers "what happened"; the Actor answers "who".
+_Avoid_: Action type, activity kind
+
+**Actor**:
+The User responsible for a Log Entry, persisted as first-class columns (`actor_id`, `actor_email`) so the trail survives user deletion (`ON DELETE SET NULL`).
+_Avoid_: Author, initiator
+
+**Retention**:
+The pruning policy applied to Log Entries by the `logs:prune` command: entries older than the retention window are deleted, then the `persistence.maxEntries` soft cap is enforced (CNIL-aligned).
+_Avoid_: Expiration, TTL (TTL belongs to cache entries)
+
 ## Example Dialogue
 
 **Dev**: Should this saved layout be called a Template or a Revision?

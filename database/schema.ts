@@ -83,6 +83,48 @@ export class FileSchema extends BaseModel {
   declare uploadedBy: number | null
 }
 
+export class LogEntrySchema extends BaseModel {
+  static $columns = [
+    'actorEmail',
+    'actorId',
+    'category',
+    'context',
+    'createdAt',
+    'error',
+    'id',
+    'ip',
+    'level',
+    'message',
+    'requestId',
+    'userAgent',
+  ] as const
+  $columns = LogEntrySchema.$columns
+  @column()
+  declare actorEmail: string | null
+  @column()
+  declare actorId: number | null
+  @column()
+  declare category: string
+  @column()
+  declare context: any | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare error: any | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare ip: string | null
+  @column()
+  declare level: string
+  @column()
+  declare message: string
+  @column()
+  declare requestId: string | null
+  @column()
+  declare userAgent: string | null
+}
+
 export class PageRevisionSchema extends BaseModel {
   static $columns = [
     'content',

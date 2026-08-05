@@ -120,7 +120,8 @@
         "admin": "Administration",
         "users": "Utilisateurs",
         "roles": "Rôles",
-        "permissions": "Permissions"
+        "permissions": "Permissions",
+        "logs": "Journaux"
       },
       "admin": {
         "access": {
@@ -173,6 +174,11 @@
         },
         "delete": {
           "value": "Supprimer les permissions"
+        }
+      },
+      "logs": {
+        "view": {
+          "value": "Afficher les journaux"
         }
       }
     },
@@ -528,6 +534,55 @@
         "description": "Impossible de se connecter à Redis. Le mode maintenance fonctionne en secours mémoire avec les valeurs par défaut sécurisées (maintenance DÉSACTIVÉE).",
         "help": "Vérifiez la connexion Redis. Les modifications d'un admin pendant la panne seront poussées vers Redis à la récupération."
       }
+    }
+  },
+  "logs": {
+    "value": "Journaux",
+    "list": {
+      "title": "Journaux applicatifs",
+      "empty": "Aucune entrée de journal trouvée.",
+      "logged_on": "Enregistré le"
+    },
+    "search": {
+      "value": "Rechercher",
+      "placeholder": "Rechercher dans les messages…",
+      "filter": "Filtrer"
+    },
+    "level": {
+      "value": "Niveau",
+      "placeholder": "Tous les niveaux",
+      "debug": "Debug",
+      "info": "Info",
+      "warn": "Avertissement",
+      "error": "Erreur",
+      "fatal": "Fatal"
+    },
+    "category": {
+      "value": "Catégorie",
+      "placeholder": "Toutes les catégories",
+      "system": "Système",
+      "security": "Sécurité",
+      "business": "Métier",
+      "auth": "Auth",
+      "api": "API",
+      "database": "Base de données",
+      "performance": "Performance"
+    },
+    "date": {
+      "from": "Du",
+      "to": "Au"
+    },
+    "context": {
+      "value": "Contexte",
+      "empty": "Aucun contexte",
+      "view": "Voir le contexte"
+    },
+    "columns": {
+      "level": "Niveau",
+      "category": "Catégorie",
+      "message": "Message",
+      "actor": "Acteur",
+      "date": "Date"
     }
   },
   "builder": {

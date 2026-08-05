@@ -24,7 +24,10 @@ export class DeleteFolderAction {
    * @returns `true` when the folder is deleted successfully.
    */
   async execute(payload: DeleteFolderPayload): Promise<boolean> {
+    const deleted = await withTransaction(async () => this.folderRepository.delete(payload.id))
+
+    // Log only after the deletion actually succeeded.
     this.logService.logBusiness('folder.deleted', {}, { folderId: payload.id })
-    return withTransaction(async () => this.folderRepository.delete(payload.id))
+    return deleted
   }
 }

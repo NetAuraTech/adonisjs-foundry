@@ -23,7 +23,9 @@ export class DeleteTemplateAction {
    * @param payload - Template ID to delete.
    */
   async execute(payload: DeleteTemplatePayload): Promise<void> {
+    await withTransaction(async () => this.templateRepository.delete(payload.id))
+
+    // Log only after the deletion actually succeeded.
     this.logService.logBusiness('template.deleted', {}, { templateId: payload.id })
-    return withTransaction(async () => this.templateRepository.delete(payload.id))
   }
 }

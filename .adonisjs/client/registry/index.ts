@@ -462,6 +462,12 @@ const routes = {
     tokens: [{"old":"/admin/settings/maintenance/toggle","type":0,"val":"admin","end":""},{"old":"/admin/settings/maintenance/toggle","type":0,"val":"settings","end":""},{"old":"/admin/settings/maintenance/toggle","type":0,"val":"maintenance","end":""},{"old":"/admin/settings/maintenance/toggle","type":0,"val":"toggle","end":""}],
     types: placeholder as Registry['admin.settings.maintenance.toggle']['types'],
   },
+  'admin.logs.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/logs',
+    tokens: [{"old":"/admin/logs","type":0,"val":"admin","end":""},{"old":"/admin/logs","type":0,"val":"logs","end":""}],
+    types: placeholder as Registry['admin.logs.render']['types'],
+  },
   'api.theme.execute': {
     methods: ["POST"],
     pattern: '/api/settings/preferences/theme',

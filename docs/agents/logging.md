@@ -29,3 +29,12 @@ Always pass a context object with at least `{ userId, userEmail }` when the acti
 - Log on every meaningful mutation (create/update/delete with business impact), not on every read.
 - `metadata` is for additional structured detail not part of the standard context (e.g. `{ fileId, filename }`); don't put PII there that isn't already in `context`.
 - Sensitive values (tokens, passwords) must never be logged in plain text — see `maskToken`-style helpers when logging anything token-related.
+
+## Persistence (write-through)
+
+Every entry flowing through `log()` is also persisted to the `log_entries` table when it passes the gate in `config/logging.ts` (`persistence.minLevel`, `excludeDebugNoise`; `security` and `business` are always persisted). The write is fire-and-forget — it never throws and never blocks the flow being logged, so all `LogService` methods stay synchronous.
+
+- Actor identity is persisted as first-class columns (`actor_id`, `actor_email`, `ip`, `user_agent`, `request_id`). Prefer the explicit top-level `entry` fields (`actorId`, `actorEmail`, `ip`, `userAgent`, `requestId`) — they take precedence over the legacy `context` keys.
+- `LogEntryRepository` deliberately overrides `BaseRepository.client()` to ignore the ambient transaction: the fire-and-forget insert resolves after the caller's transaction has committed (dead client otherwise), and audit entries must survive rollbacks.
+- Retention is enforced by `node ace logs:prune` (`--days`, `--dry-run`), which also applies the `persistence.maxEntries` soft cap.
+- Admins browse entries at `/admin/logs` behind the `logs.view` permission.

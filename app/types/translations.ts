@@ -799,6 +799,54 @@ export type CmsTranslations = {
   files: string
   users: string
   maintenance: string
+  logs: string
+}
+
+export type CmsLogsIndexTranslations = {
+  title: string
+  empty: string
+  logged_on: string
+  search: {
+    value: string
+    placeholder: string
+    filter: string
+  }
+  level: {
+    value: string
+    placeholder: string
+    debug: string
+    info: string
+    warn: string
+    error: string
+    fatal: string
+  }
+  category: {
+    value: string
+    placeholder: string
+    system: string
+    security: string
+    business: string
+    auth: string
+    api: string
+    database: string
+    performance: string
+  }
+  date: {
+    from: string
+    to: string
+  }
+  context: {
+    value: string
+    empty: string
+    view: string
+  }
+  columns: {
+    level: string
+    category: string
+    message: string
+    actor: string
+    date: string
+  }
 }
 
 export type MaintenanceTranslations = {

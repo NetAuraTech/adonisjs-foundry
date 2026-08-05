@@ -25,11 +25,14 @@ export class DeleteFileAction {
    */
   async execute(payload: DeleteFilePayload): Promise<boolean> {
     const file = await this.fileRepository.findByIdOrFail(payload.id)
+    const deleted = await withTransaction(async () => this.fileRepository.delete(payload.id))
+
+    // Log only after the deletion actually succeeded.
     this.logService.logBusiness(
       'file.deleted',
       {},
       { fileId: file.id, filename: file.originalName, path: file.path }
     )
-    return withTransaction(async () => this.fileRepository.delete(payload.id))
+    return deleted
   }
 }

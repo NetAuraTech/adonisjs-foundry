@@ -120,7 +120,8 @@
         "admin": "Administration",
         "users": "Users",
         "roles": "Roles",
-        "permissions": "Permissions"
+        "permissions": "Permissions",
+        "logs": "Logs"
       },
       "admin": {
         "access": {
@@ -173,6 +174,11 @@
         },
         "delete": {
           "value": "Delete permissions"
+        }
+      },
+      "logs": {
+        "view": {
+          "value": "View logs"
         }
       }
     },
@@ -404,6 +410,55 @@
         "description": "Cannot connect to Redis. Maintenance mode is running on memory fallback with safe defaults (maintenance OFF).",
         "help": "Check Redis connection. Admin changes during outage will be pushed to Redis on recovery."
       }
+    }
+  },
+  "logs": {
+    "value": "Logs",
+    "list": {
+      "title": "Application logs",
+      "empty": "No log entries found.",
+      "logged_on": "Logged on"
+    },
+    "search": {
+      "value": "Search",
+      "placeholder": "Search messages…",
+      "filter": "Filter"
+    },
+    "level": {
+      "value": "Level",
+      "placeholder": "All levels",
+      "debug": "Debug",
+      "info": "Info",
+      "warn": "Warning",
+      "error": "Error",
+      "fatal": "Fatal"
+    },
+    "category": {
+      "value": "Category",
+      "placeholder": "All categories",
+      "system": "System",
+      "security": "Security",
+      "business": "Business",
+      "auth": "Auth",
+      "api": "API",
+      "database": "Database",
+      "performance": "Performance"
+    },
+    "date": {
+      "from": "From",
+      "to": "To"
+    },
+    "context": {
+      "value": "Context",
+      "empty": "No context",
+      "view": "View context"
+    },
+    "columns": {
+      "level": "Level",
+      "category": "Category",
+      "message": "Message",
+      "actor": "Actor",
+      "date": "Date"
     }
   },
   "pages": {

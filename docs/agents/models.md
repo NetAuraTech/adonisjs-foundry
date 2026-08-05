@@ -59,7 +59,7 @@ A helper should be lightweight — if it requires multiple repository calls or c
 
 ## Static methods on models
 
-Models may expose static methods when the operation is intrinsic to the model's nature (e.g., token verification with selector/validator pattern). See [ADR-001](../adr/001-token-domain-model.md) for the rationale behind this decision.
+Models may expose static methods when the operation is intrinsic to the model's nature (e.g., token verification with selector/validator pattern).
 
 **Convention:** Verification logic → model static method. Management operations (creation, bulk expiration) → repository.
 

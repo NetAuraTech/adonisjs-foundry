@@ -206,6 +206,17 @@ export function registerAdminRoutes(): void {
               .use([middleware.permission({ permissions: ['settings.maintenance'] })])
           })
           .use([middleware.auth()])
+
+        // Logs
+        router
+          .group(() => {
+            router
+              .get('/', [controllers.log.cms.Logs, 'render'])
+              .as('logs.render')
+              .use([middleware.permission({ permissions: ['logs.view'] })])
+          })
+          .prefix('logs')
+          .use([middleware.auth()])
       })
     })
     .prefix('admin')
