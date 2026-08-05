@@ -88,6 +88,32 @@ export class FileRepository extends BaseRepository {
   }
 
   /**
+   * Counts every file with a single aggregate query, without loading rows.
+   *
+   * @returns The total number of files.
+   *
+   * @example
+   * const total = await fileRepository.count()
+   */
+  async count(): Promise<number> {
+    const result = await File.query(this.client()).count('* as total')
+    return Number(result[0].$extras.total)
+  }
+
+  /**
+   * Lists the most recently uploaded files, newest first.
+   *
+   * @param limit - Maximum number of files to return.
+   * @returns The latest {@link File} records, bounded to `limit`.
+   *
+   * @example
+   * const latest = await fileRepository.listRecent(5)
+   */
+  async listRecent(limit: number): Promise<File[]> {
+    return File.query(this.client()).orderBy('created_at', 'desc').limit(limit)
+  }
+
+  /**
    * Creates and persists a new file record.
    *
    * @param data - The file metadata to persist.

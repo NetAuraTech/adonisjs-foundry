@@ -23,6 +23,27 @@ test.group('ChangePageStatusAction', () => {
     assert.equal(updated.status, 'published')
   })
 
+  test('execute() stamps publishedAt when publishing', async ({ assert }) => {
+    const action = await app.container.make(ChangePageStatusAction)
+
+    const page = await Page.create({ defaultLocale: 'en', createdBy: null })
+    await PageTranslation.create({
+      pageId: page.id,
+      locale: 'en',
+      slug: `stamp-page-${page.id}`,
+      title: 'Stamp Page',
+      content: { blocks: [] },
+      status: 'draft' as any,
+    })
+
+    const published = await action.execute({ pageId: page.id, locale: 'en', status: 'published' })
+    assert.isNotNull(published.publishedAt)
+
+    // Unpublishing keeps the last publication date as historical information.
+    const archived = await action.execute({ pageId: page.id, locale: 'en', status: 'archived' })
+    assert.isNotNull(archived.publishedAt)
+  })
+
   test('execute() throws E_MISSING_TRANSLATION when translation does not exist', async ({
     assert,
   }) => {

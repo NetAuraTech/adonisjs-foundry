@@ -289,6 +289,40 @@ export class UserRepository extends BaseRepository {
   }
 
   /**
+   * Counts users grouped by role with a single aggregate query.
+   *
+   * Users without a role fall into a `null` bucket. Buckets are sorted by
+   * descending count (ties broken by role name), with the `null` bucket
+   * always last.
+   *
+   * @returns One entry per role: the role name (`null` for users holding no
+   * role) and the number of users holding it.
+   *
+   * @example
+   * const breakdown = await userRepository.countByRole()
+   * // [{ name: 'editor', count: 5 }, { name: 'admin', count: 2 }, { name: null, count: 1 }]
+   */
+  async countByRole(): Promise<{ name: string | null; count: number }[]> {
+    const rows = await User.query(this.client())
+      .leftJoin('roles', 'users.role_id', 'roles.id')
+      .select('roles.name as role_name')
+      .count('users.id as total')
+      .groupBy('roles.name')
+
+    return rows
+      .map((row) => ({
+        name: row.$extras.role_name as string | null,
+        count: Number(row.$extras.total),
+      }))
+      .sort((a, b) => {
+        if (b.count !== a.count) return b.count - a.count
+        if (a.name === null) return 1
+        if (b.name === null) return -1
+        return a.name.localeCompare(b.name)
+      })
+  }
+
+  /**
    * Checks whether at least one user matches the given criteria.
    *
    * @param criteria - Map of column/value pairs to filter by.

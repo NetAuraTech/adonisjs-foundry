@@ -105,6 +105,7 @@ app/domain/actions/
   auth/              # login, register, logout
   account/           # email change, deletion
   backup/            # run, list, restore, delete backups
+  core/              # cross-cutting operations (dashboard stats)
   email_verification/ # send verification, verify email
   file/              # upload, move, delete files
   file_folder/       # create, rename, delete folders

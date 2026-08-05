@@ -104,7 +104,7 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
               content: ctx.i18n.t('cms.category.content'),
               settings: ctx.i18n.t('cms.category.settings'),
             },
-            dashboard: ctx.i18n.t('cms.dashboard'),
+            dashboard: ctx.i18n.t('cms.dashboard.value'),
             pages: ctx.i18n.t('cms.pages.value'),
             templates: ctx.i18n.t('cms.templates.value'),
             users: ctx.i18n.t('cms.users.value'),

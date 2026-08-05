@@ -119,6 +119,19 @@ export class PageRepository extends BaseRepository {
   }
 
   /**
+   * Counts every page with a single aggregate query, without loading rows.
+   *
+   * @returns The total number of pages.
+   *
+   * @example
+   * const total = await pageRepository.count()
+   */
+  async count(): Promise<number> {
+    const result = await Page.query(this.client()).count('* as total')
+    return Number(result[0].$extras.total)
+  }
+
+  /**
    * Creates and persists a new page.
    *
    * @param data - The page data including default locale and creator ID.

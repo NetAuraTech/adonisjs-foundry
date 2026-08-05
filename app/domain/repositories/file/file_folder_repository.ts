@@ -50,6 +50,44 @@ export class FileFolderRepository extends BaseRepository {
   }
 
   /**
+   * Counts all folders, without loading rows.
+   *
+   * @returns The total number of {@link FileFolder} records.
+   *
+   * @example
+   * const total = await fileFolderRepository.count()
+   */
+  async count(): Promise<number> {
+    const result = await FileFolder.query(this.client()).count('* as total')
+    return Number(result[0].$extras.total)
+  }
+
+  /**
+   * Lists every folder with the number of files it directly contains
+   * (not recursive), sorted alphabetically, with a single aggregate query.
+   *
+   * @returns One entry per folder: primary key, name, and direct file count.
+   *
+   * @example
+   * const folders = await fileFolderRepository.listWithFileCounts()
+   * // [{ id: 1, name: 'Documents', count: 4 }, { id: 2, name: 'Images', count: 12 }]
+   */
+  async listWithFileCounts(): Promise<{ id: number; name: string; count: number }[]> {
+    const rows = await FileFolder.query(this.client())
+      .leftJoin('files', 'files.folder_id', 'file_folders.id')
+      .select('file_folders.id', 'file_folders.name')
+      .count('files.id as total')
+      .groupBy('file_folders.id', 'file_folders.name')
+      .orderBy('file_folders.name', 'asc')
+
+    return rows.map((row) => ({
+      id: row.id,
+      name: row.name,
+      count: Number(row.$extras.total),
+    }))
+  }
+
+  /**
    * Creates and persists a new folder.
    *
    * @param data - The folder data including name and optional parent ID.

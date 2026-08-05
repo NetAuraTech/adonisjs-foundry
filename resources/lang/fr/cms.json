@@ -1,6 +1,21 @@
 {
   "value": "Administration",
-  "dashboard": "Tableau de bord",
+  "dashboard": {
+    "value": "Tableau de bord",
+    "title": "Tableau de bord",
+    "cards": {
+      "translations": "Traductions de pages",
+      "published_locales": "Locales publiées",
+      "folders": "Dossiers",
+      "no_role": "Sans rôle"
+    },
+    "recent": {
+      "published_pages": "Publiées récemment",
+      "uploads": "Fichiers récents",
+      "empty": "Rien à afficher pour le moment."
+    },
+    "view_all": "Tout voir"
+  },
   "category": {
     "access_control": "Contrôle d'accès",
     "content": "Contenu",

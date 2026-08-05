@@ -6,6 +6,7 @@
 /// <reference path="./manifest.d.ts" />
 import type { InferData, InferVariants } from '@adonisjs/core/types/transformers'
 import type { InferSharedProps } from '@adonisjs/inertia/types'
+import type DashboardTransformer from '#transformers/dashboard_transformer'
 import type FileFolderTransformer from '#transformers/file_folder_transformer'
 import type FileTransformer from '#transformers/file_transformer'
 import type PageRevisionTransformer from '#transformers/page_revision_transformer'
@@ -18,6 +19,10 @@ import type UserTransformer from '#transformers/user_transformer'
 import type InertiaMiddleware from '#middleware/inertia_middleware'
 
 export namespace Data {
+  export type Dashboard = InferData<DashboardTransformer>
+  export namespace Dashboard {
+    export type Variants = InferVariants<DashboardTransformer>
+  }
   export type FileFolder = InferData<FileFolderTransformer>
   export namespace FileFolder {
     export type Variants = InferVariants<FileFolderTransformer>

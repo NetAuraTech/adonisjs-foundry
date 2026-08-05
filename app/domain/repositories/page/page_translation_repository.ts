@@ -2,6 +2,7 @@ import { transactionContext } from '#shared/context/transaction_context'
 import PageTranslation from '#models/page/page_translation'
 import type { PageContent, PageStatus } from '#types/page'
 import { BaseRepository } from '#repositories/base_repository'
+import type { DateTime } from 'luxon'
 
 /**
  * Handles all database operations for the {@link PageTranslation} model.
@@ -100,6 +101,7 @@ export class PageTranslationRepository extends BaseRepository {
       metaTitle: string | null
       metaDescription: string | null
       status: PageStatus
+      publishedAt: DateTime | null
     }>
   ): Promise<PageTranslation> {
     translation.merge(data as any)
@@ -157,5 +159,66 @@ export class PageTranslationRepository extends BaseRepository {
     if (excludeId) query.whereNot('id', excludeId)
     const result = await query.first()
     return !!result
+  }
+
+  /**
+   * Counts translations grouped by status with a single aggregate query,
+   * without loading rows. Statuses absent from the table report `0`.
+   *
+   * @returns The number of translations per {@link PageStatus}.
+   *
+   * @example
+   * const counts = await pageTranslationRepository.countByStatus()
+   * // { draft: 3, published: 12, archived: 1 }
+   */
+  async countByStatus(): Promise<Record<PageStatus, number>> {
+    const rows = await PageTranslation.query(this.client())
+      .select('status')
+      .count('* as total')
+      .groupBy('status')
+
+    const counts: Record<PageStatus, number> = { draft: 0, published: 0, archived: 0 }
+    for (const row of rows) {
+      if (row.status in counts) {
+        counts[row.status] = Number(row.$extras.total)
+      }
+    }
+    return counts
+  }
+
+  /**
+   * Counts the unique locales having at least one published translation.
+   *
+   * @returns The number of distinct published locales.
+   *
+   * @example
+   * const locales = await pageTranslationRepository.countPublishedLocales()
+   */
+  async countPublishedLocales(): Promise<number> {
+    const result = await PageTranslation.query(this.client())
+      .where('status', 'published')
+      .countDistinct('locale as total')
+    return Number(result[0].$extras.total)
+  }
+
+  /**
+   * Lists the most recently published translations, newest first.
+   *
+   * Rows published before `publishedAt` was stamped have a NULL date: the
+   * explicit `NULLS LAST` keeps them at the bottom on both PostgreSQL and
+   * SQLite (their default NULL ordering differs), with `updated_at` as a
+   * deterministic tiebreak.
+   *
+   * @param limit - Maximum number of translations to return.
+   * @returns The latest published {@link PageTranslation} records, bounded to `limit`.
+   *
+   * @example
+   * const latest = await pageTranslationRepository.listRecentlyPublished(5)
+   */
+  async listRecentlyPublished(limit: number): Promise<PageTranslation[]> {
+    return PageTranslation.query(this.client())
+      .where('status', 'published')
+      .orderByRaw('published_at DESC NULLS LAST, updated_at DESC')
+      .limit(limit)
   }
 }

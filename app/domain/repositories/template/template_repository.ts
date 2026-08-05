@@ -73,6 +73,19 @@ export class TemplateRepository extends BaseRepository {
   }
 
   /**
+   * Counts every template with a single aggregate query, without loading rows.
+   *
+   * @returns The total number of templates.
+   *
+   * @example
+   * const total = await templateRepository.count()
+   */
+  async count(): Promise<number> {
+    const result = await Template.query(this.client()).count('* as total')
+    return Number(result[0].$extras.total)
+  }
+
+  /**
    * Creates and persists a new template.
    *
    * @param data - The template data including name, type, and content.

@@ -762,6 +762,31 @@ export type CommonTranslations = {
   }
 }
 
+export type CmsDashboardTranslations = {
+  title: string
+  cards: {
+    users: string
+    pages: string
+    translations: string
+    files: string
+    templates: string
+    published_locales: string
+    folders: string
+    no_role: string
+  }
+  status: {
+    draft: string
+    published: string
+    archived: string
+  }
+  recent: {
+    published_pages: string
+    uploads: string
+    empty: string
+  }
+  view_all: string
+}
+
 export type CmsTranslations = {
   category: {
     content: string
