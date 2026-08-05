@@ -114,7 +114,7 @@ export default function UsersIndexPage(props: PageProps) {
                   </Table.Cell>
                   <Table.Cell data-label={t('roles.value', { count: 1 })}>
                     <span className="px-4 py-1 rounded border border-secondary bg-secondary-light/20 text-secondary">
-                      {t(user.role?.name as any)}
+                      {user.role?.name ? t(user.role.name as any) : '—'}
                     </span>
                   </Table.Cell>
                   <Table.Cell data-label={t('status.value')}>
