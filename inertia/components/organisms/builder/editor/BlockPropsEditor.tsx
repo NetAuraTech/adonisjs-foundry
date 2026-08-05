@@ -13,6 +13,11 @@ import { FormEditor } from '~/components/organisms/builder/editor/blocks/form_ed
 import { FieldEditor } from '~/components/organisms/builder/editor/blocks/field_editor'
 import { HtmlTextEditor } from '~/components/organisms/builder/editor/blocks/html_text_editor'
 import { ImageEditor } from '~/components/organisms/builder/editor/blocks/image_editor'
+import { VideoEditor } from '~/components/organisms/builder/editor/blocks/video_editor'
+import { CarouselEditor } from '~/components/organisms/builder/editor/blocks/carousel_editor'
+import { ListEditor } from '~/components/organisms/builder/editor/blocks/list_editor'
+import { QuoteEditor } from '~/components/organisms/builder/editor/blocks/quote_editor'
+import { IframeEditor } from '~/components/organisms/builder/editor/blocks/iframe_editor'
 
 interface BlockPropsEditorProps {
   block: Block
@@ -58,6 +63,16 @@ export default function BlockPropsEditor(props: BlockPropsEditorProps) {
       return <HtmlTextEditor block={block} onChange={onChange} lockProps={lockProps} />
     case 'image':
       return <ImageEditor block={block} onChange={onChange} lockProps={lockProps} />
+    case 'video':
+      return <VideoEditor block={block} onChange={onChange} lockProps={lockProps} />
+    case 'carousel':
+      return <CarouselEditor block={block} onChange={onChange} lockProps={lockProps} />
+    case 'list':
+      return <ListEditor block={block} onChange={onChange} lockProps={lockProps} />
+    case 'quote':
+      return <QuoteEditor block={block} onChange={onChange} lockProps={lockProps} />
+    case 'iframe':
+      return <IframeEditor block={block} onChange={onChange} lockProps={lockProps} />
     default:
       return <p className="text-xs text-ink-subtle">No editable props.</p>
   }

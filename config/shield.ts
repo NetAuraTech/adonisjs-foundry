@@ -1,5 +1,17 @@
 import app from '@adonisjs/core/services/app'
 import { defineConfig } from '@adonisjs/shield'
+import cmsConfig from '#config/cms'
+import { getEmbedFrameSources } from '#services/page/embed_policy'
+
+/**
+ * `frame-src` hosts for the CMS `iframe` block: each allowlisted hostname
+ * (exact + subdomains) becomes a host-source. Kept in sync with
+ * `CMS_IFRAME_ALLOWLIST`.
+ */
+const iframeFrameSources = cmsConfig.iframeAllowlist.flatMap((host) => [
+  `https://${host}`,
+  `https://*.${host}`,
+])
 
 const shieldConfig = defineConfig({
   /**
@@ -47,6 +59,9 @@ const shieldConfig = defineConfig({
         'https://*.sentry.io', // Sentry error reporting
       ],
 
+      // Frames this page may embed (video block players, allowlisted iframes)
+      frameSrc: ["'self'", ...getEmbedFrameSources(), ...iframeFrameSources],
+
       // Frames: deny (xFrame also set to SAMEORIGIN)
       frameAncestors: ["'none'"],
 
@@ -59,8 +74,8 @@ const shieldConfig = defineConfig({
       // Object/embed: none
       objectSrc: ["'none'"],
 
-      // Media: self
-      mediaSrc: ["'self'"],
+      // Media: self + external direct video files (video block)
+      mediaSrc: ["'self'", 'https:'],
 
       // Workers: self
       workerSrc: ["'self'"],

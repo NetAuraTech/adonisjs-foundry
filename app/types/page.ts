@@ -17,6 +17,23 @@ export type BlockType =
   | 'field'
   | 'htmltext'
   | 'image'
+  | 'video'
+  | 'carousel'
+  | 'list'
+  | 'quote'
+  | 'iframe'
+
+/**
+ * Remote video providers supported by the `video` block embed pipeline.
+ * The enabled subset is configured via `CMS_VIDEO_PROVIDERS` (see `config/cms.ts`).
+ */
+export type VideoProvider = 'youtube' | 'vimeo'
+
+/**
+ * Intrinsic aspect ratios shared by media blocks (`video`, `carousel`, `iframe`).
+ * Rendered as stable ratio containers so embeds cause no layout shift (CLS).
+ */
+export type MediaAspect = '16:9' | '4:3' | '1:1'
 
 /**
  * A responsive value that can vary per Tailwind breakpoint.
@@ -225,6 +242,62 @@ export interface ImageProps {
   className?: string
 }
 
+/**
+ * Props of the `video` block.
+ *
+ * `url` is either a video page URL from an enabled provider (YouTube, Vimeo)
+ * or a direct media file URL (`.mp4`, `.webm`, `.ogg`, `.mov`) — absolute
+ * `https://` or same-origin relative. Anything else is rejected by
+ * sanitization and stored as `null` (see `embed_policy`).
+ */
+export interface VideoProps {
+  url: string | null
+  poster?: FileRef | null
+  caption?: string
+  aspect: ResponsiveValue<MediaAspect>
+  className?: string
+}
+
+/**
+ * Props of the `carousel` block — a container whose children are the slides.
+ * Each child Block (typically `image`, `title` or `paragraph`) is one slide.
+ */
+export interface CarouselProps {
+  aspect: ResponsiveValue<MediaAspect>
+  showArrows: boolean
+  showDots: boolean
+  className?: string
+}
+
+export interface ListProps {
+  ordered: boolean
+  items: string[]
+  className?: string
+}
+
+export interface QuoteProps {
+  text: string
+  attribution?: string
+  variant: 'default' | 'highlight' | 'plain'
+  className?: string
+}
+
+/**
+ * Props of the `iframe` block.
+ *
+ * `url` must use `https` and its hostname must appear in the configured
+ * allowlist (`CMS_IFRAME_ALLOWLIST`, see `config/cms.ts`) — enforced both at
+ * save time (sanitization) and at render time (`PageResolverService`).
+ * `height` optionally overrides `aspect` with a fixed pixel height.
+ */
+export interface IframeProps {
+  url: string | null
+  title: string
+  aspect: ResponsiveValue<MediaAspect>
+  height?: number
+  className?: string
+}
+
 export interface ButtonProps {
   children: string
   linkType: 'page' | 'route' | 'external'
@@ -281,6 +354,11 @@ export interface BlockPropsMap {
   field: FieldProps
   htmltext: HtmlTextProps
   image: ImageProps
+  video: VideoProps
+  carousel: CarouselProps
+  list: ListProps
+  quote: QuoteProps
+  iframe: IframeProps
 }
 
 /**
@@ -341,6 +419,38 @@ export interface ResolvedImageProps {
 }
 
 /**
+ * Resolved props of the `video` block.
+ *
+ * `kind` tells the renderer which tag to emit: `embed` renders `embedUrl` in
+ * an `<iframe>`, `file` renders `url` in a `<video>` tag. Both are `null`
+ * when the stored URL failed the provider/format policy — the block then
+ * renders nothing.
+ */
+export interface ResolvedVideoProps {
+  kind: 'embed' | 'file' | null
+  provider: VideoProvider | null
+  url: string | null
+  embedUrl: string | null
+  poster: ResolvedFile | null
+  caption?: string
+  aspect: ResponsiveValue<MediaAspect>
+  className?: string
+}
+
+/**
+ * Resolved props of the `iframe` block.
+ * `url` is `null` when the stored URL is not on the configured allowlist —
+ * the block renders nothing in that case.
+ */
+export interface ResolvedIframeProps {
+  url: string | null
+  title: string
+  aspect: ResponsiveValue<MediaAspect>
+  height?: number
+  className?: string
+}
+
+/**
  * Maps each BlockType to its resolved props.
  * Types without FileRef are identical to their source counterparts.
  */
@@ -357,6 +467,11 @@ export interface ResolvedBlockPropsMap {
   field: FieldProps
   htmltext: HtmlTextProps
   image: ResolvedImageProps
+  video: ResolvedVideoProps
+  carousel: CarouselProps
+  list: ListProps
+  quote: QuoteProps
+  iframe: ResolvedIframeProps
 }
 
 /**

@@ -743,6 +743,11 @@ export type PageEditorTranslations = {
     field: { label: string; description: string }
     htmltext: { label: string; description: string }
     image: { label: string; description: string }
+    video: { label: string; description: string }
+    carousel: { label: string; description: string }
+    list: { label: string; description: string }
+    quote: { label: string; description: string }
+    iframe: { label: string; description: string }
   }
 }
 

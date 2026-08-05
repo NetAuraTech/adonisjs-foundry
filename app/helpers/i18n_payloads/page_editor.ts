@@ -144,6 +144,26 @@ export function buildPageEditorPayload(i18n: I18nService) {
         label: 'cms.builder.blocks.image.label',
         description: 'cms.builder.blocks.image.description',
       },
+      video: {
+        label: 'cms.builder.blocks.video.label',
+        description: 'cms.builder.blocks.video.description',
+      },
+      carousel: {
+        label: 'cms.builder.blocks.carousel.label',
+        description: 'cms.builder.blocks.carousel.description',
+      },
+      list: {
+        label: 'cms.builder.blocks.list.label',
+        description: 'cms.builder.blocks.list.description',
+      },
+      quote: {
+        label: 'cms.builder.blocks.quote.label',
+        description: 'cms.builder.blocks.quote.description',
+      },
+      iframe: {
+        label: 'cms.builder.blocks.iframe.label',
+        description: 'cms.builder.blocks.iframe.description',
+      },
     },
   })
 }

@@ -176,6 +176,71 @@ export const BLOCK_CATALOG: BlockDescriptor[] = [
       className: '',
     },
   },
+  {
+    type: 'video',
+    label: 'Video',
+    icon: 'video',
+    description: 'Provider embed or direct video file',
+    isContainer: false,
+    defaultProps: {
+      url: '',
+      poster: null,
+      caption: '',
+      aspect: { default: '16:9' },
+      className: '',
+    },
+  },
+  {
+    type: 'carousel',
+    label: 'Carousel',
+    icon: 'carousel',
+    description: 'Slideshow of child blocks',
+    isContainer: true,
+    defaultProps: {
+      aspect: { default: '16:9' },
+      showArrows: true,
+      showDots: true,
+      className: '',
+    },
+  },
+  {
+    type: 'list',
+    label: 'List',
+    icon: 'list',
+    description: 'Bulleted or numbered list',
+    isContainer: false,
+    defaultProps: {
+      ordered: false,
+      items: ['First item'],
+      className: '',
+    },
+  },
+  {
+    type: 'quote',
+    label: 'Quote',
+    icon: 'quote',
+    description: 'Blockquote with attribution',
+    isContainer: false,
+    defaultProps: {
+      text: 'Quote text',
+      attribution: '',
+      variant: 'default',
+      className: '',
+    },
+  },
+  {
+    type: 'iframe',
+    label: 'Embed',
+    icon: 'iframe',
+    description: 'Allowlisted external embed (map, calendar…)',
+    isContainer: false,
+    defaultProps: {
+      url: '',
+      title: '',
+      aspect: { default: '16:9' },
+      className: '',
+    },
+  },
 ]
 
 /** Returns the descriptor for a given block type, optionally with translated labels */

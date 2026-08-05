@@ -1,9 +1,23 @@
 import { inject } from '@adonisjs/core'
 import { FileRepository } from '#repositories/file/file_repository'
 import { ImageOptimizerService } from '#services/file/image_optimizer_service'
+import { classifyVideoUrl, isAllowedIframeUrl } from '#services/page/embed_policy'
 import type CmsFile from '#models/file/file'
-import type { Block, PageContent, BlockType, ImageProps } from '#types/page'
-import type { ResolvedBlock, ResolvedPageContent, ResolvedImageProps } from '#types/page'
+import type {
+  Block,
+  PageContent,
+  BlockType,
+  ImageProps,
+  VideoProps,
+  IframeProps,
+} from '#types/page'
+import type {
+  ResolvedBlock,
+  ResolvedPageContent,
+  ResolvedImageProps,
+  ResolvedVideoProps,
+  ResolvedIframeProps,
+} from '#types/page'
 import type { FileRef, ResolvedFile } from '#types/file'
 
 @inject()
@@ -48,6 +62,11 @@ export class PageResolverService {
       if (block.type === 'image') {
         const props = block.props as ImageProps
         if (props.file?.fileId) ids.add(props.file.fileId)
+      }
+
+      if (block.type === 'video') {
+        const props = block.props as VideoProps
+        if (props.poster?.fileId) ids.add(props.poster.fileId)
       }
 
       if (block.children?.length) {
@@ -121,9 +140,35 @@ export class PageResolverService {
         } satisfies ResolvedImageProps
       }
 
+      case 'video': {
+        const props = block.props as VideoProps
+        // Embed policy re-enforced at render time — the configured providers
+        // may have changed since the content was saved.
+        const source = props.url ? classifyVideoUrl(props.url) : null
+        return {
+          ...props,
+          kind: source?.kind ?? null,
+          provider: source?.kind === 'embed' ? source.provider : null,
+          url: source ? props.url : null,
+          embedUrl: source?.kind === 'embed' ? source.embedUrl : null,
+          poster: props.poster ? await this.resolveFileRef(props.poster, locale, fileMap) : null,
+        } satisfies ResolvedVideoProps
+      }
+
+      case 'iframe': {
+        const props = block.props as IframeProps
+        return {
+          ...props,
+          // Allowlist re-enforced at render time (see embed_policy).
+          url: props.url && isAllowedIframeUrl(props.url) ? props.url : null,
+        } satisfies ResolvedIframeProps
+      }
+
       default:
-        // section, title, rich_text, grid, button_cta, separator, contact_form
-        // none of these have FileRef fields — return props unchanged
+        // section, grid, flex, title, paragraph, button, separator, icon,
+        // form, field, htmltext, carousel, list, quote
+        // none of these have FileRef fields or render-time policies — return
+        // props unchanged
         return block.props as ResolvedBlock['props']
     }
   }

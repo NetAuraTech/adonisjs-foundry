@@ -1,6 +1,14 @@
 import { JSDOM } from 'jsdom'
-import type { Block, PageContent } from '#types/page'
+import type {
+  Block,
+  IframeProps,
+  ListProps,
+  PageContent,
+  QuoteProps,
+  VideoProps,
+} from '#types/page'
 import DOMPurify, { type Config } from 'dompurify'
+import { classifyVideoUrl, isAllowedIframeUrl } from '#services/page/embed_policy'
 
 // isomorphic-dompurify requires a JSDOM window in a Node environment
 const { window } = new JSDOM('')
@@ -74,14 +82,20 @@ const PURIFY_CONFIG: Config = {
 }
 
 /**
- * Recursively walks the block tree and sanitises the `content` field of every
- * `htmltext` block, and the `text` field of every `paragraph` and `title` block
- * using DOMPurify (server-side, via jsdom).
+ * Recursively walks the block tree and sanitises rich-text fields using
+ * DOMPurify (server-side, via jsdom): the `content` field of `htmltext`
+ * blocks, the `text` field of `paragraph`/`title` blocks, the `caption`
+ * field of `video` blocks, the `items` of `list` blocks and the
+ * `text`/`attribution` fields of `quote` blocks.
+ *
+ * Also enforces the embed policy (see `embed_policy`) at save time:
+ * `video` URLs that are neither enabled-provider page URLs nor direct media
+ * files, and `iframe` URLs outside the configured hostname allowlist, are
+ * stored as `null` so the blocks render nothing.
  *
  * Called in `PageService` before any `create` or `update` that persists
- * `PageContent` to the database. This is the first line of defence; the
- * React `RichTextBlock` component also sanitises at render time as a
- * second layer.
+ * `PageContent` to the database. `PageResolverService` re-enforces the
+ * embed policy at render time.
  *
  * @param content - The `PageContent` to sanitise in-place
  * @returns The same `PageContent` object with all rich-text HTML cleaned
@@ -111,6 +125,69 @@ export function sanitizePageContent(content: PageContent): PageContent {
               (block.props as { text: string }).text ?? '',
               PURIFY_CONFIG
             ) as unknown as string,
+          },
+        }
+      }
+
+      if (block.type === 'video') {
+        const props = block.props as VideoProps
+        const url = typeof props.url === 'string' ? props.url : ''
+        return {
+          ...block,
+          props: {
+            ...props,
+            // Embed policy enforcement at save time: anything that is neither
+            // an enabled-provider page URL nor a direct media file is nulled.
+            url: url && classifyVideoUrl(url) ? url : null,
+            caption:
+              typeof props.caption === 'string'
+                ? (purify.sanitize(props.caption, PURIFY_CONFIG) as unknown as string)
+                : props.caption,
+          },
+        }
+      }
+
+      if (block.type === 'iframe') {
+        const props = block.props as IframeProps
+        const url = typeof props.url === 'string' ? props.url : ''
+        return {
+          ...block,
+          props: {
+            ...props,
+            // Allowlist enforcement at save time (see embed_policy).
+            url: isAllowedIframeUrl(url) ? url : null,
+          },
+        }
+      }
+
+      if (block.type === 'list') {
+        const props = block.props as ListProps
+        const items = Array.isArray(props.items) ? props.items : []
+        return {
+          ...block,
+          props: {
+            ...props,
+            items: items
+              .filter((item): item is string => typeof item === 'string')
+              .map((item) => purify.sanitize(item, PURIFY_CONFIG) as unknown as string),
+          },
+        }
+      }
+
+      if (block.type === 'quote') {
+        const props = block.props as QuoteProps
+        return {
+          ...block,
+          props: {
+            ...props,
+            text:
+              typeof props.text === 'string'
+                ? (purify.sanitize(props.text, PURIFY_CONFIG) as unknown as string)
+                : props.text,
+            attribution:
+              typeof props.attribution === 'string'
+                ? (purify.sanitize(props.attribution, PURIFY_CONFIG) as unknown as string)
+                : props.attribution,
           },
         }
       }

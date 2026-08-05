@@ -29,16 +29,39 @@ export function sanitizeBuilderOperation(
   }
 }
 
+/**
+ * Fields that may carry rich-text HTML across all block types.
+ */
+const RICH_TEXT_FIELDS = [
+  'text',
+  'content',
+  'html',
+  'label',
+  'placeholder',
+  'helpText',
+  'caption',
+  'attribution',
+]
+
+/**
+ * Array fields whose string entries may carry rich-text HTML (list items).
+ */
+const RICH_TEXT_ARRAY_FIELDS = ['items']
+
 function sanitizeProps(props: Record<string, unknown>): Record<string, unknown> {
   const safe: Record<string, unknown> = {}
   for (const [key, value] of Object.entries(props)) {
     if (typeof value === 'string') {
       // Only sanitize fields that could contain HTML
-      if (['text', 'content', 'html', 'label', 'placeholder', 'helpText'].includes(key)) {
+      if (RICH_TEXT_FIELDS.includes(key)) {
         safe[key] = sanitizeHtml(value)
       } else {
         safe[key] = value
       }
+    } else if (Array.isArray(value)) {
+      safe[key] = RICH_TEXT_ARRAY_FIELDS.includes(key)
+        ? value.map((item) => (typeof item === 'string' ? sanitizeHtml(item) : item))
+        : value
     } else if (typeof value === 'object' && value !== null) {
       safe[key] = sanitizeProps(value as Record<string, unknown>)
     } else {

@@ -19,7 +19,7 @@ A saved snapshot of a PageTranslation's content, created automatically before ev
 _Avoid_: Version, history entry, backup (this is unrelated to the Backup system)
 
 **Block**:
-A single node in a PageTranslation's content tree (one of 12 types: section, grid, flex, title, paragraph, button, separator, icon, form, field, htmltext, image). Container blocks (section, grid, form) can hold child Blocks.
+A single node in a PageTranslation's content tree (one of 17 types: section, grid, flex, title, paragraph, button, separator, icon, form, field, htmltext, image, video, carousel, list, quote, iframe). Container blocks (section, grid, flex, form, carousel) can hold child Blocks. Embeddable blocks (video, iframe) are governed by the embed policy (`embed_policy`), configured via `CMS_VIDEO_PROVIDERS` / `CMS_IFRAME_ALLOWLIST` and enforced both at save time (sanitization) and render time (PageResolverService).
 _Avoid_: Component, widget, element
 
 **Template**:

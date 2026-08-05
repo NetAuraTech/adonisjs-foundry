@@ -152,4 +152,13 @@ export default await Env.create(new URL('../', import.meta.url), {
   |----------------------------------------------------------
   */
   LIMITER_STORE: Env.schema.enum(['redis', 'memory'] as const),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for CMS content policies (page builder blocks).
+  | Comma-separated lists; both have safe defaults in config/cms.ts.
+  |----------------------------------------------------------
+  */
+  CMS_IFRAME_ALLOWLIST: Env.schema.string.optional(),
+  CMS_VIDEO_PROVIDERS: Env.schema.string.optional(),
 })

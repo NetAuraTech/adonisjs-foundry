@@ -209,4 +209,170 @@ test.group('sanitizePageContent', () => {
     assert.isTrue(first.content.includes('First'))
     assert.isTrue(second.content.includes('Second'))
   })
+
+  // ─── Video blocks ─────────────────────────────────────────────────────────
+
+  test('video: keeps provider URLs from enabled providers unchanged', ({ assert }) => {
+    const content: PageContent = {
+      blocks: [
+        {
+          id: 'v1',
+          type: 'video',
+          props: {
+            url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+            poster: null,
+            caption: '',
+            aspect: { default: '16:9' },
+          },
+        } as Block,
+      ],
+    }
+    const result = sanitizePageContent(content)
+    const props = result.blocks[0].props as { url: string | null }
+    assert.equal(props.url, 'https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+  })
+
+  test('video: strips XSS from captions and nulls non-renderable URLs', ({ assert }) => {
+    const content: PageContent = {
+      blocks: [
+        {
+          id: 'v2',
+          type: 'video',
+          props: {
+            url: 'https://www.dailymotion.com/video/x123',
+            caption: 'Nice <strong>video</strong><script>alert(1)</script>',
+            aspect: { default: '16:9' },
+          },
+        } as Block,
+      ],
+    }
+    const result = sanitizePageContent(content)
+    const props = result.blocks[0].props as { url: string | null; caption: string }
+    assert.isNull(props.url)
+    assert.isFalse(props.caption.includes('<script>'))
+    assert.isTrue(props.caption.includes('<strong>'))
+  })
+
+  // ─── Iframe blocks ────────────────────────────────────────────────────────
+
+  test('iframe: nulls the URL when the host is not on the allowlist', ({ assert }) => {
+    const content: PageContent = {
+      blocks: [
+        {
+          id: 'if1',
+          type: 'iframe',
+          props: {
+            url: 'https://evil.example.com/widget',
+            title: 'X',
+            aspect: { default: '16:9' },
+          },
+        } as Block,
+      ],
+    }
+    const result = sanitizePageContent(content)
+    const props = result.blocks[0].props as { url: string | null }
+    assert.isNull(props.url)
+  })
+
+  test('iframe: keeps the URL when the host is on the allowlist', ({ assert }) => {
+    const content: PageContent = {
+      blocks: [
+        {
+          id: 'if2',
+          type: 'iframe',
+          props: {
+            url: 'https://www.google.com/maps/embed?pb=abc',
+            title: 'Map',
+            aspect: { default: '16:9' },
+          },
+        } as Block,
+      ],
+    }
+    const result = sanitizePageContent(content)
+    const props = result.blocks[0].props as { url: string | null }
+    assert.equal(props.url, 'https://www.google.com/maps/embed?pb=abc')
+  })
+
+  // ─── List blocks ──────────────────────────────────────────────────────────
+
+  test('list: sanitizes each item and drops non-string entries', ({ assert }) => {
+    const content: PageContent = {
+      blocks: [
+        {
+          id: 'l1',
+          type: 'list',
+          props: {
+            ordered: false,
+            items: ['<em>Safe</em>', '<script>alert(1)</script>Item', 42],
+          },
+        } as Block,
+      ],
+    }
+    const result = sanitizePageContent(content)
+    const props = result.blocks[0].props as { items: string[] }
+    assert.lengthOf(props.items, 2)
+    assert.equal(props.items[0], '<em>Safe</em>')
+    assert.isFalse(props.items[1].includes('<script>'))
+    assert.isTrue(props.items[1].includes('Item'))
+  })
+
+  // ─── Quote blocks ─────────────────────────────────────────────────────────
+
+  test('quote: strips XSS from text while keeping safe markup', ({ assert }) => {
+    const content: PageContent = {
+      blocks: [
+        {
+          id: 'q1',
+          type: 'quote',
+          props: {
+            text: 'To be <em>or not</em><script>alert(1)</script>',
+            variant: 'default',
+          },
+        } as Block,
+      ],
+    }
+    const result = sanitizePageContent(content)
+    const props = result.blocks[0].props as { text: string }
+    assert.isFalse(props.text.includes('<script>'))
+    assert.isTrue(props.text.includes('<em>'))
+  })
+
+  test('quote: strips XSS from attribution', ({ assert }) => {
+    const content: PageContent = {
+      blocks: [
+        {
+          id: 'q2',
+          type: 'quote',
+          props: {
+            text: 'Quote',
+            attribution: '<strong>Hamlet</strong><script>alert(1)</script>',
+            variant: 'default',
+          },
+        } as Block,
+      ],
+    }
+    const result = sanitizePageContent(content)
+    const props = result.blocks[0].props as { attribution: string }
+    assert.isFalse(props.attribution.includes('<script>'))
+    assert.isTrue(props.attribution.includes('<strong>'))
+  })
+
+  // ─── Carousel blocks ──────────────────────────────────────────────────────
+
+  test('carousel: recurses into slide children', ({ assert }) => {
+    const content: PageContent = {
+      blocks: [
+        {
+          id: 'c1',
+          type: 'carousel',
+          props: { aspect: { default: '16:9' }, showArrows: true, showDots: true },
+          children: [makeHtmlText('<p>Slide</p><script>alert(1)</script>')],
+        } as Block,
+      ],
+    }
+    const result = sanitizePageContent(content)
+    const child = result.blocks[0].children![0].props as { content: string }
+    assert.isFalse(child.content.includes('<script>'))
+    assert.isTrue(child.content.includes('<p>Slide</p>'))
+  })
 })

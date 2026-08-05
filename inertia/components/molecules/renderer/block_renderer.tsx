@@ -11,6 +11,11 @@ import IconBlock from '~/components/atoms/blocks/icon_block'
 import FormBlock from '~/components/atoms/blocks/form_block'
 import FieldBlock from '~/components/atoms/blocks/field_block'
 import HtmlTextBlock from '~/components/atoms/blocks/html_text_block'
+import VideoBlock from '~/components/atoms/blocks/video_block'
+import CarouselBlock from '~/components/atoms/blocks/carousel_block'
+import ListBlock from '~/components/atoms/blocks/list_block'
+import QuoteBlock from '~/components/atoms/blocks/quote_block'
+import IframeBlock from '~/components/atoms/blocks/iframe_block'
 
 interface BlockRendererProps {
   block: ResolvedBlock
@@ -104,6 +109,29 @@ export default function BlockRenderer({
       return <HtmlTextBlock block={block as ResolvedBlock<'htmltext'>} />
     case 'image':
       return <ImageBlock block={block as ResolvedBlock<'image'>} isPriority={isPriority} />
+    case 'video':
+      return <VideoBlock block={block as ResolvedBlock<'video'>} />
+    case 'carousel':
+      // Container: each child block is one slide
+      return (
+        <CarouselBlock block={block as ResolvedBlock<'carousel'>}>
+          {block.children?.map((child) => (
+            <BlockRenderer
+              key={child.id}
+              block={child}
+              pageId={pageId}
+              locale={locale}
+              isPriority={isPriority}
+            />
+          ))}
+        </CarouselBlock>
+      )
+    case 'list':
+      return <ListBlock block={block as ResolvedBlock<'list'>} />
+    case 'quote':
+      return <QuoteBlock block={block as ResolvedBlock<'quote'>} />
+    case 'iframe':
+      return <IframeBlock block={block as ResolvedBlock<'iframe'>} />
     default:
       if (process.env.NODE_ENV === 'development') {
         console.warn(`[BlockRenderer] Unknown block type: ${(block as any).type}`)

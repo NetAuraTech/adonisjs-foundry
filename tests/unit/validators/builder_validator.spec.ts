@@ -1,5 +1,10 @@
 import { test } from '@japa/runner'
-import { builderOperationValidator, builderPresenceValidator } from '#validators/builder'
+import vine from '@vinejs/vine'
+import {
+  addBlockSchema,
+  builderOperationValidator,
+  builderPresenceValidator,
+} from '#validators/builder'
 
 /**
  * Unit tests for builder validators.
@@ -135,6 +140,24 @@ test.group('builderOperationValidator', () => {
     assert.equal(result.blockId, 'block-1')
     assert.equal(result.fieldKey, 'title')
   })
+})
+
+test.group('addBlockSchema — new block types', () => {
+  const newBlockTypes = ['video', 'carousel', 'list', 'quote', 'iframe'] as const
+
+  for (const type of newBlockTypes) {
+    test(`accepts ADD_BLOCK with a ${type} block`, async ({ assert }) => {
+      const result = await vine.validate({
+        schema: addBlockSchema,
+        data: {
+          block: { id: 'b1', type, props: {} },
+          parentId: 'root',
+          index: 0,
+        },
+      })
+      assert.equal(result.block.type, type)
+    })
+  }
 })
 
 test.group('builderPresenceValidator', () => {

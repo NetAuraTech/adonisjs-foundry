@@ -725,6 +725,26 @@
       "image": {
         "label": "Image",
         "description": "Image unique depuis la médiathèque"
+      },
+      "video": {
+        "label": "Vidéo",
+        "description": "Intégration d'un fournisseur ou fichier vidéo direct"
+      },
+      "carousel": {
+        "label": "Carrousel",
+        "description": "Diaporama de blocs enfants"
+      },
+      "list": {
+        "label": "Liste",
+        "description": "Liste à puces ou numérotée"
+      },
+      "quote": {
+        "label": "Citation",
+        "description": "Bloc de citation avec attribution"
+      },
+      "iframe": {
+        "label": "Intégration",
+        "description": "Contenu externe autorisé (carte, calendrier…)"
       }
     }
   }

@@ -725,6 +725,26 @@
       "image": {
         "label": "Image",
         "description": "Single image from the media library"
+      },
+      "video": {
+        "label": "Video",
+        "description": "Provider embed or direct video file"
+      },
+      "carousel": {
+        "label": "Carousel",
+        "description": "Slideshow of child blocks"
+      },
+      "list": {
+        "label": "List",
+        "description": "Bulleted or numbered list"
+      },
+      "quote": {
+        "label": "Quote",
+        "description": "Blockquote with attribution"
+      },
+      "iframe": {
+        "label": "Embed",
+        "description": "Allowlisted external embed (map, calendar…)"
       }
     }
   }

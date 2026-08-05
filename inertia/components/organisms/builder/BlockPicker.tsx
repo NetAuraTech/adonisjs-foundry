@@ -77,6 +77,50 @@ const ICONS: Record<string, React.ReactNode> = {
       />
     </>
   ),
+  'video': (
+    <>
+      <rect x="2" y="5" width="14" height="14" rx="2" ry="2" strokeWidth={1.5} />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        d="M16 10l6-3v10l-6-3z"
+      />
+    </>
+  ),
+  'carousel': (
+    <>
+      <rect x="7" y="4" width="10" height="16" rx="2" ry="2" strokeWidth={1.5} />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8v8M21 8v8" />
+    </>
+  ),
+  'list': (
+    <>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        d="M9 6h12M9 12h12M9 18h12"
+      />
+      <circle cx="4.5" cy="6" r="1" fill="currentColor" stroke="none" />
+      <circle cx="4.5" cy="12" r="1" fill="currentColor" stroke="none" />
+      <circle cx="4.5" cy="18" r="1" fill="currentColor" stroke="none" />
+    </>
+  ),
+  'quote': (
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      d="M7 7h4v4c0 3-1.5 5-4 6M15 7h4v4c0 3-1.5 5-4 6"
+    />
+  ),
+  'iframe': (
+    <>
+      <rect x="3" y="4" width="18" height="16" rx="2" ry="2" strokeWidth={1.5} />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 9h18M8 4v5" />
+    </>
+  ),
 }
 
 interface BlockPickerProps {

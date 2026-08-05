@@ -28,6 +28,11 @@ const BLOCK_TYPES = [
   'field',
   'htmltext',
   'image',
+  'video',
+  'carousel',
+  'list',
+  'quote',
+  'iframe',
 ] as const
 
 /**
