@@ -45,6 +45,19 @@ export type ScannedRoutes = {
     'admin.users_show.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.users_update.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.users_update.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.roles.render': { paramsTuple?: []; params?: {} }
+    'admin.roles_create.render': { paramsTuple?: []; params?: {} }
+    'admin.roles_create.execute': { paramsTuple?: []; params?: {} }
+    'admin.roles.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.roles_show.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.roles_update.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.roles_update.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.permissions.render': { paramsTuple?: []; params?: {} }
+    'admin.permissions_create.render': { paramsTuple?: []; params?: {} }
+    'admin.permissions_create.execute': { paramsTuple?: []; params?: {} }
+    'admin.permissions.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.permissions_update.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.permissions_update.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.pages.render': { paramsTuple?: []; params?: {} }
     'admin.pages_create.render': { paramsTuple?: []; params?: {} }
     'admin.pages_create.execute': { paramsTuple?: []; params?: {} }
@@ -125,6 +138,13 @@ export type ScannedRoutes = {
     'admin.users_create.render': { paramsTuple?: []; params?: {} }
     'admin.users_show.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.users_update.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.roles.render': { paramsTuple?: []; params?: {} }
+    'admin.roles_create.render': { paramsTuple?: []; params?: {} }
+    'admin.roles_show.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.roles_update.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.permissions.render': { paramsTuple?: []; params?: {} }
+    'admin.permissions_create.render': { paramsTuple?: []; params?: {} }
+    'admin.permissions_update.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.pages.render': { paramsTuple?: []; params?: {} }
     'admin.pages_create.render': { paramsTuple?: []; params?: {} }
     'admin.pages_show.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -174,6 +194,13 @@ export type ScannedRoutes = {
     'admin.users_create.render': { paramsTuple?: []; params?: {} }
     'admin.users_show.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.users_update.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.roles.render': { paramsTuple?: []; params?: {} }
+    'admin.roles_create.render': { paramsTuple?: []; params?: {} }
+    'admin.roles_show.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.roles_update.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.permissions.render': { paramsTuple?: []; params?: {} }
+    'admin.permissions_create.render': { paramsTuple?: []; params?: {} }
+    'admin.permissions_update.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.pages.render': { paramsTuple?: []; params?: {} }
     'admin.pages_create.render': { paramsTuple?: []; params?: {} }
     'admin.pages_show.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -216,6 +243,10 @@ export type ScannedRoutes = {
     'settings.preferences.execute': { paramsTuple?: []; params?: {} }
     'admin.users_create.execute': { paramsTuple?: []; params?: {} }
     'admin.users_update.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.roles_create.execute': { paramsTuple?: []; params?: {} }
+    'admin.roles_update.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.permissions_create.execute': { paramsTuple?: []; params?: {} }
+    'admin.permissions_update.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.pages_create.execute': { paramsTuple?: []; params?: {} }
     'admin.pages_update.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.pages_update.publish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -244,6 +275,8 @@ export type ScannedRoutes = {
   DELETE: {
     'settings.account.destroy': { paramsTuple?: []; params?: {} }
     'admin.users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.roles.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.permissions.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.pages.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.templates.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.files.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

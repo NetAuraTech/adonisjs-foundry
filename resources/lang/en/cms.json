@@ -186,6 +186,209 @@
     "value": "Users",
     "value_one": "User"
   },
+  "roles": {
+    "value": "Roles",
+    "value_one": "Role",
+    "list": {
+      "title": "Manage roles"
+    },
+    "search": {
+      "value": "Search",
+      "placeholder": "Search by name or description...",
+      "filter": "Filter"
+    },
+    "create": {
+      "title": "Create a role"
+    },
+    "edit": {
+      "title": "Edit role \"{name}\""
+    },
+    "show": {
+      "title": "Role \"{name}\""
+    },
+    "delete": {
+      "title": "Delete role \"{name}\"",
+      "confirm": "Are you sure you want to delete the role \"{name}\"? Its users will be reassigned to the \"User\" role."
+    },
+    "form": {
+      "name": {
+        "value": "Name",
+        "placeholder": "Editor"
+      },
+      "slug": {
+        "value": "Slug",
+        "placeholder": "editor"
+      },
+      "description": {
+        "value": "Description",
+        "placeholder": "Can manage editorial content"
+      },
+      "permissions": {
+        "value": "Permissions",
+        "system_hint": "System roles cannot be modified."
+      },
+      "submit": "Submit"
+    },
+    "flash": {
+      "created": "Role created successfully",
+      "updated": "Role updated successfully",
+      "deleted": "Role deleted successfully"
+    },
+    "system": {
+      "value": "System",
+      "hint": "System role — editing and deletion are disabled."
+    },
+    "table": {
+      "name": "Name",
+      "slug": "Slug",
+      "permissions": "Permissions",
+      "users": "Users"
+    },
+    "users": {
+      "value": "Users",
+      "empty": "No user holds this role.",
+      "table": {
+        "username": "Username",
+        "email": "Email"
+      }
+    },
+    "actions": "Actions",
+    "empty": "No roles found.",
+    "roles": {
+      "admin": {
+        "value": "Administrator",
+        "description": "Full system access with all permissions."
+      },
+      "user": {
+        "value": "User",
+        "description": "Standard user with limited permissions."
+      }
+    },
+    "permissions": {
+      "category": {
+        "admin": "Administration",
+        "users": "Users",
+        "roles": "Roles",
+        "permissions": "Permissions",
+        "logs": "Logs"
+      },
+      "admin.access": {
+        "value": "Access admin dashboard",
+        "description": "Allows access to the admin panel."
+      },
+      "users.view": {
+        "value": "View users",
+        "description": "Allows listing and viewing users."
+      },
+      "users.create": {
+        "value": "Create users",
+        "description": "Allows creating new users."
+      },
+      "users.update": {
+        "value": "Update users",
+        "description": "Allows editing existing users."
+      },
+      "users.delete": {
+        "value": "Delete users",
+        "description": "Allows deleting users."
+      },
+      "users.manage_roles": {
+        "value": "Manage user roles",
+        "description": "Allows assigning roles to users."
+      },
+      "roles.view": {
+        "value": "View roles",
+        "description": "Allows listing and viewing roles."
+      },
+      "roles.create": {
+        "value": "Create roles",
+        "description": "Allows creating custom roles."
+      },
+      "roles.update": {
+        "value": "Update roles",
+        "description": "Allows editing custom roles and their permissions."
+      },
+      "roles.delete": {
+        "value": "Delete roles",
+        "description": "Allows deleting custom roles."
+      },
+      "roles.manage_permissions": {
+        "value": "Manage role permissions",
+        "description": "Allows changing which permissions a role grants."
+      },
+      "permissions.view": {
+        "value": "View permissions",
+        "description": "Allows listing and viewing permissions."
+      },
+      "permissions.create": {
+        "value": "Create permissions",
+        "description": "Allows creating custom permissions."
+      },
+      "permissions.update": {
+        "value": "Update permissions",
+        "description": "Allows editing custom permissions."
+      },
+      "permissions.delete": {
+        "value": "Delete permissions",
+        "description": "Allows deleting custom permissions."
+      },
+      "logs.view": {
+        "value": "View logs",
+        "description": "Allows viewing application logs."
+      }
+    }
+  },
+  "permissions": {
+    "value": "Permissions",
+    "list": {
+      "title": "Manage permissions"
+    },
+    "create": {
+      "title": "Create a permission"
+    },
+    "edit": {
+      "title": "Edit permission \"{name}\""
+    },
+    "delete": {
+      "title": "Delete permission \"{name}\"",
+      "confirm": "Are you sure you want to delete the permission \"{name}\"? It will be revoked from every role."
+    },
+    "form": {
+      "name": {
+        "value": "Name",
+        "placeholder": "Publish reports"
+      },
+      "slug": {
+        "value": "Slug",
+        "placeholder": "reports.publish"
+      },
+      "category": {
+        "value": "Category",
+        "placeholder": "reports"
+      },
+      "description": {
+        "value": "Description",
+        "placeholder": "Allows publishing reports"
+      },
+      "submit": "Submit"
+    },
+    "flash": {
+      "created": "Permission created successfully",
+      "updated": "Permission updated successfully",
+      "deleted": "Permission deleted successfully"
+    },
+    "system": {
+      "value": "System",
+      "hint": "System permission — editing and deletion are disabled."
+    },
+    "table": {
+      "name": "Name",
+      "slug": "Slug",
+      "description": "Description"
+    },
+    "actions": "Actions",
+    "empty": "No permissions found."
+  },
   "files": {
     "list": {
       "title": "Manage files",

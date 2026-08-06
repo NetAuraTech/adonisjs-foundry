@@ -764,6 +764,7 @@ export type CommonTranslations = {
     max_length: string
     matches: string
     one_of: string
+    slug_format: string
   }
 }
 
@@ -792,6 +793,163 @@ export type CmsDashboardTranslations = {
   view_all: string
 }
 
+export type CmsRolesIndexTranslations = {
+  title: string
+  search: {
+    value: string
+    placeholder: string
+    filter: string
+  }
+  create: {
+    title: string
+  }
+  table: {
+    name: string
+    slug: string
+    permissions: string
+    users: string
+  }
+  actions: {
+    value: string
+    show: string
+    edit: string
+    delete: string
+  }
+  delete: {
+    confirm: string
+  }
+  system: {
+    value: string
+    hint: string
+  }
+  empty: string
+  roles: TranslationNodes
+}
+
+export type CmsRolesFormTranslations = {
+  title: {
+    create: string
+    edit: string
+  }
+  name: {
+    value: string
+    placeholder: string
+  }
+  slug: {
+    value: string
+    placeholder: string
+  }
+  description: {
+    value: string
+    placeholder: string
+  }
+  submit: string
+  actions: {
+    list: string
+  }
+  permissions: {
+    value: string
+    system_hint: string
+    categories: TranslationNodes
+    items: TranslationNodes
+  }
+}
+
+export type CmsRolesShowTranslations = {
+  title: string
+  name: {
+    value: string
+  }
+  slug: {
+    value: string
+  }
+  description: {
+    value: string
+  }
+  system: {
+    value: string
+    hint: string
+  }
+  users: {
+    value: string
+    empty: string
+    table: {
+      username: string
+      email: string
+    }
+    actions: string
+    show: string
+  }
+  permissions: {
+    value: string
+    categories: TranslationNodes
+    items: TranslationNodes
+  }
+  actions: {
+    list: string
+    edit: string
+    delete: string
+  }
+  delete: {
+    confirm: string
+  }
+  roles: TranslationNodes
+}
+
+export type CmsPermissionsIndexTranslations = {
+  title: string
+  create: {
+    title: string
+  }
+  table: {
+    name: string
+    slug: string
+    description: string
+  }
+  actions: {
+    value: string
+    edit: string
+    delete: string
+  }
+  delete: {
+    confirm: string
+  }
+  system: {
+    value: string
+    hint: string
+  }
+  empty: string
+  categories: TranslationNodes
+  items: TranslationNodes
+}
+
+export type CmsPermissionsFormTranslations = {
+  title: {
+    create: string
+    edit: string
+  }
+  name: {
+    value: string
+    placeholder: string
+  }
+  slug: {
+    value: string
+    placeholder: string
+  }
+  category: {
+    value: string
+    placeholder: string
+  }
+  description: {
+    value: string
+    placeholder: string
+  }
+  submit: string
+  actions: {
+    list: string
+  }
+}
+
 export type CmsTranslations = {
   category: {
     content: string
@@ -803,6 +961,8 @@ export type CmsTranslations = {
   templates: string
   files: string
   users: string
+  roles: string
+  permissions: string
   maintenance: string
   logs: string
 }

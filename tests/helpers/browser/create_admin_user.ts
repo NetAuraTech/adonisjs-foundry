@@ -31,9 +31,9 @@ export async function createAdminUser(overrides: {
   const role = await Role.updateOrCreate(
     { slug: 'admin' },
     {
-      name: 'roles:admin.value',
+      name: 'roles.admin.value',
       slug: 'admin',
-      description: 'roles:admin.description',
+      description: 'roles.admin.description',
       isSystem: true,
     }
   )
@@ -45,10 +45,10 @@ export async function createAdminUser(overrides: {
       return Permission.updateOrCreate(
         { slug },
         {
-          name: `permissions:${slug}.value`,
+          name: `permissions.${slug}.value`,
           slug,
-          category: `permissions:category.${category}`,
-          description: `permissions:${slug}.description`,
+          category: `permissions.category.${category}`,
+          description: `permissions.${slug}.description`,
           isSystem: true,
         }
       )

@@ -36,6 +36,11 @@ declare module '@adonisjs/inertia/types' {
     'page/cms/show': ExtractProps<(typeof import('../../inertia/pages/page/cms/show.tsx'))['default']>
     'page/front/preview': ExtractProps<(typeof import('../../inertia/pages/page/front/preview.tsx'))['default']>
     'page/front/show': ExtractProps<(typeof import('../../inertia/pages/page/front/show.tsx'))['default']>
+    'permission/cms/form': ExtractProps<(typeof import('../../inertia/pages/permission/cms/form.tsx'))['default']>
+    'permission/cms/index': ExtractProps<(typeof import('../../inertia/pages/permission/cms/index.tsx'))['default']>
+    'role/cms/form': ExtractProps<(typeof import('../../inertia/pages/role/cms/form.tsx'))['default']>
+    'role/cms/index': ExtractProps<(typeof import('../../inertia/pages/role/cms/index.tsx'))['default']>
+    'role/cms/show': ExtractProps<(typeof import('../../inertia/pages/role/cms/show.tsx'))['default']>
     'settings/account/front/email_change': ExtractProps<(typeof import('../../inertia/pages/settings/account/front/email_change.tsx'))['default']>
     'settings/account/front/index': ExtractProps<(typeof import('../../inertia/pages/settings/account/front/index.tsx'))['default']>
     'settings/preferences/front/index': ExtractProps<(typeof import('../../inertia/pages/settings/preferences/front/index.tsx'))['default']>

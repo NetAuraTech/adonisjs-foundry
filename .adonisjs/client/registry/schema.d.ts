@@ -499,6 +499,162 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/users_update_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'admin.roles.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/roles'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/role').listRolesValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.roles_create.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/roles/create'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_create_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_create_controller').default['render']>>>
+    }
+  }
+  'admin.roles_create.execute': {
+    methods: ["POST"]
+    pattern: '/admin/roles/create'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/role').createRoleValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/role').createRoleValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_create_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_create_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.roles.destroy': {
+    methods: ["DELETE"]
+    pattern: '/admin/roles/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/role').deleteRoleValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/role').deleteRoleValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.roles_show.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/roles/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/role').showRoleValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_show_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_show_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.roles_update.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/roles/:id/edit'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/role').editRoleValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_update_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_update_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.roles_update.execute': {
+    methods: ["POST"]
+    pattern: '/admin/roles/:id/edit'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/role').editRoleValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/role').editRoleValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_update_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_update_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.permissions.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/permissions'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_controller').default['render']>>>
+    }
+  }
+  'admin.permissions_create.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/permissions/create'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_create_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_create_controller').default['render']>>>
+    }
+  }
+  'admin.permissions_create.execute': {
+    methods: ["POST"]
+    pattern: '/admin/permissions/create'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/permission').createPermissionValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/permission').createPermissionValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_create_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_create_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.permissions.destroy': {
+    methods: ["DELETE"]
+    pattern: '/admin/permissions/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/permission').deletePermissionValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/permission').deletePermissionValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.permissions_update.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/permissions/:id/edit'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/permission').editPermissionValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_update_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_update_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.permissions_update.execute': {
+    methods: ["POST"]
+    pattern: '/admin/permissions/:id/edit'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/permission').editPermissionValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/permission').editPermissionValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_update_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_update_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'admin.pages.render': {
     methods: ["GET","HEAD"]
     pattern: '/admin/pages'

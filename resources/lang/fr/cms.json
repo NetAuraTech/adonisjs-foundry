@@ -186,6 +186,209 @@
     "value": "Utilisateurs",
     "value_one": "Utilisateur"
   },
+  "roles": {
+    "value": "Rôles",
+    "value_one": "Rôle",
+    "list": {
+      "title": "Gérer les rôles"
+    },
+    "search": {
+      "value": "Recherche",
+      "placeholder": "Rechercher par nom ou description...",
+      "filter": "Filtrer"
+    },
+    "create": {
+      "title": "Créer un rôle"
+    },
+    "edit": {
+      "title": "Modifier le rôle \"{name}\""
+    },
+    "show": {
+      "title": "Rôle \"{name}\""
+    },
+    "delete": {
+      "title": "Supprimer le rôle \"{name}\"",
+      "confirm": "Êtes-vous sûr de vouloir supprimer le rôle \"{name}\" ? Ses utilisateurs seront réassignés au rôle \"Utilisateur\"."
+    },
+    "form": {
+      "name": {
+        "value": "Nom",
+        "placeholder": "Éditeur"
+      },
+      "slug": {
+        "value": "Slug",
+        "placeholder": "editeur"
+      },
+      "description": {
+        "value": "Description",
+        "placeholder": "Peut gérer les contenus éditoriaux"
+      },
+      "permissions": {
+        "value": "Permissions",
+        "system_hint": "Les rôles système ne peuvent pas être modifiés."
+      },
+      "submit": "Enregistrer"
+    },
+    "flash": {
+      "created": "Rôle créé avec succès",
+      "updated": "Rôle mis à jour avec succès",
+      "deleted": "Rôle supprimé avec succès"
+    },
+    "system": {
+      "value": "Système",
+      "hint": "Rôle système — la modification et la suppression sont désactivées."
+    },
+    "table": {
+      "name": "Nom",
+      "slug": "Slug",
+      "permissions": "Permissions",
+      "users": "Utilisateurs"
+    },
+    "users": {
+      "value": "Utilisateurs",
+      "empty": "Aucun utilisateur ne détient ce rôle.",
+      "table": {
+        "username": "Nom d'utilisateur",
+        "email": "Email"
+      }
+    },
+    "actions": "Actions",
+    "empty": "Aucun rôle trouvé.",
+    "roles": {
+      "admin": {
+        "value": "Administrateur",
+        "description": "Accès complet au système avec toutes les autorisations."
+      },
+      "user": {
+        "value": "Utilisateur",
+        "description": "Utilisateur standard disposant de droits d'accès limités."
+      }
+    },
+    "permissions": {
+      "category": {
+        "admin": "Administration",
+        "users": "Utilisateurs",
+        "roles": "Rôles",
+        "permissions": "Permissions",
+        "logs": "Journaux"
+      },
+      "admin.access": {
+        "value": "Accéder au tableau de bord de l'administration",
+        "description": "Permet d'accéder au panneau d'administration."
+      },
+      "users.view": {
+        "value": "Afficher les utilisateurs",
+        "description": "Permet de lister et de consulter les utilisateurs."
+      },
+      "users.create": {
+        "value": "Créer des utilisateurs",
+        "description": "Permet de créer de nouveaux utilisateurs."
+      },
+      "users.update": {
+        "value": "Modifier les utilisateurs",
+        "description": "Permet de modifier les utilisateurs existants."
+      },
+      "users.delete": {
+        "value": "Supprimer les utilisateurs",
+        "description": "Permet de supprimer des utilisateurs."
+      },
+      "users.manage_roles": {
+        "value": "Gérer les rôles des utilisateurs",
+        "description": "Permet d'assigner des rôles aux utilisateurs."
+      },
+      "roles.view": {
+        "value": "Afficher les rôles",
+        "description": "Permet de lister et de consulter les rôles."
+      },
+      "roles.create": {
+        "value": "Créer des rôles",
+        "description": "Permet de créer des rôles personnalisés."
+      },
+      "roles.update": {
+        "value": "Modifier les rôles",
+        "description": "Permet de modifier les rôles personnalisés et leurs permissions."
+      },
+      "roles.delete": {
+        "value": "Supprimer les rôles",
+        "description": "Permet de supprimer les rôles personnalisés."
+      },
+      "roles.manage_permissions": {
+        "value": "Gérer les permissions des rôles",
+        "description": "Permet de changer les permissions qu'un rôle accorde."
+      },
+      "permissions.view": {
+        "value": "Afficher les permissions",
+        "description": "Permet de lister et de consulter les permissions."
+      },
+      "permissions.create": {
+        "value": "Créer des permissions",
+        "description": "Permet de créer des permissions personnalisées."
+      },
+      "permissions.update": {
+        "value": "Modifier les permissions",
+        "description": "Permet de modifier les permissions personnalisées."
+      },
+      "permissions.delete": {
+        "value": "Supprimer les permissions",
+        "description": "Permet de supprimer les permissions personnalisées."
+      },
+      "logs.view": {
+        "value": "Afficher les journaux",
+        "description": "Permet de consulter les journaux de l'application."
+      }
+    }
+  },
+  "permissions": {
+    "value": "Permissions",
+    "list": {
+      "title": "Gérer les permissions"
+    },
+    "create": {
+      "title": "Créer une permission"
+    },
+    "edit": {
+      "title": "Modifier la permission \"{name}\""
+    },
+    "delete": {
+      "title": "Supprimer la permission \"{name}\"",
+      "confirm": "Êtes-vous sûr de vouloir supprimer la permission \"{name}\" ? Elle sera retirée de tous les rôles."
+    },
+    "form": {
+      "name": {
+        "value": "Nom",
+        "placeholder": "Publier des rapports"
+      },
+      "slug": {
+        "value": "Slug",
+        "placeholder": "reports.publish"
+      },
+      "category": {
+        "value": "Catégorie",
+        "placeholder": "reports"
+      },
+      "description": {
+        "value": "Description",
+        "placeholder": "Permet de publier des rapports"
+      },
+      "submit": "Enregistrer"
+    },
+    "flash": {
+      "created": "Permission créée avec succès",
+      "updated": "Permission mise à jour avec succès",
+      "deleted": "Permission supprimée avec succès"
+    },
+    "system": {
+      "value": "Système",
+      "hint": "Permission système — la modification et la suppression sont désactivées."
+    },
+    "table": {
+      "name": "Nom",
+      "slug": "Slug",
+      "description": "Description"
+    },
+    "actions": "Actions",
+    "empty": "Aucune permission trouvée."
+  },
   "files": {
     "list": {
       "title": "Gérer les fichiers",

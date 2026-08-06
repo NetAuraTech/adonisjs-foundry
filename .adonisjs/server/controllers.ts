@@ -12,6 +12,13 @@ export const controllers = {
   },
   auth: {
     cms: {
+      Permissions: () => import('#controllers/auth/cms/permissions_controller'),
+      PermissionsCreate: () => import('#controllers/auth/cms/permissions_create_controller'),
+      PermissionsUpdate: () => import('#controllers/auth/cms/permissions_update_controller'),
+      Roles: () => import('#controllers/auth/cms/roles_controller'),
+      RolesCreate: () => import('#controllers/auth/cms/roles_create_controller'),
+      RolesShow: () => import('#controllers/auth/cms/roles_show_controller'),
+      RolesUpdate: () => import('#controllers/auth/cms/roles_update_controller'),
       Users: () => import('#controllers/auth/cms/users_controller'),
       UsersCreate: () => import('#controllers/auth/cms/users_create_controller'),
       UsersShow: () => import('#controllers/auth/cms/users_show_controller'),

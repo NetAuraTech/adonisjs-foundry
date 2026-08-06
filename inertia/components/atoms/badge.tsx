@@ -7,6 +7,8 @@ interface BadgeProps {
   children: ReactNode
   /** Additional Tailwind classes. */
   className?: string
+  /** Native `title` attribute shown as a tooltip on hover. */
+  title?: string
   /** Optional click handler. */
   onClick?: () => void
 }
@@ -37,11 +39,12 @@ const variants = {
  * <Badge variant="outline">Outline</Badge>
  */
 export function Badge(props: BadgeProps) {
-  const { variant = 'default', children, className = '', onClick } = props
+  const { variant = 'default', children, className = '', title, onClick } = props
 
   return (
     <span
       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${variants[variant]} ${className}`}
+      title={title}
       onClick={onClick}
     >
       {children}

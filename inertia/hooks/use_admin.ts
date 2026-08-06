@@ -91,6 +91,18 @@ export function useMenu(overrides: Menu = {}) {
         route: 'admin.users.render',
         permission: 'users.view',
       },
+      {
+        label: t('roles'),
+        icon: 'ShieldCheck',
+        route: 'admin.roles.render',
+        permission: 'roles.view',
+      },
+      {
+        label: t('permissions'),
+        icon: 'KeyRound',
+        route: 'admin.permissions.render',
+        permission: 'permissions.view',
+      },
     ],
     settings: [
       {

@@ -53,6 +53,73 @@ export function registerAdminRoutes(): void {
         })
         .prefix('users')
 
+      router
+        .group(() => {
+          router
+            .get('/', [controllers.auth.cms.Roles, 'render'])
+            .use([middleware.permission({ permissions: ['roles.view'] })])
+
+          router
+            .group(() => {
+              router.get('/', [controllers.auth.cms.RolesCreate, 'render'])
+              router.post('/', [controllers.auth.cms.RolesCreate, 'execute'])
+            })
+            .prefix('create')
+            .use([middleware.permission({ permissions: ['roles.create'] })])
+
+          router
+            .group(() => {
+              router
+                .delete('/', [controllers.auth.cms.Roles, 'destroy'])
+                .use([middleware.permission({ permissions: ['roles.delete'] })])
+              router
+                .get('/', [controllers.auth.cms.RolesShow, 'render'])
+                .use([middleware.permission({ permissions: ['roles.view'] })])
+
+              router
+                .group(() => {
+                  router.get('/', [controllers.auth.cms.RolesUpdate, 'render'])
+                  router.post('/', [controllers.auth.cms.RolesUpdate, 'execute'])
+                })
+                .prefix('edit')
+                .use([middleware.permission({ permissions: ['roles.update'] })])
+            })
+            .prefix(':id')
+        })
+        .prefix('roles')
+
+      router
+        .group(() => {
+          router
+            .get('/', [controllers.auth.cms.Permissions, 'render'])
+            .use([middleware.permission({ permissions: ['permissions.view'] })])
+
+          router
+            .group(() => {
+              router.get('/', [controllers.auth.cms.PermissionsCreate, 'render'])
+              router.post('/', [controllers.auth.cms.PermissionsCreate, 'execute'])
+            })
+            .prefix('create')
+            .use([middleware.permission({ permissions: ['permissions.create'] })])
+
+          router
+            .group(() => {
+              router
+                .delete('/', [controllers.auth.cms.Permissions, 'destroy'])
+                .use([middleware.permission({ permissions: ['permissions.delete'] })])
+
+              router
+                .group(() => {
+                  router.get('/', [controllers.auth.cms.PermissionsUpdate, 'render'])
+                  router.post('/', [controllers.auth.cms.PermissionsUpdate, 'execute'])
+                })
+                .prefix('edit')
+                .use([middleware.permission({ permissions: ['permissions.update'] })])
+            })
+            .prefix(':id')
+        })
+        .prefix('permissions')
+
       router.group(() => {
         // Pages
         router

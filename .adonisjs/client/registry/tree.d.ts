@@ -86,6 +86,33 @@ export interface ApiDefinition {
       render: typeof routes['admin.users_update.render']
       execute: typeof routes['admin.users_update.execute']
     }
+    roles: {
+      render: typeof routes['admin.roles.render']
+      destroy: typeof routes['admin.roles.destroy']
+    }
+    rolesCreate: {
+      render: typeof routes['admin.roles_create.render']
+      execute: typeof routes['admin.roles_create.execute']
+    }
+    rolesShow: {
+      render: typeof routes['admin.roles_show.render']
+    }
+    rolesUpdate: {
+      render: typeof routes['admin.roles_update.render']
+      execute: typeof routes['admin.roles_update.execute']
+    }
+    permissions: {
+      render: typeof routes['admin.permissions.render']
+      destroy: typeof routes['admin.permissions.destroy']
+    }
+    permissionsCreate: {
+      render: typeof routes['admin.permissions_create.render']
+      execute: typeof routes['admin.permissions_create.execute']
+    }
+    permissionsUpdate: {
+      render: typeof routes['admin.permissions_update.render']
+      execute: typeof routes['admin.permissions_update.execute']
+    }
     pages: {
       render: typeof routes['admin.pages.render']
       setHomepage: typeof routes['admin.pages.set_homepage']

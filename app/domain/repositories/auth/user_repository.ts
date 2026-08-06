@@ -447,4 +447,25 @@ export class UserRepository extends BaseRepository {
     await user.save()
     return user
   }
+
+  /**
+   * Reassigns every user holding a role to another role.
+   *
+   * Typically used before deleting a custom role so that no user is left
+   * without a role. Runs inside the ambient transaction when one exists.
+   *
+   * @param fromRoleId - The role users are moved away from.
+   * @param toRoleId - The fallback role users are moved to.
+   * @returns The number of reassigned users.
+   *
+   * @example
+   * const moved = await userRepository.reassignRole(customRole.id, fallbackRole.id)
+   */
+  async reassignRole(fromRoleId: number, toRoleId: number): Promise<number> {
+    const affected = await User.query(this.client())
+      .where('role_id', fromRoleId)
+      .update({ role_id: toRoleId })
+
+    return Number(affected)
+  }
 }

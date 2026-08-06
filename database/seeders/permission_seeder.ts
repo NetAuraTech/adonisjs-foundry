@@ -18,10 +18,10 @@ export default class extends BaseSeeder {
 
     const permissions = Object.entries(categories).flatMap(([category, actions]) =>
       actions.map((action) => ({
-        name: `permissions:${category}.${action}.value`,
+        name: `permissions.${category}.${action}.value`,
         slug: `${category}.${action}`,
-        category: `permissions:category.${category}`,
-        description: `permissions:${category}.${action}.description`,
+        category: `permissions.category.${category}`,
+        description: `permissions.${category}.${action}.description`,
         isSystem: true,
       }))
     )

@@ -94,6 +94,7 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
           }),
           matches: ctx.i18n.t('validation.front.matches', { other: '{other}' }),
           one_of: ctx.i18n.t('validation.front.one_of', { field: '{field}' }),
+          slug_format: ctx.i18n.t('validation.front.slug_format', { field: '{field}' }),
         },
       } as CommonTranslations,
       cms_translations: isCms
@@ -108,6 +109,8 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
             pages: ctx.i18n.t('cms.pages.value'),
             templates: ctx.i18n.t('cms.templates.value'),
             users: ctx.i18n.t('cms.users.value'),
+            roles: ctx.i18n.t('cms.roles.value'),
+            permissions: ctx.i18n.t('cms.permissions.value'),
             files: ctx.i18n.t('cms.files.value'),
             maintenance: ctx.i18n.t('cms.settings.maintenance.value'),
             logs: ctx.i18n.t('cms.logs.value'),
