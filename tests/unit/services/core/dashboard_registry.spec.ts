@@ -48,7 +48,7 @@ test.group('DashboardRegistry', () => {
     const entries = registry.entries()
     assert.lengthOf(entries, 1)
     const collector = await entries[0][1]()
-    assert.deepEqual(await collector.collect(), { templates: 42 })
+    assert.deepEqual(await collector.collect({ recentLimit: 5 }), { templates: 42 })
   })
 
   test('entries() returns factories that resolve to the registered collector', async ({
