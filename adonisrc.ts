@@ -97,6 +97,7 @@ export default defineConfig({
     () => import('#start/validator'),
     () => import('#start/events'),
     () => import('#start/container'),
+    () => import('#start/dashboard'),
     () => import('#start/extensions'),
     () => import('#start/transmit'),
   ],

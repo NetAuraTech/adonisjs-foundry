@@ -1,10 +1,7 @@
 import { inject } from '@adonisjs/core'
-import { UserRepository } from '#repositories/auth/user_repository'
-import { PageRepository } from '#repositories/page/page_repository'
-import { PageTranslationRepository } from '#repositories/page/page_translation_repository'
-import { FileRepository } from '#repositories/file/file_repository'
-import { FileFolderRepository } from '#repositories/file/file_folder_repository'
-import { TemplateRepository } from '#repositories/template/template_repository'
+import { DashboardRegistry } from '#services/core/dashboard_registry'
+import { LogService } from '#services/logging/log_service'
+import { LogCategory } from '#types/logging'
 import type { DashboardStats } from '#types/dashboard'
 
 interface GetDashboardStatsPayload {
@@ -12,96 +9,55 @@ interface GetDashboardStatsPayload {
   recentLimit?: number
 }
 
+/** Default number of entries per recent-activity list. */
+const DEFAULT_RECENT_LIMIT = 5
+
 /**
- * Aggregate the CMS headline figures and recent activity shown on the admin
- * dashboard.
+ * Aggregate the CMS figures and recent activity shown on the admin dashboard.
  *
- * Read-only: every figure comes from a dedicated repository aggregate or a
- * bounded recent-items query — no full table loads — so the dashboard stays
- * cheap as data grows. All queries run in parallel.
+ * Orchestration only: the registered collectors (see {@link DashboardRegistry})
+ * each compute their own domain section. All collectors run in parallel and
+ * their results are assembled into a payload keyed by section, so a domain
+ * absent from the registry simply disappears from the dashboard.
  */
 @inject()
 export class GetDashboardStatsAction {
   constructor(
-    protected userRepository: UserRepository,
-    protected pageRepository: PageRepository,
-    protected pageTranslationRepository: PageTranslationRepository,
-    protected fileRepository: FileRepository,
-    protected fileFolderRepository: FileFolderRepository,
-    protected templateRepository: TemplateRepository
+    protected registry: DashboardRegistry,
+    protected logService: LogService
   ) {}
 
   /**
    * Execute the dashboard aggregation.
    *
+   * A collector failure is logged and propagated: the request fails loudly
+   * instead of serving a partial dashboard.
+   *
    * @param payload - Optional recent-activity list limit.
-   * @returns The aggregated {@link DashboardStats} snapshot.
+   * @returns The aggregated {@link DashboardStats} snapshot, keyed by section.
    *
    * @example
    * const stats = await getDashboardStatsAction.execute({ recentLimit: 5 })
    */
   async execute(payload: GetDashboardStatsPayload = {}): Promise<DashboardStats> {
-    const recentLimit = payload.recentLimit ?? 5
+    const collectorPayload = { recentLimit: payload.recentLimit ?? DEFAULT_RECENT_LIMIT }
 
-    const [
-      users,
-      usersByRole,
-      pages,
-      translationsByStatus,
-      publishedLocales,
-      files,
-      fileFolders,
-      filesByFolder,
-      templates,
-      recentPublishedPages,
-      recentFiles,
-    ] = await Promise.all([
-      this.userRepository.count(),
-      this.userRepository.countByRole(),
-      this.pageRepository.count(),
-      this.pageTranslationRepository.countByStatus(),
-      this.pageTranslationRepository.countPublishedLocales(),
-      this.fileRepository.count(),
-      this.fileFolderRepository.count(),
-      this.fileFolderRepository.listWithFileCounts(),
-      this.templateRepository.count(),
-      this.pageTranslationRepository.listRecentlyPublished(recentLimit),
-      this.fileRepository.listRecent(recentLimit),
-    ])
+    const collected = await Promise.all(
+      this.registry.entries().map(async ([section, makeCollector]) => {
+        try {
+          const collector = await makeCollector()
+          return [section, await collector.collect(collectorPayload)] as const
+        } catch (error) {
+          this.logService.error({
+            message: `Dashboard collector "${String(section)}" failed`,
+            category: LogCategory.SYSTEM,
+            error,
+          })
+          throw error
+        }
+      })
+    )
 
-    const totalTranslations =
-      translationsByStatus.draft + translationsByStatus.published + translationsByStatus.archived
-
-    return {
-      counts: {
-        users,
-        pages,
-        pageTranslations: {
-          ...translationsByStatus,
-          total: totalTranslations,
-        },
-        publishedLocales,
-        files,
-        fileFolders,
-        templates,
-      },
-      usersByRole,
-      filesByFolder,
-      recentPublishedPages: recentPublishedPages.map((translation) => ({
-        id: translation.id,
-        pageId: translation.pageId,
-        title: translation.title,
-        slug: translation.slug,
-        locale: translation.locale,
-        publishedAt: translation.publishedAt,
-      })),
-      recentFiles: recentFiles.map((file) => ({
-        id: file.id,
-        originalName: file.originalName,
-        mimeType: file.mimeType,
-        size: Number(file.size),
-        createdAt: file.createdAt,
-      })),
-    }
+    return Object.fromEntries(collected) as DashboardStats
   }
 }
