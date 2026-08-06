@@ -31,7 +31,14 @@ function parseInertiaPage(html: string) {
 
 test.group('Admin dashboard endpoint', (group) => {
   group.each.setup(async () => {
-    await testUtils.db().truncate()
+    // testUtils.db().truncate() does NOT truncate eagerly: it runs the
+    // migrations and returns a teardown callback performing db:truncate
+    // (the browser specs rely on that by returning it from their setup).
+    // Invoke the teardown immediately so every test starts from an empty
+    // database — other suites in a full run leave committed rows behind,
+    // and the exact-figure assertions below must not see them.
+    const truncate = await testUtils.db().truncate()
+    await truncate()
     // Maintenance state lives in Redis and persists across runs: an
     // interrupted suite can leave maintenance ON and 503 every request.
     await redis.flushdb()
