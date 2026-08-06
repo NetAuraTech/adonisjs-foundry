@@ -442,7 +442,7 @@ function SaveButton({
     )
   }
   return (
-    <Button variant="primary" onClick={onClick} disabled={saving} fitContent>
+    <Button variant="primary" name="builder-save" onClick={onClick} disabled={saving} fitContent>
       {saving ? t('save.saving') : t('save.button')}
     </Button>
   )

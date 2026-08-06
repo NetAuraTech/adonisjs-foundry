@@ -168,6 +168,7 @@ export default function BlockTree({
               <Button
                 type="button"
                 variant="icon"
+                name="add-block-root"
                 onClick={() => setPickerParentId(pickerParentId === 'root' ? null : 'root')}
                 fitContent
                 title={t('blocktree.add_block')}

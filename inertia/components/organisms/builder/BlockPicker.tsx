@@ -158,6 +158,7 @@ export default function BlockPicker(props: BlockPickerProps) {
           <button
             key={block.type}
             type="button"
+            name={`block-pick-${block.type}`}
             onClick={() => onSelect(block.type)}
             className="flex items-start gap-3 rounded-lg p-3 text-left hover:bg-sunken transition-colors group"
           >

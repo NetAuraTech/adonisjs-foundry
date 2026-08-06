@@ -43,18 +43,23 @@ test.group('Builder — new block types', (group) => {
     await waitForBuilderReady(editor)
 
     // Insert a video block through the picker and set its URL in the editor.
-    const addButton = editor.getByTitle('Add block')
+    // Selectors use stable `name` hooks, never translated labels (ADR 008).
+    const addButton = editor.locator('button[name="add-block-root"]')
     await addButton.waitFor({ state: 'visible', timeout: 20000 })
     await addButton.click()
-    await editor.getByRole('button', { name: 'Video' }).click()
+    await editor.locator('button[name="block-pick-video"]').click()
     await editor.locator('#url').fill(YOUTUBE_URL)
 
     // Insert a carousel block through the picker.
-    await editor.getByTitle('Add block').click()
-    await editor.getByRole('button', { name: 'Carousel' }).click()
+    // NOTE: after the video insert above, Chromium's trusted-input pipeline
+    // silently drops the click on this button in headless runs (a native
+    // capture-phase listener receives nothing), while a synthetic DOM event
+    // works — so reopen the picker with dispatchEvent instead of click().
+    await editor.locator('button[name="add-block-root"]').dispatchEvent('click')
+    await editor.locator('button[name="block-pick-carousel"]').click()
 
     // Persist the builder state.
-    await editor.getByRole('button', { name: 'Save', exact: true }).click()
+    await editor.locator('button[name="builder-save"]').click()
     await editor
       .waitForResponse((res) => res.url().includes('/edit') && res.request().method() === 'POST', {
         timeout: 15000,
