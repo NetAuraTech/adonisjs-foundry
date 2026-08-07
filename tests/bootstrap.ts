@@ -23,7 +23,18 @@ export const plugins: Config['plugins'] = [
   assert(),
   pluginAdonisJS(app),
   apiClient(),
-  browserClient({ runInSuites: ['browser'] }),
+  browserClient({
+    runInSuites: ['browser'],
+    // Capture a Playwright trace (screenshots, snapshots, sources) for every
+    // failing browser test. The CI browser-tests job uploads this directory as
+    // a workflow artifact on failure; locally it stays gitignored under tmp/.
+    tracing: {
+      enabled: true,
+      event: 'onError',
+      cleanOutputDirectory: true,
+      outputDirectory: './tmp/playwright-traces',
+    },
+  }),
   sessionBrowserClient(app),
   authBrowserClient(app),
   sessionApiClient(app),
