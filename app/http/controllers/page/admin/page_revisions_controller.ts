@@ -27,7 +27,7 @@ export default class PageRevisionsController {
       pagination,
     })
 
-    return inertia.render('page/admin/revisions', {
+    return inertia.render('cms/page/admin/revisions', {
       revisions: PageRevisionTransformer.transform(revisions.all()),
       translation_id: params.translationId,
       page_id: params.id,

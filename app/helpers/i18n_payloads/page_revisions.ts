@@ -2,27 +2,27 @@ import type { I18nService } from '#services/i18n_service'
 
 export function buildPageRevisionsPayload(i18n: I18nService) {
   return i18n.buildPayload({
-    title: 'admin.pages.show.revision.value',
-    help: 'admin.pages.show.revision.help',
-    index: 'admin.pages.show.revision.index',
+    title: 'page.admin.show.revision.value',
+    help: 'page.admin.show.revision.help',
+    index: 'page.admin.show.revision.index',
     created: {
-      at: 'admin.pages.show.revision.created.at',
-      by: 'admin.pages.show.revision.created.by',
+      at: 'page.admin.show.revision.created.at',
+      by: 'page.admin.show.revision.created.by',
     },
     empty: {
-      value: 'admin.pages.show.revision.empty.value',
-      help: 'admin.pages.show.revision.empty.help',
+      value: 'page.admin.show.revision.empty.value',
+      help: 'page.admin.show.revision.empty.help',
     },
-    latest: 'admin.pages.show.revision.latest',
+    latest: 'page.admin.show.revision.latest',
     actions: {
-      value: 'admin.pages.actions',
-      back: 'admin.pages.show.revision.back',
+      value: 'page.admin.actions',
+      back: 'page.admin.show.revision.back',
       restore: {
-        value: 'admin.pages.show.revision.restore.value',
-        confirm: 'admin.pages.show.revision.restore.confirm',
+        value: 'page.admin.show.revision.restore.value',
+        confirm: 'page.admin.show.revision.restore.confirm',
       },
-      unpin: 'admin.pages.show.revision.unpin',
-      pin: 'admin.pages.show.revision.pin',
+      unpin: 'page.admin.show.revision.unpin',
+      pin: 'page.admin.show.revision.pin',
     },
   })
 }

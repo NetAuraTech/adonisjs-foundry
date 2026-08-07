@@ -94,7 +94,7 @@ export default class PagesPreviewController {
       payload.locale
     )
 
-    return inertia.render('page/front/preview', {
+    return inertia.render('cms/page/front/preview', {
       page: PageTranslationTransformer.transform(translation),
       editable: true,
     })

@@ -41,10 +41,15 @@ export class FooService {
 | **Direct infra access** (exception to layering) | Bypasses the repository layer entirely for OS-level operations (raw SQL, child processes, filesystem) — document why in the file header when used |
 | **Stateful/cache-backed**                       | No DB repo; state lives in a cache service, namespaced per concern, often TTL-based                                                               |
 | **Dashboard collector**                         | Read-only, single `collect(payload)` method; registered in `start/dashboard.ts` to contribute one optional section to the admin dashboard         |
+| **Nav entries module**                          | Static `{domain}_nav.ts` exporting `AdminNavEntry[]`; registered in `start/nav.ts` to contribute entries to the admin sidebar                     |
 
 ## Dashboard collectors
 
 The admin dashboard payload is composed, not hardcoded: each domain owns a `{domain}_dashboard_collector.ts` service implementing `DashboardCollector<Section>` from `#types/dashboard`, and the composition file `start/dashboard.ts` (preloaded) registers one collector per section into the `DashboardRegistry` singleton. `GetDashboardStatsAction` aggregates exactly the registered sections, in parallel; the React page renders only the sections present in the payload. Dropping a domain from the composition therefore removes its dashboard section without leaving empty figures behind.
+
+## Admin navigation
+
+The admin sidebar follows the same composition pattern: each domain owns a `{domain}_nav.ts` module exporting `AdminNavEntry[]` (i18n key labels, route names, icons, permissions, category), and the composition file `start/nav.ts` (preloaded) registers them in sidebar order into the `NavRegistry` singleton. The inertia middleware reads the registry on every admin page render, resolves labels in the request locale, and shares the grouped result as the `admin_menu` prop — the React `useMenu()` hook only reads it. Dropping a domain from the composition removes its sidebar entries without touching kept code.
 
 ## Decision rule
 

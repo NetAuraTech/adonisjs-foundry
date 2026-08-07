@@ -14,7 +14,9 @@ import { registerAuthRoutes } from '#start/routes/auth.routes'
 import { registerSettingsRoutes } from '#start/routes/settings.routes'
 import { registerAdminRoutes } from '#start/routes/admin.routes'
 import { registerAdminApiRoutes } from '#start/routes/admin_api.routes'
-import { registerPublicRoutes } from '#start/routes/public.routes'
+import { registerCmsAdminRoutes } from '#start/routes/cms_admin.routes'
+import { registerCmsApiRoutes } from '#start/routes/cms_api.routes'
+import { registerCmsPublicRoutes } from '#start/routes/cms_public.routes'
 import { registerHealthRoutes } from '#start/routes/health.routes'
 import { middleware } from '#start/kernel'
 
@@ -30,6 +32,10 @@ router
     if (features.settings) registerSettingsRoutes()
     if (features.admin) registerAdminRoutes()
     if (features.adminApi) registerAdminApiRoutes()
-    if (features.public) registerPublicRoutes()
+    if (features.cms) {
+      registerCmsAdminRoutes()
+      registerCmsApiRoutes()
+      registerCmsPublicRoutes()
+    }
   })
   .use(features.maintenance ? middleware.maintenance() : [])

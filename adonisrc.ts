@@ -98,6 +98,7 @@ export default defineConfig({
     () => import('#start/events'),
     () => import('#start/container'),
     () => import('#start/dashboard'),
+    () => import('#start/nav'),
     () => import('#start/extensions'),
     () => import('#start/transmit'),
   ],

@@ -1,4 +1,64 @@
 {
+  "admin": {
+    "list": {
+      "title": "Gérer les modèles",
+      "actions": {
+        "edit": "Modifier le modèle : {name}",
+        "regenerate": "Régénérer la miniature de {name}"
+      },
+      "create_guidance": {
+        "value": "Les modèles se créent depuis l'éditeur visuel, pas depuis cette page.",
+        "from_page": "Ouvrez une page et utilisez « Enregistrer comme modèle » dans la barre d'outils."
+      },
+      "empty": {
+        "help": "Les modèles sont créés à partir des pages dans l'éditeur de page.",
+        "value": "Aucun modèle pour le moment"
+      },
+      "thumbnail": {
+        "placeholder": "Aucune miniature"
+      }
+    },
+    "edit": {
+      "title": "Modifier le modèle : {name}",
+      "back": "Retour aux modèles",
+      "form": {
+        "name": "Nom",
+        "description": "Description",
+        "thumbnail": {
+          "value": "Miniature",
+          "replace": "Remplacer la miniature",
+          "remove": "Supprimer la miniature",
+          "regenerate": "Régénérer la miniature",
+          "regenerating": "Régénération…",
+          "placeholder": "Capturée automatiquement depuis le contenu du modèle. Vous pouvez la remplacer ou la supprimer manuellement."
+        },
+        "submit": "Enregistrer les modifications",
+        "cancel": "Annuler"
+      },
+      "preview": {
+        "value": "Aperçu du contenu",
+        "empty": "Ce modèle n'a pas de contenu.",
+        "block": "Modèle de bloc",
+        "page": "Modèle de page"
+      }
+    },
+    "search": {
+      "filter": "Filtrer",
+      "placeholder": "Section, Image, Héro, ...",
+      "value": "Rechercher",
+      "type": {
+        "page": "Page",
+        "block": "Bloc",
+        "placeholder": "Tous",
+        "value": "Type"
+      }
+    },
+    "delete": {
+      "title": "Supprimer le modèle : {name}",
+      "confirm": "Êtes-vous sûr de vouloir supprimer ce modèle ?"
+    },
+    "value": "Modèles"
+  },
   "created": "Modèle créé avec succès.",
   "updated": "Modèle mis à jour avec succès.",
   "deleted": "Modèle supprimé avec succès.",

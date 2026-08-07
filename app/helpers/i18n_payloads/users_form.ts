@@ -21,8 +21,8 @@ export function buildUsersFormPayload(i18n: I18nService, roles: Role[]) {
       placeholder: 'admin.users.form.role.placeholder',
       ...roles.reduce((acc, role) => {
         acc[role.slug] = {
-          value: `admin.users.roles.${role.slug}.value`,
-          description: `admin.users.roles.${role.slug}.description`,
+          value: `roles.${role.slug}.value`,
+          description: `roles.${role.slug}.description`,
         }
         return acc
       }, {} as TranslationNodes),

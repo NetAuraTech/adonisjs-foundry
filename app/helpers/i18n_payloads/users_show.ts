@@ -36,8 +36,8 @@ export function buildUsersShowPayload(i18n: I18nService, role: Role, permissions
       current: 'admin.users.show.role.current',
       ...[role].reduce((acc, r) => {
         acc[r.slug] = {
-          value: `admin.users.roles.${r.slug}.value`,
-          description: `admin.users.roles.${r.slug}.description`,
+          value: `roles.${r.slug}.value`,
+          description: `roles.${r.slug}.description`,
         }
         return acc
       }, {} as TranslationNodes),
