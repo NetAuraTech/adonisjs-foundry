@@ -1,5 +1,6 @@
 import app from '@adonisjs/core/services/app'
 import { defineConfig } from '@adonisjs/cors'
+import env from '#start/env'
 
 /**
  * Configuration options to tweak the CORS policy. The following
@@ -24,6 +25,11 @@ const corsConfig = defineConfig({
         'http://localhost:3000',
         'http://127.0.0.1:5173',
         'http://127.0.0.1:3000',
+        /**
+         * APP_URL covers tunnel/public dev URLs (e.g. https://xyz.example.fr).
+         * The Origin header includes the scheme, and APP_URL is a full URL.
+         */
+        env.get('APP_URL'),
       ]
     : [],
 
