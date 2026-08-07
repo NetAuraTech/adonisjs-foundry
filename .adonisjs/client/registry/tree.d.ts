@@ -113,6 +113,30 @@ export interface ApiDefinition {
       render: typeof routes['admin.permissions_update.render']
       execute: typeof routes['admin.permissions_update.execute']
     }
+    files: {
+      render: typeof routes['admin.files.render']
+      upload: typeof routes['admin.files.upload']
+      move: typeof routes['admin.files.move']
+      destroy: typeof routes['admin.files.destroy']
+      upsertAlt: typeof routes['admin.files.upsert_alt']
+      deleteAlt: typeof routes['admin.files.delete_alt']
+    }
+    fileFolders: {
+      render: typeof routes['admin.file_folders.render']
+      execute: typeof routes['admin.file_folders.execute']
+      update: typeof routes['admin.file_folders.update']
+      destroy: typeof routes['admin.file_folders.destroy']
+    }
+    settings: {
+      maintenance: {
+        render: typeof routes['admin.settings.maintenance.render']
+        update: typeof routes['admin.settings.maintenance.update']
+        toggle: typeof routes['admin.settings.maintenance.toggle']
+      }
+    }
+    logs: {
+      render: typeof routes['admin.logs.render']
+    }
     pages: {
       render: typeof routes['admin.pages.render']
       setHomepage: typeof routes['admin.pages.set_homepage']
@@ -153,36 +177,17 @@ export interface ApiDefinition {
     templatesPreview: {
       render: typeof routes['admin.templates_preview.render']
     }
-    files: {
-      render: typeof routes['admin.files.render']
-      upload: typeof routes['admin.files.upload']
-      move: typeof routes['admin.files.move']
-      destroy: typeof routes['admin.files.destroy']
-      upsertAlt: typeof routes['admin.files.upsert_alt']
-      deleteAlt: typeof routes['admin.files.delete_alt']
-    }
-    fileFolders: {
-      render: typeof routes['admin.file_folders.render']
-      execute: typeof routes['admin.file_folders.execute']
-      update: typeof routes['admin.file_folders.update']
-      destroy: typeof routes['admin.file_folders.destroy']
-    }
-    settings: {
-      maintenance: {
-        render: typeof routes['admin.settings.maintenance.render']
-        update: typeof routes['admin.settings.maintenance.update']
-        toggle: typeof routes['admin.settings.maintenance.toggle']
-      }
-    }
-    logs: {
-      render: typeof routes['admin.logs.render']
-    }
   }
   api: {
     theme: {
       execute: typeof routes['api.theme.execute']
     }
     admin: {
+      file: {
+        list: typeof routes['api.admin.file.list']
+        find: typeof routes['api.admin.file.find']
+        upload: typeof routes['api.admin.file.upload']
+      }
       builderOperations: {
         execute: typeof routes['api.admin.builder_operations.execute']
         presence: typeof routes['api.admin.builder_operations.presence']
@@ -199,11 +204,6 @@ export interface ApiDefinition {
       }
       templatesPreview: {
         token: typeof routes['api.admin.templates_preview.token']
-      }
-      file: {
-        list: typeof routes['api.admin.file.list']
-        find: typeof routes['api.admin.file.find']
-        upload: typeof routes['api.admin.file.upload']
       }
     }
   }
