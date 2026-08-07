@@ -411,8 +411,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/core/cms/dashboard_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/core/cms/dashboard_controller').default['render']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/core/admin/dashboard_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/core/admin/dashboard_controller').default['render']>>>
     }
   }
   'admin.users.render': {
@@ -423,8 +423,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/users_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/users_controller').default['render']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/users_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/users_controller').default['render']>>>
     }
   }
   'admin.users_create.render': {
@@ -435,8 +435,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/users_create_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/users_create_controller').default['render']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/users_create_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/users_create_controller').default['render']>>>
     }
   }
   'admin.users_create.execute': {
@@ -447,8 +447,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/users_create_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/users_create_controller').default['execute']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/users_create_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/users_create_controller').default['execute']>>>
     }
   }
   'admin.users.destroy': {
@@ -459,8 +459,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/user').deleteValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/users_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/users_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/users_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/users_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.users_show.render': {
@@ -471,8 +471,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQueryForGet<InferInput<(typeof import('#validators/user').showValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/users_show_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/users_show_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/users_show_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/users_show_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.users_update.render': {
@@ -483,8 +483,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQueryForGet<InferInput<(typeof import('#validators/user').editValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/users_update_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/users_update_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/users_update_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/users_update_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.users_update.execute': {
@@ -495,8 +495,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/user').editValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/users_update_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/users_update_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/users_update_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/users_update_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.roles.render': {
@@ -507,8 +507,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: ExtractQueryForGet<InferInput<(typeof import('#validators/role').listRolesValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/roles_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/roles_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.roles_create.render': {
@@ -519,8 +519,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_create_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_create_controller').default['render']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/roles_create_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/roles_create_controller').default['render']>>>
     }
   }
   'admin.roles_create.execute': {
@@ -531,8 +531,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: ExtractQuery<InferInput<(typeof import('#validators/role').createRoleValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_create_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_create_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/roles_create_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/roles_create_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.roles.destroy': {
@@ -543,8 +543,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/role').deleteRoleValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/roles_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/roles_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.roles_show.render': {
@@ -555,8 +555,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQueryForGet<InferInput<(typeof import('#validators/role').showRoleValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_show_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_show_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/roles_show_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/roles_show_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.roles_update.render': {
@@ -567,8 +567,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQueryForGet<InferInput<(typeof import('#validators/role').editRoleValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_update_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_update_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/roles_update_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/roles_update_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.roles_update.execute': {
@@ -579,8 +579,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/role').editRoleValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_update_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/roles_update_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/roles_update_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/roles_update_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.permissions.render': {
@@ -591,8 +591,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_controller').default['render']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/permissions_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/permissions_controller').default['render']>>>
     }
   }
   'admin.permissions_create.render': {
@@ -603,8 +603,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_create_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_create_controller').default['render']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/permissions_create_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/permissions_create_controller').default['render']>>>
     }
   }
   'admin.permissions_create.execute': {
@@ -615,8 +615,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: ExtractQuery<InferInput<(typeof import('#validators/permission').createPermissionValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_create_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_create_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/permissions_create_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/permissions_create_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.permissions.destroy': {
@@ -627,8 +627,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/permission').deletePermissionValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/permissions_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/permissions_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.permissions_update.render': {
@@ -639,8 +639,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQueryForGet<InferInput<(typeof import('#validators/permission').editPermissionValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_update_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_update_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/permissions_update_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/permissions_update_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.permissions_update.execute': {
@@ -651,8 +651,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/permission').editPermissionValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_update_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/cms/permissions_update_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/admin/permissions_update_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/admin/permissions_update_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.pages.render': {
@@ -663,8 +663,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: ExtractQueryForGet<InferInput<(typeof import('#validators/page').listPageValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.pages_create.render': {
@@ -675,8 +675,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_create_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_create_controller').default['render']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_create_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_create_controller').default['render']>>>
     }
   }
   'admin.pages_create.execute': {
@@ -687,8 +687,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: ExtractQuery<InferInput<(typeof import('#validators/page').createPageValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_create_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_create_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_create_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_create_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.pages_show.render': {
@@ -699,8 +699,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQueryForGet<InferInput<(typeof import('#validators/page').showPageValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_show_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_show_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_show_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_show_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.pages_update.render': {
@@ -711,8 +711,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQueryForGet<InferInput<(typeof import('#validators/page').showPageValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_update_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_update_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_update_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_update_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.pages_update.execute': {
@@ -723,8 +723,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/page').showPageValidator)>|InferInput<(typeof import('#validators/page').updatePageValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_update_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_update_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_update_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_update_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.pages_update.publish': {
@@ -735,8 +735,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/page').showPageValidator)>|InferInput<(typeof import('#validators/page').publishPageValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_update_controller').default['publish']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_update_controller').default['publish']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_update_controller').default['publish']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_update_controller').default['publish']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.pages_update.unpublish': {
@@ -747,8 +747,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/page').showPageValidator)>|InferInput<(typeof import('#validators/page').publishPageValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_update_controller').default['unpublish']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_update_controller').default['unpublish']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_update_controller').default['unpublish']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_update_controller').default['unpublish']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.pages.set_homepage': {
@@ -759,8 +759,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_controller').default['setHomepage']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_controller').default['setHomepage']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_controller').default['setHomepage']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_controller').default['setHomepage']>>>
     }
   }
   'admin.pages.destroy': {
@@ -771,8 +771,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/page').showPageValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.page_translations.execute': {
@@ -783,8 +783,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/page').showPageValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/cms/page_translations_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/page_translations_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/page_translations_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/page_translations_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.page_revisions.index': {
@@ -795,8 +795,8 @@ export interface Registry {
       paramsTuple: [ParamValue, ParamValue]
       params: { id: ParamValue; translationId: ParamValue }
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/cms/page_revisions_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/page_revisions_controller').default['index']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/page_revisions_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/page_revisions_controller').default['index']>>>
     }
   }
   'admin.page_revisions.restore': {
@@ -807,8 +807,8 @@ export interface Registry {
       paramsTuple: [ParamValue, ParamValue, ParamValue]
       params: { id: ParamValue; translationId: ParamValue; revisionId: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/page').revisionValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/cms/page_revisions_controller').default['restore']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/page_revisions_controller').default['restore']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/page_revisions_controller').default['restore']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/page_revisions_controller').default['restore']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.page_revisions.toggle_keep': {
@@ -819,8 +819,8 @@ export interface Registry {
       paramsTuple: [ParamValue, ParamValue, ParamValue]
       params: { id: ParamValue; translationId: ParamValue; revisionId: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/page').revisionValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/cms/page_revisions_controller').default['toggleKeep']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/page_revisions_controller').default['toggleKeep']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/page_revisions_controller').default['toggleKeep']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/page_revisions_controller').default['toggleKeep']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.pages_preview.render': {
@@ -831,8 +831,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { pageId: ParamValue }
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_preview_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_preview_controller').default['render']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_preview_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_preview_controller').default['render']>>>
     }
   }
   'admin.templates.render': {
@@ -843,8 +843,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: ExtractQueryForGet<InferInput<(typeof import('#validators/template').listTemplateValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.templates.execute': {
@@ -855,8 +855,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: ExtractQuery<InferInput<(typeof import('#validators/template').createTemplateValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.templates.apply_to_page': {
@@ -867,8 +867,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/template').showTemplateValidator)>|InferInput<(typeof import('#validators/template').applyTemplateValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_controller').default['applyToPage']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_controller').default['applyToPage']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['applyToPage']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['applyToPage']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.templates.update': {
@@ -879,8 +879,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/template').showTemplateValidator)>|InferInput<(typeof import('#validators/template').updateTemplateValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.templates.destroy': {
@@ -891,8 +891,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/template').showTemplateValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.templates_preview.render': {
@@ -903,8 +903,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQueryForGet<InferInput<(typeof import('#validators/template').templatePreviewValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_preview_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_preview_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_preview_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_preview_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.templates.edit': {
@@ -915,8 +915,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQueryForGet<InferInput<(typeof import('#validators/template').showTemplateValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_controller').default['edit']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_controller').default['edit']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['edit']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['edit']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.files.render': {
@@ -927,8 +927,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: ExtractQueryForGet<InferInput<(typeof import('#validators/file').listFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/cms/files_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/cms/files_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/admin/files_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/admin/files_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.files.upload': {
@@ -939,8 +939,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/cms/files_controller').default['upload']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/cms/files_controller').default['upload']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/admin/files_controller').default['upload']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/admin/files_controller').default['upload']>>>
     }
   }
   'admin.files.move': {
@@ -951,8 +951,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/file').showFileValidator)>|InferInput<(typeof import('#validators/file').moveFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/cms/files_controller').default['move']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/cms/files_controller').default['move']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/admin/files_controller').default['move']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/admin/files_controller').default['move']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.files.destroy': {
@@ -963,8 +963,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/file').showFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/cms/files_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/cms/files_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/admin/files_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/admin/files_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.files.upsert_alt': {
@@ -975,8 +975,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/file').showFileValidator)>|InferInput<(typeof import('#validators/file').upsertAltValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/cms/files_controller').default['upsertAlt']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/cms/files_controller').default['upsertAlt']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/admin/files_controller').default['upsertAlt']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/admin/files_controller').default['upsertAlt']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.files.delete_alt': {
@@ -987,8 +987,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/file').showFileValidator)>|InferInput<(typeof import('#validators/file').deleteAltValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/cms/files_controller').default['deleteAlt']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/cms/files_controller').default['deleteAlt']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/admin/files_controller').default['deleteAlt']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/admin/files_controller').default['deleteAlt']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.file_folders.render': {
@@ -999,8 +999,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/cms/file_folders_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/cms/file_folders_controller').default['render']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/admin/file_folders_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/admin/file_folders_controller').default['render']>>>
     }
   }
   'admin.file_folders.execute': {
@@ -1011,8 +1011,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: ExtractQuery<InferInput<(typeof import('#validators/file').createFolderValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/cms/file_folders_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/cms/file_folders_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/admin/file_folders_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/admin/file_folders_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.file_folders.update': {
@@ -1023,8 +1023,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/file').showFileValidator)>|InferInput<(typeof import('#validators/file').updateFolderValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/cms/file_folders_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/cms/file_folders_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/admin/file_folders_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/admin/file_folders_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.file_folders.destroy': {
@@ -1035,8 +1035,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: ExtractQuery<InferInput<(typeof import('#validators/file').showFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/cms/file_folders_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/cms/file_folders_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/file/admin/file_folders_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/file/admin/file_folders_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.settings.maintenance.render': {
@@ -1047,8 +1047,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/maintenance/cms/maintenance_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/maintenance/cms/maintenance_controller').default['render']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/maintenance/admin/maintenance_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/maintenance/admin/maintenance_controller').default['render']>>>
     }
   }
   'admin.settings.maintenance.update': {
@@ -1059,8 +1059,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/maintenance/cms/maintenance_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/maintenance/cms/maintenance_controller').default['update']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/maintenance/admin/maintenance_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/maintenance/admin/maintenance_controller').default['update']>>>
     }
   }
   'admin.settings.maintenance.toggle': {
@@ -1071,8 +1071,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/maintenance/cms/maintenance_controller').default['toggle']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/maintenance/cms/maintenance_controller').default['toggle']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/maintenance/admin/maintenance_controller').default['toggle']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/maintenance/admin/maintenance_controller').default['toggle']>>>
     }
   }
   'admin.logs.render': {
@@ -1083,8 +1083,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: ExtractQueryForGet<InferInput<(typeof import('#validators/log').listLogsValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/log/cms/logs_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/log/cms/logs_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/log/admin/logs_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/log/admin/logs_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'api.theme.execute': {
@@ -1143,8 +1143,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_preview_controller').default['token']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_preview_controller').default['token']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_preview_controller').default['token']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_preview_controller').default['token']>>>
     }
   }
   'api.admin.templates.index': {
@@ -1203,8 +1203,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_preview_controller').default['token']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/cms/templates_preview_controller').default['token']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_preview_controller').default['token']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_preview_controller').default['token']>>>
     }
   }
   'api.admin.file.list': {
