@@ -1,9 +1,9 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
-import { CreateFromPageAction } from '#actions/template/create_from_page_action'
-import Page from '#models/page/page'
-import PageTranslation from '#models/page/page_translation'
-import { type PageContent } from '#types/page'
+import { CreateFromPageAction } from '#cms/domain/actions/template/create_from_page_action'
+import Page from '#cms/models/page/page'
+import PageTranslation from '#cms/models/page/page_translation'
+import { type PageContent } from '#cms/types/page'
 import { UserFactory } from '#database/factories/user_factory'
 
 test.group('CreateFromPageAction', () => {

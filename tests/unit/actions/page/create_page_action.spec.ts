@@ -1,9 +1,9 @@
 import { test } from '@japa/runner'
 import SlugExistsException from '#exceptions/core/slug_exists_exception'
 import app from '@adonisjs/core/services/app'
-import { CreatePageAction } from '#actions/page/create_page_action'
-import Page from '#models/page/page'
-import PageTranslation from '#models/page/page_translation'
+import { CreatePageAction } from '#cms/domain/actions/page/create_page_action'
+import Page from '#cms/models/page/page'
+import PageTranslation from '#cms/models/page/page_translation'
 import { UserFactory } from '#database/factories/user_factory'
 
 test.group('CreatePageAction', () => {

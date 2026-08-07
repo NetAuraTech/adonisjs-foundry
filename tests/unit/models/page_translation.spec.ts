@@ -1,8 +1,8 @@
 import { test } from '@japa/runner'
 import sinon from 'sinon'
-import PageTranslation from '#models/page/page_translation'
-import type { PageContent } from '#types/page'
-import { PageRevisionRepository } from '#repositories/page/page_revision_repository'
+import PageTranslation from '#cms/models/page/page_translation'
+import type { PageContent } from '#cms/types/page'
+import { PageRevisionRepository } from '#cms/domain/repositories/page/page_revision_repository'
 
 /**
  * Unit tests for `PageTranslation.saveRevision()`.

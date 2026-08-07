@@ -1,4 +1,4 @@
-import type { ResolvedBlock } from '#types/page'
+import type { ResolvedBlock } from '#cms/types/page'
 import { Fragment } from 'react'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'

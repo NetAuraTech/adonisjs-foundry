@@ -1,7 +1,7 @@
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
-import Page from '#models/page/page'
-import PageTranslation from '#models/page/page_translation'
-import type { PageContent } from '#types/page'
+import Page from '#cms/models/page/page'
+import PageTranslation from '#cms/models/page/page_translation'
+import type { PageContent } from '#cms/types/page'
 
 /**
  * CMS Page seeder.

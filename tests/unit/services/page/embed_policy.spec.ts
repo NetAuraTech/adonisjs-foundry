@@ -1,5 +1,5 @@
 import { test } from '@japa/runner'
-import { classifyVideoUrl, isAllowedIframeUrl } from '#services/page/embed_policy'
+import { classifyVideoUrl, isAllowedIframeUrl } from '#cms/domain/services/page/embed_policy'
 
 /**
  * Unit tests for the embed policy — the pure seam that decides which remote

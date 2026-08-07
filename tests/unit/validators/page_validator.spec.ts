@@ -7,7 +7,7 @@ import {
   publishPageValidator,
   createTranslationValidator,
   revisionValidator,
-} from '#validators/page'
+} from '#cms/validators/page'
 
 /**
  * Unit tests for page validators.

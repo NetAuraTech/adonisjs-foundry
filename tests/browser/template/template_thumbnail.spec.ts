@@ -4,8 +4,8 @@ import { createAdminUser, CMS_PERMISSIONS } from '#tests/helpers/browser/create_
 import { login } from '#tests/helpers/browser/login'
 import { visitPage } from '#tests/helpers/browser/visit_page'
 import { FileFactory } from '#factories/file_factory'
-import Template from '#models/template/template'
-import type { PageContent } from '#types/page'
+import Template from '#cms/models/template/template'
+import type { PageContent } from '#cms/types/page'
 
 const blockContent: PageContent = {
   blocks: [{ id: 'b1', type: 'section', props: {}, children: [] }],

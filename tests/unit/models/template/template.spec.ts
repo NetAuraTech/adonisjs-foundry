@@ -1,5 +1,5 @@
 import { test } from '@japa/runner'
-import Template from '#models/template/template'
+import Template from '#cms/models/template/template'
 
 test.group('Template Model', () => {
   test('can instantiate a template model', async ({ assert }) => {

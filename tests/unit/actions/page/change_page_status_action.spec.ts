@@ -1,9 +1,9 @@
 import { test } from '@japa/runner'
-import MissingTranslationException from '#exceptions/page/missing_translation_exception'
+import MissingTranslationException from '#cms/exceptions/page/missing_translation_exception'
 import app from '@adonisjs/core/services/app'
-import { ChangePageStatusAction } from '#actions/page/change_page_status_action'
-import Page from '#models/page/page'
-import PageTranslation from '#models/page/page_translation'
+import { ChangePageStatusAction } from '#cms/domain/actions/page/change_page_status_action'
+import Page from '#cms/models/page/page'
+import PageTranslation from '#cms/models/page/page_translation'
 
 test.group('ChangePageStatusAction', () => {
   test('execute() changes the page status', async ({ assert }) => {

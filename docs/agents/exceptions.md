@@ -2,6 +2,8 @@
 
 Custom exceptions live in `app/exceptions/{domain}/{name}_exception.ts`, one class per error case. Built on AdonisJS's `Exception` base class with a project-specific `handle()` convention layered on top.
 
+> **CMS exception (ADR-0001):** CMS exceptions (page, template) live under `app/cms/exceptions/{domain}/`, imported via `#cms/exceptions/...`. The layout above applies to everything outside the CMS module.
+
 ## Structure
 
 ```typescript

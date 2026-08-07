@@ -1,5 +1,5 @@
 import env from '#start/env'
-import type { VideoProvider } from '#types/page'
+import type { VideoProvider } from '#cms/types/page'
 
 /**
  * Configuration for CMS content policies (page builder blocks).

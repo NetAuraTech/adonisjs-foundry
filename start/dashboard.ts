@@ -13,8 +13,8 @@
 import app from '@adonisjs/core/services/app'
 import { DashboardRegistry } from '#services/core/dashboard_registry'
 import { AuthDashboardCollector } from '#services/auth/auth_dashboard_collector'
-import { PageDashboardCollector } from '#services/page/page_dashboard_collector'
-import { TemplateDashboardCollector } from '#services/template/template_dashboard_collector'
+import { PageDashboardCollector } from '#cms/domain/services/page/page_dashboard_collector'
+import { TemplateDashboardCollector } from '#cms/domain/services/template/template_dashboard_collector'
 import { FileDashboardCollector } from '#services/file/file_dashboard_collector'
 
 app.container.singleton(DashboardRegistry, () => new DashboardRegistry())

@@ -3,8 +3,8 @@ import { Button } from '~/components/atoms/button'
 import { Input } from '~/components/atoms/input'
 import { Field } from '~/components/molecules/field'
 import { useBuilderSync } from '~/hooks/use_builder_sync'
-import type { PageContent } from '#types/page'
-import type { BuilderOperation } from '#types/builder'
+import type { PageContent } from '#cms/types/page'
+import type { BuilderOperation } from '#cms/types/builder'
 import { urlFor } from '~/client'
 import PresenceBar from '~/components/organisms/builder/PresenceBar'
 import BlockTree from '~/components/organisms/builder/BlockTree'
@@ -23,7 +23,7 @@ import { useTranslation } from '~/hooks/use_translation'
 import type { PageEditorTranslations } from '#types/translations'
 
 interface Props {
-  page: Data.Page
+  page: Data.Page.Page
   translations: PageEditorTranslations
   availableRoutes: {
     name: string | undefined

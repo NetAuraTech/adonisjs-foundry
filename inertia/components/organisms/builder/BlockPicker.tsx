@@ -1,6 +1,6 @@
 import React from 'react'
 import { getBlockCatalog } from './block_types'
-import type { BlockType } from '#types/page'
+import type { BlockType } from '#cms/types/page'
 import type { PageEditorTranslations } from '#types/translations'
 import { Button } from '~/components/atoms/button'
 import { Icon } from '~/components/atoms/icon'

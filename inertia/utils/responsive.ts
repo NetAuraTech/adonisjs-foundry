@@ -1,4 +1,4 @@
-import type { ResponsiveValue } from '#types/page'
+import type { ResponsiveValue } from '#cms/types/page'
 
 /**
  * Resolves a `ResponsiveValue<T>` into a Tailwind class string by looking up

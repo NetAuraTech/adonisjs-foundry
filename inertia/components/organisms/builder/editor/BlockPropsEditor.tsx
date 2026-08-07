@@ -1,4 +1,4 @@
-import type { Block, BlockType } from '#types/page'
+import type { Block, BlockType } from '#cms/types/page'
 import type { LockState } from '~/hooks/use_builder_sync'
 import { LockProps } from '~/types/builder'
 import { SectionEditor } from '~/components/organisms/builder/editor/blocks/section_editor'

@@ -1,4 +1,4 @@
-import type { ResolvedPageContent } from '#types/page'
+import type { ResolvedPageContent } from '#cms/types/page'
 import BlockRenderer from '~/components/molecules/renderer/block_renderer'
 
 interface PageRendererProps {

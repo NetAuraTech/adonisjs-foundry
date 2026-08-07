@@ -1,4 +1,4 @@
-import type { Block } from '#types/page'
+import type { Block } from '#cms/types/page'
 import { generateBlockId } from '~/components/organisms/builder/block_types'
 
 /** Function that produces a fresh block id. Injectable for deterministic tests. */

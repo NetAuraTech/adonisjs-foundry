@@ -1,5 +1,5 @@
 import { resolveResponsive } from '~/utils/responsive'
-import type { ResolvedBlock } from '#types/page'
+import type { ResolvedBlock } from '#cms/types/page'
 import { ReactNode } from 'react'
 
 const directionMap = {

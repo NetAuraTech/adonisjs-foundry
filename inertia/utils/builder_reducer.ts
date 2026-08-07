@@ -1,5 +1,5 @@
-import type { Block, PageContent } from '#types/page'
-import type { BuilderOperation } from '#types/builder'
+import type { Block, PageContent } from '#cms/types/page'
+import type { BuilderOperation } from '#cms/types/builder'
 
 /**
  * Pure reducer that applies a `BuilderOperation` to a `PageContent` tree.

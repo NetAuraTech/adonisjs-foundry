@@ -4,8 +4,8 @@ import TemplatePicker from './TemplatePicker'
 import SaveBlockTemplateModal from './SaveBlockTemplateModal'
 import BlockPropsEditor from './editor/BlockPropsEditor'
 import { createBlock, getBlockDescriptor } from './block_types'
-import type { Block, BlockType, PageContent } from '#types/page'
-import type { BuilderOperation } from '#types/builder'
+import type { Block, BlockType, PageContent } from '#cms/types/page'
+import type { BuilderOperation } from '#cms/types/builder'
 import type { LockState } from '~/hooks/use_builder_sync'
 import { Button } from '~/components/atoms/button'
 import { Icon } from '~/components/atoms/icon'
@@ -103,7 +103,7 @@ export default function BlockTree({
   const csrfToken = pageProps.csrfToken
   const locale = (pageProps.locale as string) ?? 'en'
 
-  function insertTemplateBlock(template: Data.Template, parentId: 'root' | string) {
+  function insertTemplateBlock(template: Data.Template.Template, parentId: 'root' | string) {
     const rootBlock = template?.content?.blocks?.[0]
     if (!rootBlock) return
 
@@ -305,7 +305,7 @@ function BlockNode(props: {
   onAddChild: (pid: string) => void
   onPickBlock: (type: BlockType, pid: string) => void
   onAddTemplateChild: (pid: string) => void
-  onPickTemplate: (template: Data.Template, pid: string) => void
+  onPickTemplate: (template: Data.Template.Template, pid: string) => void
   handleCloseBlockPicker: () => void
   handleCloseTemplatePicker: () => void
 }) {

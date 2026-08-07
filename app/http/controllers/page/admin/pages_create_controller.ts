@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { createPageValidator } from '#validators/page'
-import { CreatePageAction } from '#actions/page/create_page_action'
+import { createPageValidator } from '#cms/validators/page'
+import { CreatePageAction } from '#cms/domain/actions/page/create_page_action'
 import { I18nService } from '#services/i18n_service'
 import { buildPagesCreatePayload } from '#helpers/i18n_payloads/pages_create'
 

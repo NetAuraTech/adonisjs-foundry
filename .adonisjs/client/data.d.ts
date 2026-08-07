@@ -10,12 +10,12 @@ import type DashboardTransformer from '#transformers/dashboard_transformer'
 import type FileFolderTransformer from '#transformers/file_folder_transformer'
 import type FileTransformer from '#transformers/file_transformer'
 import type LogEntryTransformer from '#transformers/log_entry_transformer'
-import type PageRevisionTransformer from '#transformers/page_revision_transformer'
-import type PageTransformer from '#transformers/page_transformer'
-import type PageTranslationTransformer from '#transformers/page_translation_transformer'
+import type PagePageRevisionTransformer from '#transformers/page/page_revision_transformer'
+import type PagePageTransformer from '#transformers/page/page_transformer'
+import type PagePageTranslationTransformer from '#transformers/page/page_translation_transformer'
 import type PermissionTransformer from '#transformers/permission_transformer'
 import type RoleTransformer from '#transformers/role_transformer'
-import type TemplateTransformer from '#transformers/template_transformer'
+import type TemplateTemplateTransformer from '#transformers/template/template_transformer'
 import type UserTransformer from '#transformers/user_transformer'
 import type InertiaMiddleware from '#middleware/inertia_middleware'
 
@@ -36,17 +36,19 @@ export namespace Data {
   export namespace LogEntry {
     export type Variants = InferVariants<LogEntryTransformer>
   }
-  export type PageRevision = InferData<PageRevisionTransformer>
-  export namespace PageRevision {
-    export type Variants = InferVariants<PageRevisionTransformer>
-  }
-  export type Page = InferData<PageTransformer>
   export namespace Page {
-    export type Variants = InferVariants<PageTransformer>
-  }
-  export type PageTranslation = InferData<PageTranslationTransformer>
-  export namespace PageTranslation {
-    export type Variants = InferVariants<PageTranslationTransformer>
+    export type PageRevision = InferData<PagePageRevisionTransformer>
+    export namespace PageRevision {
+      export type Variants = InferVariants<PagePageRevisionTransformer>
+    }
+    export type Page = InferData<PagePageTransformer>
+    export namespace Page {
+      export type Variants = InferVariants<PagePageTransformer>
+    }
+    export type PageTranslation = InferData<PagePageTranslationTransformer>
+    export namespace PageTranslation {
+      export type Variants = InferVariants<PagePageTranslationTransformer>
+    }
   }
   export type Permission = InferData<PermissionTransformer>
   export namespace Permission {
@@ -56,9 +58,11 @@ export namespace Data {
   export namespace Role {
     export type Variants = InferVariants<RoleTransformer>
   }
-  export type Template = InferData<TemplateTransformer>
   export namespace Template {
-    export type Variants = InferVariants<TemplateTransformer>
+    export type Template = InferData<TemplateTemplateTransformer>
+    export namespace Template {
+      export type Variants = InferVariants<TemplateTemplateTransformer>
+    }
   }
   export type User = InferData<UserTransformer>
   export namespace User {

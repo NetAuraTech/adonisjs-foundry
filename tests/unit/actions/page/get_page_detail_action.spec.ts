@@ -1,8 +1,8 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
-import { GetPageDetailAction } from '#actions/page/get_page_detail_action'
-import Page from '#models/page/page'
-import PageTranslation from '#models/page/page_translation'
+import { GetPageDetailAction } from '#cms/domain/actions/page/get_page_detail_action'
+import Page from '#cms/models/page/page'
+import PageTranslation from '#cms/models/page/page_translation'
 
 test.group('GetPageDetailAction', () => {
   test('execute() returns the page with translations preloaded', async ({ assert }) => {

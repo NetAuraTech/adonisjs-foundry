@@ -1,5 +1,5 @@
 import transmit from '@adonisjs/transmit/services/main'
-import { BuilderSessionService } from '#services/page/builder_session_service'
+import { BuilderSessionService } from '#cms/domain/services/page/builder_session_service'
 import app from '@adonisjs/core/services/app'
 
 transmit.registerRoutes()

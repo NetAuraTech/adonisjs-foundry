@@ -1,10 +1,10 @@
 import { test } from '@japa/runner'
 import RowNotFoundException from '#exceptions/core/row_not_found_exception'
 import app from '@adonisjs/core/services/app'
-import { RestoreRevisionAction } from '#actions/page/restore_revision_action'
-import Page from '#models/page/page'
-import PageTranslation from '#models/page/page_translation'
-import PageRevision from '#models/page/page_revision'
+import { RestoreRevisionAction } from '#cms/domain/actions/page/restore_revision_action'
+import Page from '#cms/models/page/page'
+import PageTranslation from '#cms/models/page/page_translation'
+import PageRevision from '#cms/models/page/page_revision'
 import { UserFactory } from '#database/factories/user_factory'
 
 test.group('RestoreRevisionAction', () => {

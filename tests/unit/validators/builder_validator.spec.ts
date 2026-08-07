@@ -4,7 +4,7 @@ import {
   addBlockSchema,
   builderOperationValidator,
   builderPresenceValidator,
-} from '#validators/builder'
+} from '#cms/validators/builder'
 
 /**
  * Unit tests for builder validators.

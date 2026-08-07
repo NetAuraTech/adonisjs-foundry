@@ -1,5 +1,5 @@
 import { Field } from '~/components/molecules/field'
-import type { ResolvedBlock } from '#types/page'
+import type { ResolvedBlock } from '#cms/types/page'
 import { SelectOption } from '~/components/atoms/select_option'
 
 interface FieldBlockProps {

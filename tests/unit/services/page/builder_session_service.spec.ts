@@ -1,7 +1,7 @@
 import { test } from '@japa/runner'
 import { setTimeout as sleep } from 'node:timers/promises'
-import { BuilderSessionService } from '#services/page/builder_session_service'
-import { LOCK_TTL_MS } from '#types/builder'
+import { BuilderSessionService } from '#cms/domain/services/page/builder_session_service'
+import { LOCK_TTL_MS } from '#cms/types/builder'
 import { CacheService } from '#services/cache/cache_service'
 import { RedisCacheDriver } from '#services/cache/drivers/redis_cache_driver'
 

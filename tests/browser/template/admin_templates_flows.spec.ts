@@ -5,8 +5,8 @@ import { login } from '#tests/helpers/browser/login'
 import { visitPage } from '#tests/helpers/browser/visit_page'
 import { fillField } from '#tests/helpers/browser/fill_field'
 import { waitForInertiaResponse } from '#tests/helpers/browser/wait_for_inertia_response'
-import Template from '#models/template/template'
-import type { PageContent } from '#types/page'
+import Template from '#cms/models/template/template'
+import type { PageContent } from '#cms/types/page'
 
 const blockContent: PageContent = {
   blocks: [{ id: 'b1', type: 'section', props: {}, children: [] }],

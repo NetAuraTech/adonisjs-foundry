@@ -1,5 +1,5 @@
 import { Children, useState, type ReactNode } from 'react'
-import type { ResolvedBlock, MediaAspect } from '#types/page'
+import type { ResolvedBlock, MediaAspect } from '#cms/types/page'
 import { Icon } from '~/components/atoms/icon'
 import { resolveResponsive } from '~/utils/responsive'
 

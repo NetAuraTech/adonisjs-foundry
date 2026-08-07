@@ -1,5 +1,5 @@
 import { test } from '@japa/runner'
-import { contactValidator } from '#validators/contact'
+import { contactValidator } from '#cms/validators/contact'
 
 /**
  * Unit tests for `contactValidator`.

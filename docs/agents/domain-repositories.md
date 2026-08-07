@@ -2,6 +2,8 @@
 
 One repository per model, in `app/domain/repositories/{area}/{name}_repository.ts`. Pure, focused wrappers around Lucid ORM queries — callers never touch the ORM directly. No business logic.
 
+> **CMS exception (ADR-0001):** CMS repositories (page, template) live under `app/cms/domain/repositories/{area}/`, imported via `#cms/domain/repositories/...`. The layout above applies to everything outside the CMS module.
+
 ## Structure
 
 ```typescript

@@ -1,8 +1,8 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
-import { FindPageBySlugAction } from '#actions/page/find_page_by_slug_action'
-import Page from '#models/page/page'
-import PageTranslation from '#models/page/page_translation'
+import { FindPageBySlugAction } from '#cms/domain/actions/page/find_page_by_slug_action'
+import Page from '#cms/models/page/page'
+import PageTranslation from '#cms/models/page/page_translation'
 
 test.group('FindPageBySlugAction', () => {
   test('execute() returns page when slug exists', async ({ assert }) => {

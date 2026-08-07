@@ -1,8 +1,8 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { showPageValidator } from '#validators/page'
-import PageTransformer from '#transformers/page_transformer'
-import { GetPageDetailAction } from '#actions/page/get_page_detail_action'
+import { showPageValidator } from '#cms/validators/page'
+import PageTransformer from '#transformers/page/page_transformer'
+import { GetPageDetailAction } from '#cms/domain/actions/page/get_page_detail_action'
 import { I18nService } from '#services/i18n_service'
 import { buildPagesShowPayload } from '#helpers/i18n_payloads/pages_show'
 

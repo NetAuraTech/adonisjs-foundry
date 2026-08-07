@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import { UserFactory, RoleFactory } from '#factories/user_factory'
-import { PageFactory, PageTranslationFactory } from '#factories/page_factory'
-import { TemplateFactory } from '#factories/template_factory'
+import { PageFactory, PageTranslationFactory } from '#cms/factories/page_factory'
+import { TemplateFactory } from '#cms/factories/template_factory'
 import { FileFactory } from '#factories/file_factory'
 import { FileFolderFactory } from '#factories/file_folder_factory'
 

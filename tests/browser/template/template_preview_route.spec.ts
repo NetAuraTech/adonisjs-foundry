@@ -6,10 +6,10 @@ import env from '#start/env'
 import { createAdminUser, CMS_PERMISSIONS } from '#tests/helpers/browser/create_admin_user'
 import { login } from '#tests/helpers/browser/login'
 import { visitPage } from '#tests/helpers/browser/visit_page'
-import Template from '#models/template/template'
+import Template from '#cms/models/template/template'
 import { PreviewTokenHelper } from '#helpers/core/preview_token'
 import { MaintenanceService } from '#services/maintenance/maintenance_service'
-import type { PageContent } from '#types/page'
+import type { PageContent } from '#cms/types/page'
 
 const previewContent: PageContent = {
   blocks: [{ id: 'b1', type: 'paragraph', props: { text: 'Preview pipeline marker' } }],

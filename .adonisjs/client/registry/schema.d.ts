@@ -662,7 +662,7 @@ export interface Registry {
       body: {}
       paramsTuple: []
       params: {}
-      query: ExtractQueryForGet<InferInput<(typeof import('#validators/page').listPageValidator)>>
+      query: ExtractQueryForGet<InferInput<(typeof import('#cms/validators/page').listPageValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_controller').default['render']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -683,10 +683,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/admin/pages/create'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/page').createPageValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#cms/validators/page').createPageValidator)>>
       paramsTuple: []
       params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/page').createPageValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#cms/validators/page').createPageValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_create_controller').default['execute']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_create_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -698,7 +698,7 @@ export interface Registry {
       body: {}
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
-      query: ExtractQueryForGet<InferInput<(typeof import('#validators/page').showPageValidator)>>
+      query: ExtractQueryForGet<InferInput<(typeof import('#cms/validators/page').showPageValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_show_controller').default['render']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_show_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -710,7 +710,7 @@ export interface Registry {
       body: {}
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
-      query: ExtractQueryForGet<InferInput<(typeof import('#validators/page').showPageValidator)>>
+      query: ExtractQueryForGet<InferInput<(typeof import('#cms/validators/page').showPageValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_update_controller').default['render']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_update_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -719,10 +719,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/admin/pages/:id/edit'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/page').showPageValidator)>|InferInput<(typeof import('#validators/page').updatePageValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#cms/validators/page').showPageValidator)>|InferInput<(typeof import('#cms/validators/page').updatePageValidator)>>
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/page').showPageValidator)>|InferInput<(typeof import('#validators/page').updatePageValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#cms/validators/page').showPageValidator)>|InferInput<(typeof import('#cms/validators/page').updatePageValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_update_controller').default['execute']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_update_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -731,10 +731,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/admin/pages/:id/publish'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/page').showPageValidator)>|InferInput<(typeof import('#validators/page').publishPageValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#cms/validators/page').showPageValidator)>|InferInput<(typeof import('#cms/validators/page').publishPageValidator)>>
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/page').showPageValidator)>|InferInput<(typeof import('#validators/page').publishPageValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#cms/validators/page').showPageValidator)>|InferInput<(typeof import('#cms/validators/page').publishPageValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_update_controller').default['publish']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_update_controller').default['publish']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -743,10 +743,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/admin/pages/:id/unpublish'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/page').showPageValidator)>|InferInput<(typeof import('#validators/page').publishPageValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#cms/validators/page').showPageValidator)>|InferInput<(typeof import('#cms/validators/page').publishPageValidator)>>
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/page').showPageValidator)>|InferInput<(typeof import('#validators/page').publishPageValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#cms/validators/page').showPageValidator)>|InferInput<(typeof import('#cms/validators/page').publishPageValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_update_controller').default['unpublish']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_update_controller').default['unpublish']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -767,10 +767,10 @@ export interface Registry {
     methods: ["DELETE"]
     pattern: '/admin/pages/:id'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/page').showPageValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#cms/validators/page').showPageValidator)>>
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/page').showPageValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#cms/validators/page').showPageValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -779,10 +779,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/admin/pages/:id/translations'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/page').showPageValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#cms/validators/page').showPageValidator)>>
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/page').showPageValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#cms/validators/page').showPageValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/page_translations_controller').default['execute']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/page_translations_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -803,10 +803,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/admin/pages/:id/translations/:translationId/revisions/:revisionId/restore'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/page').revisionValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#cms/validators/page').revisionValidator)>>
       paramsTuple: [ParamValue, ParamValue, ParamValue]
       params: { id: ParamValue; translationId: ParamValue; revisionId: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/page').revisionValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#cms/validators/page').revisionValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/page_revisions_controller').default['restore']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/page_revisions_controller').default['restore']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -815,10 +815,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/admin/pages/:id/translations/:translationId/revisions/:revisionId/keep'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/page').revisionValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#cms/validators/page').revisionValidator)>>
       paramsTuple: [ParamValue, ParamValue, ParamValue]
       params: { id: ParamValue; translationId: ParamValue; revisionId: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/page').revisionValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#cms/validators/page').revisionValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/page_revisions_controller').default['toggleKeep']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/page_revisions_controller').default['toggleKeep']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -842,7 +842,7 @@ export interface Registry {
       body: {}
       paramsTuple: []
       params: {}
-      query: ExtractQueryForGet<InferInput<(typeof import('#validators/template').listTemplateValidator)>>
+      query: ExtractQueryForGet<InferInput<(typeof import('#cms/validators/template').listTemplateValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['render']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -851,10 +851,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/admin/templates'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/template').createTemplateValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#cms/validators/template').createTemplateValidator)>>
       paramsTuple: []
       params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/template').createTemplateValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#cms/validators/template').createTemplateValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['execute']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -863,10 +863,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/admin/templates/:id/apply'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/template').showTemplateValidator)>|InferInput<(typeof import('#validators/template').applyTemplateValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#cms/validators/template').showTemplateValidator)>|InferInput<(typeof import('#cms/validators/template').applyTemplateValidator)>>
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/template').showTemplateValidator)>|InferInput<(typeof import('#validators/template').applyTemplateValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#cms/validators/template').showTemplateValidator)>|InferInput<(typeof import('#cms/validators/template').applyTemplateValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['applyToPage']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['applyToPage']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -875,10 +875,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/admin/templates/:id'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/template').showTemplateValidator)>|InferInput<(typeof import('#validators/template').updateTemplateValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#cms/validators/template').showTemplateValidator)>|InferInput<(typeof import('#cms/validators/template').updateTemplateValidator)>>
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/template').showTemplateValidator)>|InferInput<(typeof import('#validators/template').updateTemplateValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#cms/validators/template').showTemplateValidator)>|InferInput<(typeof import('#cms/validators/template').updateTemplateValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['update']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -887,10 +887,10 @@ export interface Registry {
     methods: ["DELETE"]
     pattern: '/admin/templates/:id'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/template').showTemplateValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#cms/validators/template').showTemplateValidator)>>
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/template').showTemplateValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#cms/validators/template').showTemplateValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -902,7 +902,7 @@ export interface Registry {
       body: {}
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
-      query: ExtractQueryForGet<InferInput<(typeof import('#validators/template').templatePreviewValidator)>>
+      query: ExtractQueryForGet<InferInput<(typeof import('#cms/validators/template').templatePreviewValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_preview_controller').default['render']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_preview_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -914,7 +914,7 @@ export interface Registry {
       body: {}
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
-      query: ExtractQueryForGet<InferInput<(typeof import('#validators/template').showTemplateValidator)>>
+      query: ExtractQueryForGet<InferInput<(typeof import('#cms/validators/template').showTemplateValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['edit']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_controller').default['edit']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -1103,10 +1103,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/api/admin/builder/operations'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/builder').builderOperationValidator)>|InferInput<(typeof import('@vinejs/vine').default)>>
+      body: ExtractBody<InferInput<(typeof import('#cms/validators/builder').builderOperationValidator)>|InferInput<(typeof import('@vinejs/vine').default)>>
       paramsTuple: []
       params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/builder').builderOperationValidator)>|InferInput<(typeof import('@vinejs/vine').default)>>
+      query: ExtractQuery<InferInput<(typeof import('#cms/validators/builder').builderOperationValidator)>|InferInput<(typeof import('@vinejs/vine').default)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/api/builder_operations_controller').default['execute']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/api/builder_operations_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -1118,7 +1118,7 @@ export interface Registry {
       body: {}
       paramsTuple: [ParamValue]
       params: { translationId: ParamValue }
-      query: ExtractQueryForGet<InferInput<(typeof import('#validators/builder').builderPresenceValidator)>>
+      query: ExtractQueryForGet<InferInput<(typeof import('#cms/validators/builder').builderPresenceValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/api/builder_operations_controller').default['presence']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/api/builder_operations_controller').default['presence']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -1154,7 +1154,7 @@ export interface Registry {
       body: {}
       paramsTuple: []
       params: {}
-      query: ExtractQueryForGet<InferInput<(typeof import('#validators/template').listTemplateValidator)>>
+      query: ExtractQueryForGet<InferInput<(typeof import('#cms/validators/template').listTemplateValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/api/templates_controller').default['index']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/api/templates_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -1163,10 +1163,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/api/admin/templates'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/template').createBlockTemplateValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#cms/validators/template').createBlockTemplateValidator)>>
       paramsTuple: []
       params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/template').createBlockTemplateValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#cms/validators/template').createBlockTemplateValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/api/templates_controller').default['store']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/api/templates_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -1175,10 +1175,10 @@ export interface Registry {
     methods: ["PUT"]
     pattern: '/api/admin/templates/:id'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/template').updateTemplateValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#cms/validators/template').updateTemplateValidator)>>
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/template').updateTemplateValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#cms/validators/template').updateTemplateValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/api/templates_controller').default['update']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/api/templates_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -1187,10 +1187,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/api/admin/templates/from-page'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/template').createFromPageValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#cms/validators/template').createFromPageValidator)>>
       paramsTuple: []
       params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/template').createFromPageValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#cms/validators/template').createFromPageValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/api/templates_controller').default['createFromPage']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/api/templates_controller').default['createFromPage']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -1247,10 +1247,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/contact'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/contact').contactValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#cms/validators/contact').contactValidator)>>
       paramsTuple: []
       params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/contact').contactValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#cms/validators/contact').contactValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/front/contact_controller').default['execute']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/front/contact_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }

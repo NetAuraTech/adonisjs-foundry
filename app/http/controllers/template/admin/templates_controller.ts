@@ -6,15 +6,15 @@ import {
   updateTemplateValidator,
   applyTemplateValidator,
   showTemplateValidator,
-} from '#validators/template'
+} from '#cms/validators/template'
 import { stripEmptyStrings } from '#helpers/core/strip_empty_strings'
-import TemplateTransformer from '#transformers/template_transformer'
-import { ListTemplatesAction } from '#actions/template/list_templates_action'
-import { CreateTemplateAction } from '#actions/template/create_template_action'
-import { UpdateTemplateAction } from '#actions/template/update_template_action'
-import { DeleteTemplateAction } from '#actions/template/delete_template_action'
-import { ApplyToPageAction } from '#actions/template/apply_to_page_action'
-import { GetTemplateDetailAction } from '#actions/template/get_template_detail_action'
+import TemplateTransformer from '#transformers/template/template_transformer'
+import { ListTemplatesAction } from '#cms/domain/actions/template/list_templates_action'
+import { CreateTemplateAction } from '#cms/domain/actions/template/create_template_action'
+import { UpdateTemplateAction } from '#cms/domain/actions/template/update_template_action'
+import { DeleteTemplateAction } from '#cms/domain/actions/template/delete_template_action'
+import { ApplyToPageAction } from '#cms/domain/actions/template/apply_to_page_action'
+import { GetTemplateDetailAction } from '#cms/domain/actions/template/get_template_detail_action'
 import { I18nService } from '#services/i18n_service'
 import { buildTemplatesIndexPayload } from '#helpers/i18n_payloads/templates_index'
 import { buildTemplatesEditPayload } from '#helpers/i18n_payloads/templates_edit'

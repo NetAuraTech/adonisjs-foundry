@@ -5,12 +5,12 @@ import {
   createFromPageValidator,
   listTemplateValidator,
   updateTemplateValidator,
-} from '#validators/template'
-import TemplateTransformer from '#transformers/template_transformer'
-import { ListTemplatesAction } from '#actions/template/list_templates_action'
-import { UpdateTemplateAction } from '#actions/template/update_template_action'
-import { SaveBlockTemplateAction } from '#actions/template/save_block_template_action'
-import { CreateFromPageAction } from '#actions/template/create_from_page_action'
+} from '#cms/validators/template'
+import TemplateTransformer from '#transformers/template/template_transformer'
+import { ListTemplatesAction } from '#cms/domain/actions/template/list_templates_action'
+import { UpdateTemplateAction } from '#cms/domain/actions/template/update_template_action'
+import { SaveBlockTemplateAction } from '#cms/domain/actions/template/save_block_template_action'
+import { CreateFromPageAction } from '#cms/domain/actions/template/create_from_page_action'
 
 /**
  * JSON API consumed by the page builder and admin Templates library.

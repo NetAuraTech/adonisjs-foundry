@@ -1,8 +1,8 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
-import { GetAvailablePagesForLinkAction } from '#actions/page/get_available_pages_for_link_action'
-import Page from '#models/page/page'
-import PageTranslation from '#models/page/page_translation'
+import { GetAvailablePagesForLinkAction } from '#cms/domain/actions/page/get_available_pages_for_link_action'
+import Page from '#cms/models/page/page'
+import PageTranslation from '#cms/models/page/page_translation'
 
 test.group('GetAvailablePagesForLinkAction', () => {
   test('execute() returns published pages for linking', async ({ assert }) => {

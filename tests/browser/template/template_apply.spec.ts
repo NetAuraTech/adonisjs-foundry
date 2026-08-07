@@ -3,11 +3,11 @@ import testUtils from '@adonisjs/core/services/test_utils'
 import { createAdminUser, CMS_PERMISSIONS } from '#tests/helpers/browser/create_admin_user'
 import { login } from '#tests/helpers/browser/login'
 import { waitForBuilderReady } from '#tests/helpers/browser/wait_for_builder_ready'
-import { PageFactory } from '#database/factories/page_factory'
-import Template from '#models/template/template'
-import PageTranslation from '#models/page/page_translation'
-import PageRevision from '#models/page/page_revision'
-import type { PageContent } from '#types/page'
+import { PageFactory } from '#cms/factories/page_factory'
+import Template from '#cms/models/template/template'
+import PageTranslation from '#cms/models/page/page_translation'
+import PageRevision from '#cms/models/page/page_revision'
+import type { PageContent } from '#cms/types/page'
 
 const templateContent: PageContent = {
   blocks: [

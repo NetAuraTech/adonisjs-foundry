@@ -4,9 +4,9 @@ import { DateTime } from 'luxon'
 import { createAdminUser, CMS_PERMISSIONS } from '#tests/helpers/browser/create_admin_user'
 import { login } from '#tests/helpers/browser/login'
 import { waitForBuilderReady } from '#tests/helpers/browser/wait_for_builder_ready'
-import { PageFactory } from '#database/factories/page_factory'
-import PageTranslation from '#models/page/page_translation'
-import type { PageContent } from '#types/page'
+import { PageFactory } from '#cms/factories/page_factory'
+import PageTranslation from '#cms/models/page/page_translation'
+import type { PageContent } from '#cms/types/page'
 
 const YOUTUBE_URL = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
 

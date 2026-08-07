@@ -1,5 +1,5 @@
 import { Head } from '@inertiajs/react'
-import type { ResolvedPageContent } from '#types/page'
+import type { ResolvedPageContent } from '#cms/types/page'
 import PageRenderer from '~/components/molecules/renderer/page_renderer'
 import { usePage } from '@inertiajs/react'
 import { SharedProps } from '@adonisjs/inertia/types'

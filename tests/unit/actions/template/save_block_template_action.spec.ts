@@ -1,9 +1,9 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
-import InvalidTemplateTypeException from '#exceptions/template/invalid_template_type_exception'
-import { SaveBlockTemplateAction } from '#actions/template/save_block_template_action'
-import Template from '#models/template/template'
-import type { PageContent } from '#types/page'
+import InvalidTemplateTypeException from '#cms/exceptions/template/invalid_template_type_exception'
+import { SaveBlockTemplateAction } from '#cms/domain/actions/template/save_block_template_action'
+import Template from '#cms/models/template/template'
+import type { PageContent } from '#cms/types/page'
 import { UserFactory } from '#database/factories/user_factory'
 
 function cardContent(): PageContent {

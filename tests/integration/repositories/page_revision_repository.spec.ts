@@ -1,7 +1,11 @@
 import { test } from '@japa/runner'
-import { PageRevisionRepository } from '#repositories/page/page_revision_repository'
-import { PageFactory, PageTranslationFactory, PageRevisionFactory } from '#factories/page_factory'
-import type { PageContent } from '#types/page'
+import { PageRevisionRepository } from '#cms/domain/repositories/page/page_revision_repository'
+import {
+  PageFactory,
+  PageTranslationFactory,
+  PageRevisionFactory,
+} from '#cms/factories/page_factory'
+import type { PageContent } from '#cms/types/page'
 
 /**
  * Integration tests for `PageRevisionRepository`.

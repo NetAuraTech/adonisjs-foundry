@@ -1,7 +1,7 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
-import { UpdateTemplateAction } from '#actions/template/update_template_action'
-import Template from '#models/template/template'
+import { UpdateTemplateAction } from '#cms/domain/actions/template/update_template_action'
+import Template from '#cms/models/template/template'
 import { FileFactory } from '#factories/file_factory'
 
 test.group('UpdateTemplateAction', () => {

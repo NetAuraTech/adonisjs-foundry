@@ -1,9 +1,9 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
-import { ToggleRevisionKeepAction } from '#actions/page/toggle_revision_keep_action'
-import Page from '#models/page/page'
-import PageTranslation from '#models/page/page_translation'
-import PageRevision from '#models/page/page_revision'
+import { ToggleRevisionKeepAction } from '#cms/domain/actions/page/toggle_revision_keep_action'
+import Page from '#cms/models/page/page'
+import PageTranslation from '#cms/models/page/page_translation'
+import PageRevision from '#cms/models/page/page_revision'
 import { UserFactory } from '#database/factories/user_factory'
 
 test.group('ToggleRevisionKeepAction', () => {

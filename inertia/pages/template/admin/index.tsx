@@ -19,7 +19,7 @@ import { captureTemplateThumbnail } from '~/utils/template_thumbnail'
 import { urlFor } from '~/client'
 
 interface TemplatesIndexPageProps {
-  templates: Data.Template[]
+  templates: Data.Template.Template[]
   filters: {
     type?: string
     block_type?: string
@@ -36,7 +36,7 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
 
   const [regeneratingId, setRegeneratingId] = useState<number | null>(null)
 
-  async function handleRegenerate(template: Data.Template) {
+  async function handleRegenerate(template: Data.Template.Template) {
     setRegeneratingId(template.id)
     try {
       const { fileId } = await captureTemplateThumbnail({
@@ -200,7 +200,7 @@ function ThumbnailCanvas({
   template,
   placeholder,
 }: {
-  template: Data.Template
+  template: Data.Template.Template
   placeholder: string
 }) {
   if (!template.thumbnail?.url) {

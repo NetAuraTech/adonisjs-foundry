@@ -1,8 +1,8 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
-import { ListRevisionsAction } from '#actions/page/list_revisions_action'
-import Page from '#models/page/page'
-import PageTranslation from '#models/page/page_translation'
+import { ListRevisionsAction } from '#cms/domain/actions/page/list_revisions_action'
+import Page from '#cms/models/page/page'
+import PageTranslation from '#cms/models/page/page_translation'
 import { UserFactory } from '#database/factories/user_factory'
 
 test.group('ListRevisionsAction', () => {
