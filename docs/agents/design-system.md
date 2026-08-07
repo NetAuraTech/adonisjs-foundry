@@ -12,9 +12,10 @@ Component library in `inertia/components/`, organized as Atomic Design (atoms �
 
 ## Local Shape
 
-- `inertia/components/atoms/`: foundational UI primitives (`button.tsx`, `input.tsx`, `modal.tsx`, `card.tsx`...) plus static block renderers (`atoms/blocks/`) and the table primitives (`atoms/table/`).
-- `inertia/components/molecules/`: small reusable compositions (`field.tsx`, `pagination.tsx`, `theme_toggle.tsx`, `renderer/` for page/block rendering).
-- `inertia/components/organisms/`: distinct interface sections (`header.tsx`, `footer.tsx`, `admin/`, `builder/`, `files/`).
+- `inertia/components/atoms/`: foundational UI primitives (`button.tsx`, `input.tsx`, `modal.tsx`, `card.tsx`...) plus the table primitives (`atoms/table/`).
+- `inertia/components/molecules/`: small reusable compositions (`field.tsx`, `pagination.tsx`, `theme_toggle.tsx`...).
+- `inertia/components/organisms/`: distinct interface sections (`header.tsx`, `footer.tsx`, `admin/`, `files/`).
+- `inertia/components/cms/`: the CMS module subtree — static block renderers (`blocks/`), the page/block `renderer/`, builder overlays (`builder/`), the props-editing UI (`editor/`), plus the module's private `hooks/`, `utils/`, and `types/`. Everything here is prunable together when a flavor drops the CMS.
 
 ## Classification Rules
 
@@ -59,12 +60,12 @@ Good organism signals:
 
 An organism may contain private child components inside its folder. Export only the public component through `package.json`.
 
-## Special case: atoms/blocks vs organisms/builder/editor/blocks
+## Special case: cms/blocks vs cms/editor/blocks
 
 The 12 page-builder block types each have **two** components, deliberately separate:
 
-- `atoms/blocks/{type}_block.tsx` — static, read-only render of the block (used on the public page and in the live builder preview).
-- `organisms/builder/editor/blocks/{type}_editor.tsx` — the editing UI for that block's props, used only inside the builder sidebar.
+- `cms/blocks/{type}_block.tsx` — static, read-only render of the block (used on the public page and in the live builder preview).
+- `cms/editor/blocks/{type}_editor.tsx` — the editing UI for that block's props, used only inside the builder sidebar.
 
 Never merge these two — rendering and editing have different concerns (the render path must stay fast and side-effect-free; the editor path owns form state and validation). Adding a new block type means adding both files.
 
@@ -77,7 +78,7 @@ Match the block/domain vocabulary from `CONTEXT.md` (Block, Template, Page) rath
 - Search `inertia/components/{atoms,molecules,organisms}` for an existing pattern to extend before creating a new one.
 - Pick the category by responsibility, not visual size.
 - Define props around content structure, not one page's current data.
-- If creating a new block type, add both the atom renderer and the organism editor, and register it wherever block types are enumerated (check `organisms/builder/block_types.ts`).
+- If creating a new block type, add both the block renderer and the editor, and register it wherever block types are enumerated (check `cms/builder/block_types.ts`).
 
 ## Verification
 

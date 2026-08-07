@@ -77,7 +77,7 @@ export default class TemplatesPreviewController {
 
     const resolved = await this.resolverService.resolve(template.content, payload.locale)
 
-    return (inertia.render as any)('template/preview', {
+    return (inertia.render as any)('cms/template/preview', {
       template: {
         id: template.id,
         name: template.name,

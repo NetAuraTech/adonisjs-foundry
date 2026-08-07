@@ -1,0 +1,163 @@
+{
+  "status": {
+    "value": "Statut",
+    "draft": "Brouillon",
+    "published": "Publié",
+    "archived": "Archivé"
+  },
+  "mode": {
+    "editor": "Éditeur",
+    "split": "Partagé",
+    "preview": "Aperçu"
+  },
+  "toolbar": {
+    "apply_template": "Appliquer un modèle",
+    "save_as_template": "Enregistrer comme modèle",
+    "unpublish": "Dépublier",
+    "publish": "Publier",
+    "revisions": "Révisions"
+  },
+  "sidebar": {
+    "details": "Détails",
+    "seo": "SEO"
+  },
+  "form": {
+    "title": {
+      "value": "Titre",
+      "placeholder": "Titre",
+      "slug_placeholder": "slug"
+    },
+    "meta_title": {
+      "value": "Meta titre",
+      "placeholder": "Utiliser le titre par défaut"
+    },
+    "meta_description": {
+      "value": "Meta desc.",
+      "placeholder": "Une courte description affichée dans les résultats de recherche."
+    }
+  },
+  "save": {
+    "button": "Sauvegarder",
+    "saving": "Sauvegarde…",
+    "saved": "Sauvegardé",
+    "retry": "Réessayer"
+  },
+  "locale": {
+    "add": "Ajouter une langue",
+    "new_translation": "Nouvelle traduction",
+    "select": "Choisir une langue…",
+    "empty_content": "Contenu vide",
+    "copy_from": "Copier depuis {locale}",
+    "add_button": "Ajouter"
+  },
+  "blocktree": {
+    "select_to_configure": "Sélectionnez un bloc à configurer",
+    "insert_template": "Insérer un modèle",
+    "add_block": "Ajouter un bloc",
+    "save_as_template": "Enregistrer comme modèle"
+  },
+  "block_picker": {
+    "title": "Blocs",
+    "search_placeholder": "Rechercher des blocs…",
+    "no_results": "Aucun bloc trouvé."
+  },
+  "template_picker": {
+    "title": "Insérer un modèle",
+    "empty": "Aucun modèle trouvé.",
+    "type_placeholder": "Tous",
+    "page": "Page",
+    "block": "Bloc"
+  },
+  "save_page_template": {
+    "title": "Enregistrer la page comme modèle",
+    "name_label": "Nom",
+    "name_placeholder": "Mon modèle",
+    "submit": "Enregistrer le modèle",
+    "error": "Le nom est requis",
+    "reminder": "Assurez-vous que votre page est sauvegardée avant de créer un modèle."
+  },
+  "apply_page_template": {
+    "title": "Appliquer un modèle de page",
+    "warning": "Cela écrasera tous les blocs existants dans la traduction courante.",
+    "apply_button": "Appliquer"
+  },
+  "save_block_template": {
+    "title": "Enregistrer le bloc comme modèle",
+    "name_label": "Nom",
+    "name_placeholder": "Section héro",
+    "submit": "Enregistrer le modèle",
+    "exists_warning": "Un modèle nommé \"{name}\" existe déjà pour ce type de bloc. Voulez-vous le remplacer ?",
+    "overwrite": "Remplacer",
+    "cancel": "Annuler"
+  },
+  "blocks": {
+    "section": {
+      "label": "Section",
+      "description": "Conteneur pleine largeur avec fond et espacement"
+    },
+    "grid": {
+      "label": "Grille",
+      "description": "Conteneur de mise en page multi-colonnes"
+    },
+    "flex": {
+      "label": "Conteneur flexible",
+      "description": "Empilement flexible pour aligner des éléments"
+    },
+    "title": {
+      "label": "Titre",
+      "description": "Titre H1–H4"
+    },
+    "paragraph": {
+      "label": "Paragraphe",
+      "description": "Paragraphes de texte riche"
+    },
+    "button": {
+      "label": "Bouton",
+      "description": "Bouton d'appel à l'action"
+    },
+    "separator": {
+      "label": "Séparateur",
+      "description": "Ligne de séparation horizontale"
+    },
+    "icon": {
+      "label": "Icône",
+      "description": "Icône en ligne"
+    },
+    "form": {
+      "label": "Formulaire",
+      "description": "Formulaire de contact ou de soumission"
+    },
+    "field": {
+      "label": "Champ",
+      "description": "Champ de formulaire"
+    },
+    "htmltext": {
+      "label": "HTML / Texte",
+      "description": "Bloc de texte ou HTML brut"
+    },
+    "image": {
+      "label": "Image",
+      "description": "Image unique depuis la médiathèque"
+    },
+    "video": {
+      "label": "Vidéo",
+      "description": "Intégration d'un fournisseur ou fichier vidéo direct"
+    },
+    "carousel": {
+      "label": "Carrousel",
+      "description": "Diaporama de blocs enfants"
+    },
+    "list": {
+      "label": "Liste",
+      "description": "Liste à puces ou numérotée"
+    },
+    "quote": {
+      "label": "Citation",
+      "description": "Bloc de citation avec attribution"
+    },
+    "iframe": {
+      "label": "Intégration",
+      "description": "Contenu externe autorisé (carte, calendrier…)"
+    }
+  }
+}

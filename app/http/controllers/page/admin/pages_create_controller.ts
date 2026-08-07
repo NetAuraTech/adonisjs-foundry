@@ -15,7 +15,7 @@ export default class PagesCreateController {
   async render(ctx: HttpContext) {
     const { inertia } = ctx
 
-    return inertia.render('page/admin/create', {
+    return inertia.render('cms/page/admin/create', {
       translations: buildPagesCreatePayload(this.i18n),
     })
   }

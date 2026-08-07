@@ -5,27 +5,27 @@ import type { I18nService } from '#services/i18n_service'
  */
 export function buildTemplatesEditPayload(i18n: I18nService) {
   return i18n.buildPayload({
-    title: i18n.entry('admin.templates.edit.title', { name: '{name}' }),
-    back: 'admin.templates.edit.back',
+    title: i18n.entry('template.admin.edit.title', { name: '{name}' }),
+    back: 'template.admin.edit.back',
     form: {
-      name: 'admin.templates.edit.form.name',
-      description: 'admin.templates.edit.form.description',
+      name: 'template.admin.edit.form.name',
+      description: 'template.admin.edit.form.description',
       thumbnail: {
-        value: 'admin.templates.edit.form.thumbnail.value',
-        replace: 'admin.templates.edit.form.thumbnail.replace',
-        remove: 'admin.templates.edit.form.thumbnail.remove',
-        regenerate: 'admin.templates.edit.form.thumbnail.regenerate',
-        regenerating: 'admin.templates.edit.form.thumbnail.regenerating',
-        placeholder: 'admin.templates.edit.form.thumbnail.placeholder',
+        value: 'template.admin.edit.form.thumbnail.value',
+        replace: 'template.admin.edit.form.thumbnail.replace',
+        remove: 'template.admin.edit.form.thumbnail.remove',
+        regenerate: 'template.admin.edit.form.thumbnail.regenerate',
+        regenerating: 'template.admin.edit.form.thumbnail.regenerating',
+        placeholder: 'template.admin.edit.form.thumbnail.placeholder',
       },
-      submit: 'admin.templates.edit.form.submit',
-      cancel: 'admin.templates.edit.form.cancel',
+      submit: 'template.admin.edit.form.submit',
+      cancel: 'template.admin.edit.form.cancel',
     },
     preview: {
-      value: 'admin.templates.edit.preview.value',
-      empty: 'admin.templates.edit.preview.empty',
-      block: 'admin.templates.edit.preview.block',
-      page: 'admin.templates.edit.preview.page',
+      value: 'template.admin.edit.preview.value',
+      empty: 'template.admin.edit.preview.empty',
+      block: 'template.admin.edit.preview.block',
+      page: 'template.admin.edit.preview.page',
     },
   })
 }

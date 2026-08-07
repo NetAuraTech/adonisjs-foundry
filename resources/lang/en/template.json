@@ -1,4 +1,64 @@
 {
+  "admin": {
+    "list": {
+      "title": "Manage templates",
+      "actions": {
+        "edit": "Edit template: {name}",
+        "regenerate": "Regenerate thumbnail for {name}"
+      },
+      "create_guidance": {
+        "value": "Templates are authored from the visual editor, not from this page.",
+        "from_page": "Open a page and use “Save as template” in the toolbar."
+      },
+      "empty": {
+        "help": "Templates are created from pages in the page editor.",
+        "value": "No templates yet"
+      },
+      "thumbnail": {
+        "placeholder": "No thumbnail yet"
+      }
+    },
+    "edit": {
+      "title": "Edit template: {name}",
+      "back": "Back to templates",
+      "form": {
+        "name": "Name",
+        "description": "Description",
+        "thumbnail": {
+          "value": "Thumbnail",
+          "replace": "Replace thumbnail",
+          "remove": "Remove thumbnail",
+          "regenerate": "Regenerate thumbnail",
+          "regenerating": "Regenerating…",
+          "placeholder": "Auto-captured from the template content. You can replace or remove it manually."
+        },
+        "submit": "Save changes",
+        "cancel": "Cancel"
+      },
+      "preview": {
+        "value": "Content preview",
+        "empty": "This template has no content.",
+        "block": "Block template",
+        "page": "Page template"
+      }
+    },
+    "search": {
+      "filter": "Filter",
+      "placeholder": "Section, Image, Hero, ...",
+      "value": "Search",
+      "type": {
+        "page": "Page",
+        "block": "Block",
+        "placeholder": "All",
+        "value": "Type"
+      }
+    },
+    "delete": {
+      "title": "Delete the template: {name}",
+      "confirm": "Are you sure you want to delete this template?"
+    },
+    "value": "Templates"
+  },
   "created": "Template created successfully.",
   "updated": "Template updated successfully.",
   "deleted": "Template deleted successfully.",

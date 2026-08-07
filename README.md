@@ -701,54 +701,51 @@ inertia/
 │   │                                       # modal.tsx, nav_link.tsx, paragraph.tsx, section.tsx, select.tsx,
 │   │                                       # select_option.tsx, separator.tsx, textarea.tsx, user_status.tsx,
 │   │                                       # table/ (table.tsx, table_body.tsx, table_cell.tsx, table_header.tsx,
-│   │                                       #         table_header_cell.tsx, table_row.tsx),
-│   │                                       # blocks/ (section_block.tsx, grid_block.tsx, flex_block.tsx,
-│   │                                       #          title_block.tsx, paragraph_block.tsx, button_block.tsx,
-│   │                                       #          separator_block.tsx, icon_block.tsx, form_block.tsx,
-│   │                                       #          field_block.tsx, html_text_block.tsx, image_block.tsx)
+│   │                                       #         table_header_cell.tsx, table_row.tsx)
 │   ├── molecules/                          # auth/ (auth_intro.tsx, auth_providers.tsx), banner.tsx, field.tsx,
-│   │                                       # image_picker.tsx, pagination.tsx, theme_toggle.tsx,
-│   │                                       # renderer/ (page_renderer.tsx, block_renderer.tsx)
-│   └── organisms/                          # footer.tsx, header.tsx, settings_layout.tsx, file_manager.tsx,
-│                                           # admin/ (admin_header.tsx, admin_main.tsx, admin_sidebar.tsx),
-│                                           # builder/ (BlockPicker.tsx, BlockTree.tsx, LockedFieldWrapper.tsx,
-│                                           #           PresenceBar.tsx, PreviewIframe.tsx, block_types.ts,
-│                                           #           editor/ (BlockPropsEditor.tsx, responsive_control.tsx,
-│                                           #                    locked_file_wrapper.tsx, blocks/...)),
-│                                           # files/ (file_alt_editor.tsx)
+│   │                                       # image_picker.tsx, pagination.tsx, theme_toggle.tsx
+│   ├── organisms/                          # footer.tsx, header.tsx, settings_layout.tsx, file_manager.tsx,
+│   │                                       # admin/ (admin_header.tsx, admin_main.tsx, admin_sidebar.tsx),
+│   │                                       # files/ (file_alt_editor.tsx)
+│   └── cms/                                # CMS module subtree (prunable as a whole):
+│                                           #   blocks/ (12 static block renderers), renderer/ (page/block renderer),
+│                                           #   builder/ (BlockPicker.tsx, BlockTree.tsx, PresenceBar.tsx, ...),
+│                                           #   editor/ (BlockPropsEditor.tsx, blocks/{type}_editor.tsx, ...),
+│                                           #   hooks/, utils/, types/ (module-private)
 ├── css/                                    # app.css, safelist.ts
 ├── guards/                                 # authenticated.tsx, can_access.tsx, has_role.tsx
 ├── helpers/                                # authorization.ts, avatar.ts, oauth.tsx, sanitization.ts, validation_rules.ts
-├── hooks/                                  # use_admin.ts, use_auth.ts, use_builder_sync.ts, use_contact_form.ts,
-│                                           # use_form_validation.ts, use_is_large.ts, use_scroll_reveal.ts,
-│                                           # use_theme.ts, use_translation.ts
+├── hooks/                                  # use_admin.ts, use_auth.ts, use_form_validation.ts, use_is_large.ts,
+│                                           # use_scroll_reveal.ts, use_theme.ts, use_translation.ts
+│                                           # (CMS-private hooks live in components/cms/hooks/)
 ├── layouts/                                # default.tsx, admin.tsx
 ├── lib/                                    # string.ts
 ├── pages/
 │   ├── auth/
-│   │   ├── cms/                            # index.tsx, form.tsx, show.tsx
+│   │   ├── admin/                          # index.tsx, form.tsx, show.tsx
 │   │   └── front/                          # login.tsx, register.tsx, forgot_password.tsx, reset_password.tsx,
 │   │                                       # define_password.tsx, accept_invitation.tsx
-│   ├── core/cms/                           # dashboard.tsx
+│   ├── cms/                                # CMS module pages (prunable as a whole):
+│   │   ├── page/
+│   │   │   ├── admin/                      # index.tsx, create.tsx, show.tsx, edit.tsx, revisions.tsx
+│   │   │   └── front/                      # show.tsx, preview.tsx
+│   │   └── template/                       # admin/ (index.tsx, edit.tsx), preview.tsx
+│   ├── core/admin/                         # dashboard.tsx
 │   ├── errors/                             # not_found.tsx, server_error.tsx
-│   ├── file/cms/                           # index.tsx, folders.tsx
-│   ├── page/
-│   │   ├── cms/                            # index.tsx, create.tsx, show.tsx, edit.tsx, revisions.tsx
-│   │   └── front/                          # show.tsx, preview.tsx
-│   ├── settings/
-│   │   ├── account/front/                  # index.tsx, email_change.tsx
-│   │   ├── preferences/front/              # index.tsx
-│   │   └── profile/front/                  # index.tsx
-│   └── template/cms/                       # index.tsx
-├── types/                                  # builder.d.ts, paginated.d.ts
-└── utils/                                  # builder_reducer.ts, file.ts, font.ts, responsive.ts
+│   ├── file/admin/                         # index.tsx, folders.tsx
+│   └── settings/
+│       ├── account/front/                  # index.tsx, email_change.tsx
+│       ├── preferences/front/              # index.tsx
+│       └── profile/front/                  # index.tsx
+├── types/                                  # paginated.d.ts (builder types live in components/cms/types/)
+└── utils/                                  # file.ts, font.ts (CMS-private utils live in components/cms/utils/)
 
 resources/
 ├── lang/
-│   ├── en/                                 # auth.json, cms.json, core.json, exceptions.json,
-│   │                                       # page.json, pagination.json, settings.json, validation.json
-│   └── fr/                                 # auth.json, cms.json, core.json, exceptions.json,
-│                                           # page.json, pagination.json, settings.json, validation.json
+│   ├── en/                                 # admin.json, auth.json, builder.json, exceptions.json, page.json,
+│   │                                       # pagination.json, permissions.json, roles.json, settings.json,
+│   │                                       # template.json, validation.json
+│   └── fr/                                 # same namespaces as en/
 └── views/
     ├── emails/                             # account_email.edge, admin_invite_email.edge, auth_email.edge,
     │                                       # contact_form_email.edge

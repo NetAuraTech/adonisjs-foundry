@@ -14,6 +14,6 @@ export default {
   settings: true,
   admin: true,
   adminApi: true,
-  public: true,
+  cms: true,
   maintenance: true,
 } as const

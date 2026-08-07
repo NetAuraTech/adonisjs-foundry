@@ -1,0 +1,100 @@
+import { Children, useState, type ReactNode } from 'react'
+import type { ResolvedBlock, MediaAspect } from '#cms/types/page'
+import { Icon } from '~/components/atoms/icon'
+import { resolveResponsive } from '~/components/cms/utils/responsive'
+
+interface CarouselBlockProps {
+  block: ResolvedBlock<'carousel'>
+  /** Pre-rendered slide blocks, mapped by `BlockRenderer` (one per slide). */
+  children?: ReactNode
+}
+
+const aspectMap: Record<MediaAspect, Record<'default', string>> = {
+  '16:9': { default: 'aspect-video' },
+  '4:3': { default: 'aspect-4/3' },
+  '1:1': { default: 'aspect-square' },
+}
+
+/**
+ * Renders a slide carousel. Each child block (pre-rendered by `BlockRenderer`)
+ * is one slide; only the active slide is visible. Arrows and dots navigate
+ * between slides. Renders nothing when there are no slides.
+ *
+ * Kept dependency-free: a single `useState` index, no external carousel lib.
+ */
+export default function CarouselBlock({ block, children }: CarouselBlockProps) {
+  const { aspect, showArrows, showDots, className } = block.props
+  const slides = Children.toArray(children).filter(Boolean)
+  const [index, setIndex] = useState(0)
+
+  if (slides.length === 0) return null
+
+  const count = slides.length
+  // Clamp in case the slide count shrinks after mount
+  const current = Math.min(index, count - 1)
+  const aspectClasses = resolveResponsive(aspect, aspectMap) || 'aspect-video'
+
+  const goTo = (i: number) => setIndex(((i % count) + count) % count)
+  const prev = () => goTo(current - 1)
+  const next = () => goTo(current + 1)
+
+  const arrowButton =
+    'absolute top-1/2 z-10 -translate-y-1/2 rounded-full bg-overlay/80 p-2 text-ink shadow transition hover:bg-overlay'
+
+  return (
+    <div className={['group relative w-full', className].filter(Boolean).join(' ')}>
+      <div className={`relative w-full overflow-hidden ${aspectClasses}`}>
+        {slides.map((slide, i) => (
+          <div
+            key={i}
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`${i + 1} / ${count}`}
+            aria-hidden={i !== current}
+            className={i === current ? 'absolute inset-0' : 'hidden'}
+          >
+            {slide}
+          </div>
+        ))}
+      </div>
+
+      {showArrows && count > 1 && (
+        <>
+          <button
+            type="button"
+            onClick={prev}
+            aria-label="Previous slide"
+            className={`${arrowButton} left-2`}
+          >
+            <Icon name="ChevronLeft" size={20} />
+          </button>
+          <button
+            type="button"
+            onClick={next}
+            aria-label="Next slide"
+            className={`${arrowButton} right-2`}
+          >
+            <Icon name="ChevronRight" size={20} />
+          </button>
+        </>
+      )}
+
+      {showDots && count > 1 && (
+        <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => goTo(i)}
+              aria-label={`Go to slide ${i + 1}`}
+              aria-current={i === current}
+              className={`h-2 w-2 rounded-full transition ${
+                i === current ? 'bg-overlay' : 'bg-overlay/50 hover:bg-overlay/75'
+              }`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}

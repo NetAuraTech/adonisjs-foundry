@@ -59,7 +59,7 @@ export default class PageController {
       metaImageUrl = await this.storageService.url(page.metaImage.path, page.metaImage.disk)
     }
 
-    return (inertia.render as any)('page/front/show', {
+    return (inertia.render as any)('cms/page/front/show', {
       id: page.id,
       locale,
       title: translation.title,
@@ -109,7 +109,7 @@ export default class PageController {
       metaImageUrl = await this.storageService.url(page.metaImage.path, page.metaImage.disk)
     }
 
-    return (inertia.render as any)('page/front/show', {
+    return (inertia.render as any)('cms/page/front/show', {
       id: page.id,
       locale,
       title: translation.title,

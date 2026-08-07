@@ -6,11 +6,16 @@ import { inject } from '@adonisjs/core'
 import { GetPreferencesAction } from '#actions/preferences/get_preferences_action'
 import { DEFAULT_PREFERENCES } from '#types/preferences'
 import env from '#start/env'
-import { AdminTranslations, CommonTranslations } from '#types/translations'
+import { CommonTranslations } from '#types/translations'
+import { NavRegistry } from '#services/core/nav_registry'
+import type { AdminNavGroup } from '#types/nav'
 
 @inject()
 export default class InertiaMiddleware extends BaseInertiaMiddleware {
-  constructor(private getPreferencesAction: GetPreferencesAction) {
+  constructor(
+    private getPreferencesAction: GetPreferencesAction,
+    private navRegistry: NavRegistry
+  ) {
     super()
   }
 
@@ -97,26 +102,44 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
           slug_format: ctx.i18n.t('validation.front.slug_format', { field: '{field}' }),
         },
       } as CommonTranslations,
-      admin_translations: isAdmin
-        ? ({
-            category: {
-              access_control: ctx.i18n.t('admin.category.access_control'),
-              main: ctx.i18n.t('admin.category.main'),
-              content: ctx.i18n.t('admin.category.content'),
-              settings: ctx.i18n.t('admin.category.settings'),
-            },
-            dashboard: ctx.i18n.t('admin.dashboard.value'),
-            pages: ctx.i18n.t('admin.pages.value'),
-            templates: ctx.i18n.t('admin.templates.value'),
-            users: ctx.i18n.t('admin.users.value'),
-            roles: ctx.i18n.t('admin.roles.value'),
-            permissions: ctx.i18n.t('admin.permissions.value'),
-            files: ctx.i18n.t('admin.files.value'),
-            maintenance: ctx.i18n.t('admin.settings.maintenance.value'),
-            logs: ctx.i18n.t('admin.logs.value'),
-          } as AdminTranslations)
-        : undefined,
+      admin_menu: isAdmin ? this.buildAdminMenu(ctx) : undefined,
     }
+  }
+
+  /**
+   * Compose the admin navigation shared with every admin page: the entries
+   * registered by each domain in `start/nav.ts`, grouped by category in
+   * registration order, with labels resolved in the request locale. Domains
+   * absent from the composition simply contribute no group.
+   */
+  private buildAdminMenu(ctx: HttpContext): AdminNavGroup[] {
+    const groups: AdminNavGroup[] = []
+
+    for (const [, entries] of this.navRegistry.entries()) {
+      for (const entry of entries) {
+        let group = groups.find((g) => g.category === entry.category)
+        if (!group) {
+          group = {
+            category: entry.category,
+            label:
+              entry.category === 'no_category'
+                ? null
+                : ctx.i18n.t(`admin.category.${entry.category}`),
+            entries: [],
+          }
+          groups.push(group)
+        }
+        group.entries.push({
+          label: ctx.i18n.t(entry.label),
+          icon: entry.icon,
+          route: entry.route,
+          routeParams: entry.routeParams,
+          permission: entry.permission,
+        })
+      }
+    }
+
+    return groups
   }
 
   async handle(ctx: HttpContext, next: NextFn) {

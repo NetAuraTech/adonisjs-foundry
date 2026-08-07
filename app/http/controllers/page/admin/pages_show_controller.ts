@@ -19,7 +19,7 @@ export default class PagesShowController {
     const { id } = await showPageValidator.validate(params)
     const page = await this.getPageDetailAction.execute({ id })
 
-    return inertia.render('page/admin/show', {
+    return inertia.render('cms/page/admin/show', {
       page: PageTransformer.transform(page),
       translations: buildPagesShowPayload(this.i18n),
     })

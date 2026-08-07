@@ -33,7 +33,7 @@ export default class PagesController {
       pagination,
     })
 
-    return inertia.render('page/admin/index', {
+    return inertia.render('cms/page/admin/index', {
       pages: PageTransformer.paginate(pages.all(), pages.getMeta()),
       filters: payload,
       translations: buildPagesIndexPayload(this.i18n),

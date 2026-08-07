@@ -950,23 +950,6 @@ export type AdminPermissionsFormTranslations = {
   }
 }
 
-export type AdminTranslations = {
-  category: {
-    content: string
-    access_control: string
-    settings: string
-  }
-  dashboard: string
-  pages: string
-  templates: string
-  files: string
-  users: string
-  roles: string
-  permissions: string
-  maintenance: string
-  logs: string
-}
-
 export type AdminLogsIndexTranslations = {
   title: string
   empty: string

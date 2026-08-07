@@ -3,7 +3,7 @@ import path from 'node:path'
 
 /**
  * Minimal Vitest setup for frontend seams: deterministic, framework-free
- * helpers under `inertia/utils/` (e.g. `cloneBlock`), plus Inertia page
+ * helpers under `inertia/components/` (e.g. `cloneBlock`), plus Inertia page
  * specs under `inertia/pages/` that pin conditional-rendering contracts.
  * Page specs opt into jsdom individually via a `// @vitest-environment
  * jsdom` docblock, so helper specs keep the fast node environment.
@@ -20,6 +20,6 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    include: ['inertia/utils/**/*.spec.ts', 'inertia/pages/**/*.spec.tsx'],
+    include: ['inertia/components/**/*.spec.ts', 'inertia/pages/**/*.spec.tsx'],
   },
 })

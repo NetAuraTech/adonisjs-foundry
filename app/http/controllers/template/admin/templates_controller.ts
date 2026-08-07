@@ -43,7 +43,7 @@ export default class TemplatesController {
       search: payload.search,
     })
 
-    return inertia.render('template/admin/index', {
+    return inertia.render('cms/template/admin/index', {
       templates: TemplateTransformer.transform(templates),
       filters: payload,
       translations: buildTemplatesIndexPayload(this.i18n),
@@ -69,7 +69,7 @@ export default class TemplatesController {
     const { id } = await showTemplateValidator.validate(params)
     const template = await this.getTemplateDetailAction.execute({ id })
 
-    return inertia.render('template/admin/edit', {
+    return inertia.render('cms/template/admin/edit', {
       template: TemplateTransformer.transform(template),
       translations: buildTemplatesEditPayload(this.i18n),
     })

@@ -41,7 +41,7 @@ export default class PagesUpdateController {
     const { id } = await showPageValidator.validate(params)
     const page = await this.getPageDetailAction.execute({ id })
 
-    return inertia.render('page/admin/edit', {
+    return inertia.render('cms/page/admin/edit', {
       page: PageTransformer.transform(page),
       availableRoutes,
       availablePages,
