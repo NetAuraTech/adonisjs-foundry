@@ -60,7 +60,7 @@ test.group('Admin dashboard endpoint', (group) => {
 
     res.assertStatus(200)
     const page = parseInertiaPage(res.text())
-    assert.equal(page.component, 'core/cms/dashboard')
+    assert.equal(page.component, 'core/admin/dashboard')
 
     // Shape: exactly the four registered sections — no more, no less.
     const stats = page.props.stats

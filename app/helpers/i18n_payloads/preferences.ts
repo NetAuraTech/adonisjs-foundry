@@ -9,7 +9,7 @@ export function buildPreferencesPayload(i18n: I18nService) {
         profile: 'settings.profile.value',
         account: 'settings.account.value',
         preferences: 'settings.preferences.value',
-        admin: 'cms.value',
+        admin: 'admin.value',
         logout: 'auth.session.logout.value',
       },
     },

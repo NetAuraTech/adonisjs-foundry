@@ -53,7 +53,7 @@ interface Menu {
  */
 export function useMenu(overrides: Menu = {}) {
   const pageProps = usePage<SharedProps>().props
-  const { t } = useTranslation(pageProps.cms_translations!)
+  const { t } = useTranslation(pageProps.admin_translations!)
 
   const defaultMenu: Menu = {
     no_category: [

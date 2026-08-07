@@ -27,28 +27,28 @@ export function buildRolesFormPayload(i18n: I18nService, permissions: Permission
 
   return i18n.buildPayload({
     title: {
-      create: 'cms.roles.create.title',
-      edit: i18n.entry('cms.roles.edit.title', { name: '{name}' }),
+      create: 'admin.roles.create.title',
+      edit: i18n.entry('admin.roles.edit.title', { name: '{name}' }),
     },
     name: {
-      value: 'cms.roles.form.name.value',
-      placeholder: 'cms.roles.form.name.placeholder',
+      value: 'admin.roles.form.name.value',
+      placeholder: 'admin.roles.form.name.placeholder',
     },
     slug: {
-      value: 'cms.roles.form.slug.value',
-      placeholder: 'cms.roles.form.slug.placeholder',
+      value: 'admin.roles.form.slug.value',
+      placeholder: 'admin.roles.form.slug.placeholder',
     },
     description: {
-      value: 'cms.roles.form.description.value',
-      placeholder: 'cms.roles.form.description.placeholder',
+      value: 'admin.roles.form.description.value',
+      placeholder: 'admin.roles.form.description.placeholder',
     },
-    submit: 'cms.roles.form.submit',
+    submit: 'admin.roles.form.submit',
     actions: {
-      list: 'cms.roles.list.title',
+      list: 'admin.roles.list.title',
     },
     permissions: {
-      value: 'cms.roles.form.permissions.value',
-      system_hint: 'cms.roles.form.permissions.system_hint',
+      value: 'admin.roles.form.permissions.value',
+      system_hint: 'admin.roles.form.permissions.system_hint',
       categories,
       items,
     },

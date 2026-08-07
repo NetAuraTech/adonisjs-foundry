@@ -43,7 +43,7 @@ interface AdminSidebarProps {
 export function AdminSidebar(props: AdminSidebarProps) {
   const { sidebarOpen } = props
   const pageProps = usePage<SharedProps>().props
-  const { t, format } = useTranslation(pageProps.cms_translations!)
+  const { t, format } = useTranslation(pageProps.admin_translations!)
 
   const { menu } = useMenu()
 

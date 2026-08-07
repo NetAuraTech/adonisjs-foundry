@@ -11,18 +11,18 @@ export const controllers = {
     },
   },
   auth: {
-    cms: {
-      Permissions: () => import('#controllers/auth/cms/permissions_controller'),
-      PermissionsCreate: () => import('#controllers/auth/cms/permissions_create_controller'),
-      PermissionsUpdate: () => import('#controllers/auth/cms/permissions_update_controller'),
-      Roles: () => import('#controllers/auth/cms/roles_controller'),
-      RolesCreate: () => import('#controllers/auth/cms/roles_create_controller'),
-      RolesShow: () => import('#controllers/auth/cms/roles_show_controller'),
-      RolesUpdate: () => import('#controllers/auth/cms/roles_update_controller'),
-      Users: () => import('#controllers/auth/cms/users_controller'),
-      UsersCreate: () => import('#controllers/auth/cms/users_create_controller'),
-      UsersShow: () => import('#controllers/auth/cms/users_show_controller'),
-      UsersUpdate: () => import('#controllers/auth/cms/users_update_controller'),
+    admin: {
+      Permissions: () => import('#controllers/auth/admin/permissions_controller'),
+      PermissionsCreate: () => import('#controllers/auth/admin/permissions_create_controller'),
+      PermissionsUpdate: () => import('#controllers/auth/admin/permissions_update_controller'),
+      Roles: () => import('#controllers/auth/admin/roles_controller'),
+      RolesCreate: () => import('#controllers/auth/admin/roles_create_controller'),
+      RolesShow: () => import('#controllers/auth/admin/roles_show_controller'),
+      RolesUpdate: () => import('#controllers/auth/admin/roles_update_controller'),
+      Users: () => import('#controllers/auth/admin/users_controller'),
+      UsersCreate: () => import('#controllers/auth/admin/users_create_controller'),
+      UsersShow: () => import('#controllers/auth/admin/users_show_controller'),
+      UsersUpdate: () => import('#controllers/auth/admin/users_update_controller'),
     },
     front: {
       AcceptInvitation: () => import('#controllers/auth/front/accept_invitation_controller'),
@@ -35,44 +35,44 @@ export const controllers = {
     },
   },
   core: {
-    cms: {
-      Dashboard: () => import('#controllers/core/cms/dashboard_controller'),
+    admin: {
+      Dashboard: () => import('#controllers/core/admin/dashboard_controller'),
     },
   },
   file: {
+    admin: {
+      FileFolders: () => import('#controllers/file/admin/file_folders_controller'),
+      Files: () => import('#controllers/file/admin/files_controller'),
+    },
     api: {
       File: () => import('#controllers/file/api/file_controller'),
-    },
-    cms: {
-      FileFolders: () => import('#controllers/file/cms/file_folders_controller'),
-      Files: () => import('#controllers/file/cms/files_controller'),
     },
   },
   health: {
     Health: () => import('#controllers/health/health_controller'),
   },
   log: {
-    cms: {
-      Logs: () => import('#controllers/log/cms/logs_controller'),
+    admin: {
+      Logs: () => import('#controllers/log/admin/logs_controller'),
     },
   },
   maintenance: {
-    cms: {
-      Maintenance: () => import('#controllers/maintenance/cms/maintenance_controller'),
+    admin: {
+      Maintenance: () => import('#controllers/maintenance/admin/maintenance_controller'),
     },
   },
   page: {
+    admin: {
+      PageRevisions: () => import('#controllers/page/admin/page_revisions_controller'),
+      PageTranslations: () => import('#controllers/page/admin/page_translations_controller'),
+      Pages: () => import('#controllers/page/admin/pages_controller'),
+      PagesCreate: () => import('#controllers/page/admin/pages_create_controller'),
+      PagesPreview: () => import('#controllers/page/admin/pages_preview_controller'),
+      PagesShow: () => import('#controllers/page/admin/pages_show_controller'),
+      PagesUpdate: () => import('#controllers/page/admin/pages_update_controller'),
+    },
     api: {
       BuilderOperations: () => import('#controllers/page/api/builder_operations_controller'),
-    },
-    cms: {
-      PageRevisions: () => import('#controllers/page/cms/page_revisions_controller'),
-      PageTranslations: () => import('#controllers/page/cms/page_translations_controller'),
-      Pages: () => import('#controllers/page/cms/pages_controller'),
-      PagesCreate: () => import('#controllers/page/cms/pages_create_controller'),
-      PagesPreview: () => import('#controllers/page/cms/pages_preview_controller'),
-      PagesShow: () => import('#controllers/page/cms/pages_show_controller'),
-      PagesUpdate: () => import('#controllers/page/cms/pages_update_controller'),
     },
     front: {
       Contact: () => import('#controllers/page/front/contact_controller'),
@@ -93,12 +93,12 @@ export const controllers = {
     },
   },
   template: {
+    admin: {
+      Templates: () => import('#controllers/template/admin/templates_controller'),
+      TemplatesPreview: () => import('#controllers/template/admin/templates_preview_controller'),
+    },
     api: {
       Templates: () => import('#controllers/template/api/templates_controller'),
-    },
-    cms: {
-      Templates: () => import('#controllers/template/cms/templates_controller'),
-      TemplatesPreview: () => import('#controllers/template/cms/templates_preview_controller'),
     },
   },
 }

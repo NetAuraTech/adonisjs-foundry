@@ -25,26 +25,26 @@ export function buildPermissionsListPayload(i18n: I18nService, permissions: Perm
   }
 
   return i18n.buildPayload({
-    title: 'cms.permissions.list.title',
-    create: { title: 'cms.permissions.create.title' },
+    title: 'admin.permissions.list.title',
+    create: { title: 'admin.permissions.create.title' },
     table: {
-      name: 'cms.permissions.table.name',
-      slug: 'cms.permissions.table.slug',
-      description: 'cms.permissions.table.description',
+      name: 'admin.permissions.table.name',
+      slug: 'admin.permissions.table.slug',
+      description: 'admin.permissions.table.description',
     },
     actions: {
-      value: 'cms.permissions.actions',
-      edit: i18n.entry('cms.permissions.edit.title', { name: '{name}' }),
-      delete: i18n.entry('cms.permissions.delete.title', { name: '{name}' }),
+      value: 'admin.permissions.actions',
+      edit: i18n.entry('admin.permissions.edit.title', { name: '{name}' }),
+      delete: i18n.entry('admin.permissions.delete.title', { name: '{name}' }),
     },
     delete: {
-      confirm: i18n.entry('cms.permissions.delete.confirm', { name: '{name}' }),
+      confirm: i18n.entry('admin.permissions.delete.confirm', { name: '{name}' }),
     },
     system: {
-      value: 'cms.permissions.system.value',
-      hint: 'cms.permissions.system.hint',
+      value: 'admin.permissions.system.value',
+      hint: 'admin.permissions.system.hint',
     },
-    empty: 'cms.permissions.empty',
+    empty: 'admin.permissions.empty',
     categories,
     items,
   })

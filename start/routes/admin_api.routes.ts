@@ -51,7 +51,7 @@ export function registerAdminApiRoutes(): void {
               router
                 .group(() => {
                   router
-                    .get('/token', [controllers.page.cms.PagesPreview, 'token'])
+                    .get('/token', [controllers.page.admin.PagesPreview, 'token'])
                     .use([middleware.permission({ permissions: ['pages.update'] })])
                 })
                 .prefix('preview')
@@ -72,7 +72,7 @@ export function registerAdminApiRoutes(): void {
                 .post('/from-page', [controllers.template.api.Templates, 'createFromPage'])
                 .use([middleware.permission({ permissions: ['templates.create'] })])
               router
-                .get('/preview/token', [controllers.template.cms.TemplatesPreview, 'token'])
+                .get('/preview/token', [controllers.template.admin.TemplatesPreview, 'token'])
                 .use([middleware.permission({ permissions: ['templates.view'] })])
             })
             .prefix('templates')

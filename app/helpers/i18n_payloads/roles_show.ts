@@ -32,36 +32,36 @@ export function buildRolesShowPayload(i18n: I18nService, role: Role, permissions
   })
 
   return i18n.buildPayload({
-    title: i18n.entry('cms.roles.show.title', { name: '{name}' }),
-    name: { value: 'cms.roles.form.name.value' },
-    slug: { value: 'cms.roles.form.slug.value' },
-    description: { value: 'cms.roles.form.description.value' },
+    title: i18n.entry('admin.roles.show.title', { name: '{name}' }),
+    name: { value: 'admin.roles.form.name.value' },
+    slug: { value: 'admin.roles.form.slug.value' },
+    description: { value: 'admin.roles.form.description.value' },
     system: {
-      value: 'cms.roles.system.value',
-      hint: 'cms.roles.system.hint',
+      value: 'admin.roles.system.value',
+      hint: 'admin.roles.system.hint',
     },
     users: {
-      value: 'cms.roles.users.value',
-      empty: 'cms.roles.users.empty',
+      value: 'admin.roles.users.value',
+      empty: 'admin.roles.users.empty',
       table: {
-        username: 'cms.roles.users.table.username',
-        email: 'cms.roles.users.table.email',
+        username: 'admin.roles.users.table.username',
+        email: 'admin.roles.users.table.email',
       },
-      actions: 'cms.roles.actions',
-      show: i18n.entry('cms.users.show.title', { username: '{username}' }),
+      actions: 'admin.roles.actions',
+      show: i18n.entry('admin.users.show.title', { username: '{username}' }),
     },
     permissions: {
-      value: 'cms.roles.form.permissions.value',
+      value: 'admin.roles.form.permissions.value',
       categories,
       items,
     },
     actions: {
-      list: 'cms.roles.list.title',
-      edit: i18n.entry('cms.roles.edit.title', { name: '{name}' }),
-      delete: i18n.entry('cms.roles.delete.title', { name: '{name}' }),
+      list: 'admin.roles.list.title',
+      edit: i18n.entry('admin.roles.edit.title', { name: '{name}' }),
+      delete: i18n.entry('admin.roles.delete.title', { name: '{name}' }),
     },
     delete: {
-      confirm: i18n.entry('cms.roles.delete.confirm', { name: '{name}' }),
+      confirm: i18n.entry('admin.roles.delete.confirm', { name: '{name}' }),
     },
     roles: roleEntry,
   })

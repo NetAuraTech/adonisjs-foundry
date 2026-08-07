@@ -39,13 +39,13 @@ export default class SendInvitationEmail extends BaseTokenListener {
     i18n: ReturnType<typeof i18nManager.locale>
   ): Record<string, string> {
     return {
-      subject: i18n.t('cms.users.mail.subject', { app: env.get('APP_NAME') }),
-      greeting: i18n.t('cms.users.mail.greeting'),
-      intro: i18n.t('cms.users.mail.intro', { app: env.get('APP_NAME') }),
-      action: i18n.t('cms.users.mail.action'),
-      outro: i18n.t('cms.users.mail.outro'),
-      expiry: i18n.t('cms.users.mail.expiry', { days: 7 }),
-      footer: i18n.t('cms.users.mail.footer'),
+      subject: i18n.t('admin.users.mail.subject', { app: env.get('APP_NAME') }),
+      greeting: i18n.t('admin.users.mail.greeting'),
+      intro: i18n.t('admin.users.mail.intro', { app: env.get('APP_NAME') }),
+      action: i18n.t('admin.users.mail.action'),
+      outro: i18n.t('admin.users.mail.outro'),
+      expiry: i18n.t('admin.users.mail.expiry', { days: 7 }),
+      footer: i18n.t('admin.users.mail.footer'),
     }
   }
 }
