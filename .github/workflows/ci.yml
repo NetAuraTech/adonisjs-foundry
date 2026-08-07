@@ -210,6 +210,7 @@ jobs:
       - name: Regenerate codegen output
         run: |
           cp .env.test .env
+          mkdir -p tmp
           node ace serve > tmp/codegen.log 2>&1 &
           SERVER_PID=$!
           for i in $(seq 1 90); do
