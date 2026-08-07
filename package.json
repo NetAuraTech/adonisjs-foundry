@@ -16,7 +16,9 @@
     "test": "node ace test",
     "test:front": "vitest run",
     "lint": "eslint . --fix",
+    "lint:ci": "eslint .",
     "format": "prettier --write .",
+    "format:ci": "prettier --check .",
     "typecheck": "tsc --noEmit && tsc --noEmit --project inertia/tsconfig.json"
   },
   "imports": {
