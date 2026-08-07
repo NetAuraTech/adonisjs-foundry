@@ -77,6 +77,9 @@ export class BuilderSessionService {
     if (existing) return existing
 
     const color = await this.assignColor(translationId, user.userId)
+    // joinedAt has millisecond resolution: two joins within the same
+    // millisecond compare equal and getPresence() then returns them in
+    // unspecified (Redis keys) order. Nothing depends on that ordering.
     const session: UserSession = { ...user, color, joinedAt: new Date() }
 
     await this.sessions.set(key, session, SESSION_TTL_S)

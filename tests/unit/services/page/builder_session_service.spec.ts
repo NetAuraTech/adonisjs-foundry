@@ -1,4 +1,5 @@
 import { test } from '@japa/runner'
+import { setTimeout as sleep } from 'node:timers/promises'
 import { BuilderSessionService } from '#services/page/builder_session_service'
 import { LOCK_TTL_MS } from '#types/builder'
 import { CacheService } from '#services/cache/cache_service'
@@ -52,6 +53,9 @@ test.group('BuilderSessionService — presence', (group) => {
 
   test('getPresence() returns all active sessions sorted by joinedAt', async ({ assert }) => {
     await service.join(TRANSLATION_ID, USER_A)
+    // joinedAt has millisecond resolution — pause so both joins don't land in
+    // the same millisecond on fast runners and sort in unspecified order
+    await sleep(2)
     await service.join(TRANSLATION_ID, USER_B)
     const presence = await service.getPresence(TRANSLATION_ID)
     assert.lengthOf(presence, 2)
