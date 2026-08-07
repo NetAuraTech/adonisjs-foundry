@@ -10,7 +10,7 @@ import type { PageContent } from '#cms/types/page'
  *   - `block` → single block presets inserted at a specific position
  *
  * Run with:
- *   node ace db:seed --files database/seeders/cms/template_seeder.ts
+ *   node ace db:seed --files database/seeders/template_seeder.ts
  *
  * Templates created:
  *   Page templates:
