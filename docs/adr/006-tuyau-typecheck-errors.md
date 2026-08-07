@@ -1,12 +1,16 @@
 ---
-status: accepted
+status: superseded
 date: 2026-08-04
+superseded_by:
+  - 009
 context:
   - Tuyau generates type definitions in `.adonisjs/` from route declarations
   - The generated code sometimes produces typecheck errors (e.g., `contact.execute`)
   - These files are auto-generated and should never be edited manually
   - Regenerating them does not fix the underlying type mismatches
 ---
+
+> **Superseded by [ADR 009](./009-patched-tuyau-extract-query.md).** The upstream root cause was identified ([Julien-R44/tuyau#116](https://github.com/Julien-R44/tuyau/issues/116)) and `@tuyau/core` is now patched at install time, so `npm run typecheck` is green. `.adonisjs/` typecheck errors are no longer expected noise — treat any new one as a real signal.
 
 ## Context
 
