@@ -2,11 +2,13 @@ import { defineConfig } from 'vitest/config'
 import path from 'node:path'
 
 /**
- * Minimal Vitest setup for the pure frontend helpers under `inertia/utils/`.
- *
- * This is intentionally a narrow seam: only deterministic, framework-free
- * helpers (e.g. `cloneBlock`) are unit-tested here. The rest of the Inertia
- * app is covered by the Japa browser E2E suite.
+ * Minimal Vitest setup for frontend seams: deterministic, framework-free
+ * helpers under `inertia/utils/` (e.g. `cloneBlock`), plus Inertia page
+ * specs under `inertia/pages/` that pin conditional-rendering contracts.
+ * Page specs opt into jsdom individually via a `// @vitest-environment
+ * jsdom` docblock, so helper specs keep the fast node environment.
+ * Everything else (flows, real rendering) stays with the Japa browser
+ * E2E suite.
  */
 export default defineConfig({
   resolve: {
@@ -18,6 +20,6 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    include: ['inertia/utils/**/*.spec.ts'],
+    include: ['inertia/utils/**/*.spec.ts', 'inertia/pages/**/*.spec.tsx'],
   },
 })

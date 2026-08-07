@@ -48,5 +48,6 @@ declare module '@adonisjs/inertia/types' {
     'template/cms/edit': ExtractProps<(typeof import('../../inertia/pages/template/cms/edit.tsx'))['default']>
     'template/cms/index': ExtractProps<(typeof import('../../inertia/pages/template/cms/index.tsx'))['default']>
     'template/preview': ExtractProps<(typeof import('../../inertia/pages/template/preview.tsx'))['default']>
+    'core/cms/dashboard.spec': ExtractProps<(typeof import('../../inertia/pages/core/cms/dashboard.spec.tsx'))['default']>
   }
 }

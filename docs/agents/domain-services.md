@@ -38,6 +38,11 @@ export class FooService {
 | **Read-only**                                   | Queries the model directly, no mutation repo, exposes listing/lookup only                                                                         |
 | **Direct infra access** (exception to layering) | Bypasses the repository layer entirely for OS-level operations (raw SQL, child processes, filesystem) — document why in the file header when used |
 | **Stateful/cache-backed**                       | No DB repo; state lives in a cache service, namespaced per concern, often TTL-based                                                               |
+| **Dashboard collector**                         | Read-only, single `collect(payload)` method; registered in `start/dashboard.ts` to contribute one optional section to the admin dashboard         |
+
+## Dashboard collectors
+
+The admin dashboard payload is composed, not hardcoded: each domain owns a `{domain}_dashboard_collector.ts` service implementing `DashboardCollector<Section>` from `#types/dashboard`, and the composition file `start/dashboard.ts` (preloaded) registers one collector per section into the `DashboardRegistry` singleton. `GetDashboardStatsAction` aggregates exactly the registered sections, in parallel; the React page renders only the sections present in the payload. Dropping a domain from the composition therefore removes its dashboard section without leaving empty figures behind.
 
 ## Decision rule
 

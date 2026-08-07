@@ -76,10 +76,20 @@ function RecentCard(props: {
   )
 }
 
+/**
+ * Admin dashboard: one block per domain section present in the payload.
+ *
+ * Every section is optional server-side (a domain contributes its figures
+ * only when it registered a collector), so each block renders only when its
+ * section is provided — a domain absent from the composition simply
+ * disappears instead of leaving empty figures behind.
+ */
 export default function DashboardPage(props: Props) {
   const { stats, translations } = props
   const pageProps = usePage<SharedProps>().props
   const { t, format } = useTranslation(translations)
+
+  const { auth, page, template, file } = stats
 
   const formatDate = (value: string | null) =>
     value ? format(new Date(value), 'medium', pageProps.locale as Lang) : '—'
@@ -87,134 +97,161 @@ export default function DashboardPage(props: Props) {
   return (
     <AdminMain title={t('title')} icon="House">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        <CanAccess permission="users.view">
-          <StatCard
-            icon="Users"
-            label={t('cards.users')}
-            value={stats.counts.users}
-            route="admin.users.render"
-          >
-            {stats.usersByRole.length > 0 && (
-              <div className="mt-4 flex flex-wrap gap-2 text-sm">
-                {stats.usersByRole.map((role) => (
-                  <span key={role.name ?? 'no-role'} className="text-ink-muted">
-                    {`${role.count} ${role.name ?? t('cards.no_role')}`}
-                  </span>
-                ))}
-              </div>
-            )}
-          </StatCard>
-        </CanAccess>
+        {auth && (
+          <CanAccess permission="users.view">
+            <StatCard
+              icon="Users"
+              label={t('cards.users')}
+              value={auth.users}
+              route="admin.users.render"
+            >
+              {auth.usersByRole.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-2 text-sm">
+                  {auth.usersByRole.map((role) => (
+                    <span key={role.name ?? 'no-role'} className="text-ink-muted">
+                      {`${role.count} ${role.name ?? t('cards.no_role')}`}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </StatCard>
+          </CanAccess>
+        )}
 
-        <CanAccess permission="pages.view">
-          <StatCard
-            icon="PanelsTopLeft"
-            label={t('cards.pages')}
-            value={stats.counts.pages}
-            route="admin.pages.render"
-          >
-            <Paragraph variant="muted" spacing="sm">
-              {`${t('cards.translations')}: ${stats.counts.pageTranslations.total}`}
-            </Paragraph>
-            <div className="mt-2 flex flex-wrap gap-2 text-sm">
-              <span className="text-success">{`${stats.counts.pageTranslations.published} ${t('status.published')}`}</span>
-              <span className="text-secondary">{`${stats.counts.pageTranslations.draft} ${t('status.draft')}`}</span>
-              <span className="text-warning">{`${stats.counts.pageTranslations.archived} ${t('status.archived')}`}</span>
-            </div>
-            <Paragraph variant="muted" spacing="sm">
-              {`${t('cards.published_locales')}: ${stats.counts.publishedLocales}`}
-            </Paragraph>
-            <CanAccess permission="templates.view">
+        {page && (
+          <CanAccess permission="pages.view">
+            <StatCard
+              icon="PanelsTopLeft"
+              label={t('cards.pages')}
+              value={page.pages}
+              route="admin.pages.render"
+            >
               <Paragraph variant="muted" spacing="sm">
-                {`${t('cards.templates')}: ${stats.counts.templates}`}
+                {`${t('cards.translations')}: ${page.pageTranslations.total}`}
               </Paragraph>
-            </CanAccess>
-          </StatCard>
-        </CanAccess>
-
-        <CanAccess permission="files.view">
-          <StatCard
-            icon="Folder"
-            label={t('cards.files')}
-            value={stats.counts.files}
-            route="admin.files.render"
-          >
-            <Paragraph variant="muted" spacing="sm">
-              {`${t('cards.folders')}: ${stats.counts.fileFolders}`}
-            </Paragraph>
-            {stats.filesByFolder.length > 0 && (
               <div className="mt-2 flex flex-wrap gap-2 text-sm">
-                {stats.filesByFolder.map((folder) => (
-                  <span key={folder.id} className="text-ink-muted">
-                    {`${folder.count} ${folder.name}`}
-                  </span>
-                ))}
+                <span className="text-success">{`${page.pageTranslations.published} ${t('status.published')}`}</span>
+                <span className="text-secondary">{`${page.pageTranslations.draft} ${t('status.draft')}`}</span>
+                <span className="text-warning">{`${page.pageTranslations.archived} ${t('status.archived')}`}</span>
               </div>
-            )}
-          </StatCard>
-        </CanAccess>
+              <Paragraph variant="muted" spacing="sm">
+                {`${t('cards.published_locales')}: ${page.publishedLocales}`}
+              </Paragraph>
+              {template && (
+                <CanAccess permission="templates.view">
+                  <Paragraph variant="muted" spacing="sm">
+                    {`${t('cards.templates')}: ${template.templates}`}
+                  </Paragraph>
+                </CanAccess>
+              )}
+            </StatCard>
+          </CanAccess>
+        )}
+
+        {!page && template && (
+          <CanAccess permission="templates.view">
+            <StatCard
+              icon="LayoutTemplate"
+              label={t('cards.templates')}
+              value={template.templates}
+              route="admin.templates.render"
+            />
+          </CanAccess>
+        )}
+
+        {file && (
+          <CanAccess permission="files.view">
+            <StatCard
+              icon="Folder"
+              label={t('cards.files')}
+              value={file.files}
+              route="admin.files.render"
+            >
+              <Paragraph variant="muted" spacing="sm">
+                {`${t('cards.folders')}: ${file.fileFolders}`}
+              </Paragraph>
+              {file.filesByFolder.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-2 text-sm">
+                  {file.filesByFolder.map((folder) => (
+                    <span key={folder.id} className="text-ink-muted">
+                      {`${folder.count} ${folder.name}`}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </StatCard>
+          </CanAccess>
+        )}
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <CanAccess permission="pages.view">
-          <RecentCard
-            title={t('recent.published_pages')}
-            viewAllRoute="admin.pages.render"
-            viewAllLabel={t('view_all')}
-          >
-            {stats.recentPublishedPages.length === 0 ? (
-              <Paragraph variant="muted" spacing="xs" className="p-6">
-                {t('recent.empty')}
-              </Paragraph>
-            ) : (
-              <ul className="divide-y divide-edge">
-                {stats.recentPublishedPages.map((entry) => (
-                  <li key={entry.id}>
-                    <Link
-                      route="admin.pages_show.render"
-                      routeParams={{ id: entry.pageId }}
-                      className="flex items-center justify-between gap-2 px-6 py-3 hover:bg-sunken"
+        {page && (
+          <CanAccess permission="pages.view">
+            <RecentCard
+              title={t('recent.published_pages')}
+              viewAllRoute="admin.pages.render"
+              viewAllLabel={t('view_all')}
+            >
+              {page.recentPublishedPages.length === 0 ? (
+                <Paragraph variant="muted" spacing="xs" className="p-6">
+                  {t('recent.empty')}
+                </Paragraph>
+              ) : (
+                <ul className="divide-y divide-edge">
+                  {page.recentPublishedPages.map((entry) => (
+                    <li key={entry.id}>
+                      <Link
+                        route="admin.pages_show.render"
+                        routeParams={{ id: entry.pageId }}
+                        className="flex items-center justify-between gap-2 px-6 py-3 hover:bg-sunken"
+                      >
+                        <span className="truncate">
+                          {entry.title} <span className="text-ink-subtle">({entry.locale})</span>
+                        </span>
+                        <span className="shrink-0 text-sm text-ink-muted">
+                          {formatDate(entry.publishedAt)}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </RecentCard>
+          </CanAccess>
+        )}
+
+        {file && (
+          <CanAccess permission="files.view">
+            <RecentCard
+              title={t('recent.uploads')}
+              viewAllRoute="admin.files.render"
+              viewAllLabel={t('view_all')}
+            >
+              {file.recentFiles.length === 0 ? (
+                <Paragraph variant="muted" spacing="xs" className="p-6">
+                  {t('recent.empty')}
+                </Paragraph>
+              ) : (
+                <ul className="divide-y divide-edge">
+                  {file.recentFiles.map((upload) => (
+                    <li
+                      key={upload.id}
+                      className="flex items-center justify-between gap-2 px-6 py-3"
                     >
                       <span className="truncate">
-                        {entry.title} <span className="text-ink-subtle">({entry.locale})</span>
+                        {upload.originalName}{' '}
+                        <span className="text-ink-subtle">({upload.mimeType})</span>
                       </span>
                       <span className="shrink-0 text-sm text-ink-muted">
-                        {formatDate(entry.publishedAt)}
+                        {formatDate(upload.createdAt)}
                       </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </RecentCard>
-        </CanAccess>
-
-        <CanAccess permission="files.view">
-          <RecentCard
-            title={t('recent.uploads')}
-            viewAllRoute="admin.files.render"
-            viewAllLabel={t('view_all')}
-          >
-            {stats.recentFiles.length === 0 ? (
-              <Paragraph variant="muted" spacing="xs" className="p-6">
-                {t('recent.empty')}
-              </Paragraph>
-            ) : (
-              <ul className="divide-y divide-edge">
-                {stats.recentFiles.map((file) => (
-                  <li key={file.id} className="flex items-center justify-between gap-2 px-6 py-3">
-                    <span className="truncate">
-                      {file.originalName} <span className="text-ink-subtle">({file.mimeType})</span>
-                    </span>
-                    <span className="shrink-0 text-sm text-ink-muted">
-                      {formatDate(file.createdAt)}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </RecentCard>
-        </CanAccess>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </RecentCard>
+          </CanAccess>
+        )}
       </div>
     </AdminMain>
   )
