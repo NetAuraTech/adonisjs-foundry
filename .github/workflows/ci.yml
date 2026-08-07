@@ -183,3 +183,59 @@ jobs:
 
       - name: Run typecheck
         run: npm run typecheck
+
+  codegen-drift:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # The dev server is the only entry point that regenerates every committed
+      # codegen file: the assembler init hooks rewrite the server indexes and
+      # pages.d.ts at startup, and the Tuyau client registry is written once the
+      # running app commits its routes (routesScanned hook), which the build,
+      # typecheck and test commands never trigger. ".env.test" boots the full
+      # app without external services (lazy Redis, memory session/limiter), so
+      # this job needs no service containers.
+      - name: Regenerate codegen output
+        run: |
+          cp .env.test .env
+          mkdir -p tmp
+          node ace serve > tmp/codegen.log 2>&1 &
+          SERVER_PID=$!
+          for i in $(seq 1 90); do
+            if grep -q 'tuyau: created api client registry' tmp/codegen.log; then
+              break
+            fi
+            if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+              echo 'Dev server exited before the codegen output was regenerated:'
+              cat tmp/codegen.log
+              exit 1
+            fi
+            sleep 1
+          done
+          kill "$SERVER_PID" 2>/dev/null || true
+          if ! grep -q 'tuyau: created api client registry' tmp/codegen.log; then
+            echo 'Timed out waiting for the codegen output to be regenerated:'
+            cat tmp/codegen.log
+            exit 1
+          fi
+
+      - name: Fail when the committed codegen output has drifted
+        run: |
+          if ! git diff --exit-code -- .adonisjs/; then
+            echo ''
+            echo '::error::The committed .adonisjs/ files are out of sync with the codegen output.'
+            echo '::error::Run the codegen locally (start the dev server with "node ace serve"), then commit the updated .adonisjs/ directory.'
+            exit 1
+          fi
