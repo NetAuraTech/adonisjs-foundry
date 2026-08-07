@@ -4,6 +4,24 @@ A production-ready boilerplate and headless CMS: authentication, an admin panel 
 
 ## Language
 
+### Contexts & Modules
+
+**Admin**:
+The authenticated back-office context: `/admin/*` URLs, controllers under `{domain}/admin/`, `admin.*` route names, the `admin.json` i18n namespace. Exists in every flavor, independently of the CMS module.
+_Avoid_: CMS (the old name of this context before ADR-0001; `cms` now names only the CMS module), dashboard (a screen inside Admin, not the context)
+
+**CMS module**:
+The prunable vertical slice of content management — Page, Template, page builder, Contact — living under `app/cms/` plus its per-domain subdirectories in framework-scanned layers (`app/http/controllers/{page,template}/`, `app/data/transformers/{page,template}/`, …) and `database/migrations/cms/`. Absent from the `inertia` and `api` flavors. Rule of thumb: if it dies when the CMS dies, it lives in the CMS module.
+_Avoid_: back-office, admin panel (those are the Admin context, which survives every flavor)
+
+**Front**:
+The audience-facing shell context: controllers under `{domain}/front/`, Inertia pages under `{domain}/front/`. Covers public content rendering (Pages, Contact) and authenticated self-service screens (account, profile, preferences) — it is about _who the screen is for_, not about authentication.
+_Avoid_: Public (that is the exposure axis, below), website
+
+**Public**:
+The exposure axis: unauthenticated route modules and feature flags (`cms_public.routes.ts`, the future `publicApi` flag) — anything reachable without a session. Orthogonal to Front: a Public route serves the Front audience, but a Front screen may still require a session.
+_Avoid_: front, anonymous, guest
+
 ### Content
 
 **Page**:
@@ -117,3 +135,6 @@ _Avoid_: Expiration, TTL (TTL belongs to cache entries)
 
 **Dev**: Is a password reset link a session token?
 **Domain**: No — it's a Token (selector/validator pattern), single-purpose and short-lived. Session/auth tokens are handled by `@adonisjs/auth`, not this Token model.
+
+**Dev**: Is the user-management screen part of the CMS?
+**Domain**: No. It belongs to the Admin context — the authenticated back-office that exists in every flavor. The CMS module is only the prunable content vertical (Page, Template, builder, Contact); user management survives when the CMS module is pruned.

@@ -10,7 +10,7 @@ import type { PageContent } from '#cms/types/page'
  * can verify the renderer end-to-end without building an editor first.
  *
  * Run with:
- *   node ace db:seed --files database/seeders/cms/page_seeder.ts
+ *   node ace db:seed --files database/seeders/page_seeder.ts
  *
  * Pages created:
  *   - Home page         (hero + rich_text + button_cta)          → /home
