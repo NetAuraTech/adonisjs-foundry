@@ -1,7 +1,7 @@
 import { test } from '@japa/runner'
-import { TemplateRepository } from '#repositories/template/template_repository'
-import { TemplateFactory } from '#factories/template_factory'
-import type { PageContent } from '#types/page'
+import { TemplateRepository } from '#cms/domain/repositories/template/template_repository'
+import { TemplateFactory } from '#cms/factories/template_factory'
+import type { PageContent } from '#cms/types/page'
 
 /**
  * Integration tests for `TemplateRepository`.

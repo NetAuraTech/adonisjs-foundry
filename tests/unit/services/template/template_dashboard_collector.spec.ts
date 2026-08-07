@@ -1,7 +1,7 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
-import { TemplateDashboardCollector } from '#services/template/template_dashboard_collector'
-import { TemplateFactory } from '#factories/template_factory'
+import { TemplateDashboardCollector } from '#cms/domain/services/template/template_dashboard_collector'
+import { TemplateFactory } from '#cms/factories/template_factory'
 
 /**
  * The test database is not truncated between tests, so count assertions are

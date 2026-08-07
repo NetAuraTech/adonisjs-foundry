@@ -17,9 +17,9 @@ import RowNotFoundException from '#exceptions/core/row_not_found_exception'
 import SlugExistsException from '#exceptions/core/slug_exists_exception'
 import FileTooLargeException from '#exceptions/file/file_too_large_exception'
 import InvalidExtensionException from '#exceptions/file/invalid_extension_exception'
-import MissingTranslationException from '#exceptions/page/missing_translation_exception'
-import MissingRevisionException from '#exceptions/page/missing_revision_exception'
-import InvalidTemplateTypeException from '#exceptions/template/invalid_template_type_exception'
+import MissingTranslationException from '#cms/exceptions/page/missing_translation_exception'
+import MissingRevisionException from '#cms/exceptions/page/missing_revision_exception'
+import InvalidTemplateTypeException from '#cms/exceptions/template/invalid_template_type_exception'
 import MaintenanceException from '#exceptions/maintenance_exception'
 
 async function testExceptionHandle(error: any, assert: any) {

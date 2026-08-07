@@ -1,8 +1,8 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
-import { ListPagesAction } from '#actions/page/list_pages_action'
-import Page from '#models/page/page'
-import PageTranslation from '#models/page/page_translation'
+import { ListPagesAction } from '#cms/domain/actions/page/list_pages_action'
+import Page from '#cms/models/page/page'
+import PageTranslation from '#cms/models/page/page_translation'
 
 test.group('ListPagesAction', () => {
   test('execute() returns paginated pages with filters', async ({ assert }) => {

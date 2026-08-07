@@ -1,14 +1,14 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { FindHomepageAction } from '#actions/page/find_homepage_action'
-import { FindPageBySlugAction } from '#actions/page/find_page_by_slug_action'
-import { GenerateSitemapAction } from '#actions/page/generate_sitemap_action'
-import { GetRobotsTxtAction } from '#actions/page/get_robots_txt_action'
+import { FindHomepageAction } from '#cms/domain/actions/page/find_homepage_action'
+import { FindPageBySlugAction } from '#cms/domain/actions/page/find_page_by_slug_action'
+import { GenerateSitemapAction } from '#cms/domain/actions/page/generate_sitemap_action'
+import { GetRobotsTxtAction } from '#cms/domain/actions/page/get_robots_txt_action'
 import { I18nService } from '#services/i18n_service'
 import { StorageService } from '#services/file/storage_service'
-import { PageResolverService } from '#services/page/page_resolver_service'
+import { PageResolverService } from '#cms/domain/services/page/page_resolver_service'
 import { CacheService } from '#services/cache/cache_service'
-import { ResolvedPageContent } from '#types/page'
+import { ResolvedPageContent } from '#cms/types/page'
 
 @inject()
 export default class PageController {

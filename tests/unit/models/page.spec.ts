@@ -1,6 +1,6 @@
 import { test } from '@japa/runner'
-import Page from '#models/page/page'
-import PageTranslation from '#models/page/page_translation'
+import Page from '#cms/models/page/page'
+import PageTranslation from '#cms/models/page/page_translation'
 
 /**
  * Unit tests for the `Page` model.

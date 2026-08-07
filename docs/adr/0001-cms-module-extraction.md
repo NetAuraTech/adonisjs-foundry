@@ -88,3 +88,11 @@ Costs:
 - The four barrel-scanned layers stay outside the module (framework constraint), mitigated by per-domain subdirectory convention.
 
 Sequencing: this lands before #2 and #3 (specs realigned while still markdown) and before #4 (manifests born on the new structure). #16 is orthogonal. Three green-CI PRs: (1) `cms`→`admin` rename, (2) module extraction, (3) Inertia + lang + composition + docs.
+
+## Phase 2 implementation notes
+
+Recorded while landing the module extraction (#58).
+
+- **Spike: second `indexEntities` invocation � not viable.** `IndexGenerator.add()` overwrites by entity key instead of merging: a second invocation pointing at `app/cms/` replaced the `controllers` barrel with only the CMS source (the app failed to boot: `controllers.health.Health` undefined), and entities not re-specified would have been re-registered with defaults, silently dropping the custom `transformers` config (`withSharedProps`, `source`, `output`). Controllers, events, listeners and transformers therefore stay outside the module permanently; the per-domain subdirectory convention (`app/http/controllers/page/`) is the final answer, not a stopgap.
+- **Migration names change when files move.** Lucid derives the tracked `adonis_schema` name from the configured path (`<migrations.path>/<file>`), so `database/migrations/cms/*` is tracked under new names and would re-run on pre-existing databases. Mitigation: `node ace cms:normalize-migration-names` � a one-time, idempotent command that renames the five stored rows in place. Required once on databases created before phase 2; fresh databases never need it. The command is safe to delete once every long-lived database has been normalized.
+- **Transformer data objects nest by directory.** `app/data/transformers/page/page_transformer.ts` generates `Data.Page.Page` (was `Data.Page`); Inertia type references were updated mechanically (`Data.Page` → `Data.Page.Page`, `Data.PageRevision` → `Data.Page.PageRevision`, `Data.PageTranslation` → `Data.Page.PageTranslation`, `Data.Template` → `Data.Template.Template`).

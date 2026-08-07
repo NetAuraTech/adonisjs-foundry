@@ -1,15 +1,15 @@
 import { useEffect, useReducer } from 'react'
 import { Head } from '@inertiajs/react'
 import { applyOperation } from '~/utils/builder_reducer'
-import type { ResolvedPageContent } from '#types/page'
-import type { BroadcastPayload } from '#types/builder'
+import type { ResolvedPageContent } from '#cms/types/page'
+import type { BroadcastPayload } from '#cms/types/builder'
 import PageRenderer from '~/components/molecules/renderer/page_renderer'
 import { Data } from '@generated/data'
 import { Transmit } from '@adonisjs/transmit-client'
 import { v4 as uuid } from 'uuid'
 
 interface PreviewPageProps {
-  page: Data.PageTranslation
+  page: Data.Page.PageTranslation
   editable: boolean
 }
 

@@ -1,4 +1,4 @@
-import type { ResolvedBlock } from '#types/page'
+import type { ResolvedBlock } from '#cms/types/page'
 import SectionBlock from '~/components/atoms/blocks/section_block'
 import TitleBlock from '~/components/atoms/blocks/title_block'
 import ImageBlock from '~/components/atoms/blocks/image_block'

@@ -1,7 +1,7 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
-import { ListTemplatesAction } from '#actions/template/list_templates_action'
-import Template from '#models/template/template'
+import { ListTemplatesAction } from '#cms/domain/actions/template/list_templates_action'
+import Template from '#cms/models/template/template'
 
 test.group('ListTemplatesAction', () => {
   test('execute() returns templates with optional filters', async ({ assert }) => {

@@ -1,6 +1,6 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
-import { GenerateSitemapAction } from '#actions/page/generate_sitemap_action'
+import { GenerateSitemapAction } from '#cms/domain/actions/page/generate_sitemap_action'
 
 test.group('GenerateSitemapAction', () => {
   test('buildSitemapXml() returns empty urlset for no pages', async ({ assert }) => {

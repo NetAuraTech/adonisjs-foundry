@@ -1,5 +1,5 @@
 import { resolveResponsive } from '~/utils/responsive'
-import type { ResolvedBlock } from '#types/page'
+import type { ResolvedBlock } from '#cms/types/page'
 import { Section } from '~/components/atoms/section'
 import { ReactNode } from 'react'
 

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { ContactFormField } from '#types/page'
+import type { ContactFormField } from '#cms/types/page'
 
 interface UseContactFormOptions {
   pageId: number

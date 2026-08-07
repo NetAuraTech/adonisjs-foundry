@@ -1,5 +1,5 @@
 import { test } from '@japa/runner'
-import { sanitizeBuilderOperation } from '#services/page/builder_sanitize'
+import { sanitizeBuilderOperation } from '#cms/domain/services/page/builder_sanitize'
 
 /**
  * Unit tests for real-time builder operation sanitization (broadcast layer).

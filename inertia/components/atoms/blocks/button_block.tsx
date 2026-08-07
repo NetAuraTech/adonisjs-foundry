@@ -1,5 +1,5 @@
 import { Button } from '~/components/atoms/button'
-import type { ResolvedBlock } from '#types/page'
+import type { ResolvedBlock } from '#cms/types/page'
 import { urlFor } from '~/client'
 
 interface ButtonBlockProps {

@@ -1,4 +1,4 @@
-import type { UserSession } from '#types/builder'
+import type { UserSession } from '#cms/types/builder'
 
 interface PresenceBarProps {
   presence: UserSession[]

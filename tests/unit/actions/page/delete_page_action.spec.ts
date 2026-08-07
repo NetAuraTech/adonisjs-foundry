@@ -1,7 +1,7 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
-import { DeletePageAction } from '#actions/page/delete_page_action'
-import Page from '#models/page/page'
+import { DeletePageAction } from '#cms/domain/actions/page/delete_page_action'
+import Page from '#cms/models/page/page'
 import RowNotFoundException from '#exceptions/core/row_not_found_exception'
 
 test.group('DeletePageAction', () => {

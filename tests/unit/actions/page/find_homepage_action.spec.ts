@@ -1,6 +1,6 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
-import { FindHomepageAction } from '#actions/page/find_homepage_action'
+import { FindHomepageAction } from '#cms/domain/actions/page/find_homepage_action'
 
 test.group('FindHomepageAction', () => {
   test('execute() returns null when no homepage is set', async ({ assert }) => {

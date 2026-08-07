@@ -5,7 +5,7 @@ import TemplateCard from './TemplateCard'
 import { useTemplates } from '~/hooks/use_templates'
 
 interface TemplatePickerProps {
-  handleSelect: (template: Data.Template) => void
+  handleSelect: (template: Data.Template.Template) => void
   handleClose: () => void
 }
 

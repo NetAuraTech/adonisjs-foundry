@@ -16,7 +16,7 @@ import { usePage } from '@inertiajs/react'
 import { Form } from '@adonisjs/inertia/react'
 
 interface PageProps {
-  revisions: Data.PageRevision[]
+  revisions: Data.Page.PageRevision[]
   translation_id: number
   page_id: number
   translations: AdminPagesRevisionTranslations

@@ -2,6 +2,8 @@
 
 Lucid models live in `app/models/{area}/{name}.ts`. Each model extends a generated schema class from `database/schema.ts` that contains column definitions. The model file adds relations, hooks, scopes, and helpers on top of the schema.
 
+> **CMS exception (ADR-0001):** the CMS module (page, template) lives under `app/cms/` with the same structure — e.g. `app/cms/models/page/page.ts`, imported via `#cms/models/page/page`. The layer-first layout above applies to everything outside the CMS module.
+
 ## Structure
 
 ```typescript

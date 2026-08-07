@@ -1,5 +1,5 @@
 import { BaseEvent } from '@adonisjs/core/events'
-import type { ContactFormSubmission } from '#types/page'
+import type { ContactFormSubmission } from '#cms/types/page'
 
 export default class ContactFormSubmitted extends BaseEvent {
   /**

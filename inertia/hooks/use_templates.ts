@@ -8,7 +8,7 @@ import type { Data } from '@generated/data'
  * which differ only in the template `type` they request.
  */
 export function useTemplates(type: 'block' | 'page') {
-  const [templates, setTemplates] = useState<Data.Template[]>([])
+  const [templates, setTemplates] = useState<Data.Template.Template[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 

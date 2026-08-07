@@ -5,7 +5,7 @@ import { Button } from '~/components/atoms/button'
 import { Icon } from '~/components/atoms/icon'
 import { Input } from '~/components/atoms/input'
 import { Label } from '~/components/atoms/label'
-import type { Block, BlockType } from '#types/page'
+import type { Block, BlockType } from '#cms/types/page'
 import { captureTemplateThumbnail } from '~/utils/template_thumbnail'
 
 interface SaveBlockTemplateModalProps {
@@ -35,7 +35,7 @@ export default function SaveBlockTemplateModal({
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [overwriteId, setOverwriteId] = useState<number | null>(null)
-  const [existingTemplates, setExistingTemplates] = useState<Data.Template[]>([])
+  const [existingTemplates, setExistingTemplates] = useState<Data.Template.Template[]>([])
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 

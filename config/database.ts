@@ -33,9 +33,10 @@ const dbConfig = defineConfig({
         naturalSort: true,
 
         /**
-         * Paths containing migration files.
+         * Paths containing migration files. `database/migrations/cms` holds the
+         * CMS module (page/template) migrations — see ADR-0001.
          */
-        paths: ['database/migrations'],
+        paths: ['database/migrations', 'database/migrations/cms'],
       },
     },
 
@@ -54,7 +55,7 @@ const dbConfig = defineConfig({
       },
       migrations: {
         naturalSort: true,
-        paths: ['database/migrations'],
+        paths: ['database/migrations', 'database/migrations/cms'],
       },
       debug: app.inDev,
     },

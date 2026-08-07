@@ -1,8 +1,8 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
 import { DateTime } from 'luxon'
-import { PageDashboardCollector } from '#services/page/page_dashboard_collector'
-import { PageFactory, PageTranslationFactory } from '#factories/page_factory'
+import { PageDashboardCollector } from '#cms/domain/services/page/page_dashboard_collector'
+import { PageFactory, PageTranslationFactory } from '#cms/factories/page_factory'
 
 /**
  * The test database is not truncated between tests, so count assertions are

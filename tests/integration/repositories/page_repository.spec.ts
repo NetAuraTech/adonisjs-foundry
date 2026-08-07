@@ -1,6 +1,10 @@
 import { test } from '@japa/runner'
-import { PageRepository } from '#repositories/page/page_repository'
-import { PageFactory, PageTranslationFactory, PageRevisionFactory } from '#factories/page_factory'
+import { PageRepository } from '#cms/domain/repositories/page/page_repository'
+import {
+  PageFactory,
+  PageTranslationFactory,
+  PageRevisionFactory,
+} from '#cms/factories/page_factory'
 
 /**
  * Integration tests for `PageRepository`.
@@ -60,7 +64,7 @@ test.group('PageRepository', () => {
 
   test('findHomepage() returns the homepage if set', async ({ assert }) => {
     // Clear any existing homepage to avoid unique constraint conflicts
-    const { default: Page } = await import('#models/page/page')
+    const { default: Page } = await import('#cms/models/page/page')
     await Page.query().where('is_homepage', true).update({ isHomepage: false })
 
     await PageFactory.create() // Not homepage
@@ -178,7 +182,7 @@ test.group('PageRepository', () => {
     const found = await repo.findById(page.id)
     assert.isNull(found)
 
-    const { default: PageTranslation } = await import('#models/page/page_translation')
+    const { default: PageTranslation } = await import('#cms/models/page/page_translation')
     const tr = await PageTranslation.find(translation.id)
     assert.isNull(tr)
   })

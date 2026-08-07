@@ -1,7 +1,7 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
-import { SetHomepageAction } from '#actions/page/set_homepage_action'
-import Page from '#models/page/page'
+import { SetHomepageAction } from '#cms/domain/actions/page/set_homepage_action'
+import Page from '#cms/models/page/page'
 
 test.group('SetHomepageAction', () => {
   test('execute() sets a page as homepage', async ({ assert }) => {

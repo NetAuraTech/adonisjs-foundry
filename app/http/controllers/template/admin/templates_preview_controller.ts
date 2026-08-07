@@ -1,9 +1,9 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { GetTemplateDetailAction } from '#actions/template/get_template_detail_action'
-import { PageResolverService } from '#services/page/page_resolver_service'
+import { GetTemplateDetailAction } from '#cms/domain/actions/template/get_template_detail_action'
+import { PageResolverService } from '#cms/domain/services/page/page_resolver_service'
 import { PreviewTokenHelper } from '#helpers/core/preview_token'
-import { templatePreviewValidator } from '#validators/template'
+import { templatePreviewValidator } from '#cms/validators/template'
 import env from '#start/env'
 
 /**

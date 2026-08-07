@@ -1,10 +1,10 @@
 import { test } from '@japa/runner'
 import SlugExistsException from '#exceptions/core/slug_exists_exception'
 import app from '@adonisjs/core/services/app'
-import { CreateTranslationAction } from '#actions/page/create_translation_action'
-import Page from '#models/page/page'
-import PageTranslation from '#models/page/page_translation'
-import type { BlockType, PageContent } from '#types/page'
+import { CreateTranslationAction } from '#cms/domain/actions/page/create_translation_action'
+import Page from '#cms/models/page/page'
+import PageTranslation from '#cms/models/page/page_translation'
+import type { BlockType, PageContent } from '#cms/types/page'
 
 test.group('CreateTranslationAction', () => {
   test('execute() creates a new translation for existing page', async ({ assert }) => {

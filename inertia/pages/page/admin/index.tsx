@@ -12,14 +12,14 @@ import Table from '~/components/atoms/table/table'
 import { Icon } from '~/components/atoms/icon'
 import { Field } from '~/components/molecules/field'
 import { SelectOption } from '~/components/atoms/select_option'
-import type { PageStatus } from '#types/page'
+import type { PageStatus } from '#cms/types/page'
 import { locales, useTranslation } from '~/hooks/use_translation'
 import type { AdminPagesIndexTranslations } from '#types/translations'
 import { Form } from '@adonisjs/inertia/react'
 import { SharedProps } from '@adonisjs/inertia/types'
 
 interface Props {
-  pages: Paginated<Data.Page>
+  pages: Paginated<Data.Page.Page>
   filters: {
     status?: string
     locale?: string

@@ -1,4 +1,4 @@
-import type { ResolvedBlock } from '#types/page'
+import type { ResolvedBlock } from '#cms/types/page'
 import { sanitizeHtml } from '~/utils/purify'
 
 interface QuoteBlockProps {

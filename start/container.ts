@@ -2,7 +2,7 @@ import app from '@adonisjs/core/services/app'
 import { BackupEngine } from '#services/backup/backup_engine'
 import { CacheService } from '#services/cache/cache_service'
 import { RedisCacheDriver } from '#services/cache/drivers/redis_cache_driver'
-import { BuilderSessionService } from '#services/page/builder_session_service'
+import { BuilderSessionService } from '#cms/domain/services/page/builder_session_service'
 import { LogService } from '#services/logging/log_service'
 import { MaintenanceService } from '#services/maintenance/maintenance_service'
 

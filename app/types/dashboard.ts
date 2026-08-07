@@ -1,5 +1,5 @@
 import type { DateTime } from 'luxon'
-import type { PageStatus } from '#types/page'
+import type { PageStatus } from '#cms/types/page'
 
 /** Number of users holding a given role; `name` is `null` for users without a role. */
 export interface DashboardRoleCount {

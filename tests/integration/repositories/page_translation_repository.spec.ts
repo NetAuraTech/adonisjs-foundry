@@ -1,6 +1,6 @@
 import { test } from '@japa/runner'
-import { PageTranslationRepository } from '#repositories/page/page_translation_repository'
-import { PageFactory, PageTranslationFactory } from '#factories/page_factory'
+import { PageTranslationRepository } from '#cms/domain/repositories/page/page_translation_repository'
+import { PageFactory, PageTranslationFactory } from '#cms/factories/page_factory'
 
 test.group('PageTranslationRepository', () => {
   const repo = new PageTranslationRepository()

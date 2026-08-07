@@ -9,7 +9,7 @@ import { Label } from '~/components/atoms/label'
 import { captureTemplateThumbnail } from '~/utils/template_thumbnail'
 import { useTranslation } from '~/hooks/use_translation'
 import type { PageEditorTranslations } from '#types/translations'
-import type { PageContent } from '#types/page'
+import type { PageContent } from '#cms/types/page'
 
 interface SavePageTemplateModalProps {
   pageId: number

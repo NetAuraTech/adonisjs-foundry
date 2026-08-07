@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { cloneBlock } from './clone_block'
-import type { Block } from '#types/page'
+import type { Block } from '#cms/types/page'
 
 /**
  * Minimal Vitest coverage for the pure block-clone helper. A stored Block

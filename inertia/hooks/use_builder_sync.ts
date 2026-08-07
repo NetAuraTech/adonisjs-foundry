@@ -2,13 +2,13 @@ import { useEffect, useRef, useCallback, useState } from 'react'
 import { Transmit } from '@adonisjs/transmit-client'
 import { v4 as uuid } from 'uuid'
 import { applyOperation } from '~/utils/builder_reducer'
-import type { PageContent } from '#types/page'
+import type { PageContent } from '#cms/types/page'
 import type {
   BuilderOperation,
   BroadcastPayload,
   ServerBroadcastEvent,
   UserSession,
-} from '#types/builder'
+} from '#cms/types/builder'
 import { usePage } from '@inertiajs/react'
 import { type SharedProps } from '@adonisjs/inertia/types'
 

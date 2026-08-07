@@ -15,7 +15,7 @@ import { usePage } from '@inertiajs/react'
 import { Form } from '@adonisjs/inertia/react'
 
 interface Props {
-  page: Data.Page
+  page: Data.Page.Page
   translations: AdminPagesShowTranslations
 }
 
@@ -223,7 +223,7 @@ function HomepageSection({
   page,
   translations,
 }: {
-  page: Data.Page
+  page: Data.Page.Page
   translations: AdminPagesShowTranslations
 }) {
   const { t } = useTranslation(translations)

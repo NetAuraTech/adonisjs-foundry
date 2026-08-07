@@ -3,15 +3,18 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import { randomUUID } from 'node:crypto'
 import transmit from '@adonisjs/transmit/services/main'
-import { BuilderSessionService } from '#services/page/builder_session_service'
+import { BuilderSessionService } from '#cms/domain/services/page/builder_session_service'
 import {
   builderOperationValidator,
   builderPresenceValidator,
   OP_SCHEMAS,
-} from '#validators/builder'
-import { sanitizeBuilderOperation, sanitizeDraftContent } from '#services/page/builder_sanitize'
-import type { BroadcastPayload } from '#types/builder'
-import type { PageContent, Block } from '#types/page'
+} from '#cms/validators/builder'
+import {
+  sanitizeBuilderOperation,
+  sanitizeDraftContent,
+} from '#cms/domain/services/page/builder_sanitize'
+import type { BroadcastPayload } from '#cms/types/builder'
+import type { PageContent, Block } from '#cms/types/page'
 
 @inject()
 export default class BuilderOperationsController {

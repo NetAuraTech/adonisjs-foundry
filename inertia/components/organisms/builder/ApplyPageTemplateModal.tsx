@@ -25,7 +25,7 @@ export default function ApplyPageTemplateModal({
 }: ApplyPageTemplateModalProps) {
   const { t } = useTranslation(translations)
   const { templates, loading, error } = useTemplates('page')
-  const [confirmTarget, setConfirmTarget] = useState<Data.Template | null>(null)
+  const [confirmTarget, setConfirmTarget] = useState<Data.Template.Template | null>(null)
   const [applying, setApplying] = useState(false)
 
   function handleConfirm() {

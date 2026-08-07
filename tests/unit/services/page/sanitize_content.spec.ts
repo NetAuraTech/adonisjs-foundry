@@ -1,6 +1,6 @@
 import { test } from '@japa/runner'
-import { sanitizePageContent } from '#services/page/sanitize_content'
-import type { PageContent, Block } from '#types/page'
+import { sanitizePageContent } from '#cms/domain/services/page/sanitize_content'
+import type { PageContent, Block } from '#cms/types/page'
 
 /**
  * Unit tests for `sanitizePageContent`.

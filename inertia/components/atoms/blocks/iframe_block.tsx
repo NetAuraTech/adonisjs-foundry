@@ -1,4 +1,4 @@
-import type { ResolvedBlock, MediaAspect } from '#types/page'
+import type { ResolvedBlock, MediaAspect } from '#cms/types/page'
 import { resolveResponsive } from '~/utils/responsive'
 
 interface IframeBlockProps {

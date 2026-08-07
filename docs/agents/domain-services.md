@@ -2,6 +2,8 @@
 
 One service = one bounded context. Lives in `app/domain/services/{area}/{name}_service.ts`. Owns business logic, delegates persistence to a repository, never returns HTTP responses — only models, primitives, or `void`.
 
+> **CMS exception (ADR-0001):** CMS services (page, template) live under `app/cms/domain/services/{area}/`, imported via `#cms/domain/services/...`. The layout above applies to everything outside the CMS module.
+
 Method names describe the action, not a fixed CRUD contract. A service exposes
 whatever operations its bounded context needs. Don't force
 `list/detail/create/update/delete` onto every service.

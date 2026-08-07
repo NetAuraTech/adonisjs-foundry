@@ -1,6 +1,6 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
-import { CreateTemplateAction } from '#actions/template/create_template_action'
+import { CreateTemplateAction } from '#cms/domain/actions/template/create_template_action'
 import { UserFactory } from '#database/factories/user_factory'
 
 test.group('CreateTemplateAction', () => {

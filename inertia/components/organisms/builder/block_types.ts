@@ -1,4 +1,4 @@
-import type { BlockType, Block } from '#types/page'
+import type { BlockType, Block } from '#cms/types/page'
 
 export interface BlockDescriptor {
   type: BlockType

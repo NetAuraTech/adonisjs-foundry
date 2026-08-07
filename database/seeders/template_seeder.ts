@@ -1,6 +1,6 @@
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
-import Template from '#models/template/template'
-import type { PageContent } from '#types/page'
+import Template from '#cms/models/template/template'
+import type { PageContent } from '#cms/types/page'
 
 /**
  * CMS Template seeder.
