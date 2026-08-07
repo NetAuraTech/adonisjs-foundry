@@ -19,7 +19,8 @@
     "lint:ci": "eslint .",
     "format": "prettier --write .",
     "format:ci": "prettier --check .",
-    "typecheck": "tsc --noEmit && tsc --noEmit --project inertia/tsconfig.json"
+    "typecheck": "tsc --noEmit && tsc --noEmit --project inertia/tsconfig.json",
+    "postinstall": "patch-package"
   },
   "imports": {
     "#controllers/*": "./app/http/controllers/*.js",
@@ -113,6 +114,7 @@
     "ipaddr.js": "^2.4.0",
     "jsdom": "^29.0.1",
     "luxon": "^3.7.2",
+    "patch-package": "^8.0.1",
     "pg": "^8.20.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
