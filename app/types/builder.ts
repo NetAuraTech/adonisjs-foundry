@@ -143,7 +143,8 @@ export interface UserSession {
   userEmail: string
   /** Unique colour assigned to this user for the duration of their session. */
   color: string
-  joinedAt: Date
+  /** `Date` when freshly built, ISO string after a Redis round-trip (millisecond resolution). */
+  joinedAt: Date | string
 }
 
 /**
