@@ -22,33 +22,33 @@ export function buildRolesListPayload(i18n: I18nService, roles: Role[]) {
   }
 
   return i18n.buildPayload({
-    title: 'cms.roles.list.title',
+    title: 'admin.roles.list.title',
     search: {
-      value: 'cms.roles.search.value',
-      placeholder: 'cms.roles.search.placeholder',
-      filter: 'cms.roles.search.filter',
+      value: 'admin.roles.search.value',
+      placeholder: 'admin.roles.search.placeholder',
+      filter: 'admin.roles.search.filter',
     },
-    create: { title: 'cms.roles.create.title' },
+    create: { title: 'admin.roles.create.title' },
     table: {
-      name: 'cms.roles.table.name',
-      slug: 'cms.roles.table.slug',
-      permissions: 'cms.roles.table.permissions',
-      users: 'cms.roles.table.users',
+      name: 'admin.roles.table.name',
+      slug: 'admin.roles.table.slug',
+      permissions: 'admin.roles.table.permissions',
+      users: 'admin.roles.table.users',
     },
     actions: {
-      value: 'cms.roles.actions',
-      show: i18n.entry('cms.roles.show.title', { name: '{name}' }),
-      edit: i18n.entry('cms.roles.edit.title', { name: '{name}' }),
-      delete: i18n.entry('cms.roles.delete.title', { name: '{name}' }),
+      value: 'admin.roles.actions',
+      show: i18n.entry('admin.roles.show.title', { name: '{name}' }),
+      edit: i18n.entry('admin.roles.edit.title', { name: '{name}' }),
+      delete: i18n.entry('admin.roles.delete.title', { name: '{name}' }),
     },
     delete: {
-      confirm: i18n.entry('cms.roles.delete.confirm', { name: '{name}' }),
+      confirm: i18n.entry('admin.roles.delete.confirm', { name: '{name}' }),
     },
     system: {
-      value: 'cms.roles.system.value',
-      hint: 'cms.roles.system.hint',
+      value: 'admin.roles.system.value',
+      hint: 'admin.roles.system.hint',
     },
-    empty: 'cms.roles.empty',
+    empty: 'admin.roles.empty',
     roles: roleEntries,
   })
 }

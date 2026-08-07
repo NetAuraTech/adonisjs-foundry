@@ -4,39 +4,39 @@ import type { TranslationNodes } from '#types/translations'
 
 export function buildUsersListPayload(i18n: I18nService, roles: Role[]) {
   return i18n.buildPayload({
-    title: 'cms.users.list.title',
-    action: 'cms.users.list.action',
+    title: 'admin.users.list.title',
+    action: 'admin.users.list.action',
     search: {
-      value: 'cms.users.search.value',
-      placeholder: 'cms.users.search.placeholder',
-      filter: 'cms.users.search.filter',
+      value: 'admin.users.search.value',
+      placeholder: 'admin.users.search.placeholder',
+      filter: 'admin.users.search.filter',
     },
     roles: {
-      value: 'cms.users.roles.value',
-      placeholder: 'cms.users.roles.placeholder',
+      value: 'admin.users.roles.value',
+      placeholder: 'admin.users.roles.placeholder',
       ...roles.reduce((acc, role) => {
         acc[role.slug] = {
-          value: `cms.users.roles.${role.slug}.value`,
-          description: `cms.users.roles.${role.slug}.description`,
+          value: `admin.users.roles.${role.slug}.value`,
+          description: `admin.users.roles.${role.slug}.description`,
         }
         return acc
       }, {} as TranslationNodes),
     },
     status: {
-      verified: 'cms.users.status.verified',
-      unverified: 'cms.users.status.unverified',
-      pending_invite: 'cms.users.status.pending_invite',
-      value: 'cms.users.status.value',
+      verified: 'admin.users.status.verified',
+      unverified: 'admin.users.status.unverified',
+      pending_invite: 'admin.users.status.pending_invite',
+      value: 'admin.users.status.value',
     },
-    empty: 'cms.users.list.empty',
-    register_on: 'cms.users.list.register_on',
-    value: 'cms.users.value',
-    value_one: 'cms.users.value_one',
+    empty: 'admin.users.list.empty',
+    register_on: 'admin.users.list.register_on',
+    value: 'admin.users.value',
+    value_one: 'admin.users.value_one',
     actions: {
-      value: 'cms.users.actions',
-      show: i18n.entry('cms.users.show.title', { username: '{username}' }),
-      edit: i18n.entry('cms.users.edit.title', { username: '{username}' }),
-      delete: i18n.entry('cms.users.delete.title', { username: '{username}' }),
+      value: 'admin.users.actions',
+      show: i18n.entry('admin.users.show.title', { username: '{username}' }),
+      edit: i18n.entry('admin.users.edit.title', { username: '{username}' }),
+      delete: i18n.entry('admin.users.delete.title', { username: '{username}' }),
     },
   })
 }

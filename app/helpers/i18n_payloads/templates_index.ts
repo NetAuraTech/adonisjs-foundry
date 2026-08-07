@@ -2,36 +2,36 @@ import type { I18nService } from '#services/i18n_service'
 
 export function buildTemplatesIndexPayload(i18n: I18nService) {
   return i18n.buildPayload({
-    title: 'cms.templates.list.title',
+    title: 'admin.templates.list.title',
     actions: {
-      edit: i18n.entry('cms.templates.list.actions.edit', { name: '{name}' }),
-      regenerate: i18n.entry('cms.templates.list.actions.regenerate', { name: '{name}' }),
+      edit: i18n.entry('admin.templates.list.actions.edit', { name: '{name}' }),
+      regenerate: i18n.entry('admin.templates.list.actions.regenerate', { name: '{name}' }),
     },
     create_guidance: {
-      value: 'cms.templates.list.create_guidance.value',
-      from_page: 'cms.templates.list.create_guidance.from_page',
+      value: 'admin.templates.list.create_guidance.value',
+      from_page: 'admin.templates.list.create_guidance.from_page',
     },
     empty: {
-      value: 'cms.templates.list.empty.value',
-      help: 'cms.templates.list.empty.help',
+      value: 'admin.templates.list.empty.value',
+      help: 'admin.templates.list.empty.help',
     },
     thumbnail: {
-      placeholder: 'cms.templates.list.thumbnail.placeholder',
+      placeholder: 'admin.templates.list.thumbnail.placeholder',
     },
     search: {
-      value: 'cms.templates.search.value',
-      placeholder: 'cms.templates.search.placeholder',
+      value: 'admin.templates.search.value',
+      placeholder: 'admin.templates.search.placeholder',
       type: {
-        value: 'cms.templates.search.type.value',
-        placeholder: 'cms.templates.search.type.placeholder',
-        page: 'cms.templates.search.type.page',
-        block: 'cms.templates.search.type.block',
+        value: 'admin.templates.search.type.value',
+        placeholder: 'admin.templates.search.type.placeholder',
+        page: 'admin.templates.search.type.page',
+        block: 'admin.templates.search.type.block',
       },
-      filter: 'cms.templates.search.filter',
+      filter: 'admin.templates.search.filter',
     },
     delete: {
-      value: i18n.entry('cms.templates.delete.title', { name: '{name}' }),
-      confirm: 'cms.templates.delete.confirm',
+      value: i18n.entry('admin.templates.delete.title', { name: '{name}' }),
+      confirm: 'admin.templates.delete.confirm',
     },
   })
 }

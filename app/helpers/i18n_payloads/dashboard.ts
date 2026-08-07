@@ -8,27 +8,27 @@ import type { I18nService } from '#services/i18n_service'
  */
 export function buildDashboardPayload(i18n: I18nService) {
   return i18n.buildPayload({
-    title: 'cms.dashboard.title',
+    title: 'admin.dashboard.title',
     cards: {
-      users: 'cms.users.value',
-      pages: 'cms.pages.value',
-      translations: 'cms.dashboard.cards.translations',
-      files: 'cms.files.value',
-      templates: 'cms.templates.value',
-      published_locales: 'cms.dashboard.cards.published_locales',
-      folders: 'cms.dashboard.cards.folders',
-      no_role: 'cms.dashboard.cards.no_role',
+      users: 'admin.users.value',
+      pages: 'admin.pages.value',
+      translations: 'admin.dashboard.cards.translations',
+      files: 'admin.files.value',
+      templates: 'admin.templates.value',
+      published_locales: 'admin.dashboard.cards.published_locales',
+      folders: 'admin.dashboard.cards.folders',
+      no_role: 'admin.dashboard.cards.no_role',
     },
     status: {
-      draft: 'cms.pages.status.draft',
-      published: 'cms.pages.status.published',
-      archived: 'cms.pages.status.archived',
+      draft: 'admin.pages.status.draft',
+      published: 'admin.pages.status.published',
+      archived: 'admin.pages.status.archived',
     },
     recent: {
-      published_pages: 'cms.dashboard.recent.published_pages',
-      uploads: 'cms.dashboard.recent.uploads',
-      empty: 'cms.dashboard.recent.empty',
+      published_pages: 'admin.dashboard.recent.published_pages',
+      uploads: 'admin.dashboard.recent.uploads',
+      empty: 'admin.dashboard.recent.empty',
     },
-    view_all: 'cms.dashboard.view_all',
+    view_all: 'admin.dashboard.view_all',
   })
 }

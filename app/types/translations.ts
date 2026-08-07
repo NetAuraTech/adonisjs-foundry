@@ -248,7 +248,7 @@ export type EmailChangeTranslations = {
   }
 }
 
-export type CmsUsersIndexTranslations = {
+export type AdminUsersIndexTranslations = {
   title: string
   action: string
   search: {
@@ -279,7 +279,7 @@ export type CmsUsersIndexTranslations = {
   }
 }
 
-export type CmsUsersShowTranslations = {
+export type AdminUsersShowTranslations = {
   title: string
   info: {
     value: string
@@ -318,7 +318,7 @@ export type CmsUsersShowTranslations = {
   }
 }
 
-export type CmsUsersFormTranslations = {
+export type AdminUsersFormTranslations = {
   title: {
     create: string
     edit: string
@@ -342,7 +342,7 @@ export type CmsUsersFormTranslations = {
   submit: string
 }
 
-export type CmsFilesTranslations = {
+export type AdminFilesTranslations = {
   title: string
   action: {
     upload: string
@@ -417,7 +417,7 @@ export type CmsFilesTranslations = {
   }
 }
 
-export type CmsFileFoldersTranslations = {
+export type AdminFileFoldersTranslations = {
   title: string
   action: string
   browse: string
@@ -443,7 +443,7 @@ export type CmsFileFoldersTranslations = {
   }
 }
 
-export type CmsTemplatesTranslations = {
+export type AdminTemplatesTranslations = {
   title: string
   actions: {
     edit: string
@@ -477,7 +477,7 @@ export type CmsTemplatesTranslations = {
   }
 }
 
-export type CmsTemplatesEditTranslations = {
+export type AdminTemplatesEditTranslations = {
   title: string
   back: string
   form: {
@@ -502,7 +502,7 @@ export type CmsTemplatesEditTranslations = {
   }
 }
 
-export type CmsPagesIndexTranslations = {
+export type AdminPagesIndexTranslations = {
   title: string
   action: string
   search: {
@@ -537,7 +537,7 @@ export type CmsPagesIndexTranslations = {
   }
 }
 
-export type CmsPagesCreateTranslations = {
+export type AdminPagesCreateTranslations = {
   title: string
   action: string
   details: string
@@ -564,7 +564,7 @@ export type CmsPagesCreateTranslations = {
   submit: string
 }
 
-export type CmsPagesShowTranslations = {
+export type AdminPagesShowTranslations = {
   title: string
   actions: {
     back: string
@@ -613,7 +613,7 @@ export type CmsPagesShowTranslations = {
   default: string
 }
 
-export type CmsPagesRevisionTranslations = {
+export type AdminPagesRevisionTranslations = {
   title: string
   actions: {
     value: string
@@ -768,7 +768,7 @@ export type CommonTranslations = {
   }
 }
 
-export type CmsDashboardTranslations = {
+export type AdminDashboardTranslations = {
   title: string
   cards: {
     users: string
@@ -793,7 +793,7 @@ export type CmsDashboardTranslations = {
   view_all: string
 }
 
-export type CmsRolesIndexTranslations = {
+export type AdminRolesIndexTranslations = {
   title: string
   search: {
     value: string
@@ -826,7 +826,7 @@ export type CmsRolesIndexTranslations = {
   roles: TranslationNodes
 }
 
-export type CmsRolesFormTranslations = {
+export type AdminRolesFormTranslations = {
   title: {
     create: string
     edit: string
@@ -855,7 +855,7 @@ export type CmsRolesFormTranslations = {
   }
 }
 
-export type CmsRolesShowTranslations = {
+export type AdminRolesShowTranslations = {
   title: string
   name: {
     value: string
@@ -896,7 +896,7 @@ export type CmsRolesShowTranslations = {
   roles: TranslationNodes
 }
 
-export type CmsPermissionsIndexTranslations = {
+export type AdminPermissionsIndexTranslations = {
   title: string
   create: {
     title: string
@@ -923,7 +923,7 @@ export type CmsPermissionsIndexTranslations = {
   items: TranslationNodes
 }
 
-export type CmsPermissionsFormTranslations = {
+export type AdminPermissionsFormTranslations = {
   title: {
     create: string
     edit: string
@@ -950,7 +950,7 @@ export type CmsPermissionsFormTranslations = {
   }
 }
 
-export type CmsTranslations = {
+export type AdminTranslations = {
   category: {
     content: string
     access_control: string
@@ -967,7 +967,7 @@ export type CmsTranslations = {
   logs: string
 }
 
-export type CmsLogsIndexTranslations = {
+export type AdminLogsIndexTranslations = {
   title: string
   empty: string
   logged_on: string
@@ -1021,7 +1021,7 @@ export type MaintenanceTranslations = {
   retry_now: string
 }
 
-export type CmsMaintenanceTranslations = {
+export type AdminMaintenanceTranslations = {
   title: string
   sub_title: string
   status: {

@@ -2,27 +2,27 @@ import type { I18nService } from '#services/i18n_service'
 
 export function buildFileFoldersPayload(i18n: I18nService) {
   return i18n.buildPayload({
-    title: 'cms.folders.list.title',
-    action: 'cms.files.list.title',
-    browse: 'cms.folders.list.browse',
-    help: 'cms.folders.form.help',
+    title: 'admin.folders.list.title',
+    action: 'admin.files.list.title',
+    browse: 'admin.folders.list.browse',
+    help: 'admin.folders.form.help',
     name: {
-      root: 'cms.folders.form.name.root',
-      sub: 'cms.folders.form.name.sub',
+      root: 'admin.folders.form.name.root',
+      sub: 'admin.folders.form.name.sub',
     },
     empty: {
-      value: 'cms.folders.list.empty.value',
-      help: 'cms.folders.list.empty.help',
+      value: 'admin.folders.list.empty.value',
+      help: 'admin.folders.list.empty.help',
     },
     actions: {
-      add: 'cms.folders.list.add',
-      create: 'cms.folders.form.create',
-      update: 'cms.folders.form.update',
-      cancel: 'cms.folders.form.cancel',
-      rename: 'cms.folders.list.rename',
+      add: 'admin.folders.list.add',
+      create: 'admin.folders.form.create',
+      update: 'admin.folders.form.update',
+      cancel: 'admin.folders.form.cancel',
+      rename: 'admin.folders.list.rename',
       delete: {
-        value: i18n.entry('cms.folders.delete.title', { folder: '{folder}' }),
-        confirm: 'cms.folders.delete.confirm',
+        value: i18n.entry('admin.folders.delete.title', { folder: '{folder}' }),
+        confirm: 'admin.folders.delete.confirm',
       },
     },
   })

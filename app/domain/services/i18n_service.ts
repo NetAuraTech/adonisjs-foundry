@@ -21,7 +21,7 @@ import { I18n } from '@adonisjs/i18n'
  *
  * @example With ICU replacements
  * ```ts
- * session.flash('success', this.i18n.translate('cms.users.deleted', { username }))
+ * session.flash('success', this.i18n.translate('admin.users.deleted', { username }))
  * ```
  *
  * @example Build a nested Inertia translation payload from flat keys
@@ -36,8 +36,8 @@ import { I18n } from '@adonisjs/i18n'
  * @example Mix plain keys and entry() markers (replacements resolved inside buildPayload)
  * ```ts
  * const translations = this.i18n.buildPayload({
- *   email: 'cms.users.form.email.value',
- *   title: this.i18n.entry('cms.users.edit.title', { username }),
+ *   email: 'admin.users.form.email.value',
+ *   title: this.i18n.entry('admin.users.edit.title', { username }),
  * })
  */
 @inject()
@@ -71,8 +71,8 @@ export class I18nService {
    * @example
    * ```ts
    * this.i18n.buildPayload({
-   *   email: 'cms.users.form.email.value',
-   *   title: this.i18n.entry('cms.users.edit.title', { username }),
+   *   email: 'admin.users.form.email.value',
+   *   title: this.i18n.entry('admin.users.edit.title', { username }),
    * })
    * ```
    */

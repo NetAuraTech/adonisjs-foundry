@@ -45,7 +45,7 @@ const indexValidator = vine.number().min(0)
 
 /**
  * Validates the envelope sent by the client to
- * `POST /api/cms/builder/operations`.
+ * `POST /api/admin/builder/operations`.
  *
  * Only the common fields (`pageId`, `translationId`, `op`) are validated
  * strictly. Op-specific fields are accepted as loose objects here and
@@ -86,7 +86,7 @@ export const builderOperationValidator = vine.create({
 
 /**
  * Validates the presence endpoint query params.
- * `GET /api/cms/builder/presence/:translationId`
+ * `GET /api/admin/builder/presence/:translationId`
  */
 export const builderPresenceValidator = vine.create({
   translationId: vine.number().positive(),

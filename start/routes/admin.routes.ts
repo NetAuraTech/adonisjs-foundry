@@ -1,6 +1,6 @@
 /*
 |--------------------------------------------------------------------------
-| Admin CMS routes
+| Admin routes
 |--------------------------------------------------------------------------
 |
 | Dashboard, users CRUD, pages CRUD, templates, files, file folders.
@@ -15,19 +15,19 @@ export function registerAdminRoutes(): void {
   router
     .group(() => {
       router
-        .get('/', [controllers.core.cms.Dashboard, 'render'])
+        .get('/', [controllers.core.admin.Dashboard, 'render'])
         .use([middleware.permission({ permissions: ['admin.access'] })])
 
       router
         .group(() => {
           router
-            .get('/', [controllers.auth.cms.Users, 'render'])
+            .get('/', [controllers.auth.admin.Users, 'render'])
             .use([middleware.permission({ permissions: ['users.view'] })])
 
           router
             .group(() => {
-              router.get('/', [controllers.auth.cms.UsersCreate, 'render'])
-              router.post('/', [controllers.auth.cms.UsersCreate, 'execute'])
+              router.get('/', [controllers.auth.admin.UsersCreate, 'render'])
+              router.post('/', [controllers.auth.admin.UsersCreate, 'execute'])
             })
             .prefix('create')
             .use([middleware.permission({ permissions: ['users.create'] })])
@@ -35,16 +35,16 @@ export function registerAdminRoutes(): void {
           router
             .group(() => {
               router
-                .delete('/', [controllers.auth.cms.Users, 'destroy'])
+                .delete('/', [controllers.auth.admin.Users, 'destroy'])
                 .use([middleware.permission({ permissions: ['users.delete'] })])
               router
-                .get('/', [controllers.auth.cms.UsersShow, 'render'])
+                .get('/', [controllers.auth.admin.UsersShow, 'render'])
                 .use([middleware.permission({ permissions: ['users.view'] })])
 
               router
                 .group(() => {
-                  router.get('/', [controllers.auth.cms.UsersUpdate, 'render'])
-                  router.post('/', [controllers.auth.cms.UsersUpdate, 'execute'])
+                  router.get('/', [controllers.auth.admin.UsersUpdate, 'render'])
+                  router.post('/', [controllers.auth.admin.UsersUpdate, 'execute'])
                 })
                 .prefix('edit')
                 .use([middleware.permission({ permissions: ['users.update'] })])
@@ -56,13 +56,13 @@ export function registerAdminRoutes(): void {
       router
         .group(() => {
           router
-            .get('/', [controllers.auth.cms.Roles, 'render'])
+            .get('/', [controllers.auth.admin.Roles, 'render'])
             .use([middleware.permission({ permissions: ['roles.view'] })])
 
           router
             .group(() => {
-              router.get('/', [controllers.auth.cms.RolesCreate, 'render'])
-              router.post('/', [controllers.auth.cms.RolesCreate, 'execute'])
+              router.get('/', [controllers.auth.admin.RolesCreate, 'render'])
+              router.post('/', [controllers.auth.admin.RolesCreate, 'execute'])
             })
             .prefix('create')
             .use([middleware.permission({ permissions: ['roles.create'] })])
@@ -70,16 +70,16 @@ export function registerAdminRoutes(): void {
           router
             .group(() => {
               router
-                .delete('/', [controllers.auth.cms.Roles, 'destroy'])
+                .delete('/', [controllers.auth.admin.Roles, 'destroy'])
                 .use([middleware.permission({ permissions: ['roles.delete'] })])
               router
-                .get('/', [controllers.auth.cms.RolesShow, 'render'])
+                .get('/', [controllers.auth.admin.RolesShow, 'render'])
                 .use([middleware.permission({ permissions: ['roles.view'] })])
 
               router
                 .group(() => {
-                  router.get('/', [controllers.auth.cms.RolesUpdate, 'render'])
-                  router.post('/', [controllers.auth.cms.RolesUpdate, 'execute'])
+                  router.get('/', [controllers.auth.admin.RolesUpdate, 'render'])
+                  router.post('/', [controllers.auth.admin.RolesUpdate, 'execute'])
                 })
                 .prefix('edit')
                 .use([middleware.permission({ permissions: ['roles.update'] })])
@@ -91,13 +91,13 @@ export function registerAdminRoutes(): void {
       router
         .group(() => {
           router
-            .get('/', [controllers.auth.cms.Permissions, 'render'])
+            .get('/', [controllers.auth.admin.Permissions, 'render'])
             .use([middleware.permission({ permissions: ['permissions.view'] })])
 
           router
             .group(() => {
-              router.get('/', [controllers.auth.cms.PermissionsCreate, 'render'])
-              router.post('/', [controllers.auth.cms.PermissionsCreate, 'execute'])
+              router.get('/', [controllers.auth.admin.PermissionsCreate, 'render'])
+              router.post('/', [controllers.auth.admin.PermissionsCreate, 'execute'])
             })
             .prefix('create')
             .use([middleware.permission({ permissions: ['permissions.create'] })])
@@ -105,13 +105,13 @@ export function registerAdminRoutes(): void {
           router
             .group(() => {
               router
-                .delete('/', [controllers.auth.cms.Permissions, 'destroy'])
+                .delete('/', [controllers.auth.admin.Permissions, 'destroy'])
                 .use([middleware.permission({ permissions: ['permissions.delete'] })])
 
               router
                 .group(() => {
-                  router.get('/', [controllers.auth.cms.PermissionsUpdate, 'render'])
-                  router.post('/', [controllers.auth.cms.PermissionsUpdate, 'execute'])
+                  router.get('/', [controllers.auth.admin.PermissionsUpdate, 'render'])
+                  router.post('/', [controllers.auth.admin.PermissionsUpdate, 'execute'])
                 })
                 .prefix('edit')
                 .use([middleware.permission({ permissions: ['permissions.update'] })])
@@ -125,13 +125,13 @@ export function registerAdminRoutes(): void {
         router
           .group(() => {
             router
-              .get('/', [controllers.page.cms.Pages, 'render'])
+              .get('/', [controllers.page.admin.Pages, 'render'])
               .use([middleware.permission({ permissions: ['pages.view'] })])
 
             router
               .group(() => {
-                router.get('/', [controllers.page.cms.PagesCreate, 'render'])
-                router.post('/', [controllers.page.cms.PagesCreate, 'execute'])
+                router.get('/', [controllers.page.admin.PagesCreate, 'render'])
+                router.post('/', [controllers.page.admin.PagesCreate, 'execute'])
               })
               .prefix('create')
               .use([middleware.permission({ permissions: ['pages.create'] })])
@@ -139,39 +139,45 @@ export function registerAdminRoutes(): void {
             router
               .group(() => {
                 router
-                  .get('/', [controllers.page.cms.PagesShow, 'render'])
+                  .get('/', [controllers.page.admin.PagesShow, 'render'])
                   .use([middleware.permission({ permissions: ['pages.view'] })])
                 router
-                  .get('/edit', [controllers.page.cms.PagesUpdate, 'render'])
+                  .get('/edit', [controllers.page.admin.PagesUpdate, 'render'])
                   .use([middleware.permission({ permissions: ['pages.update'] })])
                 router
-                  .post('/edit', [controllers.page.cms.PagesUpdate, 'execute'])
+                  .post('/edit', [controllers.page.admin.PagesUpdate, 'execute'])
                   .use([middleware.permission({ permissions: ['pages.update'] })])
                 router
-                  .post('/publish', [controllers.page.cms.PagesUpdate, 'publish'])
+                  .post('/publish', [controllers.page.admin.PagesUpdate, 'publish'])
                   .use([middleware.permission({ permissions: ['pages.update'] })])
                 router
-                  .post('/unpublish', [controllers.page.cms.PagesUpdate, 'unpublish'])
+                  .post('/unpublish', [controllers.page.admin.PagesUpdate, 'unpublish'])
                   .use([middleware.permission({ permissions: ['pages.update'] })])
                 router
-                  .post('/homepage', [controllers.page.cms.Pages, 'setHomepage'])
+                  .post('/homepage', [controllers.page.admin.Pages, 'setHomepage'])
                   .use([middleware.permission({ permissions: ['pages.update'] })])
                 router
-                  .delete('/', [controllers.page.cms.Pages, 'destroy'])
+                  .delete('/', [controllers.page.admin.Pages, 'destroy'])
                   .use([middleware.permission({ permissions: ['pages.delete'] })])
                 router
-                  .post('/translations', [controllers.page.cms.PageTranslations, 'execute'])
+                  .post('/translations', [controllers.page.admin.PageTranslations, 'execute'])
                   .use([middleware.permission({ permissions: ['pages.update'] })])
                 router
                   .group(() => {
                     router
-                      .get('/', [controllers.page.cms.PageRevisions, 'index'])
+                      .get('/', [controllers.page.admin.PageRevisions, 'index'])
                       .use([middleware.permission({ permissions: ['pages.view'] })])
                     router
-                      .post('/:revisionId/restore', [controllers.page.cms.PageRevisions, 'restore'])
+                      .post('/:revisionId/restore', [
+                        controllers.page.admin.PageRevisions,
+                        'restore',
+                      ])
                       .use([middleware.permission({ permissions: ['pages.update'] })])
                     router
-                      .post('/:revisionId/keep', [controllers.page.cms.PageRevisions, 'toggleKeep'])
+                      .post('/:revisionId/keep', [
+                        controllers.page.admin.PageRevisions,
+                        'toggleKeep',
+                      ])
                       .use([middleware.permission({ permissions: ['pages.update'] })])
                   })
                   .prefix('translations/:translationId/revisions')
@@ -179,7 +185,7 @@ export function registerAdminRoutes(): void {
               .prefix(':id')
 
             router
-              .get('/preview/:pageId', [controllers.page.cms.PagesPreview, 'render'])
+              .get('/preview/:pageId', [controllers.page.admin.PagesPreview, 'render'])
               .use([middleware.permission({ permissions: ['pages.view'] })])
           })
           .prefix('pages')
@@ -188,25 +194,25 @@ export function registerAdminRoutes(): void {
         router
           .group(() => {
             router
-              .get('/', [controllers.template.cms.Templates, 'render'])
+              .get('/', [controllers.template.admin.Templates, 'render'])
               .use([middleware.permission({ permissions: ['templates.view'] })])
             router
-              .post('/', [controllers.template.cms.Templates, 'execute'])
+              .post('/', [controllers.template.admin.Templates, 'execute'])
               .use([middleware.permission({ permissions: ['templates.create'] })])
             router
-              .post('/:id/apply', [controllers.template.cms.Templates, 'applyToPage'])
+              .post('/:id/apply', [controllers.template.admin.Templates, 'applyToPage'])
               .use([middleware.permission({ permissions: ['templates.update'] })])
             router
-              .post('/:id', [controllers.template.cms.Templates, 'update'])
+              .post('/:id', [controllers.template.admin.Templates, 'update'])
               .use([middleware.permission({ permissions: ['templates.update'] })])
             router
-              .delete('/:id', [controllers.template.cms.Templates, 'destroy'])
+              .delete('/:id', [controllers.template.admin.Templates, 'destroy'])
               .use([middleware.permission({ permissions: ['templates.delete'] })])
             router
-              .get('/preview/:id', [controllers.template.cms.TemplatesPreview, 'render'])
+              .get('/preview/:id', [controllers.template.admin.TemplatesPreview, 'render'])
               .use([middleware.permission({ permissions: ['templates.view'] })])
             router
-              .get('/:id/edit', [controllers.template.cms.Templates, 'edit'])
+              .get('/:id/edit', [controllers.template.admin.Templates, 'edit'])
               .use([middleware.permission({ permissions: ['templates.view'] })])
           })
           .prefix('templates')
@@ -215,22 +221,22 @@ export function registerAdminRoutes(): void {
         router
           .group(() => {
             router
-              .get('/', [controllers.file.cms.Files, 'render'])
+              .get('/', [controllers.file.admin.Files, 'render'])
               .use([middleware.permission({ permissions: ['files.view'] })])
             router
-              .post('/upload', [controllers.file.cms.Files, 'upload'])
+              .post('/upload', [controllers.file.admin.Files, 'upload'])
               .use([middleware.permission({ permissions: ['files.create'] })])
             router
-              .post('/:id/move', [controllers.file.cms.Files, 'move'])
+              .post('/:id/move', [controllers.file.admin.Files, 'move'])
               .use([middleware.permission({ permissions: ['files.update'] })])
             router
-              .delete('/:id', [controllers.file.cms.Files, 'destroy'])
+              .delete('/:id', [controllers.file.admin.Files, 'destroy'])
               .use([middleware.permission({ permissions: ['files.delete'] })])
             router
-              .post('/:id/alts', [controllers.file.cms.Files, 'upsertAlt'])
+              .post('/:id/alts', [controllers.file.admin.Files, 'upsertAlt'])
               .use([middleware.permission({ permissions: ['files.update'] })])
             router
-              .delete('/:id/alts', [controllers.file.cms.Files, 'deleteAlt'])
+              .delete('/:id/alts', [controllers.file.admin.Files, 'deleteAlt'])
               .use([middleware.permission({ permissions: ['files.update'] })])
           })
           .prefix('files')
@@ -239,16 +245,16 @@ export function registerAdminRoutes(): void {
         router
           .group(() => {
             router
-              .get('/', [controllers.file.cms.FileFolders, 'render'])
+              .get('/', [controllers.file.admin.FileFolders, 'render'])
               .use([middleware.permission({ permissions: ['folders.view'] })])
             router
-              .post('/', [controllers.file.cms.FileFolders, 'execute'])
+              .post('/', [controllers.file.admin.FileFolders, 'execute'])
               .use([middleware.permission({ permissions: ['folders.create'] })])
             router
-              .put('/:id', [controllers.file.cms.FileFolders, 'update'])
+              .put('/:id', [controllers.file.admin.FileFolders, 'update'])
               .use([middleware.permission({ permissions: ['folders.update'] })])
             router
-              .delete('/:id', [controllers.file.cms.FileFolders, 'destroy'])
+              .delete('/:id', [controllers.file.admin.FileFolders, 'destroy'])
               .use([middleware.permission({ permissions: ['folders.delete'] })])
           })
           .prefix('files/folders')
@@ -259,13 +265,16 @@ export function registerAdminRoutes(): void {
             router
               .group(() => {
                 router
-                  .get('/maintenance', [controllers.maintenance.cms.Maintenance, 'render'])
+                  .get('/maintenance', [controllers.maintenance.admin.Maintenance, 'render'])
                   .as('maintenance.render')
                 router
-                  .post('/maintenance', [controllers.maintenance.cms.Maintenance, 'update'])
+                  .post('/maintenance', [controllers.maintenance.admin.Maintenance, 'update'])
                   .as('maintenance.update')
                 router
-                  .post('/maintenance/toggle', [controllers.maintenance.cms.Maintenance, 'toggle'])
+                  .post('/maintenance/toggle', [
+                    controllers.maintenance.admin.Maintenance,
+                    'toggle',
+                  ])
                   .as('maintenance.toggle')
               })
               .prefix('settings')
@@ -278,7 +287,7 @@ export function registerAdminRoutes(): void {
         router
           .group(() => {
             router
-              .get('/', [controllers.log.cms.Logs, 'render'])
+              .get('/', [controllers.log.admin.Logs, 'render'])
               .as('logs.render')
               .use([middleware.permission({ permissions: ['logs.view'] })])
           })

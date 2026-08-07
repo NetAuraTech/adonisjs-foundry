@@ -33,7 +33,7 @@ export default class ExampleController {
 ## Variants
 
 - **API**: no `render()`; methods return JSON via `response.ok()`, `response.badRequest()`. Serialize with transformers (`#transformers/...`) + `ctx.serialize()`.
-- **Collection** (CMS index): no `execute()`; just `render()` + `destroy()` (+ optional custom actions like `setHomepage()`).
+- **Collection** (admin index): no `execute()`; just `render()` + `destroy()` (+ optional custom actions like `setHomepage()`).
 - **Execute-only** (front forms): no `render()`; called via POST or fetch, returns redirect.
 
 ## Conventions
