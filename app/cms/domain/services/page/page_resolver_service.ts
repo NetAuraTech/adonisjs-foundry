@@ -19,6 +19,7 @@ import type {
   ResolvedIframeProps,
 } from '#cms/types/page'
 import type { FileRef, ResolvedFile } from '#types/file'
+import { classifyFileType } from '#services/file/file_type'
 
 @inject()
 export class PageResolverService {
@@ -202,6 +203,7 @@ export class PageResolverService {
       mimeType: file.mimeType,
       extension: file.extension,
       size: file.size as number,
+      type: classifyFileType(file.mimeType),
       alt,
       width: optimized.width,
       height: optimized.height,

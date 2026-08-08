@@ -272,6 +272,7 @@ test.group('Exceptions', () => {
       'E_ROW_NOT_FOUND',
       'E_SLUG_EXISTS',
       'E_FILE_TOO_LARGE',
+      'E_FILE_NOT_FOUND',
       'E_INVALID_EXTENSION',
       'E_MISSING_TRANSLATION',
       'E_MISSING_REVISION',

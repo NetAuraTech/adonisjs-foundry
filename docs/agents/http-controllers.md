@@ -42,6 +42,7 @@ export default class ExampleController {
 - Validation: import from `#validators/...`, validate before every service call.
 - Inertia responses: always pass a `translations` payload with i18n keys.
 - Auth: use `auth.getUserOrFail()` on authenticated routes.
+- **Manual front pages are always served by controllers** — never an inline `inertia.render` in route declarations. The controller is where server-side resolution happens (e.g. `FindFileAction` → `FileTransformer`), so every future server-side need stays uniform across manual fronts.
 
 ## Documentation
 
