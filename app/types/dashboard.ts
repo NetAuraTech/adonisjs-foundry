@@ -1,5 +1,4 @@
 import type { DateTime } from 'luxon'
-import type { PageStatus } from '#cms/types/page'
 
 /** Number of users holding a given role; `name` is `null` for users without a role. */
 export interface DashboardRoleCount {
@@ -12,16 +11,6 @@ export interface DashboardFolderFileCount {
   id: number
   name: string
   count: number
-}
-
-/** A recently published page translation entry for the dashboard activity list. */
-export interface DashboardRecentPage {
-  id: number
-  pageId: number
-  title: string
-  slug: string
-  locale: string
-  publishedAt: DateTime | null
 }
 
 /** A recently uploaded file entry for the dashboard activity list. */
@@ -39,21 +28,6 @@ export interface DashboardAuthSection {
   usersByRole: DashboardRoleCount[]
 }
 
-/** Dashboard section contributed by the page domain. */
-export interface DashboardPageSection {
-  pages: number
-  /** Page translations grouped by publication status, plus the grand total. */
-  pageTranslations: Record<PageStatus, number> & { total: number }
-  /** Number of unique locales having at least one published page translation. */
-  publishedLocales: number
-  recentPublishedPages: DashboardRecentPage[]
-}
-
-/** Dashboard section contributed by the template domain. */
-export interface DashboardTemplateSection {
-  templates: number
-}
-
 /** Dashboard section contributed by the file domain. */
 export interface DashboardFileSection {
   files: number
@@ -63,7 +37,7 @@ export interface DashboardFileSection {
 }
 
 /**
- * Aggregated, read-only snapshot of the CMS state shown on the admin
+ * Aggregated, read-only snapshot of the application state shown on the admin
  * dashboard, keyed by section.
  *
  * Every section is optional: it is present only when its domain registered a
@@ -71,11 +45,14 @@ export interface DashboardFileSection {
  * each domain can be dropped without leaving empty figures behind. Built by
  * `GetDashboardStatsAction` and serialized for Inertia by
  * `DashboardTransformer`.
+ *
+ * Flavor-agnostic by construction: a prunable domain (e.g. the CMS module)
+ * extends this interface from within its own subtree via `declare module`,
+ * so pruning that subtree simply removes the keys — no import here can break
+ * a flavor build.
  */
 export interface DashboardStats {
   auth?: DashboardAuthSection
-  page?: DashboardPageSection
-  template?: DashboardTemplateSection
   file?: DashboardFileSection
 }
 

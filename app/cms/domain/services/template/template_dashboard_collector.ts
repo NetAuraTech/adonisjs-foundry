@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core'
 import { TemplateRepository } from '#cms/domain/repositories/template/template_repository'
-import type { DashboardCollector, DashboardTemplateSection } from '#types/dashboard'
+import type { DashboardCollector } from '#types/dashboard'
+import type { DashboardTemplateSection } from '#cms/types/dashboard'
 
 /**
  * Contributes the template section of the admin dashboard: the total template
