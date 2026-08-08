@@ -7,9 +7,8 @@ import type {
   DashboardAuthSection,
   DashboardCollector,
   DashboardCollectorPayload,
-  DashboardPageSection,
-  DashboardTemplateSection,
 } from '#types/dashboard'
+import type { DashboardPageSection, DashboardTemplateSection } from '#cms/types/dashboard'
 
 class FakeTemplateCollector implements DashboardCollector<'template'> {
   async collect(): Promise<DashboardTemplateSection> {
