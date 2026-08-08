@@ -96,10 +96,16 @@ const shieldConfig = defineConfig({
     enabled: true,
 
     /**
-     * Route patterns to exclude from CSRF checks.
-     * Useful for external webhooks or API endpoints.
+     * Routes to exclude from CSRF checks. Useful for external webhooks or
+     * API endpoints. Patterns match `ctx.route.pattern` exactly (no glob),
+     * hence the function form.
+     *
+     * `/api/v1/*` is the token-guarded REST API: Bearer-token requests carry
+     * no cookies, so they are not exposed to CSRF. Session-authenticated API
+     * routes (`/api/admin/*`, `/api/settings/*`) keep full CSRF protection.
      */
-    exceptRoutes: [],
+    exceptRoutes: (ctx) =>
+      ctx.route !== undefined && ctx.route.pattern.replace(/^\//, '').startsWith('api/v1/'),
 
     /**
      * Expose an encrypted XSRF-TOKEN cookie for frontend HTTP clients.

@@ -20,7 +20,7 @@ export function registerSettingsRoutes(): void {
           router.post('/', [controllers.profile.front.Profile, 'execute'])
         })
         .prefix('profile')
-        .use([middleware.auth()])
+        .use([middleware.auth({ guards: ['web'] })])
 
       router
         .group(() => {
@@ -30,7 +30,7 @@ export function registerSettingsRoutes(): void {
               router.post('/', [controllers.account.front.Account, 'execute'])
               router.delete('/', [controllers.account.front.Account, 'destroy'])
             })
-            .use([middleware.auth()])
+            .use([middleware.auth({ guards: ['web'] })])
 
           router
             .group(() => {
@@ -47,7 +47,7 @@ export function registerSettingsRoutes(): void {
           router.post('/', [controllers.preferences.front.Preferences, 'execute'])
         })
         .prefix('preferences')
-        .use([middleware.auth()])
+        .use([middleware.auth({ guards: ['web'] })])
 
       router
         .get('/', function (ctx) {
@@ -56,7 +56,7 @@ export function registerSettingsRoutes(): void {
           return response.redirect().toRoute('settings.profile.render')
         })
         .as('index')
-        .use([middleware.auth()])
+        .use([middleware.auth({ guards: ['web'] })])
     })
     .prefix('settings')
     .as('settings')

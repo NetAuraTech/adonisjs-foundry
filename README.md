@@ -302,6 +302,24 @@ All token-based workflows use the **selector/validator pattern**:
 | `EMAIL_CHANGE`       | 24 hours | —                |
 | `PENDING_INVITE`     | 7 days   | —                |
 
+### Authentication Guards
+
+Two guards are available in `config/auth.ts`, toggled by environment variable:
+
+| Guard | Driver          | Env flag         | Default  |
+| ----- | --------------- | ---------------- | -------- |
+| `web` | Session cookies | `AUTH_GUARD_WEB` | enabled  |
+| `api` | Opaque tokens   | `AUTH_GUARD_API` | disabled |
+
+- **`web`** — the browser/Inertia guard. Session cookie, CSRF protection.
+- **`api`** — opaque access tokens (`Authorization: Bearer`), designed for the REST API consumed by non-browser clients (mobile apps, scripts). Enabling it exposes the `/api/v1/auth/*` endpoints (login, logout, me). Token lifetime is configurable via `AUTH_API_TOKEN_EXPIRY` (default: `30d`).
+
+The JSON API under `/api/admin/*` and `/api/settings/*` accepts **both** guards when `AUTH_GUARD_API=true`: a browser keeps using its session cookie while scripts authenticate with a Bearer token — permissions resolve identically either way. Inertia pages remain session-only, and `/api/v1/*` remains token-only: the two guards never overlap by accident.
+
+For the `api` flavor (no session guard at all): set `AUTH_GUARD_WEB=false` and `AUTH_GUARD_API=true`.
+
+**OAuth and mobile clients**: the OAuth flow relies on the browser session (state/nonce + flash messages) and always redirects back to the web app after a provider callback. A mobile client completes OAuth inside a system browser (the web app creates its session as usual), then obtains an API token via `POST /api/v1/auth/login` — OAuth-only users set a password first through the existing "define password" flow. No token is ever placed in a redirect URL.
+
 ## Admin Panel (CMS)
 
 Foundry includes a full admin panel accessible at `/admin`, protected by authentication and permission middleware.
@@ -931,6 +949,16 @@ The project uses Node.js subpath imports for clean module resolution:
 | GET    | `/api/admin/page/preview/token`              | PagesPreviewController.token          | `pages.update` |
 | GET    | `/api/admin/files`                           | FileController.list                   | Required       |
 | GET    | `/api/admin/files/:id`                       | FileController.find                   | Required       |
+
+When the `api` guard is enabled (`AUTH_GUARD_API=true`), the token-guarded
+REST API is registered (see [Authentication Guards](#authentication-guards)).
+These routes accept a Bearer token only — session cookies are ignored:
+
+| Method | Path                  | Handler                 | Auth             |
+| ------ | --------------------- | ----------------------- | ---------------- |
+| POST   | `/api/v1/auth/login`  | TokenController.execute | Guest, throttled |
+| POST   | `/api/v1/auth/logout` | TokenController.destroy | Bearer token     |
+| GET    | `/api/v1/auth/me`     | MeController.show       | Bearer token     |
 
 ## Logging & Exception Handling
 

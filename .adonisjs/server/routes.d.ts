@@ -113,6 +113,9 @@ export type ScannedRoutes = {
     'page.home': { paramsTuple?: []; params?: {} }
     'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
     'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
+    'api.v1.auth.token.execute': { paramsTuple?: []; params?: {} }
+    'api.v1.auth.token.destroy': { paramsTuple?: []; params?: {} }
+    'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -169,6 +172,7 @@ export type ScannedRoutes = {
     'page.home': { paramsTuple?: []; params?: {} }
     'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
     'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
+    'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -225,6 +229,7 @@ export type ScannedRoutes = {
     'page.home': { paramsTuple?: []; params?: {} }
     'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
     'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
+    'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
   }
   POST: {
     'subscribe': { paramsTuple?: []; params?: {} }
@@ -271,6 +276,8 @@ export type ScannedRoutes = {
     'api.admin.templates.store': { paramsTuple?: []; params?: {} }
     'api.admin.templates.create_from_page': { paramsTuple?: []; params?: {} }
     'contact.execute': { paramsTuple?: []; params?: {} }
+    'api.v1.auth.token.execute': { paramsTuple?: []; params?: {} }
+    'api.v1.auth.token.destroy': { paramsTuple?: []; params?: {} }
   }
   DELETE: {
     'settings.account.destroy': { paramsTuple?: []; params?: {} }

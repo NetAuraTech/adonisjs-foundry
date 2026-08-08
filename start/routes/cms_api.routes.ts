@@ -69,7 +69,7 @@ export function registerCmsApiRoutes(): void {
         })
         .prefix('admin')
         .as('admin')
-        .use([middleware.auth()])
+        .use([middleware.auth({ guards: ['web'] })])
     })
     .prefix('api')
     .as('api')
