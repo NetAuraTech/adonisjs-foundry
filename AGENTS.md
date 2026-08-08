@@ -7,17 +7,17 @@ This is `adonisjs-foundry` — a production-ready AdonisJS v7 + Inertia/React bo
 
 ## Stack
 
-| Layer     | Technology                                   |
-| --------- | -------------------------------------------- |
-| Backend   | AdonisJS v7, Lucid ORM, VineJS               |
-| Frontend  | React 19, Inertia.js, Tailwind CSS v4        |
-| Language  | TypeScript 5.9                               |
-| Database  | PostgreSQL (primary), SQLite (dev)           |
-| Cache     | Redis                                        |
-| Auth      | Session-based (@adonisjs/auth), OAuth (Ally) |
-| Storage   | @adonisjs/drive (local, S3, R2)              |
-| Real-time | @adonisjs/transmit (SSE)                     |
-| Testing   | Japa (backend), Vitest (frontend)            |
+| Layer     | Technology                                                                              |
+| --------- | --------------------------------------------------------------------------------------- |
+| Backend   | AdonisJS v7, Lucid ORM, VineJS                                                          |
+| Frontend  | React 19, Inertia.js, Tailwind CSS v4                                                   |
+| Language  | TypeScript 5.9                                                                          |
+| Database  | PostgreSQL (primary), SQLite (dev)                                                      |
+| Cache     | Redis                                                                                   |
+| Auth      | Session-based (@adonisjs/auth), OAuth (Ally), opt-in API tokens (`AUTH_GUARD_API=true`) |
+| Storage   | @adonisjs/drive (local, S3, R2)                                                         |
+| Real-time | @adonisjs/transmit (SSE)                                                                |
+| Testing   | Japa (backend), Vitest (frontend)                                                       |
 
 ## Working Agreements
 

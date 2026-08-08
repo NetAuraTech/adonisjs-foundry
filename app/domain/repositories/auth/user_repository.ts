@@ -1,5 +1,6 @@
 import { transactionContext } from '#shared/context/transaction_context'
 import User from '#models/auth/user'
+import { type AccessToken } from '@adonisjs/auth/access_tokens'
 import { type OAuthProvider } from '#types/auth'
 import { type FindOptions } from '#types/core'
 import { BaseRepository } from '#repositories/base_repository'
@@ -184,6 +185,37 @@ export class UserRepository extends BaseRepository {
    */
   async verifyCredentials(email: string, password: string): Promise<User> {
     return await User.verifyCredentials(email, password)
+  }
+
+  /**
+   * Creates an opaque access token for the `api` auth guard.
+   *
+   * The default expiry comes from the provider configuration on the
+   * {@link User} model (`AUTH_API_TOKEN_EXPIRY`).
+   *
+   * @param user - The {@link User} the token authenticates.
+   * @returns The freshly created {@link AccessToken}; the plain-text secret
+   * is only available once via `token.value.release()`.
+   *
+   * @example
+   * const token = await userRepository.createAccessToken(user)
+   */
+  async createAccessToken(user: User): Promise<AccessToken> {
+    return await User.accessTokens.create(user)
+  }
+
+  /**
+   * Revokes an access token owned by the given user.
+   *
+   * @param user - The {@link User} that owns the token.
+   * @param identifier - The token identifier to delete (its database id).
+   * @returns The number of deleted token rows.
+   *
+   * @example
+   * await userRepository.deleteAccessToken(user, user.currentAccessToken.identifier)
+   */
+  async deleteAccessToken(user: User, identifier: string | number | BigInt): Promise<number> {
+    return await User.accessTokens.delete(user, identifier)
   }
 
   /**

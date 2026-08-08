@@ -10,6 +10,15 @@
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
 import { controllers } from '#generated/controllers'
+import { enabledAuthGuards } from '#config/auth'
+
+/**
+ * The JSON API accepts the session guard (browser) and, when enabled, the
+ * access-token guard (mobile apps, scripts). Guards that are disabled in
+ * `config/auth.ts` must never reach `authenticateUsing`, hence the
+ * conditional list.
+ */
+const apiGuards = enabledAuthGuards.api ? (['web', 'api'] as const) : (['web'] as const)
 
 export function registerAdminApiRoutes(): void {
   router
@@ -23,7 +32,7 @@ export function registerAdminApiRoutes(): void {
             .prefix('preferences')
         })
         .prefix('settings')
-        .use([middleware.auth()])
+        .use([middleware.auth({ guards: [...apiGuards] })])
 
       router
         .group(() => {
@@ -43,7 +52,7 @@ export function registerAdminApiRoutes(): void {
         })
         .prefix('admin')
         .as('admin')
-        .use([middleware.auth()])
+        .use([middleware.auth({ guards: [...apiGuards] })])
     })
     .prefix('api')
     .as('api')

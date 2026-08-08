@@ -11,9 +11,11 @@ import {
   hasMany,
   hasOne,
 } from '@adonisjs/lucid/orm'
+import env from '#start/env'
 import Role from '#models/auth/role'
 import type { BelongsTo, HasMany, HasOne } from '@adonisjs/lucid/types/relations'
 import { DbRememberMeTokensProvider } from '@adonisjs/auth/session'
+import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import UserPreference from '#models/preferences/user_preference'
 import Token from '#models/core/token'
 import { TOKEN_TYPES } from '#types/core'
@@ -26,6 +28,15 @@ const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
 
 export default class User extends compose(UserSchema, AuthFinder) {
   static rememberMeTokens = DbRememberMeTokensProvider.forModel(User)
+
+  /**
+   * Opaque access tokens backing the `api` auth guard (see `config/auth.ts`).
+   * Default expiry is env-driven (`AUTH_API_TOKEN_EXPIRY`) so every issuance
+   * path — login endpoint, OAuth API mode, tests — gets the same lifetime.
+   */
+  static accessTokens = DbAccessTokensProvider.forModel(User, {
+    expiresIn: env.get('AUTH_API_TOKEN_EXPIRY') ?? '30 days',
+  })
 
   @belongsTo(() => Role)
   declare role: BelongsTo<typeof Role>

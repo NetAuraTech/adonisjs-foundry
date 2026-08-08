@@ -185,7 +185,7 @@ export function registerAdminRoutes(): void {
               .as('settings')
               .use([middleware.permission({ permissions: ['settings.maintenance'] })])
           })
-          .use([middleware.auth()])
+          .use([middleware.auth({ guards: ['web'] })])
 
         // Logs
         router
@@ -196,10 +196,10 @@ export function registerAdminRoutes(): void {
               .use([middleware.permission({ permissions: ['logs.view'] })])
           })
           .prefix('logs')
-          .use([middleware.auth()])
+          .use([middleware.auth({ guards: ['web'] })])
       })
     })
     .prefix('admin')
     .as('admin')
-    .use([middleware.auth()])
+    .use([middleware.auth({ guards: ['web'] })])
 }

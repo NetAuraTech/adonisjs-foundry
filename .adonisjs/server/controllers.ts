@@ -24,6 +24,10 @@ export const controllers = {
       UsersShow: () => import('#controllers/auth/admin/users_show_controller'),
       UsersUpdate: () => import('#controllers/auth/admin/users_update_controller'),
     },
+    api: {
+      Me: () => import('#controllers/auth/api/me_controller'),
+      Token: () => import('#controllers/auth/api/token_controller'),
+    },
     front: {
       AcceptInvitation: () => import('#controllers/auth/front/accept_invitation_controller'),
       EmailVerification: () => import('#controllers/auth/front/email_verification_controller'),

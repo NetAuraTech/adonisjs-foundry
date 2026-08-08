@@ -206,6 +206,17 @@ export interface ApiDefinition {
         token: typeof routes['api.admin.templates_preview.token']
       }
     }
+    v1: {
+      auth: {
+        token: {
+          execute: typeof routes['api.v1.auth.token.execute']
+          destroy: typeof routes['api.v1.auth.token.destroy']
+        }
+        me: {
+          show: typeof routes['api.v1.auth.me.show']
+        }
+      }
+    }
   }
   contact: {
     execute: typeof routes['contact.execute']
