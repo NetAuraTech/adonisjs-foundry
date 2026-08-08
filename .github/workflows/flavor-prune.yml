@@ -17,48 +17,15 @@ permissions:
   contents: write
 
 jobs:
-  # ─── Stage 1: main gates must pass before any flavor is regenerated ───────
-  # Reuses the main CI workflow as a gate: lint, typecheck, backend/frontend/
-  # browser tests, and codegen drift all need to be green on `main` before a
-  # flavor is materialized. This keeps broken code from propagating into
-  # flavor branches.
-  main-gates:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run ESLint
-        run: npm run lint:ci
-
-      - name: Run Prettier check
-        run: npm run format:ci
-
-      - name: Run typecheck (backend + inertia)
-        run: npm run typecheck
-
-      - name: Run frontend tests
-        run: npm run test:front
-
-      - name: Run backend tests (unit + integration)
-        run: npm run test -- unit integration
-
-  # ─── Stage 2: discover flavor manifests present on main ───────────────────
+  # ─── Stage 1: discover flavor manifests present on main ───────────────────
   # Builds the matrix of flavors to regenerate from the manifest files in
   # tooling/prune/flavors/. Issues #5 and #8 will drop `inertia.manifest.ts`
   # and `api.manifest.ts` there — this job then picks them up automatically.
+  # The main CI workflow (ci.yml) already gates `main` on lint, typecheck,
+  # backend/frontend/browser tests, and codegen drift — no need to re-run a
+  # subset here. The prune-flavor job below gates the pruned tree itself.
   discover-flavors:
     runs-on: ubuntu-latest
-    needs: main-gates
     outputs:
       flavors: ${{ steps.list.outputs.flavors }}
       empty: ${{ steps.list.outputs.empty }}
@@ -90,7 +57,7 @@ jobs:
             echo "Discovered flavors: $flavors"
           fi
 
-  # ─── Stage 3: per-flavor prune + gates + force-push ───────────────────────
+  # ─── Stage 2: per-flavor prune + gates + force-push ───────────────────────
   # For each discovered flavor: checkout main → prune → clean install → run
   # flavor gates (typecheck, lint, tests of remaining suites) → force-push the
   # flavor branch with the source main SHA. A failed prune or gate blocks only
