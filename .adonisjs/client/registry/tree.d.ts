@@ -14,6 +14,12 @@ export interface ApiDefinition {
     liveness: typeof routes['health.liveness']
     readiness: typeof routes['health.readiness']
   }
+  sitemap: {
+    show: typeof routes['sitemap.show']
+  }
+  robots: {
+    show: typeof routes['robots.show']
+  }
   auth: {
     session: {
       render: typeof routes['auth.session.render']
@@ -222,8 +228,6 @@ export interface ApiDefinition {
     execute: typeof routes['contact.execute']
   }
   page: {
-    sitemap: typeof routes['page.sitemap']
-    robots: typeof routes['page.robots']
     home: typeof routes['page.home']
     localised: {
       render: typeof routes['page.localised.render']

@@ -79,6 +79,30 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/health/health_controller').default['readiness']>>>
     }
   }
+  'sitemap.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/sitemap.xml'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/core/front/sitemap_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/core/front/sitemap_controller').default['show']>>>
+    }
+  }
+  'robots.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/robots.txt'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/core/front/robots_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/core/front/robots_controller').default['show']>>>
+    }
+  }
   'auth.session.render': {
     methods: ["GET","HEAD"]
     pattern: '/login'
@@ -1253,30 +1277,6 @@ export interface Registry {
       query: ExtractQuery<InferInput<(typeof import('#cms/validators/contact').contactValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/front/contact_controller').default['execute']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/front/contact_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'page.sitemap': {
-    methods: ["GET","HEAD"]
-    pattern: '/sitemap.xml'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/front/page_controller').default['sitemap']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/front/page_controller').default['sitemap']>>>
-    }
-  }
-  'page.robots': {
-    methods: ["GET","HEAD"]
-    pattern: '/robots.txt'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/front/page_controller').default['robots']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/front/page_controller').default['robots']>>>
     }
   }
   'page.home': {

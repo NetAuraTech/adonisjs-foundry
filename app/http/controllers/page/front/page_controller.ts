@@ -2,8 +2,6 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import { FindHomepageAction } from '#cms/domain/actions/page/find_homepage_action'
 import { FindPageBySlugAction } from '#cms/domain/actions/page/find_page_by_slug_action'
-import { GenerateSitemapAction } from '#cms/domain/actions/page/generate_sitemap_action'
-import { GetRobotsTxtAction } from '#cms/domain/actions/page/get_robots_txt_action'
 import { I18nService } from '#services/i18n_service'
 import { StorageService } from '#services/file/storage_service'
 import { PageResolverService } from '#cms/domain/services/page/page_resolver_service'
@@ -16,8 +14,6 @@ export default class PageController {
     protected i18n: I18nService,
     protected findHomepageAction: FindHomepageAction,
     protected findPageBySlugAction: FindPageBySlugAction,
-    protected generateSitemapAction: GenerateSitemapAction,
-    protected getRobotsTxtAction: GetRobotsTxtAction,
     protected resolverService: PageResolverService,
     protected storageService: StorageService,
     protected cache: CacheService
@@ -118,26 +114,5 @@ export default class PageController {
       metaImage: metaImageUrl,
       content: resolvedContent,
     })
-  }
-
-  /**
-   * Generates and serves the XML sitemap for search engines.
-   */
-  async sitemap({ response }: HttpContext) {
-    const xml = await this.generateSitemapAction.execute()
-
-    return response
-      .header('Content-Type', 'application/xml')
-      .header('Cache-Control', 'public, max-age=3600')
-      .send(xml)
-  }
-
-  /**
-   * Generates and serves the robots.txt configuration file.
-   */
-  async robots({ response }: HttpContext) {
-    const robotsTxt = this.getRobotsTxtAction.execute()
-
-    return response.header('Content-Type', 'text/plain').send(robotsTxt)
   }
 }

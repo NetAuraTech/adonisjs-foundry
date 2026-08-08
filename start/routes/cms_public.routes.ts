@@ -3,8 +3,10 @@
 | CMS public routes
 |--------------------------------------------------------------------------
 |
-| Contact, sitemap, robots, home, page rendering (locale/non-locale).
-| Registered from `start/routes.ts` behind the `cms` feature flag.
+| Contact, home, and page rendering (locale/non-locale). The `sitemap.xml`
+| and `robots.txt` endpoints live in `core_public.routes.ts` because they
+| survive a CMS prune. Registered from `start/routes.ts` behind the `cms`
+| feature flag.
 |
 */
 
@@ -13,9 +15,6 @@ import { controllers } from '#generated/controllers'
 
 export function registerCmsPublicRoutes(): void {
   router.post('/contact', [controllers.page.front.Contact, 'execute'])
-
-  router.get('/sitemap.xml', [controllers.page.front.Page, 'sitemap'])
-  router.get('/robots.txt', [controllers.page.front.Page, 'robots'])
 
   router.get('/', [controllers.page.front.Page, 'home']).as('page.home')
 
