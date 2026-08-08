@@ -18,6 +18,7 @@ import { registerAdminApiRoutes } from '#start/routes/admin_api.routes'
 import { registerCmsAdminRoutes } from '#start/routes/cms_admin.routes'
 import { registerCmsApiRoutes } from '#start/routes/cms_api.routes'
 import { registerCmsPublicRoutes } from '#start/routes/cms_public.routes'
+import { registerCorePublicRoutes } from '#start/routes/core_public.routes'
 import { registerApiRoutes } from '#start/routes/api.routes'
 import { registerHealthRoutes } from '#start/routes/health.routes'
 import { middleware } from '#start/kernel'
@@ -30,6 +31,9 @@ registerHealthRoutes()
 
 router
   .group(() => {
+    // Core SEO endpoints (sitemap.xml, robots.txt) — flavor-independent.
+    registerCorePublicRoutes()
+
     if (features.auth) registerAuthRoutes()
     if (features.settings) registerSettingsRoutes()
     if (features.admin) registerAdminRoutes()

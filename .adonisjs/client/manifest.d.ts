@@ -18,4 +18,5 @@
 /// <reference path="../../config/mail.ts" />
 /// <reference path="../../config/redis.ts" />
 /// <reference path="../../config/sentry.ts" />
+/// <reference path="../../config/sitemap.ts" />
 /// <reference path="../../config/transmit.ts" />

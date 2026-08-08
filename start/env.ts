@@ -176,4 +176,13 @@ export default await Env.create(new URL('../', import.meta.url), {
   */
   CMS_IFRAME_ALLOWLIST: Env.schema.string.optional(),
   CMS_VIDEO_PROVIDERS: Env.schema.string.optional(),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for sitemap.xml generation.
+  | Comma-separated lists; both have safe defaults in config/sitemap.ts.
+  |----------------------------------------------------------
+  */
+  SITEMAP_ADDITIONS: Env.schema.string.optional(),
+  SITEMAP_EXCLUSIONS: Env.schema.string.optional(),
 })

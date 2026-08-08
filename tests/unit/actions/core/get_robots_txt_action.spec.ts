@@ -1,6 +1,6 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
-import { GetRobotsTxtAction } from '#cms/domain/actions/page/get_robots_txt_action'
+import { GetRobotsTxtAction } from '#actions/core/get_robots_txt_action'
 
 test.group('GetRobotsTxtAction', () => {
   test('buildRobotsTxt() returns correct robots.txt content', async ({ assert }) => {

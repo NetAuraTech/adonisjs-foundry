@@ -10,6 +10,8 @@ export type ScannedRoutes = {
     'unsubscribe': { paramsTuple?: []; params?: {} }
     'health.liveness': { paramsTuple?: []; params?: {} }
     'health.readiness': { paramsTuple?: []; params?: {} }
+    'sitemap.show': { paramsTuple?: []; params?: {} }
+    'robots.show': { paramsTuple?: []; params?: {} }
     'auth.session.render': { paramsTuple?: []; params?: {} }
     'auth.session.execute': { paramsTuple?: []; params?: {} }
     'auth.register.render': { paramsTuple?: []; params?: {} }
@@ -108,8 +110,6 @@ export type ScannedRoutes = {
     'api.admin.templates.create_from_page': { paramsTuple?: []; params?: {} }
     'api.admin.templates_preview.token': { paramsTuple?: []; params?: {} }
     'contact.execute': { paramsTuple?: []; params?: {} }
-    'page.sitemap': { paramsTuple?: []; params?: {} }
-    'page.robots': { paramsTuple?: []; params?: {} }
     'page.home': { paramsTuple?: []; params?: {} }
     'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
     'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
@@ -122,6 +122,8 @@ export type ScannedRoutes = {
     'event_stream': { paramsTuple?: []; params?: {} }
     'health.liveness': { paramsTuple?: []; params?: {} }
     'health.readiness': { paramsTuple?: []; params?: {} }
+    'sitemap.show': { paramsTuple?: []; params?: {} }
+    'robots.show': { paramsTuple?: []; params?: {} }
     'auth.session.render': { paramsTuple?: []; params?: {} }
     'auth.register.render': { paramsTuple?: []; params?: {} }
     'auth.forgot_password.render': { paramsTuple?: []; params?: {} }
@@ -167,8 +169,6 @@ export type ScannedRoutes = {
     'api.admin.pages_preview.token': { paramsTuple?: []; params?: {} }
     'api.admin.templates.index': { paramsTuple?: []; params?: {} }
     'api.admin.templates_preview.token': { paramsTuple?: []; params?: {} }
-    'page.sitemap': { paramsTuple?: []; params?: {} }
-    'page.robots': { paramsTuple?: []; params?: {} }
     'page.home': { paramsTuple?: []; params?: {} }
     'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
     'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
@@ -179,6 +179,8 @@ export type ScannedRoutes = {
     'event_stream': { paramsTuple?: []; params?: {} }
     'health.liveness': { paramsTuple?: []; params?: {} }
     'health.readiness': { paramsTuple?: []; params?: {} }
+    'sitemap.show': { paramsTuple?: []; params?: {} }
+    'robots.show': { paramsTuple?: []; params?: {} }
     'auth.session.render': { paramsTuple?: []; params?: {} }
     'auth.register.render': { paramsTuple?: []; params?: {} }
     'auth.forgot_password.render': { paramsTuple?: []; params?: {} }
@@ -224,8 +226,6 @@ export type ScannedRoutes = {
     'api.admin.pages_preview.token': { paramsTuple?: []; params?: {} }
     'api.admin.templates.index': { paramsTuple?: []; params?: {} }
     'api.admin.templates_preview.token': { paramsTuple?: []; params?: {} }
-    'page.sitemap': { paramsTuple?: []; params?: {} }
-    'page.robots': { paramsTuple?: []; params?: {} }
     'page.home': { paramsTuple?: []; params?: {} }
     'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
     'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
