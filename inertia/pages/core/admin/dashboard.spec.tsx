@@ -8,10 +8,14 @@ import type { AdminDashboardTranslations } from '#types/translations'
 import DashboardPage from '~/pages/core/admin/dashboard'
 
 /**
- * Conditional-rendering seam for the admin dashboard page: every section
- * renders when its key is present in the payload and disappears when it is
- * not — the contract that lets a pruned flavor drop a domain without
- * leaving empty figures behind.
+ * Conditional-rendering seam for the admin dashboard page: every core section
+ * (auth, file) renders when its key is present in the payload and disappears
+ * when it is not — the contract that lets a pruned flavor drop a domain
+ * without leaving empty figures behind.
+ *
+ * The CMS sections (page, template) are asserted in
+ * `inertia/pages/cms/dashboard_cms.spec.tsx` so the `inertia` flavor can prune
+ * them alongside the CMS card modules.
  *
  * Inertia's server-provided context (page props, Head manager, Tuyau Link
  * routes) is substituted with narrow mocks; atoms, guards and the
@@ -23,7 +27,7 @@ const { mockPageProps } = vi.hoisted(() => ({
     props: {
       locale: 'en',
       currentUser: {
-        permissions: ['users.view', 'pages.view', 'templates.view', 'files.view'],
+        permissions: ['users.view', 'files.view'],
         role: { slug: 'admin' },
       },
     },
@@ -65,7 +69,7 @@ const translations: AdminDashboardTranslations = {
   view_all: 'View all',
 }
 
-const fullStats: Data.Dashboard = {
+const coreStats: Data.Dashboard = {
   auth: {
     users: 2,
     usersByRole: [
@@ -73,22 +77,6 @@ const fullStats: Data.Dashboard = {
       { name: null, count: 1 },
     ],
   },
-  page: {
-    pages: 3,
-    pageTranslations: { draft: 1, published: 2, archived: 0, total: 3 },
-    publishedLocales: 2,
-    recentPublishedPages: [
-      {
-        id: 11,
-        pageId: 1,
-        title: 'Welcome',
-        slug: 'welcome',
-        locale: 'en',
-        publishedAt: '2026-08-01T10:00:00.000Z',
-      },
-    ],
-  },
-  template: { templates: 4 },
   file: {
     files: 5,
     fileFolders: 2,
@@ -127,62 +115,38 @@ async function render(stats: Data.Dashboard): Promise<string> {
 }
 
 describe('DashboardPage', () => {
-  it('renders every section when all keys are present', async () => {
-    const content = await render(fullStats)
+  it('renders every core section when all keys are present', async () => {
+    const content = await render(coreStats)
 
     // Auth section.
     expect(content).toContain('Users')
     expect(content).toContain('1 admin')
     expect(content).toContain('1 No role')
-    // Page section, pixel-faithful label-first lines.
-    expect(content).toContain('Page translations: 3')
-    expect(content).toContain('2 Published')
-    expect(content).toContain('1 Draft')
-    expect(content).toContain('0 Archived')
-    expect(content).toContain('Published locales: 2')
-    // Template section (rendered inside the pages card).
-    expect(content).toContain('Templates: 4')
     // File section.
     expect(content).toContain('Folders: 2')
     expect(content).toContain('5 banners')
-    // Recent-activity lists.
-    expect(content).toContain('Recently published')
-    expect(content).toContain('Welcome')
+    // Recent-activity list.
     expect(content).toContain('Recent uploads')
     expect(content).toContain('hero.png')
   })
 
   it('renders only the sections whose key is present', async () => {
-    const { auth: _auth, file: _file, ...partialStats } = fullStats
-    const content = await render(partialStats)
+    const { file: _file, ...authOnlyStats } = coreStats
+    const content = await render(authOnlyStats)
 
-    expect(content).toContain('Page translations: 3')
-    expect(content).toContain('Templates: 4')
-    expect(content).toContain('Recently published')
-    // Auth and file sections leave nothing behind.
-    expect(content).not.toContain('Users')
+    expect(content).toContain('Users')
+    // The file section leaves nothing behind.
     expect(content).not.toContain('Folders:')
     expect(content).not.toContain('Recent uploads')
     expect(content).not.toContain('hero.png')
-  })
-
-  it('renders the template section without the page section', async () => {
-    const { auth: _auth, page: _page, file: _file, ...templateOnly } = fullStats
-    const content = await render(templateOnly)
-
-    // The template section stands on its own key, not on the page one.
-    expect(content).toContain('Templates')
-    expect(content).not.toContain('Page translations')
-    expect(content).not.toContain('Recently published')
   })
 
   it('renders the page shell without figures when no key is present', async () => {
     const content = await render({})
 
     expect(content).toContain('Dashboard')
-    expect(content).not.toContain('Page translations')
+    expect(content).not.toContain('Users')
     expect(content).not.toContain('Folders:')
-    expect(content).not.toContain('Recently published')
     expect(content).not.toContain('Recent uploads')
     expect(content).not.toContain('Nothing to display yet.')
   })

@@ -43,6 +43,7 @@ export const controllers = {
       Dashboard: () => import('#controllers/core/admin/dashboard_controller'),
     },
     front: {
+      Home: () => import('#controllers/core/front/home_controller'),
       Robots: () => import('#controllers/core/front/robots_controller'),
       Sitemap: () => import('#controllers/core/front/sitemap_controller'),
     },
