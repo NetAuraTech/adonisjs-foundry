@@ -57,3 +57,5 @@ export const updateValidator = (user_id: User['id'], role_ids: Role['slug'][]) =
 export const deleteValidator = vine.create({
   id: id(),
 })
+
+export { restIdValidator } from '#validators/rest'

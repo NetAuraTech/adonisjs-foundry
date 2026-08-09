@@ -185,41 +185,165 @@ export interface ApiDefinition {
     }
   }
   api: {
-    theme: {
-      execute: typeof routes['api.theme.execute']
-    }
-    admin: {
-      file: {
-        list: typeof routes['api.admin.file.list']
-        find: typeof routes['api.admin.file.find']
-        upload: typeof routes['api.admin.file.upload']
-      }
-      builderOperations: {
-        execute: typeof routes['api.admin.builder_operations.execute']
-        presence: typeof routes['api.admin.builder_operations.presence']
-        saveDraft: typeof routes['api.admin.builder_operations.save_draft']
-      }
-      pagesPreview: {
-        token: typeof routes['api.admin.pages_preview.token']
-      }
-      templates: {
-        index: typeof routes['api.admin.templates.index']
-        store: typeof routes['api.admin.templates.store']
-        update: typeof routes['api.admin.templates.update']
-        createFromPage: typeof routes['api.admin.templates.create_from_page']
-      }
-      templatesPreview: {
-        token: typeof routes['api.admin.templates_preview.token']
-      }
-    }
     v1: {
+      admin: {
+        usersApi: {
+          index: typeof routes['api.v1.admin.users_api.index']
+        }
+        usersCreateApi: {
+          store: typeof routes['api.v1.admin.users_create_api.store']
+        }
+        usersShowApi: {
+          show: typeof routes['api.v1.admin.users_show_api.show']
+        }
+        usersUpdateApi: {
+          update: typeof routes['api.v1.admin.users_update_api.update']
+        }
+        usersDeleteApi: {
+          destroy: typeof routes['api.v1.admin.users_delete_api.destroy']
+        }
+        rolesApi: {
+          index: typeof routes['api.v1.admin.roles_api.index']
+        }
+        rolesCreateApi: {
+          store: typeof routes['api.v1.admin.roles_create_api.store']
+        }
+        rolesShowApi: {
+          show: typeof routes['api.v1.admin.roles_show_api.show']
+        }
+        rolesUpdateApi: {
+          update: typeof routes['api.v1.admin.roles_update_api.update']
+        }
+        rolesDeleteApi: {
+          destroy: typeof routes['api.v1.admin.roles_delete_api.destroy']
+        }
+        pagesApi: {
+          index: typeof routes['api.v1.admin.pages_api.index']
+          setHomepage: typeof routes['api.v1.admin.pages_api.set_homepage']
+        }
+        pagesCreateApi: {
+          store: typeof routes['api.v1.admin.pages_create_api.store']
+        }
+        pagesShowApi: {
+          show: typeof routes['api.v1.admin.pages_show_api.show']
+        }
+        pagesUpdateApi: {
+          update: typeof routes['api.v1.admin.pages_update_api.update']
+          publish: typeof routes['api.v1.admin.pages_update_api.publish']
+          unpublish: typeof routes['api.v1.admin.pages_update_api.unpublish']
+        }
+        pagesDeleteApi: {
+          destroy: typeof routes['api.v1.admin.pages_delete_api.destroy']
+        }
+        pageTranslationsApi: {
+          store: typeof routes['api.v1.admin.page_translations_api.store']
+        }
+        pageRevisionsApi: {
+          index: typeof routes['api.v1.admin.page_revisions_api.index']
+          restore: typeof routes['api.v1.admin.page_revisions_api.restore']
+          toggle: typeof routes['api.v1.admin.page_revisions_api.toggle']
+        }
+        pagesPreview: {
+          token: typeof routes['api.v1.admin.pages_preview.token']
+        }
+        filesApi: {
+          index: typeof routes['api.v1.admin.files_api.index']
+          move: typeof routes['api.v1.admin.files_api.move']
+        }
+        filesUploadApi: {
+          store: typeof routes['api.v1.admin.files_upload_api.store']
+        }
+        filesShowApi: {
+          show: typeof routes['api.v1.admin.files_show_api.show']
+        }
+        filesDeleteApi: {
+          destroy: typeof routes['api.v1.admin.files_delete_api.destroy']
+        }
+        filesAltApi: {
+          upsertAlt: typeof routes['api.v1.admin.files_alt_api.upsert_alt']
+          deleteAlt: typeof routes['api.v1.admin.files_alt_api.delete_alt']
+        }
+        foldersApi: {
+          index: typeof routes['api.v1.admin.folders_api.index']
+          store: typeof routes['api.v1.admin.folders_api.store']
+        }
+        foldersShowApi: {
+          show: typeof routes['api.v1.admin.folders_show_api.show']
+          children: typeof routes['api.v1.admin.folders_show_api.children']
+        }
+        foldersUpdateApi: {
+          update: typeof routes['api.v1.admin.folders_update_api.update']
+        }
+        foldersDeleteApi: {
+          destroy: typeof routes['api.v1.admin.folders_delete_api.destroy']
+        }
+        templates: {
+          index: typeof routes['api.v1.admin.templates.index']
+          store: typeof routes['api.v1.admin.templates.store']
+          update: typeof routes['api.v1.admin.templates.update']
+          destroy: typeof routes['api.v1.admin.templates.destroy']
+          createFromPage: typeof routes['api.v1.admin.templates.create_from_page']
+        }
+        templatesPreview: {
+          token: typeof routes['api.v1.admin.templates_preview.token']
+        }
+        builderOperations: {
+          execute: typeof routes['api.v1.admin.builder_operations.execute']
+          presence: typeof routes['api.v1.admin.builder_operations.presence']
+          saveDraft: typeof routes['api.v1.admin.builder_operations.save_draft']
+        }
+        theme: {
+          execute: typeof routes['api.v1.admin.theme.execute']
+        }
+        dashboardApi: {
+          index: typeof routes['api.v1.admin.dashboard_api.index']
+        }
+        logsApi: {
+          index: typeof routes['api.v1.admin.logs_api.index']
+        }
+        maintenanceApi: {
+          index: typeof routes['api.v1.admin.maintenance_api.index']
+          update: typeof routes['api.v1.admin.maintenance_api.update']
+          toggle: typeof routes['api.v1.admin.maintenance_api.toggle']
+        }
+        permissionsApi: {
+          index: typeof routes['api.v1.admin.permissions_api.index']
+        }
+      }
       auth: {
         token: {
           execute: typeof routes['api.v1.auth.token.execute']
           destroy: typeof routes['api.v1.auth.token.destroy']
         }
+        registerApi: {
+          store: typeof routes['api.v1.auth.register_api.store']
+        }
+        forgotPasswordApi: {
+          store: typeof routes['api.v1.auth.forgot_password_api.store']
+        }
+        resetPasswordApi: {
+          store: typeof routes['api.v1.auth.reset_password_api.store']
+        }
+        emailVerificationApi: {
+          store: typeof routes['api.v1.auth.email_verification_api.store']
+        }
+        acceptInvitationApi: {
+          store: typeof routes['api.v1.auth.accept_invitation_api.store']
+        }
         me: {
           show: typeof routes['api.v1.auth.me.show']
+        }
+      }
+      profile: {
+        profileApi: {
+          show: typeof routes['api.v1.profile.profile_api.show']
+          update: typeof routes['api.v1.profile.profile_api.update']
+        }
+      }
+      account: {
+        accountApi: {
+          update: typeof routes['api.v1.account.account_api.update']
+          destroy: typeof routes['api.v1.account.account_api.destroy']
         }
       }
     }

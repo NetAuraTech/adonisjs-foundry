@@ -24,14 +24,14 @@ interface ThumbnailResult {
  * 3. Wait for fonts and images to settle, then rasterise the preview container
  *    with `html-to-image` (browser-painted, so Tailwind v4 `oklch()` colors are
  *    handled — `html2canvas` cannot parse them).
- * 4. Upload the resulting PNG via `POST /api/admin/files/upload` and return the
+ * 4. Upload the resulting PNG via `POST /api/v1/admin/files` and return the
  *    new File id for the caller to store as `thumbnailId`.
  */
 export async function captureTemplateThumbnail(options: CaptureOptions): Promise<ThumbnailResult> {
   const { templateId, csrfToken, locale = 'en' } = options
 
   const tokenRes = await fetch(
-    `/api/admin/templates/preview/token?id=${templateId}&locale=${locale}`,
+    `/api/v1/admin/templates/preview/token?id=${templateId}&locale=${locale}`,
     { headers: { Accept: 'application/json' } }
   )
   if (!tokenRes.ok) throw new Error('Failed to request template preview token')
@@ -70,7 +70,7 @@ export async function captureTemplateThumbnail(options: CaptureOptions): Promise
     const form = new FormData()
     form.append('file', blob, `template-${templateId}.png`)
 
-    const uploadRes = await fetch('/api/admin/files/upload', {
+    const uploadRes = await fetch('/api/v1/admin/files', {
       method: 'POST',
       body: form,
       headers: { 'Accept': 'application/json', 'X-CSRF-Token': csrfToken },
@@ -79,7 +79,7 @@ export async function captureTemplateThumbnail(options: CaptureOptions): Promise
     if (!uploadRes.ok) throw new Error('Failed to upload template thumbnail')
 
     const data = await uploadRes.json()
-    return { fileId: data.file?.id }
+    return { fileId: data.data?.id }
   } finally {
     iframe.remove()
   }

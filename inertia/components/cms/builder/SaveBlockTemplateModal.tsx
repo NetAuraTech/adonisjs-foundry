@@ -20,7 +20,7 @@ interface SaveBlockTemplateModalProps {
 /**
  * Modal for saving a selected block as a Block Template.
  *
- * Submits to `POST /api/admin/templates` (create or overwrite) and then
+ * Submits to `POST /api/v1/admin/templates` (create or overwrite) and then
  * automatically triggers thumbnail capture + upload so a freshly-created
  * Template has a preview image immediately.
  */
@@ -42,7 +42,7 @@ export default function SaveBlockTemplateModal({
   useEffect(() => {
     async function fetchBlockTemplates() {
       try {
-        const res = await fetch('/api/admin/templates?type=block', {
+        const res = await fetch('/api/v1/admin/templates?type=block', {
           headers: { Accept: 'application/json' },
         })
         if (!res.ok) return
@@ -65,7 +65,7 @@ export default function SaveBlockTemplateModal({
     setError(null)
 
     try {
-      const res = await fetch('/api/admin/templates', {
+      const res = await fetch('/api/v1/admin/templates', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ export default function SaveBlockTemplateModal({
         csrfToken,
       })
 
-      const updateRes = await fetch(`/api/admin/templates/${template.id}`, {
+      const updateRes = await fetch(`/api/v1/admin/templates/${template.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

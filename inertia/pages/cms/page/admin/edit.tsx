@@ -74,7 +74,7 @@ export default function PagesEditPage({ page, translations }: Props) {
 
   useEffect(() => {
     if (!currentTranslation?.id) return
-    fetch(`/api/admin/builder/presence/${currentTranslation.id}`, {
+    fetch(`/api/v1/admin/builder/presence/${currentTranslation.id}`, {
       headers: { Accept: 'application/json' },
     })
       .then((r) => r.json())

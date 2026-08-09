@@ -202,12 +202,12 @@ test.group('API token authorization', (group) => {
     const token = await User.accessTokens.create(user)
 
     const res = await client
-      .get('/api/admin/files')
+      .get('/api/v1/admin/files')
       .accept('json')
       .bearerToken(token.value!.release())
 
     res.assertStatus(200)
-    assert.exists(res.body().files)
+    assert.exists(res.body().data)
   })
 
   test('bearer token without the required permission gets a 403', async ({ client }) => {
@@ -215,7 +215,7 @@ test.group('API token authorization', (group) => {
     const token = await User.accessTokens.create(user)
 
     const res = await client
-      .get('/api/admin/files')
+      .get('/api/v1/admin/files')
       .accept('json')
       .bearerToken(token.value!.release())
 

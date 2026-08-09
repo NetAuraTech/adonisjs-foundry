@@ -42,7 +42,7 @@ export default function PreviewIframe({ pageId, locale, translationId }: Preview
     setError(false)
     try {
       const res = await fetch(
-        `/api/admin/page/preview/token?pageId=${pageId}&locale=${locale}&translationId=${translationId}`,
+        `/api/v1/admin/pages/preview/token?pageId=${pageId}&locale=${locale}&translationId=${translationId}`,
         {
           headers: { Accept: 'application/json' },
         }
