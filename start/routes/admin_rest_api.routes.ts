@@ -163,6 +163,49 @@ export function registerAdminRestApiRoutes(): void {
             .prefix('folders')
 
           router
+            .group(() => {
+              router
+                .get('/', [controllers.template.api.Templates, 'index'])
+                .use([middleware.permission({ permissions: ['templates.view'] })])
+              router
+                .post('/', [controllers.template.api.Templates, 'store'])
+                .use([middleware.permission({ permissions: ['templates.create'] })])
+              router
+                .put('/:id', [controllers.template.api.Templates, 'update'])
+                .use([middleware.permission({ permissions: ['templates.update'] })])
+              router
+                .post('/from-page', [controllers.template.api.Templates, 'createFromPage'])
+                .use([middleware.permission({ permissions: ['templates.create'] })])
+            })
+            .prefix('templates')
+
+          router
+            .group(() => {
+              router
+                .post('/operations', [controllers.page.api.BuilderOperations, 'execute'])
+                .use([middleware.permission({ permissions: ['pages.update'] })])
+              router
+                .get('/presence/:translationId', [
+                  controllers.page.api.BuilderOperations,
+                  'presence',
+                ])
+                .use([middleware.permission({ permissions: ['pages.update'] })])
+              router
+                .post('/draft/:translationId', [
+                  controllers.page.api.BuilderOperations,
+                  'saveDraft',
+                ])
+                .use([middleware.permission({ permissions: ['pages.update'] })])
+            })
+            .prefix('builder')
+
+          router
+            .group(() => {
+              router.post('theme', [controllers.preferences.api.Theme, 'execute'])
+            })
+            .prefix('preferences')
+
+          router
             .get('permissions', [controllers.auth.api.PermissionsApi, 'index'])
             .use([middleware.permission({ permissions: ['roles.view'] })])
         })
