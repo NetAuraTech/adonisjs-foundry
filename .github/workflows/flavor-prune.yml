@@ -183,8 +183,8 @@ jobs:
             echo 'inertia/ absent — skipping frontend tests (expected for the api flavor).'
           fi
 
-      - name: Run backend tests (unit + integration of remaining suites)
-        run: npm run test -- unit integration
+      - name: Run backend tests (remaining suites)
+        run: npm run test -- unit integration functional
 
       - name: Configure git identity
         run: |
