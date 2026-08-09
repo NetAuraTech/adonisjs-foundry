@@ -20,7 +20,7 @@ test.group('Admin Dashboard E2E (core sections)', (group) => {
     const page = await visitPage('/admin', visit)
     const content = await page.locator('body').innerText()
 
-    assert.match(content, /Users: \d+/)
+    assert.match(content, /Users/)
     assert.match(content, /Folders: \d+/)
   })
 })

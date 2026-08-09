@@ -1,6 +1,12 @@
 import { Section } from '~/components/atoms/section'
 import { Heading } from '~/components/atoms/heading'
 import { Paragraph } from '~/components/atoms/paragraph'
+import { useTranslation } from '~/hooks/use_translation'
+import type { HomeTranslations } from '#types/translations'
+
+interface Props {
+  translations: HomeTranslations
+}
 
 /**
  * Blank home page for the hand-written front.
@@ -10,14 +16,15 @@ import { Paragraph } from '~/components/atoms/paragraph'
  * sees the expected `front.home` pattern from the first file they open.
  * Replace this with your own content.
  */
-export default function HomePage() {
+export default function HomePage({ translations }: Props) {
+  const { t } = useTranslation(translations)
+
   return (
     <Section className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md text-center">
-        <Heading level={1}>Welcome</Heading>
+        <Heading level={1}>{t('welcome')}</Heading>
         <Paragraph variant="muted" spacing="base">
-          This is the blank home page of your hand-written front. Edit
-          inertia/pages/core/front/home.tsx to get started.
+          {t('tagline')}
         </Paragraph>
       </div>
     </Section>
