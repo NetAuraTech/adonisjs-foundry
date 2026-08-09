@@ -4,6 +4,7 @@ import { ListUsersAction } from '#actions/user/list_users_action'
 import { ListAllRolesAction } from '#actions/role/list_all_roles_action'
 import { listValidator } from '#validators/user'
 import UserTransformer from '#transformers/user_transformer'
+import { roleIdsToAllowlist } from '#helpers/auth/load_user_role'
 import { extractPagination } from '#helpers/pagination/extract_pagination'
 import { stripEmptyStrings } from '#helpers/core/strip_empty_strings'
 
@@ -27,7 +28,7 @@ export default class UsersApiController {
     const pagination = await extractPagination(request)
 
     const roles = await this.listAllRolesAction.execute()
-    const allowed = roles.map((role) => String(role.id))
+    const allowed = roleIdsToAllowlist(roles)
 
     const data = stripEmptyStrings(request.all())
     const payload = await listValidator(allowed).validate(data)

@@ -19,7 +19,7 @@ export function useTemplates(type: 'block' | 'page') {
       setLoading(true)
       setError(null)
       try {
-        const res = await fetch(`/api/admin/templates?type=${type}`, {
+        const res = await fetch(`/api/v1/admin/templates?type=${type}`, {
           headers: { Accept: 'application/json' },
         })
         if (!res.ok) throw new Error(`HTTP ${res.status}`)

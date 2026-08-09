@@ -3,6 +3,9 @@ import { inject } from '@adonisjs/core'
 import { UploadFileAction } from '#actions/file/upload_file_action'
 import FileTransformer from '#transformers/file_transformer'
 
+/**
+ * POST /api/v1/admin/files — upload a file (multipart `file` field).
+ */
 @inject()
 export default class FilesUploadApiController {
   constructor(protected uploadFileAction: UploadFileAction) {}
@@ -12,7 +15,9 @@ export default class FilesUploadApiController {
     const file = request.file('file')
 
     if (!file) {
-      return response.badRequest({ message: 'No file uploaded' })
+      return response.badRequest({
+        error: { code: 'E_NO_FILE', message: 'file field is required' },
+      })
     }
 
     const result = await this.uploadFileAction.execute({

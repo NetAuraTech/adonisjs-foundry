@@ -14,8 +14,21 @@ import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
 import { controllers } from '#generated/controllers'
 import { throttle } from '#start/limiter'
+import features from '#config/features'
+import { enabledAuthGuards } from '#config/auth'
+
+/**
+ * Whether the identity/token REST surface is exposed at all. The whole
+ * `/api/v1` surface is gated by the `adminApi` feature flag and additionally
+ * requires the `api` access-token guard (session cookies are never consulted).
+ */
+export function identityApiEnabled(featuresList: { adminApi: boolean }): boolean {
+  return featuresList.adminApi && enabledAuthGuards.api
+}
 
 export function registerApiRoutes(): void {
+  if (!identityApiEnabled(features)) return
+
   router
     .group(() => {
       router

@@ -5,6 +5,7 @@ import { GetUserDetailAction } from '#actions/user/get_user_detail_action'
 import { ListAllRolesAction } from '#actions/role/list_all_roles_action'
 import { createValidator } from '#validators/user'
 import UserTransformer from '#transformers/user_transformer'
+import { roleIdsToAllowlist } from '#helpers/auth/load_user_role'
 
 /**
  * POST /api/v1/admin/users — create a user from the admin REST API.
@@ -26,7 +27,7 @@ export default class UsersCreateApiController {
     const { request, response, serialize } = ctx
 
     const roles = await this.listAllRolesAction.execute()
-    const allowed = roles.map((role) => String(role.id))
+    const allowed = roleIdsToAllowlist(roles)
 
     const payload = await createValidator(allowed).validate(request.all())
 

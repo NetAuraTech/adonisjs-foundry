@@ -137,7 +137,7 @@ test.group('Admin REST API v1 — Maintenance', (group) => {
       .bearerToken(token.value!.release())
 
     res.assertStatus(200)
-    assert.isFalse(res.body().config.enabled)
+    assert.isFalse(res.body().data.config.enabled)
   })
 
   test('updates the maintenance configuration', async ({ client, assert }) => {
@@ -157,7 +157,7 @@ test.group('Admin REST API v1 — Maintenance', (group) => {
       .json({ message: 'Scheduled maintenance', allowedIps: ['127.0.0.1'] })
 
     res.assertStatus(200)
-    assert.equal(res.body().config.allowedIps[0], '127.0.0.1')
+    assert.equal(res.body().data.config.allowedIps[0], '127.0.0.1')
 
     const config = await service.getConfig()
     assert.equal(config.allowedIps[0], '127.0.0.1')
@@ -180,7 +180,7 @@ test.group('Admin REST API v1 — Maintenance', (group) => {
       .json({ enabled: true })
 
     res.assertStatus(200)
-    assert.isTrue(res.body().enabled)
+    assert.isTrue(res.body().data.enabled)
 
     const config = await service.getConfig()
     assert.isTrue(config.enabled)

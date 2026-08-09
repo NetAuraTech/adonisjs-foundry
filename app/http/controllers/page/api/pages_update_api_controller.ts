@@ -6,6 +6,11 @@ import { UpdatePageAction } from '#cms/domain/actions/page/update_page_action'
 import { ChangePageStatusAction } from '#cms/domain/actions/page/change_page_status_action'
 import { GetPageDetailAction } from '#cms/domain/actions/page/get_page_detail_action'
 
+/**
+ * PUT  /api/v1/admin/pages/:id — update a page
+ * PUT  /api/v1/admin/pages/:id/publish — publish a page translation
+ * PUT  /api/v1/admin/pages/:id/unpublish — unpublish a page translation
+ */
 @inject()
 export default class PagesUpdateApiController {
   constructor(

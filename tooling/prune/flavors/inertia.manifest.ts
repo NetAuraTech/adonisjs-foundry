@@ -75,7 +75,6 @@ const inertiaManifest: FlavorManifest = {
 
     // ─── CMS route files ────────────────────────────────────────────────────
     'start/routes/cms_admin.routes.ts',
-    'start/routes/cms_api.routes.ts',
     'start/routes/cms_public.routes.ts',
 
     // ─── Transmit integration ───────────────────────────────────────────────
@@ -484,7 +483,7 @@ const inertiaManifest: FlavorManifest = {
         "import { registerAuthRoutes } from '#start/routes/auth.routes'",
         "import { registerSettingsRoutes } from '#start/routes/settings.routes'",
         "import { registerAdminRoutes } from '#start/routes/admin.routes'",
-        "import { registerAdminApiRoutes } from '#start/routes/admin_api.routes'",
+        "import { registerAdminRestApiRoutes } from '#start/routes/admin_rest_api.routes'",
         "import { registerCorePublicRoutes } from '#start/routes/core_public.routes'",
         "import { registerFrontRoutes } from '#start/routes/front.routes'",
         "import { registerApiRoutes } from '#start/routes/api.routes'",
@@ -508,10 +507,11 @@ const inertiaManifest: FlavorManifest = {
         '    if (features.auth) registerAuthRoutes()',
         '    if (features.settings) registerSettingsRoutes()',
         '    if (features.admin) registerAdminRoutes()',
-        '    if (features.adminApi) registerAdminApiRoutes()',
+        '    if (features.adminApi) registerAdminRestApiRoutes()',
         '',
-        '    // Token-guarded REST API — only when the `api` guard is enabled.',
-        '    if (enabledAuthGuards.api) registerApiRoutes()',
+        '    // Token-guarded identity/register REST API — only when the `api` guard',
+        '    // is enabled and the `adminApi` surface is on.',
+        '    if (features.adminApi && enabledAuthGuards.api) registerApiRoutes()',
         '  })',
         '  .use(features.maintenance ? middleware.maintenance() : [])',
         '',

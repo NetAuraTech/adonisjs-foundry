@@ -166,6 +166,67 @@ test.group('Admin REST API v1 — Templates', (group) => {
     res.assertStatus(404)
   })
 
+  test('deletes a template', async ({ client, assert }) => {
+    const admin = await createAdminUser({
+      email: 'admin-templates-destroy@example.com',
+      permissionSlugs: ['templates.delete'],
+    })
+    const token = await User.accessTokens.create(admin)
+
+    const template = await Template.create({
+      name: 'To Delete',
+      type: 'page',
+      content: { blocks: [] },
+      createdBy: null,
+    })
+
+    const res = await client
+      .delete(`/api/v1/admin/templates/${template.id}`)
+      .accept('json')
+      .bearerToken(token.value!.release())
+
+    res.assertStatus(204)
+    const found = await Template.find(template.id)
+    assert.isNull(found)
+  })
+
+  test('delete returns 404 for unknown id', async ({ client }) => {
+    const admin = await createAdminUser({
+      email: 'admin-templates-destroy-404@example.com',
+      permissionSlugs: ['templates.delete'],
+    })
+    const token = await User.accessTokens.create(admin)
+
+    const res = await client
+      .delete('/api/v1/admin/templates/999999')
+      .accept('json')
+      .bearerToken(token.value!.release())
+
+    res.assertStatus(404)
+  })
+
+  test('delete returns 403 without templates.delete', async ({ client }) => {
+    const admin = await createAdminUser({
+      email: 'noperm-templates-destroy@example.com',
+      permissionSlugs: ['templates.view'],
+    })
+    const token = await User.accessTokens.create(admin)
+
+    const template = await Template.create({
+      name: 'Blocked Delete',
+      type: 'page',
+      content: { blocks: [] },
+      createdBy: null,
+    })
+
+    const res = await client
+      .delete(`/api/v1/admin/templates/${template.id}`)
+      .accept('json')
+      .bearerToken(token.value!.release())
+
+    res.assertStatus(403)
+  })
+
   test('creates a template from a page', async ({ client, assert }) => {
     const admin = await createAdminUser({
       email: 'admin-templates-from-page@example.com',

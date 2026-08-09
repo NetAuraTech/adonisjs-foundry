@@ -29,7 +29,7 @@ export default class PageRevisionsApiController {
       pagination,
     })
 
-    return serialize(PageRevisionTransformer.transform(revisions.all()))
+    return serialize(PageRevisionTransformer.paginate(revisions.all(), revisions.getMeta()))
   }
 
   async restore(ctx: HttpContext) {

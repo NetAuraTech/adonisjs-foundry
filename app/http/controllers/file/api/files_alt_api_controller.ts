@@ -6,6 +6,10 @@ import { DeleteFileAltAction } from '#actions/file/delete_file_alt_action'
 import { GetFileDetailAction } from '#actions/file/get_file_detail_action'
 import FileTransformer from '#transformers/file_transformer'
 
+/**
+ * PUT    /api/v1/admin/files/:id/alt — upsert an alt-text entry
+ * DELETE /api/v1/admin/files/:id/alt — delete an alt-text entry
+ */
 @inject()
 export default class FilesAltApiController {
   constructor(

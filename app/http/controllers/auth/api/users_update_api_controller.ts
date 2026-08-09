@@ -5,6 +5,7 @@ import { UpdateUserAction } from '#actions/user/update_user_action'
 import { ListAllRolesAction } from '#actions/role/list_all_roles_action'
 import { restIdValidator, updateValidator } from '#validators/user'
 import UserTransformer from '#transformers/user_transformer'
+import { roleIdsToAllowlist } from '#helpers/auth/load_user_role'
 
 /**
  * PUT /api/v1/admin/users/:id — update a user from the admin REST API.
@@ -28,7 +29,7 @@ export default class UsersUpdateApiController {
     const { id } = await restIdValidator.validate(params)
 
     const roles = await this.listAllRolesAction.execute()
-    const allowed = roles.map((role) => String(role.id))
+    const allowed = roleIdsToAllowlist(roles)
 
     const payload = await updateValidator(id, allowed).validate(request.all())
 

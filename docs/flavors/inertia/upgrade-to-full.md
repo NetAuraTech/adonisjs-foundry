@@ -36,7 +36,7 @@ restoring whole directories over individual files.
 | CMS seeders                                   | `database/seeders/page_seeder.ts`, `database/seeders/template_seeder.ts`                        |
 | CMS i18n namespaces                           | `resources/lang/{en,fr}/page.json`, `{en,fr}/template.json`, `{en,fr}/builder.json`             |
 | CMS email template (contact form)             | `resources/views/emails/contact_form_email.edge`                                                |
-| CMS route files                               | `start/routes/cms_admin.routes.ts`, `cms_api.routes.ts`, `cms_public.routes.ts`                 |
+| CMS route files                               | `start/routes/cms_admin.routes.ts`, `cms_public.routes.ts`                                      |
 | CMS React subtrees (builder, renderer, pages) | `inertia/pages/cms`, `inertia/components/cms`                                                   |
 
 ## 2. Recover Transmit (real-time builder collaboration)
@@ -75,7 +75,7 @@ version (or set `cms: true`) to re-enable the CMS route module.
 The flavor rewrites several startup/composition files to drop CMS
 registrations. Restore the `main` version of each:
 
-- `start/routes.ts` — re-registers `cms_public`, `cms_admin`, and `cms_api` route modules.
+- `start/routes.ts` — re-registers the `cms_public` and `cms_admin` route modules (the CMS admin JSON API is part of the shared `admin_rest_api` surface).
 - `start/events.ts` — re-registers the page event/listener pairs.
 - `start/nav.ts` — re-adds the **Pages** and **Templates** admin menu entries.
 - `start/dashboard.ts` — re-registers the `page` and `template` dashboard collectors.

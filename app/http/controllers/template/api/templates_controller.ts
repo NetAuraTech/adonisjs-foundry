@@ -4,6 +4,7 @@ import {
   createBlockTemplateValidator,
   createFromPageValidator,
   listTemplateValidator,
+  showTemplateValidator,
   updateTemplateValidator,
 } from '#cms/validators/template'
 import TemplateTransformer from '#transformers/template/template_transformer'
@@ -11,6 +12,7 @@ import { ListTemplatesAction } from '#cms/domain/actions/template/list_templates
 import { UpdateTemplateAction } from '#cms/domain/actions/template/update_template_action'
 import { SaveBlockTemplateAction } from '#cms/domain/actions/template/save_block_template_action'
 import { CreateFromPageAction } from '#cms/domain/actions/template/create_from_page_action'
+import { DeleteTemplateAction } from '#cms/domain/actions/template/delete_template_action'
 
 /**
  * JSON API consumed by the page builder and admin Templates library.
@@ -29,7 +31,8 @@ export default class TemplatesApiController {
     protected listTemplatesAction: ListTemplatesAction,
     protected saveBlockTemplateAction: SaveBlockTemplateAction,
     protected updateTemplateAction: UpdateTemplateAction,
-    protected createFromPageAction: CreateFromPageAction
+    protected createFromPageAction: CreateFromPageAction,
+    protected deleteTemplateAction: DeleteTemplateAction
   ) {}
 
   /**
@@ -134,5 +137,21 @@ export default class TemplatesApiController {
     const serialized = await serialize(TemplateTransformer.transform(template))
 
     return response.ok({ template: serialized.data })
+  }
+
+  /**
+   * DELETE /api/v1/admin/templates/:id
+   *
+   * Deletes a template. Files inside are NOT deleted — thumbnails are kept so
+   * other templates or pages referencing them do not break.
+   */
+  async destroy(ctx: HttpContext) {
+    const { params, response } = ctx
+
+    const { id } = await showTemplateValidator.validate(params)
+
+    await this.deleteTemplateAction.execute({ id })
+
+    return response.noContent()
   }
 }

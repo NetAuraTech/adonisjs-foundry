@@ -15,11 +15,12 @@ export default class MaintenanceApiController {
     protected logService: LogService
   ) {}
 
-  async index() {
+  async index(ctx: HttpContext) {
+    const { serialize } = ctx
     const config = await this.maintenanceService.getConfig()
     const effectiveConfig = await this.maintenanceService.getEffectiveConfig()
 
-    return {
+    return serialize({
       config: {
         enabled: config.enabled,
         message: config.message,
@@ -30,14 +31,16 @@ export default class MaintenanceApiController {
       effectiveEnabled: effectiveConfig.enabled,
       redisAvailable: this.maintenanceService.isRedisAvailable(),
       source: this.maintenanceService.getSource(),
-    }
+    })
   }
 
   /**
    * PUT /api/v1/admin/maintenance — update maintenance configuration.
    */
   async update(ctx: HttpContext) {
-    const { request, response } = ctx
+    const { request, serialize, auth } = ctx
+    const user = auth.getUserOrFail()
+
     const payload = await updateMaintenanceValidator.validate(request.all())
 
     await this.maintenanceService.setConfig({
@@ -48,25 +51,31 @@ export default class MaintenanceApiController {
 
     this.logService.logBusiness(
       'settings.maintenance.updated',
-      {},
+      { userId: user.id, userEmail: user.email },
       { enabled: payload.enabled ?? false, allowedIpsCount: (payload.allowedIps ?? []).length }
     )
 
     const config = await this.maintenanceService.getConfig()
-    return response.ok({ config })
+    return serialize({ config })
   }
 
   /**
    * PUT /api/v1/admin/maintenance/toggle — toggle maintenance mode on/off.
    */
   async toggle(ctx: HttpContext) {
-    const { request, response } = ctx
+    const { request, serialize, auth } = ctx
+    const user = auth.getUserOrFail()
+
     const { enabled } = await toggleMaintenanceValidator.validate(request.all())
 
     await this.maintenanceService.toggle(enabled)
 
-    this.logService.logBusiness('settings.maintenance.toggled', {}, { enabled })
+    this.logService.logBusiness(
+      'settings.maintenance.toggled',
+      { userId: user.id, userEmail: user.email },
+      { enabled }
+    )
 
-    return response.ok({ enabled })
+    return serialize({ enabled })
   }
 }

@@ -3,7 +3,12 @@ import { inject } from '@adonisjs/core'
 import { createFolderValidator } from '#validators/file'
 import { ListRootFoldersAction } from '#actions/file_folder/list_root_folders_action'
 import { CreateFolderAction } from '#actions/file_folder/create_folder_action'
+import FileFolderTransformer from '#transformers/file_folder_transformer'
 
+/**
+ * GET  /api/v1/admin/folders — list root folders
+ * POST /api/v1/admin/folders — create a folder
+ */
 @inject()
 export default class FoldersApiController {
   constructor(
@@ -11,26 +16,18 @@ export default class FoldersApiController {
     protected createFolderAction: CreateFolderAction
   ) {}
 
-  async index({ response }: HttpContext) {
+  async index({ serialize }: HttpContext) {
     const roots = await this.listRootFoldersAction.execute()
-    return response.json({
-      data: roots.map((f) => ({
-        id: f.id,
-        name: f.name,
-        parentId: f.parentId,
-      })),
-    })
+    return serialize(FileFolderTransformer.transform(roots))
   }
 
   async store(ctx: HttpContext) {
-    const { request, response } = ctx
+    const { request, response, serialize } = ctx
     const payload = await createFolderValidator.validate(request.all())
     const folder = await this.createFolderAction.execute({
       name: payload.name,
       parentId: payload.parentId ?? null,
     })
-    return response.created({
-      data: { id: folder.id, name: folder.name, parentId: folder.parentId },
-    })
+    return response.created(await serialize(FileFolderTransformer.transform(folder)))
   }
 }

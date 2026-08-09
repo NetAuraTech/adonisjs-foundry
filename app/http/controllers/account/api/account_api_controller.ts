@@ -5,8 +5,8 @@ import {
   updateEmailValidator,
   updatePasswordValidator,
 } from '#validators/account'
-import User from '#models/auth/user'
 import UserTransformer from '#transformers/user_transformer'
+import { preloadUserRoleWithPermissions } from '#helpers/auth/load_user_role'
 import { UpdateUserAccountAction } from '#actions/account/update_user_account_action'
 import { DeleteUserAccountAction } from '#actions/account/delete_user_account_action'
 
@@ -22,7 +22,7 @@ export default class AccountApiController {
   ) {}
 
   async update(ctx: HttpContext) {
-    const { auth, request, serialize } = ctx
+    const { auth, request, serialize, response } = ctx
 
     const action = request.input('_action')
 
@@ -35,7 +35,7 @@ export default class AccountApiController {
         await this.updateUserAccountAction.execute({ user, email: payload.email })
 
         await user.refresh()
-        await this.preloadRole(user)
+        await preloadUserRoleWithPermissions(user)
 
         return serialize(UserTransformer.transform(user))
       }
@@ -49,12 +49,17 @@ export default class AccountApiController {
         })
 
         await user.refresh()
-        await this.preloadRole(user)
+        await preloadUserRoleWithPermissions(user)
 
         return serialize(UserTransformer.transform(user))
       }
       default: {
-        return { error: { code: 'E_INVALID_ACTION', message: 'Unknown account action' } }
+        return response.badRequest({
+          error: {
+            code: 'E_INVALID_ACTION',
+            message: 'Unknown account action (_action must be "update_email" or "update_password")',
+          },
+        })
       }
     }
   }
@@ -69,13 +74,5 @@ export default class AccountApiController {
     await this.deleteUserAccountAction.execute({ user, password: payload.password })
 
     return response.noContent()
-  }
-
-  private async preloadRole(user: InstanceType<typeof User>) {
-    await user.load((loader) => {
-      loader.load('role', (role) => {
-        role.preload('permissions')
-      })
-    })
   }
 }

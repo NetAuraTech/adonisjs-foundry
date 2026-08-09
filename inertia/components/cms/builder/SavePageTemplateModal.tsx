@@ -43,7 +43,7 @@ export default function SavePageTemplateModal({
     setError(null)
 
     try {
-      const res = await fetch('/api/admin/templates/from-page', {
+      const res = await fetch('/api/v1/admin/templates/from-page', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ export default function SavePageTemplateModal({
         csrfToken: csrfToken as string,
       })
 
-      const updateRes = await fetch(`/api/admin/templates/${template.id}`, {
+      const updateRes = await fetch(`/api/v1/admin/templates/${template.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

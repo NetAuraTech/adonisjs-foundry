@@ -4,6 +4,7 @@ import { invitationValidator, acceptInvitationValidator } from '#validators/auth
 import InvalidTokenException from '#exceptions/core/invalid_token_exception'
 import { FullToken } from '#types/core'
 import UserTransformer from '#transformers/user_transformer'
+import { preloadUserRoleWithPermissions } from '#helpers/auth/load_user_role'
 import { GetInvitationAction } from '#actions/invitation/get_invitation_action'
 import { AcceptInvitationAction } from '#actions/invitation/accept_invitation_action'
 
@@ -40,11 +41,7 @@ export default class AcceptInvitationApiController {
       password: payload.password,
     })
 
-    await user.load((loader) => {
-      loader.load('role', (role) => {
-        role.preload('permissions')
-      })
-    })
+    await preloadUserRoleWithPermissions(user)
 
     const serialized = await serialize(UserTransformer.transform(user))
 

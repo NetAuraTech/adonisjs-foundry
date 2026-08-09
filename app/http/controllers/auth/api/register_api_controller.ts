@@ -2,7 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import { registerValidator } from '#validators/auth'
 import { I18nService } from '#services/i18n_service'
-import User from '#models/auth/user'
+import { preloadUserRoleWithPermissions } from '#helpers/auth/load_user_role'
 import { RegisterUserAction } from '#actions/auth/register_user_action'
 import { SendEmailVerificationAction } from '#actions/email_verification/send_email_verification_action'
 import UserTransformer from '#transformers/user_transformer'
@@ -31,18 +31,10 @@ export default class RegisterApiController {
 
     await this.sendEmailVerificationAction.execute({ user })
 
-    await this.preloadRole(user)
+    await preloadUserRoleWithPermissions(user)
 
     const serialized = await serialize(UserTransformer.transform(user))
 
     return response.created(serialized)
-  }
-
-  private async preloadRole(user: InstanceType<typeof User>) {
-    await user.load((loader) => {
-      loader.load('role', (role) => {
-        role.preload('permissions')
-      })
-    })
   }
 }

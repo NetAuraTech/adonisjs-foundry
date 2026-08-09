@@ -7,6 +7,10 @@ import FileTransformer from '#transformers/file_transformer'
 import { stripEmptyStrings } from '#helpers/core/strip_empty_strings'
 import { extractPagination } from '#helpers/pagination/extract_pagination'
 
+/**
+ * GET  /api/v1/admin/files — list files
+ * PUT  /api/v1/admin/files/:id/move — move a file to another folder
+ */
 @inject()
 export default class FilesApiController {
   constructor(

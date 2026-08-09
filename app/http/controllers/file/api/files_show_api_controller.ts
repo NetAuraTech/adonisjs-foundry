@@ -4,6 +4,9 @@ import { showFileValidator } from '#validators/file'
 import FileTransformer from '#transformers/file_transformer'
 import { GetFileDetailAction } from '#actions/file/get_file_detail_action'
 
+/**
+ * GET /api/v1/admin/files/:id — show a single file with its alts.
+ */
 @inject()
 export default class FilesShowApiController {
   constructor(protected getFileDetailAction: GetFileDetailAction) {}

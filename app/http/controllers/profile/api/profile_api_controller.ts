@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import User from '#models/auth/user'
 import UserTransformer from '#transformers/user_transformer'
+import { preloadUserRoleWithPermissions } from '#helpers/auth/load_user_role'
 import { profileValidator } from '#validators/profile'
 import { UpdateUserProfileAction } from '#actions/profile/update_user_profile_action'
 
@@ -18,7 +18,7 @@ export default class ProfileApiController {
 
     const user = auth.getUserOrFail()
 
-    await this.preloadRole(user)
+    await preloadUserRoleWithPermissions(user)
 
     return serialize(UserTransformer.transform(user))
   }
@@ -33,16 +33,8 @@ export default class ProfileApiController {
     await this.updateUserProfileAction.execute({ user, username: payload.username })
 
     await user.refresh()
-    await this.preloadRole(user)
+    await preloadUserRoleWithPermissions(user)
 
     return serialize(UserTransformer.transform(user))
-  }
-
-  private async preloadRole(user: InstanceType<typeof User>) {
-    await user.load((loader) => {
-      loader.load('role', (role) => {
-        role.preload('permissions')
-      })
-    })
   }
 }

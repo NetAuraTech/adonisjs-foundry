@@ -106,7 +106,7 @@ export function useBuilderSync({
 
     subscription.create().then(() => setConnected(true))
 
-    fetch(`/api/admin/builder/presence/${translationId}`, {
+    fetch(`/api/v1/admin/builder/presence/${translationId}`, {
       headers: apiHeaders(),
     })
       .then((r) => r.json())
@@ -196,7 +196,7 @@ export function useBuilderSync({
         const operationId = uuid()
         emittedIds.current.add(operationId)
         try {
-          const res = await fetch('/api/admin/builder/operations', {
+          const res = await fetch('/api/v1/admin/builder/operations', {
             method: 'POST',
             headers: apiHeaders(),
             body: JSON.stringify({ pageId, translationId, operationId, ...op }),
@@ -225,7 +225,7 @@ export function useBuilderSync({
   const acquireLock = useCallback(
     async (blockId: string, fieldKey: string) => {
       try {
-        const res = await fetch('/api/admin/builder/operations', {
+        const res = await fetch('/api/v1/admin/builder/operations', {
           method: 'POST',
           headers: apiHeaders(),
           body: JSON.stringify({ pageId, translationId, op: 'LOCK_ACQUIRE', blockId, fieldKey }),
@@ -259,7 +259,7 @@ export function useBuilderSync({
         next.delete(`${blockId}:${fieldKey}`)
         return next
       })
-      await fetch('/api/admin/builder/operations', {
+      await fetch('/api/v1/admin/builder/operations', {
         method: 'POST',
         headers: apiHeaders(),
         body: JSON.stringify({ pageId, translationId, op: 'LOCK_RELEASE', blockId, fieldKey }),
@@ -290,7 +290,7 @@ export function useBuilderSync({
       if (draftDebounceRef.current) clearTimeout(draftDebounceRef.current)
       draftDebounceRef.current = setTimeout(async () => {
         try {
-          await fetch(`/api/admin/builder/draft/${translationId}`, {
+          await fetch(`/api/v1/admin/builder/draft/${translationId}`, {
             method: 'POST',
             headers: apiHeaders(),
             body: JSON.stringify({ content: draftContent }),
