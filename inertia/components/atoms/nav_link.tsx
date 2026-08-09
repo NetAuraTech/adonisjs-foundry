@@ -51,6 +51,8 @@ type NavLinkRouteProps<R extends NonNullable<LinkProps['route']>> = NavLinkBaseP
 type NavLinkNoRouteProps = NavLinkBaseProps & {
   route?: never
   routeParams?: never
+  /** Plain URL to link to when the target has no named route (e.g. the home page at `/`). */
+  href?: string
   /** Optional URL fragment appended to the resolved href (e.g. `'section-1'`). */
   anchor?: string
   /**
@@ -112,11 +114,15 @@ export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLin
   const { url } = usePage()
   const [isActive, setIsActive] = useState(false)
 
+  const href = 'href' in props ? props.href : undefined
+
   useEffect(() => {
     const determineActive = () => {
       const currentPath = window.location.pathname
 
-      const resolvedHref = props.route ? (urlFor as any)(props.route, props.routeParams) : ''
+      const resolvedHref = props.route
+        ? (urlFor as any)(props.route, props.routeParams)
+        : (href ?? '')
 
       const pathMatches = currentPath === resolvedHref
 
@@ -136,7 +142,7 @@ export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLin
     return () => {
       removeFinishEventListener()
     }
-  }, [url, props.anchor, props.route, props.routeParams])
+  }, [url, props.anchor, props.route, props.routeParams, href])
 
   const states = {
     active: '',
@@ -147,7 +153,7 @@ export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLin
 
   const state = disabled ? 'disabled' : 'active'
 
-  let linkProps: any = { href: '#' }
+  let linkProps: any = href ? { href } : { href: '#' }
 
   if (props.route) {
     linkProps =

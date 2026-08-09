@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { variants } from '~/components/atoms/nav_link'
+import { NavLink } from '~/components/atoms/nav_link'
 import { Link } from '@adonisjs/inertia/react'
 import { router, usePage } from '@inertiajs/react'
 import { SharedProps } from '@adonisjs/inertia/types'
@@ -49,9 +49,7 @@ export function Header() {
         data-state={menuState}
         aria-expanded={isExpanded}
       >
-        <Link href="/" className={variants['nav']} onClick={closeMenu}>
-          Home
-        </Link>
+        <NavLink href="/" label="Home" variant="nav" onClick={closeMenu} />
       </nav>
       <button
         className="header__burger md:display-hidden"
