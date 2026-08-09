@@ -116,6 +116,11 @@ export type ScannedRoutes = {
     'api.v1.auth.token.execute': { paramsTuple?: []; params?: {} }
     'api.v1.auth.token.destroy': { paramsTuple?: []; params?: {} }
     'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.users_api.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.users_create_api.store': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.users_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.users_update_api.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.users_delete_api.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   GET: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -173,6 +178,8 @@ export type ScannedRoutes = {
     'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
     'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
     'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.users_api.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.users_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   HEAD: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -230,6 +237,8 @@ export type ScannedRoutes = {
     'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
     'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
     'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.users_api.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.users_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   POST: {
     'subscribe': { paramsTuple?: []; params?: {} }
@@ -278,6 +287,7 @@ export type ScannedRoutes = {
     'contact.execute': { paramsTuple?: []; params?: {} }
     'api.v1.auth.token.execute': { paramsTuple?: []; params?: {} }
     'api.v1.auth.token.destroy': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.users_create_api.store': { paramsTuple?: []; params?: {} }
   }
   DELETE: {
     'settings.account.destroy': { paramsTuple?: []; params?: {} }
@@ -289,10 +299,12 @@ export type ScannedRoutes = {
     'admin.file_folders.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.pages.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.templates.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.users_delete_api.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PUT: {
     'admin.file_folders.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.admin.templates.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.users_update_api.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

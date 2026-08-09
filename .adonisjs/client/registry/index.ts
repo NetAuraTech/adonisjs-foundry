@@ -678,6 +678,36 @@ const routes = {
     tokens: [{"old":"/api/v1/auth/me","type":0,"val":"api","end":""},{"old":"/api/v1/auth/me","type":0,"val":"v1","end":""},{"old":"/api/v1/auth/me","type":0,"val":"auth","end":""},{"old":"/api/v1/auth/me","type":0,"val":"me","end":""}],
     types: placeholder as Registry['api.v1.auth.me.show']['types'],
   },
+  'api.v1.admin.users_api.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/admin/users',
+    tokens: [{"old":"/api/v1/admin/users","type":0,"val":"api","end":""},{"old":"/api/v1/admin/users","type":0,"val":"v1","end":""},{"old":"/api/v1/admin/users","type":0,"val":"admin","end":""},{"old":"/api/v1/admin/users","type":0,"val":"users","end":""}],
+    types: placeholder as Registry['api.v1.admin.users_api.index']['types'],
+  },
+  'api.v1.admin.users_create_api.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/admin/users',
+    tokens: [{"old":"/api/v1/admin/users","type":0,"val":"api","end":""},{"old":"/api/v1/admin/users","type":0,"val":"v1","end":""},{"old":"/api/v1/admin/users","type":0,"val":"admin","end":""},{"old":"/api/v1/admin/users","type":0,"val":"users","end":""}],
+    types: placeholder as Registry['api.v1.admin.users_create_api.store']['types'],
+  },
+  'api.v1.admin.users_show_api.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/admin/users/:id',
+    tokens: [{"old":"/api/v1/admin/users/:id","type":0,"val":"api","end":""},{"old":"/api/v1/admin/users/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/admin/users/:id","type":0,"val":"admin","end":""},{"old":"/api/v1/admin/users/:id","type":0,"val":"users","end":""},{"old":"/api/v1/admin/users/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['api.v1.admin.users_show_api.show']['types'],
+  },
+  'api.v1.admin.users_update_api.update': {
+    methods: ["PUT"],
+    pattern: '/api/v1/admin/users/:id',
+    tokens: [{"old":"/api/v1/admin/users/:id","type":0,"val":"api","end":""},{"old":"/api/v1/admin/users/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/admin/users/:id","type":0,"val":"admin","end":""},{"old":"/api/v1/admin/users/:id","type":0,"val":"users","end":""},{"old":"/api/v1/admin/users/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['api.v1.admin.users_update_api.update']['types'],
+  },
+  'api.v1.admin.users_delete_api.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/admin/users/:id',
+    tokens: [{"old":"/api/v1/admin/users/:id","type":0,"val":"api","end":""},{"old":"/api/v1/admin/users/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/admin/users/:id","type":0,"val":"admin","end":""},{"old":"/api/v1/admin/users/:id","type":0,"val":"users","end":""},{"old":"/api/v1/admin/users/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['api.v1.admin.users_delete_api.destroy']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

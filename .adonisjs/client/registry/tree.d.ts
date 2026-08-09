@@ -222,6 +222,23 @@ export interface ApiDefinition {
           show: typeof routes['api.v1.auth.me.show']
         }
       }
+      admin: {
+        usersApi: {
+          index: typeof routes['api.v1.admin.users_api.index']
+        }
+        usersCreateApi: {
+          store: typeof routes['api.v1.admin.users_create_api.store']
+        }
+        usersShowApi: {
+          show: typeof routes['api.v1.admin.users_show_api.show']
+        }
+        usersUpdateApi: {
+          update: typeof routes['api.v1.admin.users_update_api.update']
+        }
+        usersDeleteApi: {
+          destroy: typeof routes['api.v1.admin.users_delete_api.destroy']
+        }
+      }
     }
   }
   contact: {

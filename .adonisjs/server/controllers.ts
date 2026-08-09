@@ -27,6 +27,11 @@ export const controllers = {
     api: {
       Me: () => import('#controllers/auth/api/me_controller'),
       Token: () => import('#controllers/auth/api/token_controller'),
+      UsersApi: () => import('#controllers/auth/api/users_api_controller'),
+      UsersCreateApi: () => import('#controllers/auth/api/users_create_api_controller'),
+      UsersDeleteApi: () => import('#controllers/auth/api/users_delete_api_controller'),
+      UsersShowApi: () => import('#controllers/auth/api/users_show_api_controller'),
+      UsersUpdateApi: () => import('#controllers/auth/api/users_update_api_controller'),
     },
     front: {
       AcceptInvitation: () => import('#controllers/auth/front/accept_invitation_controller'),
