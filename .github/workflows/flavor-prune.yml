@@ -126,6 +126,37 @@ jobs:
       - name: Reinstall dependencies (post-prune package.json)
         run: npm ci
 
+      - name: Regenerate AdonisJS indexes (post-prune codegen)
+        run: |
+          # The dev server is the only entry point that regenerates every
+          # committed codegen file: the assembler init hooks rewrite the server
+          # indexes and pages.d.ts at startup, and the Tuyau client registry is
+          # written once the running app commits its routes (routesScanned
+          # hook), which typecheck and test commands never trigger. ".env.test"
+          # boots the full app without external services, same as ci.yml's
+          # codegen-drift job.
+          cp .env.test .env
+          mkdir -p tmp
+          node ace serve > tmp/codegen.log 2>&1 &
+          SERVER_PID=$!
+          for i in $(seq 1 90); do
+            if grep -q 'tuyau: created api client registry' tmp/codegen.log; then
+              break
+            fi
+            if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+              echo 'Dev server exited before the codegen output was regenerated:'
+              cat tmp/codegen.log
+              exit 1
+            fi
+            sleep 1
+          done
+          kill "$SERVER_PID" 2>/dev/null || true
+          if ! grep -q 'tuyau: created api client registry' tmp/codegen.log; then
+            echo 'Timed out waiting for the codegen output to be regenerated:'
+            cat tmp/codegen.log
+            exit 1
+          fi
+
       - name: Run typecheck (backend)
         run: npx tsc --noEmit
 
@@ -152,8 +183,8 @@ jobs:
             echo 'inertia/ absent — skipping frontend tests (expected for the api flavor).'
           fi
 
-      - name: Run backend tests (unit + integration of remaining suites)
-        run: npm run test -- unit integration
+      - name: Run backend tests (remaining suites)
+        run: npm run test -- unit integration functional
 
       - name: Configure git identity
         run: |

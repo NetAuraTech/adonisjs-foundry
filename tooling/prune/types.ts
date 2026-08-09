@@ -29,6 +29,10 @@
  * - `start/{routes,events,nav,dashboard,container,transmit,sitemap}.ts` —
  *   startup composition: each registers domain contributors, and a flavor
  *   rewrites the file to drop the registrations of pruned domains.
+ * - `start/env.ts` — environment validation; a flavor drops the variables of
+ *   its pruned domains (e.g. the CMS content-policy vars).
+ * - `.env.example` — the environment template mirrors the kept variables.
+ * - `README.md` — flavor-specific rewrite documenting its conventions.
  */
 export const REWRITE_ALLOWLIST = [
   'adonisrc.ts',
@@ -42,6 +46,9 @@ export const REWRITE_ALLOWLIST = [
   'start/container.ts',
   'start/transmit.ts',
   'start/sitemap.ts',
+  'start/env.ts',
+  '.env.example',
+  'README.md',
 ] as const
 
 /** Type of a single allowlisted rewrite path. */

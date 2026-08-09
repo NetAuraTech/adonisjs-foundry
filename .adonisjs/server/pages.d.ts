@@ -21,6 +21,7 @@ declare module '@adonisjs/inertia/types' {
     'auth/front/login': ExtractProps<(typeof import('../../inertia/pages/auth/front/login.tsx'))['default']>
     'auth/front/register': ExtractProps<(typeof import('../../inertia/pages/auth/front/register.tsx'))['default']>
     'auth/front/reset_password': ExtractProps<(typeof import('../../inertia/pages/auth/front/reset_password.tsx'))['default']>
+    'cms/dashboard_cms.spec': ExtractProps<(typeof import('../../inertia/pages/cms/dashboard_cms.spec.tsx'))['default']>
     'cms/page/admin/create': ExtractProps<(typeof import('../../inertia/pages/cms/page/admin/create.tsx'))['default']>
     'cms/page/admin/edit': ExtractProps<(typeof import('../../inertia/pages/cms/page/admin/edit.tsx'))['default']>
     'cms/page/admin/index': ExtractProps<(typeof import('../../inertia/pages/cms/page/admin/index.tsx'))['default']>
@@ -33,6 +34,7 @@ declare module '@adonisjs/inertia/types' {
     'cms/template/preview': ExtractProps<(typeof import('../../inertia/pages/cms/template/preview.tsx'))['default']>
     'core/admin/dashboard.spec': ExtractProps<(typeof import('../../inertia/pages/core/admin/dashboard.spec.tsx'))['default']>
     'core/admin/dashboard': ExtractProps<(typeof import('../../inertia/pages/core/admin/dashboard.tsx'))['default']>
+    'core/front/home': ExtractProps<(typeof import('../../inertia/pages/core/front/home.tsx'))['default']>
     'errors/not_found': ExtractProps<(typeof import('../../inertia/pages/errors/not_found.tsx'))['default']>
     'errors/server_error': ExtractProps<(typeof import('../../inertia/pages/errors/server_error.tsx'))['default']>
     'file/admin/folders': ExtractProps<(typeof import('../../inertia/pages/file/admin/folders.tsx'))['default']>

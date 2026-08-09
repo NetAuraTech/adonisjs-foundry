@@ -2,7 +2,6 @@ import { test } from '@japa/runner'
 import AuthNotification from '#mails/auth/auth_notification'
 import AccountNotification from '#mails/account/account_notification'
 import InviteNotification from '#mails/admin/invite_notification'
-import ContactFormNotification from '#mails/page/contact_form_notification'
 import type { MailPayload } from '#types/mail'
 
 const fixturePayload: MailPayload = {
@@ -24,10 +23,5 @@ test.group('Notification template paths', () => {
   test('InviteNotification uses admin_invite_email template', ({ assert }) => {
     const notif = new InviteNotification(fixturePayload)
     assert.equal(notif.templatePath, 'emails/admin_invite_email')
-  })
-
-  test('ContactFormNotification uses contact_form_email template', ({ assert }) => {
-    const notif = new ContactFormNotification(fixturePayload)
-    assert.equal(notif.templatePath, 'emails/contact_form_email')
   })
 })

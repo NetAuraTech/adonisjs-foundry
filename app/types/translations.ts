@@ -1054,3 +1054,9 @@ export type AdminMaintenanceTranslations = {
     help: string
   }
 }
+
+/** Translations for the hand-written front home page (`core/front/home`). */
+export type HomeTranslations = {
+  welcome: string
+  tagline: string
+}

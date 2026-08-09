@@ -1,5 +1,4 @@
 import { test } from '@japa/runner'
-import app from '@adonisjs/core/services/app'
 import { GetDashboardStatsAction } from '#actions/core/get_dashboard_stats_action'
 import { DashboardRegistry } from '#services/core/dashboard_registry'
 import { LogService } from '#services/logging/log_service'
@@ -7,14 +6,8 @@ import type {
   DashboardAuthSection,
   DashboardCollector,
   DashboardCollectorPayload,
+  DashboardFileSection,
 } from '#types/dashboard'
-import type { DashboardPageSection, DashboardTemplateSection } from '#cms/types/dashboard'
-
-class FakeTemplateCollector implements DashboardCollector<'template'> {
-  async collect(): Promise<DashboardTemplateSection> {
-    return { templates: 7 }
-  }
-}
 
 test.group('GetDashboardStatsAction', () => {
   test('returns an empty payload when no collector is registered', async ({ assert }) => {
@@ -24,13 +17,19 @@ test.group('GetDashboardStatsAction', () => {
   })
 
   test('returns only the sections of registered collectors', async ({ assert }) => {
+    class FakeAuthCollector implements DashboardCollector<'auth'> {
+      async collect(): Promise<DashboardAuthSection> {
+        return { users: 7, usersByRole: [] }
+      }
+    }
+
     const registry = new DashboardRegistry()
-    registry.register('template', async () => new FakeTemplateCollector())
+    registry.register('auth', async () => new FakeAuthCollector())
 
     const action = new GetDashboardStatsAction(registry, new LogService())
     const stats = await action.execute()
 
-    assert.deepEqual(stats, { template: { templates: 7 } })
+    assert.deepEqual(stats, { auth: { users: 7, usersByRole: [] } })
   })
 
   test('runs registered collectors in parallel', async ({ assert }) => {
@@ -40,11 +39,6 @@ test.group('GetDashboardStatsAction', () => {
       releaseAuth = resolve
     })
 
-    /**
-     * Waits until the page collector has started before resolving — with
-     * sequential execution the gate would never open and the test would time
-     * out instead of passing.
-     */
     class GatedAuthCollector implements DashboardCollector<'auth'> {
       async collect(): Promise<DashboardAuthSection> {
         events.push('auth:start')
@@ -54,28 +48,23 @@ test.group('GetDashboardStatsAction', () => {
       }
     }
 
-    class ReleasingPageCollector implements DashboardCollector<'page'> {
-      async collect(): Promise<DashboardPageSection> {
-        events.push('page:start')
+    class ReleasingFileCollector implements DashboardCollector<'file'> {
+      async collect(): Promise<DashboardFileSection> {
+        events.push('file:start')
         releaseAuth()
-        return {
-          pages: 2,
-          pageTranslations: { draft: 0, published: 0, archived: 0, total: 0 },
-          publishedLocales: 0,
-          recentPublishedPages: [],
-        }
+        return { files: 2, fileFolders: 0, filesByFolder: [], recentFiles: [] }
       }
     }
 
     const registry = new DashboardRegistry()
     registry.register('auth', async () => new GatedAuthCollector())
-    registry.register('page', async () => new ReleasingPageCollector())
+    registry.register('file', async () => new ReleasingFileCollector())
 
     const action = new GetDashboardStatsAction(registry, new LogService())
     const stats = await action.execute()
 
-    assert.deepEqual(events, ['auth:start', 'page:start', 'auth:end'])
-    assert.deepEqual(Object.keys(stats), ['auth', 'page'])
+    assert.deepEqual(events, ['auth:start', 'file:start', 'auth:end'])
+    assert.deepEqual(Object.keys(stats), ['auth', 'file'])
   })
 
   test('rejects when a collector fails', async ({ assert }) => {
@@ -87,45 +76,24 @@ test.group('GetDashboardStatsAction', () => {
 
     const registry = new DashboardRegistry()
     registry.register('auth', async () => new FailingCollector())
-    registry.register('template', async () => new FakeTemplateCollector())
 
     const action = new GetDashboardStatsAction(registry, new LogService())
 
     await assert.rejects(() => action.execute(), 'collector exploded')
   })
 
-  test('aggregates every section registered by the composition module', async ({ assert }) => {
-    const action = await app.container.make(GetDashboardStatsAction)
-
-    const stats = await action.execute()
-
-    assert.deepEqual(Object.keys(stats).sort(), ['auth', 'file', 'page', 'template'])
-    assert.isNumber(stats.auth?.users)
-    assert.isArray(stats.auth?.usersByRole)
-    assert.isNumber(stats.page?.pages)
-    assert.isNumber(stats.page?.pageTranslations.total)
-    assert.isNumber(stats.template?.templates)
-    assert.isNumber(stats.file?.files)
-    assert.isArray(stats.file?.recentFiles)
-  })
-
   test('forwards the recent-activity limit to collectors, defaulting to 5', async ({ assert }) => {
     const receivedLimits: number[] = []
 
-    class ProbingPageCollector implements DashboardCollector<'page'> {
-      async collect(payload: DashboardCollectorPayload): Promise<DashboardPageSection> {
+    class ProbingAuthCollector implements DashboardCollector<'auth'> {
+      async collect(payload: DashboardCollectorPayload): Promise<DashboardAuthSection> {
         receivedLimits.push(payload.recentLimit)
-        return {
-          pages: 0,
-          pageTranslations: { draft: 0, published: 0, archived: 0, total: 0 },
-          publishedLocales: 0,
-          recentPublishedPages: [],
-        }
+        return { users: 0, usersByRole: [] }
       }
     }
 
     const registry = new DashboardRegistry()
-    registry.register('page', async () => new ProbingPageCollector())
+    registry.register('auth', async () => new ProbingAuthCollector())
 
     const action = new GetDashboardStatsAction(registry, new LogService())
     await action.execute({ recentLimit: 12 })

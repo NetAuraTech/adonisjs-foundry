@@ -17,9 +17,6 @@ import RowNotFoundException from '#exceptions/core/row_not_found_exception'
 import SlugExistsException from '#exceptions/core/slug_exists_exception'
 import FileTooLargeException from '#exceptions/file/file_too_large_exception'
 import InvalidExtensionException from '#exceptions/file/invalid_extension_exception'
-import MissingTranslationException from '#cms/exceptions/page/missing_translation_exception'
-import MissingRevisionException from '#cms/exceptions/page/missing_revision_exception'
-import InvalidTemplateTypeException from '#cms/exceptions/template/invalid_template_type_exception'
 import MaintenanceException from '#exceptions/maintenance_exception'
 
 async function testExceptionHandle(error: any, assert: any) {
@@ -178,27 +175,6 @@ test.group('Exceptions', () => {
     await testExceptionHandle(error, assert)
   })
 
-  test('MissingTranslationException properties and handle()', async ({ assert }) => {
-    const error = new MissingTranslationException('fr', 1)
-    assert.equal(error.status, 404)
-    assert.equal(error.code, 'E_MISSING_TRANSLATION')
-    await testExceptionHandle(error, assert)
-  })
-
-  test('MissingRevisionException properties and handle()', async ({ assert }) => {
-    const error = new MissingRevisionException(42)
-    assert.equal(error.status, 404)
-    assert.equal(error.code, 'E_MISSING_REVISION')
-    await testExceptionHandle(error, assert)
-  })
-
-  test('InvalidTemplateTypeException properties and handle()', async ({ assert }) => {
-    const error = new InvalidTemplateTypeException()
-    assert.equal(error.status, 422)
-    assert.equal(error.code, 'E_INVALID_TEMPLATE_TYPE')
-    await testExceptionHandle(error, assert)
-  })
-
   test('MaintenanceException properties and handle()', async ({ assert }) => {
     const error = new MaintenanceException('Site maintenance', 30)
     assert.equal(error.status, 503)
@@ -274,9 +250,6 @@ test.group('Exceptions', () => {
       'E_FILE_TOO_LARGE',
       'E_FILE_NOT_FOUND',
       'E_INVALID_EXTENSION',
-      'E_MISSING_TRANSLATION',
-      'E_MISSING_REVISION',
-      'E_INVALID_TEMPLATE_TYPE',
       'E_MAINTENANCE',
     ]
 

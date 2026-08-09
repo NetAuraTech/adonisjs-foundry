@@ -7,6 +7,11 @@ import router from '@adonisjs/core/services/router'
  * Verifies that the refactored modular routing produces the same
  * route table as the original monolithic file — same names,
  * same patterns, same middleware wiring.
+ *
+ * The assertions here cover routes shared by every flavor. CMS route names
+ * (`admin.pages.*`, `admin.templates.*`, the `page.*` public front) are
+ * asserted in `tests/integration/routes_structure_cms.spec.ts` so the
+ * `inertia` flavor can prune them.
  */
 test.group('Routes structure', (group) => {
   group.each.setup(() => {
@@ -38,7 +43,7 @@ test.group('Routes structure', (group) => {
       'settings.preferences.execute',
       'settings.index',
 
-      // Admin CMS (referenced by CMS controllers)
+      // Admin back-office
       'admin.dashboard.render',
       'admin.users.render',
       'admin.users_create.render',
@@ -46,18 +51,12 @@ test.group('Routes structure', (group) => {
       'admin.users_show.render',
       'admin.users_update.render',
       'admin.users_update.execute',
-      'admin.pages.render',
-      'admin.pages_create.render',
-      'admin.pages_show.render',
-      'admin.pages_update.render',
-      'admin.templates.render',
       'admin.files.render',
       'admin.file_folders.render',
 
-      // Public pages
-      'page.home',
-      'page.localised.render',
-      'page.render',
+      // SEO
+      'robots.show',
+      'sitemap.show',
     ]
 
     for (const expectedName of expectedNames) {
@@ -69,17 +68,12 @@ test.group('Routes structure', (group) => {
     const json = router.toJSON()
     const routes = json['root']
 
-    // Count all route entries (named + unnamed)
-    // Auth domain: ~20 routes (login, register, forgot, reset, invitation, logout, oauth, verify)
-    // Settings domain: ~10 routes (profile, account, preferences, index, email_change)
-    // Admin CMS: ~45 routes (dashboard, users CRUD, pages CRUD, templates, files, folders)
-    // Admin API: ~10 routes (settings/theme, builder ops, preview token, file API)
-    // Public: ~5 routes (contact, sitemap, robots, home, locale render, render)
-    // Total expected: ~90 individual route entries
-
+    // Count all route entries (named + unnamed). The floor is the shared
+    // core (auth + settings + admin back-office + SEO); the `inertia`
+    // flavor drops the CMS routes on top of it.
     assert.isTrue(
-      routes.length >= 80,
-      `Expected at least 80 registered routes, got ${routes.length}`
+      routes.length >= 60,
+      `Expected at least 60 registered routes, got ${routes.length}`
     )
   })
 
@@ -88,14 +82,11 @@ test.group('Routes structure', (group) => {
     const routes = json['root']
     const byName = new Map(routes.filter((r) => r.name).map((r) => [r.name!, r]))
 
-    // Home route
-    assert.equal(byName.get('page.home')?.pattern, '/')
-
-    // Localised page render
-    assert.ok(
-      byName.get('page.localised.render')?.pattern.includes(':locale'),
-      'Localised render should have :locale param'
-    )
+    // The home route is `page.home` on `main` and `front.home` in the
+    // `inertia` flavor — both must point at `/`.
+    const home = byName.get('page.home') ?? byName.get('front.home')
+    assert.ok(home, 'Expected a home route (page.home or front.home)')
+    assert.equal(home!.pattern, '/')
 
     // Settings index redirects to profile
     assert.equal(byName.get('settings.index')?.pattern, '/settings')

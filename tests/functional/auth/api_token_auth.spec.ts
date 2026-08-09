@@ -181,19 +181,6 @@ test.group('API token authentication', (group) => {
 
     res.assertStatus(401)
   })
-
-  test('a bearer token does not authenticate session-guarded routes', async ({ client }) => {
-    const user = await createVerifiedUser({ email: 'api-matrix-token@example.com' })
-    const token = await User.accessTokens.create(user)
-
-    // The CMS API keeps the session guard exclusively.
-    const res = await client
-      .get('/api/admin/templates')
-      .accept('json')
-      .bearerToken(token.value!.release())
-
-    res.assertStatus(401)
-  })
 })
 
 /**
