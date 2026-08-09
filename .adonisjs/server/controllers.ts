@@ -26,6 +26,12 @@ export const controllers = {
     },
     api: {
       Me: () => import('#controllers/auth/api/me_controller'),
+      PermissionsApi: () => import('#controllers/auth/api/permissions_api_controller'),
+      RolesApi: () => import('#controllers/auth/api/roles_api_controller'),
+      RolesCreateApi: () => import('#controllers/auth/api/roles_create_api_controller'),
+      RolesDeleteApi: () => import('#controllers/auth/api/roles_delete_api_controller'),
+      RolesShowApi: () => import('#controllers/auth/api/roles_show_api_controller'),
+      RolesUpdateApi: () => import('#controllers/auth/api/roles_update_api_controller'),
       Token: () => import('#controllers/auth/api/token_controller'),
       UsersApi: () => import('#controllers/auth/api/users_api_controller'),
       UsersCreateApi: () => import('#controllers/auth/api/users_create_api_controller'),

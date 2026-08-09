@@ -1411,4 +1411,76 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/api/users_delete_api_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'api.v1.admin.roles_api.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/roles'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/role').listRolesValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/api/roles_api_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/api/roles_api_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.roles_create_api.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/admin/roles'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/role').createRoleValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/role').createRoleValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/api/roles_create_api_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/api/roles_create_api_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.roles_show_api.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/roles/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/role').restRoleIdValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/api/roles_show_api_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/api/roles_show_api_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.roles_update_api.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/admin/roles/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/role').restRoleIdValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/role').restRoleIdValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/api/roles_update_api_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/api/roles_update_api_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.roles_delete_api.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/admin/roles/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/role').restRoleIdValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/role').restRoleIdValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/api/roles_delete_api_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/api/roles_delete_api_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.permissions_api.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/permissions'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth/api/permissions_api_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth/api/permissions_api_controller').default['index']>>>
+    }
+  }
 }

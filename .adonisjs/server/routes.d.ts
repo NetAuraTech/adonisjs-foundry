@@ -121,6 +121,12 @@ export type ScannedRoutes = {
     'api.v1.admin.users_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.users_update_api.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.users_delete_api.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.roles_api.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.roles_create_api.store': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.roles_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.roles_update_api.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.roles_delete_api.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.permissions_api.index': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -180,6 +186,9 @@ export type ScannedRoutes = {
     'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
     'api.v1.admin.users_api.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.users_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.roles_api.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.roles_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.permissions_api.index': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -239,6 +248,9 @@ export type ScannedRoutes = {
     'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
     'api.v1.admin.users_api.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.users_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.roles_api.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.roles_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.permissions_api.index': { paramsTuple?: []; params?: {} }
   }
   POST: {
     'subscribe': { paramsTuple?: []; params?: {} }
@@ -288,6 +300,7 @@ export type ScannedRoutes = {
     'api.v1.auth.token.execute': { paramsTuple?: []; params?: {} }
     'api.v1.auth.token.destroy': { paramsTuple?: []; params?: {} }
     'api.v1.admin.users_create_api.store': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.roles_create_api.store': { paramsTuple?: []; params?: {} }
   }
   DELETE: {
     'settings.account.destroy': { paramsTuple?: []; params?: {} }
@@ -300,11 +313,13 @@ export type ScannedRoutes = {
     'admin.pages.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.templates.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.users_delete_api.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.roles_delete_api.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PUT: {
     'admin.file_folders.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.admin.templates.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.users_update_api.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.roles_update_api.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

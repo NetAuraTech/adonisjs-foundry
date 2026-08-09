@@ -238,6 +238,24 @@ export interface ApiDefinition {
         usersDeleteApi: {
           destroy: typeof routes['api.v1.admin.users_delete_api.destroy']
         }
+        rolesApi: {
+          index: typeof routes['api.v1.admin.roles_api.index']
+        }
+        rolesCreateApi: {
+          store: typeof routes['api.v1.admin.roles_create_api.store']
+        }
+        rolesShowApi: {
+          show: typeof routes['api.v1.admin.roles_show_api.show']
+        }
+        rolesUpdateApi: {
+          update: typeof routes['api.v1.admin.roles_update_api.update']
+        }
+        rolesDeleteApi: {
+          destroy: typeof routes['api.v1.admin.roles_delete_api.destroy']
+        }
+        permissionsApi: {
+          index: typeof routes['api.v1.admin.permissions_api.index']
+        }
       }
     }
   }

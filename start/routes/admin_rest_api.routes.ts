@@ -44,6 +44,30 @@ export function registerAdminRestApiRoutes(): void {
                 .use([middleware.permission({ permissions: ['users.delete'] })])
             })
             .prefix('users')
+
+          router
+            .group(() => {
+              router
+                .get('/', [controllers.auth.api.RolesApi, 'index'])
+                .use([middleware.permission({ permissions: ['roles.view'] })])
+              router
+                .post('/', [controllers.auth.api.RolesCreateApi, 'store'])
+                .use([middleware.permission({ permissions: ['roles.create'] })])
+              router
+                .get('/:id', [controllers.auth.api.RolesShowApi, 'show'])
+                .use([middleware.permission({ permissions: ['roles.view'] })])
+              router
+                .put('/:id', [controllers.auth.api.RolesUpdateApi, 'update'])
+                .use([middleware.permission({ permissions: ['roles.update'] })])
+              router
+                .delete('/:id', [controllers.auth.api.RolesDeleteApi, 'destroy'])
+                .use([middleware.permission({ permissions: ['roles.delete'] })])
+            })
+            .prefix('roles')
+
+          router
+            .get('permissions', [controllers.auth.api.PermissionsApi, 'index'])
+            .use([middleware.permission({ permissions: ['roles.view'] })])
         })
         .prefix('admin')
         .as('admin')
