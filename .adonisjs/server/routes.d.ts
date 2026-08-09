@@ -126,6 +126,18 @@ export type ScannedRoutes = {
     'api.v1.admin.roles_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.roles_update_api.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.roles_delete_api.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.pages_api.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.pages_create_api.store': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.pages_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.pages_update_api.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.pages_delete_api.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.pages_update_api.publish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.pages_update_api.unpublish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.pages_api.set_homepage': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.page_translations_api.store': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.page_revisions_api.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
+    'api.v1.admin.page_revisions_api.restore': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
+    'api.v1.admin.page_revisions_api.toggle': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
     'api.v1.admin.permissions_api.index': { paramsTuple?: []; params?: {} }
   }
   GET: {
@@ -188,6 +200,9 @@ export type ScannedRoutes = {
     'api.v1.admin.users_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.roles_api.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.roles_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.pages_api.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.pages_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.page_revisions_api.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
     'api.v1.admin.permissions_api.index': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
@@ -250,6 +265,9 @@ export type ScannedRoutes = {
     'api.v1.admin.users_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.roles_api.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.roles_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.pages_api.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.pages_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.page_revisions_api.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
     'api.v1.admin.permissions_api.index': { paramsTuple?: []; params?: {} }
   }
   POST: {
@@ -301,6 +319,9 @@ export type ScannedRoutes = {
     'api.v1.auth.token.destroy': { paramsTuple?: []; params?: {} }
     'api.v1.admin.users_create_api.store': { paramsTuple?: []; params?: {} }
     'api.v1.admin.roles_create_api.store': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.pages_create_api.store': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.page_translations_api.store': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.page_revisions_api.restore': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
   }
   DELETE: {
     'settings.account.destroy': { paramsTuple?: []; params?: {} }
@@ -314,12 +335,18 @@ export type ScannedRoutes = {
     'admin.templates.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.users_delete_api.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.roles_delete_api.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.pages_delete_api.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PUT: {
     'admin.file_folders.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.admin.templates.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.users_update_api.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.roles_update_api.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.pages_update_api.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.pages_update_api.publish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.pages_update_api.unpublish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.pages_api.set_homepage': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.page_revisions_api.toggle': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

@@ -5,6 +5,9 @@
 
 export const controllers = {
   account: {
+    api: {
+      AccountApi: () => import('#controllers/account/api/account_api_controller'),
+    },
     front: {
       Account: () => import('#controllers/account/front/account_controller'),
       EmailChange: () => import('#controllers/account/front/email_change_controller'),
@@ -25,8 +28,13 @@ export const controllers = {
       UsersUpdate: () => import('#controllers/auth/admin/users_update_controller'),
     },
     api: {
+      AcceptInvitationApi: () => import('#controllers/auth/api/accept_invitation_api_controller'),
+      EmailVerificationApi: () => import('#controllers/auth/api/email_verification_api_controller'),
+      ForgotPasswordApi: () => import('#controllers/auth/api/forgot_password_api_controller'),
       Me: () => import('#controllers/auth/api/me_controller'),
       PermissionsApi: () => import('#controllers/auth/api/permissions_api_controller'),
+      RegisterApi: () => import('#controllers/auth/api/register_api_controller'),
+      ResetPasswordApi: () => import('#controllers/auth/api/reset_password_api_controller'),
       RolesApi: () => import('#controllers/auth/api/roles_api_controller'),
       RolesCreateApi: () => import('#controllers/auth/api/roles_create_api_controller'),
       RolesDeleteApi: () => import('#controllers/auth/api/roles_delete_api_controller'),
@@ -133,6 +141,9 @@ export const controllers = {
     },
   },
   profile: {
+    api: {
+      ProfileApi: () => import('#controllers/profile/api/profile_api_controller'),
+    },
     front: {
       Profile: () => import('#controllers/profile/front/profile_controller'),
     },

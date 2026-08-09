@@ -253,6 +253,32 @@ export interface ApiDefinition {
         rolesDeleteApi: {
           destroy: typeof routes['api.v1.admin.roles_delete_api.destroy']
         }
+        pagesApi: {
+          index: typeof routes['api.v1.admin.pages_api.index']
+          setHomepage: typeof routes['api.v1.admin.pages_api.set_homepage']
+        }
+        pagesCreateApi: {
+          store: typeof routes['api.v1.admin.pages_create_api.store']
+        }
+        pagesShowApi: {
+          show: typeof routes['api.v1.admin.pages_show_api.show']
+        }
+        pagesUpdateApi: {
+          update: typeof routes['api.v1.admin.pages_update_api.update']
+          publish: typeof routes['api.v1.admin.pages_update_api.publish']
+          unpublish: typeof routes['api.v1.admin.pages_update_api.unpublish']
+        }
+        pagesDeleteApi: {
+          destroy: typeof routes['api.v1.admin.pages_delete_api.destroy']
+        }
+        pageTranslationsApi: {
+          store: typeof routes['api.v1.admin.page_translations_api.store']
+        }
+        pageRevisionsApi: {
+          index: typeof routes['api.v1.admin.page_revisions_api.index']
+          restore: typeof routes['api.v1.admin.page_revisions_api.restore']
+          toggle: typeof routes['api.v1.admin.page_revisions_api.toggle']
+        }
         permissionsApi: {
           index: typeof routes['api.v1.admin.permissions_api.index']
         }
