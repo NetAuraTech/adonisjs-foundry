@@ -53,6 +53,9 @@ export const controllers = {
     admin: {
       Dashboard: () => import('#controllers/core/admin/dashboard_controller'),
     },
+    api: {
+      DashboardApi: () => import('#controllers/core/api/dashboard_api_controller'),
+    },
     front: {
       Home: () => import('#controllers/core/front/home_controller'),
       Robots: () => import('#controllers/core/front/robots_controller'),
@@ -84,10 +87,16 @@ export const controllers = {
     admin: {
       Logs: () => import('#controllers/log/admin/logs_controller'),
     },
+    api: {
+      LogsApi: () => import('#controllers/log/api/logs_api_controller'),
+    },
   },
   maintenance: {
     admin: {
       Maintenance: () => import('#controllers/maintenance/admin/maintenance_controller'),
+    },
+    api: {
+      MaintenanceApi: () => import('#controllers/maintenance/api/maintenance_api_controller'),
     },
   },
   page: {

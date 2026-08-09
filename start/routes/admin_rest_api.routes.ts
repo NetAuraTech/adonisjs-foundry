@@ -206,6 +206,33 @@ export function registerAdminRestApiRoutes(): void {
             .prefix('preferences')
 
           router
+            .get('/', [controllers.core.api.DashboardApi, 'index'])
+            .prefix('dashboard')
+            .use([middleware.permission({ permissions: ['admin.access'] })])
+
+          router
+            .group(() => {
+              router
+                .get('/', [controllers.log.api.LogsApi, 'index'])
+                .use([middleware.permission({ permissions: ['logs.view'] })])
+            })
+            .prefix('logs')
+
+          router
+            .group(() => {
+              router
+                .get('/', [controllers.maintenance.api.MaintenanceApi, 'index'])
+                .use([middleware.permission({ permissions: ['settings.maintenance'] })])
+              router
+                .put('/', [controllers.maintenance.api.MaintenanceApi, 'update'])
+                .use([middleware.permission({ permissions: ['settings.maintenance'] })])
+              router
+                .put('/toggle', [controllers.maintenance.api.MaintenanceApi, 'toggle'])
+                .use([middleware.permission({ permissions: ['settings.maintenance'] })])
+            })
+            .prefix('maintenance')
+
+          router
             .get('permissions', [controllers.auth.api.PermissionsApi, 'index'])
             .use([middleware.permission({ permissions: ['roles.view'] })])
         })
