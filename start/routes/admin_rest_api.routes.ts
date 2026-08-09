@@ -114,6 +114,55 @@ export function registerAdminRestApiRoutes(): void {
             .prefix('pages')
 
           router
+            .group(() => {
+              router
+                .get('/', [controllers.file.api.FilesApi, 'index'])
+                .use([middleware.permission({ permissions: ['files.view'] })])
+              router
+                .post('/', [controllers.file.api.FilesUploadApi, 'store'])
+                .use([middleware.permission({ permissions: ['files.create'] })])
+              router
+                .get('/:id', [controllers.file.api.FilesShowApi, 'show'])
+                .use([middleware.permission({ permissions: ['files.view'] })])
+              router
+                .put('/:id/move', [controllers.file.api.FilesApi, 'move'])
+                .use([middleware.permission({ permissions: ['files.update'] })])
+              router
+                .delete('/:id', [controllers.file.api.FilesDeleteApi, 'destroy'])
+                .use([middleware.permission({ permissions: ['files.delete'] })])
+              router
+                .put('/:id/alt', [controllers.file.api.FilesAltApi, 'upsertAlt'])
+                .use([middleware.permission({ permissions: ['files.update'] })])
+              router
+                .delete('/:id/alt', [controllers.file.api.FilesAltApi, 'deleteAlt'])
+                .use([middleware.permission({ permissions: ['files.update'] })])
+            })
+            .prefix('files')
+
+          router
+            .group(() => {
+              router
+                .get('/', [controllers.file.api.FoldersApi, 'index'])
+                .use([middleware.permission({ permissions: ['folders.view'] })])
+              router
+                .post('/', [controllers.file.api.FoldersApi, 'store'])
+                .use([middleware.permission({ permissions: ['folders.create'] })])
+              router
+                .get('/:id', [controllers.file.api.FoldersShowApi, 'show'])
+                .use([middleware.permission({ permissions: ['folders.view'] })])
+              router
+                .get('/:id/children', [controllers.file.api.FoldersShowApi, 'children'])
+                .use([middleware.permission({ permissions: ['folders.view'] })])
+              router
+                .put('/:id', [controllers.file.api.FoldersUpdateApi, 'update'])
+                .use([middleware.permission({ permissions: ['folders.update'] })])
+              router
+                .delete('/:id', [controllers.file.api.FoldersDeleteApi, 'destroy'])
+                .use([middleware.permission({ permissions: ['folders.delete'] })])
+            })
+            .prefix('folders')
+
+          router
             .get('permissions', [controllers.auth.api.PermissionsApi, 'index'])
             .use([middleware.permission({ permissions: ['roles.view'] })])
         })

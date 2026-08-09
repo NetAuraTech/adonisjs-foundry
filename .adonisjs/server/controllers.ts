@@ -66,6 +66,15 @@ export const controllers = {
     },
     api: {
       File: () => import('#controllers/file/api/file_controller'),
+      FilesAltApi: () => import('#controllers/file/api/files_alt_api_controller'),
+      FilesApi: () => import('#controllers/file/api/files_api_controller'),
+      FilesDeleteApi: () => import('#controllers/file/api/files_delete_api_controller'),
+      FilesShowApi: () => import('#controllers/file/api/files_show_api_controller'),
+      FilesUploadApi: () => import('#controllers/file/api/files_upload_api_controller'),
+      FoldersApi: () => import('#controllers/file/api/folders_api_controller'),
+      FoldersDeleteApi: () => import('#controllers/file/api/folders_delete_api_controller'),
+      FoldersShowApi: () => import('#controllers/file/api/folders_show_api_controller'),
+      FoldersUpdateApi: () => import('#controllers/file/api/folders_update_api_controller'),
     },
   },
   health: {
@@ -93,6 +102,13 @@ export const controllers = {
     },
     api: {
       BuilderOperations: () => import('#controllers/page/api/builder_operations_controller'),
+      PageRevisionsApi: () => import('#controllers/page/api/page_revisions_api_controller'),
+      PageTranslationsApi: () => import('#controllers/page/api/page_translations_api_controller'),
+      PagesApi: () => import('#controllers/page/api/pages_api_controller'),
+      PagesCreateApi: () => import('#controllers/page/api/pages_create_api_controller'),
+      PagesDeleteApi: () => import('#controllers/page/api/pages_delete_api_controller'),
+      PagesShowApi: () => import('#controllers/page/api/pages_show_api_controller'),
+      PagesUpdateApi: () => import('#controllers/page/api/pages_update_api_controller'),
     },
     front: {
       Contact: () => import('#controllers/page/front/contact_controller'),
