@@ -9,6 +9,10 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  # Vulnerability severities that fail the scan job. Override per-run from the
+  # Actions UI ("Run workflow") or by redefining this env here. Comma-separated,
+  # ordered low→high: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL.
+  TRIVY_SEVERITY: 'CRITICAL'
 
 jobs:
   build-and-push:
@@ -19,6 +23,10 @@ jobs:
     permissions:
       contents: read
       packages: write
+
+    outputs:
+      branch: ${{ steps.tags.outputs.branch }}
+      short_sha: ${{ steps.tags.outputs.short_sha }}
 
     steps:
       # For workflow_run events, github.ref/github.sha point at the default
@@ -63,3 +71,51 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  # ─── Trivy vulnerability scan of the freshly pushed image ──────────────────
+  # Runs only after a successful build-and-push (needs + the workflow_run
+  # success guard above), so a failed build never triggers a scan. Uploads the
+  # report as SARIF to the repository's Security tab and fails on vulnerabilities
+  # at or above the configured severity threshold (env.TRIVY_SEVERITY).
+  trivy-scan:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Only the scan writes security findings — least-privilege addition to
+      # the build job's permissions.
+      security-events: write
+
+    steps:
+      - name: Log in to the Container registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Scan the pushed image with Trivy
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.build-and-push.outputs.short_sha }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          # --exit-code 1 makes Trivy non-zero when any vulnerability matches
+          # --severity; the job then fails and surfaces the image as vulnerable.
+          exit-code: '1'
+          severity: ${{ env.TRIVY_SEVERITY }}
+          # Ignore unfixed vulnerabilities only when explicitly enabled; the
+          # default is to report everything so CRITICAL issues are never hidden.
+          ignore-unfixed: false
+
+      # `always()` so the report is still uploaded when the scan step fails on
+      # CRITICAL findings (exit-code 1) — the findings must surface in the
+      # Security tab even on a red scan. The guard skips the upload when no
+      # report was produced (e.g. registry login failure), which would otherwise
+      # error out trying to read a missing file.
+      - name: Upload Trivy SARIF report to the Security tab
+        if: always() && hashFiles('trivy-results.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+          category: 'docker-image'
