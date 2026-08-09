@@ -117,4 +117,30 @@ test.group('Routes structure', (group) => {
       )
     }
   })
+
+  test('REST API admin endpoints are registered', ({ assert }) => {
+    const json = router.toJSON()
+    const routes = json['root'].map((r) => r.pattern)
+
+    const expectedPatterns = [
+      '/api/v1/auth/login',
+      '/api/v1/auth/register',
+      '/api/v1/auth/logout',
+      '/api/v1/auth/me',
+      '/api/v1/profile',
+      '/api/v1/account',
+      '/api/v1/admin/users',
+      '/api/v1/admin/roles',
+      '/api/v1/admin/folders',
+      '/api/v1/admin/dashboard',
+      '/api/v1/admin/logs',
+      '/api/v1/admin/maintenance',
+      '/api/v1/admin/templates',
+      '/api/v1/admin/pages',
+    ]
+
+    for (const pattern of expectedPatterns) {
+      assert.include(routes, pattern, `Expected REST API route "${pattern}" to be registered`)
+    }
+  })
 })
