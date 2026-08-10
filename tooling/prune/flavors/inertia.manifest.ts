@@ -54,6 +54,7 @@ const inertiaManifest: FlavorManifest = {
     // ─── CMS preview-token helper (page/template preview only) ──────────────
     'app/helpers/core/preview_token.ts',
     'tests/unit/helpers/core/preview_token.spec.ts',
+    'commands/cms_normalize_migration_names.ts',
 
     // ─── CMS migrations ─────────────────────────────────────────────────────
     'database/migrations/cms',
