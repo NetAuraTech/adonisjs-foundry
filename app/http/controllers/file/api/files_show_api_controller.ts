@@ -11,6 +11,9 @@ import { GetFileDetailAction } from '#actions/file/get_file_detail_action'
 export default class FilesShowApiController {
   constructor(protected getFileDetailAction: GetFileDetailAction) {}
 
+  /**
+   * Show a single file with its alt texts.
+   */
   async show(ctx: HttpContext) {
     const { params, serialize } = ctx
     const { id } = await showFileValidator.validate(params)

@@ -5,12 +5,13 @@ import InvalidTokenException from '#exceptions/core/invalid_token_exception'
 import { FullToken } from '#types/core'
 import UserTransformer from '#transformers/user_transformer'
 import { preloadUserRoleWithPermissions } from '#helpers/auth/load_user_role'
+import { invalidTokenNotFound } from '#helpers/api/error_response'
 import { GetInvitationAction } from '#actions/invitation/get_invitation_action'
 import { AcceptInvitationAction } from '#actions/invitation/accept_invitation_action'
 
 /**
  * POST /api/v1/auth/accept-invitation — accept an invitation and set a password.
- * Returns 404 when the token is invalid.
+ * Returns a canonical 404 error body when the token is invalid.
  */
 @inject()
 export default class AcceptInvitationApiController {
@@ -29,7 +30,7 @@ export default class AcceptInvitationApiController {
       invitedUser = await this.getInvitationAction.execute({ token: token as FullToken })
     } catch (error) {
       if (error instanceof InvalidTokenException) {
-        return response.notFound({ message: 'invalid_token' })
+        return invalidTokenNotFound(ctx)
       }
       throw error
     }

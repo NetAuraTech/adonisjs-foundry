@@ -19,6 +19,9 @@ export default class PagesUpdateApiController {
     protected getPageDetailAction: GetPageDetailAction
   ) {}
 
+  /**
+   * Update a page translation's content.
+   */
   async update(ctx: HttpContext) {
     const { params, request, auth, serialize } = ctx
     const { id } = await showPageValidator.validate(params)
@@ -40,29 +43,37 @@ export default class PagesUpdateApiController {
     return serialize(PageTransformer.transform(page))
   }
 
+  /**
+   * Publish a page translation (draft → published).
+   */
   async publish(ctx: HttpContext) {
     const { params, request, auth, serialize } = ctx
     const { id } = await showPageValidator.validate(params)
     const { locale } = await publishPageValidator.validate(request.all())
+    const user = auth.getUserOrFail()
     await this.changePageStatusAction.execute({
       pageId: id,
       locale,
       status: 'published',
-      userId: auth.user?.id,
+      userId: user.id,
     })
     const page = await this.getPageDetailAction.execute({ id })
     return serialize(PageTransformer.transform(page))
   }
 
+  /**
+   * Unpublish a page translation (published → draft).
+   */
   async unpublish(ctx: HttpContext) {
     const { params, request, auth, serialize } = ctx
     const { id } = await showPageValidator.validate(params)
     const { locale } = await publishPageValidator.validate(request.all())
+    const user = auth.getUserOrFail()
     await this.changePageStatusAction.execute({
       pageId: id,
       locale,
       status: 'draft',
-      userId: auth.user?.id,
+      userId: user.id,
     })
     const page = await this.getPageDetailAction.execute({ id })
     return serialize(PageTransformer.transform(page))

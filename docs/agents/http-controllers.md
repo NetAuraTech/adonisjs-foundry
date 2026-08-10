@@ -2,6 +2,8 @@
 
 One controller = one action. `render()` serves the Inertia page; `execute()` performs the mutation. Add `destroy()` only when deleting a resource. Files go in `app/http/controllers/{domain}/{context}/{name}_controller.ts`.
 
+**REST exception**: resource controllers in the `api/` context may group the handlers of a single REST resource — one controller per resource, one method per HTTP action (`index`, `show`, `store`, `update`, `destroy`, plus resource-specific actions like `publish`/`move`). They stay thin transport wrappers over domain actions and never duplicate business logic. This is the documented convention for the `/api/v1/admin/*` surface (spec #7), not an invitation to multi-action session controllers.
+
 ## Structure
 
 ```typescript

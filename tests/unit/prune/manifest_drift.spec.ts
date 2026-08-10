@@ -1,5 +1,5 @@
 import { test } from '@japa/runner'
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { readdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -116,5 +116,36 @@ test.group('Manifest drift seam', () => {
     }
 
     assert.isTrue(true, 'all manifests pass engine validation against main')
+  })
+
+  test('a package.json rewrite never drifts the version from main', async ({ assert }) => {
+    const manifests = await loadAllManifests()
+    const mainVersion = JSON.parse(readFileSync(join(REPO_ROOT, 'package.json'), 'utf8'))
+      .version as string
+
+    if (manifests.length === 0) {
+      assert.isTrue(true, 'no flavor manifests yet — version drift seam is a no-op until #5/#8')
+      return
+    }
+
+    const drifted: { flavor: string; version: string }[] = []
+    for (const { flavor, manifest } of manifests) {
+      const rewrite = manifest.rewrites.find((r) => r.path === 'package.json')
+      if (!rewrite) continue
+
+      const parsed = JSON.parse(rewrite.content) as { version?: string }
+      if (parsed.version !== mainVersion) {
+        drifted.push({ flavor, version: parsed.version ?? '(missing)' })
+      }
+    }
+
+    assert.deepEqual(
+      drifted,
+      [],
+      'the package.json rewrite version must stay in sync with main — update the manifest when the project version bumps:\n' +
+        drifted
+          .map((d) => `  - [${d.flavor}] version ${d.version} (main is ${mainVersion})`)
+          .join('\n')
+    )
   })
 })

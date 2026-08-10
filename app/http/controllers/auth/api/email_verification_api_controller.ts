@@ -3,10 +3,11 @@ import { inject } from '@adonisjs/core'
 import { VerifyEmailAction } from '#actions/email_verification/verify_email_action'
 import InvalidTokenException from '#exceptions/core/invalid_token_exception'
 import { FullToken } from '#types/core'
+import { invalidTokenNotFound } from '#helpers/api/error_response'
 
 /**
  * POST /api/v1/auth/verify-email — confirm an email address with a token.
- * Returns 404 when the token is invalid.
+ * Returns a canonical 404 error body when the token is invalid.
  */
 @inject()
 export default class EmailVerificationApiController {
@@ -19,11 +20,11 @@ export default class EmailVerificationApiController {
       const user = await this.verifyEmailAction.execute({ token: params.token as FullToken })
 
       if (!user) {
-        return response.notFound({ message: 'invalid_token' })
+        return invalidTokenNotFound(ctx)
       }
     } catch (error) {
       if (error instanceof InvalidTokenException) {
-        return response.notFound({ message: 'invalid_token' })
+        return invalidTokenNotFound(ctx)
       }
       throw error
     }

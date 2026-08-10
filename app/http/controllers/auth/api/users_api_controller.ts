@@ -22,6 +22,9 @@ export default class UsersApiController {
     protected listAllRolesAction: ListAllRolesAction
   ) {}
 
+  /**
+   * List users with search/role filters and pagination.
+   */
   async index(ctx: HttpContext) {
     const { request, serialize } = ctx
 
