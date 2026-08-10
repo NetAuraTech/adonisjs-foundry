@@ -39,12 +39,18 @@ jobs:
               const { data } = await github.rest.actions.listWorkflowRunsForRepo({
                 owner,
                 repo,
-                workflow_id: 'ci.yml',
                 head_sha: sha,
-                per_page: 1,
+                per_page: 100,
               })
 
-              const run = data.workflow_runs[0]
+              // Pick the CI run deterministically. Filtering on the workflow
+              // *path* in JS (rather than the workflow_id query param, which
+              // resolves to the most recent run across workflows for the SHA)
+              // guarantees we evaluate ci.yml's conclusion and never another
+              // workflow's run created for the same SHA.
+              const run = data.workflow_runs.find(
+                (candidate) => candidate.path === '.github/workflows/ci.yml'
+              )
               if (run && run.status === 'completed') {
                 if (run.conclusion === 'success') {
                   console.log(`CI workflow ${run.id} passed for ${sha}`)
