@@ -135,8 +135,6 @@ test.group('Routes structure', (group) => {
       '/api/v1/admin/dashboard',
       '/api/v1/admin/logs',
       '/api/v1/admin/maintenance',
-      '/api/v1/admin/templates',
-      '/api/v1/admin/pages',
     ]
 
     for (const pattern of expectedPatterns) {

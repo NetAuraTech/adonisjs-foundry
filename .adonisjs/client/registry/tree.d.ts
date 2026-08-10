@@ -246,6 +246,21 @@ export interface ApiDefinition {
         pagesPreviewToken: {
           token: typeof routes['api.v1.admin.pages_preview_token.token']
         }
+        templates: {
+          index: typeof routes['api.v1.admin.templates.index']
+          store: typeof routes['api.v1.admin.templates.store']
+          update: typeof routes['api.v1.admin.templates.update']
+          destroy: typeof routes['api.v1.admin.templates.destroy']
+          createFromPage: typeof routes['api.v1.admin.templates.create_from_page']
+        }
+        templatesPreviewToken: {
+          token: typeof routes['api.v1.admin.templates_preview_token.token']
+        }
+        builderOperations: {
+          execute: typeof routes['api.v1.admin.builder_operations.execute']
+          presence: typeof routes['api.v1.admin.builder_operations.presence']
+          saveDraft: typeof routes['api.v1.admin.builder_operations.save_draft']
+        }
         filesApi: {
           index: typeof routes['api.v1.admin.files_api.index']
           move: typeof routes['api.v1.admin.files_api.move']
@@ -276,21 +291,6 @@ export interface ApiDefinition {
         }
         foldersDeleteApi: {
           destroy: typeof routes['api.v1.admin.folders_delete_api.destroy']
-        }
-        templates: {
-          index: typeof routes['api.v1.admin.templates.index']
-          store: typeof routes['api.v1.admin.templates.store']
-          update: typeof routes['api.v1.admin.templates.update']
-          destroy: typeof routes['api.v1.admin.templates.destroy']
-          createFromPage: typeof routes['api.v1.admin.templates.create_from_page']
-        }
-        templatesPreviewToken: {
-          token: typeof routes['api.v1.admin.templates_preview_token.token']
-        }
-        builderOperations: {
-          execute: typeof routes['api.v1.admin.builder_operations.execute']
-          presence: typeof routes['api.v1.admin.builder_operations.presence']
-          saveDraft: typeof routes['api.v1.admin.builder_operations.save_draft']
         }
         theme: {
           execute: typeof routes['api.v1.admin.theme.execute']

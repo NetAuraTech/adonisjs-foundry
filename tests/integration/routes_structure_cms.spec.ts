@@ -50,4 +50,19 @@ test.group('Routes structure (CMS)', (group) => {
       'Localised render should have :locale param'
     )
   })
+
+  test('CMS REST API resources are registered on main', ({ assert }) => {
+    const json = router.toJSON()
+    const routes = json['root'].map((r) => r.pattern)
+
+    const expectedPatterns = [
+      '/api/v1/admin/pages',
+      '/api/v1/admin/templates',
+      '/api/v1/admin/builder/operations',
+    ]
+
+    for (const pattern of expectedPatterns) {
+      assert.include(routes, pattern, `Expected CMS REST API route "${pattern}" to be registered`)
+    }
+  })
 })

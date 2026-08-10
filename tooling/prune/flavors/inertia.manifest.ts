@@ -76,6 +76,7 @@ const inertiaManifest: FlavorManifest = {
     // ─── CMS route files ────────────────────────────────────────────────────
     'start/routes/cms_admin.routes.ts',
     'start/routes/cms_public.routes.ts',
+    'start/routes/cms_rest_api.routes.ts',
 
     // ─── Transmit integration ───────────────────────────────────────────────
     'start/transmit.ts',

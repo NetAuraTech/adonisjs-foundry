@@ -15,6 +15,7 @@ import { registerAuthRoutes } from '#start/routes/auth.routes'
 import { registerSettingsRoutes } from '#start/routes/settings.routes'
 import { registerAdminRoutes } from '#start/routes/admin.routes'
 import { registerCmsAdminRoutes } from '#start/routes/cms_admin.routes'
+import { registerCmsRestApiRoutes } from '#start/routes/cms_rest_api.routes'
 import { registerCmsPublicRoutes } from '#start/routes/cms_public.routes'
 import { registerCorePublicRoutes } from '#start/routes/core_public.routes'
 import { registerApiRoutes } from '#start/routes/api.routes'
@@ -37,6 +38,7 @@ router
     if (features.settings) registerSettingsRoutes()
     if (features.admin) registerAdminRoutes()
     if (features.adminApi) registerAdminRestApiRoutes()
+    if (features.adminApi && features.cms) registerCmsRestApiRoutes()
     if (features.cms) {
       registerCmsAdminRoutes()
       registerCmsPublicRoutes()
