@@ -243,8 +243,8 @@ export interface ApiDefinition {
           restore: typeof routes['api.v1.admin.page_revisions_api.restore']
           toggle: typeof routes['api.v1.admin.page_revisions_api.toggle']
         }
-        pagesPreview: {
-          token: typeof routes['api.v1.admin.pages_preview.token']
+        pagesPreviewToken: {
+          token: typeof routes['api.v1.admin.pages_preview_token.token']
         }
         filesApi: {
           index: typeof routes['api.v1.admin.files_api.index']
@@ -284,8 +284,8 @@ export interface ApiDefinition {
           destroy: typeof routes['api.v1.admin.templates.destroy']
           createFromPage: typeof routes['api.v1.admin.templates.create_from_page']
         }
-        templatesPreview: {
-          token: typeof routes['api.v1.admin.templates_preview.token']
+        templatesPreviewToken: {
+          token: typeof routes['api.v1.admin.templates_preview_token.token']
         }
         builderOperations: {
           execute: typeof routes['api.v1.admin.builder_operations.execute']

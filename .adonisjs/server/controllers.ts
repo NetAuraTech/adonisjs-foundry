@@ -124,6 +124,7 @@ export const controllers = {
       PagesApi: () => import('#controllers/page/api/pages_api_controller'),
       PagesCreateApi: () => import('#controllers/page/api/pages_create_api_controller'),
       PagesDeleteApi: () => import('#controllers/page/api/pages_delete_api_controller'),
+      PagesPreviewToken: () => import('#controllers/page/api/pages_preview_token_controller'),
       PagesShowApi: () => import('#controllers/page/api/pages_show_api_controller'),
       PagesUpdateApi: () => import('#controllers/page/api/pages_update_api_controller'),
     },
@@ -155,6 +156,7 @@ export const controllers = {
     },
     api: {
       Templates: () => import('#controllers/template/api/templates_controller'),
+      TemplatesPreviewToken: () => import('#controllers/template/api/templates_preview_token_controller'),
     },
   },
 }

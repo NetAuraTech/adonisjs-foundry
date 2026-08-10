@@ -1,5 +1,6 @@
 import { BaseHttpException } from '#exceptions/base_http_exception'
 import type { HttpContext } from '@adonisjs/core/http'
+import { routePath } from '#helpers/router/route_path'
 
 export default class InvalidTokenException extends BaseHttpException {
   static status = 400
@@ -10,6 +11,8 @@ export default class InvalidTokenException extends BaseHttpException {
   }
 
   protected redirectPath(response: HttpContext['response']): ReturnType<typeof response.redirect> {
-    return response.redirect().toRoute('auth.session.render')
+    const loginPath = routePath('auth.session.render')
+    if (loginPath) return response.redirect().toPath(loginPath)
+    return response.redirect().back()
   }
 }

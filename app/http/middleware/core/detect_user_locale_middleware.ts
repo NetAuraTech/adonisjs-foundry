@@ -79,8 +79,15 @@ export default class DetectUserLocaleMiddleware {
       ctx.view.share({ i18n: ctx.i18n })
     }
 
-    if ('inertia' in ctx) {
-      ctx.inertia.share({
+    // Inertia shared props are only injected when the view layer exists —
+    // the Inertia context is detected at runtime (its type augmentation is
+    // absent in headless flavors, hence the local cast).
+    const inertiaView = (
+      ctx as unknown as { inertia?: { share(data: Record<string, unknown>): void } }
+    ).inertia
+
+    if (inertiaView) {
+      inertiaView.share({
         locale: ctx.i18n?.locale || language || 'en',
       })
     }

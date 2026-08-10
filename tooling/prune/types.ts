@@ -29,9 +29,18 @@
  * - `start/{routes,events,nav,dashboard,container,transmit,sitemap}.ts` —
  *   startup composition: each registers domain contributors, and a flavor
  *   rewrites the file to drop the registrations of pruned domains.
+ * - `start/asset_middleware.ts` — the server middleware for the view-layer
+ *   asset pipeline (Vite + Inertia); the `api` flavor rewrites it to `[]`.
+ * - `config/cors.ts` — CORS policy; the `api` flavor makes it an explicit
+ *   env-driven allowlist (essential for a token-guarded REST backend).
  * - `start/env.ts` — environment validation; a flavor drops the variables of
- *   its pruned domains (e.g. the CMS content-policy vars).
+ *   its pruned domains (e.g. the CMS content-policy vars) and adds its own.
  * - `.env.example` — the environment template mirrors the kept variables.
+ * - `package.json` — scripts referencing pruned tooling (e.g. the Inertia
+ *   typecheck, front Vitest) are removed; dependency maps are pruned through
+ *   the manifest's `dependencies` field.
+ * - `tsconfig.json` — a flavor that prunes the Inertia tree drops the
+ *   project reference (`tsconfig.inertia.json`) and the `jsx` setting.
  * - `README.md` — flavor-specific rewrite documenting its conventions.
  */
 export const REWRITE_ALLOWLIST = [
@@ -39,6 +48,7 @@ export const REWRITE_ALLOWLIST = [
   'config/features.ts',
   'config/database.ts',
   'config/shield.ts',
+  'config/cors.ts',
   'start/routes.ts',
   'start/events.ts',
   'start/nav.ts',
@@ -46,8 +56,11 @@ export const REWRITE_ALLOWLIST = [
   'start/container.ts',
   'start/transmit.ts',
   'start/sitemap.ts',
+  'start/asset_middleware.ts',
   'start/env.ts',
   '.env.example',
+  'package.json',
+  'tsconfig.json',
   'README.md',
 ] as const
 

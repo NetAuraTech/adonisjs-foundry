@@ -1111,7 +1111,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/api/page_revisions_api_controller').default['toggle']>>>
     }
   }
-  'api.v1.admin.pages_preview.token': {
+  'api.v1.admin.pages_preview_token.token': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/admin/pages/preview/token'
     types: {
@@ -1119,8 +1119,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_preview_controller').default['token']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/admin/pages_preview_controller').default['token']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/api/pages_preview_token_controller').default['token']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/api/pages_preview_token_controller').default['token']>>>
     }
   }
   'api.v1.admin.files_api.index': {
@@ -1339,7 +1339,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/api/templates_controller').default['createFromPage']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
-  'api.v1.admin.templates_preview.token': {
+  'api.v1.admin.templates_preview_token.token': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/admin/templates/preview/token'
     types: {
@@ -1347,8 +1347,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_preview_controller').default['token']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/admin/templates_preview_controller').default['token']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/template/api/templates_preview_token_controller').default['token']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/template/api/templates_preview_token_controller').default['token']>>>
     }
   }
   'api.v1.admin.builder_operations.execute': {

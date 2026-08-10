@@ -3,7 +3,7 @@ import type UserRegistered from '#events/auth/user_registered'
 import AuthNotification from '#mails/auth/auth_notification'
 import { TOKEN_TYPES } from '#types/core'
 import env from '#start/env'
-import { urlFor } from '@adonisjs/core/services/url_builder'
+import { routePath } from '#helpers/router/route_path'
 import i18nManager from '@adonisjs/i18n/services/main'
 import { MailService } from '#services/mails/mail_service'
 import { GetPreferencesAction } from '#actions/preferences/get_preferences_action'
@@ -30,9 +30,11 @@ export default class SendVerificationEmail extends BaseTokenListener {
     token: string
   ): Record<string, any> {
     return {
-      verification_link: `${env.get('APP_URL')}${urlFor('auth.email_verification.execute', {
-        token,
-      })}`,
+      verification_link: `${env.get('APP_URL')}${
+        routePath('auth.email_verification.execute', { token }) ??
+        routePath('api.v1.auth.email_verification_api.store', { token }) ??
+        ''
+      }`,
     }
   }
 
