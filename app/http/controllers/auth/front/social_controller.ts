@@ -11,6 +11,8 @@ import { FindOrCreateSocialUserAction } from '#actions/social/find_or_create_soc
 import { LinkSocialProviderAction } from '#actions/social/link_social_provider_action'
 import { UnlinkSocialProviderAction } from '#actions/social/unlink_social_provider_action'
 import { NeedsPasswordSetupAction } from '#actions/social/needs_password_setup_action'
+import { SocialApiLoginAction } from '#actions/social/social_api_login_action'
+import { completeSocialApiCallback } from '#helpers/auth/social_api_callback'
 
 @inject()
 export default class SocialController {
@@ -20,15 +22,23 @@ export default class SocialController {
     protected findOrCreateSocialUserAction: FindOrCreateSocialUserAction,
     protected linkSocialProviderAction: LinkSocialProviderAction,
     protected unlinkSocialProviderAction: UnlinkSocialProviderAction,
-    protected needsPasswordSetupAction: NeedsPasswordSetupAction
+    protected needsPasswordSetupAction: NeedsPasswordSetupAction,
+    protected socialApiLoginAction: SocialApiLoginAction
   ) {}
 
   async redirect(ctx: HttpContext) {
-    const { ally, params } = ctx
+    const { ally, params, request, session } = ctx
 
     const provider = params.provider as OAuthProvider
 
     validateProvider(provider)
+
+    // API mode: the callback issues an API token and redirects to the
+    // configured client URL instead of creating a session. Intent is carried
+    // through the provider round-trip in the session.
+    if (request.input('mode') === 'api') {
+      session.put('oauth.api_mode', true)
+    }
 
     return ally.use(provider).redirect()
   }
@@ -39,6 +49,11 @@ export default class SocialController {
     const provider = params.provider as OAuthProvider
 
     validateProvider(provider)
+
+    // API mode (spec #6): issue an API token and redirect to the client URL.
+    if (session.pull('oauth.api_mode') === true) {
+      return completeSocialApiCallback(ctx, provider, this.socialApiLoginAction)
+    }
 
     const providerInstance = ally.use(provider)
 

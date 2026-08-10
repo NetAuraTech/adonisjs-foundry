@@ -20,5 +20,6 @@
   "E_MISSING_REVISION": "Revision {revisionId} not found.",
   "E_MAINTENANCE": "The site is currently down for maintenance. Please try again in {retryAfter} minutes.",
   "E_SYSTEM_ROLE_IMMUTABLE": "The system role \"{slug}\" cannot be modified or deleted.",
-  "E_SYSTEM_PERMISSION_IMMUTABLE": "The system permission \"{slug}\" cannot be modified or deleted."
+  "E_SYSTEM_PERMISSION_IMMUTABLE": "The system permission \"{slug}\" cannot be modified or deleted.",
+  "E_API_CLIENT_URL_MISSING": "AUTH_API_CLIENT_URL is not configured but is required for OAuth API mode."
 }

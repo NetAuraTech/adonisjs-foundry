@@ -19,6 +19,9 @@ export default class RegisterApiController {
     protected sendEmailVerificationAction: SendEmailVerificationAction
   ) {}
 
+  /**
+   * Register a new user and dispatch the email-verification flow.
+   */
   async store(ctx: HttpContext) {
     const { request, response, serialize } = ctx
 

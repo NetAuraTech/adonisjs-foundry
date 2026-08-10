@@ -20,5 +20,6 @@
   "E_MISSING_REVISION": "La révision {revisionId} est introuvable.",
   "E_MAINTENANCE": "Le site est actuellement en maintenance. Veuillez réessayer dans {retryAfter} minutes.",
   "E_SYSTEM_ROLE_IMMUTABLE": "Le rôle système \"{slug}\" ne peut pas être modifié ou supprimé.",
-  "E_SYSTEM_PERMISSION_IMMUTABLE": "La permission système \"{slug}\" ne peut pas être modifiée ou supprimée."
+  "E_SYSTEM_PERMISSION_IMMUTABLE": "La permission système \"{slug}\" ne peut pas être modifiée ou supprimée.",
+  "E_API_CLIENT_URL_MISSING": "AUTH_API_CLIENT_URL n'est pas configuré alors qu'il est requis pour le mode API OAuth."
 }

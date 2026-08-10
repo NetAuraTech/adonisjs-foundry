@@ -251,6 +251,7 @@ test.group('Exceptions', () => {
       'E_FILE_NOT_FOUND',
       'E_INVALID_EXTENSION',
       'E_MAINTENANCE',
+      'E_API_CLIENT_URL_MISSING',
     ]
 
     const langDir = path.join(process.cwd(), 'resources/lang')

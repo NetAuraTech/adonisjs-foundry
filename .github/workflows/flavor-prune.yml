@@ -17,6 +17,51 @@ permissions:
   contents: write
 
 jobs:
+  # ─── Stage 0: main gates must pass before any flavor is regenerated ─────
+  # Spec #4 requires "only after main's own gates pass, so that broken code is
+  # never propagated into flavors". ci.yml gates `main` on every push, but it
+  # runs in parallel with this workflow — so this job polls the CI workflow
+  # conclusion for the pushed SHA and blocks regeneration until it succeeds.
+  main-gates:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+    steps:
+      - name: Wait for the CI workflow to pass on main
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner
+            const repo = context.repo.repo
+            const sha = context.sha
+
+            for (let attempt = 0; attempt < 60; attempt++) {
+              const { data } = await github.rest.actions.listWorkflowRunsForRepo({
+                owner,
+                repo,
+                workflow_id: 'ci.yml',
+                head_sha: sha,
+                per_page: 1,
+              })
+
+              const run = data.workflow_runs[0]
+              if (run && run.status === 'completed') {
+                if (run.conclusion === 'success') {
+                  console.log(`CI workflow ${run.id} passed for ${sha}`)
+                  return
+                }
+                core.setFailed(
+                  `CI workflow ${run.id} concluded with "${run.conclusion}" for ${sha} — ` +
+                    'broken main must not regenerate flavor branches.'
+                )
+                return
+              }
+
+              await new Promise((resolve) => setTimeout(resolve, 15000))
+            }
+
+            core.setFailed(`Timed out waiting for the CI workflow to conclude for ${sha}.`)
+
   # ─── Stage 1: discover flavor manifests present on main ───────────────────
   # Builds the matrix of flavors to regenerate from the manifest files in
   # tooling/prune/flavors/. Issues #5 and #8 will drop `inertia.manifest.ts`
@@ -26,6 +71,7 @@ jobs:
   # subset here. The prune-flavor job below gates the pruned tree itself.
   discover-flavors:
     runs-on: ubuntu-latest
+    needs: main-gates
     outputs:
       flavors: ${{ steps.list.outputs.flavors }}
       empty: ${{ steps.list.outputs.empty }}

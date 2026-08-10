@@ -13,7 +13,7 @@ interface GetDashboardStatsPayload {
 const DEFAULT_RECENT_LIMIT = 5
 
 /**
- * Aggregate the CMS figures and recent activity shown on the admin dashboard.
+ * Aggregate the domain figures and recent activity shown on the admin dashboard.
  *
  * Orchestration only: the registered collectors (see {@link DashboardRegistry})
  * each compute their own domain section. All collectors run in parallel and

@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
 import UserTransformer from '#transformers/user_transformer'
+import { preloadUserRoleWithPermissions } from '#helpers/auth/load_user_role'
 
 /**
  * Identity endpoint of the REST API (`/api/v1/auth`).
@@ -17,11 +18,7 @@ export default class MeController {
   async show(ctx: HttpContext) {
     const user = ctx.auth.use('api').getUserOrFail()
 
-    await user.load((loader) => {
-      loader.load('role', (role) => {
-        role.preload('permissions')
-      })
-    })
+    await preloadUserRoleWithPermissions(user)
 
     return ctx.serialize(UserTransformer.transform(user))
   }
