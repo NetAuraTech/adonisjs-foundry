@@ -154,6 +154,28 @@ git merge foundry/main
 | `origin`  | `git@github.com:your-username/my-project.git`         | Your project repository          |
 | `foundry` | `https://github.com/NetAuraTech/adonisjs-foundry.git` | Upstream boilerplate (read-only) |
 
+### Flavors & branches
+
+This repository ships as **three flavor branches** — the same codebase, pruned to different surfaces. This README (on `main`) is the **`full`** flavor, the complete tree.
+
+| Flavor      | Branch    | Pitch                                                                   |
+| ----------- | --------- | ----------------------------------------------------------------------- |
+| **full**    | `main`    | Inertia front + admin, CMS module and visual page builder (this README) |
+| **inertia** | `inertia` | Hand-written Inertia front + admin, no CMS / page builder               |
+| **api**     | `api`     | Headless REST backend (`/api/v1/*`), no frontend                        |
+
+**Choosing a flavor:** want the CMS / visual builder → `full`. Want auth + admin + hand-written pages, no CMS → `inertia`. Want a headless backend consumed by an external front (Next.js, mobile, …) → `api`.
+
+**How to get a flavor:** flavor branches are regenerated branches of `main` — check them out directly and note each carries its own README describing its conventions:
+
+```bash
+git checkout -b inertia origin/inertia   # or: git checkout -b api origin/api
+```
+
+**Upgrading:** flavors are not one-way doors — every flavor branch is derived from `main`, so anything it removes is recoverable. Upgrading is a documented manual `git` process, the inverse of each flavor's prune manifest: see `docs/flavors/README.md` and the [`api` → `full`](docs/flavors/api/upgrade-to-full.md) / [`inertia` → `full`](docs/flavors/inertia/upgrade-to-full.md) guides.
+
+**How it works:** the `inertia` and `api` branches are CI-regenerated artifacts produced from `main` by the declarative prune manifests in `tooling/prune/flavors/` (see [ADR-010](docs/adr/010-flavor-prune-pipeline.md)). They are never edited by hand.
+
 ### Available Scripts
 
 | Script              | Description                     |

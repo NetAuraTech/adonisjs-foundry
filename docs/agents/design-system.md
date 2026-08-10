@@ -2,6 +2,8 @@
 
 Component library in `inertia/components/`, organized as Atomic Design (atoms → molecules → organisms). No `templates`/`pages` folders — page-level layout lives in `inertia/pages/`. No Storybook in this project; verification is via typecheck + manual checks in the running app.
 
+> **Flavor note:** this guide assumes a frontend tree. The `api` flavor ships no `inertia/` directory at all; the `cms/` subtree below is `full`-flavor only (the `inertia` flavor prunes it too).
+
 ## Sources
 
 - Atomic Design, chapter 1: design systems should move work away from isolated pages and toward systems of reusable components.

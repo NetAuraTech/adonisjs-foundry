@@ -2,6 +2,8 @@
 
 One action = one business operation. Lives in `app/domain/actions/{area}/{verb}_action.ts`. Owns a single use-case, delegates persistence to repositories, and exposes exactly one public method: `async execute(payload): Promise<T>`.
 
+> **CMS exception (ADR-0001):** CMS actions (page, template) live under `app/cms/domain/actions/{area}/`, imported via `#cms/domain/actions/...`. The layout above applies to everything outside the CMS module.
+
 ## Structure
 
 ```typescript
@@ -110,16 +112,17 @@ app/domain/actions/
   file/              # upload, move, delete files
   file_folder/       # create, rename, delete folders
   invitation/        # send, accept invitations
-  page/              # CRUD pages, translations, revisions
   password/          # reset password flow
   permission/        # list permissions (read-only)
   preferences/       # get, update user preferences
   profile/           # update user profile
   role/              # list roles (read-only)
   social/            # OAuth login, link/unlink providers
-  template/          # CRUD templates, apply to pages
   user/              # CRUD users, admin operations
 ```
+
+> **(full flavor)** CMS actions (page, template) live under `app/cms/domain/actions/{page,template}/`
+> — see the CMS module note at the top of this file.
 
 ## Documentation
 
