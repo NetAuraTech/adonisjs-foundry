@@ -15,14 +15,17 @@ The prunable vertical slice of content management — Page, Template, page build
 _Avoid_: back-office, admin panel (those are the Admin context, which survives every flavor)
 
 **Front**:
-The audience-facing shell context: controllers under `{domain}/front/`, Inertia pages under `{domain}/front/`. Covers public content rendering (Pages, Contact) and authenticated self-service screens (account, profile, preferences) — it is about _who the screen is for_, not about authentication.
+The audience-facing shell context: controllers under `{domain}/front/`, Inertia pages under `{domain}/front/`. Covers public content rendering (Pages, Contact) and authenticated self-service screens (account, profile, preferences) — it is about _who the screen is for_, not about authentication. Exists in the front flavors (full, inertia); the headless `api` flavor prunes the front context entirely.
 _Avoid_: Public (that is the exposure axis, below), website
 
 **Public**:
-The exposure axis: unauthenticated route modules and feature flags (`cms_public.routes.ts`, the future `publicApi` flag) — anything reachable without a session. Orthogonal to Front: a Public route serves the Front audience, but a Front screen may still require a session.
+The exposure axis: unauthenticated route modules and feature flags (`cms_public.routes.ts`, the future `publicApi` flag) — anything reachable without a session. Orthogonal to Front: a Public route serves the Front audience, but a Front screen may still require a session. (Front flavors — the headless `api` flavor has no public site routes.)
 _Avoid_: front, anonymous, guest
 
 ### Content
+
+> **(full flavor)** The terms below belong to the CMS module — Page, PageTranslation, PageRevision, Block and
+> Template are pruned from the `inertia` and `api` flavor branches.
 
 **Page**:
 A publishable unit in the CMS, identified by its `defaultLocale` and an optional homepage flag. A Page owns one or more PageTranslations and has no content of its own — all renderable content lives on its translations.
@@ -45,6 +48,9 @@ A reusable, saved Block tree — either a full `page` template (an entire layout
 _Avoid_: Layout, preset, snippet
 
 ### Collaboration (Page Builder)
+
+> **(full flavor)** The terms below belong to the CMS page builder — Builder Session, Lock and
+> Draft are pruned from the `inertia` and `api` flavor branches.
 
 **Builder Session**:
 A user's active editing presence on a specific PageTranslation, tracked in the cache (Redis) with a TTL, not in the database. Ends on disconnect or timeout.
