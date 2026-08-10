@@ -7,6 +7,11 @@
 | thin controller reusing the existing domain actions, validators, and
 | transformers — no business logic is duplicated with the Inertia admin.
 |
+| The CMS resources (`/api/v1/admin/pages`, `/templates`, `/builder`) are
+| registered separately from `start/routes/cms_rest_api.routes.ts` behind the
+| `cms` feature flag, so flavors that prune the page/template domain can
+| delete that module (and never reference CMS controllers here).
+|
 | Registered only when the `adminApi` feature flag is on and the `api`
 | access-token guard is enabled (see `config/auth.ts`).
 |
@@ -82,60 +87,6 @@ export function registerAdminRestApiRoutes(): void {
             })
             .prefix('roles')
 
-          if (features.cms) {
-            router
-              .group(() => {
-                router
-                  .get('/', [controllers.page.api.PagesApi, 'index'])
-                  .use([middleware.permission({ permissions: ['pages.view'] })])
-                router
-                  .post('/', [controllers.page.api.PagesCreateApi, 'store'])
-                  .use([middleware.permission({ permissions: ['pages.create'] })])
-                router
-                  .get('/:id', [controllers.page.api.PagesShowApi, 'show'])
-                  .use([middleware.permission({ permissions: ['pages.view'] })])
-                router
-                  .put('/:id', [controllers.page.api.PagesUpdateApi, 'update'])
-                  .use([middleware.permission({ permissions: ['pages.update'] })])
-                router
-                  .delete('/:id', [controllers.page.api.PagesDeleteApi, 'destroy'])
-                  .use([middleware.permission({ permissions: ['pages.delete'] })])
-                router
-                  .put('/:id/publish', [controllers.page.api.PagesUpdateApi, 'publish'])
-                  .use([middleware.permission({ permissions: ['pages.update'] })])
-                router
-                  .put('/:id/unpublish', [controllers.page.api.PagesUpdateApi, 'unpublish'])
-                  .use([middleware.permission({ permissions: ['pages.update'] })])
-                router
-                  .put('/:id/homepage', [controllers.page.api.PagesApi, 'setHomepage'])
-                  .use([middleware.permission({ permissions: ['pages.update'] })])
-                router
-                  .post('/:id/translations', [controllers.page.api.PageTranslationsApi, 'store'])
-                  .use([middleware.permission({ permissions: ['pages.update'] })])
-                router
-                  .group(() => {
-                    router
-                      .get('/', [controllers.page.api.PageRevisionsApi, 'index'])
-                      .use([middleware.permission({ permissions: ['pages.view'] })])
-                    router
-                      .post('/:revisionId/restore', [
-                        controllers.page.api.PageRevisionsApi,
-                        'restore',
-                      ])
-                      .use([middleware.permission({ permissions: ['pages.update'] })])
-                    router
-                      .put('/:revisionId/pin', [controllers.page.api.PageRevisionsApi, 'toggle'])
-                      .use([middleware.permission({ permissions: ['pages.update'] })])
-                  })
-                  .prefix('/:id/translations/:translationId/revisions')
-
-                router
-                  .get('/preview/token', [controllers.page.api.PagesPreviewToken, 'token'])
-                  .use([middleware.permission({ permissions: ['pages.update'] })])
-              })
-              .prefix('pages')
-          }
-
           router
             .group(() => {
               router
@@ -184,53 +135,6 @@ export function registerAdminRestApiRoutes(): void {
                 .use([middleware.permission({ permissions: ['folders.delete'] })])
             })
             .prefix('folders')
-
-          if (features.cms) {
-            router
-              .group(() => {
-                router
-                  .get('/', [controllers.template.api.Templates, 'index'])
-                  .use([middleware.permission({ permissions: ['templates.view'] })])
-                router
-                  .post('/', [controllers.template.api.Templates, 'store'])
-                  .use([middleware.permission({ permissions: ['templates.create'] })])
-                router
-                  .put('/:id', [controllers.template.api.Templates, 'update'])
-                  .use([middleware.permission({ permissions: ['templates.update'] })])
-                router
-                  .delete('/:id', [controllers.template.api.Templates, 'destroy'])
-                  .use([middleware.permission({ permissions: ['templates.delete'] })])
-                router
-                  .post('/from-page', [controllers.template.api.Templates, 'createFromPage'])
-                  .use([middleware.permission({ permissions: ['templates.create'] })])
-                router
-                  .get('/preview/token', [controllers.template.api.TemplatesPreviewToken, 'token'])
-                  .use([middleware.permission({ permissions: ['templates.view'] })])
-              })
-              .prefix('templates')
-          }
-
-          if (features.cms) {
-            router
-              .group(() => {
-                router
-                  .post('/operations', [controllers.page.api.BuilderOperations, 'execute'])
-                  .use([middleware.permission({ permissions: ['pages.update'] })])
-                router
-                  .get('/presence/:translationId', [
-                    controllers.page.api.BuilderOperations,
-                    'presence',
-                  ])
-                  .use([middleware.permission({ permissions: ['pages.update'] })])
-                router
-                  .post('/draft/:translationId', [
-                    controllers.page.api.BuilderOperations,
-                    'saveDraft',
-                  ])
-                  .use([middleware.permission({ permissions: ['pages.update'] })])
-              })
-              .prefix('builder')
-          }
 
           router
             .group(() => {
