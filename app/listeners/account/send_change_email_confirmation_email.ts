@@ -3,7 +3,7 @@ import type InitiateEmailChange from '#events/account/initiate_email_change'
 import AccountNotification from '#mails/account/account_notification'
 import { TOKEN_TYPES } from '#types/core'
 import env from '#start/env'
-import { urlFor } from '@adonisjs/core/services/url_builder'
+import { routePath } from '#helpers/router/route_path'
 import i18nManager from '@adonisjs/i18n/services/main'
 import { MailService } from '#services/mails/mail_service'
 import { GetPreferencesAction } from '#actions/preferences/get_preferences_action'
@@ -31,9 +31,9 @@ export default class SendChangeEmailConfirmationEmail extends BaseTokenListener 
   ): Record<string, any> {
     return {
       user: { email: event.user.pendingEmail!, locale },
-      confirmation_link: `${env.get('APP_URL')}${urlFor('settings.email_change.render', {
-        token,
-      })}`,
+      confirmation_link: `${env.get('APP_URL')}${
+        routePath('settings.email_change.render', { token }) ?? ''
+      }`,
     }
   }
 

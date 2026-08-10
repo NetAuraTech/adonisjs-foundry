@@ -130,7 +130,7 @@ export function registerAdminRestApiRoutes(): void {
                   .prefix('/:id/translations/:translationId/revisions')
 
                 router
-                  .get('/preview/token', [controllers.page.admin.PagesPreview, 'token'])
+                  .get('/preview/token', [controllers.page.api.PagesPreviewToken, 'token'])
                   .use([middleware.permission({ permissions: ['pages.update'] })])
               })
               .prefix('pages')
@@ -204,7 +204,7 @@ export function registerAdminRestApiRoutes(): void {
                   .post('/from-page', [controllers.template.api.Templates, 'createFromPage'])
                   .use([middleware.permission({ permissions: ['templates.create'] })])
                 router
-                  .get('/preview/token', [controllers.template.admin.TemplatesPreview, 'token'])
+                  .get('/preview/token', [controllers.template.api.TemplatesPreviewToken, 'token'])
                   .use([middleware.permission({ permissions: ['templates.view'] })])
               })
               .prefix('templates')

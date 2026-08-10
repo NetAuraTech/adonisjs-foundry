@@ -558,11 +558,11 @@ const routes = {
     tokens: [{"old":"/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/pin","type":0,"val":"api","end":""},{"old":"/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/pin","type":0,"val":"v1","end":""},{"old":"/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/pin","type":0,"val":"admin","end":""},{"old":"/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/pin","type":0,"val":"pages","end":""},{"old":"/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/pin","type":1,"val":"id","end":""},{"old":"/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/pin","type":0,"val":"translations","end":""},{"old":"/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/pin","type":1,"val":"translationId","end":""},{"old":"/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/pin","type":0,"val":"revisions","end":""},{"old":"/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/pin","type":1,"val":"revisionId","end":""},{"old":"/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/pin","type":0,"val":"pin","end":""}],
     types: placeholder as Registry['api.v1.admin.page_revisions_api.toggle']['types'],
   },
-  'api.v1.admin.pages_preview.token': {
+  'api.v1.admin.pages_preview_token.token': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/admin/pages/preview/token',
     tokens: [{"old":"/api/v1/admin/pages/preview/token","type":0,"val":"api","end":""},{"old":"/api/v1/admin/pages/preview/token","type":0,"val":"v1","end":""},{"old":"/api/v1/admin/pages/preview/token","type":0,"val":"admin","end":""},{"old":"/api/v1/admin/pages/preview/token","type":0,"val":"pages","end":""},{"old":"/api/v1/admin/pages/preview/token","type":0,"val":"preview","end":""},{"old":"/api/v1/admin/pages/preview/token","type":0,"val":"token","end":""}],
-    types: placeholder as Registry['api.v1.admin.pages_preview.token']['types'],
+    types: placeholder as Registry['api.v1.admin.pages_preview_token.token']['types'],
   },
   'api.v1.admin.files_api.index': {
     methods: ["GET","HEAD"],
@@ -672,11 +672,11 @@ const routes = {
     tokens: [{"old":"/api/v1/admin/templates/from-page","type":0,"val":"api","end":""},{"old":"/api/v1/admin/templates/from-page","type":0,"val":"v1","end":""},{"old":"/api/v1/admin/templates/from-page","type":0,"val":"admin","end":""},{"old":"/api/v1/admin/templates/from-page","type":0,"val":"templates","end":""},{"old":"/api/v1/admin/templates/from-page","type":0,"val":"from-page","end":""}],
     types: placeholder as Registry['api.v1.admin.templates.create_from_page']['types'],
   },
-  'api.v1.admin.templates_preview.token': {
+  'api.v1.admin.templates_preview_token.token': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/admin/templates/preview/token',
     tokens: [{"old":"/api/v1/admin/templates/preview/token","type":0,"val":"api","end":""},{"old":"/api/v1/admin/templates/preview/token","type":0,"val":"v1","end":""},{"old":"/api/v1/admin/templates/preview/token","type":0,"val":"admin","end":""},{"old":"/api/v1/admin/templates/preview/token","type":0,"val":"templates","end":""},{"old":"/api/v1/admin/templates/preview/token","type":0,"val":"preview","end":""},{"old":"/api/v1/admin/templates/preview/token","type":0,"val":"token","end":""}],
-    types: placeholder as Registry['api.v1.admin.templates_preview.token']['types'],
+    types: placeholder as Registry['api.v1.admin.templates_preview_token.token']['types'],
   },
   'api.v1.admin.builder_operations.execute': {
     methods: ["POST"],

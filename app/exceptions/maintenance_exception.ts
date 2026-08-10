@@ -4,6 +4,19 @@ import app from '@adonisjs/core/services/app'
 import { I18nService } from '#services/i18n_service'
 import { buildMaintenanceIndexPayload } from '#helpers/i18n_payloads/maintenance_index'
 
+/**
+ * Minimal shape of the Inertia view context the `@adonisjs/inertia`
+ * middleware injects into `HttpContext`. Declared locally (rather than
+ * relying on the package's type augmentation) so this exception still
+ * type-checks in flavors where the whole Inertia stack is pruned — the
+ * presence of `ctx.inertia` is detected at runtime instead.
+ */
+interface InertiaViewContext {
+  inertia?: {
+    render(page: string, data?: Record<string, unknown>): Promise<string>
+  }
+}
+
 export default class MaintenanceException extends Exception {
   static status = 503
   static code = 'E_MAINTENANCE'
@@ -16,9 +29,13 @@ export default class MaintenanceException extends Exception {
   }
 
   async handle(error: this, ctx: HttpContext) {
-    const { request, response, inertia, i18n } = ctx
+    const { request, response, i18n } = ctx
 
-    if (request.wantsJSON() || request.url().startsWith('/api/')) {
+    const inertiaView = (ctx as unknown as InertiaViewContext).inertia
+
+    // JSON API clients, `/api/*` requests, and headless flavors (no Inertia
+    // context) always receive a JSON body.
+    if (request.wantsJSON() || request.url().startsWith('/api/') || !inertiaView) {
       return response.status(503).send({
         error: {
           code: error.code,
@@ -35,7 +52,7 @@ export default class MaintenanceException extends Exception {
     // Render Inertia maintenance page — explicitly write to response because the exception
     // handler pipeline discards the return value from handle(); it only works for statusPages
     // renderers where ExceptionHandler internally calls response.send() with the result.
-    const html = await inertia.render('maintenance/front/index', {
+    const html = await inertiaView.render('maintenance/front/index', {
       message: error.message,
       retryAfter: error.retryAfter,
       redirectPath: request.url(),

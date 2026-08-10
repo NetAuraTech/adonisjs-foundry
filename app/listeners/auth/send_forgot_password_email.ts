@@ -3,7 +3,7 @@ import type ForgotPassword from '#events/auth/forgot_password'
 import AuthNotification from '#mails/auth/auth_notification'
 import { TOKEN_TYPES } from '#types/core'
 import env from '#start/env'
-import { urlFor } from '@adonisjs/core/services/url_builder'
+import { routePath } from '#helpers/router/route_path'
 import i18nManager from '@adonisjs/i18n/services/main'
 import { MailService } from '#services/mails/mail_service'
 import { GetPreferencesAction } from '#actions/preferences/get_preferences_action'
@@ -30,7 +30,11 @@ export default class SendForgotPasswordEmail extends BaseTokenListener {
     token: string
   ): Record<string, any> {
     return {
-      reset_link: `${env.get('APP_URL')}${urlFor('auth.reset_password.render', { token })}`,
+      reset_link: `${env.get('APP_URL')}${
+        routePath('auth.reset_password.render', { token }) ??
+        routePath('api.v1.auth.reset_password_api.store', { token }) ??
+        ''
+      }`,
     }
   }
 
