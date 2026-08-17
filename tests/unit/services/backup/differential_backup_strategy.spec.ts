@@ -38,8 +38,8 @@ test.group('DifferentialBackupStrategy', (group) => {
       .returns('backup-full-2024.sql.gz.enc')
     sinon.stub(snapshotModule.SnapshotHelper, 'manifestFilename').returns('m.manifest.json')
 
-    // Mock FullBackupStrategy.execute so the fallback path resolves cleanly
-    const fullModule = await import('#services/backup/full_backup_strategy')
+    // Mock BackupPipeline.executeFullBackup so the fallback path resolves cleanly
+    const pipelineModule = await import('#services/backup/backup_pipeline')
     const fullExecuteStub = sinon.stub().resolves({
       success: true,
       filename: 'backup-full-2024.sql.gz.enc',
@@ -48,7 +48,9 @@ test.group('DifferentialBackupStrategy', (group) => {
       duration: 500,
       storage: 'fs',
     })
-    sinon.stub(fullModule.FullBackupStrategy.prototype, 'execute').callsFake(fullExecuteStub)
+    sinon
+      .stub(pipelineModule.BackupPipeline.prototype, 'executeFullBackup')
+      .callsFake(fullExecuteStub)
 
     const context = {
       tempDir: '/tmp/backups',

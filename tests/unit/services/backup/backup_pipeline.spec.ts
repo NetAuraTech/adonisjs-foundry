@@ -245,4 +245,115 @@ test.group('BackupPipeline', (group) => {
     assert.equal(result.duration, 42)
     assert.isFalse('error' in result)
   })
+
+  // ─── executeFullBackup() ─────────────────────────────────────────────────
+  //
+  // Coverage migrated from the retired FullBackupStrategy spec: full backups
+  // run end to end through the pipeline without a dedicated strategy module.
+
+  test('executeFullBackup() runs dump, compress, encrypt, upload and manifest', async ({
+    assert,
+  }) => {
+    const logService = buildLogService()
+    const overrides = buildOverrides()
+
+    const dbModule = await import('@adonisjs/lucid/services/db')
+    sinon.stub(dbModule.default, 'connection').returns({
+      rawQuery: sinon.stub().resolves({
+        rows: [{ tablename: 'users' }, { tablename: 'posts' }],
+      }),
+    } as any)
+    const snapshotModule = await import('#services/backup/snapshot_helper')
+    sinon.stub(snapshotModule.SnapshotHelper, 'manifestFilename').returns(manifestName)
+
+    const { BackupPipeline } = await import('#services/backup/backup_pipeline')
+    const pipeline = new BackupPipeline(context, logService, overrides)
+
+    const result = await pipeline.executeFullBackup()
+
+    assert.isTrue(result.success)
+    assert.equal(result.filename, context.filename)
+    assert.equal(result.type, 'full')
+    assert.equal(result.size, 2048)
+    assert.isNumber(result.duration)
+    // Whole-database dump (no tables restriction) of the pipeline's dump path
+    const dumpOptions = overrides._createDatabaseDump.firstCall.args[0]
+    assert.equal(dumpOptions.outputPath, join('/tmp/backups', 'backup-full-2024-01-01-020000.sql'))
+    assert.isUndefined(dumpOptions.tables)
+    assert.isTrue(
+      overrides._snapshotHelper.compress.calledBefore(overrides._snapshotHelper.encrypt)
+    )
+    // The artifact is uploaded before the manifest lists the dumped tables
+    assert.deepEqual(JSON.parse(overrides._writeFile.firstCall.args[1]), {
+      tables: ['users', 'posts'],
+    })
+    const successLog = logService.info.getCall(1)
+    assert.equal(successLog.args[0].message, 'Backup completed successfully')
+    assert.equal(successLog.args[0].metadata.size, 2048)
+    // 1 explicit unlink (dump after compress) + cleanup of dump/compressed/encrypted/manifest
+    assert.equal(overrides._unlink.callCount, 5)
+  })
+
+  test('executeFullBackup() uploads the encrypted artifact before the manifest', async ({
+    assert,
+  }) => {
+    const logService = buildLogService()
+    const overrides = buildOverrides()
+
+    const dbModule = await import('@adonisjs/lucid/services/db')
+    sinon.stub(dbModule.default, 'connection').returns({
+      rawQuery: sinon.stub().resolves({ rows: [{ tablename: 'users' }] }),
+    } as any)
+    const snapshotModule = await import('#services/backup/snapshot_helper')
+    sinon.stub(snapshotModule.SnapshotHelper, 'manifestFilename').returns(manifestName)
+
+    const { BackupPipeline } = await import('#services/backup/backup_pipeline')
+    const pipeline = new BackupPipeline(context, logService, overrides)
+
+    await pipeline.executeFullBackup()
+
+    const uploadStub = overrides._uploader.upload
+    assert.equal(uploadStub.callCount, 2)
+    assert.equal(uploadStub.firstCall.args[0], '/tmp/backups/x.sql.gz.enc')
+    assert.equal(uploadStub.firstCall.args[1], context.filename)
+    assert.equal(uploadStub.secondCall.args[0], join('/tmp/backups', manifestName))
+    assert.equal(uploadStub.secondCall.args[1], manifestName)
+    assert.isTrue(uploadStub.firstCall.calledBefore(uploadStub.secondCall))
+  })
+
+  test('executeFullBackup() converts a step failure into a logged failure result', async ({
+    assert,
+  }) => {
+    const logService = buildLogService()
+    const overrides = buildOverrides()
+    // Make mkdir throw to trigger the error path before any file is created
+    overrides._mkdir = sinon.stub().rejects(new Error('Permission denied'))
+
+    const { BackupPipeline } = await import('#services/backup/backup_pipeline')
+    const pipeline = new BackupPipeline(context, logService, overrides)
+
+    const result = await pipeline.executeFullBackup()
+
+    assert.isFalse(result.success)
+    assert.equal(result.type, 'full')
+    assert.equal(result.size, 0)
+    assert.include(result.error, 'Permission denied')
+    assert.isTrue(logService.error.calledOnce)
+  })
+
+  test('executeFullBackup() cleans up partial temp files on failure', async ({ assert }) => {
+    const logService = buildLogService()
+    const overrides = buildOverrides()
+    // Encryption fails after the dump was compressed
+    overrides._snapshotHelper.encrypt = sinon.stub().rejects(new Error('Encryption failed'))
+
+    const { BackupPipeline } = await import('#services/backup/backup_pipeline')
+    const pipeline = new BackupPipeline(context, logService, overrides)
+
+    const result = await pipeline.executeFullBackup()
+
+    assert.isFalse(result.success)
+    // 1 explicit unlink (dump after compress) + cleanup removes tracked dump/compressed
+    assert.equal(overrides._unlink.callCount, 3)
+  })
 })

@@ -2,11 +2,14 @@ import { DateTime } from 'luxon'
 import backupConfig from '#config/backup'
 import { type LogService } from '#services/logging/log_service'
 import { SnapshotHelper } from '#services/backup/snapshot_helper'
+import { BackupPipeline } from '#services/backup/backup_pipeline'
 import type { BackupResult, BackupContext } from '#services/backup/backup_strategy'
 
 /**
  * BackupEngine — Orchestrates backup execution by selecting the appropriate
- * strategy, building the context, and delegating to it.
+ * execution path, building the context, and delegating to it: full backups
+ * run through the shared {@link BackupPipeline} directly, differential
+ * backups through their strategy.
  *
  * Non-DI class: imported and instantiated directly, no @inject().
  */
@@ -27,12 +30,12 @@ export class BackupEngine {
   }
 
   /**
-   * Execute the backup using the selected strategy.
+   * Execute the backup through the selected path: the shared pipeline for
+   * full backups, the differential strategy otherwise.
    */
   async execute(): Promise<BackupResult> {
     if (this.context.strategyType === 'full') {
-      const { FullBackupStrategy } = await import('#services/backup/full_backup_strategy')
-      return new FullBackupStrategy(this.context, this.logService).execute()
+      return new BackupPipeline(this.context, this.logService).executeFullBackup()
     }
 
     const { DifferentialBackupStrategy } =

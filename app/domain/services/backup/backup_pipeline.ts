@@ -45,12 +45,12 @@ export interface BackupPipelineOverrides {
 /**
  * BackupPipeline - shared plumbing for the backup strategies.
  *
- * Owns the dump, compress, encrypt, manifest, upload and cleanup steps that
- * were previously duplicated between `FullBackupStrategy` and
- * `DifferentialBackupStrategy`: temp-file tracking and cleanup,
- * result-object construction and pipeline logging. Strategies keep their own
- * decision logic (which tables to dump, fallbacks, skip conditions) and
- * delegate every I/O step to this pipeline.
+ * Owns the dump, compress, encrypt, manifest, upload and cleanup steps for
+ * every backup kind: temp-file tracking and cleanup, result-object
+ * construction and pipeline logging. Full backups run end to end through
+ * {@link executeFullBackup}; the differential strategy keeps its own decision
+ * logic (which tables to dump, fallbacks, skip conditions) and delegates
+ * every I/O step to this pipeline.
  *
  * Non-DI class: imported and instantiated directly, no @inject().
  *
@@ -134,6 +134,31 @@ export class BackupPipeline {
     } finally {
       await this.cleanupTemp()
     }
+  }
+
+  /**
+   * Execute a full backup end to end: dump every table, compress and
+   * encrypt the dump, upload the artifact, then persist a manifest listing
+   * the dumped tables.
+   *
+   * Entry point for full backups — the backup engine and the differential
+   * fallback both delegate here instead of a dedicated strategy module.
+   *
+   * @returns The {@link BackupResult} for the run.
+   */
+  async executeFullBackup(): Promise<BackupResult> {
+    return this.run(async (elapsed) => {
+      const dumpPath = this.dumpPath()
+      await this.dump(dumpPath)
+
+      const { encryptedPath, size } = await this.compressAndEncrypt(dumpPath)
+      await this.uploadBackup(encryptedPath)
+
+      const tables = await this.getAllTables()
+      await this.writeManifest({ tables })
+
+      return this.successResult(size, elapsed())
+    })
   }
 
   /**
@@ -241,6 +266,19 @@ export class BackupPipeline {
       duration,
       storage: backupConfig.storage.disk,
     }
+  }
+
+  /**
+   * List all tables in the `public` schema (persisted in the manifest by
+   * {@link executeFullBackup}).
+   */
+  private async getAllTables(): Promise<string[]> {
+    const db = await import('@adonisjs/lucid/services/db')
+    const connection = db.default.connection(backupConfig.database.connection)
+    const result = await connection.rawQuery(
+      `SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename`
+    )
+    return result.rows.map((row: any) => row.tablename)
   }
 
   /**
