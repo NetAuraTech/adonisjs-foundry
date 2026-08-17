@@ -1,0 +1,320 @@
+import {
+  mkdir as defaultMkdir,
+  stat as defaultStat,
+  unlink as defaultUnlink,
+  writeFile as defaultWriteFile,
+} from 'node:fs/promises'
+import { join } from 'node:path'
+import env from '#start/env'
+import backupConfig from '#config/backup'
+import { type LogService } from '#services/logging/log_service'
+import { LogCategory } from '#types/logging'
+import {
+  createDatabaseDump as defaultCreateDatabaseDump,
+  type DumpOptions,
+} from '#services/backup/dump_helper'
+import {
+  SnapshotHelper,
+  type SnapshotHelper as SnapshotHelperType,
+} from '#services/backup/snapshot_helper'
+import {
+  StorageUploader,
+  type StorageUploader as StorageUploaderType,
+} from '#services/backup/storage_uploader'
+import type { BackupResult, BackupContext } from '#services/backup/backup_strategy'
+
+/**
+ * Test-override dependency-injection bag for the backup pipeline.
+ *
+ * Declared exactly once here and shared by every strategy that delegates to
+ * {@link BackupPipeline}. Keys prefixed with `_` are internal: in production
+ * the bag is omitted and every dependency falls back to its real
+ * implementation; in tests, stubs replace the real functions so no ESM-level
+ * mocking is needed.
+ */
+export interface BackupPipelineOverrides {
+  _snapshotHelper?: SnapshotHelperType
+  _uploader?: StorageUploaderType
+  _mkdir?: typeof defaultMkdir
+  _stat?: typeof defaultStat
+  _unlink?: typeof defaultUnlink
+  _writeFile?: typeof defaultWriteFile
+  _createDatabaseDump?: (options: DumpOptions, _spawn?: any) => Promise<void>
+}
+
+/**
+ * BackupPipeline - shared plumbing for the backup strategies.
+ *
+ * Owns the dump, compress, encrypt, manifest, upload and cleanup steps that
+ * were previously duplicated between `FullBackupStrategy` and
+ * `DifferentialBackupStrategy`: temp-file tracking and cleanup,
+ * result-object construction and pipeline logging. Strategies keep their own
+ * decision logic (which tables to dump, fallbacks, skip conditions) and
+ * delegate every I/O step to this pipeline.
+ *
+ * Non-DI class: imported and instantiated directly, no @inject().
+ *
+ * **Dependency injection for testability**
+ *
+ * The optional `overrides` bag accepts dependencies prefixed with `_` to
+ * distinguish them from public API parameters. In production, the bag is
+ * never passed and each dependency falls back to its real implementation
+ * (e.g. `mkdir as defaultMkdir`). In tests, stubs replace the real functions
+ * so no ESM-level mocking is needed.
+ *
+ * @example Production usage
+ *   new BackupPipeline(context, logService)
+ *
+ * @example Test usage
+ *   new BackupPipeline(context, logService, {
+ *     _snapshotHelper: snapshotMock,
+ *     _mkdir: mkdirStub,
+ *   })
+ */
+export class BackupPipeline {
+  private readonly snapshotHelper: SnapshotHelperType
+  readonly storageUploader: StorageUploaderType
+  private readonly mkdirFn: typeof defaultMkdir
+  private readonly statFn: typeof defaultStat
+  private readonly unlinkFn: typeof defaultUnlink
+  private readonly writeFileFn: typeof defaultWriteFile
+  private readonly createDump: (options: DumpOptions, _spawn?: any) => Promise<void>
+  private readonly tempFiles: string[] = []
+
+  /**
+   * @param context - Backup execution context (temp dir, filename, strategy type).
+   * @param logService - Application logging service.
+   * @param overrides - Optional dependency overrides for testing (see
+   *   {@link BackupPipelineOverrides}).
+   */
+  constructor(
+    private readonly context: BackupContext,
+    private readonly logService: LogService,
+    overrides?: BackupPipelineOverrides
+  ) {
+    this.snapshotHelper = overrides?._snapshotHelper ?? new SnapshotHelper()
+    this.storageUploader = overrides?._uploader ?? new StorageUploader()
+    this.mkdirFn = overrides?._mkdir ?? defaultMkdir
+    this.statFn = overrides?._stat ?? defaultStat
+    this.unlinkFn = overrides?._unlink ?? defaultUnlink
+    this.writeFileFn = overrides?._writeFile ?? defaultWriteFile
+    this.createDump = overrides?._createDatabaseDump ?? defaultCreateDatabaseDump
+  }
+
+  /**
+   * Local path of the SQL dump for the pipeline's backup filename: the
+   * filename with its `.gz`/`.enc` extensions stripped down to `.sql`.
+   */
+  dumpPath(): string {
+    return join(this.context.tempDir, this.context.filename).replace(/\.(gz\.enc|enc|gz)$/, '.sql')
+  }
+
+  /**
+   * Run a strategy-specific pipeline body inside the shared envelope.
+   *
+   * Logs the start of the run, ensures the temp directory exists, executes
+   * the body with an `elapsed()` helper, turns any failure into a failure
+   * {@link BackupResult}, and always cleans up tracked temp files.
+   *
+   * @param body - Strategy-specific steps (dump, manifest, upload, ...).
+   *   Receives `elapsed()` returning the milliseconds spent so far.
+   * @returns The {@link BackupResult} built by the body on success, or a
+   *   failure result when the body throws.
+   */
+  async run(body: (elapsed: () => number) => Promise<BackupResult>): Promise<BackupResult> {
+    const startTime = Date.now()
+    this.logStart()
+
+    try {
+      await this.ensureTempDir()
+
+      return await body(() => Date.now() - startTime)
+    } catch (error) {
+      return this.failureResult(error, Date.now() - startTime)
+    } finally {
+      await this.cleanupTemp()
+    }
+  }
+
+  /**
+   * Execute `pg_dump` into the given output path, tracking the produced file
+   * for cleanup.
+   *
+   * @param outputPath - Local path to write the SQL dump to.
+   * @param tables - Optional tables to limit the dump to (differential backups).
+   */
+  async dump(outputPath: string, tables?: string[]): Promise<void> {
+    this.track(outputPath)
+    await this.createDump({
+      host: env.get('PG_HOST')!,
+      port: Number(env.get('PG_PORT') || 5432),
+      user: env.get('PG_USER')!,
+      database: env.get('PG_DB_NAME')!,
+      password: env.get('PG_PASSWORD').release(),
+      outputPath,
+      tables,
+    })
+  }
+
+  /**
+   * Compress the SQL dump, encrypt it, and measure the resulting artifact.
+   *
+   * Tracks the compressed and final paths for cleanup and removes the raw
+   * dump once it has been compressed.
+   *
+   * @param dumpPath - Local path of the SQL dump produced by {@link dump}.
+   * @returns The final artifact path (encrypted when enabled, compressed
+   *   otherwise) and its size in bytes.
+   */
+  async compressAndEncrypt(dumpPath: string): Promise<{ encryptedPath: string; size: number }> {
+    const compressedPath = await this.snapshotHelper.compress(dumpPath)
+    this.track(compressedPath)
+    await this.unlinkFn(dumpPath)
+
+    const encryptedPath = await this.snapshotHelper.encrypt(compressedPath)
+    this.track(encryptedPath)
+
+    const { size } = await this.statFn(encryptedPath)
+    return { encryptedPath, size }
+  }
+
+  /**
+   * Upload the final backup artifact to storage under the pipeline's filename.
+   *
+   * @param finalPath - Local path of the artifact to upload.
+   */
+  uploadBackup(finalPath: string): Promise<void> {
+    return this.storageUploader.upload(finalPath, this.context.filename)
+  }
+
+  /**
+   * Serialize, write and upload the backup manifest, tracking it for cleanup.
+   *
+   * @param payload - Raw manifest content to persist as JSON.
+   * @returns The local path of the written manifest file.
+   */
+  async writeManifest(payload: object): Promise<string> {
+    const manifestFilename = SnapshotHelper.manifestFilename(this.context.filename)
+    const manifestPath = join(this.context.tempDir, manifestFilename)
+    await this.writeFileFn(manifestPath, JSON.stringify(payload, null, 2))
+    await this.storageUploader.upload(manifestPath, manifestFilename)
+    this.track(manifestPath)
+    return manifestPath
+  }
+
+  /**
+   * Build the success {@link BackupResult} for a completed backup and log the
+   * completion with size and duration metadata.
+   *
+   * @param size - Size in bytes of the uploaded artifact.
+   * @param duration - Pipeline duration in milliseconds.
+   */
+  successResult(size: number, duration: number): BackupResult {
+    this.logService.info({
+      message: 'Backup completed successfully',
+      category: LogCategory.SYSTEM,
+      metadata: { filename: this.context.filename, size, duration },
+    })
+
+    return {
+      success: true,
+      filename: this.context.filename,
+      type: this.context.strategyType,
+      size,
+      duration,
+      storage: backupConfig.storage.disk,
+    }
+  }
+
+  /**
+   * Build the success {@link BackupResult} for a run that produced no
+   * artifact (e.g. a differential backup skipped because nothing changed).
+   *
+   * @param duration - Pipeline duration in milliseconds.
+   */
+  noArtifactResult(duration: number): BackupResult {
+    return {
+      success: true,
+      filename: '',
+      type: this.context.strategyType,
+      size: 0,
+      duration,
+      storage: backupConfig.storage.disk,
+    }
+  }
+
+  /**
+   * Create the temp directory for the pipeline (recursively).
+   */
+  private async ensureTempDir(): Promise<void> {
+    await this.mkdirFn(this.context.tempDir, { recursive: true })
+  }
+
+  /**
+   * Track a temporary file for removal by {@link cleanupTemp}.
+   */
+  private track(path: string): void {
+    this.tempFiles.push(path)
+  }
+
+  /**
+   * Remove every tracked temp file, silently ignoring missing ones.
+   *
+   * Runs after success or failure alike: temp files must never leak out of
+   * a pipeline run.
+   */
+  private async cleanupTemp(): Promise<void> {
+    for (const path of this.tempFiles) {
+      try {
+        await this.unlinkFn(path)
+      } catch {
+        // File already gone - no-op
+      }
+    }
+  }
+
+  /**
+   * Log the start of a pipeline run.
+   */
+  private logStart(): void {
+    this.logService.info({
+      message: `Starting ${this.context.strategyType} backup`,
+      category: LogCategory.SYSTEM,
+      metadata: { filename: this.context.filename },
+    })
+  }
+
+  /**
+   * Build the failure {@link BackupResult} for a run that threw and log the
+   * failure.
+   *
+   * @param error - The error thrown by the pipeline body.
+   * @param duration - Pipeline duration in milliseconds.
+   */
+  private failureResult(error: any, duration: number): BackupResult {
+    this.logService.error({
+      message: `${this.strategyLabel} backup failed`,
+      category: LogCategory.SYSTEM,
+      error,
+      context: { filename: this.context.filename, duration },
+    })
+
+    return {
+      success: false,
+      filename: this.context.filename,
+      type: this.context.strategyType,
+      size: 0,
+      duration,
+      storage: backupConfig.storage.disk,
+      error: error.message,
+    }
+  }
+
+  /**
+   * Title-cased strategy label used in log messages
+   * ('Full' / 'Differential').
+   */
+  private get strategyLabel(): string {
+    return this.context.strategyType === 'full' ? 'Full' : 'Differential'
+  }
+}
