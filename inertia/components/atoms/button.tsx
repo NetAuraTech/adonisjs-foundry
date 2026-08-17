@@ -69,8 +69,7 @@ type ButtonNoRouteProps = ButtonBaseProps & {
 }
 
 type ButtonProps<R extends NonNullable<LinkProps['route']>> =
-  | ButtonRouteProps<R>
-  | ButtonNoRouteProps
+  ButtonRouteProps<R> | ButtonNoRouteProps
 
 export const variants = {
   primary: 'bg-primary text-ink-inverted hover:bg-primary-deep',

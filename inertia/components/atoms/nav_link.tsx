@@ -64,8 +64,7 @@ type NavLinkNoRouteProps = NavLinkBaseProps & {
 }
 
 type NavLinkProps<R extends NonNullable<LinkProps['route']>> =
-  | NavLinkRouteProps<R>
-  | NavLinkNoRouteProps
+  NavLinkRouteProps<R> | NavLinkNoRouteProps
 
 export const variants = {
   link: 'text-secondary hover:text-secondary-deep',

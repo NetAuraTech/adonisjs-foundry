@@ -1422,7 +1422,7 @@ const apiManifest: FlavorManifest = {
         '    "eslint": "^10.8.1",',
         '    "hot-hook": "^1.0.0",',
         '    "pino-pretty": "^13.1.3",',
-        '    "prettier": "^3.8.1",',
+        '    "prettier": "^3.9.6",',
         '    "typescript": "~5.9.3",',
         '    "vite": "^7.3.1",',
         '    "vitest": "^4.1.10",',
