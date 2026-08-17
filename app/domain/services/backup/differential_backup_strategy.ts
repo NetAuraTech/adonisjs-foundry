@@ -11,8 +11,9 @@ import type { BackupResult, BackupContext, BackupMetadata } from '#services/back
  * Pipeline: find last full backup -> detect modified tables -> pg_dump (tables only)
  * -> compress -> encrypt -> manifest -> upload.
  *
- * Falls back to FullBackupStrategy if no full backup exists. Skips entirely
- * if no tables have been modified since the last backup.
+ * Falls back to a full backup (run through the shared pipeline) if no full
+ * backup exists. Skips entirely if no tables have been modified since the
+ * last backup.
  *
  * I/O steps are delegated to the shared {@link BackupPipeline}; this
  * strategy keeps the differential decision logic: last full backup
@@ -43,11 +44,13 @@ export class DifferentialBackupStrategy {
    * @param logService - Application logging service.
    * @param opts - Optional dependency overrides for testing. Parameters prefixed
    * with `_` are internal — they replace real I/O with stubs in test environments.
+   *   Forwarded to the full pipeline when the strategy falls back to a full
+   *   backup.
    */
   constructor(
     private context: BackupContext,
     private logService: LogService,
-    opts?: BackupPipelineOverrides
+    private readonly opts?: BackupPipelineOverrides
   ) {
     this.pipeline = new BackupPipeline(context, logService, opts)
   }
@@ -71,8 +74,7 @@ export class DifferentialBackupStrategy {
           filename: SnapshotHelper.generateFilename('full'),
           strategyType: 'full',
         }
-        const { FullBackupStrategy } = await import('#services/backup/full_backup_strategy')
-        return new FullBackupStrategy(fullContext, this.logService).execute()
+        return new BackupPipeline(fullContext, this.logService, this.opts).executeFullBackup()
       }
 
       // Get tables modified since the last backup

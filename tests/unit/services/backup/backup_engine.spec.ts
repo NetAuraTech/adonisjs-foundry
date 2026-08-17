@@ -6,8 +6,9 @@ import { DateTime } from 'luxon'
  * Unit tests for `BackupEngine`.
  *
  * Tests the strategy selection logic (explicit vs auto mode) and verifies
- * that the engine delegates to the correct strategy. Strategy execution
- * itself is stubbed — each strategy has its own test file.
+ * that the engine delegates to the correct path. Full backup execution is
+ * stubbed at the BackupPipeline seam, the differential strategy at its
+ * execute() seam — each has its own test file.
  */
 test.group('BackupEngine', (group) => {
   group.each.teardown(() => {
@@ -16,7 +17,7 @@ test.group('BackupEngine', (group) => {
 
   // ─── Explicit full strategy ──────────────────────────────────────────────
 
-  test('execute() delegates to FullBackupStrategy when strategyType is "full"', async ({
+  test('execute() runs full backups through BackupPipeline when strategyType is "full"', async ({
     assert,
   }) => {
     const logService = { info: sinon.stub(), error: sinon.stub(), warn: sinon.stub() } as any
@@ -27,8 +28,8 @@ test.group('BackupEngine', (group) => {
       .stub(snapshotModule.SnapshotHelper, 'generateFilename')
       .returns('backup-full-2024-01-07-020000.sql.gz.enc')
 
-    // Mock FullBackupStrategy.execute
-    const fullModule = await import('#services/backup/full_backup_strategy')
+    // Mock BackupPipeline.executeFullBackup
+    const pipelineModule = await import('#services/backup/backup_pipeline')
     const executeStub = sinon.stub().resolves({
       success: true,
       filename: 'backup-full-2024-01-07-020000.sql.gz.enc',
@@ -37,7 +38,7 @@ test.group('BackupEngine', (group) => {
       duration: 500,
       storage: 'fs',
     })
-    sinon.stub(fullModule.FullBackupStrategy.prototype, 'execute').callsFake(executeStub)
+    sinon.stub(pipelineModule.BackupPipeline.prototype, 'executeFullBackup').callsFake(executeStub)
 
     const { BackupEngine } = await import('#services/backup/backup_engine')
     const engine = new BackupEngine('full', '/tmp/backups', logService)
@@ -98,7 +99,7 @@ test.group('BackupEngine', (group) => {
       .stub(snapshotModule.SnapshotHelper, 'generateFilename')
       .returns('backup-full-2024-01-07-020000.sql.gz.enc')
 
-    const fullModule = await import('#services/backup/full_backup_strategy')
+    const pipelineModule = await import('#services/backup/backup_pipeline')
     const executeStub = sinon.stub().resolves({
       success: true,
       filename: 'backup-full-2024-01-07-020000.sql.gz.enc',
@@ -107,7 +108,7 @@ test.group('BackupEngine', (group) => {
       duration: 500,
       storage: 'fs',
     })
-    sinon.stub(fullModule.FullBackupStrategy.prototype, 'execute').callsFake(executeStub)
+    sinon.stub(pipelineModule.BackupPipeline.prototype, 'executeFullBackup').callsFake(executeStub)
 
     const { BackupEngine } = await import('#services/backup/backup_engine')
     const engine = new BackupEngine('auto', '/tmp/backups', logService)
@@ -158,7 +159,7 @@ test.group('BackupEngine', (group) => {
       .stub(snapshotModule.SnapshotHelper, 'generateFilename')
       .returns('backup-full-2024-01-07-020000.sql.gz.enc')
 
-    const fullModule = await import('#services/backup/full_backup_strategy')
+    const pipelineModule = await import('#services/backup/backup_pipeline')
     const executeStub = sinon.stub().resolves({
       success: false,
       filename: 'backup-full-2024-01-07-020000.sql.gz.enc',
@@ -168,7 +169,7 @@ test.group('BackupEngine', (group) => {
       storage: 'fs',
       error: 'pg_dump failed',
     })
-    sinon.stub(fullModule.FullBackupStrategy.prototype, 'execute').callsFake(executeStub)
+    sinon.stub(pipelineModule.BackupPipeline.prototype, 'executeFullBackup').callsFake(executeStub)
 
     const { BackupEngine } = await import('#services/backup/backup_engine')
     const engine = new BackupEngine('full', '/tmp/backups', logService)
