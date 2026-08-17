@@ -308,13 +308,7 @@ export interface ButtonProps {
   anchor?: string
   url?: string
   variant:
-    | 'primary'
-    | 'secondary'
-    | 'outline'
-    | 'danger'
-    | 'success'
-    | 'link_muted'
-    | 'link_secondary'
+    'primary' | 'secondary' | 'outline' | 'danger' | 'success' | 'link_muted' | 'link_secondary'
   size: 'sm' | 'md' | 'lg'
   align: 'left' | 'center' | 'right'
   fitContent: boolean

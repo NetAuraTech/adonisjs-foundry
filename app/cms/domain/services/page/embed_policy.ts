@@ -12,8 +12,7 @@ import type { VideoProvider } from '#cms/types/page'
  */
 
 export type VideoSource =
-  | { kind: 'embed'; provider: VideoProvider; embedUrl: string }
-  | { kind: 'file'; url: string }
+  { kind: 'embed'; provider: VideoProvider; embedUrl: string } | { kind: 'file'; url: string }
 
 const YOUTUBE_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/
 const VIMEO_ID_PATTERN = /^\d+$/
