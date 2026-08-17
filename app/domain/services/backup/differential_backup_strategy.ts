@@ -1,43 +1,30 @@
-import {
-  mkdir as defaultMkdir,
-  stat as defaultStat,
-  unlink as defaultUnlink,
-  writeFile as defaultWriteFile,
-} from 'node:fs/promises'
-import { join } from 'node:path'
-import env from '#start/env'
 import backupConfig from '#config/backup'
 import { type LogService } from '#services/logging/log_service'
 import { LogCategory } from '#types/logging'
-import {
-  createDatabaseDump as defaultCreateDatabaseDump,
-  type DumpOptions,
-} from '#services/backup/dump_helper'
-import {
-  SnapshotHelper,
-  type SnapshotHelper as SnapshotHelperType,
-} from '#services/backup/snapshot_helper'
-import {
-  StorageUploader,
-  type StorageUploader as StorageUploaderType,
-} from '#services/backup/storage_uploader'
+import { SnapshotHelper } from '#services/backup/snapshot_helper'
+import { BackupPipeline, type BackupPipelineOverrides } from '#services/backup/backup_pipeline'
 import type { BackupResult, BackupContext, BackupMetadata } from '#services/backup/backup_strategy'
 
 /**
- * DifferentialBackupStrategy — Executes a differential database backup.
+ * DifferentialBackupStrategy - Executes a differential database backup.
  *
- * Pipeline: find last full backup → detect modified tables → pg_dump (tables only)
- * → compress → encrypt → manifest → upload.
+ * Pipeline: find last full backup -> detect modified tables -> pg_dump (tables only)
+ * -> compress -> encrypt -> manifest -> upload.
  *
  * Falls back to FullBackupStrategy if no full backup exists. Skips entirely
  * if no tables have been modified since the last backup.
  *
+ * I/O steps are delegated to the shared {@link BackupPipeline}; this
+ * strategy keeps the differential decision logic: last full backup
+ * discovery, modified table detection, fallback and skip.
+ *
  * **Dependency injection for testability**
  *
- * The optional `opts` bag accepts dependencies prefixed with `_` to distinguish
- * them from public API parameters. In production, `opts` is never passed and each
- * dependency falls back to its real implementation (e.g. `mkdir as defaultMkdir`).
- * In tests, stubs replace the real functions so no ESM-level mocking is needed.
+ * The optional `opts` bag ({@link BackupPipelineOverrides}) accepts
+ * dependencies prefixed with `_` to distinguish them from public API
+ * parameters. In production, `opts` is never passed and each dependency
+ * falls back to its real implementation. In tests, stubs replace the real
+ * functions so no ESM-level mocking is needed.
  *
  * @example Production usage
  *   new DifferentialBackupStrategy(context, logService)
@@ -49,13 +36,7 @@ import type { BackupResult, BackupContext, BackupMetadata } from '#services/back
  *   })
  */
 export class DifferentialBackupStrategy {
-  private readonly snapshotHelper: SnapshotHelperType
-  private readonly uploader: StorageUploaderType
-  private readonly mkdirFn: typeof defaultMkdir
-  private readonly statFn: typeof defaultStat
-  private readonly unlinkFn: typeof defaultUnlink
-  private readonly writeFileFn: typeof defaultWriteFile
-  private readonly createDump: (options: DumpOptions, _spawn?: any) => Promise<void>
+  private readonly pipeline: BackupPipeline
 
   /**
    * @param context - Backup execution context (temp dir, filename, strategy type).
@@ -66,47 +47,24 @@ export class DifferentialBackupStrategy {
   constructor(
     private context: BackupContext,
     private logService: LogService,
-    opts?: {
-      _snapshotHelper?: SnapshotHelperType
-      _uploader?: StorageUploaderType
-      _mkdir?: typeof defaultMkdir
-      _stat?: typeof defaultStat
-      _unlink?: typeof defaultUnlink
-      _writeFile?: typeof defaultWriteFile
-      _createDatabaseDump?: (options: DumpOptions, _spawn?: any) => Promise<void>
-    }
+    opts?: BackupPipelineOverrides
   ) {
-    this.snapshotHelper = opts?._snapshotHelper ?? new SnapshotHelper()
-    this.uploader = opts?._uploader ?? new StorageUploader()
-    this.mkdirFn = opts?._mkdir ?? defaultMkdir
-    this.statFn = opts?._stat ?? defaultStat
-    this.unlinkFn = opts?._unlink ?? defaultUnlink
-    this.writeFileFn = opts?._writeFile ?? defaultWriteFile
-    this.createDump = opts?._createDatabaseDump ?? defaultCreateDatabaseDump
+    this.pipeline = new BackupPipeline(context, logService, opts)
   }
 
+  /**
+   * Execute the differential backup pipeline.
+   */
   async execute(): Promise<BackupResult> {
-    const startTime = Date.now()
-    const tempPath = join(this.context.tempDir, this.context.filename)
-
-    this.logService.info({
-      message: 'Starting differential backup',
-      category: LogCategory.SYSTEM,
-      metadata: { filename: this.context.filename },
-    })
-
-    // Track all temp paths for cleanup
-    const tempFiles: string[] = []
-
-    try {
-      await this.mkdirFn(this.context.tempDir, { recursive: true })
-
+    return this.pipeline.run(async (elapsed) => {
+      // Find the last full backup to use as reference
       const lastFullBackup = await this.findLastFullBackup()
       if (!lastFullBackup) {
         this.logService.warn({
           message: 'No full backup found, running full backup instead',
           category: LogCategory.SYSTEM,
         })
+
         // Fall through to full backup logic — regenerate the filename to match
         const fullContext: BackupContext = {
           ...this.context,
@@ -117,6 +75,7 @@ export class DifferentialBackupStrategy {
         return new FullBackupStrategy(fullContext, this.logService).execute()
       }
 
+      // Get tables modified since the last backup
       const modifiedTables = await this.getModifiedTables(lastFullBackup.createdAt)
 
       if (modifiedTables.length === 0) {
@@ -124,14 +83,7 @@ export class DifferentialBackupStrategy {
           message: 'No tables modified since last backup, skipping',
           category: LogCategory.SYSTEM,
         })
-        return {
-          success: true,
-          filename: '',
-          type: 'differential',
-          size: 0,
-          duration: Date.now() - startTime,
-          storage: backupConfig.storage.disk,
-        }
+        return this.pipeline.noArtifactResult(elapsed())
       }
 
       this.logService.info({
@@ -140,96 +92,19 @@ export class DifferentialBackupStrategy {
         metadata: { count: modifiedTables.length, tables: modifiedTables },
       })
 
-      const dumpPath = tempPath.replace(/\.(gz\.enc|enc|gz)$/, '.sql')
-      tempFiles.push(dumpPath)
-      await this.createDump({
-        host: env.get('PG_HOST')!,
-        port: Number(env.get('PG_PORT') || 5432),
-        user: env.get('PG_USER')!,
-        database: env.get('PG_DB_NAME')!,
-        password: env.get('PG_PASSWORD').release(),
-        outputPath: dumpPath,
+      const dumpPath = this.pipeline.dumpPath()
+      await this.pipeline.dump(dumpPath, modifiedTables)
+
+      const { encryptedPath, size } = await this.pipeline.compressAndEncrypt(dumpPath)
+      await this.pipeline.writeManifest({
+        type: 'differential',
         tables: modifiedTables,
+        fullBackupReference: lastFullBackup.filename,
       })
+      await this.pipeline.uploadBackup(encryptedPath)
 
-      const compressedPath = await this.snapshotHelper.compress(dumpPath)
-      tempFiles.push(compressedPath)
-      await this.unlinkFn(dumpPath)
-
-      const encryptedPath = await this.snapshotHelper.encrypt(compressedPath)
-      tempFiles.push(encryptedPath)
-
-      const fileStats = await this.statFn(encryptedPath)
-      const size = fileStats.size
-
-      const manifestPath = await this.createManifest(modifiedTables, lastFullBackup.filename)
-      tempFiles.push(manifestPath)
-
-      await this.uploader.upload(encryptedPath, this.context.filename)
-
-      const duration = Date.now() - startTime
-
-      this.logService.info({
-        message: 'Backup completed successfully',
-        category: LogCategory.SYSTEM,
-        metadata: { filename: this.context.filename, size, duration },
-      })
-
-      return {
-        success: true,
-        filename: this.context.filename,
-        type: 'differential',
-        size,
-        duration,
-        storage: backupConfig.storage.disk,
-      }
-    } catch (error) {
-      const duration = Date.now() - startTime
-
-      this.logService.error({
-        message: 'Differential backup failed',
-        category: LogCategory.SYSTEM,
-        error,
-        context: { filename: this.context.filename, duration },
-      })
-
-      return {
-        success: false,
-        filename: this.context.filename,
-        type: 'differential',
-        size: 0,
-        duration,
-        storage: backupConfig.storage.disk,
-        error: error.message,
-      }
-    } finally {
-      await this.cleanupTemp(...tempFiles)
-    }
-  }
-
-  private async createManifest(tables: string[], fullBackupReference: string): Promise<string> {
-    const manifestFilename = SnapshotHelper.manifestFilename(this.context.filename)
-    const manifestPath = join(this.context.tempDir, manifestFilename)
-    await this.writeFileFn(
-      manifestPath,
-      JSON.stringify({ type: 'differential', tables, fullBackupReference }, null, 2)
-    )
-    await this.uploader.upload(manifestPath, manifestFilename)
-    return manifestPath
-  }
-
-  /**
-   * Clean up temporary files left in the local temp directory.
-   * Silently ignores missing files — called after success or failure.
-   */
-  private async cleanupTemp(...paths: string[]): Promise<void> {
-    for (const path of paths) {
-      try {
-        await this.unlinkFn(path)
-      } catch {
-        // File already gone — no-op
-      }
-    }
+      return this.pipeline.successResult(size, elapsed())
+    })
   }
 
   private async findLastFullBackup(): Promise<BackupMetadata | null> {
@@ -240,7 +115,7 @@ export class DifferentialBackupStrategy {
 
   private async listBackups(): Promise<BackupMetadata[]> {
     try {
-      const objects = await this.uploader.listBackups()
+      const objects = await this.pipeline.storageUploader.listBackups()
       const backups: BackupMetadata[] = []
 
       for (const object of objects) {
@@ -250,7 +125,7 @@ export class DifferentialBackupStrategy {
         const match = filename.match(/backup-(full|differential)-(\d{4}-\d{2}-\d{2})-(\d{6})/)
         if (!match) continue
 
-        const meta = await this.uploader.getMetaData(object.key)
+        const meta = await this.pipeline.storageUploader.getMetaData(object.key)
 
         backups.push({
           filename,
