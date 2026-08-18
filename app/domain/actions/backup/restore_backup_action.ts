@@ -1,7 +1,7 @@
 ﻿import { inject } from '@adonisjs/core'
 import drive from '@adonisjs/drive/services/main'
 import backupConfig from '#config/backup'
-import { spawn, type ChildProcess } from 'node:child_process'
+import { restoreDatabaseWithPsql } from '#services/backup/psql_helper'
 import { createWriteStream } from 'node:fs'
 import { mkdir, unlink } from 'node:fs/promises'
 import { join } from 'node:path'
@@ -125,35 +125,14 @@ export class RestoreBackupAction {
     await pipeline(input, gunzip, output)
   }
 
-  private async restoreDatabase(sqlPath: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const args = [
-        '-h',
-        env.get('PG_HOST')!,
-        '-p',
-        String(env.get('PG_PORT') || 5432),
-        '-U',
-        env.get('PG_USER')!,
-        '-d',
-        env.get('PG_DB_NAME')!,
-        '-f',
-        sqlPath,
-      ]
-
-      const psql: ChildProcess = spawn('psql', args, {
-        env: { ...process.env, PGPASSWORD: env.get('PG_PASSWORD').release() },
-      })
-
-      let errorOutput = ''
-      psql.stderr!.on('data', (data) => {
-        errorOutput += data.toString()
-      })
-      psql.on('close', (code) => {
-        code === 0 ? resolve() : reject(new Error(`psql failed with code ${code}: ${errorOutput}`))
-      })
-      psql.on('error', (error) => {
-        reject(new Error(`Failed to start psql: ${error.message}`))
-      })
+  private restoreDatabase(sqlPath: string): Promise<void> {
+    return restoreDatabaseWithPsql({
+      host: env.get('PG_HOST')!,
+      port: Number(env.get('PG_PORT') || 5432),
+      user: env.get('PG_USER')!,
+      database: env.get('PG_DB_NAME')!,
+      password: env.get('PG_PASSWORD').release(),
+      sqlPath,
     })
   }
 }

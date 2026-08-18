@@ -1,17 +1,22 @@
 import { spawn as defaultSpawn, type ChildProcess } from 'node:child_process'
 
-export interface DumpOptions {
+export interface PsqlRestoreOptions {
   host: string
   port: number
   user: string
   database: string
   password: string
-  outputPath: string
-  tables?: string[]
+  sqlPath: string
 }
 
 /**
- * Execute a pg_dump process for the given options.
+ * Restore a database by replaying a SQL dump through `psql`.
+ *
+ * **Flag hardening**
+ *
+ * `-v ON_ERROR_STOP=1` makes `psql` abort on the first failing statement, and
+ * `-1` wraps the whole restore in a single transaction, so a failing restore
+ * rolls back instead of partially applying the dump.
  *
  * **Dependency injection for testability**
  *
@@ -19,19 +24,18 @@ export interface DumpOptions {
  * In production, callers omit it and the real `node:child_process.spawn` is used.
  * In tests, pass a sinon stub to avoid spawning actual processes.
  *
- * @param options - pg_dump connection and output configuration.
+ * @param options - psql connection and dump-file configuration.
  * @param _spawn - Optional spawn function for testability (defaults to node:child_process.spawn).
  */
-export function createDatabaseDump(
-  options: DumpOptions,
+export function restoreDatabaseWithPsql(
+  options: PsqlRestoreOptions,
   _spawn: typeof defaultSpawn = defaultSpawn
 ): Promise<void> {
-  const tables = options.tables ?? []
-
   return new Promise((resolve, reject) => {
     const args = [
-      '--no-owner',
-      '--no-privileges',
+      '-v',
+      'ON_ERROR_STOP=1',
+      '-1',
       '-h',
       options.host,
       '-p',
@@ -40,35 +44,23 @@ export function createDatabaseDump(
       options.user,
       '-d',
       options.database,
-      '-F',
-      'p',
       '-f',
-      options.outputPath,
+      options.sqlPath,
     ]
 
-    for (const table of tables) {
-      args.push('-t', table)
-    }
-
-    const pgDump: ChildProcess = _spawn('pg_dump', args, {
+    const psql: ChildProcess = _spawn('psql', args, {
       env: { ...process.env, PGPASSWORD: options.password },
     })
 
     let errorOutput = ''
-    pgDump.stderr!.on('data', (data) => {
+    psql.stderr!.on('data', (data) => {
       errorOutput += data.toString()
     })
-
-    pgDump.on('close', (code) => {
-      if (code === 0) {
-        resolve()
-      } else {
-        reject(new Error(`pg_dump failed with code ${code}: ${errorOutput}`))
-      }
+    psql.on('close', (code) => {
+      code === 0 ? resolve() : reject(new Error(`psql failed with code ${code}: ${errorOutput}`))
     })
-
-    pgDump.on('error', (error) => {
-      reject(new Error(`Failed to start pg_dump: ${error.message}`))
+    psql.on('error', (error) => {
+      reject(new Error(`Failed to start psql: ${error.message}`))
     })
   })
 }
