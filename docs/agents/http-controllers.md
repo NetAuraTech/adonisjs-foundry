@@ -4,6 +4,8 @@ One controller = one action. `render()` serves the Inertia page; `execute()` per
 
 **REST exception**: resource controllers in the `api/` context may group the handlers of a single REST resource — one controller per resource, one method per HTTP action (`index`, `show`, `store`, `update`, `destroy`, plus resource-specific actions like `publish`/`move`). They stay thin transport wrappers over domain actions and never duplicate business logic. This is the documented convention for the `/api/v1/admin/*` surface (spec #7), not an invitation to multi-action session controllers.
 
+**REST resource contract**: the `api/` controllers are one-line adapters over declarative REST resources defined in `app/http/rest/` (`#rest/*`). Each resource (e.g. `UsersResource`) declares its endpoints once against the shared `RestEndpoint` shape — input selection, `prepare`, Vine validator, domain action, optional `refetch`, transformer — and `handleRest` runs the common transport pipeline (see `app/http/rest/rest_resource.ts`). When adding a new admin REST resource, add a resource file in `app/http/rest/`, wire the controllers as adapters, and keep the controllers free of validation/serialization logic.
+
 ## Structure
 
 ```typescript

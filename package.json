@@ -32,6 +32,7 @@
     "#events/*": "./app/events/*.js",
     "#generated/*": "./.adonisjs/server/*.js",
     "#middleware/*": "./app/http/middleware/*.js",
+    "#rest/*": "./app/http/rest/*.js",
     "#repositories/*": "./app/domain/repositories/*.js",
     "#services/*": "./app/domain/services/*.js",
     "#contracts/*": "./app/domain/contracts/*.js",
@@ -132,7 +133,8 @@
   "hotHook": {
     "boundaries": [
       "./app/http/controllers/**/*.ts",
-      "./app/http/middleware/**/*.ts"
+      "./app/http/middleware/**/*.ts",
+      "./app/http/rest/**/*.ts"
     ]
   },
   "prettier": "@adonisjs/prettier-config"

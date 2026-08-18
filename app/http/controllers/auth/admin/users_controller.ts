@@ -10,6 +10,7 @@ import RoleTransformer from '#transformers/role_transformer'
 import { stripEmptyStrings } from '#helpers/core/strip_empty_strings'
 import { extractPagination } from '#helpers/pagination/extract_pagination'
 import { buildUsersListPayload } from '#helpers/i18n_payloads/users_list'
+import { roleIdsToAllowlist } from '#helpers/auth/load_user_role'
 
 @inject()
 export default class UsersController {
@@ -26,7 +27,7 @@ export default class UsersController {
     const pagination = await extractPagination(request)
 
     const roles = await this.listAllRolesAction.execute()
-    const allowed = roles.map((role) => String(role.id))
+    const allowed = roleIdsToAllowlist(roles)
 
     const data = stripEmptyStrings(request.all())
 
