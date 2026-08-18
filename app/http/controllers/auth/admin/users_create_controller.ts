@@ -6,6 +6,7 @@ import { I18nService } from '#services/i18n_service'
 import { ListAllRolesAction } from '#actions/role/list_all_roles_action'
 import RoleTransformer from '#transformers/role_transformer'
 import { buildUsersFormPayload } from '#helpers/i18n_payloads/users_form'
+import { roleIdsToAllowlist } from '#helpers/auth/load_user_role'
 
 @inject()
 export default class UsersCreateController {
@@ -30,7 +31,7 @@ export default class UsersCreateController {
     const { request, response, session } = ctx
 
     const roles = await this.listAllRolesAction.execute()
-    const allowed = roles.map((role) => String(role.id))
+    const allowed = roleIdsToAllowlist(roles)
 
     const payload = await createValidator(allowed).validate(request.all())
 

@@ -1,30 +1,22 @@
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
-import { GetUserDetailAction } from '#actions/user/get_user_detail_action'
-import { restIdValidator } from '#validators/user'
-import UserTransformer from '#transformers/user_transformer'
+import UsersResource from '#rest/users'
 
 /**
  * GET /api/v1/admin/users/:id — show a single user from the admin REST API.
  *
- * Thin transport wrapper around the shared {@link GetUserDetailAction}. Uses
- * the REST id validator (number-only, no `exists` lookup) so unknown ids
- * surface as a typed `RowNotFoundException` (HTTP 404) instead of a Vine
- * validation error (422).
+ * Thin transport adapter over the `show` endpoint of the
+ * {@link UsersResource}; the endpoint declaration is executed by the shared
+ * REST pipeline.
  */
 @inject()
 export default class UsersShowApiController {
-  constructor(protected getUserDetailAction: GetUserDetailAction) {}
+  constructor(protected usersResource: UsersResource) {}
 
-  async show(ctx: HttpContext) {
-    const { params, serialize } = ctx
-
-    const { id } = await restIdValidator.validate(params)
-
-    const user = await this.getUserDetailAction.execute({ id })
-
-    const serialized = await serialize(UserTransformer.transform(user))
-
-    return ctx.response.ok(serialized)
+  /**
+   * Show a single user by id.
+   */
+  async show(ctx: HttpContext): Promise<void> {
+    await this.usersResource.handle('show', ctx)
   }
 }

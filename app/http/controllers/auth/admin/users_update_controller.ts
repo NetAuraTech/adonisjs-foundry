@@ -8,6 +8,7 @@ import { ListAllRolesAction } from '#actions/role/list_all_roles_action'
 import UserTransformer from '#transformers/user_transformer'
 import RoleTransformer from '#transformers/role_transformer'
 import { buildUsersFormPayload } from '#helpers/i18n_payloads/users_form'
+import { roleIdsToAllowlist } from '#helpers/auth/load_user_role'
 
 @inject()
 export default class UsersUpdateController {
@@ -40,7 +41,7 @@ export default class UsersUpdateController {
     const { id } = await editValidator.validate(params)
 
     const roles = await this.listAllRolesAction.execute()
-    const allowed = roles.map((role) => String(role.id))
+    const allowed = roleIdsToAllowlist(roles)
 
     const payload = await updateValidator(id, allowed).validate(request.all())
 

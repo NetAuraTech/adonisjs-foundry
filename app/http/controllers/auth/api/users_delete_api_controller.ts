@@ -1,25 +1,22 @@
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
-import { DeleteUserAction } from '#actions/user/delete_user_action'
-import { restIdValidator } from '#validators/user'
+import UsersResource from '#rest/users'
 
 /**
  * DELETE /api/v1/admin/users/:id — delete a user from the admin REST API.
  *
- * Thin transport wrapper around the shared {@link DeleteUserAction}. Returns
- * `204 No Content` on success.
+ * Thin transport adapter over the `destroy` endpoint of the
+ * {@link UsersResource}; the endpoint declaration is executed by the shared
+ * REST pipeline.
  */
 @inject()
 export default class UsersDeleteApiController {
-  constructor(protected deleteUserAction: DeleteUserAction) {}
+  constructor(protected usersResource: UsersResource) {}
 
-  async destroy(ctx: HttpContext) {
-    const { params, response } = ctx
-
-    const { id } = await restIdValidator.validate(params)
-
-    await this.deleteUserAction.execute({ id })
-
-    return response.noContent()
+  /**
+   * Delete a user by id.
+   */
+  async destroy(ctx: HttpContext): Promise<void> {
+    await this.usersResource.handle('destroy', ctx)
   }
 }

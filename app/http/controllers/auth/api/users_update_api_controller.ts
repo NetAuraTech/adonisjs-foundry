@@ -1,49 +1,22 @@
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
-import { GetUserDetailAction } from '#actions/user/get_user_detail_action'
-import { UpdateUserAction } from '#actions/user/update_user_action'
-import { ListAllRolesAction } from '#actions/role/list_all_roles_action'
-import { restIdValidator, updateValidator } from '#validators/user'
-import UserTransformer from '#transformers/user_transformer'
-import { roleIdsToAllowlist } from '#helpers/auth/load_user_role'
+import UsersResource from '#rest/users'
 
 /**
  * PUT /api/v1/admin/users/:id — update a user from the admin REST API.
  *
- * Thin transport wrapper around the shared {@link UpdateUserAction}. An email
- * change triggers the pending-email confirmation flow inside the action; the
- * user is then reloaded through {@link GetUserDetailAction} so the response
- * reflects the persisted state with role and permissions preloaded.
+ * Thin transport adapter over the `update` endpoint of the
+ * {@link UsersResource}; the endpoint declaration is executed by the shared
+ * REST pipeline.
  */
 @inject()
 export default class UsersUpdateApiController {
-  constructor(
-    protected updateUserAction: UpdateUserAction,
-    protected getUserDetailAction: GetUserDetailAction,
-    protected listAllRolesAction: ListAllRolesAction
-  ) {}
+  constructor(protected usersResource: UsersResource) {}
 
-  async update(ctx: HttpContext) {
-    const { params, request, response, serialize } = ctx
-
-    const { id } = await restIdValidator.validate(params)
-
-    const roles = await this.listAllRolesAction.execute()
-    const allowed = roleIdsToAllowlist(roles)
-
-    const payload = await updateValidator(id, allowed).validate(request.all())
-
-    await this.updateUserAction.execute({
-      id,
-      email: payload.email,
-      username: payload.username,
-      roleId: payload.role_id ? Number(payload.role_id) : undefined,
-    })
-
-    const user = await this.getUserDetailAction.execute({ id })
-
-    const serialized = await serialize(UserTransformer.transform(user))
-
-    return response.ok(serialized)
+  /**
+   * Update a user and return the persisted state.
+   */
+  async update(ctx: HttpContext): Promise<void> {
+    await this.usersResource.handle('update', ctx)
   }
 }
