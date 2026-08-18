@@ -9,7 +9,7 @@ import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import { useState } from 'react'
 import { Data } from '@generated/data'
 import { Banner } from '~/components/molecules/banner'
-import type { AcceptInvitationTranslations } from '#types/translations'
+import type { AcceptInvitationTranslations } from '#helpers/i18n_payloads/accept_invitation'
 import { useTranslation } from '~/hooks/use_translation'
 import { Form } from '@adonisjs/inertia/react'
 

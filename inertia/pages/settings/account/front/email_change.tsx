@@ -8,7 +8,7 @@ import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import { Field } from '~/components/molecules/field'
 import { Banner } from '~/components/molecules/banner'
 import { useTranslation } from '~/hooks/use_translation'
-import type { EmailChangeTranslations } from '#types/translations'
+import type { EmailChangeTranslations } from '#helpers/i18n_payloads/email_change'
 import { Form } from '@adonisjs/inertia/react'
 
 interface PageProps {

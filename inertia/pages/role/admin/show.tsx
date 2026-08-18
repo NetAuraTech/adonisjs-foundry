@@ -13,7 +13,7 @@ import { Separator } from '~/components/atoms/separator'
 import Table from '~/components/atoms/table/table'
 import { useTranslation } from '~/hooks/use_translation'
 import { permissionCategoryKey } from '~/helpers/permissions'
-import type { AdminRolesShowTranslations } from '#types/translations'
+import type { AdminRolesShowTranslations } from '#helpers/i18n_payloads/roles_show'
 import { Form } from '@adonisjs/inertia/react'
 import { SharedProps } from '@adonisjs/inertia/types'
 

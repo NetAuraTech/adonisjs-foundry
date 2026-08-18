@@ -14,7 +14,7 @@ import { Field } from '~/components/molecules/field'
 import { SelectOption } from '~/components/atoms/select_option'
 import type { PageStatus } from '#cms/types/page'
 import { locales, useTranslation } from '~/hooks/use_translation'
-import type { AdminPagesIndexTranslations } from '#types/translations'
+import type { AdminPagesIndexTranslations } from '#helpers/i18n_payloads/pages_index'
 import { Form } from '@adonisjs/inertia/react'
 import { SharedProps } from '@adonisjs/inertia/types'
 

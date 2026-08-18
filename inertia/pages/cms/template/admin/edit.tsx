@@ -14,7 +14,7 @@ import { useTranslation } from '~/hooks/use_translation'
 import { usePage } from '@inertiajs/react'
 import { SharedProps } from '@adonisjs/inertia/types'
 import { Form } from '@adonisjs/inertia/react'
-import type { AdminTemplatesEditTranslations } from '#types/translations'
+import type { AdminTemplatesEditTranslations } from '#helpers/i18n_payloads/templates_edit'
 import type { Block, PageContent } from '#cms/types/page'
 import { captureTemplateThumbnail } from '~/components/cms/utils/template_thumbnail'
 

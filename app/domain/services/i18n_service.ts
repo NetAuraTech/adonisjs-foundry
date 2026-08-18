@@ -66,7 +66,7 @@ export class I18nService {
    *
    * Unlike plain string keys, entries carry their replacements so that
    * `_build` resolves them in a single pass — no need to call `translate()`
-   * outside of `buildPayload`.
+   * outside of `buildPayload`. Delegates to {@link createI18nEntry}.
    *
    * @example
    * ```ts
@@ -77,7 +77,7 @@ export class I18nService {
    * ```
    */
   entry(key: string, replacements?: Record<string, any>): I18nEntry {
-    return { __i18n_key: key, __replacements: replacements ?? {} }
+    return createI18nEntry(key, replacements)
   }
 
   /**
@@ -119,10 +119,31 @@ export class I18nService {
 // ─── Type helpers for buildPayload ──────────────────────────────────────────
 
 /**
- * Marker type returned by `entry()`. Recognized by `_build()` which calls
- * `translate(key, replacements)` in a single pass.
+ * Marker type returned by {@link I18nService.entry} / {@link createI18nEntry}.
+ * Recognized by the payload builder which calls `translate(key, replacements)`
+ * in a single pass.
  */
 export type I18nEntry = { __i18n_key: string; __replacements: Record<string, any> }
+
+/**
+ * Standalone {@link I18nService.entry} — create a translation entry marker that
+ * can be composed into a module-level mapping before the request-scoped service
+ * is available (e.g. inside a payload builder's key-mapping constant).
+ *
+ * @param key          - Dot-notation translation key
+ * @param replacements - ICU-formatted replacement map, defaults to an empty object
+ * @returns The entry marker resolved to its translated string by `buildPayload`
+ *
+ * @example
+ * ```ts
+ * const MAPPING = {
+ *   title: createI18nEntry('admin.roles.edit.title', { name: '{name}' }),
+ * }
+ * ```
+ */
+export function createI18nEntry(key: string, replacements?: Record<string, any>): I18nEntry {
+  return { __i18n_key: key, __replacements: replacements ?? {} }
+}
 
 function isI18nEntry(value: unknown): value is I18nEntry {
   return (
@@ -137,7 +158,7 @@ function isI18nEntry(value: unknown): value is I18nEntry {
  * Recursively replaces leaf `string` and `I18nEntry` values with their translated `string`.
  * Since `translate()` returns `string`, the shape is preserved.
  */
-type BuildPayloadResult<T> = T extends string
+export type BuildPayloadResult<T> = T extends string
   ? string
   : T extends I18nEntry
     ? string

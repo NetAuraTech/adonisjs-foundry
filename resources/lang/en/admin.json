@@ -381,8 +381,16 @@
     },
     "show": {
       "title": "Open",
+      "info": {
+        "name": "Name",
+        "type": "Type",
+        "size": "Size",
+        "uploaded_at": "Uploaded at",
+        "value": "Content"
+      },
       "alts": {
         "title": "Alt texts",
+        "value": "Alt text",
         "empty": "No alt texts yet.",
         "add": "Add",
         "close": "Close",

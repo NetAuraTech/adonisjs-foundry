@@ -13,7 +13,7 @@ import { Field } from '~/components/molecules/field'
 import { Pagination } from '~/components/molecules/pagination'
 import Table from '~/components/atoms/table/table'
 import { useTranslation } from '~/hooks/use_translation'
-import type { AdminRolesIndexTranslations } from '#types/translations'
+import type { AdminRolesIndexTranslations } from '#helpers/i18n_payloads/roles_list'
 import { Form } from '@adonisjs/inertia/react'
 import { SharedProps } from '@adonisjs/inertia/types'
 

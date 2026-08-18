@@ -20,7 +20,7 @@ import { router, useForm } from '@inertiajs/react'
 import { SharedProps } from '@adonisjs/inertia/types'
 import { CanAccess } from '~/guards/can_access'
 import { useTranslation } from '~/hooks/use_translation'
-import type { PageEditorTranslations } from '#types/translations'
+import type { PageEditorTranslations } from '#helpers/i18n_payloads/page_editor'
 
 interface Props {
   page: Data.Page.Page

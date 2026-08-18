@@ -7,7 +7,7 @@ import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets } from '~/helpers/validation_rules'
 import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import { useState } from 'react'
-import type { DefinePasswordTranslations } from '#types/translations'
+import type { DefinePasswordTranslations } from '#helpers/i18n_payloads/social_define_password'
 import { useTranslation } from '~/hooks/use_translation'
 import { Form } from '@adonisjs/inertia/react'
 

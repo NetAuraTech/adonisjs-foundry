@@ -2,7 +2,7 @@ import { Button } from '~/components/atoms/button'
 import type { OAuthProvider } from '#types/auth'
 import { capitalize } from '~/lib/string'
 import { getIcon } from '~/helpers/oauth'
-import type { TranslationNodes } from '#types/translations'
+import type { TranslationNodes } from '#helpers/i18n_payloads/nest'
 import { useTranslation } from '~/hooks/use_translation'
 
 interface AuthProviderProps {

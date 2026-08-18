@@ -11,7 +11,7 @@ import { urlFor } from '~/client'
 import { useState } from 'react'
 import { Banner } from '~/components/molecules/banner'
 import { getIcon } from '~/helpers/oauth'
-import type { SettingsAccountTranslations } from '#types/translations'
+import type { SettingsAccountTranslations } from '#helpers/i18n_payloads/account'
 import { useTranslation } from '~/hooks/use_translation'
 import { Form } from '@adonisjs/inertia/react'
 

@@ -6,7 +6,8 @@ import { inject } from '@adonisjs/core'
 import { GetPreferencesAction } from '#actions/preferences/get_preferences_action'
 import { DEFAULT_PREFERENCES } from '#types/preferences'
 import env from '#start/env'
-import { CommonTranslations } from '#types/translations'
+import { I18nService } from '#services/i18n_service'
+import { buildCommonPayload } from '#helpers/i18n_payloads/common'
 import { NavRegistry } from '#services/core/nav_registry'
 import type { AdminNavGroup } from '#types/nav'
 
@@ -74,34 +75,7 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
       app_name: env.get('APP_NAME'),
       app_url: env.get('APP_URL'),
       email: env.get('MAIL_FROM_ADDRESS'),
-      common_translations: {
-        pagination: {
-          showing: ctx.i18n.t('pagination.showing', {
-            start: '{start}',
-            end: '{end}',
-            total: '{total}',
-          }),
-          previous: ctx.i18n.t('pagination.previous'),
-          next: ctx.i18n.t('pagination.next'),
-        },
-        validation: {
-          required: ctx.i18n.t('validation.front.required', { field: '{field}' }),
-          email: ctx.i18n.t('validation.front.email'),
-          min_length: ctx.i18n.t('validation.front.min_length', {
-            field: '{field}',
-            min: '{min}',
-            current: '{current}',
-          }),
-          max_length: ctx.i18n.t('validation.front.max_length', {
-            field: '{field}',
-            max: '{max}',
-            current: '{current}',
-          }),
-          matches: ctx.i18n.t('validation.front.matches', { other: '{other}' }),
-          one_of: ctx.i18n.t('validation.front.one_of', { field: '{field}' }),
-          slug_format: ctx.i18n.t('validation.front.slug_format', { field: '{field}' }),
-        },
-      } as CommonTranslations,
+      common_translations: buildCommonPayload(new I18nService(ctx.i18n)),
       admin_menu: isAdmin ? this.buildAdminMenu(ctx) : undefined,
     }
   }

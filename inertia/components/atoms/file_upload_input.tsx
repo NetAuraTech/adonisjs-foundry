@@ -4,7 +4,7 @@ import { Paragraph } from '~/components/atoms/paragraph'
 import { humanSize } from '~/utils/file'
 import { Label } from '~/components/atoms/label'
 import { Button } from '~/components/atoms/button'
-import type { AdminFilesTranslations } from '#types/translations'
+import type { AdminFilesTranslations } from '#helpers/i18n_payloads/files_index'
 import { useTranslation } from '~/hooks/use_translation'
 
 interface FileUploadInputProps {

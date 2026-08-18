@@ -11,7 +11,7 @@ import { Icon } from '~/components/atoms/icon'
 import Table from '~/components/atoms/table/table'
 import { useTranslation } from '~/hooks/use_translation'
 import { permissionCategoryKey } from '~/helpers/permissions'
-import type { AdminPermissionsIndexTranslations } from '#types/translations'
+import type { AdminPermissionsIndexTranslations } from '#helpers/i18n_payloads/permissions_list'
 import { Form } from '@adonisjs/inertia/react'
 import { SharedProps } from '@adonisjs/inertia/types'
 
