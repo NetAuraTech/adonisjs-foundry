@@ -1,0 +1,142 @@
+import { inject } from '@adonisjs/core'
+import { type HttpContext } from '@adonisjs/core/http'
+import type { Infer } from '@vinejs/vine/types'
+import type File from '#models/file/file'
+import { ListFilesAction } from '#actions/file/list_files_action'
+import { GetFileDetailAction } from '#actions/file/get_file_detail_action'
+import { MoveFileAction } from '#actions/file/move_file_action'
+import { DeleteFileAction } from '#actions/file/delete_file_action'
+import { UpsertFileAltAction } from '#actions/file/upsert_file_alt_action'
+import { DeleteFileAltAction } from '#actions/file/delete_file_alt_action'
+import {
+  listFileValidator,
+  showFileValidator,
+  moveFileValidator,
+  upsertAltValidator,
+  deleteAltValidator,
+} from '#validators/file'
+import FileTransformer from '#transformers/file_transformer'
+import { type RestEndpoint, type AnyRestEndpoint, handleRest } from '#rest/rest_resource'
+
+type FileListPagination = Awaited<ReturnType<ListFilesAction['execute']>>
+type FileMoveResult = Awaited<ReturnType<MoveFileAction['execute']>>
+type FileDeleteResult = Awaited<ReturnType<DeleteFileAction['execute']>>
+
+type FileListPayload = Infer<typeof listFileValidator>
+type FileIdPayload = Infer<typeof showFileValidator>
+type FileMovePayload = Infer<typeof moveFileValidator>
+type FileUpsertAltPayload = Infer<typeof upsertAltValidator>
+type FileDeleteAltPayload = Infer<typeof deleteAltValidator>
+
+/**
+ * Endpoint declarations for the files REST resource.
+ */
+export interface FilesEndpoints {
+  index: RestEndpoint<undefined, FileListPayload, FileListPagination, FileListPagination>
+  show: RestEndpoint<undefined, FileIdPayload, File, File>
+  move: RestEndpoint<{ id: number }, FileMovePayload, FileMoveResult, File>
+  destroy: RestEndpoint<undefined, FileIdPayload, FileDeleteResult, FileDeleteResult>
+  upsertAlt: RestEndpoint<{ id: number }, FileUpsertAltPayload, void, File>
+  deleteAlt: RestEndpoint<{ id: number }, FileDeleteAltPayload, void, File>
+}
+
+/**
+ * Declarative files REST resource.
+ *
+ * Owns the files endpoint declarations executed by the shared
+ * {@link handleRest} pipeline; the `/api/v1/admin/files` controllers reduce
+ * to one-line adapters over `handle()`.
+ */
+@inject()
+export default class FilesResource {
+  constructor(
+    protected listFilesAction: ListFilesAction,
+    protected getFileDetailAction: GetFileDetailAction,
+    protected moveFileAction: MoveFileAction,
+    protected deleteFileAction: DeleteFileAction,
+    protected upsertFileAltAction: UpsertFileAltAction,
+    protected deleteFileAltAction: DeleteFileAltAction
+  ) {}
+
+  readonly endpoints: FilesEndpoints = {
+    index: {
+      paginated: true,
+      strip: true,
+      validator: () => listFileValidator,
+      execute: (_context, _prepared, payload) =>
+        this.listFilesAction.execute({
+          folderId: payload.folder_id ?? null,
+          mimeType: payload.mime_type,
+          search: payload.search,
+          pagination: _context.pagination!,
+        }),
+      transform: (entity) => FileTransformer.paginate(entity.all(), entity.getMeta()),
+    },
+    show: {
+      input: (context) => context.params,
+      validator: () => showFileValidator,
+      execute: (_context, _prepared, payload) =>
+        this.getFileDetailAction.execute({ id: payload.id }),
+      transform: (entity) => FileTransformer.transform(entity),
+    },
+    move: {
+      prepare: async (context) => {
+        const { id } = await showFileValidator.validate(context.params)
+
+        return { id }
+      },
+      validator: () => moveFileValidator,
+      execute: (_context, prepared, payload) =>
+        this.moveFileAction.execute({ id: prepared.id, folderId: payload.folder_id ?? null }),
+      transform: (entity) => FileTransformer.transform(entity),
+    },
+    destroy: {
+      status: 204,
+      input: (context) => context.params,
+      validator: () => showFileValidator,
+      execute: (_context, _prepared, payload) => this.deleteFileAction.execute({ id: payload.id }),
+    },
+    upsertAlt: {
+      prepare: async (context) => {
+        const { id } = await showFileValidator.validate(context.params)
+
+        return { id }
+      },
+      validator: () => upsertAltValidator,
+      execute: (_context, prepared, payload) =>
+        this.upsertFileAltAction.execute({
+          fileId: prepared.id,
+          locale: payload.locale,
+          key: payload.key,
+          value: payload.value,
+        }),
+      refetch: (_context, prepared) => this.getFileDetailAction.execute({ id: prepared.id }),
+      transform: (entity) => FileTransformer.transform(entity),
+    },
+    deleteAlt: {
+      prepare: async (context) => {
+        const { id } = await showFileValidator.validate(context.params)
+
+        return { id }
+      },
+      validator: () => deleteAltValidator,
+      execute: (_context, prepared, payload) =>
+        this.deleteFileAltAction.execute({
+          fileId: prepared.id,
+          locale: payload.locale,
+          key: payload.key,
+        }),
+      refetch: (_context, prepared) => this.getFileDetailAction.execute({ id: prepared.id }),
+      transform: (entity) => FileTransformer.transform(entity),
+    },
+  }
+
+  /**
+   * Dispatch a REST action to its declared endpoint.
+   */
+  async handle(route: keyof FilesEndpoints, ctx: HttpContext): Promise<void> {
+    const endpoint = this.endpoints[route] as AnyRestEndpoint
+
+    await handleRest(ctx, endpoint)
+  }
+}

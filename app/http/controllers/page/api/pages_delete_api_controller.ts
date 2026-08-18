@@ -1,22 +1,19 @@
-import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { showPageValidator } from '#cms/validators/page'
-import { DeletePageAction } from '#cms/domain/actions/page/delete_page_action'
+import { type HttpContext } from '@adonisjs/core/http'
+import PagesResource from '#rest/pages'
 
 /**
  * DELETE /api/v1/admin/pages/:id — delete a page from the admin REST API.
+ *
+ * Thin transport adapter over the `destroy` endpoint of the
+ * {@link PagesResource}; the endpoint declaration is executed by the shared
+ * REST pipeline.
  */
 @inject()
 export default class PagesDeleteApiController {
-  constructor(protected deletePageAction: DeletePageAction) {}
+  constructor(protected pagesResource: PagesResource) {}
 
-  async destroy(ctx: HttpContext) {
-    const { params, response } = ctx
-
-    const { id } = await showPageValidator.validate(params)
-
-    await this.deletePageAction.execute({ id })
-
-    return response.noContent()
+  async destroy(ctx: HttpContext): Promise<void> {
+    await this.pagesResource.handle('destroy', ctx)
   }
 }

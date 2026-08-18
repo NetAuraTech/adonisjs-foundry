@@ -1,19 +1,19 @@
-import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { showFileValidator } from '#validators/file'
-import { DeleteFileAction } from '#actions/file/delete_file_action'
+import { type HttpContext } from '@adonisjs/core/http'
+import FilesResource from '#rest/files'
 
 /**
- * DELETE /api/v1/admin/files/:id — delete a file.
+ * DELETE /api/v1/admin/files/:id — delete a file from the admin REST API.
+ *
+ * Thin transport adapter over the `destroy` endpoint of the
+ * {@link FilesResource}; the endpoint declaration is executed by the shared
+ * REST pipeline.
  */
 @inject()
 export default class FilesDeleteApiController {
-  constructor(protected deleteFileAction: DeleteFileAction) {}
+  constructor(protected filesResource: FilesResource) {}
 
-  async destroy(ctx: HttpContext) {
-    const { params, response } = ctx
-    const { id } = await showFileValidator.validate(params)
-    await this.deleteFileAction.execute({ id })
-    return response.noContent()
+  async destroy(ctx: HttpContext): Promise<void> {
+    await this.filesResource.handle('destroy', ctx)
   }
 }

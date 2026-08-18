@@ -1,36 +1,19 @@
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
-import { CreateRoleAction } from '#actions/role/create_role_action'
-import { GetRoleDetailAction } from '#actions/role/get_role_detail_action'
-import { createRoleValidator } from '#validators/role'
-import RoleTransformer from '#transformers/role_transformer'
+import RolesResource from '#rest/roles'
 
 /**
  * POST /api/v1/admin/roles — create a role from the admin REST API.
+ *
+ * Thin transport adapter over the `store` endpoint of the
+ * {@link RolesResource}; the endpoint declaration is executed by the shared
+ * REST pipeline.
  */
 @inject()
 export default class RolesCreateApiController {
-  constructor(
-    protected createRoleAction: CreateRoleAction,
-    protected getRoleDetailAction: GetRoleDetailAction
-  ) {}
+  constructor(protected rolesResource: RolesResource) {}
 
-  async store(ctx: HttpContext) {
-    const { request, response, serialize } = ctx
-
-    const payload = await createRoleValidator.validate(request.all())
-
-    const created = await this.createRoleAction.execute({
-      name: payload.name,
-      slug: payload.slug,
-      description: payload.description ?? null,
-      permissionIds: payload.permission_ids,
-    })
-
-    const role = await this.getRoleDetailAction.execute({ id: created.id })
-
-    const serialized = await serialize(RoleTransformer.transform(role))
-
-    return response.created(serialized)
+  async store(ctx: HttpContext): Promise<void> {
+    await this.rolesResource.handle('store', ctx)
   }
 }

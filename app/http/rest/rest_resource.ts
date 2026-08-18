@@ -4,12 +4,14 @@ import { extractPagination } from '#helpers/pagination/extract_pagination'
 import { stripEmptyStrings } from '#helpers/core/strip_empty_strings'
 
 /**
- * Input handed to every endpoint step: the raw request, the route params,
- * and (when the endpoint is `paginated`) the validated pagination filters.
+ * Input handed to every endpoint step: the raw request, the route params, the
+ * request authenticator, and (when the endpoint is `paginated`) the validated
+ * pagination filters.
  */
 export interface RestEndpointContext {
   request: HttpContext['request']
   params: HttpContext['params']
+  auth: HttpContext['auth']
   pagination?: PaginationFilters
 }
 
@@ -32,14 +34,19 @@ export interface RestValidator<Payload> {
  * 2. `input`     — pick the raw payload to validate (defaults to `request.all()`)
  * 3. `strip`     — drop empty-string entries from the input
  * 4. `prepare`   — endpoint-specific pre-validation work (e.g. role allowlists)
- * 5. `validator` — validate the input into a typed payload
+ * 5. `validator` — validate the input into a typed payload (optional, the
+ *                  input is used as-is when absent)
  * 6. `execute`   — call the domain action
  * 7. `refetch`   — reload persisted state when the action result is not
  *                  serializable on its own
  * 8. `transform` — shape the entity, then serialize it with `ctx.serialize()`
  *
  * `status` overrides the success code: `201` on creation, `204` to send no
- * body. Domain exceptions thrown by the action propagate untouched and are
+ * body. `wrap` overrides the response envelope: the serialized payload is
+ * sent under that key (e.g. `{ templates: [...] }`) instead of the
+ * serializer's default `data` wrapper, preserving endpoints that predate the
+ * envelope convention.
+ * Domain exceptions thrown by the action propagate untouched and are
  * shaped by the standard exception handler.
  *
  * @template Prepared Value produced by `prepare` (undefined when absent)
@@ -51,9 +58,10 @@ export interface RestEndpoint<Prepared, Payload, Result, Entity> {
   paginated?: boolean
   strip?: boolean
   status?: 201 | 204
+  wrap?: string
   input?: (context: RestEndpointContext) => unknown
   prepare?: (context: RestEndpointContext) => Promise<Prepared>
-  validator: (prepared: Prepared, context: RestEndpointContext) => RestValidator<Payload>
+  validator?: (prepared: Prepared, context: RestEndpointContext) => RestValidator<Payload>
   execute(context: RestEndpointContext, prepared: Prepared, payload: Payload): Promise<Result>
   refetch?(
     context: RestEndpointContext,
@@ -93,7 +101,7 @@ export async function handleRest<Prepared, Payload, Result, Entity>(
   ctx: HttpContext,
   endpoint: RestEndpoint<Prepared, Payload, Result, Entity>
 ): Promise<void> {
-  const context: RestEndpointContext = { request: ctx.request, params: ctx.params }
+  const context: RestEndpointContext = { request: ctx.request, params: ctx.params, auth: ctx.auth }
 
   if (endpoint.paginated) {
     context.pagination = await extractPagination(ctx.request)
@@ -109,8 +117,9 @@ export async function handleRest<Prepared, Payload, Result, Entity>(
     ? await endpoint.prepare(context)
     : (undefined as unknown as Prepared)
 
-  const validator = endpoint.validator(prepared, context)
-  const payload = await validator.validate(input)
+  const payload: Payload = endpoint.validator
+    ? await endpoint.validator(prepared, context).validate(input)
+    : (input as Payload)
 
   const result = await endpoint.execute(context, prepared, payload)
 
@@ -126,6 +135,13 @@ export async function handleRest<Prepared, Payload, Result, Entity>(
   const serialized = endpoint.transform
     ? await ctx.serialize(endpoint.transform(entity))
     : undefined
+
+  if (endpoint.wrap && serialized !== undefined) {
+    const { data } = serialized as { data: unknown }
+
+    ctx.response.status(endpoint.status ?? 200).send({ [endpoint.wrap]: data })
+    return
+  }
 
   ctx.response.status(endpoint.status ?? 200).send(serialized)
 }

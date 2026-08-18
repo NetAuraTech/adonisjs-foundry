@@ -1,20 +1,19 @@
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
-import { ListAllPermissionsAction } from '#actions/permission/list_all_permissions_action'
-import PermissionTransformer from '#transformers/permission_transformer'
+import PermissionsResource from '#rest/permissions'
 
 /**
  * GET /api/v1/admin/permissions — list all permissions from the admin REST API.
+ *
+ * Thin transport adapter over the `index` endpoint of the
+ * {@link PermissionsResource}; the endpoint declaration is executed by the
+ * shared REST pipeline.
  */
 @inject()
 export default class PermissionsApiController {
-  constructor(protected listAllPermissionsAction: ListAllPermissionsAction) {}
+  constructor(protected permissionsResource: PermissionsResource) {}
 
-  async index(ctx: HttpContext) {
-    const { serialize } = ctx
-
-    const permissions = await this.listAllPermissionsAction.execute()
-
-    return serialize(PermissionTransformer.transform(permissions))
+  async index(ctx: HttpContext): Promise<void> {
+    await this.permissionsResource.handle('index', ctx)
   }
 }

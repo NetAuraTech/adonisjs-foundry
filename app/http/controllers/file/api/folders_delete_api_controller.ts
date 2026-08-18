@@ -1,19 +1,19 @@
-import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { showFileValidator } from '#validators/file'
-import { DeleteFolderAction } from '#actions/file_folder/delete_folder_action'
+import { type HttpContext } from '@adonisjs/core/http'
+import FoldersResource from '#rest/folders'
 
 /**
- * DELETE /api/v1/admin/folders/:id — delete a folder
+ * DELETE /api/v1/admin/folders/:id — delete a folder from the admin REST API.
+ *
+ * Thin transport adapter over the `destroy` endpoint of the
+ * {@link FoldersResource}; the endpoint declaration is executed by the shared
+ * REST pipeline.
  */
 @inject()
 export default class FoldersDeleteApiController {
-  constructor(protected deleteFolderAction: DeleteFolderAction) {}
+  constructor(protected foldersResource: FoldersResource) {}
 
-  async destroy(ctx: HttpContext) {
-    const { params, response } = ctx
-    const { id } = await showFileValidator.validate(params)
-    await this.deleteFolderAction.execute({ id })
-    return response.noContent()
+  async destroy(ctx: HttpContext): Promise<void> {
+    await this.foldersResource.handle('destroy', ctx)
   }
 }

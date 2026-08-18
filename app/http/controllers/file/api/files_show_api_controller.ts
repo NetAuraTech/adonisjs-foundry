@@ -1,23 +1,19 @@
-import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { showFileValidator } from '#validators/file'
-import FileTransformer from '#transformers/file_transformer'
-import { GetFileDetailAction } from '#actions/file/get_file_detail_action'
+import { type HttpContext } from '@adonisjs/core/http'
+import FilesResource from '#rest/files'
 
 /**
- * GET /api/v1/admin/files/:id — show a single file with its alts.
+ * GET /api/v1/admin/files/:id — show a file from the admin REST API.
+ *
+ * Thin transport adapter over the `show` endpoint of the
+ * {@link FilesResource}; the endpoint declaration is executed by the shared
+ * REST pipeline.
  */
 @inject()
 export default class FilesShowApiController {
-  constructor(protected getFileDetailAction: GetFileDetailAction) {}
+  constructor(protected filesResource: FilesResource) {}
 
-  /**
-   * Show a single file with its alt texts.
-   */
-  async show(ctx: HttpContext) {
-    const { params, serialize } = ctx
-    const { id } = await showFileValidator.validate(params)
-    const file = await this.getFileDetailAction.execute({ id })
-    return serialize(FileTransformer.transform(file))
+  async show(ctx: HttpContext): Promise<void> {
+    await this.filesResource.handle('show', ctx)
   }
 }

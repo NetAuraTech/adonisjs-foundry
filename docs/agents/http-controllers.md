@@ -6,6 +6,8 @@ One controller = one action. `render()` serves the Inertia page; `execute()` per
 
 **REST resource contract**: the `api/` controllers are one-line adapters over declarative REST resources defined in `app/http/rest/` (`#rest/*`). Each resource (e.g. `UsersResource`) declares its endpoints once against the shared `RestEndpoint` shape — input selection, `prepare`, Vine validator, domain action, optional `refetch`, transformer — and `handleRest` runs the common transport pipeline (see `app/http/rest/rest_resource.ts`). When adding a new admin REST resource, add a resource file in `app/http/rest/`, wire the controllers as adapters, and keep the controllers free of validation/serialization logic.
 
+**Intentional exemptions** (deliberately plain controllers, not migration leftovers): one-off endpoints without a resource shape are exempt from the contract — auth flows (register, forgot / reset password, email verification, invitation acceptance, social login), token issuance and identity (`me`), file upload, preview tokens, and builder operations. They keep hand-rolled transport because forcing them through the resource contract would add indirection without consolidating any repeated plumbing.
+
 ## Structure
 
 ```typescript

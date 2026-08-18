@@ -1,23 +1,19 @@
-import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { updateFolderValidator } from '#validators/file'
-import { RenameFolderAction } from '#actions/file_folder/rename_folder_action'
-import FileFolderTransformer from '#transformers/file_folder_transformer'
+import { type HttpContext } from '@adonisjs/core/http'
+import FoldersResource from '#rest/folders'
 
 /**
- * PUT /api/v1/admin/folders/:id — rename a folder
+ * PUT /api/v1/admin/folders/:id — rename a folder from the admin REST API.
+ *
+ * Thin transport adapter over the `update` endpoint of the
+ * {@link FoldersResource}; the endpoint declaration is executed by the shared
+ * REST pipeline.
  */
 @inject()
 export default class FoldersUpdateApiController {
-  constructor(protected renameFolderAction: RenameFolderAction) {}
+  constructor(protected foldersResource: FoldersResource) {}
 
-  async update(ctx: HttpContext) {
-    const { params, request, response, serialize } = ctx
-    const payload = await updateFolderValidator.validate({
-      id: Number(params.id),
-      name: request.input('name'),
-    })
-    const folder = await this.renameFolderAction.execute({ id: payload.id, name: payload.name })
-    return response.ok(await serialize(FileFolderTransformer.transform(folder)))
+  async update(ctx: HttpContext): Promise<void> {
+    await this.foldersResource.handle('update', ctx)
   }
 }
