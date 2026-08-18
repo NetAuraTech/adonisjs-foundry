@@ -89,7 +89,7 @@ export default await Env.create(new URL('../', import.meta.url), {
 
   /*
   |----------------------------------------------------------
-  | Variables for configuring @rlanz/sentry package
+  | Variables for configuring the Sentry SDK
   |----------------------------------------------------------
   */
   SENTRY_DSN: Env.schema.string(),

@@ -1,8 +1,27 @@
-import env from '#start/env'
+import type { NodeOptions } from '@sentry/node'
 import app from '@adonisjs/core/services/app'
-import { defineConfig } from '@rlanz/sentry'
+import env from '#start/env'
 
-export default defineConfig({
+/**
+ * Sentry SDK options for this application.
+ *
+ * Extends the `@sentry/node` options with the toggle used by the
+ * application's Sentry provider to decide whether to initialize the
+ * client at all, and with the required project DSN.
+ */
+export interface SentryConfig extends NodeOptions {
+  /**
+   * Enable or disable Sentry
+   */
+  enabled: boolean
+
+  /**
+   * The DSN of the project
+   */
+  dsn: string
+}
+
+const sentryConfig = {
   /**
    * Enable or disable Sentry
    */
@@ -29,4 +48,6 @@ export default defineConfig({
    * @see https://docs.sentry.io/platforms/javascript/guides/node/configuration/sampling
    */
   tracesSampleRate: 0.1,
-})
+} satisfies SentryConfig
+
+export default sentryConfig

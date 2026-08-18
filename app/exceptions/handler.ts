@@ -1,7 +1,7 @@
 import app from '@adonisjs/core/services/app'
 import { type HttpContext, ExceptionHandler } from '@adonisjs/core/http'
 import type { StatusPageRange, StatusPageRenderer } from '@adonisjs/core/types/http'
-import { Sentry } from '@rlanz/sentry'
+import * as Sentry from '@sentry/node'
 
 /**
  * Minimal shape of the Inertia view context the `@adonisjs/inertia`
