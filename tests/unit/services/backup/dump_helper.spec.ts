@@ -52,6 +52,8 @@ test.group('DumpHelper', (group) => {
     assert.include(args, 'p')
     assert.include(args, '-f')
     assert.include(args, '/tmp/dump.sql')
+    assert.include(args, '--no-owner')
+    assert.include(args, '--no-privileges')
   })
 
   test('createDatabaseDump appends -t flags for each table', async ({ assert }) => {
