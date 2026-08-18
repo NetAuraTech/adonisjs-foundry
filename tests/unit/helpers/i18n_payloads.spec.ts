@@ -1,11 +1,10 @@
 import type { I18n } from '@adonisjs/i18n'
 import { test } from '@japa/runner'
-import { readFileSync, readdirSync } from 'node:fs'
-import { join, resolve } from 'node:path'
 import type Role from '#models/auth/role'
 import type Permission from '#models/auth/permission'
 import { I18nService } from '#services/i18n_service'
 import { FakeI18n } from '#tests/helpers/fake_i18n'
+import { LOCALES, loadLang, emptyLeaves } from '#tests/helpers/i18n_lang_loader'
 import { buildSessionPayload } from '#helpers/i18n_payloads/session'
 import { buildSocialDefinePasswordPayload } from '#helpers/i18n_payloads/social_define_password'
 import { buildForgotPasswordPayload } from '#helpers/i18n_payloads/forgot_password'
@@ -24,13 +23,6 @@ import { buildRolesShowPayload } from '#helpers/i18n_payloads/roles_show'
 import { buildPermissionsListPayload } from '#helpers/i18n_payloads/permissions_list'
 import { buildPermissionsFormPayload } from '#helpers/i18n_payloads/permissions_form'
 import { buildLogsListPayload } from '#helpers/i18n_payloads/logs_list'
-import { buildTemplatesIndexPayload } from '#helpers/i18n_payloads/templates_index'
-import { buildTemplatesEditPayload } from '#helpers/i18n_payloads/templates_edit'
-import { buildPagesIndexPayload } from '#helpers/i18n_payloads/pages_index'
-import { buildPagesCreatePayload } from '#helpers/i18n_payloads/pages_create'
-import { buildPagesShowPayload } from '#helpers/i18n_payloads/pages_show'
-import { buildPageRevisionsPayload } from '#helpers/i18n_payloads/page_revisions'
-import { buildPageEditorPayload } from '#helpers/i18n_payloads/page_editor'
 import { buildAdminMaintenanceIndexPayload } from '#helpers/i18n_payloads/maintenance_index'
 import { buildMaintenanceIndexPayload } from '#helpers/i18n_payloads/maintenance_index'
 import { buildFileFoldersPayload } from '#helpers/i18n_payloads/file_folders'
@@ -40,61 +32,6 @@ import { buildUsersListPayload } from '#helpers/i18n_payloads/users_list'
 import { buildUsersFormPayload } from '#helpers/i18n_payloads/users_form'
 import { buildUsersShowPayload } from '#helpers/i18n_payloads/users_show'
 import { buildCommonPayload } from '#helpers/i18n_payloads/common'
-
-const LOCALES = ['en', 'fr'] as const
-
-const LANG_DIR = resolve(process.cwd(), 'resources', 'lang')
-
-/**
- * Recursively flattens a nested lang object into dot-notation keys. The file
- * basename is the root namespace (e.g. `admin.json` → `admin.*`). A JSON key
- * that itself contains dots is appended verbatim, matching the flat key the
- * i18n runtime uses.
- */
-function flatten(
-  root: string,
-  obj: Record<string, any>,
-  acc: Record<string, string>,
-  prefix = ''
-): void {
-  for (const [key, value] of Object.entries(obj)) {
-    const full = prefix ? `${prefix}.${key}` : key
-    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      flatten(root, value, acc, full)
-    } else {
-      acc[`${root}.${full}`] = String(value)
-    }
-  }
-}
-
-function loadLang(locale: string): Record<string, string> {
-  const dir = join(LANG_DIR, locale)
-  const acc: Record<string, string> = {}
-  for (const file of readdirSync(dir).filter((f) => f.endsWith('.json'))) {
-    const root = file.replace(/\.json$/, '')
-    const parsed = JSON.parse(readFileSync(join(dir, file), 'utf8'))
-    flatten(root, parsed, acc)
-  }
-  return acc
-}
-
-/**
- * Collects the paths of every leaf in a payload whose value is the empty
- * string. A missing translation key falls back to the key itself, so this
- * specifically guards against keys stored as empty strings in the lang files.
- */
-function emptyLeaves(root: Record<string, any>, prefix = ''): string[] {
-  const out: string[] = []
-  for (const [key, value] of Object.entries(root)) {
-    const path = prefix ? `${prefix}.${key}` : key
-    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      out.push(...emptyLeaves(value, path))
-    } else if (value === '') {
-      out.push(path)
-    }
-  }
-  return out
-}
 
 // Dummy domain records whose slugs map to keys that exist in both locales.
 const DUMMY_ROLE = {
@@ -129,13 +66,6 @@ const BUILDER_IDS = [
   'permissions_list',
   'permissions_form',
   'logs_list',
-  'templates_index',
-  'templates_edit',
-  'pages_index',
-  'pages_create',
-  'pages_show',
-  'page_revisions',
-  'page_editor',
   'admin_maintenance_index',
   'maintenance_index',
   'file_folders',
@@ -190,20 +120,6 @@ function buildById(i18n: I18nService, id: (typeof BUILDER_IDS)[number]): any {
       return buildPermissionsFormPayload(i18n)
     case 'logs_list':
       return buildLogsListPayload(i18n)
-    case 'templates_index':
-      return buildTemplatesIndexPayload(i18n)
-    case 'templates_edit':
-      return buildTemplatesEditPayload(i18n)
-    case 'pages_index':
-      return buildPagesIndexPayload(i18n)
-    case 'pages_create':
-      return buildPagesCreatePayload(i18n)
-    case 'pages_show':
-      return buildPagesShowPayload(i18n)
-    case 'page_revisions':
-      return buildPageRevisionsPayload(i18n)
-    case 'page_editor':
-      return buildPageEditorPayload(i18n)
     case 'admin_maintenance_index':
       return buildAdminMaintenanceIndexPayload(i18n)
     case 'maintenance_index':
@@ -226,8 +142,8 @@ function buildById(i18n: I18nService, id: (typeof BUILDER_IDS)[number]): any {
 }
 
 test.group('i18n payload lang coverage', () => {
-  test('covers every payload builder', ({ assert }) => {
-    assert.lengthOf(BUILDER_IDS, 34)
+  test('covers every non-CMS payload builder', ({ assert }) => {
+    assert.lengthOf(BUILDER_IDS, 27)
   })
 
   for (const locale of LOCALES) {
