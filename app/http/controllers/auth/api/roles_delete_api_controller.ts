@@ -1,22 +1,19 @@
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
-import { DeleteRoleAction } from '#actions/role/delete_role_action'
-import { restRoleIdValidator } from '#validators/role'
+import RolesResource from '#rest/roles'
 
 /**
  * DELETE /api/v1/admin/roles/:id — delete a role from the admin REST API.
+ *
+ * Thin transport adapter over the `destroy` endpoint of the
+ * {@link RolesResource}; the endpoint declaration is executed by the shared
+ * REST pipeline.
  */
 @inject()
 export default class RolesDeleteApiController {
-  constructor(protected deleteRoleAction: DeleteRoleAction) {}
+  constructor(protected rolesResource: RolesResource) {}
 
-  async destroy(ctx: HttpContext) {
-    const { params, response } = ctx
-
-    const { id } = await restRoleIdValidator.validate(params)
-
-    await this.deleteRoleAction.execute({ id })
-
-    return response.noContent()
+  async destroy(ctx: HttpContext): Promise<void> {
+    await this.rolesResource.handle('destroy', ctx)
   }
 }

@@ -1,51 +1,24 @@
-import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { showFileValidator, upsertAltValidator, deleteAltValidator } from '#validators/file'
-import { UpsertFileAltAction } from '#actions/file/upsert_file_alt_action'
-import { DeleteFileAltAction } from '#actions/file/delete_file_alt_action'
-import { GetFileDetailAction } from '#actions/file/get_file_detail_action'
-import FileTransformer from '#transformers/file_transformer'
+import { type HttpContext } from '@adonisjs/core/http'
+import FilesResource from '#rest/files'
 
 /**
- * PUT    /api/v1/admin/files/:id/alt — upsert an alt-text entry
- * DELETE /api/v1/admin/files/:id/alt — delete an alt-text entry
+ * PUT    /api/v1/admin/files/:id/alt — upsert an alt-text entry.
+ * DELETE /api/v1/admin/files/:id/alt — delete an alt-text entry.
+ *
+ * Thin transport adapters over the `upsertAlt` and `deleteAlt` endpoints of
+ * the {@link FilesResource}; the endpoint declarations are executed by the
+ * shared REST pipeline.
  */
 @inject()
 export default class FilesAltApiController {
-  constructor(
-    protected upsertFileAltAction: UpsertFileAltAction,
-    protected deleteFileAltAction: DeleteFileAltAction,
-    protected getFileDetailAction: GetFileDetailAction
-  ) {}
+  constructor(protected filesResource: FilesResource) {}
 
-  async upsertAlt(ctx: HttpContext) {
-    const { params, request, serialize } = ctx
-    const { id } = await showFileValidator.validate(params)
-    const payload = await upsertAltValidator.validate(request.all())
-
-    await this.upsertFileAltAction.execute({
-      fileId: id,
-      locale: payload.locale,
-      key: payload.key,
-      value: payload.value,
-    })
-
-    const file = await this.getFileDetailAction.execute({ id })
-    return serialize(FileTransformer.transform(file))
+  async upsertAlt(ctx: HttpContext): Promise<void> {
+    await this.filesResource.handle('upsertAlt', ctx)
   }
 
-  async deleteAlt(ctx: HttpContext) {
-    const { params, request, serialize } = ctx
-    const { id } = await showFileValidator.validate(params)
-    const payload = await deleteAltValidator.validate(request.all())
-
-    await this.deleteFileAltAction.execute({
-      fileId: id,
-      locale: payload.locale,
-      key: payload.key,
-    })
-
-    const file = await this.getFileDetailAction.execute({ id })
-    return serialize(FileTransformer.transform(file))
+  async deleteAlt(ctx: HttpContext): Promise<void> {
+    await this.filesResource.handle('deleteAlt', ctx)
   }
 }
