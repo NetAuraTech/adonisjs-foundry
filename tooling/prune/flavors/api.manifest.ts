@@ -1451,7 +1451,7 @@ const apiManifest: FlavorManifest = {
         '    "@fontsource/playfair-display": "^5.3.0",',
         '    "@iconify/react": "^6.0.2",',
         '    "@inertiajs/react": "^2.3.22",',
-        '    "@sentry/node": "^9.47.1",',
+        '    "@sentry/node": "^10.70.0",',
         '    "@tailwindcss/vite": "^4.2.1",',
         '    "@tuyau/core": "^1.0.0",',
         '    "@vinejs/vine": "^4.3.0",',
