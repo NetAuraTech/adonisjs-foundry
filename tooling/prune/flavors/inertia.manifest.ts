@@ -30,6 +30,8 @@ const inertiaManifest: FlavorManifest = {
     // ─── CMS controllers (page + template) ──────────────────────────────────
     'app/http/controllers/page',
     'app/http/controllers/template',
+    'app/http/rest/pages.ts',
+    'app/http/rest/templates.ts',
 
     // ─── CMS transformers (page + template) ─────────────────────────────────
     'app/data/transformers/page',
@@ -54,6 +56,7 @@ const inertiaManifest: FlavorManifest = {
     // ─── CMS preview-token helper (page/template preview only) ──────────────
     'app/helpers/core/preview_token.ts',
     'tests/unit/helpers/core/preview_token.spec.ts',
+    'tests/unit/helpers/i18n_payloads_cms.spec.ts',
     'commands/cms_normalize_migration_names.ts',
 
     // ─── CMS migrations ─────────────────────────────────────────────────────
