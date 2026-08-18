@@ -1,7 +1,7 @@
 import app from '@adonisjs/core/services/app'
 import { inject } from '@adonisjs/core'
 import { BackupEngine } from '#services/backup/backup_engine'
-import type { BackupResult } from '#services/backup/backup_strategy'
+import type { BackupResult } from '#services/backup/backup_types'
 
 export interface RunBackupPayload {
   strategy?: 'full' | 'differential' | 'auto'

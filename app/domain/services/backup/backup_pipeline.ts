@@ -21,13 +21,14 @@ import {
   StorageUploader,
   type StorageUploader as StorageUploaderType,
 } from '#services/backup/storage_uploader'
-import type { BackupResult, BackupContext } from '#services/backup/backup_strategy'
+import type { BackupResult, BackupContext, BackupMetadata } from '#services/backup/backup_types'
 
 /**
  * Test-override dependency-injection bag for the backup pipeline.
  *
- * Declared exactly once here and shared by every strategy that delegates to
- * {@link BackupPipeline}. Keys prefixed with `_` are internal: in production
+ * Declared exactly once here; the {@link BackupPipeline} constructor and the
+ * tests are its only consumers. Keys prefixed with `_` are internal: in
+ * production
  * the bag is omitted and every dependency falls back to its real
  * implementation; in tests, stubs replace the real functions so no ESM-level
  * mocking is needed.
@@ -43,16 +44,27 @@ export interface BackupPipelineOverrides {
 }
 
 /**
- * BackupPipeline - shared plumbing for the backup strategies.
+ * BackupPipeline - the single execution path for every backup kind.
  *
  * Owns the dump, compress, encrypt, manifest, upload and cleanup steps for
- * every backup kind: temp-file tracking and cleanup, result-object
- * construction and pipeline logging. Full backups run end to end through
- * {@link executeFullBackup}; the differential strategy keeps its own decision
- * logic (which tables to dump, fallbacks, skip conditions) and delegates
- * every I/O step to this pipeline.
+ * both full and differential backups: temp-file tracking and cleanup,
+ * result-object construction and pipeline logging. Full backups run through
+ * {@link executeFullBackup}; differential backups through
+ * {@link executeDifferentialBackup}. The only variation point between the
+ * two runs is table selection: every table for a full dump, the tables
+ * modified since the last full backup for a differential one. When no full
+ * backup exists to serve as the base, the differential run falls back to a
+ * full backup inside the pipeline.
  *
  * Non-DI class: imported and instantiated directly, no @inject().
+ *
+ * **Direct infra access** (exception to the layering rules)
+ *
+ * A backup is OS-level work no repository can own: a `pg_dump` child
+ * process, gzip compression and encryption, temp-file handling on the
+ * filesystem, and raw SQL against the catalogs (`pg_stat_user_tables`,
+ * `information_schema`) to detect modified tables. The pipeline therefore
+ * bypasses the repository layer entirely.
  *
  * **Dependency injection for testability**
  *
@@ -73,7 +85,7 @@ export interface BackupPipelineOverrides {
  */
 export class BackupPipeline {
   private readonly snapshotHelper: SnapshotHelperType
-  readonly storageUploader: StorageUploaderType
+  private readonly storageUploader: StorageUploaderType
   private readonly mkdirFn: typeof defaultMkdir
   private readonly statFn: typeof defaultStat
   private readonly unlinkFn: typeof defaultUnlink
@@ -85,12 +97,13 @@ export class BackupPipeline {
    * @param context - Backup execution context (temp dir, filename, strategy type).
    * @param logService - Application logging service.
    * @param overrides - Optional dependency overrides for testing (see
-   *   {@link BackupPipelineOverrides}).
+   *   {@link BackupPipelineOverrides}). Kept so a fallback run started
+   *   inside {@link executeDifferentialBackup} inherits the same stubs.
    */
   constructor(
     private readonly context: BackupContext,
     private readonly logService: LogService,
-    overrides?: BackupPipelineOverrides
+    private readonly overrides?: BackupPipelineOverrides
   ) {
     this.snapshotHelper = overrides?._snapshotHelper ?? new SnapshotHelper()
     this.storageUploader = overrides?._uploader ?? new StorageUploader()
@@ -103,10 +116,10 @@ export class BackupPipeline {
 
   /**
    * Local path of the SQL dump for the pipeline's backup filename: the
-   * filename with its `.gz`/`.enc` extensions stripped down to `.sql`.
+   * trailing `.sql`/`.gz`/`.enc` extension stack reduced to a single `.sql`.
    */
   dumpPath(): string {
-    return join(this.context.tempDir, this.context.filename).replace(/\.(gz\.enc|enc|gz)$/, '.sql')
+    return join(this.context.tempDir, this.context.filename).replace(/(\.sql|\.gz|\.enc)+$/, '.sql')
   }
 
   /**
@@ -156,6 +169,70 @@ export class BackupPipeline {
 
       const tables = await this.getAllTables()
       await this.writeManifest({ tables })
+
+      return this.successResult(size, elapsed())
+    })
+  }
+
+  /**
+   * Execute a differential backup end to end: find the last full backup as
+   * the base reference, dump only the tables modified since then, compress
+   * and encrypt the dump, upload the artifact, then persist a manifest
+   * listing the dumped tables and referencing the base full backup filename.
+   *
+   * Entry point for differential backups. When no full backup exists, the
+   * run falls back to a full backup executed inside this same pipeline with
+   * a full-typed filename. When no table has been modified, the run is
+   * skipped and no artifact is produced.
+   *
+   * @returns The {@link BackupResult} for the run.
+   */
+  async executeDifferentialBackup(): Promise<BackupResult> {
+    return this.run(async (elapsed) => {
+      // Find the last full backup to use as reference
+      const lastFullBackup = await this.findLastFullBackup()
+      if (!lastFullBackup) {
+        this.logService.warn({
+          message: 'No full backup found, running full backup instead',
+          category: LogCategory.SYSTEM,
+        })
+
+        // Fall through to a full backup — regenerate the filename to match
+        const fullContext: BackupContext = {
+          ...this.context,
+          filename: SnapshotHelper.generateFilename('full'),
+          strategyType: 'full',
+        }
+        return new BackupPipeline(fullContext, this.logService, this.overrides).executeFullBackup()
+      }
+
+      // Get tables modified since the last backup
+      const modifiedTables = await this.getModifiedTables(lastFullBackup.createdAt)
+
+      if (modifiedTables.length === 0) {
+        this.logService.info({
+          message: 'No tables modified since last backup, skipping',
+          category: LogCategory.SYSTEM,
+        })
+        return this.noArtifactResult(elapsed())
+      }
+
+      this.logService.info({
+        message: 'Found modified tables',
+        category: LogCategory.SYSTEM,
+        metadata: { count: modifiedTables.length, tables: modifiedTables },
+      })
+
+      const dumpPath = this.dumpPath()
+      await this.dump(dumpPath, modifiedTables)
+
+      const { encryptedPath, size } = await this.compressAndEncrypt(dumpPath)
+      await this.writeManifest({
+        type: 'differential',
+        tables: modifiedTables,
+        fullBackupReference: lastFullBackup.filename,
+      })
+      await this.uploadBackup(encryptedPath)
 
       return this.successResult(size, elapsed())
     })
@@ -279,6 +356,146 @@ export class BackupPipeline {
       `SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename`
     )
     return result.rows.map((row: any) => row.tablename)
+  }
+
+  /**
+   * Find the newest full backup stored on the configured disk — the base
+   * reference for a differential run ({@link executeDifferentialBackup}).
+   */
+  private async findLastFullBackup(): Promise<BackupMetadata | null> {
+    const backups = await this.listBackups()
+    const fullBackups = backups.filter((b) => b.type === 'full')
+    return fullBackups.length > 0 ? fullBackups[0] : null
+  }
+
+  /**
+   * List the backup artifacts stored under the configured prefix, newest
+   * first. Storage failures are logged and swallowed as an empty list,
+   * which makes a differential run fall back to a full backup.
+   */
+  private async listBackups(): Promise<BackupMetadata[]> {
+    try {
+      const objects = await this.storageUploader.listBackups()
+      const backups: BackupMetadata[] = []
+
+      for (const object of objects) {
+        if (object.isDirectory) continue
+
+        const filename = object.key.replace(backupConfig.storage.prefix + '/', '')
+        const match = filename.match(/backup-(full|differential)-(\d{4}-\d{2}-\d{2})-(\d{6})/)
+        if (!match) continue
+
+        const meta = await this.storageUploader.getMetaData(object.key)
+
+        backups.push({
+          filename,
+          type: match[1] as 'full' | 'differential',
+          size: meta.contentLength || 0,
+          createdAt: meta.lastModified || this.parseFilenameDate(match[2], match[3]),
+          path: object.key,
+        })
+      }
+
+      return backups.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    } catch (error) {
+      this.logService.error({
+        message: 'Failed to list backups from Drive',
+        category: LogCategory.SYSTEM,
+        error,
+        context: { disk: backupConfig.storage.disk },
+      })
+      return []
+    }
+  }
+
+  /**
+   * Parse the date and time components carried by a backup filename.
+   */
+  private parseFilenameDate(date: string, time: string): Date {
+    const [year, month, day] = date.split('-').map(Number)
+    const hour = Number.parseInt(time.slice(0, 2))
+    const minute = Number.parseInt(time.slice(2, 4))
+    const second = Number.parseInt(time.slice(4, 6))
+    return new Date(year, month - 1, day, hour, minute, second)
+  }
+
+  /**
+   * List the tables modified since the given date, combining vacuum/analyze
+   * statistics with `updated_at` columns (excluding the tables listed in the
+   * differential config exclusions).
+   *
+   * @param since - Reference date (creation time of the base full backup).
+   */
+  private async getModifiedTables(since: Date): Promise<string[]> {
+    const db = await import('@adonisjs/lucid/services/db')
+    const connection = db.default.connection(backupConfig.database.connection)
+
+    const result = await connection.rawQuery(
+      `
+        SELECT
+          schemaname || '.' || relname as table_name,
+          last_vacuum,
+          last_autovacuum,
+          last_analyze,
+          last_autoanalyze
+        FROM pg_stat_user_tables
+        WHERE
+          schemaname = 'public'
+          AND (
+            last_vacuum > ? OR
+            last_autovacuum > ? OR
+            last_analyze > ? OR
+            last_autoanalyze > ?
+          )
+        ORDER BY relname
+      `,
+      [since, since, since, since]
+    )
+
+    const modifiedFromStats = result.rows.map((row: any) => row.table_name.replace('public.', ''))
+
+    const allTablesResult = await connection.rawQuery(
+      `SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename`
+    )
+    const allTables = allTablesResult.rows.map((row: any) => row.tablename)
+
+    const modifiedFromUpdatedAt: string[] = []
+
+    for (const table of allTables) {
+      if (backupConfig.differential.excludedTables.includes(table)) continue
+
+      try {
+        const hasUpdatedAt = await connection.rawQuery(
+          `
+            SELECT column_name
+            FROM information_schema.columns
+            WHERE table_schema = 'public'
+              AND table_name = ?
+              AND column_name = 'updated_at'
+          `,
+          [table]
+        )
+
+        if (hasUpdatedAt.rows.length > 0) {
+          const hasModified = await connection.rawQuery(
+            `SELECT 1 FROM "${table}" WHERE updated_at > ? LIMIT 1`,
+            [since]
+          )
+          if (hasModified.rows.length > 0) {
+            modifiedFromUpdatedAt.push(table)
+          }
+        }
+      } catch (error) {
+        this.logService.warn({
+          message: 'Failed to check table for modifications',
+          category: LogCategory.SYSTEM,
+          error,
+          metadata: { table },
+        })
+      }
+    }
+
+    return [...new Set([...modifiedFromStats, ...modifiedFromUpdatedAt])]
   }
 
   /**

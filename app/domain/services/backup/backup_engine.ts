@@ -3,13 +3,13 @@ import backupConfig from '#config/backup'
 import { type LogService } from '#services/logging/log_service'
 import { SnapshotHelper } from '#services/backup/snapshot_helper'
 import { BackupPipeline } from '#services/backup/backup_pipeline'
-import type { BackupResult, BackupContext } from '#services/backup/backup_strategy'
+import type { BackupResult, BackupContext } from '#services/backup/backup_types'
 
 /**
- * BackupEngine — Orchestrates backup execution by selecting the appropriate
- * execution path, building the context, and delegating to it: full backups
- * run through the shared {@link BackupPipeline} directly, differential
- * backups through their strategy.
+ * BackupEngine — Orchestrates backup execution by resolving the strategy
+ * type (explicit or `auto` off the configured schedule), building the
+ * context, and delegating to the shared {@link BackupPipeline}: full and
+ * differential backups both run end to end through it.
  *
  * Non-DI class: imported and instantiated directly, no @inject().
  */
@@ -30,17 +30,14 @@ export class BackupEngine {
   }
 
   /**
-   * Execute the backup through the selected path: the shared pipeline for
-   * full backups, the differential strategy otherwise.
+   * Execute the backup through the shared pipeline: the full or the
+   * differential entry point, depending on the resolved strategy type.
    */
   async execute(): Promise<BackupResult> {
-    if (this.context.strategyType === 'full') {
-      return new BackupPipeline(this.context, this.logService).executeFullBackup()
-    }
-
-    const { DifferentialBackupStrategy } =
-      await import('#services/backup/differential_backup_strategy')
-    return new DifferentialBackupStrategy(this.context, this.logService).execute()
+    const pipeline = new BackupPipeline(this.context, this.logService)
+    return this.context.strategyType === 'full'
+      ? pipeline.executeFullBackup()
+      : pipeline.executeDifferentialBackup()
   }
 
   /**

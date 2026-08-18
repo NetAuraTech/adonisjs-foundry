@@ -92,11 +92,12 @@ test.group('BackupPipeline', (group) => {
 
   test('uploadBackup() uploads the artifact under the context filename', async ({ assert }) => {
     const { BackupPipeline } = await import('#services/backup/backup_pipeline')
-    const pipeline = new BackupPipeline(context, buildLogService(), buildOverrides() as any)
+    const overrides = buildOverrides()
+    const pipeline = new BackupPipeline(context, buildLogService(), overrides as any)
 
-    const uploadStub = (pipeline as any).storageUploader.upload
     await pipeline.uploadBackup('/tmp/backups/x.sql.gz.enc')
 
+    const uploadStub = overrides._uploader.upload
     assert.isTrue(uploadStub.calledOnce)
     assert.equal(uploadStub.firstCall.args[0], '/tmp/backups/x.sql.gz.enc')
     assert.equal(uploadStub.firstCall.args[1], context.filename)
@@ -355,5 +356,220 @@ test.group('BackupPipeline', (group) => {
     assert.isFalse(result.success)
     // 1 explicit unlink (dump after compress) + cleanup removes tracked dump/compressed
     assert.equal(overrides._unlink.callCount, 3)
+  })
+
+  // ─── executeDifferentialBackup() ─────────────────────────────────────────
+  //
+  // Coverage migrated from the retired DifferentialBackupStrategy spec:
+  // differential backups run end to end through the pipeline, with table
+  // selection (dumped tables, base full backup reference, fallback, skip)
+  // as their only variation point.
+
+  const differentialContext = {
+    tempDir: '/tmp/backups',
+    filename: 'backup-differential-2024.sql.gz.enc',
+    strategyType: 'differential' as const,
+  }
+
+  const baseFullBackupObject = {
+    key: 'backup/backup-full-2024-01-01-020000.sql.gz.enc',
+    isDirectory: false,
+  }
+
+  const buildDifferentialOverrides = (fullBackups: any[] = []) => {
+    const overrides = buildOverrides()
+    overrides._uploader = {
+      upload: sinon.stub().resolves(),
+      listBackups: sinon.stub().resolves(fullBackups as any),
+      getMetaData: sinon.stub().resolves({
+        contentLength: 5000,
+        lastModified: new Date('2024-01-01T02:00:00Z'),
+      }),
+    } as any
+    return overrides
+  }
+
+  test('executeDifferentialBackup() falls back to a full backup inside the pipeline when no full backup exists', async ({
+    assert,
+  }) => {
+    const logService = buildLogService()
+    const overrides = buildDifferentialOverrides()
+
+    const snapshotModule = await import('#services/backup/snapshot_helper')
+    sinon
+      .stub(snapshotModule.SnapshotHelper, 'generateFilename')
+      .returns('backup-full-2024.sql.gz.enc')
+    sinon.stub(snapshotModule.SnapshotHelper, 'manifestFilename').returns('m.manifest.json')
+
+    // The fallback delegates to the full entry point on a fresh full-typed pipeline
+    const pipelineModule = await import('#services/backup/backup_pipeline')
+    const executeStub = sinon.stub().resolves({
+      success: true,
+      filename: 'backup-full-2024.sql.gz.enc',
+      type: 'full' as const,
+      size: 1024,
+      duration: 500,
+      storage: 'fs',
+    })
+    sinon.stub(pipelineModule.BackupPipeline.prototype, 'executeFullBackup').callsFake(executeStub)
+
+    const { BackupPipeline } = pipelineModule
+    const pipeline = new BackupPipeline(differentialContext, logService, overrides)
+
+    const result = await pipeline.executeDifferentialBackup()
+
+    assert.isTrue(result.success)
+    assert.equal(result.type, 'full')
+    assert.equal(result.filename, 'backup-full-2024.sql.gz.enc')
+    assert.isTrue(executeStub.calledOnce)
+    assert.isTrue(logService.warn.calledOnce)
+    assert.include(logService.warn.firstCall.args[0].message, 'No full backup found')
+    // Verify the filename was regenerated with 'full' type before delegating
+    assert.isTrue(
+      (snapshotModule.SnapshotHelper.generateFilename as any).calledWith('full'),
+      'generateFilename should be called with full type on fallback'
+    )
+  })
+
+  test('executeDifferentialBackup() skips when no tables have been modified', async ({
+    assert,
+  }) => {
+    const logService = buildLogService()
+    const overrides = buildDifferentialOverrides([baseFullBackupObject])
+
+    // Mock DB — no modified tables
+    const dbModule = await import('@adonisjs/lucid/services/db')
+    sinon.stub(dbModule.default, 'connection').returns({
+      rawQuery: sinon.stub().resolves({ rows: [] }),
+    } as any)
+
+    const { BackupPipeline } = await import('#services/backup/backup_pipeline')
+    const pipeline = new BackupPipeline(differentialContext, logService, overrides)
+
+    const result = await pipeline.executeDifferentialBackup()
+
+    assert.isTrue(result.success)
+    assert.equal(result.type, 'differential')
+    assert.equal(result.size, 0)
+    assert.equal(result.filename, '')
+    assert.include(
+      logService.info.getCalls().map((call: any) => call.args[0].message),
+      'No tables modified since last backup, skipping'
+    )
+  })
+
+  test('executeDifferentialBackup() dumps the modified tables and writes the differential manifest', async ({
+    assert,
+  }) => {
+    const logService = buildLogService()
+    const overrides = buildDifferentialOverrides([baseFullBackupObject])
+    const uploadStub = overrides._uploader.upload
+
+    // Mock DB — return modified tables
+    const dbModule = await import('@adonisjs/lucid/services/db')
+    const connStub = {
+      rawQuery: sinon
+        .stub()
+        .onCall(0)
+        .resolves({ rows: [{ table_name: 'public.users' }] }) // pg_stat_user_tables — modified
+        .onCall(1)
+        .resolves({ rows: [{ tablename: 'users' }] }) // pg_tables
+        .resolves({ rows: [] }), // default for further calls
+    }
+    sinon.stub(dbModule.default, 'connection').returns(connStub as any)
+
+    const snapshotModule = await import('#services/backup/snapshot_helper')
+    sinon.stub(snapshotModule.SnapshotHelper, 'manifestFilename').returns('m.manifest.json')
+
+    const { BackupPipeline } = await import('#services/backup/backup_pipeline')
+    const pipeline = new BackupPipeline(differentialContext, logService, overrides)
+
+    const result = await pipeline.executeDifferentialBackup()
+
+    assert.isTrue(result.success)
+    assert.equal(result.type, 'differential')
+    assert.equal(result.size, 2048)
+    assert.equal(result.filename, differentialContext.filename)
+    // Table selection: the dump is restricted to the modified tables
+    const dumpOptions = overrides._createDatabaseDump.firstCall.args[0]
+    assert.equal(dumpOptions.outputPath, join('/tmp/backups', 'backup-differential-2024.sql'))
+    assert.deepEqual(dumpOptions.tables, ['users'])
+    // The manifest lists the dumped tables and references the base full backup
+    assert.deepEqual(JSON.parse(overrides._writeFile.firstCall.args[1]), {
+      type: 'differential',
+      tables: ['users'],
+      fullBackupReference: 'backup-full-2024-01-01-020000.sql.gz.enc',
+    })
+    // The artifact (2nd upload, after the manifest) goes out under the differential filename
+    assert.equal(uploadStub.callCount, 2)
+    assert.equal(uploadStub.secondCall.args[0], '/tmp/backups/x.sql.gz.enc')
+    assert.equal(uploadStub.secondCall.args[1], differentialContext.filename)
+    // 1 explicit unlink (dump after compress) + cleanup of dump/compressed/encrypted/manifest
+    assert.equal(overrides._unlink.callCount, 5)
+  })
+
+  test('executeDifferentialBackup() returns a failure result on step failure', async ({
+    assert,
+  }) => {
+    const logService = buildLogService()
+    const overrides = buildDifferentialOverrides()
+    overrides._mkdir = sinon.stub().rejects(new Error('Disk full'))
+
+    const { BackupPipeline } = await import('#services/backup/backup_pipeline')
+    const pipeline = new BackupPipeline(differentialContext, logService, overrides)
+
+    const result = await pipeline.executeDifferentialBackup()
+
+    assert.isFalse(result.success)
+    assert.equal(result.type, 'differential')
+    assert.include(result.error, 'Disk full')
+  })
+
+  test('executeDifferentialBackup() cleans up temp files on failure', async ({ assert }) => {
+    const logService = buildLogService()
+    const overrides = buildDifferentialOverrides([baseFullBackupObject])
+    // Encryption fails after the dump was compressed
+    overrides._snapshotHelper.encrypt = sinon.stub().rejects(new Error('Encryption failed'))
+
+    // Mock DB — return modified tables
+    const dbModule = await import('@adonisjs/lucid/services/db')
+    const connStub = {
+      rawQuery: sinon
+        .stub()
+        .onCall(0)
+        .resolves({ rows: [{ table_name: 'public.users' }] })
+        .onCall(1)
+        .resolves({ rows: [{ tablename: 'users' }] })
+        .resolves({ rows: [] }),
+    }
+    sinon.stub(dbModule.default, 'connection').returns(connStub as any)
+
+    const snapshotModule = await import('#services/backup/snapshot_helper')
+    sinon.stub(snapshotModule.SnapshotHelper, 'manifestFilename').returns('m.manifest.json')
+
+    const { BackupPipeline } = await import('#services/backup/backup_pipeline')
+    const pipeline = new BackupPipeline(differentialContext, logService, overrides)
+
+    const result = await pipeline.executeDifferentialBackup()
+
+    assert.isFalse(result.success)
+    // 1 explicit unlink (dump after compress) + cleanup removes tracked dump/compressed
+    assert.equal(overrides._unlink.callCount, 3)
+  })
+
+  test('parseFilenameDate() parses date and time components', async ({ assert }) => {
+    const { BackupPipeline } = await import('#services/backup/backup_pipeline')
+    const pipeline = new BackupPipeline(differentialContext, buildLogService(), buildOverrides())
+
+    // Access private method via prototype (TypeScript doesn't enforce private at runtime)
+    const parseMethod = (pipeline as any).parseFilenameDate.bind(pipeline)
+    const date = parseMethod('2024-06-15', '143022')
+
+    assert.equal(date.getFullYear(), 2024)
+    assert.equal(date.getMonth(), 5) // June is month 5 (0-indexed)
+    assert.equal(date.getDate(), 15)
+    assert.equal(date.getHours(), 14)
+    assert.equal(date.getMinutes(), 30)
+    assert.equal(date.getSeconds(), 22)
   })
 })

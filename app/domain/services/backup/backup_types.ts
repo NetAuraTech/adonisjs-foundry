@@ -1,8 +1,8 @@
 /**
- * BackupStrategy — Common interface for all backup strategies.
+ * Shared backup types.
  *
- * Each strategy implements its own execution logic (dump, compress,
- * encrypt, manifest, upload) while sharing the same contract.
+ * The result and context contracts shared by the backup pipeline, the
+ * backup engine, and the backup actions.
  */
 
 export interface BackupResult {
@@ -30,13 +30,9 @@ export interface BackupMetadata {
   path: string
 }
 
-export interface BackupStrategy {
-  execute(): Promise<BackupResult>
-}
-
 /**
- * Context shared across strategies and helpers.
- * All external dependencies are passed in here to keep strategies
+ * Context shared across the pipeline and helpers.
+ * All external dependencies are passed in here to keep the pipeline
  * instantiable without DI.
  */
 export interface BackupContext {
