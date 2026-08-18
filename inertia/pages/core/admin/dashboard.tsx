@@ -5,7 +5,7 @@ import { Data } from '@generated/data'
 import { AdminMain } from '~/components/organisms/admin/admin_main'
 import { usePage } from '@inertiajs/react'
 import { Lang, useTranslation } from '~/hooks/use_translation'
-import type { AdminDashboardTranslations } from '#types/translations'
+import type { AdminDashboardTranslations } from '#helpers/i18n_payloads/dashboard'
 import { getDashboardSectionBundle } from '~/lib/dashboard_sections'
 
 interface Props {

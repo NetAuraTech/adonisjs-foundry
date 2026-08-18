@@ -4,7 +4,7 @@ import { Heading } from '~/components/atoms/heading'
 import { NavLink } from '~/components/atoms/nav_link'
 import { Paragraph } from '~/components/atoms/paragraph'
 import { CanAccess } from '~/guards/can_access'
-import type { TranslationNodes } from '#types/translations'
+import type { TranslationNodes } from '#helpers/i18n_payloads/nest'
 import { useTranslation } from '~/hooks/use_translation'
 import { Head } from '@inertiajs/react'
 

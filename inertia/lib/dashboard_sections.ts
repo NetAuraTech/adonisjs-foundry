@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react'
 import type { Data } from '@generated/data'
-import type { AdminDashboardTranslations } from '#types/translations'
+import type { AdminDashboardTranslations } from '#helpers/i18n_payloads/dashboard'
 
 /**
  * Client-side registry of admin dashboard section cards, mirroring the

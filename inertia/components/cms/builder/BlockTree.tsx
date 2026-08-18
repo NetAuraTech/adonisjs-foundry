@@ -14,7 +14,7 @@ import { usePage } from '@inertiajs/react'
 import { SharedProps } from '@adonisjs/inertia/types'
 import { cloneBlock } from '~/components/cms/utils/clone_block'
 import { useTranslation } from '~/hooks/use_translation'
-import type { PageEditorTranslations } from '#types/translations'
+import type { PageEditorTranslations } from '#helpers/i18n_payloads/page_editor'
 import type { Data } from '@generated/data'
 
 interface LockHelpers {

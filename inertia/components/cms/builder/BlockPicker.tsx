@@ -1,7 +1,7 @@
 import React from 'react'
 import { getBlockCatalog } from './block_types'
 import type { BlockType } from '#cms/types/page'
-import type { PageEditorTranslations } from '#types/translations'
+import type { PageEditorTranslations } from '#helpers/i18n_payloads/page_editor'
 import { Button } from '~/components/atoms/button'
 import { Icon } from '~/components/atoms/icon'
 

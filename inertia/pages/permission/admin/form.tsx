@@ -11,7 +11,7 @@ import { useFormValidation } from '~/hooks/use_form_validation'
 import { rules } from '~/helpers/validation_rules'
 import { Field } from '~/components/molecules/field'
 import { useTranslation } from '~/hooks/use_translation'
-import type { AdminPermissionsFormTranslations } from '#types/translations'
+import type { AdminPermissionsFormTranslations } from '#helpers/i18n_payloads/permissions_form'
 import { Form } from '@adonisjs/inertia/react'
 import { SharedProps } from '@adonisjs/inertia/types'
 

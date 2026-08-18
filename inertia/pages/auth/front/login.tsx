@@ -11,7 +11,7 @@ import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import type { OAuthProvider } from '#types/auth'
 import { AuthProviders } from '~/components/molecules/auth/auth_providers'
 import { useTranslation } from '~/hooks/use_translation'
-import type { LoginTranslations } from '#types/translations'
+import type { LoginTranslations } from '#helpers/i18n_payloads/session'
 import { Form } from '@adonisjs/inertia/react'
 
 interface PageProps {

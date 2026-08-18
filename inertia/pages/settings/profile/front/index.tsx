@@ -7,7 +7,7 @@ import { Button } from '~/components/atoms/button'
 import { Avatar } from '~/components/atoms/avatar'
 import { Label } from '~/components/atoms/label'
 import { Data } from '@generated/data'
-import type { SettingsProfileTranslations } from '#types/translations'
+import type { SettingsProfileTranslations } from '#helpers/i18n_payloads/profile'
 import { useTranslation } from '~/hooks/use_translation'
 import { Form } from '@adonisjs/inertia/react'
 

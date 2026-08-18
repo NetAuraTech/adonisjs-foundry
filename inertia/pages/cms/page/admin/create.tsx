@@ -14,7 +14,7 @@ import { Icon } from '~/components/atoms/icon'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets, rules } from '~/helpers/validation_rules'
 import { locales, useTranslation } from '~/hooks/use_translation'
-import type { AdminPagesCreateTranslations } from '#types/translations'
+import type { AdminPagesCreateTranslations } from '#helpers/i18n_payloads/pages_create'
 import { Form } from '@adonisjs/inertia/react'
 import { SharedProps } from '@adonisjs/inertia/types'
 

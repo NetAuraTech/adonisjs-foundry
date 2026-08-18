@@ -4,7 +4,7 @@ import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import type { ReactNode } from 'react'
 import type { Data } from '@generated/data'
-import type { AdminDashboardTranslations } from '#types/translations'
+import type { AdminDashboardTranslations } from '#helpers/i18n_payloads/dashboard'
 import DashboardPage from '~/pages/core/admin/dashboard'
 
 /**

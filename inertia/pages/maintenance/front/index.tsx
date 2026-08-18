@@ -6,7 +6,7 @@ import { Button } from '~/components/atoms/button'
 import { Badge } from '~/components/atoms/badge'
 import { useInterval } from '~/hooks/use_interval'
 import { useTranslation } from '~/hooks/use_translation'
-import type { MaintenanceTranslations } from '#types/translations'
+import type { MaintenanceTranslations } from '#helpers/i18n_payloads/maintenance_index'
 
 interface PageProps {
   message: string

@@ -1,25 +1,7 @@
 import { test } from '@japa/runner'
 import type { I18n } from '@adonisjs/i18n'
 import { I18nService } from '#services/i18n_service'
-
-class FakeI18n implements Partial<I18n> {
-  public locale = 'en'
-  private translations: Record<string, string> = {}
-
-  constructor(translations?: Record<string, string>) {
-    this.translations = translations ?? {}
-  }
-
-  t(key: string, replacements?: Record<string, any>): string {
-    let result = this.translations[key] ?? key
-    if (replacements) {
-      for (const [k, v] of Object.entries(replacements)) {
-        result = result.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v))
-      }
-    }
-    return result
-  }
-}
+import { FakeI18n } from '#tests/helpers/fake_i18n'
 
 test.group('I18nService', () => {
   let i18n: FakeI18n

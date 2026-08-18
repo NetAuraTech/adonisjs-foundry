@@ -2,7 +2,7 @@ import { Section } from '~/components/atoms/section'
 import { Heading } from '~/components/atoms/heading'
 import { Paragraph } from '~/components/atoms/paragraph'
 import { useTranslation } from '~/hooks/use_translation'
-import type { HomeTranslations } from '#types/translations'
+import type { HomeTranslations } from '#helpers/i18n_payloads/home'
 
 interface Props {
   translations: HomeTranslations

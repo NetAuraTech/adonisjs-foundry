@@ -1,8 +1,58 @@
-import type { I18nService } from '#services/i18n_service'
+import type { BuildPayloadResult, I18nService } from '#services/i18n_service'
 import type Role from '#models/auth/role'
 import type Permission from '#models/auth/permission'
-import type { TranslationNodes } from '#types/translations'
-import { nestTranslation, permissionCategoryKey } from '#helpers/i18n_payloads/nest'
+import { createI18nEntry } from '#services/i18n_service'
+import {
+  nestTranslation,
+  permissionCategoryKey,
+  type TranslationNodes,
+} from '#helpers/i18n_payloads/nest'
+
+/**
+ * The flat i18n key mapping for the role detail page. The `roles` and
+ * `permissions` nodes are built dynamically at build time, one entry per
+ * data-driven slug.
+ */
+export const ROLES_SHOW_MAPPING = {
+  title: createI18nEntry('admin.roles.show.title', { name: '{name}' }),
+  name: { value: 'admin.roles.form.name.value' },
+  slug: { value: 'admin.roles.form.slug.value' },
+  description: { value: 'admin.roles.form.description.value' },
+  system: {
+    value: 'admin.roles.system.value',
+    hint: 'admin.roles.system.hint',
+  },
+  users: {
+    value: 'admin.roles.users.value',
+    empty: 'admin.roles.users.empty',
+    table: {
+      username: 'admin.roles.users.table.username',
+      email: 'admin.roles.users.table.email',
+    },
+    actions: 'admin.roles.actions',
+    show: createI18nEntry('admin.users.show.title', { username: '{username}' }),
+  },
+  permissions: {
+    value: 'admin.roles.form.permissions.value',
+  },
+  actions: {
+    list: 'admin.roles.list.title',
+    edit: createI18nEntry('admin.roles.edit.title', { name: '{name}' }),
+    delete: createI18nEntry('admin.roles.delete.title', { name: '{name}' }),
+  },
+  delete: {
+    confirm: createI18nEntry('admin.roles.delete.confirm', { name: '{name}' }),
+  },
+}
+
+/**
+ * Shape of the resolved translation payload for the role detail page: the
+ * static keys plus the data-driven `roles` and `permissions` nodes.
+ */
+export type AdminRolesShowTranslations = BuildPayloadResult<typeof ROLES_SHOW_MAPPING> & {
+  roles: TranslationNodes
+  permissions: TranslationNodes
+}
 
 /**
  * Builds the translation payload for the role detail page.
@@ -12,8 +62,17 @@ import { nestTranslation, permissionCategoryKey } from '#helpers/i18n_payloads/n
  * permission matrix grouped by category. Leaves are the raw stored values —
  * system records store i18n keys resolved by the `roles` / `permissions` lang
  * namespaces, custom records store plain strings returned unchanged.
+ *
+ * @param i18n - The request-scoped {@link I18nService}.
+ * @param role - The role being displayed.
+ * @param permissions - The permissions assigned to the role (grouped by category).
+ * @returns The role detail `t` object with every UI string resolved.
  */
-export function buildRolesShowPayload(i18n: I18nService, role: Role, permissions: Permission[]) {
+export function buildRolesShowPayload(
+  i18n: I18nService,
+  role: Role,
+  permissions: Permission[]
+): AdminRolesShowTranslations {
   const categories: TranslationNodes = {}
   const items: TranslationNodes = {}
 
@@ -32,36 +91,11 @@ export function buildRolesShowPayload(i18n: I18nService, role: Role, permissions
   })
 
   return i18n.buildPayload({
-    title: i18n.entry('admin.roles.show.title', { name: '{name}' }),
-    name: { value: 'admin.roles.form.name.value' },
-    slug: { value: 'admin.roles.form.slug.value' },
-    description: { value: 'admin.roles.form.description.value' },
-    system: {
-      value: 'admin.roles.system.value',
-      hint: 'admin.roles.system.hint',
-    },
-    users: {
-      value: 'admin.roles.users.value',
-      empty: 'admin.roles.users.empty',
-      table: {
-        username: 'admin.roles.users.table.username',
-        email: 'admin.roles.users.table.email',
-      },
-      actions: 'admin.roles.actions',
-      show: i18n.entry('admin.users.show.title', { username: '{username}' }),
-    },
+    ...ROLES_SHOW_MAPPING,
     permissions: {
-      value: 'admin.roles.form.permissions.value',
+      ...ROLES_SHOW_MAPPING.permissions,
       categories,
       items,
-    },
-    actions: {
-      list: 'admin.roles.list.title',
-      edit: i18n.entry('admin.roles.edit.title', { name: '{name}' }),
-      delete: i18n.entry('admin.roles.delete.title', { name: '{name}' }),
-    },
-    delete: {
-      confirm: i18n.entry('admin.roles.delete.confirm', { name: '{name}' }),
     },
     roles: roleEntry,
   })

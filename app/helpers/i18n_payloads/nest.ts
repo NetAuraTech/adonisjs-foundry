@@ -1,4 +1,9 @@
-import type { TranslationNodes } from '#types/translations'
+/**
+ * A free-form translation tree whose keys are arbitrary (data-driven) slugs,
+ * in contrast to the statically typed payloads derived from a builder mapping.
+ * Leaves are resolved translation strings; branches nest arbitrarily deep.
+ */
+export type TranslationNodes = { [key: string]: string | TranslationNodes }
 
 /**
  * Sets a leaf value inside a nested translation tree, creating intermediate

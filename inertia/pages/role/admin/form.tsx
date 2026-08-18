@@ -15,7 +15,7 @@ import { Field } from '~/components/molecules/field'
 import { Checkbox } from '~/components/atoms/checkbox'
 import { useTranslation } from '~/hooks/use_translation'
 import { permissionCategoryKey } from '~/helpers/permissions'
-import type { AdminRolesFormTranslations } from '#types/translations'
+import type { AdminRolesFormTranslations } from '#helpers/i18n_payloads/roles_form'
 import { Form } from '@adonisjs/inertia/react'
 import { SharedProps } from '@adonisjs/inertia/types'
 

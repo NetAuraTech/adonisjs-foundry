@@ -381,8 +381,16 @@
     },
     "show": {
       "title": "Ouvrir",
+      "info": {
+        "name": "Nom",
+        "type": "Type",
+        "size": "Taille",
+        "uploaded_at": "Téléversé le",
+        "value": "Contenu"
+      },
       "alts": {
         "title": "Textes alternatifs",
+        "value": "Texte alternatif",
         "empty": "Aucun texte alternatif pour le moment.",
         "add": "Ajouter",
         "close": "Fermer",

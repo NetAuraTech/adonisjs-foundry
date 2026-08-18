@@ -12,7 +12,7 @@ import { presets, rules } from '~/helpers/validation_rules'
 import { Field } from '~/components/molecules/field'
 import { SelectOption } from '~/components/atoms/select_option'
 import { useTranslation } from '~/hooks/use_translation'
-import type { AdminUsersFormTranslations } from '#types/translations'
+import type { AdminUsersFormTranslations } from '#helpers/i18n_payloads/users_form'
 import { Form } from '@adonisjs/inertia/react'
 import { SharedProps } from '@adonisjs/inertia/types'
 
