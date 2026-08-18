@@ -59,7 +59,7 @@ AdonisJS Foundry is built on AdonisJS v7 and follows a domain-driven architectur
 | **Routing**          | Tuyau (type-safe client)                                          |
 | **Icons**            | Iconify React                                                     |
 | **Notifications**    | Sonner (toast)                                                    |
-| **Monitoring**       | Sentry (@rlanz/sentry)                                            |
+| **Monitoring**       | Sentry (@sentry/node)                                             |
 | **Build**            | Vite 7, @adonisjs/assembler                                       |
 | **Testing**          | Japa (unit, functional, browser)                                  |
 
@@ -1012,7 +1012,7 @@ The global exception handler (`app/exceptions/handler.ts`) extends AdonisJS's bu
 
 - **Debug mode** — verbose error display with stack traces (disabled in production)
 - **Status pages** — Inertia-rendered error pages (`errors/not_found` for 404, `errors/server_error` for 500–599)
-- **Sentry reporting** — unhandled exceptions are forwarded to Sentry via `@rlanz/sentry`
+- **Sentry reporting** — unhandled exceptions are forwarded to Sentry via the `@sentry/node` SDK, bootstrapped by the internal `providers/sentry_provider.ts`
 
 ### Typed Exceptions
 

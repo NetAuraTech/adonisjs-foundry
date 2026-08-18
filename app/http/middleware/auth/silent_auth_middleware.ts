@@ -1,6 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
-import { Sentry } from '@rlanz/sentry'
+import * as Sentry from '@sentry/node'
 
 /**
  * Silent auth middleware can be used as a global middleware to silent check
