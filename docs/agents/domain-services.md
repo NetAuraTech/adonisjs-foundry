@@ -42,6 +42,7 @@ export class FooService {
 | **Stateful/cache-backed**                       | No DB repo; state lives in a cache service, namespaced per concern, often TTL-based                                                               |
 | **Dashboard collector**                         | Read-only, single `collect(payload)` method; registered in `start/dashboard.ts` to contribute one optional section to the admin dashboard         |
 | **Nav entries module**                          | Static `{domain}_nav.ts` exporting `AdminNavEntry[]`; registered in `start/nav.ts` to contribute entries to the admin sidebar                     |
+| **Permission catalog module**                   | Static `{domain}_permissions.ts` exporting the domain's `category → actions` const (`as const`) from which the slug values and slug union derive; composed in `start/permissions.ts`            |
 
 ## Dashboard collectors
 
@@ -50,6 +51,11 @@ The admin dashboard payload is composed, not hardcoded: each domain owns a `{dom
 ## Admin navigation
 
 The admin sidebar follows the same composition pattern: each domain owns a `{domain}_nav.ts` module exporting `AdminNavEntry[]` (i18n key labels, route names, icons, permissions, category), and the composition file `start/nav.ts` (preloaded) registers them in sidebar order into the `NavRegistry` singleton. The inertia middleware reads the registry on every admin page render, resolves labels in the request locale, and shares the grouped result as the `admin_menu` prop — the React `useMenu()` hook only reads it. Dropping a domain from the composition removes its sidebar entries without touching kept code.
+
+## System permission catalog
+
+Permissions follow the same composition pattern. Each domain owns a `{domain}_permissions.ts` module exporting a `category → actions` const with `as const` (e.g. `app/domain/services/auth/auth_permissions.ts`), and the composition file `start/permissions.ts` spreads the per-domain catalogs into the single `permissionCatalog` matrix. The `permission_seeder` persists exactly that matrix, and `PermissionSlug`/`SystemRoleSlug` are derived from it — renaming a slug therefore touches exactly one file. `start/permissions.ts` is on the prune `REWRITE_ALLOWLIST`, so a flavor rewrites it to drop the catalogs of its pruned domains.
+
 
 ## Decision rule
 

@@ -1,22 +1,17 @@
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
 import Permission from '#models/auth/permission'
+import { permissionCatalog } from '#start/permissions'
 
 export default class extends BaseSeeder {
   async run() {
-    const categories = {
-      admin: ['access'],
-      users: ['view', 'create', 'update', 'delete', 'manage_roles'],
-      roles: ['view', 'create', 'update', 'delete', 'manage_permissions'],
-      permissions: ['view', 'create', 'update', 'delete'],
-      pages: ['view', 'create', 'update', 'delete', 'publish'],
-      templates: ['view', 'create', 'update', 'delete'],
-      files: ['view', 'create', 'update', 'delete'],
-      folders: ['view', 'create', 'update', 'delete'],
-      settings: ['maintenance'],
-      logs: ['view'],
-    }
-
-    const permissions = Object.entries(categories).flatMap(([category, actions]) =>
+    /**
+     * Flatten the composed permission catalog (single source of the
+     * persisted slugs) into permission rows, then upsert each permission
+     * into the database.
+     */
+    const permissions = Object.entries(
+      permissionCatalog as Record<string, readonly string[]>
+    ).flatMap(([category, actions]) =>
       actions.map((action) => ({
         name: `permissions.${category}.${action}.value`,
         slug: `${category}.${action}`,

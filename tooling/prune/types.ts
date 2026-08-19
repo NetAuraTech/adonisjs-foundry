@@ -26,8 +26,8 @@
  * - `config/features.ts` — feature flags toggled off for dropped domains.
  * - `config/database.ts` — Lucid migration `paths` drop the CMS folder.
  * - `config/shield.ts` — CSP `frame-src` hosts for the CMS iframe block.
- * - `start/{routes,events,nav,dashboard,container,transmit,sitemap}.ts` —
- *   startup composition: each registers domain contributors, and a flavor
+ * - `start/{routes,events,nav,dashboard,container,transmit,sitemap,permissions}.ts`
+ *   — startup composition: each registers domain contributors, and a flavor
  *   rewrites the file to drop the registrations of pruned domains.
  * - `start/asset_middleware.ts` — the server middleware for the view-layer
  *   asset pipeline (Vite + Inertia); the `api` flavor rewrites it to `[]`.
@@ -56,6 +56,7 @@ export const REWRITE_ALLOWLIST = [
   'start/container.ts',
   'start/transmit.ts',
   'start/sitemap.ts',
+  'start/permissions.ts',
   'start/asset_middleware.ts',
   'start/env.ts',
   '.env.example',
