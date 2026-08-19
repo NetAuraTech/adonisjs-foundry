@@ -55,7 +55,7 @@ export default class MaintenanceMiddleware {
 
     if (isAuthenticated) {
       const user = ctx.auth.user!
-      const hasAdminAccess = await user.checkAny([permissions.adminAccess])
+      const hasAdminAccess = await user.checkAny([permissions.admin.access])
 
       if (hasAdminAccess) {
         return next()

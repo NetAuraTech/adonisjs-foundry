@@ -7,7 +7,7 @@ export const templateNavEntries: AdminNavEntry[] = [
     label: 'template.admin.value',
     icon: 'LayoutTemplate',
     route: 'admin.templates.render',
-    permission: permissions.templatesView,
+    permission: permissions.templates.view,
     category: 'content',
   },
 ]

@@ -41,7 +41,7 @@ transmit.authorize<{ pageId: string; translationId: string }>(
 
     const user = ctx.auth.user!
 
-    const canEdit = await user.can(permissions.pagesUpdate)
+    const canEdit = await user.can(permissions.pages.update)
     if (!canEdit) return false
 
     const translationId = Number(params.translationId)

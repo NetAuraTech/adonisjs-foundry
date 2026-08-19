@@ -7,7 +7,7 @@ export const coreNavEntries: AdminNavEntry[] = [
     label: 'admin.dashboard.value',
     icon: 'House',
     route: 'admin.dashboard.render',
-    permission: permissions.adminAccess,
+    permission: permissions.admin.access,
     category: 'no_category',
   },
 ]

@@ -7,7 +7,7 @@ export const fileNavEntries: AdminNavEntry[] = [
     label: 'admin.files.value',
     icon: 'Folder',
     route: 'admin.files.render',
-    permission: permissions.filesView,
+    permission: permissions.files.view,
     category: 'content',
   },
 ]

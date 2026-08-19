@@ -22,29 +22,29 @@ export type PermissionSlugs<T> = {
     : never}`
 }[keyof T & string]
 
-/** The Pascal-Case form of a snake_case slug part (`manage_roles` → `ManageRoles`). */
-type SlugPart<S extends string> = S extends `${infer Head}_${infer Tail}`
-  ? `${Capitalize<Head>}${SlugPart<Tail>}`
-  : Capitalize<S>
+/**
+ * The camelCase form of a snake_case permission action (`manage_roles` →
+ * `manageRoles`); the key shape of the nested `permissions` identity map.
+ */
+type ActionCamel<S extends string> = S extends `${infer Head}_${infer Tail}`
+  ? `${Head}${Capitalize<ActionCamel<Tail & string>>}`
+  : S
 
 /**
- * The camelCase key of a single `category.action` slug: the category verbatim
- * followed by the Pascal-Case action.
+ * The nested key structure of the composed `permissions` identity map: one
+ * group per catalog category, whose keys are the camelCase form of the
+ * category's actions, each value typed as the raw `category.action` slug.
  *
  * @example
- * type K1 = SlugKey<'users.view'> // => 'usersView'
- * type K2 = SlugKey<'users.manage_roles'> // => 'usersManageRoles'
+ * type M = PermissionMap<{ readonly users: readonly ['view', 'manage_roles'] }>
+ * // => { readonly users: { readonly view: 'users.view'; readonly manageRoles: 'users.manage_roles' } }
  */
-export type SlugKey<S extends string> = S extends `${infer Category}.${infer Action}`
-  ? `${Category & string}${SlugPart<Action & string>}`
-  : never
-
-/**
- * The camelCase key union of every slug of a permission catalog const —
- * the key set of the composed `permissions` identity map.
- *
- * @example
- * type Keys = SlugKeys<{ readonly users: readonly ['view', 'manage_roles'] }>
- * // => 'usersView' | 'usersManageRoles'
- */
-export type SlugKeys<T> = SlugKey<PermissionSlugs<T>>
+export type PermissionMap<T> = {
+  [Category in keyof T & string]: {
+    [
+      Action in T[Category] extends readonly string[] ? T[Category][number] : never as ActionCamel<
+        Action & string
+      >
+    ]: `${Category}.${Action & string}`
+  }
+}

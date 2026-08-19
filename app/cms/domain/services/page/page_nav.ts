@@ -7,7 +7,7 @@ export const pageNavEntries: AdminNavEntry[] = [
     label: 'page.admin.value',
     icon: 'PanelsTopLeft',
     route: 'admin.pages.render',
-    permission: permissions.pagesView,
+    permission: permissions.pages.view,
     category: 'content',
   },
 ]

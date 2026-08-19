@@ -15,8 +15,9 @@
 | values and the slug type.
 |
 | The composed catalog finally yields the `permissions` identity map — one
-| camelCase key per slug, mapped to the raw slug string — which route
-| guards, nav entries and ability checks reference instead of raw literals.
+| group per category, one camelCase key per action, mapped to the raw slug
+| string — which route guards, nav entries and ability checks reference
+| instead of raw literals.
 |
 */
 
@@ -27,7 +28,7 @@ import { templatePermissionCatalog } from '#cms/domain/services/template/templat
 import { filePermissionCatalog } from '#services/file/file_permissions'
 import { maintenancePermissionCatalog } from '#services/maintenance/maintenance_permissions'
 import { loggingPermissionCatalog } from '#services/logging/logging_permissions'
-import type { PermissionSlugs, SlugKeys } from '#types/permissions'
+import type { PermissionSlugs, PermissionMap } from '#types/permissions'
 
 /**
  * The composed system permission catalog of this flavor: `category →
@@ -49,31 +50,34 @@ export const permissionCatalog = {
 export type PermissionSlug = PermissionSlugs<typeof permissionCatalog>
 
 /**
- * The Pascal-Case form of a snake_case permission action (`manage_roles` →
- * `ManageRoles`); the runtime counterpart of the `SlugKey` type.
+ * The camelCase form of a snake_case permission action (`manage_roles` →
+ * `manageRoles`); the runtime counterpart of the nested `permissions` keys.
  */
-const slugPart = (part: string): string =>
-  part
-    .split('_')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join('')
+const actionKey = (action: string): string =>
+  action.replace(/_([a-z])/g, (_separator, letter: string) => letter.toUpperCase())
 
 /**
- * The identity map of this flavor's permission slugs: one camelCase key per
- * slug (`usersView`, `usersManageRoles`, ...) whose value is the raw slug
- * string. Derived at runtime from the {@link permissionCatalog}, so renaming
- * a slug in a domain catalog file renames its key here, and every former
- * `permissions.*` use site fails to compile until it is updated.
+ * The nested identity map of this flavor's permission slugs: one group per
+ * catalog category (`permissions.users`, `permissions.pages`, ...) whose
+ * keys are the camelCase form of the category's actions
+ * (`permissions.users.view`, `permissions.users.manageRoles`, ...) mapped to
+ * the raw slug string. Derived at runtime from the {@link permissionCatalog},
+ * so renaming a slug in a domain catalog file renames its key here, and
+ * every former `permissions.*` use site fails to compile until it is updated.
  */
 export const permissions = Object.fromEntries(
-  (Object.keys(permissionCatalog) as Array<keyof typeof permissionCatalog>).flatMap(
-    (category): Array<[string, string]> =>
-      (permissionCatalog[category] as readonly string[]).map((action): [string, string] => [
-        `${category}${slugPart(action)}`,
-        `${category}.${action}`,
-      ])
+  (Object.keys(permissionCatalog) as Array<keyof typeof permissionCatalog>).map(
+    (category): [string, Record<string, string>] => [
+      String(category),
+      Object.fromEntries(
+        (permissionCatalog[category] as readonly string[]).map((action): [string, string] => [
+          actionKey(action),
+          `${String(category)}.${action}`,
+        ])
+      ),
+    ]
   )
-) as Record<SlugKeys<typeof permissionCatalog>, PermissionSlug>
+) as unknown as PermissionMap<typeof permissionCatalog>
 
 /**
  * The system role slugs of this flavor; the role seeder persists exactly

@@ -7,7 +7,7 @@ export const loggingNavEntries: AdminNavEntry[] = [
     label: 'admin.logs.value',
     icon: 'ScrollText',
     route: 'admin.logs.render',
-    permission: permissions.logsView,
+    permission: permissions.logs.view,
     category: 'settings',
   },
 ]
