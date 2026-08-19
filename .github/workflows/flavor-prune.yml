@@ -23,7 +23,7 @@ jobs:
   # runs in parallel with this workflow — so this job polls the CI workflow
   # conclusion for the pushed SHA and blocks regeneration until it succeeds.
   main-gates:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     permissions:
       actions: read
     steps:
@@ -76,7 +76,7 @@ jobs:
   # backend/frontend tests, and codegen drift — no need to re-run a
   # subset here. The prune-flavor job below gates the pruned tree itself.
   discover-flavors:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     needs: main-gates
     outputs:
       flavors: ${{ steps.list.outputs.flavors }}
@@ -115,7 +115,7 @@ jobs:
   # flavor branch with the source main SHA. A failed prune or gate blocks only
   # that flavor's publication.
   prune-flavor:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     needs: discover-flavors
     if: needs.discover-flavors.outputs.empty == 'false'
     strategy:
