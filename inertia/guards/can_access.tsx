@@ -1,8 +1,9 @@
 import { ReactNode } from 'react'
+import type { PermissionSlug } from '#start/permissions'
 import { useAuth } from '~/hooks/use_auth'
 
 interface CanAccessProps {
-  permission: string | string[]
+  permission: PermissionSlug | PermissionSlug[]
   requireAll?: boolean
   fallback?: ReactNode
   children: ReactNode
@@ -11,11 +12,11 @@ interface CanAccessProps {
 /**
  * Conditionally renders children based on the current user's permissions.
  *
- * Accepts either a single permission slug or an array of slugs.
+ * Accepts either a single system permission slug or an array of slugs.
  * When an array is provided, the `requireAll` flag controls whether
  * the user must hold all of them (`true`) or at least one (`false`, default).
  *
- * @param permission - A single permission slug or an array of slugs to check
+ * @param permission - A single system permission slug or an array of slugs to check
  * @param requireAll - If `true`, the user must hold all provided permissions. Defaults to `false`
  * @param fallback - Content to render when access is denied. Defaults to `null`
  * @param children - Content to render when access is granted
