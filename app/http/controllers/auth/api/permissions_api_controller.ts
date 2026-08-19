@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
-import PermissionsResource from '#rest/permissions'
+import PermissionsResource from '#rest/permissions_resource'
+import { handle } from '#rest/rest_adapter'
 
 /**
  * GET /api/v1/admin/permissions — list all permissions from the admin REST API.
@@ -14,6 +15,6 @@ export default class PermissionsApiController {
   constructor(protected permissionsResource: PermissionsResource) {}
 
   async index(ctx: HttpContext): Promise<void> {
-    await this.permissionsResource.handle('index', ctx)
+    await handle(ctx, this.permissionsResource.endpoints.index)
   }
 }

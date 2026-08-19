@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
-import FilesResource from '#rest/files'
+import FilesResource from '#rest/files_resource'
+import { handle } from '#rest/rest_adapter'
 
 /**
  * PUT    /api/v1/admin/files/:id/alt — upsert an alt-text entry.
@@ -15,10 +16,10 @@ export default class FilesAltApiController {
   constructor(protected filesResource: FilesResource) {}
 
   async upsertAlt(ctx: HttpContext): Promise<void> {
-    await this.filesResource.handle('upsertAlt', ctx)
+    await handle(ctx, this.filesResource.endpoints.upsertAlt)
   }
 
   async deleteAlt(ctx: HttpContext): Promise<void> {
-    await this.filesResource.handle('deleteAlt', ctx)
+    await handle(ctx, this.filesResource.endpoints.deleteAlt)
   }
 }

@@ -30,8 +30,8 @@ const inertiaManifest: FlavorManifest = {
     // ─── CMS controllers (page + template) ──────────────────────────────────
     'app/http/controllers/page',
     'app/http/controllers/template',
-    'app/http/rest/pages.ts',
-    'app/http/rest/templates.ts',
+    'app/http/rest/pages_resource.ts',
+    'app/http/rest/templates_resource.ts',
 
     // ─── CMS transformers (page + template) ─────────────────────────────────
     'app/data/transformers/page',

@@ -1,7 +1,7 @@
 import { test } from '@japa/runner'
 import { type HttpContext } from '@adonisjs/core/http'
-import { handlePage } from '#rest/page_resource'
-import { type AnyRestEndpoint } from '#rest/rest_resource'
+import { handle } from '#rest/page_adapter'
+import { type AnyRestEndpoint } from '#rest/rest_adapter'
 
 interface RecordedCall {
   method: string
@@ -50,7 +50,7 @@ function createFakePageContext(
   return { ctx: ctx as unknown as HttpContext, calls }
 }
 
-test.group('handlePage', () => {
+test.group('handle', () => {
   test('renders the Inertia page with the props built by `page.render` on display methods', async ({
     assert,
   }) => {
@@ -77,7 +77,7 @@ test.group('handlePage', () => {
       },
     }
 
-    const response = await handlePage(ctx, endpoint)
+    const response = await handle(ctx, endpoint)
 
     assert.deepEqual(calls, [
       {
@@ -132,7 +132,7 @@ test.group('handlePage', () => {
       },
     }
 
-    const response = await handlePage(ctx, endpoint)
+    const response = await handle(ctx, endpoint)
 
     assert.deepEqual(calls, [
       { method: 'flash', args: ['success', 'user updated'] },
@@ -159,7 +159,7 @@ test.group('handlePage', () => {
       },
     }
 
-    await handlePage(ctx, endpoint)
+    await handle(ctx, endpoint)
 
     assert.deepEqual(calls, [{ method: 'inertia.render', args: ['auth/admin/index', {}] }])
   })
@@ -180,7 +180,7 @@ test.group('handlePage', () => {
       },
     }
 
-    await assert.rejects(() => handlePage(ctx, endpoint), /validation failed/)
+    await assert.rejects(() => handle(ctx, endpoint), /validation failed/)
 
     assert.isEmpty(calls)
   })
@@ -198,7 +198,7 @@ test.group('handlePage', () => {
       },
     }
 
-    await assert.rejects(() => handlePage(ctx, endpoint), /row not found/)
+    await assert.rejects(() => handle(ctx, endpoint), /row not found/)
 
     assert.isEmpty(calls)
   })
@@ -216,7 +216,7 @@ test.group('handlePage', () => {
       },
     }
 
-    await assert.rejects(() => handlePage(ctx, endpoint), /page render declaration/)
+    await assert.rejects(() => handle(ctx, endpoint), /page render declaration/)
   })
 
   test('throws a developer error when a mutating endpoint lacks its flash and redirect', async ({
@@ -232,6 +232,6 @@ test.group('handlePage', () => {
       },
     }
 
-    await assert.rejects(() => handlePage(ctx, endpoint), /flash and redirect declarations/)
+    await assert.rejects(() => handle(ctx, endpoint), /flash and redirect declarations/)
   })
 })

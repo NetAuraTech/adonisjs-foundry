@@ -12,7 +12,7 @@ import {
 import UserTransformer from '#transformers/user_transformer'
 import InvalidActionException from '#exceptions/account/invalid_action_exception'
 import { preloadUserRoleWithPermissions } from '#helpers/auth/load_user_role'
-import { type RestEndpoint, type AnyRestEndpoint, handleRest } from '#rest/rest_resource'
+import { type RestEndpoint, handle } from '#rest/rest_adapter'
 
 type AccountEmailPayload = Infer<ReturnType<typeof updateEmailValidator>>
 type AccountPasswordPayload = Infer<typeof updatePasswordValidator>
@@ -42,10 +42,10 @@ async function refetchProfile(user: User): Promise<User> {
 /**
  * Declarative account REST resource.
  *
- * Owns the `/api/v1/account` (self) endpoint declarations executed by the
- * shared {@link handleRest} pipeline; the controllers reduce to thin adapters
- * over `handle()`. The single `update` route is dispatched on its `_action`
- * body discriminator through {@link handleUpdate}.
+ * Owns the `/api/v1/account` (self) endpoint declarations consumed by the
+ * REST `handle` adapter (`#rest/rest_adapter`); the controllers reduce to
+ * thin dispatchers over `endpoints`. The single `update` route is dispatched
+ * on its `_action` body discriminator through {@link handleUpdate}.
  */
 @inject()
 export default class AccountResource {
@@ -90,26 +90,17 @@ export default class AccountResource {
    * Unknown or missing discriminators fail with `E_INVALID_ACTION` (400),
    * exactly like the pre-migration controller.
    */
-  async handleUpdate(ctx: HttpContext): Promise<void> {
+  async handleUpdate(ctx: HttpContext): Promise<unknown> {
     const action = ctx.request.input('_action')
 
     if (action === 'update_email') {
-      return this.handle('updateEmail', ctx)
+      return handle(ctx, this.endpoints.updateEmail)
     }
 
     if (action === 'update_password') {
-      return this.handle('updatePassword', ctx)
+      return handle(ctx, this.endpoints.updatePassword)
     }
 
     throw new InvalidActionException()
-  }
-
-  /**
-   * Dispatch a REST action to its declared endpoint.
-   */
-  async handle(route: keyof AccountEndpoints, ctx: HttpContext): Promise<void> {
-    const endpoint = this.endpoints[route] as AnyRestEndpoint
-
-    await handleRest(ctx, endpoint)
   }
 }

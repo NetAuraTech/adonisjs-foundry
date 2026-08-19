@@ -1,10 +1,9 @@
 import { inject } from '@adonisjs/core'
-import { type HttpContext } from '@adonisjs/core/http'
 import type { Infer } from '@vinejs/vine/types'
 import { MaintenanceService } from '#services/maintenance/maintenance_service'
 import { LogService } from '#services/logging/log_service'
 import { updateMaintenanceValidator, toggleMaintenanceValidator } from '#validators/maintenance'
-import { type RestEndpoint, type AnyRestEndpoint, handleRest } from '#rest/rest_resource'
+import { type RestEndpoint } from '#rest/rest_adapter'
 
 type MaintenanceUpdatePayload = Infer<typeof updateMaintenanceValidator>
 type MaintenanceTogglePayload = Infer<typeof toggleMaintenanceValidator>
@@ -34,9 +33,9 @@ export interface MaintenanceEndpoints {
 /**
  * Declarative maintenance REST resource.
  *
- * Owns the maintenance endpoint declarations executed by the shared
- * {@link handleRest} pipeline; the `/api/v1/admin/maintenance` controller
- * reduces to one-line adapters over `handle()`.
+ * Owns the maintenance endpoint declarations consumed by the REST `handle`
+ * adapter (`#rest/rest_adapter`); the `/api/v1/admin/maintenance` controller
+ * reduces to one-line dispatch over `endpoints`.
  */
 @inject()
 export default class MaintenanceResource {
@@ -110,14 +109,5 @@ export default class MaintenanceResource {
       redisAvailable: this.maintenanceService.isRedisAvailable(),
       source: this.maintenanceService.getSource(),
     }
-  }
-
-  /**
-   * Dispatch a REST action to its declared endpoint.
-   */
-  async handle(route: keyof MaintenanceEndpoints, ctx: HttpContext): Promise<void> {
-    const endpoint = this.endpoints[route] as AnyRestEndpoint
-
-    await handleRest(ctx, endpoint)
   }
 }

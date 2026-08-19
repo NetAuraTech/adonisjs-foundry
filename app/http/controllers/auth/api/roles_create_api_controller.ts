@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
-import RolesResource from '#rest/roles'
+import RolesResource from '#rest/roles_resource'
+import { handle } from '#rest/rest_adapter'
 
 /**
  * POST /api/v1/admin/roles — create a role from the admin REST API.
@@ -14,6 +15,6 @@ export default class RolesCreateApiController {
   constructor(protected rolesResource: RolesResource) {}
 
   async store(ctx: HttpContext): Promise<void> {
-    await this.rolesResource.handle('store', ctx)
+    await handle(ctx, this.rolesResource.endpoints.store)
   }
 }

@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
-import ProfileResource from '#rest/profile'
+import ProfileResource from '#rest/profile_resource'
+import { handle } from '#rest/rest_adapter'
 
 /**
  * GET /api/v1/profile — show the current user's profile (self).
@@ -14,10 +15,10 @@ export default class ProfileApiController {
   constructor(protected profileResource: ProfileResource) {}
 
   async show(ctx: HttpContext): Promise<void> {
-    await this.profileResource.handle('show', ctx)
+    await handle(ctx, this.profileResource.endpoints.show)
   }
 
   async update(ctx: HttpContext): Promise<void> {
-    await this.profileResource.handle('update', ctx)
+    await handle(ctx, this.profileResource.endpoints.update)
   }
 }

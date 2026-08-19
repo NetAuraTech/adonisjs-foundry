@@ -1,12 +1,11 @@
 import { inject } from '@adonisjs/core'
-import { type HttpContext } from '@adonisjs/core/http'
 import type { Infer } from '@vinejs/vine/types'
 import type User from '#models/auth/user'
 import { UpdateUserProfileAction } from '#actions/profile/update_user_profile_action'
 import { profileValidator } from '#validators/profile'
 import UserTransformer from '#transformers/user_transformer'
 import { preloadUserRoleWithPermissions } from '#helpers/auth/load_user_role'
-import { type RestEndpoint, type AnyRestEndpoint, handleRest } from '#rest/rest_resource'
+import { type RestEndpoint } from '#rest/rest_adapter'
 
 type ProfileUpdatePayload = Infer<ReturnType<typeof profileValidator>>
 
@@ -33,9 +32,9 @@ async function refetchProfile(user: User): Promise<User> {
 /**
  * Declarative profile REST resource.
  *
- * Owns the `/api/v1/profile` (self) endpoint declarations executed by the
- * shared {@link handleRest} pipeline; the controllers reduce to one-line
- * adapters over `handle()`.
+ * Owns the `/api/v1/profile` (self) endpoint declarations consumed by the
+ * REST `handle` adapter (`#rest/rest_adapter`); the controllers reduce to
+ * one-line dispatch over `endpoints`.
  */
 @inject()
 export default class ProfileResource {
@@ -64,14 +63,5 @@ export default class ProfileResource {
       refetch: (_context, prepared) => refetchProfile(prepared.user),
       transform: (entity) => UserTransformer.transform(entity),
     },
-  }
-
-  /**
-   * Dispatch a REST action to its declared endpoint.
-   */
-  async handle(route: keyof ProfileEndpoints, ctx: HttpContext): Promise<void> {
-    const endpoint = this.endpoints[route] as AnyRestEndpoint
-
-    await handleRest(ctx, endpoint)
   }
 }

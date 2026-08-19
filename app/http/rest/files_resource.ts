@@ -1,5 +1,4 @@
 import { inject } from '@adonisjs/core'
-import { type HttpContext } from '@adonisjs/core/http'
 import type { Infer } from '@vinejs/vine/types'
 import type File from '#models/file/file'
 import { ListFilesAction } from '#actions/file/list_files_action'
@@ -16,7 +15,7 @@ import {
   deleteAltValidator,
 } from '#validators/file'
 import FileTransformer from '#transformers/file_transformer'
-import { type RestEndpoint, type AnyRestEndpoint, handleRest } from '#rest/rest_resource'
+import { type RestEndpoint } from '#rest/rest_adapter'
 
 type FileListPagination = Awaited<ReturnType<ListFilesAction['execute']>>
 type FileMoveResult = Awaited<ReturnType<MoveFileAction['execute']>>
@@ -43,9 +42,9 @@ export interface FilesEndpoints {
 /**
  * Declarative files REST resource.
  *
- * Owns the files endpoint declarations executed by the shared
- * {@link handleRest} pipeline; the `/api/v1/admin/files` controllers reduce
- * to one-line adapters over `handle()`.
+ * Owns the files endpoint declarations consumed by the REST `handle`
+ * adapter (`#rest/rest_adapter`); the `/api/v1/admin/files` controllers
+ * reduce to one-line dispatch over `endpoints`.
  */
 @inject()
 export default class FilesResource {
@@ -129,14 +128,5 @@ export default class FilesResource {
       refetch: (_context, prepared) => this.getFileDetailAction.execute({ id: prepared.id }),
       transform: (entity) => FileTransformer.transform(entity),
     },
-  }
-
-  /**
-   * Dispatch a REST action to its declared endpoint.
-   */
-  async handle(route: keyof FilesEndpoints, ctx: HttpContext): Promise<void> {
-    const endpoint = this.endpoints[route] as AnyRestEndpoint
-
-    await handleRest(ctx, endpoint)
   }
 }

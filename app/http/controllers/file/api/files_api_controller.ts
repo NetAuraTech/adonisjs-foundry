@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
-import FilesResource from '#rest/files'
+import FilesResource from '#rest/files_resource'
+import { handle } from '#rest/rest_adapter'
 
 /**
  * GET  /api/v1/admin/files — list files from the admin REST API.
@@ -15,10 +16,10 @@ export default class FilesApiController {
   constructor(protected filesResource: FilesResource) {}
 
   async index(ctx: HttpContext): Promise<void> {
-    await this.filesResource.handle('index', ctx)
+    await handle(ctx, this.filesResource.endpoints.index)
   }
 
   async move(ctx: HttpContext): Promise<void> {
-    await this.filesResource.handle('move', ctx)
+    await handle(ctx, this.filesResource.endpoints.move)
   }
 }

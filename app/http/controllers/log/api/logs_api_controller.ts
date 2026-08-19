@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
-import LogsResource from '#rest/logs'
+import LogsResource from '#rest/logs_resource'
+import { handle } from '#rest/rest_adapter'
 
 /**
  * GET /api/v1/admin/logs — paginated, filterable application log entries.
@@ -14,6 +15,6 @@ export default class LogsApiController {
   constructor(protected logsResource: LogsResource) {}
 
   async index(ctx: HttpContext): Promise<void> {
-    await this.logsResource.handle('index', ctx)
+    await handle(ctx, this.logsResource.endpoints.index)
   }
 }
