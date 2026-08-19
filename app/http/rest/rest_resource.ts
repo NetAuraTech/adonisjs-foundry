@@ -26,6 +26,54 @@ export interface RestValidator<Payload> {
 }
 
 /**
+ * Redirect target of a page mutation: the named route to send the client to,
+ * and the parameters used to build its URL.
+ */
+export interface PageRedirect {
+  route: string
+  params?: Record<string, unknown>
+}
+
+/**
+ * The page transport facet of an endpoint: how the shared request
+ * interpretation is turned into a page response instead of a JSON one.
+ *
+ * An endpoint serves a page over display methods (GET/HEAD) through
+ * `component` + `render`, and over mutating methods through `flash` +
+ * `redirect`. A given endpoint declares one of the two pairs, matching the
+ * method its page route exposes.
+ *
+ * @template Prepared Value produced by `prepare` (undefined when absent)
+ * @template Payload Typed input produced by the validator
+ * @template Result  Value returned by the domain action
+ */
+export interface PageEndpoint<Prepared = unknown, Payload = unknown, Result = unknown> {
+  /** The Inertia component rendered for display methods. */
+  component?: string
+  /** Builds the Inertia props for display methods. */
+  render?(
+    context: RestEndpointContext,
+    prepared: Prepared,
+    payload: Payload,
+    result: Result
+  ): Promise<Record<string, unknown>>
+  /** Builds the success flash message for mutating methods. */
+  flash?(
+    context: RestEndpointContext,
+    prepared: Prepared,
+    payload: Payload,
+    result: Result
+  ): Promise<string> | string
+  /** Builds the redirect target for mutating methods. */
+  redirect?(
+    context: RestEndpointContext,
+    prepared: Prepared,
+    payload: Payload,
+    result: Result
+  ): PageRedirect
+}
+
+/**
  * Declarative description of a single REST endpoint.
  *
  * {@link handleRest} executes the steps in this fixed order:
@@ -49,6 +97,12 @@ export interface RestValidator<Payload> {
  * Domain exceptions thrown by the action propagate untouched and are
  * shaped by the standard exception handler.
  *
+ * `page` optionally carries the endpoint's page transport output
+ * ({@link PageEndpoint}): the same resolved steps are turned into an Inertia
+ * render or a flash + redirect by the page adapter instead of a JSON
+ * response, so the request interpretation exists exactly once, shared by
+ * both transports.
+ *
  * @template Prepared Value produced by `prepare` (undefined when absent)
  * @template Payload Typed input produced by the validator
  * @template Result  Value returned by the domain action
@@ -70,6 +124,7 @@ export interface RestEndpoint<Prepared, Payload, Result, Entity> {
     result: Result
   ): Promise<Entity>
   transform?(entity: Entity): unknown
+  page?: PageEndpoint<Prepared, Payload, Result>
 }
 
 /**
@@ -79,6 +134,56 @@ export interface RestEndpoint<Prepared, Payload, Result, Entity> {
  * rather than a literal type.
  */
 export type AnyRestEndpoint = RestEndpoint<any, any, any, any>
+
+/**
+ * Resolve the shared request interpretation of an endpoint: pagination,
+ * input selection, strip, prepare, validate and execute — steps 1 to 6 of
+ * the {@link RestEndpoint} pipeline.
+ *
+ * This is the transport-agnostic core of the contract: {@link handleRest}
+ * turns the resolved result into a JSON response, while the page adapter
+ * turns it into an Inertia page or a flash + redirect. Validation and
+ * domain exceptions propagate untouched and are shaped by the standard
+ * exception handler.
+ *
+ * @param ctx - The AdonisJS HTTP context.
+ * @param endpoint - The declarative endpoint to resolve.
+ * @returns The endpoint context, the prepared value, the validated payload
+ *          and the domain action result.
+ */
+export async function resolveEndpoint<Prepared, Payload, Result, Entity>(
+  ctx: HttpContext,
+  endpoint: RestEndpoint<Prepared, Payload, Result, Entity>
+): Promise<{
+  context: RestEndpointContext
+  prepared: Prepared
+  payload: Payload
+  result: Result
+}> {
+  const context: RestEndpointContext = { request: ctx.request, params: ctx.params, auth: ctx.auth }
+
+  if (endpoint.paginated) {
+    context.pagination = await extractPagination(ctx.request)
+  }
+
+  let input: unknown = endpoint.input ? endpoint.input(context) : ctx.request.all()
+
+  if (endpoint.strip) {
+    input = stripEmptyStrings(input as Record<string, unknown>)
+  }
+
+  const prepared = endpoint.prepare
+    ? await endpoint.prepare(context)
+    : (undefined as unknown as Prepared)
+
+  const payload: Payload = endpoint.validator
+    ? await endpoint.validator(prepared, context).validate(input)
+    : (input as Payload)
+
+  const result = await endpoint.execute(context, prepared, payload)
+
+  return { context, prepared, payload, result }
+}
 
 /**
  * Run a declarative REST endpoint and send the response.
@@ -101,27 +206,7 @@ export async function handleRest<Prepared, Payload, Result, Entity>(
   ctx: HttpContext,
   endpoint: RestEndpoint<Prepared, Payload, Result, Entity>
 ): Promise<void> {
-  const context: RestEndpointContext = { request: ctx.request, params: ctx.params, auth: ctx.auth }
-
-  if (endpoint.paginated) {
-    context.pagination = await extractPagination(ctx.request)
-  }
-
-  let input: unknown = endpoint.input ? endpoint.input(context) : ctx.request.all()
-
-  if (endpoint.strip) {
-    input = stripEmptyStrings(input as Record<string, unknown>)
-  }
-
-  const prepared = endpoint.prepare
-    ? await endpoint.prepare(context)
-    : (undefined as unknown as Prepared)
-
-  const payload: Payload = endpoint.validator
-    ? await endpoint.validator(prepared, context).validate(input)
-    : (input as Payload)
-
-  const result = await endpoint.execute(context, prepared, payload)
+  const { context, prepared, payload, result } = await resolveEndpoint(ctx, endpoint)
 
   if (endpoint.status === 204) {
     ctx.response.noContent()

@@ -58,6 +58,11 @@ const apiManifest: FlavorManifest = {
     // ─── View-layer server middleware ────────────────────────────────────
     'app/http/middleware/core/inertia_middleware.ts',
 
+    // ─── Page transport adapter — Inertia-dependent half of the REST ──────
+    // ─── contract. rest_resource.ts stays (transport-agnostic); only this ──
+    // ─── pipeline and its unit tests need the pruned Inertia binding. ──────
+    'app/http/rest/page_resource.ts',
+
     // ─── Session-rendered front controllers ──────────────────────────────
     // front = guest/public pages (auth, self-service, home, sitemap, robots).
     'app/http/controllers/auth/front',
@@ -132,6 +137,7 @@ const apiManifest: FlavorManifest = {
     'tests/functional/cms/admin_dashboard_cms.spec.ts',
     'tests/integration/routes_structure.spec.ts',
     'tests/integration/routes_structure_cms.spec.ts',
+    'tests/unit/rest/page_resource.spec.ts',
 
     // ─── CMS test suites ──────────────────────────────────────────────────
     'tests/functional/cms',
