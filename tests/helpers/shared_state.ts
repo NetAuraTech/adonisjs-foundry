@@ -9,9 +9,14 @@ import { MaintenanceService } from '#services/maintenance/maintenance_service'
  *
  * Flushes the Redis database and forces maintenance OFF so a test group starts
  * from a clean, non-degraded state.
+ *
+ * The allowlist is cleared too: the service is a process-wide singleton with an
+ * in-memory CIDR cache that survives `flushdb`, so a leftover entry (e.g.
+ * '127.0.0.1' set by an earlier spec) keeps the middleware bypassing
+ * maintenance for the local test client.
  */
 export async function resetSharedState() {
   await redis.flushdb()
   const service = await app.container.make(MaintenanceService)
-  await service.setConfig({ enabled: false })
+  await service.setConfig({ enabled: false, allowedIps: [] })
 }
