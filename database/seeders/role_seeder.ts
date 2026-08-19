@@ -1,19 +1,19 @@
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
 import Role from '#models/auth/role'
 import Permission from '#models/auth/permission'
+import { systemRoleSlugs } from '#start/permissions'
 
 export default class extends BaseSeeder {
   async run() {
-    const rolesData = {
-      admin: { isSystem: true },
-      user: { isSystem: true },
-    }
-
-    const roles = Object.entries(rolesData).map(([slug, meta]) => ({
+    /**
+     * The system role slugs (single source of the persisted slugs) from the
+     * composed permission catalog, flattened into role rows.
+     */
+    const roles = systemRoleSlugs.map((slug) => ({
       name: `roles.${slug}.value`,
       slug,
       description: `roles.${slug}.description`,
-      isSystem: meta.isSystem,
+      isSystem: true,
     }))
 
     const createdRoles = await Promise.all(
