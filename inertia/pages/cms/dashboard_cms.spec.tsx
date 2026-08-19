@@ -5,6 +5,7 @@ import { createRoot, type Root } from 'react-dom/client'
 import type { ReactNode } from 'react'
 import type { Data } from '@generated/data'
 import type { AdminDashboardTranslations } from '#helpers/i18n_payloads/dashboard'
+import type { CmsDashboardTranslations } from '#cms/helpers/i18n_payloads/dashboard_cms'
 import DashboardPage from '~/pages/core/admin/dashboard'
 
 /**
@@ -46,25 +47,31 @@ vi.mock('~/layouts/admin', () => ({
 }))
 ;(globalThis as Record<string, unknown>).IS_REACT_ACT_ENVIRONMENT = true
 
-const translations: AdminDashboardTranslations = {
+const translations: AdminDashboardTranslations & CmsDashboardTranslations = {
   title: 'Dashboard',
   cards: {
     users: 'Users',
-    pages: 'Pages',
-    translations: 'Page translations',
     files: 'Files',
-    templates: 'Templates',
-    published_locales: 'Published locales',
     folders: 'Folders',
     no_role: 'No role',
   },
-  status: { draft: 'Draft', published: 'Published', archived: 'Archived' },
   recent: {
-    published_pages: 'Recently published',
     uploads: 'Recent uploads',
     empty: 'Nothing to display yet.',
   },
   view_all: 'View all',
+  cms: {
+    cards: {
+      pages: 'Pages',
+      translations: 'Page translations',
+      templates: 'Templates',
+      published_locales: 'Published locales',
+    },
+    status: { draft: 'Draft', published: 'Published', archived: 'Archived' },
+    recent: {
+      published_pages: 'Recently published',
+    },
+  },
 }
 
 const cmsStats: Data.Dashboard = {

@@ -6,6 +6,10 @@ import { StatCard } from '~/components/dashboard_sections/stat_card'
 import { RecentCard } from '~/components/dashboard_sections/recent_card'
 import { registerDashboardSection, type DashboardSectionCardProps } from '~/lib/dashboard_sections'
 import type { Data } from '@generated/data'
+import type { AdminDashboardTranslations } from '#helpers/i18n_payloads/dashboard'
+import type { CmsDashboardTranslations } from '#cms/helpers/i18n_payloads/dashboard_cms'
+
+type CmsTranslations = AdminDashboardTranslations & CmsDashboardTranslations
 
 /**
  * Page dashboard section cards: page/translation counts, the status breakdown
@@ -17,7 +21,7 @@ import type { Data } from '@generated/data'
  * section.
  */
 function PageStatCard({ stats, translations }: DashboardSectionCardProps) {
-  const { t } = useTranslation(translations)
+  const { t } = useTranslation(translations as CmsTranslations)
   const page: Data.Dashboard['page'] = stats.page
   const template: Data.Dashboard['template'] = stats.template
 
@@ -27,25 +31,25 @@ function PageStatCard({ stats, translations }: DashboardSectionCardProps) {
     <CanAccess permission="pages.view">
       <StatCard
         icon="PanelsTopLeft"
-        label={t('cards.pages')}
+        label={t('cms.cards.pages')}
         value={page.pages}
         route="admin.pages.render"
       >
         <Paragraph variant="muted" spacing="sm">
-          {`${t('cards.translations')}: ${page.pageTranslations.total}`}
+          {`${t('cms.cards.translations')}: ${page.pageTranslations.total}`}
         </Paragraph>
         <div className="mt-2 flex flex-wrap gap-2 text-sm">
-          <span className="text-success">{`${page.pageTranslations.published} ${t('status.published')}`}</span>
-          <span className="text-secondary">{`${page.pageTranslations.draft} ${t('status.draft')}`}</span>
-          <span className="text-warning">{`${page.pageTranslations.archived} ${t('status.archived')}`}</span>
+          <span className="text-success">{`${page.pageTranslations.published} ${t('cms.status.published')}`}</span>
+          <span className="text-secondary">{`${page.pageTranslations.draft} ${t('cms.status.draft')}`}</span>
+          <span className="text-warning">{`${page.pageTranslations.archived} ${t('cms.status.archived')}`}</span>
         </div>
         <Paragraph variant="muted" spacing="sm">
-          {`${t('cards.published_locales')}: ${page.publishedLocales}`}
+          {`${t('cms.cards.published_locales')}: ${page.publishedLocales}`}
         </Paragraph>
         {template && (
           <CanAccess permission="templates.view">
             <Paragraph variant="muted" spacing="sm">
-              {`${t('cards.templates')}: ${template.templates}`}
+              {`${t('cms.cards.templates')}: ${template.templates}`}
             </Paragraph>
           </CanAccess>
         )}
@@ -55,7 +59,7 @@ function PageStatCard({ stats, translations }: DashboardSectionCardProps) {
 }
 
 function PageRecentCard({ stats, translations, formatDate }: DashboardSectionCardProps) {
-  const { t } = useTranslation(translations)
+  const { t } = useTranslation(translations as CmsTranslations)
   const page: Data.Dashboard['page'] = stats.page
 
   if (!page) return null
@@ -63,7 +67,7 @@ function PageRecentCard({ stats, translations, formatDate }: DashboardSectionCar
   return (
     <CanAccess permission="pages.view">
       <RecentCard
-        title={t('recent.published_pages')}
+        title={t('cms.recent.published_pages')}
         viewAllRoute="admin.pages.render"
         viewAllLabel={t('view_all')}
       >

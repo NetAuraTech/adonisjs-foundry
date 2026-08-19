@@ -52,17 +52,11 @@ const translations: AdminDashboardTranslations = {
   title: 'Dashboard',
   cards: {
     users: 'Users',
-    pages: 'Pages',
-    translations: 'Page translations',
     files: 'Files',
-    templates: 'Templates',
-    published_locales: 'Published locales',
     folders: 'Folders',
     no_role: 'No role',
   },
-  status: { draft: 'Draft', published: 'Published', archived: 'Archived' },
   recent: {
-    published_pages: 'Recently published',
     uploads: 'Recent uploads',
     empty: 'Nothing to display yet.',
   },

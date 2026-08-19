@@ -1,4 +1,5 @@
 import type { DashboardCollector, DashboardStats } from '#types/dashboard'
+import type { I18nService } from '#services/i18n_service'
 
 /**
  * Lazily resolves a dashboard collector instance — typically through the IoC
@@ -8,15 +9,24 @@ export type DashboardCollectorFactory<K extends keyof DashboardStats = keyof Das
   () => Promise<DashboardCollector<K>>
 
 /**
- * Registry of dashboard section collectors.
+ * Builds a translation fragment for the dashboard payload from the
+ * request-scoped i18n service.
+ */
+export type DashboardTranslationBuilder = (i18n: I18nService) => Record<string, unknown>
+
+/**
+ * Registry of dashboard section collectors and translation fragments.
  *
  * Populated once at startup by the composition module (`start/dashboard.ts`),
  * which is the only place knowing which domains exist in this flavor of the
- * application. `GetDashboardStatsAction` reads it to aggregate the dashboard
- * payload without knowing the contributing domains.
+ * application. `GetDashboardStatsAction` reads the collector factories to
+ * aggregate the dashboard payload without knowing the contributing domains,
+ * and `DashboardController` reads the translation builders to merge the
+ * per-domain i18n fragments into the full translation payload.
  */
 export class DashboardRegistry {
   private factories = new Map<keyof DashboardStats, DashboardCollectorFactory>()
+  private translationBuilders: DashboardTranslationBuilder[] = []
 
   /**
    * Register the collector factory for a dashboard section. Registering the
@@ -41,5 +51,25 @@ export class DashboardRegistry {
    */
   entries(): [keyof DashboardStats, DashboardCollectorFactory][] {
     return [...this.factories.entries()]
+  }
+
+  /**
+   * Register a translation builder that produces a fragment of the dashboard
+   * translation payload for the request-scoped locale.
+   *
+   * @param builder - Function returning a resolved translation fragment.
+   *
+   * @example
+   * registry.registerTranslations(buildCmsDashboardPayload)
+   */
+  registerTranslations(builder: DashboardTranslationBuilder): void {
+    this.translationBuilders.push(builder)
+  }
+
+  /**
+   * List the registered translation builders, in registration order.
+   */
+  getTranslationBuilders(): DashboardTranslationBuilder[] {
+    return this.translationBuilders
   }
 }

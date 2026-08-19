@@ -59,10 +59,10 @@ export const ADMIN_MAINTENANCE_MAPPING = {
  * visitors while the application is down.
  */
 export const MAINTENANCE_MAPPING = {
-  title: 'page.maintenance.title',
-  default_message: 'page.maintenance.default_message',
-  retry_in: 'page.maintenance.retry_in',
-  retry_now: 'page.maintenance.retry_now',
+  title: 'maintenance.title',
+  default_message: 'maintenance.default_message',
+  retry_in: 'maintenance.retry_in',
+  retry_now: 'maintenance.retry_now',
 }
 
 /**

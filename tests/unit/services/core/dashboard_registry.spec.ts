@@ -58,4 +58,28 @@ test.group('DashboardRegistry', () => {
     const collector = await factory()
     assert.deepEqual(await collector.collect(payload), { users: 42, usersByRole: [] })
   })
+
+  test('getTranslationBuilders() is empty on a fresh registry', ({ assert }) => {
+    const registry = new DashboardRegistry()
+
+    assert.deepEqual(registry.getTranslationBuilders(), [])
+  })
+
+  test('registerTranslations() accumulates builders in registration order', ({ assert }) => {
+    const registry = new DashboardRegistry()
+    const builderA = (_i18n: unknown) => ({ a: 'A' })
+    const builderB = (_i18n: unknown) => ({ b: 'B' })
+
+    registry.registerTranslations(builderA)
+    registry.registerTranslations(builderB)
+
+    const builders = registry.getTranslationBuilders()
+    assert.lengthOf(builders, 2)
+    assert.deepEqual(builders[0]({} as unknown as import('#services/i18n_service').I18nService), {
+      a: 'A',
+    })
+    assert.deepEqual(builders[1]({} as unknown as import('#services/i18n_service').I18nService), {
+      b: 'B',
+    })
+  })
 })

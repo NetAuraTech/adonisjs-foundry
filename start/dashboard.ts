@@ -16,6 +16,7 @@ import { AuthDashboardCollector } from '#services/auth/auth_dashboard_collector'
 import { PageDashboardCollector } from '#cms/domain/services/page/page_dashboard_collector'
 import { TemplateDashboardCollector } from '#cms/domain/services/template/template_dashboard_collector'
 import { FileDashboardCollector } from '#services/file/file_dashboard_collector'
+import { buildCmsDashboardPayload } from '#cms/helpers/i18n_payloads/dashboard_cms'
 
 app.container.singleton(DashboardRegistry, () => new DashboardRegistry())
 
@@ -25,3 +26,5 @@ registry.register('auth', () => app.container.make(AuthDashboardCollector))
 registry.register('page', () => app.container.make(PageDashboardCollector))
 registry.register('template', () => app.container.make(TemplateDashboardCollector))
 registry.register('file', () => app.container.make(FileDashboardCollector))
+
+registry.registerTranslations(buildCmsDashboardPayload)
