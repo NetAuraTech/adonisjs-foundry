@@ -5,7 +5,13 @@
  * `NavRegistry` singleton and turned into request-scoped, label-resolved
  * groups by the inertia middleware. Labels stay as i18n keys here because
  * the resolution locale is only known per request.
+ *
+ * The gating permission is a system slug (or array of slugs) from the
+ * composed catalog in `start/permissions.ts`, so a renamed slug is a
+ * compile error at the entry's registration site.
  */
+import type { PermissionSlug } from '#start/permissions'
+
 export type AdminNavEntry = {
   /** i18n key resolved per request (e.g. `admin.users.value`, `page.admin.value`). */
   label: string
@@ -15,8 +21,8 @@ export type AdminNavEntry = {
   route: string
   /** Optional route parameters forwarded to `urlFor`. */
   routeParams?: Record<string, string | number>
-  /** Permission slug(s) gating the entry (client-side hint; the route stays guarded server-side). */
-  permission: string | string[]
+  /** System permission slug(s) gating the entry (client-side hint; the route stays guarded server-side). */
+  permission: PermissionSlug | PermissionSlug[]
   /**
    * Sidebar category the entry belongs to. `no_category` renders without a
    * heading (used for the dashboard link).
@@ -30,7 +36,7 @@ export type ResolvedAdminNavEntry = {
   icon?: string
   route: string
   routeParams?: Record<string, string | number>
-  permission: string | string[]
+  permission: PermissionSlug | PermissionSlug[]
 }
 
 /**
