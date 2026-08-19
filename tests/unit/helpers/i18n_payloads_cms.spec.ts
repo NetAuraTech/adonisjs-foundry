@@ -10,6 +10,7 @@ import { buildPagesCreatePayload } from '#helpers/i18n_payloads/pages_create'
 import { buildPagesShowPayload } from '#helpers/i18n_payloads/pages_show'
 import { buildPageRevisionsPayload } from '#helpers/i18n_payloads/page_revisions'
 import { buildPageEditorPayload } from '#helpers/i18n_payloads/page_editor'
+import { buildCmsDashboardPayload } from '#cms/helpers/i18n_payloads/dashboard_cms'
 
 const BUILDER_IDS = [
   'templates_index',
@@ -19,6 +20,7 @@ const BUILDER_IDS = [
   'pages_show',
   'page_revisions',
   'page_editor',
+  'dashboard_cms',
 ] as const
 
 /**
@@ -42,12 +44,14 @@ function buildById(i18n: I18nService, id: (typeof BUILDER_IDS)[number]): any {
       return buildPageRevisionsPayload(i18n)
     case 'page_editor':
       return buildPageEditorPayload(i18n)
+    case 'dashboard_cms':
+      return buildCmsDashboardPayload(i18n)
   }
 }
 
 test.group('i18n payload lang coverage (CMS)', () => {
   test('covers every CMS payload builder', ({ assert }) => {
-    assert.lengthOf(BUILDER_IDS, 7)
+    assert.lengthOf(BUILDER_IDS, 8)
   })
 
   for (const locale of LOCALES) {

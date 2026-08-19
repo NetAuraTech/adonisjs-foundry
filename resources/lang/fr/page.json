@@ -155,11 +155,5 @@
       "email": "E-Mail: {value}",
       "message": "Message: {value}"
     }
-  },
-  "maintenance": {
-    "title": "Mode maintenance",
-    "default_message": "Nous effectuons une maintenance planifiée. Merci de revenir plus tard.",
-    "retry_in": "Nouvel essai dans :",
-    "retry_now": "Réessayer maintenant"
   }
 }

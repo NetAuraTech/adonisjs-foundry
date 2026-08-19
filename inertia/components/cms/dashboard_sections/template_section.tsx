@@ -3,6 +3,10 @@ import { useTranslation } from '~/hooks/use_translation'
 import { StatCard } from '~/components/dashboard_sections/stat_card'
 import { registerDashboardSection, type DashboardSectionCardProps } from '~/lib/dashboard_sections'
 import type { Data } from '@generated/data'
+import type { AdminDashboardTranslations } from '#helpers/i18n_payloads/dashboard'
+import type { CmsDashboardTranslations } from '#cms/helpers/i18n_payloads/dashboard_cms'
+
+type CmsTranslations = AdminDashboardTranslations & CmsDashboardTranslations
 
 /**
  * Template dashboard section card: the total template count.
@@ -14,7 +18,7 @@ import type { Data } from '@generated/data'
  * it entirely and the dashboard never renders a template section.
  */
 function TemplateStatCard({ stats, translations }: DashboardSectionCardProps) {
-  const { t } = useTranslation(translations)
+  const { t } = useTranslation(translations as CmsTranslations)
   const template: Data.Dashboard['template'] = stats.template
 
   if (!template || stats.page) return null
@@ -23,7 +27,7 @@ function TemplateStatCard({ stats, translations }: DashboardSectionCardProps) {
     <CanAccess permission="templates.view">
       <StatCard
         icon="LayoutTemplate"
-        label={t('cards.templates')}
+        label={t('cms.cards.templates')}
         value={template.templates}
         route="admin.templates.render"
       />

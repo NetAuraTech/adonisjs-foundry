@@ -1,27 +1,18 @@
 import type { BuildPayloadResult, I18nService } from '#services/i18n_service'
 
 /**
- * The flat i18n key mapping for the admin dashboard page.
+ * The flat i18n key mapping for the admin dashboard page (core sections only).
+ * CMS-specific keys live in `app/cms/helpers/i18n_payloads/dashboard_cms.ts`.
  */
 export const DASHBOARD_MAPPING = {
   title: 'admin.dashboard.title',
   cards: {
     users: 'admin.users.value',
-    pages: 'page.admin.value',
-    translations: 'page.admin.dashboard.cards.translations',
     files: 'admin.files.value',
-    templates: 'template.admin.value',
-    published_locales: 'page.admin.dashboard.cards.published_locales',
     folders: 'admin.dashboard.cards.folders',
     no_role: 'admin.dashboard.cards.no_role',
   },
-  status: {
-    draft: 'page.admin.status.draft',
-    published: 'page.admin.status.published',
-    archived: 'page.admin.status.archived',
-  },
   recent: {
-    published_pages: 'page.admin.dashboard.recent.published_pages',
     uploads: 'admin.dashboard.recent.uploads',
     empty: 'admin.dashboard.recent.empty',
   },
