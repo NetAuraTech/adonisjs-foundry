@@ -10,6 +10,7 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+import { permissions } from '#start/permissions'
 import { controllers } from '#generated/controllers'
 
 export function registerCmsAdminRoutes(): void {
@@ -20,7 +21,7 @@ export function registerCmsAdminRoutes(): void {
         .group(() => {
           router
             .get('/', [controllers.page.admin.Pages, 'render'])
-            .use([middleware.permission({ permissions: ['pages.view'] })])
+            .use([middleware.permission({ permissions: [permissions.pages.view] })])
 
           router
             .group(() => {
@@ -28,45 +29,45 @@ export function registerCmsAdminRoutes(): void {
               router.post('/', [controllers.page.admin.PagesCreate, 'execute'])
             })
             .prefix('create')
-            .use([middleware.permission({ permissions: ['pages.create'] })])
+            .use([middleware.permission({ permissions: [permissions.pages.create] })])
 
           router
             .group(() => {
               router
                 .get('/', [controllers.page.admin.PagesShow, 'render'])
-                .use([middleware.permission({ permissions: ['pages.view'] })])
+                .use([middleware.permission({ permissions: [permissions.pages.view] })])
               router
                 .get('/edit', [controllers.page.admin.PagesUpdate, 'render'])
-                .use([middleware.permission({ permissions: ['pages.update'] })])
+                .use([middleware.permission({ permissions: [permissions.pages.update] })])
               router
                 .post('/edit', [controllers.page.admin.PagesUpdate, 'execute'])
-                .use([middleware.permission({ permissions: ['pages.update'] })])
+                .use([middleware.permission({ permissions: [permissions.pages.update] })])
               router
                 .post('/publish', [controllers.page.admin.PagesUpdate, 'publish'])
-                .use([middleware.permission({ permissions: ['pages.update'] })])
+                .use([middleware.permission({ permissions: [permissions.pages.update] })])
               router
                 .post('/unpublish', [controllers.page.admin.PagesUpdate, 'unpublish'])
-                .use([middleware.permission({ permissions: ['pages.update'] })])
+                .use([middleware.permission({ permissions: [permissions.pages.update] })])
               router
                 .post('/homepage', [controllers.page.admin.Pages, 'setHomepage'])
-                .use([middleware.permission({ permissions: ['pages.update'] })])
+                .use([middleware.permission({ permissions: [permissions.pages.update] })])
               router
                 .delete('/', [controllers.page.admin.Pages, 'destroy'])
-                .use([middleware.permission({ permissions: ['pages.delete'] })])
+                .use([middleware.permission({ permissions: [permissions.pages.delete] })])
               router
                 .post('/translations', [controllers.page.admin.PageTranslations, 'execute'])
-                .use([middleware.permission({ permissions: ['pages.update'] })])
+                .use([middleware.permission({ permissions: [permissions.pages.update] })])
               router
                 .group(() => {
                   router
                     .get('/', [controllers.page.admin.PageRevisions, 'index'])
-                    .use([middleware.permission({ permissions: ['pages.view'] })])
+                    .use([middleware.permission({ permissions: [permissions.pages.view] })])
                   router
                     .post('/:revisionId/restore', [controllers.page.admin.PageRevisions, 'restore'])
-                    .use([middleware.permission({ permissions: ['pages.update'] })])
+                    .use([middleware.permission({ permissions: [permissions.pages.update] })])
                   router
                     .post('/:revisionId/keep', [controllers.page.admin.PageRevisions, 'toggleKeep'])
-                    .use([middleware.permission({ permissions: ['pages.update'] })])
+                    .use([middleware.permission({ permissions: [permissions.pages.update] })])
                 })
                 .prefix('translations/:translationId/revisions')
             })
@@ -74,7 +75,7 @@ export function registerCmsAdminRoutes(): void {
 
           router
             .get('/preview/:pageId', [controllers.page.admin.PagesPreview, 'render'])
-            .use([middleware.permission({ permissions: ['pages.view'] })])
+            .use([middleware.permission({ permissions: [permissions.pages.view] })])
         })
         .prefix('pages')
 
@@ -83,25 +84,25 @@ export function registerCmsAdminRoutes(): void {
         .group(() => {
           router
             .get('/', [controllers.template.admin.Templates, 'render'])
-            .use([middleware.permission({ permissions: ['templates.view'] })])
+            .use([middleware.permission({ permissions: [permissions.templates.view] })])
           router
             .post('/', [controllers.template.admin.Templates, 'execute'])
-            .use([middleware.permission({ permissions: ['templates.create'] })])
+            .use([middleware.permission({ permissions: [permissions.templates.create] })])
           router
             .post('/:id/apply', [controllers.template.admin.Templates, 'applyToPage'])
-            .use([middleware.permission({ permissions: ['templates.update'] })])
+            .use([middleware.permission({ permissions: [permissions.templates.update] })])
           router
             .post('/:id', [controllers.template.admin.Templates, 'update'])
-            .use([middleware.permission({ permissions: ['templates.update'] })])
+            .use([middleware.permission({ permissions: [permissions.templates.update] })])
           router
             .delete('/:id', [controllers.template.admin.Templates, 'destroy'])
-            .use([middleware.permission({ permissions: ['templates.delete'] })])
+            .use([middleware.permission({ permissions: [permissions.templates.delete] })])
           router
             .get('/preview/:id', [controllers.template.admin.TemplatesPreview, 'render'])
-            .use([middleware.permission({ permissions: ['templates.view'] })])
+            .use([middleware.permission({ permissions: [permissions.templates.view] })])
           router
             .get('/:id/edit', [controllers.template.admin.Templates, 'edit'])
-            .use([middleware.permission({ permissions: ['templates.view'] })])
+            .use([middleware.permission({ permissions: [permissions.templates.view] })])
         })
         .prefix('templates')
     })
