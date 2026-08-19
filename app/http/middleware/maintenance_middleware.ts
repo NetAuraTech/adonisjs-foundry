@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
 import { MaintenanceService } from '#services/maintenance/maintenance_service'
+import { permissions } from '#start/permissions'
 import MaintenanceException from '#exceptions/maintenance_exception'
 
 /**
@@ -54,7 +55,7 @@ export default class MaintenanceMiddleware {
 
     if (isAuthenticated) {
       const user = ctx.auth.user!
-      const hasAdminAccess = await user.checkAny(['admin.access'])
+      const hasAdminAccess = await user.checkAny([permissions.adminAccess])
 
       if (hasAdminAccess) {
         return next()

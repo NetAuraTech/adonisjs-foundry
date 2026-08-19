@@ -9,6 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+import { permissions } from '#start/permissions'
 import { controllers } from '#generated/controllers'
 
 export function registerAdminRoutes(): void {
@@ -16,13 +17,13 @@ export function registerAdminRoutes(): void {
     .group(() => {
       router
         .get('/', [controllers.core.admin.Dashboard, 'render'])
-        .use([middleware.permission({ permissions: ['admin.access'] })])
+        .use([middleware.permission({ permissions: [permissions.adminAccess] })])
 
       router
         .group(() => {
           router
             .get('/', [controllers.auth.admin.Users, 'render'])
-            .use([middleware.permission({ permissions: ['users.view'] })])
+            .use([middleware.permission({ permissions: [permissions.usersView] })])
 
           router
             .group(() => {
@@ -30,16 +31,16 @@ export function registerAdminRoutes(): void {
               router.post('/', [controllers.auth.admin.UsersCreate, 'execute'])
             })
             .prefix('create')
-            .use([middleware.permission({ permissions: ['users.create'] })])
+            .use([middleware.permission({ permissions: [permissions.usersCreate] })])
 
           router
             .group(() => {
               router
                 .delete('/', [controllers.auth.admin.Users, 'destroy'])
-                .use([middleware.permission({ permissions: ['users.delete'] })])
+                .use([middleware.permission({ permissions: [permissions.usersDelete] })])
               router
                 .get('/', [controllers.auth.admin.UsersShow, 'render'])
-                .use([middleware.permission({ permissions: ['users.view'] })])
+                .use([middleware.permission({ permissions: [permissions.usersView] })])
 
               router
                 .group(() => {
@@ -47,7 +48,7 @@ export function registerAdminRoutes(): void {
                   router.post('/', [controllers.auth.admin.UsersUpdate, 'execute'])
                 })
                 .prefix('edit')
-                .use([middleware.permission({ permissions: ['users.update'] })])
+                .use([middleware.permission({ permissions: [permissions.usersUpdate] })])
             })
             .prefix(':id')
         })
@@ -57,7 +58,7 @@ export function registerAdminRoutes(): void {
         .group(() => {
           router
             .get('/', [controllers.auth.admin.Roles, 'render'])
-            .use([middleware.permission({ permissions: ['roles.view'] })])
+            .use([middleware.permission({ permissions: [permissions.rolesView] })])
 
           router
             .group(() => {
@@ -65,16 +66,16 @@ export function registerAdminRoutes(): void {
               router.post('/', [controllers.auth.admin.RolesCreate, 'execute'])
             })
             .prefix('create')
-            .use([middleware.permission({ permissions: ['roles.create'] })])
+            .use([middleware.permission({ permissions: [permissions.rolesCreate] })])
 
           router
             .group(() => {
               router
                 .delete('/', [controllers.auth.admin.Roles, 'destroy'])
-                .use([middleware.permission({ permissions: ['roles.delete'] })])
+                .use([middleware.permission({ permissions: [permissions.rolesDelete] })])
               router
                 .get('/', [controllers.auth.admin.RolesShow, 'render'])
-                .use([middleware.permission({ permissions: ['roles.view'] })])
+                .use([middleware.permission({ permissions: [permissions.rolesView] })])
 
               router
                 .group(() => {
@@ -82,7 +83,7 @@ export function registerAdminRoutes(): void {
                   router.post('/', [controllers.auth.admin.RolesUpdate, 'execute'])
                 })
                 .prefix('edit')
-                .use([middleware.permission({ permissions: ['roles.update'] })])
+                .use([middleware.permission({ permissions: [permissions.rolesUpdate] })])
             })
             .prefix(':id')
         })
@@ -92,7 +93,7 @@ export function registerAdminRoutes(): void {
         .group(() => {
           router
             .get('/', [controllers.auth.admin.Permissions, 'render'])
-            .use([middleware.permission({ permissions: ['permissions.view'] })])
+            .use([middleware.permission({ permissions: [permissions.permissionsView] })])
 
           router
             .group(() => {
@@ -100,13 +101,13 @@ export function registerAdminRoutes(): void {
               router.post('/', [controllers.auth.admin.PermissionsCreate, 'execute'])
             })
             .prefix('create')
-            .use([middleware.permission({ permissions: ['permissions.create'] })])
+            .use([middleware.permission({ permissions: [permissions.permissionsCreate] })])
 
           router
             .group(() => {
               router
                 .delete('/', [controllers.auth.admin.Permissions, 'destroy'])
-                .use([middleware.permission({ permissions: ['permissions.delete'] })])
+                .use([middleware.permission({ permissions: [permissions.permissionsDelete] })])
 
               router
                 .group(() => {
@@ -114,7 +115,7 @@ export function registerAdminRoutes(): void {
                   router.post('/', [controllers.auth.admin.PermissionsUpdate, 'execute'])
                 })
                 .prefix('edit')
-                .use([middleware.permission({ permissions: ['permissions.update'] })])
+                .use([middleware.permission({ permissions: [permissions.permissionsUpdate] })])
             })
             .prefix(':id')
         })
@@ -126,22 +127,22 @@ export function registerAdminRoutes(): void {
           .group(() => {
             router
               .get('/', [controllers.file.admin.Files, 'render'])
-              .use([middleware.permission({ permissions: ['files.view'] })])
+              .use([middleware.permission({ permissions: [permissions.filesView] })])
             router
               .post('/upload', [controllers.file.admin.Files, 'upload'])
-              .use([middleware.permission({ permissions: ['files.create'] })])
+              .use([middleware.permission({ permissions: [permissions.filesCreate] })])
             router
               .post('/:id/move', [controllers.file.admin.Files, 'move'])
-              .use([middleware.permission({ permissions: ['files.update'] })])
+              .use([middleware.permission({ permissions: [permissions.filesUpdate] })])
             router
               .delete('/:id', [controllers.file.admin.Files, 'destroy'])
-              .use([middleware.permission({ permissions: ['files.delete'] })])
+              .use([middleware.permission({ permissions: [permissions.filesDelete] })])
             router
               .post('/:id/alts', [controllers.file.admin.Files, 'upsertAlt'])
-              .use([middleware.permission({ permissions: ['files.update'] })])
+              .use([middleware.permission({ permissions: [permissions.filesUpdate] })])
             router
               .delete('/:id/alts', [controllers.file.admin.Files, 'deleteAlt'])
-              .use([middleware.permission({ permissions: ['files.update'] })])
+              .use([middleware.permission({ permissions: [permissions.filesUpdate] })])
           })
           .prefix('files')
 
@@ -150,16 +151,16 @@ export function registerAdminRoutes(): void {
           .group(() => {
             router
               .get('/', [controllers.file.admin.FileFolders, 'render'])
-              .use([middleware.permission({ permissions: ['folders.view'] })])
+              .use([middleware.permission({ permissions: [permissions.foldersView] })])
             router
               .post('/', [controllers.file.admin.FileFolders, 'execute'])
-              .use([middleware.permission({ permissions: ['folders.create'] })])
+              .use([middleware.permission({ permissions: [permissions.foldersCreate] })])
             router
               .put('/:id', [controllers.file.admin.FileFolders, 'update'])
-              .use([middleware.permission({ permissions: ['folders.update'] })])
+              .use([middleware.permission({ permissions: [permissions.foldersUpdate] })])
             router
               .delete('/:id', [controllers.file.admin.FileFolders, 'destroy'])
-              .use([middleware.permission({ permissions: ['folders.delete'] })])
+              .use([middleware.permission({ permissions: [permissions.foldersDelete] })])
           })
           .prefix('files/folders')
 
@@ -183,7 +184,7 @@ export function registerAdminRoutes(): void {
               })
               .prefix('settings')
               .as('settings')
-              .use([middleware.permission({ permissions: ['settings.maintenance'] })])
+              .use([middleware.permission({ permissions: [permissions.settingsMaintenance] })])
           })
           .use([middleware.auth({ guards: ['web'] })])
 
@@ -193,7 +194,7 @@ export function registerAdminRoutes(): void {
             router
               .get('/', [controllers.log.admin.Logs, 'render'])
               .as('logs.render')
-              .use([middleware.permission({ permissions: ['logs.view'] })])
+              .use([middleware.permission({ permissions: [permissions.logsView] })])
           })
           .prefix('logs')
           .use([middleware.auth({ guards: ['web'] })])

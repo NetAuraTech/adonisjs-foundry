@@ -1,5 +1,6 @@
 import transmit from '@adonisjs/transmit/services/main'
 import { BuilderSessionService } from '#cms/domain/services/page/builder_session_service'
+import { permissions } from '#start/permissions'
 import app from '@adonisjs/core/services/app'
 
 transmit.registerRoutes()
@@ -40,7 +41,7 @@ transmit.authorize<{ pageId: string; translationId: string }>(
 
     const user = ctx.auth.user!
 
-    const canEdit = await user.can('pages.update')
+    const canEdit = await user.can(permissions.pagesUpdate)
     if (!canEdit) return false
 
     const translationId = Number(params.translationId)

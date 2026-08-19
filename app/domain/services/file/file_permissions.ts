@@ -8,8 +8,8 @@ import type { PermissionSlugs } from '#types/permissions'
  * this const; the permission seeder persists exactly this matrix.
  */
 export const filePermissionCatalog = {
-  files: ['view', 'upload', 'delete'],
-  folders: ['view', 'create', 'rename', 'delete'],
+  files: ['view', 'create', 'update', 'delete'],
+  folders: ['view', 'create', 'update', 'delete'],
 } as const
 
 /** Union of every system permission slug owned by the file domain. */

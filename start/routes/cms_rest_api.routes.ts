@@ -13,6 +13,7 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+import { permissions } from '#start/permissions'
 import { controllers } from '#generated/controllers'
 import { enabledAuthGuards } from '#config/auth'
 
@@ -34,51 +35,51 @@ export function registerCmsRestApiRoutes(): void {
             .group(() => {
               router
                 .get('/', [controllers.page.api.PagesApi, 'index'])
-                .use([middleware.permission({ permissions: ['pages.view'] })])
+                .use([middleware.permission({ permissions: [permissions.pagesView] })])
               router
                 .post('/', [controllers.page.api.PagesCreateApi, 'store'])
-                .use([middleware.permission({ permissions: ['pages.create'] })])
+                .use([middleware.permission({ permissions: [permissions.pagesCreate] })])
               router
                 .get('/:id', [controllers.page.api.PagesShowApi, 'show'])
-                .use([middleware.permission({ permissions: ['pages.view'] })])
+                .use([middleware.permission({ permissions: [permissions.pagesView] })])
               router
                 .put('/:id', [controllers.page.api.PagesUpdateApi, 'update'])
-                .use([middleware.permission({ permissions: ['pages.update'] })])
+                .use([middleware.permission({ permissions: [permissions.pagesUpdate] })])
               router
                 .delete('/:id', [controllers.page.api.PagesDeleteApi, 'destroy'])
-                .use([middleware.permission({ permissions: ['pages.delete'] })])
+                .use([middleware.permission({ permissions: [permissions.pagesDelete] })])
               router
                 .put('/:id/publish', [controllers.page.api.PagesUpdateApi, 'publish'])
-                .use([middleware.permission({ permissions: ['pages.update'] })])
+                .use([middleware.permission({ permissions: [permissions.pagesUpdate] })])
               router
                 .put('/:id/unpublish', [controllers.page.api.PagesUpdateApi, 'unpublish'])
-                .use([middleware.permission({ permissions: ['pages.update'] })])
+                .use([middleware.permission({ permissions: [permissions.pagesUpdate] })])
               router
                 .put('/:id/homepage', [controllers.page.api.PagesApi, 'setHomepage'])
-                .use([middleware.permission({ permissions: ['pages.update'] })])
+                .use([middleware.permission({ permissions: [permissions.pagesUpdate] })])
               router
                 .post('/:id/translations', [controllers.page.api.PageTranslationsApi, 'store'])
-                .use([middleware.permission({ permissions: ['pages.update'] })])
+                .use([middleware.permission({ permissions: [permissions.pagesUpdate] })])
               router
                 .group(() => {
                   router
                     .get('/', [controllers.page.api.PageRevisionsApi, 'index'])
-                    .use([middleware.permission({ permissions: ['pages.view'] })])
+                    .use([middleware.permission({ permissions: [permissions.pagesView] })])
                   router
                     .post('/:revisionId/restore', [
                       controllers.page.api.PageRevisionsApi,
                       'restore',
                     ])
-                    .use([middleware.permission({ permissions: ['pages.update'] })])
+                    .use([middleware.permission({ permissions: [permissions.pagesUpdate] })])
                   router
                     .put('/:revisionId/pin', [controllers.page.api.PageRevisionsApi, 'toggle'])
-                    .use([middleware.permission({ permissions: ['pages.update'] })])
+                    .use([middleware.permission({ permissions: [permissions.pagesUpdate] })])
                 })
                 .prefix('/:id/translations/:translationId/revisions')
 
               router
                 .get('/preview/token', [controllers.page.api.PagesPreviewToken, 'token'])
-                .use([middleware.permission({ permissions: ['pages.update'] })])
+                .use([middleware.permission({ permissions: [permissions.pagesUpdate] })])
             })
             .prefix('pages')
 
@@ -87,22 +88,22 @@ export function registerCmsRestApiRoutes(): void {
             .group(() => {
               router
                 .get('/', [controllers.template.api.Templates, 'index'])
-                .use([middleware.permission({ permissions: ['templates.view'] })])
+                .use([middleware.permission({ permissions: [permissions.templatesView] })])
               router
                 .post('/', [controllers.template.api.Templates, 'store'])
-                .use([middleware.permission({ permissions: ['templates.create'] })])
+                .use([middleware.permission({ permissions: [permissions.templatesCreate] })])
               router
                 .put('/:id', [controllers.template.api.Templates, 'update'])
-                .use([middleware.permission({ permissions: ['templates.update'] })])
+                .use([middleware.permission({ permissions: [permissions.templatesUpdate] })])
               router
                 .delete('/:id', [controllers.template.api.Templates, 'destroy'])
-                .use([middleware.permission({ permissions: ['templates.delete'] })])
+                .use([middleware.permission({ permissions: [permissions.templatesDelete] })])
               router
                 .post('/from-page', [controllers.template.api.Templates, 'createFromPage'])
-                .use([middleware.permission({ permissions: ['templates.create'] })])
+                .use([middleware.permission({ permissions: [permissions.templatesCreate] })])
               router
                 .get('/preview/token', [controllers.template.api.TemplatesPreviewToken, 'token'])
-                .use([middleware.permission({ permissions: ['templates.view'] })])
+                .use([middleware.permission({ permissions: [permissions.templatesView] })])
             })
             .prefix('templates')
 
@@ -111,19 +112,19 @@ export function registerCmsRestApiRoutes(): void {
             .group(() => {
               router
                 .post('/operations', [controllers.page.api.BuilderOperations, 'execute'])
-                .use([middleware.permission({ permissions: ['pages.update'] })])
+                .use([middleware.permission({ permissions: [permissions.pagesUpdate] })])
               router
                 .get('/presence/:translationId', [
                   controllers.page.api.BuilderOperations,
                   'presence',
                 ])
-                .use([middleware.permission({ permissions: ['pages.update'] })])
+                .use([middleware.permission({ permissions: [permissions.pagesUpdate] })])
               router
                 .post('/draft/:translationId', [
                   controllers.page.api.BuilderOperations,
                   'saveDraft',
                 ])
-                .use([middleware.permission({ permissions: ['pages.update'] })])
+                .use([middleware.permission({ permissions: [permissions.pagesUpdate] })])
             })
             .prefix('builder')
         })
