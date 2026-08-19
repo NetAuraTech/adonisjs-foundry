@@ -1,0 +1,67 @@
+import { type HttpContext } from '@adonisjs/core/http'
+import { resolveEndpoint, type AnyRestEndpoint } from '#rest/rest_resource'
+
+/**
+ * Run a declarative endpoint as an admin page and send the page response.
+ *
+ * The page twin of `handleRest`: the shared request interpretation is
+ * resolved through {@link resolveEndpoint} exactly once, then the
+ * endpoint's `page` declaration produces the page transport output:
+ *
+ * - display methods (GET/HEAD): the Inertia page rendered with the props
+ *   built by `page.render`
+ * - mutating methods: the success flash from `page.flash`, then a redirect
+ *   to the named route from `page.redirect`
+ *
+ * A validation failure never reaches the page declaration: the exception
+ * propagates to the global Vine handler, which flashes the errors and
+ * redirects back so the page re-renders with its validation state. Domain
+ * exceptions thrown by the action propagate the same way and are shaped by
+ * the standard exception handler.
+ *
+ * @param ctx - The AdonisJS HTTP context.
+ * @param endpoint - The endpoint carrying its `page` declaration.
+ * @returns Resolves once the page response has been sent.
+ *
+ * @example
+ * async render(ctx: HttpContext) {
+ *   return handlePage(ctx, this.usersResource.endpoints.index)
+ * }
+ */
+export async function handlePage(ctx: HttpContext, endpoint: AnyRestEndpoint): Promise<unknown> {
+  const page = endpoint.page
+
+  if (!page) {
+    throw new Error('[handlePage] the endpoint is missing its page declaration')
+  }
+
+  const { context, prepared, payload, result } = await resolveEndpoint(ctx, endpoint)
+
+  if (ctx.request.method() === 'GET' || ctx.request.method() === 'HEAD') {
+    const { component, render } = page
+
+    if (!component || !render) {
+      throw new Error('[handlePage] the endpoint is missing its page render declaration')
+    }
+
+    // The component name stays a plain `string` on the contract, so the
+    // dynamic render goes through the same cast the controllers use.
+    return (ctx.inertia.render as any)(component, await render(context, prepared, payload, result))
+  }
+
+  const { flash, redirect } = page
+
+  if (!flash || !redirect) {
+    throw new Error('[handlePage] the endpoint is missing its page flash and redirect declarations')
+  }
+
+  ctx.session.flash('success', await flash(context, prepared, payload, result))
+
+  const { route, params } = redirect(context, prepared, payload, result)
+
+  // The route name stays a plain `string` on the contract, so the dynamic
+  // redirect goes through a cast rather than the generated route names.
+  return (
+    ctx.response.redirect().toRoute as (routeName: string, params?: Record<string, unknown>) => void
+  )(route, params ?? {})
+}

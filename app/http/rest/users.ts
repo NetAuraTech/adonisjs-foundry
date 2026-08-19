@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
 import { type Infer } from '@vinejs/vine/types'
+import type Role from '#models/auth/role'
 import type User from '#models/auth/user'
 import { ListUsersAction } from '#actions/user/list_users_action'
 import { GetUserDetailAction } from '#actions/user/get_user_detail_action'
@@ -8,9 +9,19 @@ import { CreateUserAction } from '#actions/user/create_user_action'
 import { UpdateUserAction } from '#actions/user/update_user_action'
 import { DeleteUserAction } from '#actions/user/delete_user_action'
 import { ListAllRolesAction } from '#actions/role/list_all_roles_action'
-import { listValidator, createValidator, updateValidator, restIdValidator } from '#validators/user'
+import {
+  listValidator,
+  editValidator,
+  createValidator,
+  updateValidator,
+  restIdValidator,
+} from '#validators/user'
 import UserTransformer from '#transformers/user_transformer'
+import RoleTransformer from '#transformers/role_transformer'
+import { I18nService } from '#services/i18n_service'
 import { roleIdsToAllowlist } from '#helpers/auth/load_user_role'
+import { buildUsersListPayload } from '#helpers/i18n_payloads/users_list'
+import { buildUsersFormPayload } from '#helpers/i18n_payloads/users_form'
 import { type RestEndpoint, type AnyRestEndpoint, handleRest } from '#rest/rest_resource'
 
 type UserListPagination = Awaited<ReturnType<ListUsersAction['execute']>>
@@ -19,16 +30,17 @@ type UserUpdateResult = Awaited<ReturnType<UpdateUserAction['execute']>>
 type UserDeleteResult = Awaited<ReturnType<DeleteUserAction['execute']>>
 
 /**
- * Endpoint declarations for the users REST resource.
+ * Endpoint declarations for the users resource.
  *
  * Each member is a {@link RestEndpoint} instantiation: `Prepared` is the
  * value produced by the `prepare` step, `Payload` is inferred from the Vine
  * validator, `Result` is the domain action return and `Entity` is what the
- * transformer consumes.
+ * transformer consumes. The REST adapter and the page adapter both consume
+ * the same declarations.
  */
 export interface UsersEndpoints {
   index: RestEndpoint<
-    { allowed: string[] },
+    { roles: Role[]; allowed: string[] },
     Infer<ReturnType<typeof listValidator>>,
     UserListPagination,
     UserListPagination
@@ -40,6 +52,7 @@ export interface UsersEndpoints {
     UserCreateResult,
     User
   >
+  edit: RestEndpoint<{ roles: Role[] }, Infer<typeof editValidator>, User, User>
   update: RestEndpoint<
     { id: number; allowed: string[] },
     Infer<ReturnType<typeof updateValidator>>,
@@ -55,15 +68,19 @@ export interface UsersEndpoints {
 }
 
 /**
- * Declarative users REST resource.
+ * Declarative users resource.
  *
- * Owns the five REST endpoint declarations executed by the shared
- * {@link handleRest} pipeline; the `/api/v1/admin/users` controllers reduce
- * to one-line adapters over `handle()`.
+ * Owns the users endpoint declarations executed by the shared adapters:
+ * {@link handleRest} for the `/api/v1/admin/users` REST routes (whose
+ * controllers reduce to one-line adapters over `handle()`) and the page
+ * adapter for the session-rendered admin pages (list, edit form, update).
+ * The request interpretation — roles allowlist, field coercions — exists
+ * exactly once, in these declarations.
  */
 @inject()
 export default class UsersResource {
   constructor(
+    protected i18n: I18nService,
     protected listUsersAction: ListUsersAction,
     protected listAllRolesAction: ListAllRolesAction,
     protected getUserDetailAction: GetUserDetailAction,
@@ -79,7 +96,7 @@ export default class UsersResource {
       prepare: async () => {
         const roles = await this.listAllRolesAction.execute()
 
-        return { allowed: roleIdsToAllowlist(roles) }
+        return { roles, allowed: roleIdsToAllowlist(roles) }
       },
       validator: (prepared) => listValidator(prepared.allowed),
       execute: (context, _prepared, payload) =>
@@ -89,6 +106,15 @@ export default class UsersResource {
           pagination: context.pagination!,
         }),
       transform: (entity) => UserTransformer.paginate(entity.all(), entity.getMeta()),
+      page: {
+        component: 'auth/admin/index',
+        render: async (_context, prepared, payload, result) => ({
+          users: UserTransformer.paginate(result.all(), result.getMeta()),
+          roles: RoleTransformer.transform(prepared.roles),
+          filters: payload,
+          translations: buildUsersListPayload(this.i18n, prepared.roles),
+        }),
+      },
     },
     show: {
       input: (context) => context.params,
@@ -114,6 +140,21 @@ export default class UsersResource {
         this.getUserDetailAction.execute({ id: created.id }),
       transform: (entity) => UserTransformer.transform(entity),
     },
+    edit: {
+      input: (context) => context.params,
+      prepare: async () => ({ roles: await this.listAllRolesAction.execute() }),
+      validator: () => editValidator,
+      execute: (_context, _prepared, payload) =>
+        this.getUserDetailAction.execute({ id: payload.id }),
+      page: {
+        component: 'auth/admin/form',
+        render: async (_context, prepared, _payload, user) => ({
+          user: UserTransformer.transform(user),
+          roles: RoleTransformer.transform(prepared.roles),
+          translations: buildUsersFormPayload(this.i18n, prepared.roles),
+        }),
+      },
+    },
     update: {
       prepare: async (context) => {
         const { id } = await restIdValidator.validate(context.params)
@@ -131,6 +172,21 @@ export default class UsersResource {
         }),
       refetch: (_context, prepared) => this.getUserDetailAction.execute({ id: prepared.id }),
       transform: (entity) => UserTransformer.transform(entity),
+      page: {
+        flash: (_context, _prepared, payload, result) => {
+          let message = this.i18n.translate('admin.users.updated')
+
+          if (result?.pendingEmail === payload.email) {
+            message = `${message} ${this.i18n.translate('admin.users.updated_email')}`
+          }
+
+          return message
+        },
+        redirect: (_context, prepared) => ({
+          route: 'admin.users_show.render',
+          params: { id: prepared.id },
+        }),
+      },
     },
     destroy: {
       status: 204,
@@ -144,7 +200,8 @@ export default class UsersResource {
    * Dispatch a REST action to its declared endpoint.
    *
    * @param route - The REST action name (`index`, `show`, `store`, `update`,
-   *                `destroy`).
+   *                `destroy`). The page-only `edit` endpoint is dispatched by
+   *                the page adapter, never here.
    * @param ctx - The AdonisJS HTTP context.
    * @returns Resolves once the response has been sent.
    *
