@@ -3,8 +3,8 @@ import { inject } from '@adonisjs/core'
 import { DeleteUserAction } from '#actions/user/delete_user_action'
 import { deleteValidator } from '#validators/user'
 import { I18nService } from '#services/i18n_service'
-import UsersResource from '#rest/users'
-import { handlePage } from '#rest/page_resource'
+import UsersResource from '#rest/users_resource'
+import { handle } from '#rest/page_adapter'
 
 @inject()
 export default class UsersController {
@@ -15,7 +15,7 @@ export default class UsersController {
   ) {}
 
   async render(ctx: HttpContext) {
-    return handlePage(ctx, this.usersResource.endpoints.index)
+    return handle(ctx, this.usersResource.endpoints.index)
   }
 
   async destroy(ctx: HttpContext) {

@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
-import FoldersResource from '#rest/folders'
+import FoldersResource from '#rest/folders_resource'
+import { handle } from '#rest/rest_adapter'
 
 /**
  * GET /api/v1/admin/folders/:id — show a folder from the admin REST API.
@@ -15,10 +16,10 @@ export default class FoldersShowApiController {
   constructor(protected foldersResource: FoldersResource) {}
 
   async show(ctx: HttpContext): Promise<void> {
-    await this.foldersResource.handle('show', ctx)
+    await handle(ctx, this.foldersResource.endpoints.show)
   }
 
   async children(ctx: HttpContext): Promise<void> {
-    await this.foldersResource.handle('children', ctx)
+    await handle(ctx, this.foldersResource.endpoints.children)
   }
 }

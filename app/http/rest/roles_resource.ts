@@ -1,5 +1,4 @@
 import { inject } from '@adonisjs/core'
-import { type HttpContext } from '@adonisjs/core/http'
 import type { Infer } from '@vinejs/vine/types'
 import type Role from '#models/auth/role'
 import { ListRolesAction } from '#actions/role/list_roles_action'
@@ -14,7 +13,7 @@ import {
   restRoleIdValidator,
 } from '#validators/role'
 import RoleTransformer from '#transformers/role_transformer'
-import { type RestEndpoint, type AnyRestEndpoint, handleRest } from '#rest/rest_resource'
+import { type RestEndpoint } from '#rest/rest_adapter'
 
 type RoleListPagination = Awaited<ReturnType<ListRolesAction['execute']>>
 type RoleCreateResult = Awaited<ReturnType<CreateRoleAction['execute']>>
@@ -44,9 +43,9 @@ export interface RolesEndpoints {
 /**
  * Declarative roles REST resource.
  *
- * Owns the five REST endpoint declarations executed by the shared
- * {@link handleRest} pipeline; the `/api/v1/admin/roles` controllers reduce
- * to one-line adapters over `handle()`.
+ * Owns the five roles REST endpoint declarations consumed by the REST
+ * `handle` adapter (`#rest/rest_adapter`); the `/api/v1/admin/roles`
+ * controllers reduce to one-line dispatch over `endpoints`.
  */
 @inject()
 export default class RolesResource {
@@ -115,14 +114,5 @@ export default class RolesResource {
       validator: () => restRoleIdValidator,
       execute: (_context, _prepared, payload) => this.deleteRoleAction.execute({ id: payload.id }),
     },
-  }
-
-  /**
-   * Dispatch a REST action to its declared endpoint.
-   */
-  async handle(route: keyof RolesEndpoints, ctx: HttpContext): Promise<void> {
-    const endpoint = this.endpoints[route] as AnyRestEndpoint
-
-    await handleRest(ctx, endpoint)
   }
 }

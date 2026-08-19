@@ -1,12 +1,11 @@
-import { type HttpContext } from '@adonisjs/core/http'
-import { resolveEndpoint, type AnyRestEndpoint } from '#rest/rest_resource'
+import { resolveEndpoint, type AdapterHandler } from '#rest/rest_adapter'
 
 /**
  * Run a declarative endpoint as an admin page and send the page response.
  *
- * The page twin of `handleRest`: the shared request interpretation is
- * resolved through {@link resolveEndpoint} exactly once, then the
- * endpoint's `page` declaration produces the page transport output:
+ * The page transport of the REST resource contract: the shared request
+ * interpretation is resolved through {@link resolveEndpoint} exactly once,
+ * then the endpoint's `page` declaration produces the page transport output:
  *
  * - display methods (GET/HEAD): the Inertia page rendered with the props
  *   built by `page.render`
@@ -25,14 +24,14 @@ import { resolveEndpoint, type AnyRestEndpoint } from '#rest/rest_resource'
  *
  * @example
  * async render(ctx: HttpContext) {
- *   return handlePage(ctx, this.usersResource.endpoints.index)
+ *   return handle(ctx, this.usersResource.endpoints.index)
  * }
  */
-export async function handlePage(ctx: HttpContext, endpoint: AnyRestEndpoint): Promise<unknown> {
+export const handle: AdapterHandler = async (ctx, endpoint) => {
   const page = endpoint.page
 
   if (!page) {
-    throw new Error('[handlePage] the endpoint is missing its page declaration')
+    throw new Error('[page_adapter] the endpoint is missing its page declaration')
   }
 
   const { context, prepared, payload, result } = await resolveEndpoint(ctx, endpoint)
@@ -41,7 +40,7 @@ export async function handlePage(ctx: HttpContext, endpoint: AnyRestEndpoint): P
     const { component, render } = page
 
     if (!component || !render) {
-      throw new Error('[handlePage] the endpoint is missing its page render declaration')
+      throw new Error('[page_adapter] the endpoint is missing its page render declaration')
     }
 
     // The component name stays a plain `string` on the contract, so the
@@ -52,7 +51,9 @@ export async function handlePage(ctx: HttpContext, endpoint: AnyRestEndpoint): P
   const { flash, redirect } = page
 
   if (!flash || !redirect) {
-    throw new Error('[handlePage] the endpoint is missing its page flash and redirect declarations')
+    throw new Error(
+      '[page_adapter] the endpoint is missing its page flash and redirect declarations'
+    )
   }
 
   ctx.session.flash('success', await flash(context, prepared, payload, result))

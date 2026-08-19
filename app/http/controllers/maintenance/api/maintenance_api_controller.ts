@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
-import MaintenanceResource from '#rest/maintenance'
+import MaintenanceResource from '#rest/maintenance_resource'
+import { handle } from '#rest/rest_adapter'
 
 /**
  * GET /api/v1/admin/maintenance — current maintenance configuration and
@@ -17,14 +18,14 @@ export default class MaintenanceApiController {
   constructor(protected maintenanceResource: MaintenanceResource) {}
 
   async index(ctx: HttpContext): Promise<void> {
-    await this.maintenanceResource.handle('index', ctx)
+    await handle(ctx, this.maintenanceResource.endpoints.index)
   }
 
   async update(ctx: HttpContext): Promise<void> {
-    await this.maintenanceResource.handle('update', ctx)
+    await handle(ctx, this.maintenanceResource.endpoints.update)
   }
 
   async toggle(ctx: HttpContext): Promise<void> {
-    await this.maintenanceResource.handle('toggle', ctx)
+    await handle(ctx, this.maintenanceResource.endpoints.toggle)
   }
 }

@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
-import PagesResource from '#rest/pages'
+import PagesResource from '#rest/pages_resource'
+import { handle } from '#rest/rest_adapter'
 
 /**
  * POST /api/v1/admin/pages — create a page from the admin REST API.
@@ -14,6 +15,6 @@ export default class PagesCreateApiController {
   constructor(protected pagesResource: PagesResource) {}
 
   async store(ctx: HttpContext): Promise<void> {
-    await this.pagesResource.handle('store', ctx)
+    await handle(ctx, this.pagesResource.endpoints.store)
   }
 }

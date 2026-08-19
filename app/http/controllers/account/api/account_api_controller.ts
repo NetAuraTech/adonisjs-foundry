@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
-import AccountResource from '#rest/account'
+import AccountResource from '#rest/account_resource'
+import { handle } from '#rest/rest_adapter'
 
 /**
  * PUT /api/v1/account — update the current user's email or password (self),
@@ -19,6 +20,6 @@ export default class AccountApiController {
   }
 
   async destroy(ctx: HttpContext): Promise<void> {
-    await this.accountResource.handle('destroy', ctx)
+    await handle(ctx, this.accountResource.endpoints.destroy)
   }
 }

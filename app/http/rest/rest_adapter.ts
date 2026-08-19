@@ -76,7 +76,7 @@ export interface PageEndpoint<Prepared = unknown, Payload = unknown, Result = un
 /**
  * Declarative description of a single REST endpoint.
  *
- * {@link handleRest} executes the steps in this fixed order:
+ * {@link handle} executes the steps in this fixed order:
  *
  * 1. `paginated` — validate the pagination parameters, stored on the context
  * 2. `input`     — pick the raw payload to validate (defaults to `request.all()`)
@@ -140,7 +140,7 @@ export type AnyRestEndpoint = RestEndpoint<any, any, any, any>
  * input selection, strip, prepare, validate and execute — steps 1 to 6 of
  * the {@link RestEndpoint} pipeline.
  *
- * This is the transport-agnostic core of the contract: {@link handleRest}
+ * This is the transport-agnostic core of the contract: {@link handle}
  * turns the resolved result into a JSON response, while the page adapter
  * turns it into an Inertia page or a flash + redirect. Validation and
  * domain exceptions propagate untouched and are shaped by the standard
@@ -186,26 +186,36 @@ export async function resolveEndpoint<Prepared, Payload, Result, Entity>(
 }
 
 /**
- * Run a declarative REST endpoint and send the response.
+ * Signature shared by the REST and page adapters: take an HTTP context and
+ * a declarative endpoint, run the shared request interpretation through
+ * {@link resolveEndpoint}, and send the response over the adapter's
+ * transport (JSON for the REST adapter, Inertia page or flash + redirect
+ * for the page adapter).
+ *
+ * @param ctx - The AdonisJS HTTP context.
+ * @param endpoint - The declarative endpoint to execute.
+ * @returns Resolves once the response has been sent.
+ */
+export type AdapterHandler = (ctx: HttpContext, endpoint: AnyRestEndpoint) => Promise<unknown>
+
+/**
+ * Run a declarative REST endpoint and send the JSON response.
  *
  * This is the only shared HTTP-level code of the REST resources: it carries
  * the transport mechanics (input selection, pagination, validation,
- * serialization, status codes) so resources and controllers stay pure
- * declarations and thin adapters.
+ * serialization, status codes) so resources stay pure declarations and
+ * controllers stay thin adapters.
  *
  * @param ctx - The AdonisJS HTTP context.
  * @param endpoint - The declarative endpoint to execute.
  * @returns Resolves once the response has been sent.
  *
  * @example
- * async handle(route: 'show', ctx: HttpContext): Promise<void> {
- *   await handleRest(ctx, this.endpoints.show)
+ * async index(ctx: HttpContext): Promise<void> {
+ *   await handle(ctx, this.usersResource.endpoints.index)
  * }
  */
-export async function handleRest<Prepared, Payload, Result, Entity>(
-  ctx: HttpContext,
-  endpoint: RestEndpoint<Prepared, Payload, Result, Entity>
-): Promise<void> {
+export const handle: AdapterHandler = async (ctx, endpoint) => {
   const { context, prepared, payload, result } = await resolveEndpoint(ctx, endpoint)
 
   if (endpoint.status === 204) {
@@ -215,7 +225,7 @@ export async function handleRest<Prepared, Payload, Result, Entity>(
 
   const entity = endpoint.refetch
     ? await endpoint.refetch(context, prepared, payload, result)
-    : (result as unknown as Entity)
+    : result
 
   const serialized = endpoint.transform
     ? await ctx.serialize(endpoint.transform(entity))

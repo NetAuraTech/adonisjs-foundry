@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
-import UsersResource from '#rest/users'
+import UsersResource from '#rest/users_resource'
+import { handle } from '#rest/rest_adapter'
 
 /**
  * GET /api/v1/admin/users/:id — show a single user from the admin REST API.
@@ -17,6 +18,6 @@ export default class UsersShowApiController {
    * Show a single user by id.
    */
   async show(ctx: HttpContext): Promise<void> {
-    await this.usersResource.handle('show', ctx)
+    await handle(ctx, this.usersResource.endpoints.show)
   }
 }

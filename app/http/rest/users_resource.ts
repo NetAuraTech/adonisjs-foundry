@@ -1,5 +1,4 @@
 import { inject } from '@adonisjs/core'
-import { type HttpContext } from '@adonisjs/core/http'
 import { type Infer } from '@vinejs/vine/types'
 import type Role from '#models/auth/role'
 import type User from '#models/auth/user'
@@ -22,7 +21,7 @@ import { I18nService } from '#services/i18n_service'
 import { roleIdsToAllowlist } from '#helpers/auth/load_user_role'
 import { buildUsersListPayload } from '#helpers/i18n_payloads/users_list'
 import { buildUsersFormPayload } from '#helpers/i18n_payloads/users_form'
-import { type RestEndpoint, type AnyRestEndpoint, handleRest } from '#rest/rest_resource'
+import { type RestEndpoint } from '#rest/rest_adapter'
 
 type UserListPagination = Awaited<ReturnType<ListUsersAction['execute']>>
 type UserCreateResult = Awaited<ReturnType<CreateUserAction['execute']>>
@@ -70,12 +69,12 @@ export interface UsersEndpoints {
 /**
  * Declarative users resource.
  *
- * Owns the users endpoint declarations executed by the shared adapters:
- * {@link handleRest} for the `/api/v1/admin/users` REST routes (whose
- * controllers reduce to one-line adapters over `handle()`) and the page
- * adapter for the session-rendered admin pages (list, edit form, update).
- * The request interpretation — roles allowlist, field coercions — exists
- * exactly once, in these declarations.
+ * Owns the users endpoint declarations consumed by the `handle` adapters:
+ * the REST `handle` (`#rest/rest_adapter`) for the `/api/v1/admin/users`
+ * routes and the page `handle` (`#rest/page_adapter`) for the
+ * session-rendered admin pages (list, edit form, update). The request
+ * interpretation — roles allowlist, field coercions — exists exactly once,
+ * in these declarations.
  */
 @inject()
 export default class UsersResource {
@@ -194,23 +193,5 @@ export default class UsersResource {
       validator: () => restIdValidator,
       execute: (_context, _prepared, payload) => this.deleteUserAction.execute({ id: payload.id }),
     },
-  }
-
-  /**
-   * Dispatch a REST action to its declared endpoint.
-   *
-   * @param route - The REST action name (`index`, `show`, `store`, `update`,
-   *                `destroy`). The page-only `edit` endpoint is dispatched by
-   *                the page adapter, never here.
-   * @param ctx - The AdonisJS HTTP context.
-   * @returns Resolves once the response has been sent.
-   *
-   * @example
-   * await usersResource.handle('show', ctx)
-   */
-  async handle(route: keyof UsersEndpoints, ctx: HttpContext): Promise<void> {
-    const endpoint = this.endpoints[route] as AnyRestEndpoint
-
-    await handleRest(ctx, endpoint)
   }
 }

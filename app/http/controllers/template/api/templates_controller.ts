@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
-import TemplatesResource from '#rest/templates'
+import TemplatesResource from '#rest/templates_resource'
+import { handle } from '#rest/rest_adapter'
 
 /**
  * JSON API consumed by the page builder and admin Templates library.
@@ -14,22 +15,22 @@ export default class TemplatesApiController {
   constructor(protected templatesResource: TemplatesResource) {}
 
   async index(ctx: HttpContext): Promise<void> {
-    await this.templatesResource.handle('index', ctx)
+    await handle(ctx, this.templatesResource.endpoints.index)
   }
 
   async store(ctx: HttpContext): Promise<void> {
-    await this.templatesResource.handle('store', ctx)
+    await handle(ctx, this.templatesResource.endpoints.store)
   }
 
   async createFromPage(ctx: HttpContext): Promise<void> {
-    await this.templatesResource.handle('createFromPage', ctx)
+    await handle(ctx, this.templatesResource.endpoints.createFromPage)
   }
 
   async update(ctx: HttpContext): Promise<void> {
-    await this.templatesResource.handle('update', ctx)
+    await handle(ctx, this.templatesResource.endpoints.update)
   }
 
   async destroy(ctx: HttpContext): Promise<void> {
-    await this.templatesResource.handle('destroy', ctx)
+    await handle(ctx, this.templatesResource.endpoints.destroy)
   }
 }

@@ -1,5 +1,4 @@
 import { inject } from '@adonisjs/core'
-import { type HttpContext } from '@adonisjs/core/http'
 import type { Infer } from '@vinejs/vine/types'
 import { ListRootFoldersAction } from '#actions/file_folder/list_root_folders_action'
 import { CreateFolderAction } from '#actions/file_folder/create_folder_action'
@@ -9,7 +8,7 @@ import { RenameFolderAction } from '#actions/file_folder/rename_folder_action'
 import { DeleteFolderAction } from '#actions/file_folder/delete_folder_action'
 import { showFileValidator, createFolderValidator, updateFolderValidator } from '#validators/file'
 import FileFolderTransformer from '#transformers/file_folder_transformer'
-import { type RestEndpoint, type AnyRestEndpoint, handleRest } from '#rest/rest_resource'
+import { type RestEndpoint } from '#rest/rest_adapter'
 
 type FolderListResult = Awaited<ReturnType<ListRootFoldersAction['execute']>>
 type FolderDetail = Awaited<ReturnType<GetFolderDetailAction['execute']>>
@@ -37,9 +36,9 @@ export interface FoldersEndpoints {
 /**
  * Declarative folders REST resource.
  *
- * Owns the folders endpoint declarations executed by the shared
- * {@link handleRest} pipeline; the `/api/v1/admin/folders` controllers reduce
- * to one-line adapters over `handle()`.
+ * Owns the folders endpoint declarations consumed by the REST `handle`
+ * adapter (`#rest/rest_adapter`); the `/api/v1/admin/folders` controllers
+ * reduce to one-line dispatch over `endpoints`.
  */
 @inject()
 export default class FoldersResource {
@@ -104,14 +103,5 @@ export default class FoldersResource {
       execute: (_context, _prepared, payload) =>
         this.deleteFolderAction.execute({ id: payload.id }),
     },
-  }
-
-  /**
-   * Dispatch a REST action to its declared endpoint.
-   */
-  async handle(route: keyof FoldersEndpoints, ctx: HttpContext): Promise<void> {
-    const endpoint = this.endpoints[route] as AnyRestEndpoint
-
-    await handleRest(ctx, endpoint)
   }
 }

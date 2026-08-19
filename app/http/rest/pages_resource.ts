@@ -1,5 +1,4 @@
 import { inject } from '@adonisjs/core'
-import { type HttpContext } from '@adonisjs/core/http'
 import type { Infer } from '@vinejs/vine/types'
 import type Page from '#cms/models/page/page'
 import type PageTranslation from '#cms/models/page/page_translation'
@@ -25,7 +24,7 @@ import {
 } from '#cms/validators/page'
 import PageTransformer from '#transformers/page/page_transformer'
 import PageRevisionTransformer from '#transformers/page/page_revision_transformer'
-import { type RestEndpoint, type AnyRestEndpoint, handleRest } from '#rest/rest_resource'
+import { type RestEndpoint } from '#rest/rest_adapter'
 
 type PageListPagination = Awaited<ReturnType<ListPagesAction['execute']>>
 type RevisionListPagination = Awaited<ReturnType<ListRevisionsAction['execute']>>
@@ -69,8 +68,9 @@ export interface PagesEndpoints {
  * Declarative pages REST resource.
  *
  * Owns the `/api/v1/admin/pages` endpoint declarations (including
- * translations and revisions) executed by the shared {@link handleRest}
- * pipeline; the controllers reduce to one-line adapters over `handle()`.
+ * translations and revisions) consumed by the REST `handle` adapter
+ * (`#rest/rest_adapter`); the controllers reduce to one-line dispatch over
+ * `endpoints`.
  */
 @inject()
 export default class PagesResource {
@@ -250,14 +250,5 @@ export default class PagesResource {
         this.toggleRevisionKeepAction.execute({ revisionId: prepared.revisionId }),
       transform: (entity) => ({ pinned: entity }),
     },
-  }
-
-  /**
-   * Dispatch a REST action to its declared endpoint.
-   */
-  async handle(route: keyof PagesEndpoints, ctx: HttpContext): Promise<void> {
-    const endpoint = this.endpoints[route] as AnyRestEndpoint
-
-    await handleRest(ctx, endpoint)
   }
 }

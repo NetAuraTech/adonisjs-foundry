@@ -1,5 +1,4 @@
 import { inject } from '@adonisjs/core'
-import { type HttpContext } from '@adonisjs/core/http'
 import type { Infer } from '@vinejs/vine/types'
 import type Template from '#cms/models/template/template'
 import { ListTemplatesAction } from '#cms/domain/actions/template/list_templates_action'
@@ -15,7 +14,7 @@ import {
   showTemplateValidator,
 } from '#cms/validators/template'
 import TemplateTransformer from '#transformers/template/template_transformer'
-import { type RestEndpoint, type AnyRestEndpoint, handleRest } from '#rest/rest_resource'
+import { type RestEndpoint } from '#rest/rest_adapter'
 
 type TemplateListPayload = Infer<typeof listTemplateValidator>
 type TemplateStorePayload = Infer<typeof createBlockTemplateValidator>
@@ -41,9 +40,9 @@ export interface TemplatesEndpoints {
 /**
  * Declarative templates REST resource.
  *
- * Owns the `/api/v1/admin/templates` endpoint declarations executed by the
- * shared {@link handleRest} pipeline; the controller reduces to one-line
- * adapters over `handle()`.
+ * Owns the `/api/v1/admin/templates` endpoint declarations consumed by the
+ * REST `handle` adapter (`#rest/rest_adapter`); the controller reduces to
+ * one-line dispatch over `endpoints`.
  */
 @inject()
 export default class TemplatesResource {
@@ -120,14 +119,5 @@ export default class TemplatesResource {
       execute: (_context, _prepared, payload) =>
         this.deleteTemplateAction.execute({ id: payload.id }),
     },
-  }
-
-  /**
-   * Dispatch a REST action to its declared endpoint.
-   */
-  async handle(route: keyof TemplatesEndpoints, ctx: HttpContext): Promise<void> {
-    const endpoint = this.endpoints[route] as AnyRestEndpoint
-
-    await handleRest(ctx, endpoint)
   }
 }

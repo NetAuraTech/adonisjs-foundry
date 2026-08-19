@@ -1,6 +1,6 @@
 import { test } from '@japa/runner'
 import { type HttpContext } from '@adonisjs/core/http'
-import { handleRest, type AnyRestEndpoint } from '#rest/rest_resource'
+import { handle, type AnyRestEndpoint } from '#rest/rest_adapter'
 
 interface RecordedCall {
   method: string
@@ -43,7 +43,7 @@ function createFakeContext(
   return { ctx: ctx as unknown as HttpContext, calls }
 }
 
-test.group('handleRest', () => {
+test.group('handle', () => {
   test('validates the default request payload and sends the transformed result at 200', async ({
     assert,
   }) => {
@@ -59,7 +59,7 @@ test.group('handleRest', () => {
       transform: (entity) => ({ transformed: entity }),
     }
 
-    await handleRest(ctx, endpoint)
+    await handle(ctx, endpoint)
 
     assert.deepEqual(executed, { email: 'jane@example.com' })
     assert.deepEqual(calls, [
@@ -82,7 +82,7 @@ test.group('handleRest', () => {
       transform: (entity) => entity,
     }
 
-    await handleRest(ctx, endpoint)
+    await handle(ctx, endpoint)
 
     assert.deepEqual(executed, { note: 'a' })
   })
@@ -101,7 +101,7 @@ test.group('handleRest', () => {
       transform: (entity) => entity,
     }
 
-    await handleRest(ctx, endpoint)
+    await handle(ctx, endpoint)
 
     assert.deepEqual(executed, { id: '42' })
   })
@@ -120,7 +120,7 @@ test.group('handleRest', () => {
       transform: (entity) => entity,
     }
 
-    await handleRest(ctx, endpoint)
+    await handle(ctx, endpoint)
 
     assert.equal(seenPagination?.page, 2)
     assert.isNumber(seenPagination?.perPage)
@@ -145,7 +145,7 @@ test.group('handleRest', () => {
       transform: (entity) => entity,
     }
 
-    await handleRest(ctx, endpoint)
+    await handle(ctx, endpoint)
 
     assert.deepEqual(executed, { role_id: '1', allowed: ['1'] })
   })
@@ -162,7 +162,7 @@ test.group('handleRest', () => {
       transform: (entity) => entity,
     }
 
-    await handleRest(ctx, endpoint)
+    await handle(ctx, endpoint)
 
     assert.deepEqual(calls, [
       { method: 'status', args: [200] },
@@ -180,7 +180,7 @@ test.group('handleRest', () => {
       transform: (entity) => entity,
     }
 
-    await handleRest(ctx, endpoint)
+    await handle(ctx, endpoint)
 
     assert.deepEqual(calls, [
       { method: 'status', args: [201] },
@@ -201,7 +201,7 @@ test.group('handleRest', () => {
       },
     }
 
-    await handleRest(ctx, endpoint)
+    await handle(ctx, endpoint)
 
     assert.isFalse(transformed)
     assert.deepEqual(calls, [{ method: 'noContent', args: [] }])
@@ -217,6 +217,6 @@ test.group('handleRest', () => {
       },
     }
 
-    await assert.rejects(() => handleRest(ctx, endpoint), /boom/)
+    await assert.rejects(() => handle(ctx, endpoint), /boom/)
   })
 })
