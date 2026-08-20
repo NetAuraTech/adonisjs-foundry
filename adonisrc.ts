@@ -2,6 +2,7 @@ import { indexPages } from '@adonisjs/inertia'
 import { indexEntities } from '@adonisjs/core'
 import { defineConfig } from '@adonisjs/core/app'
 import { generateRegistry } from '@tuyau/core/hooks'
+import { restRoutesRegistryHook } from '#rest/rest_routes_registry_hook'
 
 export default defineConfig({
   /*
@@ -182,6 +183,7 @@ export default defineConfig({
       }),
       indexPages({ framework: 'react' }),
       generateRegistry(),
+      restRoutesRegistryHook(),
     ],
     buildStarting: [() => import('@adonisjs/vite/build_hook')],
   },
