@@ -5,8 +5,8 @@ import testUtils from '@adonisjs/core/services/test_utils'
 import limiter from '@adonisjs/limiter/services/main'
 import User from '#models/auth/user'
 import { MaintenanceService } from '#services/maintenance/maintenance_service'
-import { createVerifiedUser } from '#tests/helpers/browser/create_verified_user'
-import { createAdminUser } from '#tests/helpers/browser/create_admin_user'
+import { createVerifiedUser } from '#tests/helpers/create_verified_user'
+import { createAdminUser } from '#tests/helpers/create_admin_user'
 
 /**
  * Maintenance state lives in Redis and persists across runs: an interrupted

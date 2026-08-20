@@ -11,7 +11,7 @@ import { generateSplitToken } from '#helpers/core/crypto'
 import { TOKEN_TYPES } from '#types/core'
 import { DateTime } from 'luxon'
 import { MaintenanceService } from '#services/maintenance/maintenance_service'
-import { createVerifiedUser } from '#tests/helpers/browser/create_verified_user'
+import { createVerifiedUser } from '#tests/helpers/create_verified_user'
 
 async function resetSharedState() {
   await redis.flushdb()

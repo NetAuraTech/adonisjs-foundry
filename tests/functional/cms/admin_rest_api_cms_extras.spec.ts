@@ -9,7 +9,7 @@ import Template from '#cms/models/template/template'
 import Page from '#cms/models/page/page'
 import PageTranslation from '#cms/models/page/page_translation'
 import { MaintenanceService } from '#services/maintenance/maintenance_service'
-import { createAdminUser } from '#tests/helpers/browser/create_admin_user'
+import { createAdminUser } from '#tests/helpers/create_admin_user'
 
 async function resetSharedState() {
   await redis.flushdb()

@@ -1,6 +1,6 @@
 import { test } from '@japa/runner'
 import testUtils from '@adonisjs/core/services/test_utils'
-import { createAdminUser } from '#tests/helpers/browser/create_admin_user'
+import { createAdminUser } from '#tests/helpers/create_admin_user'
 
 /**
  * Extracts the Inertia page object from the server-rendered HTML — the

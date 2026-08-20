@@ -7,7 +7,7 @@ import User from '#models/auth/user'
 import Role from '#models/auth/role'
 import Permission from '#models/auth/permission'
 import { MaintenanceService } from '#services/maintenance/maintenance_service'
-import { createAdminUser } from '#tests/helpers/browser/create_admin_user'
+import { createAdminUser } from '#tests/helpers/create_admin_user'
 
 async function resetSharedState() {
   await redis.flushdb()

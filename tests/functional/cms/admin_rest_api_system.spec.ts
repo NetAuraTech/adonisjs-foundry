@@ -7,8 +7,8 @@ import limiter from '@adonisjs/limiter/services/main'
 import User from '#models/auth/user'
 import LogEntry from '#models/core/log_entry'
 import { MaintenanceService } from '#services/maintenance/maintenance_service'
-import { createAdminUser } from '#tests/helpers/browser/create_admin_user'
-import { createVerifiedUser } from '#tests/helpers/browser/create_verified_user'
+import { createAdminUser } from '#tests/helpers/create_admin_user'
+import { createVerifiedUser } from '#tests/helpers/create_verified_user'
 
 async function resetSharedState() {
   await redis.flushdb()

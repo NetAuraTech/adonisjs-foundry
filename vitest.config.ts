@@ -8,8 +8,8 @@ import path from 'node:path'
  * specs under `inertia/pages/` that pin conditional-rendering contracts.
  * Page specs opt into jsdom individually via a `// @vitest-environment
  * jsdom` docblock, so helper specs keep the fast node environment.
- * Everything else (flows, real rendering) stays with the Japa browser
- * E2E suite.
+ * Everything else (HTTP flows, auth, server side-effects) is covered by
+ * the Japa functional suite (`@japa/api-client`).
  */
 export default defineConfig({
   resolve: {

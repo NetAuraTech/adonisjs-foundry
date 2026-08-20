@@ -3,8 +3,8 @@ import app from '@adonisjs/core/services/app'
 import redis from '@adonisjs/redis/services/main'
 import testUtils from '@adonisjs/core/services/test_utils'
 import { MaintenanceService } from '#services/maintenance/maintenance_service'
-import { createAdminUser } from '#tests/helpers/browser/create_admin_user'
-import { seedDashboard } from '#tests/helpers/browser/seed_dashboard'
+import { createAdminUser } from '#tests/helpers/create_admin_user'
+import { seedDashboard } from '#tests/helpers/seed_dashboard'
 
 /**
  * HTTP seam for the dashboard composition: the full-flavor payload served
@@ -32,8 +32,7 @@ function parseInertiaPage(html: string) {
 test.group('Admin dashboard endpoint', (group) => {
   group.each.setup(async () => {
     // testUtils.db().truncate() does NOT truncate eagerly: it runs the
-    // migrations and returns a teardown callback performing db:truncate
-    // (the browser specs rely on that by returning it from their setup).
+    // migrations and returns a teardown callback performing db:truncate.
     // Invoke the teardown immediately so every test starts from an empty
     // database — other suites in a full run leave committed rows behind,
     // and the exact-figure assertions below must not see them.
