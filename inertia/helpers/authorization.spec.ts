@@ -37,7 +37,7 @@ const userWith = (roleSlug: string, permissionSlugs: string[]): Data.User =>
   }) as unknown as Data.User
 
 const admin = userWith('admin', ['users.view', 'users.create', 'roles.view'])
-const guest = userWith('user', ['pages.view'])
+const guest = userWith('user', ['logs.view'])
 /** A user whose role and permissions were created at runtime (not in the catalog). */
 const custom = userWith('billing_manager', ['billing.export'])
 
@@ -55,7 +55,7 @@ describe('can', () => {
   })
 
   it('accepts any system permission slug from the catalog', () => {
-    expect(can(guest, 'pages.view')).toBe(true)
+    expect(can(guest, 'logs.view')).toBe(true)
     expect(can(admin, 'roles.view')).toBe(true)
   })
 
