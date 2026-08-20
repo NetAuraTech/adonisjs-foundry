@@ -1,22 +1,9 @@
 import { test } from '@japa/runner'
 import testUtils from '@adonisjs/core/services/test_utils'
-import { createAdminUser } from '#tests/helpers/browser/create_admin_user'
-
-/**
- * Extracts the Inertia page object from the server-rendered HTML — the
- * `data-page` attribute carries the props JSON with HTML-escaped quotes.
- */
-function parseInertiaPage(html: string) {
-  const match = html.match(/data-page="([^"]+)"/)
-  if (!match) throw new Error('No Inertia data-page attribute in response')
-  const json = match[1]
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&')
-  return JSON.parse(json)
-}
+import { FileFactory } from '#factories/file_factory'
+import { FileFolderFactory } from '#factories/file_folder_factory'
+import { createAdminUser } from '#tests/helpers/create_admin_user'
+import { parseInertiaPage } from '#tests/helpers/inertia_page'
 
 const VIEW_PERMISSIONS = ['users.view', 'files.view'] as const
 
@@ -29,6 +16,9 @@ test.group('Admin dashboard endpoint (core sections)', (group) => {
       permissionSlugs: VIEW_PERMISSIONS,
     })
 
+    const folder = await FileFolderFactory.merge({ name: 'core-dash-folder' }).create()
+    await FileFactory.merge({ folderId: folder.id, originalName: 'core-dash-file.txt' }).create()
+
     const res = await client.get('/admin').loginAs(user)
 
     res.assertStatus(200)
@@ -36,5 +26,14 @@ test.group('Admin dashboard endpoint (core sections)', (group) => {
     const stats = page.props.stats
 
     assert.isAbove(stats.auth.users, 0)
+
+    // The file section reports the seeded folder and its file.
+    assert.isAtLeast(stats.file.fileFolders, 1)
+    assert.isAtLeast(stats.file.files, 1)
+    const folderEntry = stats.file.filesByFolder.find(
+      (f: { name: string }) => f.name === folder.name
+    )
+    assert.exists(folderEntry)
+    assert.isAtLeast(folderEntry!.count, 1)
   })
 })

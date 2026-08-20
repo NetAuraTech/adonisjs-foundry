@@ -1,7 +1,5 @@
-﻿import { test } from '@japa/runner'
-import app from '@adonisjs/core/services/app'
+import { test } from '@japa/runner'
 import emitter from '@adonisjs/core/services/emitter'
-import redis from '@adonisjs/redis/services/main'
 import testUtils from '@adonisjs/core/services/test_utils'
 import limiter from '@adonisjs/limiter/services/main'
 import { mkdir, rm } from 'node:fs/promises'
@@ -9,16 +7,10 @@ import path from 'node:path'
 import User from '#models/auth/user'
 import { FileFactory } from '#factories/file_factory'
 import { FileFolderFactory } from '#factories/file_folder_factory'
-import { MaintenanceService } from '#services/maintenance/maintenance_service'
-import { createAdminUser } from '#tests/helpers/browser/create_admin_user'
+import { createAdminUser } from '#tests/helpers/create_admin_user'
+import { resetSharedState } from '#tests/helpers/shared_state'
 
 const tmpDir = path.join(process.cwd(), 'tmp')
-
-async function resetSharedState() {
-  await redis.flushdb()
-  const service = await app.container.make(MaintenanceService)
-  await service.setConfig({ enabled: false })
-}
 
 test.group('Admin REST API v1 — Files', (group) => {
   group.each.setup(() => testUtils.db().truncate())

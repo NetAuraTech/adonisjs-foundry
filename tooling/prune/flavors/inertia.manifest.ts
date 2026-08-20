@@ -91,9 +91,6 @@ const inertiaManifest: FlavorManifest = {
     'inertia/pages/cms',
     'inertia/components/cms',
 
-    // ─── CMS-only test helpers ──────────────────────────────────────────────
-    'tests/helpers/browser/wait_for_builder_ready.ts',
-
     // ─── CMS test suites ────────────────────────────────────────────────────
     'tests/unit/actions/page',
     'tests/unit/actions/template',
@@ -111,9 +108,6 @@ const inertiaManifest: FlavorManifest = {
     'tests/integration/repositories/template_repository.spec.ts',
     'tests/integration/services/page/page_sitemap_collector.spec.ts',
     'tests/integration/routes_structure_cms.spec.ts',
-    'tests/browser/builder',
-    'tests/browser/template',
-    'tests/browser/cms',
 
     // ─── CMS split-off test files ───────────────────────────────────────────
     'tests/unit/exceptions_cms.spec.ts',
@@ -123,7 +117,7 @@ const inertiaManifest: FlavorManifest = {
     'tests/unit/validators/builder_validator.spec.ts',
     'tests/unit/validators/contact_validator.spec.ts',
     'tests/functional/cms',
-    'tests/helpers/browser/seed_dashboard.ts',
+    'tests/helpers/seed_dashboard.ts',
 
     // ─── Prune pipeline (main-only infrastructure) ──────────────────────────
     'tooling/prune',
@@ -659,12 +653,10 @@ const inertiaManifest: FlavorManifest = {
         '    (category): [string, Record<string, string>] => [',
         '      String(category),',
         '      Object.fromEntries(',
-        '        (permissionCatalog[category] as readonly string[]).map(',
-        '          (action): [string, string] => [',
-        '            actionKey(action),',
-        '            `${String(category)}.${action}`,',
-        '          ]',
-        '        )',
+        '        (permissionCatalog[category] as readonly string[]).map((action): [string, string] => [',
+        '          actionKey(action),',
+        '          `${String(category)}.${action}`,',
+        '        ])',
         '      ),',
         '    ]',
         '  )',
@@ -958,11 +950,6 @@ const inertiaManifest: FlavorManifest = {
         "        files: ['tests/functional/**/*.spec.{ts,js}'],",
         "        name: 'functional',",
         '        timeout: 30000,',
-        '      },',
-        '      {',
-        "        files: ['tests/browser/**/*.spec.{ts,js}'],",
-        "        name: 'browser',",
-        '        timeout: 300000,',
         '      },',
         '    ],',
         '    forceExit: false,',

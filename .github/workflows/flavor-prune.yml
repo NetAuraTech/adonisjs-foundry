@@ -73,7 +73,7 @@ jobs:
   # tooling/prune/flavors/. Issues #5 and #8 will drop `inertia.manifest.ts`
   # and `api.manifest.ts` there — this job then picks them up automatically.
   # The main CI workflow (ci.yml) already gates `main` on lint, typecheck,
-  # backend/frontend/browser tests, and codegen drift — no need to re-run a
+  # backend/frontend tests, and codegen drift — no need to re-run a
   # subset here. The prune-flavor job below gates the pruned tree itself.
   discover-flavors:
     runs-on: ubuntu-latest

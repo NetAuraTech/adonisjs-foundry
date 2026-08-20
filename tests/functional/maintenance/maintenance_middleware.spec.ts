@@ -1,7 +1,7 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
-import redis from '@adonisjs/redis/services/main'
 import { MaintenanceService } from '#services/maintenance/maintenance_service'
+import { resetSharedState } from '#tests/helpers/shared_state'
 
 /**
  * Maintenance middleware integration tests.
@@ -11,11 +11,7 @@ import { MaintenanceService } from '#services/maintenance/maintenance_service'
  * blocked-route, and response-format behaviour.
  */
 test.group('Maintenance middleware', (group) => {
-  group.each.setup(async () => {
-    await redis.flushdb()
-    const service = await app.container.make(MaintenanceService)
-    await service.setConfig({ enabled: false })
-  })
+  group.each.setup(resetSharedState)
 
   test('maintenance OFF serves public pages normally', async ({ client }) => {
     const res = await client.get('/robots.txt')

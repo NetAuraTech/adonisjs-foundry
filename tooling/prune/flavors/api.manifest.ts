@@ -128,11 +128,18 @@ const apiManifest: FlavorManifest = {
     'start/routes/admin.routes.ts',
     'start/routes/auth.routes.ts',
 
-    // ─── Front test suites (browser E2E, Inertia-page functional, SEO, ────
-    // ─── and the full-router structure snapshots of the pruned routes) ─────
-    'tests/browser',
+    // ─── Front test suites (session-guarded Inertia-page functional, ──────
+    // ─── SEO, and the full-router structure snapshots of the pruned routes)
     'tests/functional/dashboard',
     'tests/functional/maintenance',
+    'tests/functional/logs',
+    'tests/functional/auth/accept_invitation.spec.ts',
+    'tests/functional/auth/email_verification.spec.ts',
+    'tests/functional/auth/forgot_password.spec.ts',
+    'tests/functional/auth/oauth.spec.ts',
+    'tests/functional/auth/register.spec.ts',
+    'tests/functional/auth/reset_password.spec.ts',
+    'tests/functional/auth/session.spec.ts',
     'tests/functional/core/seo_endpoints.spec.ts',
     'tests/functional/cms/admin_dashboard_cms.spec.ts',
     'tests/integration/routes_structure.spec.ts',
@@ -165,15 +172,10 @@ const apiManifest: FlavorManifest = {
     'tests/integration/repositories/template_repository.spec.ts',
     'tests/integration/services/page/page_sitemap_collector.spec.ts',
 
-    // ─── Playwright-only test helpers — the REST suites keep the two ──────
-    // ─── DB-seeding helpers (create_admin_user, create_verified_user). ─────
-    'tests/helpers/browser/login.ts',
-    'tests/helpers/browser/visit_page.ts',
-    'tests/helpers/browser/fill_field.ts',
-    'tests/helpers/browser/field_is_filled.ts',
-    'tests/helpers/browser/seed_dashboard.ts',
-    'tests/helpers/browser/wait_for_builder_ready.ts',
-    'tests/helpers/browser/wait_for_inertia_response.ts',
+    // ─── CMS dashboard seed helper (imports #cms factories). The REST ──────
+    // ─── suites keep the two DB-seeding helpers (create_admin_user, ────────
+    // ─── create_verified_user) that live alongside it. ─────────────────────
+    'tests/helpers/seed_dashboard.ts',
 
     // ─── Prune pipeline (main-only infrastructure) ────────────────────────
     'tooling/prune',
@@ -712,12 +714,10 @@ const apiManifest: FlavorManifest = {
         '    (category): [string, Record<string, string>] => [',
         '      String(category),',
         '      Object.fromEntries(',
-        '        (permissionCatalog[category] as readonly string[]).map(',
-        '          (action): [string, string] => [',
-        '            actionKey(action),',
-        '            `${String(category)}.${action}`,',
-        '          ]',
-        '        )',
+        '        (permissionCatalog[category] as readonly string[]).map((action): [string, string] => [',
+        '          actionKey(action),',
+        '          `${String(category)}.${action}`,',
+        '        ])',
         '      ),',
         '    ]',
         '  )',
@@ -1370,8 +1370,7 @@ const apiManifest: FlavorManifest = {
         '  |--------------------------------------------------------------------------',
         '  |',
         '  | List of test suites to organize tests by their type. Feel free to',
-        '  | remove and add additional suites. The `browser` suite stays declared',
-        '  | but is empty: no view layer exists to drive with Playwright.',
+        '  | remove and add additional suites.',
         '  |',
         '  */',
         '  tests: {',
@@ -1390,11 +1389,6 @@ const apiManifest: FlavorManifest = {
         "        files: ['tests/functional/**/*.spec.{ts,js}'],",
         "        name: 'functional',",
         '        timeout: 30000,',
-        '      },',
-        '      {',
-        "        files: ['tests/browser/**/*.spec.{ts,js}'],",
-        "        name: 'browser',",
-        '        timeout: 300000,',
         '      },',
         '    ],',
         '    forceExit: false,',
@@ -1513,10 +1507,8 @@ const apiManifest: FlavorManifest = {
         '    "@adonisjs/tsconfig": "^2.0.0",',
         '    "@japa/api-client": "^3.2.1",',
         '    "@japa/assert": "^4.2.0",',
-        '    "@japa/browser-client": "^2.3.0",',
         '    "@japa/plugin-adonisjs": "^5.1.0",',
         '    "@japa/runner": "^5.3.0",',
-        '    "@playwright/test": "^1.62.1",',
         '    "@poppinss/ts-exec": "^1.4.4",',
         '    "@types/dompurify": "^3.2.0",',
         '    "@types/jsdom": "^28.0.1",',

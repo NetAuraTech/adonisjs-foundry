@@ -3,12 +3,10 @@ import app from '@adonisjs/core/services/app'
 import type { Config } from '@japa/runner/types'
 import { pluginAdonisJS } from '@japa/plugin-adonisjs'
 import testUtils from '@adonisjs/core/services/test_utils'
-import { browserClient } from '@japa/browser-client'
 import { apiClient } from '@japa/api-client'
-import { authBrowserClient } from '@adonisjs/auth/plugins/browser_client'
-import { sessionBrowserClient } from '@adonisjs/session/plugins/browser_client'
 import { authApiClient } from '@adonisjs/auth/plugins/api_client'
 import { sessionApiClient } from '@adonisjs/session/plugins/api_client'
+import { shieldApiClient } from '@adonisjs/shield/plugins/api_client'
 import limiter from '@adonisjs/limiter/services/main'
 
 /**
@@ -23,22 +21,9 @@ export const plugins: Config['plugins'] = [
   assert(),
   pluginAdonisJS(app),
   apiClient(),
-  browserClient({
-    runInSuites: ['browser'],
-    // Capture a Playwright trace (screenshots, snapshots, sources) for every
-    // failing browser test. The CI browser-tests job uploads this directory as
-    // a workflow artifact on failure; locally it stays gitignored under tmp/.
-    tracing: {
-      enabled: true,
-      event: 'onError',
-      cleanOutputDirectory: true,
-      outputDirectory: './tmp/playwright-traces',
-    },
-  }),
-  sessionBrowserClient(app),
-  authBrowserClient(app),
   sessionApiClient(app),
   authApiClient(app),
+  shieldApiClient(),
 ]
 
 /**
@@ -58,7 +43,7 @@ export const runnerHooks: Required<Pick<Config, 'setup' | 'teardown'>> = {
  * Learn more - https://japa.dev/docs/test-suites#lifecycle-hooks
  */
 export const configureSuite: Config['configureSuite'] = (suite) => {
-  if (['browser', 'functional', 'e2e'].includes(suite.name)) {
+  if (['functional', 'e2e'].includes(suite.name)) {
     return suite
       .setup(() => testUtils.httpServer().start())
       .onTest(async () => {

@@ -1,19 +1,11 @@
 import { test } from '@japa/runner'
-import app from '@adonisjs/core/services/app'
-import redis from '@adonisjs/redis/services/main'
 import testUtils from '@adonisjs/core/services/test_utils'
 import limiter from '@adonisjs/limiter/services/main'
 import User from '#models/auth/user'
 import Role from '#models/auth/role'
 import Permission from '#models/auth/permission'
-import { MaintenanceService } from '#services/maintenance/maintenance_service'
-import { createAdminUser } from '#tests/helpers/browser/create_admin_user'
-
-async function resetSharedState() {
-  await redis.flushdb()
-  const service = await app.container.make(MaintenanceService)
-  await service.setConfig({ enabled: false })
-}
+import { createAdminUser } from '#tests/helpers/create_admin_user'
+import { resetSharedState } from '#tests/helpers/shared_state'
 
 /**
  * Admin REST API v1 — Roles & Permissions resource.

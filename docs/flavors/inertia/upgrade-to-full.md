@@ -100,12 +100,11 @@ The flavor deletes the CMS test suites. Recover from `main`:
 - `tests/integration/repositories/{page,page_translation,page_revision,template}_repository.spec.ts`
 - `tests/integration/services/page/page_sitemap_collector.spec.ts`
 - `tests/integration/routes_structure_cms.spec.ts`
-- `tests/browser/builder`, `tests/browser/template`, `tests/browser/cms`
 - `tests/functional/cms`, `tests/unit/exceptions_cms.spec.ts`,
   `tests/unit/actions/cms`, `tests/unit/services/cms`,
   `tests/unit/mails/notifications_cms.spec.ts`,
   `tests/unit/validators/{builder,contact}_validator.spec.ts`
-- `tests/helpers/browser/wait_for_builder_ready.ts`, `tests/helpers/browser/seed_dashboard.ts`
+- `tests/helpers/seed_dashboard.ts`
 - `tests/unit/helpers/core/preview_token.spec.ts`
 
 ## 7. Regenerate the codegen
