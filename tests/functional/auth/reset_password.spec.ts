@@ -1,43 +1,11 @@
 import { test } from '@japa/runner'
-import app from '@adonisjs/core/services/app'
-import redis from '@adonisjs/redis/services/main'
 import testUtils from '@adonisjs/core/services/test_utils'
 import limiter from '@adonisjs/limiter/services/main'
-import hash from '@adonisjs/core/services/hash'
-import type User from '#models/auth/user'
-import { TokenRepository } from '#repositories/core/token_repository'
-import { generateSplitToken } from '#helpers/core/crypto'
 import { TOKEN_TYPES } from '#types/core'
-import { DateTime } from 'luxon'
-import { MaintenanceService } from '#services/maintenance/maintenance_service'
 import { createVerifiedUser } from '#tests/helpers/create_verified_user'
-
-/**
- * Maintenance state lives in Redis and persists across runs: an interrupted
- * suite (or a dev session sharing the Redis instance) can leave maintenance
- * ON and 503 every request.
- */
-async function resetSharedState() {
-  await redis.flushdb()
-  const service = await app.container.make(MaintenanceService)
-  await service.setConfig({ enabled: false })
-}
-
-/**
- * Creates a `selector.validator` password-reset token for a user.
- */
-async function createPasswordResetToken(user: User, expiresIn = { hours: 1 }) {
-  const tokenRepo = await app.container.make(TokenRepository)
-  const { selector, validator, token } = generateSplitToken()
-  await tokenRepo.create({
-    userId: user.id,
-    type: TOKEN_TYPES.PASSWORD_RESET,
-    selector,
-    token: await hash.make(validator),
-    expiresAt: DateTime.now().plus(expiresIn),
-  })
-  return token
-}
+import { resetSharedState } from '#tests/helpers/shared_state'
+import { createSplitToken } from '#tests/helpers/tokens'
+import { fieldError } from '#tests/helpers/validation'
 
 /**
  * Functional seam for the reset-password flow
@@ -59,7 +27,7 @@ test.group('Reset password endpoint', (group) => {
       email: 'reset-render@example.com',
       password: 'OldPassword123!',
     })
-    const token = await createPasswordResetToken(user)
+    const token = await createSplitToken(user, TOKEN_TYPES.PASSWORD_RESET)
 
     const res = await client.get(`/reset-password/${token}`)
 
@@ -78,7 +46,7 @@ test.group('Reset password endpoint', (group) => {
       email: 'reset-expired@example.com',
       password: 'OldPassword123!',
     })
-    const token = await createPasswordResetToken(user, { hours: -1 })
+    const token = await createSplitToken(user, TOKEN_TYPES.PASSWORD_RESET, { hours: -1 })
 
     const res = await client.get(`/reset-password/${token}`).redirects(0).accept('json')
 
@@ -93,7 +61,7 @@ test.group('Reset password endpoint', (group) => {
       email: 'reset-execute@example.com',
       password: 'OldPassword123!',
     })
-    const token = await createPasswordResetToken(user)
+    const token = await createSplitToken(user, TOKEN_TYPES.PASSWORD_RESET)
 
     const res = await client
       .post('/reset-password')
@@ -114,7 +82,7 @@ test.group('Reset password endpoint', (group) => {
       email: 'reset-weak@example.com',
       password: 'OldPassword123!',
     })
-    const token = await createPasswordResetToken(user)
+    const token = await createSplitToken(user, TOKEN_TYPES.PASSWORD_RESET)
 
     const res = await client
       .post('/reset-password')
@@ -125,7 +93,7 @@ test.group('Reset password endpoint', (group) => {
       .send()
 
     res.assertStatus(422)
-    assert.exists(res.body().errors.find((e: { field: string }) => e.field === 'password'))
+    assert.exists(fieldError(res, 'password'))
   })
 
   test('reset (execute): a confirmation mismatch returns a 422 with a password field error', async ({
@@ -136,7 +104,7 @@ test.group('Reset password endpoint', (group) => {
       email: 'reset-mismatch@example.com',
       password: 'OldPassword123!',
     })
-    const token = await createPasswordResetToken(user)
+    const token = await createSplitToken(user, TOKEN_TYPES.PASSWORD_RESET)
 
     const res = await client
       .post('/reset-password')
@@ -147,8 +115,6 @@ test.group('Reset password endpoint', (group) => {
       .send()
 
     res.assertStatus(422)
-    assert.exists(
-      res.body().errors.find((e: { field: string }) => e.field === 'password_confirmation')
-    )
+    assert.exists(fieldError(res, 'password_confirmation'))
   })
 })

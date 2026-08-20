@@ -1,20 +1,12 @@
 import { test } from '@japa/runner'
-import app from '@adonisjs/core/services/app'
 import emitter from '@adonisjs/core/services/emitter'
-import redis from '@adonisjs/redis/services/main'
 import testUtils from '@adonisjs/core/services/test_utils'
 import limiter from '@adonisjs/limiter/services/main'
 import User from '#models/auth/user'
 import Page from '#cms/models/page/page'
 import PageTranslation from '#cms/models/page/page_translation'
-import { MaintenanceService } from '#services/maintenance/maintenance_service'
 import { createAdminUser } from '#tests/helpers/create_admin_user'
-
-async function resetSharedState() {
-  await redis.flushdb()
-  const service = await app.container.make(MaintenanceService)
-  await service.setConfig({ enabled: false })
-}
+import { resetSharedState } from '#tests/helpers/shared_state'
 
 /**
  * Helper: creates a page with a draft translation and returns both.

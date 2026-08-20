@@ -1,65 +1,12 @@
 import { test } from '@japa/runner'
-import app from '@adonisjs/core/services/app'
 import emitter from '@adonisjs/core/services/emitter'
-import redis from '@adonisjs/redis/services/main'
 import testUtils from '@adonisjs/core/services/test_utils'
 import limiter from '@adonisjs/limiter/services/main'
-import hash from '@adonisjs/core/services/hash'
 import User from '#models/auth/user'
-import { TokenRepository } from '#repositories/core/token_repository'
-import { generateSplitToken } from '#helpers/core/crypto'
 import { TOKEN_TYPES } from '#types/core'
-import { DateTime } from 'luxon'
-import { MaintenanceService } from '#services/maintenance/maintenance_service'
 import { createVerifiedUser } from '#tests/helpers/create_verified_user'
-
-async function resetSharedState() {
-  await redis.flushdb()
-  const service = await app.container.make(MaintenanceService)
-  await service.setConfig({ enabled: false })
-}
-
-async function createEmailVerificationToken(user: User) {
-  const tokenRepo = await app.container.make(TokenRepository)
-  const { selector, validator, token } = generateSplitToken()
-  const hashedValidator = await hash.make(validator)
-  await tokenRepo.create({
-    userId: user.id,
-    type: TOKEN_TYPES.EMAIL_VERIFICATION,
-    selector,
-    token: hashedValidator,
-    expiresAt: DateTime.now().plus({ hours: 1 }),
-  })
-  return token
-}
-
-async function createPasswordResetToken(user: User) {
-  const tokenRepo = await app.container.make(TokenRepository)
-  const { selector, validator, token } = generateSplitToken()
-  const hashedValidator = await hash.make(validator)
-  await tokenRepo.create({
-    userId: user.id,
-    type: TOKEN_TYPES.PASSWORD_RESET,
-    selector,
-    token: hashedValidator,
-    expiresAt: DateTime.now().plus({ hours: 1 }),
-  })
-  return token
-}
-
-async function createInviteToken(user: User) {
-  const tokenRepo = await app.container.make(TokenRepository)
-  const { selector, validator, token } = generateSplitToken()
-  const hashedValidator = await hash.make(validator)
-  await tokenRepo.create({
-    userId: user.id,
-    type: TOKEN_TYPES.PENDING_INVITE,
-    selector,
-    token: hashedValidator,
-    expiresAt: DateTime.now().plus({ hours: 1 }),
-  })
-  return token
-}
+import { resetSharedState } from '#tests/helpers/shared_state'
+import { createSplitToken } from '#tests/helpers/tokens'
 
 async function setupGroup(group: any) {
   group.each.setup(() => testUtils.db().truncate())
@@ -128,7 +75,7 @@ test.group('Public API v1 — Reset password', (group) => {
 
   test('resets a password with a valid token', async ({ client }) => {
     const user = await createVerifiedUser({ email: 'reset-api@example.com' })
-    const token = await createPasswordResetToken(user)
+    const token = await createSplitToken(user, TOKEN_TYPES.PASSWORD_RESET)
 
     const res = await client
       .post('/api/v1/auth/reset-password')
@@ -140,7 +87,7 @@ test.group('Public API v1 — Reset password', (group) => {
 
   test('reset-password returns 422 on short password', async ({ client }) => {
     const user = await createVerifiedUser({ email: 'reset-short-api@example.com' })
-    const token = await createPasswordResetToken(user)
+    const token = await createSplitToken(user, TOKEN_TYPES.PASSWORD_RESET)
 
     const res = await client
       .post('/api/v1/auth/reset-password')
@@ -159,7 +106,7 @@ test.group('Public API v1 — Email verification', (group) => {
       email: 'verify-api@example.com',
       username: 'verify-api',
     })
-    const token = await createEmailVerificationToken(user)
+    const token = await createSplitToken(user, TOKEN_TYPES.EMAIL_VERIFICATION)
 
     const res = await client.post(`/api/v1/auth/verify-email/${token}`).accept('json')
 
@@ -180,7 +127,7 @@ test.group('Public API v1 — Accept invitation', (group) => {
       email: 'invite-api@example.com',
       username: 'invite-api',
     })
-    const token = await createInviteToken(invited)
+    const token = await createSplitToken(invited, TOKEN_TYPES.PENDING_INVITE)
 
     const res = await client.post('/api/v1/auth/accept-invitation').accept('json').json({
       token,
@@ -297,10 +244,10 @@ test.group('Authenticated API v1 — Account', (group) => {
   })
 
   test('account returns 401 without token', async ({ client }) => {
-    const res = await client
-      .put('/api/v1/account')
-      .accept('json')
-      .json({ _action: 'update_email', email: 'x@example.com' })
+    const res = await client.put('/api/v1/account').accept('json').json({
+      _action: 'update_email',
+      email: 'x@example.com',
+    })
     res.assertStatus(401)
   })
 })

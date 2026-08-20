@@ -1,34 +1,23 @@
 import { test } from '@japa/runner'
-import app from '@adonisjs/core/services/app'
 import emitter from '@adonisjs/core/services/emitter'
-import redis from '@adonisjs/redis/services/main'
 import testUtils from '@adonisjs/core/services/test_utils'
 import limiter from '@adonisjs/limiter/services/main'
 import User from '#models/auth/user'
-import { MaintenanceService } from '#services/maintenance/maintenance_service'
 import { createVerifiedUser } from '#tests/helpers/create_verified_user'
-
-/**
- * Maintenance state lives in Redis and persists across runs: an interrupted
- * suite (or a dev session sharing the Redis instance) can leave maintenance
- * ON and 503 every request.
- */
-async function resetSharedState() {
-  await redis.flushdb()
-  const service = await app.container.make(MaintenanceService)
-  await service.setConfig({ enabled: false })
-}
+import { resetSharedState } from '#tests/helpers/shared_state'
+import { fieldError } from '#tests/helpers/validation'
 
 /**
  * Functional seam for public registration (`POST /register`).
  *
  * Replaces the Playwright browser E2E: we assert the HTTP contract a client
  * observes — the 302 to the profile page on success, the created-but-unverified
- * user row, and the 422 coded field errors (duplicate email, weak password)
- * plus the 429 after the registration throttle — rather than driving a real
- * browser. VineJS 422 bodies are a flat array of `{ field, message, rule }`
- * entries. The `UserRegistered` event (which sends the verification mail) is
- * faked so the suite never touches a real transport.
+ * user row, the 422 coded field errors (duplicate email, weak password, mismatched
+ * confirmation, missing required fields) plus the 429 after the registration
+ * throttle — rather than driving a real browser. VineJS 422 bodies are a flat
+ * array of `{ field, message, rule }` entries. The `UserRegistered` event (which
+ * sends the verification mail) is faked so the suite never touches a real
+ * transport.
  */
 test.group('Registration endpoint', (group) => {
   group.each.setup(() => testUtils.db().truncate())
@@ -84,7 +73,7 @@ test.group('Registration endpoint', (group) => {
       .send()
 
     res.assertStatus(422)
-    assert.exists(res.body().errors.find((e: { field: string }) => e.field === 'email'))
+    assert.exists(fieldError(res, 'email'))
   })
 
   test('register: a weak password returns a 422 with a password field error', async ({
@@ -100,7 +89,38 @@ test.group('Registration endpoint', (group) => {
       .send()
 
     res.assertStatus(422)
-    assert.exists(res.body().errors.find((e: { field: string }) => e.field === 'password'))
+    assert.exists(fieldError(res, 'password'))
+  })
+
+  test('register: a confirmation mismatch returns a 422 with a password_confirmation field error', async ({
+    client,
+    assert,
+  }) => {
+    const res = await client
+      .post('/register')
+      .redirects(0)
+      .withCsrfToken()
+      .accept('json')
+      .form({
+        email: 'mismatch@example.com',
+        password: 'NewPassword123!',
+        password_confirmation: 'Different123!',
+      })
+      .send()
+
+    res.assertStatus(422)
+    assert.exists(fieldError(res, 'password_confirmation'))
+  })
+
+  test('register: missing required fields return a 422 with email and password field errors', async ({
+    client,
+    assert,
+  }) => {
+    const res = await client.post('/register').redirects(0).withCsrfToken().accept('json').send()
+
+    res.assertStatus(422)
+    assert.exists(fieldError(res, 'email'))
+    assert.exists(fieldError(res, 'password'))
   })
 
   test('register: the endpoint is throttled after exceeding the attempt limit', async ({

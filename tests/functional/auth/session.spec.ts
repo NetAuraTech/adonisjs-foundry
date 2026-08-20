@@ -1,29 +1,9 @@
 import { test } from '@japa/runner'
-import app from '@adonisjs/core/services/app'
-import redis from '@adonisjs/redis/services/main'
 import testUtils from '@adonisjs/core/services/test_utils'
 import limiter from '@adonisjs/limiter/services/main'
-import type { ApiResponse } from '@japa/api-client'
-import { MaintenanceService } from '#services/maintenance/maintenance_service'
 import { createVerifiedUser } from '#tests/helpers/create_verified_user'
-
-/**
- * Maintenance state lives in Redis and persists across runs: an interrupted
- * suite (or a dev session sharing the Redis instance) can leave maintenance
- * ON and 503 every request.
- */
-async function resetSharedState() {
-  await redis.flushdb()
-  const service = await app.container.make(MaintenanceService)
-  await service.setConfig({ enabled: false })
-}
-
-/**
- * VineJS 422 bodies are a flat array of `{ field, message, rule }` entries.
- * Returns the entry for a given field (or undefined when the field is absent).
- */
-const fieldError = (res: ApiResponse, field: string) =>
-  res.body().errors.find((entry: { field: string }) => entry.field === field)
+import { resetSharedState } from '#tests/helpers/shared_state'
+import { fieldError } from '#tests/helpers/validation'
 
 /**
  * Functional seam for the session (login/logout) endpoints.

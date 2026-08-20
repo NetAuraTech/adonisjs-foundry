@@ -1,20 +1,12 @@
 import { test } from '@japa/runner'
-import app from '@adonisjs/core/services/app'
 import emitter from '@adonisjs/core/services/emitter'
-import redis from '@adonisjs/redis/services/main'
 import testUtils from '@adonisjs/core/services/test_utils'
 import Template from '#cms/models/template/template'
 import PageTranslation from '#cms/models/page/page_translation'
 import PageRevision from '#cms/models/page/page_revision'
 import { PageFactory } from '#cms/factories/page_factory'
-import { MaintenanceService } from '#services/maintenance/maintenance_service'
 import { createAdminUser, CMS_PERMISSIONS } from '#tests/helpers/create_admin_user'
-
-async function resetSharedState() {
-  await redis.flushdb()
-  const service = await app.container.make(MaintenanceService)
-  await service.setConfig({ enabled: false })
-}
+import { resetSharedState } from '#tests/helpers/shared_state'
 
 const templateContent: any = {
   blocks: [

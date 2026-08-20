@@ -1,10 +1,9 @@
 import { test } from '@japa/runner'
-import app from '@adonisjs/core/services/app'
-import redis from '@adonisjs/redis/services/main'
 import testUtils from '@adonisjs/core/services/test_utils'
-import { MaintenanceService } from '#services/maintenance/maintenance_service'
 import { createAdminUser } from '#tests/helpers/create_admin_user'
 import { seedDashboard } from '#tests/helpers/seed_dashboard'
+import { parseInertiaPage } from '#tests/helpers/inertia_page'
+import { resetSharedState } from '#tests/helpers/shared_state'
 
 /**
  * HTTP seam for the dashboard composition: the full-flavor payload served
@@ -12,22 +11,6 @@ import { seedDashboard } from '#tests/helpers/seed_dashboard'
  * figures and recent-activity content the pre-registry action produced.
  */
 const ALL_VIEW_PERMISSIONS = ['users.view', 'pages.view', 'templates.view', 'files.view'] as const
-
-/**
- * Extracts the Inertia page object from the server-rendered HTML — the
- * `data-page` attribute carries the props JSON with HTML-escaped quotes.
- */
-function parseInertiaPage(html: string) {
-  const match = html.match(/data-page="([^"]+)"/)
-  if (!match) throw new Error('No Inertia data-page attribute in response')
-  const json = match[1]
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&')
-  return JSON.parse(json)
-}
 
 test.group('Admin dashboard endpoint', (group) => {
   group.each.setup(async () => {
@@ -40,9 +23,7 @@ test.group('Admin dashboard endpoint', (group) => {
     await truncate()
     // Maintenance state lives in Redis and persists across runs: an
     // interrupted suite can leave maintenance ON and 503 every request.
-    await redis.flushdb()
-    const service = await app.container.make(MaintenanceService)
-    await service.setConfig({ enabled: false })
+    await resetSharedState()
   })
 
   test('GET /admin serves the complete, sectioned dashboard payload', async ({

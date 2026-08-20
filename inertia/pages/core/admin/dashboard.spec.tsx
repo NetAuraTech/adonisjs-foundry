@@ -145,3 +145,42 @@ describe('DashboardPage', () => {
     expect(content).not.toContain('Nothing to display yet.')
   })
 })
+
+/**
+ * Permission-based hiding: the server ships every section's figures to any
+ * admin, so the client hides a section card the current user may not see
+ * (via `CanAccess`) even when its data is present in the payload.
+ */
+describe('DashboardPage | permission-based hiding', () => {
+  function setPermissions(permissions: string[]) {
+    mockPageProps.props.currentUser.permissions = permissions
+  }
+
+  it('hides the auth card when users.view is missing', async () => {
+    setPermissions(['files.view'])
+    const content = await render(coreStats)
+
+    expect(content).not.toContain('Users')
+    expect(content).toContain('Folders: 2')
+    expect(content).toContain('Recent uploads')
+  })
+
+  it('hides the file card when files.view is missing', async () => {
+    setPermissions(['users.view'])
+    const content = await render(coreStats)
+
+    expect(content).toContain('Users')
+    expect(content).not.toContain('Folders:')
+    expect(content).not.toContain('Recent uploads')
+  })
+
+  it('hides every section card when the admin holds no matching permission', async () => {
+    setPermissions([])
+    const content = await render(coreStats)
+
+    expect(content).toContain('Dashboard')
+    expect(content).not.toContain('Users')
+    expect(content).not.toContain('Folders:')
+    expect(content).not.toContain('Recent uploads')
+  })
+})

@@ -3,22 +3,7 @@ import testUtils from '@adonisjs/core/services/test_utils'
 import { LogEntryFactory } from '#factories/log_entry_factory'
 import { LogCategory, LogLevel } from '#types/logging'
 import { createAdminUser } from '#tests/helpers/create_admin_user'
-
-/**
- * Extracts the Inertia page object from the server-rendered HTML — the
- * `data-page` attribute carries the props JSON with HTML-escaped quotes.
- */
-function parseInertiaPage(html: string) {
-  const match = html.match(/data-page="([^"]+)"/)
-  if (!match) throw new Error('No Inertia data-page attribute in response')
-  const json = match[1]
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&')
-  return JSON.parse(json)
-}
+import { parseInertiaPage } from '#tests/helpers/inertia_page'
 
 /** Every `message` rendered on the logs page, regardless of the filter applied. */
 function renderedMessages(page: { props?: { entries?: { data?: Array<{ message?: string }> } } }) {

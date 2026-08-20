@@ -1,30 +1,11 @@
 import { test } from '@japa/runner'
-import app from '@adonisjs/core/services/app'
-import redis from '@adonisjs/redis/services/main'
 import testUtils from '@adonisjs/core/services/test_utils'
 import env from '#start/env'
 import Template from '#cms/models/template/template'
 import { PreviewTokenHelper } from '#helpers/core/preview_token'
-import { MaintenanceService } from '#services/maintenance/maintenance_service'
 import { createAdminUser, CMS_PERMISSIONS } from '#tests/helpers/create_admin_user'
-
-async function resetSharedState() {
-  await redis.flushdb()
-  const service = await app.container.make(MaintenanceService)
-  await service.setConfig({ enabled: false })
-}
-
-function parseInertiaPage(html: string) {
-  const match = html.match(/data-page="([^"]+)"/)
-  if (!match) throw new Error('No Inertia data-page attribute in response')
-  const json = match[1]
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&')
-  return JSON.parse(json)
-}
+import { parseInertiaPage } from '#tests/helpers/inertia_page'
+import { resetSharedState } from '#tests/helpers/shared_state'
 
 const previewContent = {
   blocks: [{ id: 'b1', type: 'paragraph', props: { text: 'Preview pipeline marker' } }],

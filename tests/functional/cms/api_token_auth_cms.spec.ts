@@ -1,23 +1,10 @@
 import { test } from '@japa/runner'
-import app from '@adonisjs/core/services/app'
-import redis from '@adonisjs/redis/services/main'
 import testUtils from '@adonisjs/core/services/test_utils'
 import limiter from '@adonisjs/limiter/services/main'
 import User from '#models/auth/user'
-import { MaintenanceService } from '#services/maintenance/maintenance_service'
 import { createVerifiedUser } from '#tests/helpers/create_verified_user'
 import { createAdminUser } from '#tests/helpers/create_admin_user'
-
-/**
- * Maintenance state lives in Redis and persists across runs: an interrupted
- * suite (or a dev session sharing the Redis instance) can leave maintenance
- * ON and 503 every request.
- */
-async function resetSharedState() {
-  await redis.flushdb()
-  const service = await app.container.make(MaintenanceService)
-  await service.setConfig({ enabled: false })
-}
+import { resetSharedState } from '#tests/helpers/shared_state'
 
 /**
  * API token authentication — guard-separation coverage that depends on the

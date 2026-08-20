@@ -140,3 +140,35 @@ describe('DashboardPage — CMS sections', () => {
     expect(content).not.toContain('Recently published')
   })
 })
+
+/**
+ * Permission-based hiding: the server ships every section's figures to any
+ * admin, so the client hides a CMS card the current user may not see (via
+ * `CanAccess`) even when its data is present in the payload.
+ */
+describe('DashboardPage — CMS sections | permission-based hiding', () => {
+  function setPermissions(permissions: string[]) {
+    mockPageProps.props.currentUser.permissions = permissions
+  }
+
+  it('hides the nested template count when templates.view is missing', async () => {
+    setPermissions(['pages.view'])
+    const content = await render(cmsStats)
+
+    // The page card (pages.view) still renders.
+    expect(content).toContain('Page translations: 3')
+    expect(content).toContain('Recently published')
+    // The nested template figure (templates.view) is hidden.
+    expect(content).not.toContain('Templates: 4')
+  })
+
+  it('hides the page and template cards when no CMS permission is held', async () => {
+    setPermissions([])
+    const content = await render(cmsStats)
+
+    expect(content).toContain('Dashboard')
+    expect(content).not.toContain('Page translations')
+    expect(content).not.toContain('Recently published')
+    expect(content).not.toContain('Templates')
+  })
+})

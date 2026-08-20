@@ -1,33 +1,14 @@
 import { test } from '@japa/runner'
-import app from '@adonisjs/core/services/app'
-import redis from '@adonisjs/redis/services/main'
 import testUtils from '@adonisjs/core/services/test_utils'
 import { DateTime } from 'luxon'
 import PageTranslation from '#cms/models/page/page_translation'
 import { PageFactory } from '#cms/factories/page_factory'
-import { MaintenanceService } from '#services/maintenance/maintenance_service'
 import { createAdminUser, CMS_PERMISSIONS } from '#tests/helpers/create_admin_user'
+import { parseInertiaPage } from '#tests/helpers/inertia_page'
+import { resetSharedState } from '#tests/helpers/shared_state'
 
 const YOUTUBE_URL = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
 const IFRAME_URL = 'https://www.google.com/maps/embed?pb=abc'
-
-async function resetSharedState() {
-  await redis.flushdb()
-  const service = await app.container.make(MaintenanceService)
-  await service.setConfig({ enabled: false })
-}
-
-function parseInertiaPage(html: string) {
-  const match = html.match(/data-page="([^"]+)"/)
-  if (!match) throw new Error('No Inertia data-page attribute in response')
-  const json = match[1]
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&')
-  return JSON.parse(json)
-}
 
 const newBlocksContent: any = {
   blocks: [

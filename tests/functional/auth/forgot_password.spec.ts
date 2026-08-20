@@ -1,22 +1,10 @@
 import { test } from '@japa/runner'
-import app from '@adonisjs/core/services/app'
 import emitter from '@adonisjs/core/services/emitter'
-import redis from '@adonisjs/redis/services/main'
 import testUtils from '@adonisjs/core/services/test_utils'
 import limiter from '@adonisjs/limiter/services/main'
-import { MaintenanceService } from '#services/maintenance/maintenance_service'
 import { createVerifiedUser } from '#tests/helpers/create_verified_user'
-
-/**
- * Maintenance state lives in Redis and persists across runs: an interrupted
- * suite (or a dev session sharing the Redis instance) can leave maintenance
- * ON and 503 every request.
- */
-async function resetSharedState() {
-  await redis.flushdb()
-  const service = await app.container.make(MaintenanceService)
-  await service.setConfig({ enabled: false })
-}
+import { resetSharedState } from '#tests/helpers/shared_state'
+import { fieldError } from '#tests/helpers/validation'
 
 /**
  * Functional seam for the forgot-password endpoint (`POST /forgot-password`).
@@ -78,7 +66,7 @@ test.group('Forgot password endpoint', (group) => {
       .send()
 
     res.assertStatus(422)
-    assert.exists(res.body().errors.find((e: { field: string }) => e.field === 'email'))
+    assert.exists(fieldError(res, 'email'))
   })
 
   test('forgot: the endpoint is throttled after exceeding the attempt limit', async ({
