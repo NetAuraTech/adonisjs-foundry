@@ -985,6 +985,7 @@ const inertiaManifest: FlavorManifest = {
         '        transformers: {',
         '          enabled: true,',
         '          withSharedProps: true,',
+        "          inertiaMiddlewareImportPath: '#middleware/core/inertia_middleware',",
         "          source: 'app/data/transformers',",
         "          importAlias: '#transformers',",
         "          glob: ['**\\/*transformer.ts'],",
