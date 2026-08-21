@@ -2,6 +2,7 @@ import { SettingsLayout } from '~/components/organisms/settings_layout'
 import { Card } from '~/components/atoms/card'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets } from '~/helpers/validation_rules'
+import { toLooseErrors } from '~/helpers/form_errors'
 import { Field } from '~/components/molecules/field'
 import { Button } from '~/components/atoms/button'
 import { Avatar } from '~/components/atoms/avatar'
@@ -54,7 +55,9 @@ export default function ProfilePage(props: PageProps) {
                   type="text"
                   defaultValue={user.username || ''}
                   placeholder={t('username.placeholder')}
-                  errorMessage={errors.username || validation.getValidationMessage('username')}
+                  errorMessage={
+                    toLooseErrors(errors).username || validation.getValidationMessage('username')
+                  }
                   onChange={(event) => {
                     validation.handleChange('username', event.target.value)
                   }}

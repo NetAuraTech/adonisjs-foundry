@@ -5,6 +5,7 @@ import { Field } from '~/components/molecules/field'
 import { Button } from '~/components/atoms/button'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets } from '~/helpers/validation_rules'
+import { toLooseErrors } from '~/helpers/form_errors'
 import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import { useState } from 'react'
 import { Data } from '@generated/data'
@@ -70,7 +71,9 @@ export default function AcceptInvitationPage(props: PageProps) {
                     type="email"
                     defaultValue={user.email}
                     placeholder={t('email.placeholder')}
-                    errorMessage={errors.email || validation.getValidationMessage('email')}
+                    errorMessage={
+                      toLooseErrors(errors).email || validation.getValidationMessage('email')
+                    }
                     onChange={(event) => {
                       validation.handleChange('email', event.target.value)
                     }}
@@ -87,7 +90,9 @@ export default function AcceptInvitationPage(props: PageProps) {
                     type="text"
                     defaultValue={user.username}
                     placeholder={t('username.placeholder')}
-                    errorMessage={errors.username || validation.getValidationMessage('username')}
+                    errorMessage={
+                      toLooseErrors(errors).username || validation.getValidationMessage('username')
+                    }
                     onChange={(event) => {
                       validation.handleChange('username', event.target.value)
                     }}
@@ -102,7 +107,9 @@ export default function AcceptInvitationPage(props: PageProps) {
                     label={t('password.value')}
                     name="password"
                     type="password"
-                    errorMessage={errors.password || validation.getValidationMessage('password')}
+                    errorMessage={
+                      toLooseErrors(errors).password || validation.getValidationMessage('password')
+                    }
                     onChange={(event) => {
                       setPassword(event.target.value)
                       validation.handleChange('password', event.target.value)
@@ -123,7 +130,7 @@ export default function AcceptInvitationPage(props: PageProps) {
                     name="password_confirmation"
                     type="password"
                     errorMessage={
-                      errors.password_confirmation ||
+                      toLooseErrors(errors).password_confirmation ||
                       validation.getValidationMessage('password_confirmation')
                     }
                     onChange={(event) => {

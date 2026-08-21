@@ -6,6 +6,7 @@ import { Paragraph } from '~/components/atoms/paragraph'
 import { NavLink } from '~/components/atoms/nav_link'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets } from '~/helpers/validation_rules'
+import { toLooseErrors } from '~/helpers/form_errors'
 import { Field } from '~/components/molecules/field'
 import { Button } from '~/components/atoms/button'
 import { useState } from 'react'
@@ -114,7 +115,7 @@ export default function RegisterPage(props: RegisterPageProps) {
                     name="password_confirmation"
                     type="password"
                     errorMessage={
-                      errors.password_confirmation ||
+                      toLooseErrors(errors).password_confirmation ||
                       validation.getValidationMessage('password_confirmation')
                     }
                     onChange={(event) => {

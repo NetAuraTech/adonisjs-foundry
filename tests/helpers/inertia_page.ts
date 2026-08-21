@@ -1,15 +1,13 @@
 /**
- * Extracts the Inertia page object from the server-rendered HTML — the
- * `data-page` attribute carries the props JSON with HTML-escaped quotes.
+ * Extracts the Inertia page object from the server-rendered HTML. In Inertia
+ * v5 the initial page payload is emitted as a JSON `<script>` element whose
+ * `data-page` attribute holds the mount element id and whose body is the page
+ * JSON (with `/` escaped as `\/`, a form `JSON.parse` accepts directly).
  */
 export function parseInertiaPage(html: string) {
-  const match = html.match(/data-page="([^"]+)"/)
-  if (!match) throw new Error('No Inertia data-page attribute in response')
-  const json = match[1]
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&')
-  return JSON.parse(json)
+  const match = html.match(
+    /<script data-page="[^"]*" type="application\/json">([\s\S]*?)<\/script>/
+  )
+  if (!match) throw new Error('No Inertia data-page script in response')
+  return JSON.parse(match[1])
 }

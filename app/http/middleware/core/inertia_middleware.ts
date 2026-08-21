@@ -29,7 +29,7 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
      * In that case, we must always assume that HttpContext is not fully hydrated
      * with all the properties
      */
-    const { session, auth } = ctx as Partial<HttpContext>
+    const { auth } = ctx as Partial<HttpContext>
 
     const user = auth?.user
 
@@ -38,18 +38,6 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
         role.preload('permissions')
       })
     })
-
-    /**
-     * Fetching the first error from the flash messages
-     */
-    const errorsBag = session?.flashMessages.get('errorsBag') ?? {}
-    const errorFromBag: string | undefined = Object.keys(errorsBag)
-      .filter((code) => code !== 'E_VALIDATION_ERROR')
-      .map((code) => errorsBag[code])[0]
-
-    const success: string | undefined = session?.flashMessages.get('success')
-    const info: string | undefined = session?.flashMessages.get('info')
-    const error: string | undefined = session?.flashMessages.get('error') || errorFromBag
 
     const preferences = ctx.inertia.always(
       user ? await this.getPreferencesAction.execute({ user }) : DEFAULT_PREFERENCES
@@ -64,11 +52,6 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
      */
     return {
       errors: ctx.inertia.always(this.getValidationErrors(ctx)),
-      flash: ctx.inertia.always({
-        error,
-        success,
-        info,
-      }),
       currentUser: ctx.inertia.always(user ? UserTransformer.transform(user) : undefined),
       preferences,
       csrfToken: ctx.request.csrfToken,
@@ -77,6 +60,42 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
       email: env.get('MAIL_FROM_ADDRESS'),
       common_translations: buildCommonPayload(new I18nService(ctx.i18n)),
       admin_menu: isAdmin ? this.buildAdminMenu(ctx) : undefined,
+    }
+  }
+
+  /**
+   * First-class flash bag sent to every Inertia page under the top-level
+   * `flash` field (a sibling of `props`, not merged into them). Kept out of
+   * `share()` so flash messages are stripped from browser history and never
+   * replay when the user navigates back.
+   *
+   * Keys and types stay identical to the legacy shared `flash` prop so the
+   * existing toasts (`flash.error`, `flash.success`, `flash.info`) keep
+   * working.
+   */
+  flash(ctx: HttpContext) {
+    /**
+     * The session may not be hydrated yet (e.g. during a 404 render before
+     * the session middleware ran), so flash messages may be unavailable.
+     */
+    const { session } = ctx as Partial<HttpContext>
+
+    /**
+     * Fetching the first error from the flash messages
+     */
+    const errorsBag = session?.flashMessages.get('errorsBag') ?? {}
+    const errorFromBag: string | undefined = Object.keys(errorsBag)
+      .filter((code) => code !== 'E_VALIDATION_ERROR')
+      .map((code) => errorsBag[code])[0]
+
+    const success: string | undefined = session?.flashMessages.get('success')
+    const info: string | undefined = session?.flashMessages.get('info')
+    const error: string | undefined = session?.flashMessages.get('error') || errorFromBag
+
+    return {
+      error,
+      success,
+      info,
     }
   }
 

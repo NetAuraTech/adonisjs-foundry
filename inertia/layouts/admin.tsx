@@ -15,8 +15,8 @@ interface LayoutProps {
  *
  * Composes the admin shell: a collapsible `<AdminSidebar>`, a sticky
  * `<AdminHeader>` with the sidebar toggle, and the page content area. A
- * `<Toaster>` is mounted at top-right to surface flash messages passed via
- * Inertia shared props (`flash.error`, `flash.success`, `flash.info`).
+ * `<Toaster>` is mounted at top-right to surface flash messages read from
+ * the Inertia flash bag (`flash.error`, `flash.success`, `flash.info`).
  *
  * **Sidebar behaviour:**
  * - Opens automatically on large viewports (`lg` breakpoint) via `useIsLarge`.
@@ -39,7 +39,7 @@ interface LayoutProps {
  */
 export default function Layout(props: LayoutProps) {
   const isLarge = useIsLarge()
-  const { props: pageProps, url } = usePage<SharedProps>()
+  const { props: pageProps, url, flash } = usePage<SharedProps>()
   const { children } = props
 
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -68,16 +68,16 @@ export default function Layout(props: LayoutProps) {
     toast.dismiss()
   }, [url])
 
-  if (children.props.flash?.error) {
-    toast.error(children.props.flash.error)
+  if (flash.error) {
+    toast.error(flash.error)
   }
 
-  if (children.props.flash?.success) {
-    toast.success(children.props.flash.success)
+  if (flash.success) {
+    toast.success(flash.success)
   }
 
-  if (children.props.flash?.info) {
-    toast.info(children.props.flash.info)
+  if (flash.info) {
+    toast.info(flash.info)
   }
 
   return (

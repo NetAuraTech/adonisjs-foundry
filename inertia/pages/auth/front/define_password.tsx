@@ -5,6 +5,7 @@ import { Field } from '~/components/molecules/field'
 import { Button } from '~/components/atoms/button'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets } from '~/helpers/validation_rules'
+import { toLooseErrors } from '~/helpers/form_errors'
 import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import { useState } from 'react'
 import type { DefinePasswordTranslations } from '#helpers/i18n_payloads/social_define_password'
@@ -80,7 +81,7 @@ export default function DefinePasswordPage(props: DefinePasswordPageProps) {
                     name="password_confirmation"
                     type="password"
                     errorMessage={
-                      errors.password_confirmation ||
+                      toLooseErrors(errors).password_confirmation ||
                       validation.getValidationMessage('password_confirmation')
                     }
                     onChange={(event) => {
