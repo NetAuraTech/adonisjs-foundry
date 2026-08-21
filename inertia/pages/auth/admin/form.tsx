@@ -9,6 +9,7 @@ import { Button } from '~/components/atoms/button'
 import { Icon } from '~/components/atoms/icon'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets, rules } from '~/helpers/validation_rules'
+import { toLooseErrors } from '~/helpers/form_errors'
 import { Field } from '~/components/molecules/field'
 import { SelectOption } from '~/components/atoms/select_option'
 import { useTranslation } from '~/hooks/use_translation'
@@ -77,7 +78,9 @@ export default function UsersFormPage(props: PageProps) {
                 type="email"
                 defaultValue={user?.email}
                 placeholder={t('email.placeholder')}
-                errorMessage={errors.email || validation.getValidationMessage('email')}
+                errorMessage={
+                  toLooseErrors(errors).email || validation.getValidationMessage('email')
+                }
                 onChange={(event) => {
                   validation.handleChange('email', event.target.value)
                 }}
@@ -93,7 +96,9 @@ export default function UsersFormPage(props: PageProps) {
                 type="text"
                 defaultValue={user?.username}
                 placeholder={t('username.placeholder')}
-                errorMessage={errors.username || validation.getValidationMessage('username')}
+                errorMessage={
+                  toLooseErrors(errors).username || validation.getValidationMessage('username')
+                }
                 onChange={(event) => {
                   validation.handleChange('username', event.target.value)
                 }}
@@ -109,7 +114,9 @@ export default function UsersFormPage(props: PageProps) {
                 type="select"
                 defaultValue={user?.role?.id}
                 placeholder={t('roles.placeholder')}
-                errorMessage={errors.role_id || validation.getValidationMessage('role_id')}
+                errorMessage={
+                  toLooseErrors(errors).role_id || validation.getValidationMessage('role_id')
+                }
                 onChange={(event) => {
                   validation.handleChange('role_id', event.target.value)
                 }}

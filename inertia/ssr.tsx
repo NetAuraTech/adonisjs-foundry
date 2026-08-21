@@ -1,5 +1,5 @@
 import Layout from '~/layouts/default'
-import { createInertiaApp } from '@inertiajs/react'
+import { createInertiaApp, type ResolvedComponent } from '@inertiajs/react'
 import ReactDOMServer from 'react-dom/server'
 import { resolvePageComponent } from '@adonisjs/inertia/helpers'
 import { ReactElement } from 'react'
@@ -15,9 +15,11 @@ export default function render(page: any) {
     render: ReactDOMServer.renderToString,
     title: (title) => (title ? `${title} - ${appName}` : appName),
     resolve: (name) => {
-      return resolvePageComponent(
+      return resolvePageComponent<ResolvedComponent>(
         `./pages/${name}.tsx`,
-        import.meta.glob(['./pages/**/*.tsx', '!./pages/**/*.spec.tsx'], { eager: true }),
+        import.meta.glob<ResolvedComponent>(['./pages/**/*.tsx', '!./pages/**/*.spec.tsx'], {
+          eager: true,
+        }),
         (page: ReactElement<Data.SharedProps>) => <Layout children={page} />
       )
     },

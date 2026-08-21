@@ -1,5 +1,4 @@
 import { defineConfig } from '@adonisjs/inertia'
-import app from '@adonisjs/core/services/app'
 
 const inertiaConfig = defineConfig({
   /**
@@ -14,7 +13,7 @@ const inertiaConfig = defineConfig({
     /**
      * Entry file used by the SSR server build.
      */
-    entrypoint: `${app.inProduction ? 'ssr/ssr.js' : 'inertia/ssr.tsx'}`,
+    entrypoint: 'inertia/ssr.tsx',
   },
 })
 

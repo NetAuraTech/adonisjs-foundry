@@ -14,16 +14,16 @@ interface LayoutProps {
  */
 export default function Layout(props: LayoutProps) {
   const { children } = props
-  const { props: pageProps, url } = usePage<SharedProps>()
+  const { props: pageProps, url, flash } = usePage<SharedProps>()
   const { app_name, app_url } = pageProps
 
   useEffect(() => {
     toast.dismiss()
 
-    if (children.props.flash?.error) toast.error(children.props.flash.error)
-    if (children.props.flash?.success) toast.success(children.props.flash.success)
-    if (children.props.flash?.info) toast.info(children.props.flash.info)
-  }, [url, children.props.flash])
+    if (flash.error) toast.error(flash.error)
+    if (flash.success) toast.success(flash.success)
+    if (flash.info) toast.info(flash.info)
+  }, [url, flash])
 
   const image_alt = ''
   const geo = {

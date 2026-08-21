@@ -2,6 +2,7 @@ import { SettingsLayout } from '~/components/organisms/settings_layout'
 import { Card } from '~/components/atoms/card'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets } from '~/helpers/validation_rules'
+import { toLooseErrors } from '~/helpers/form_errors'
 import { Field } from '~/components/molecules/field'
 import { Button } from '~/components/atoms/button'
 import { Data } from '@generated/data'
@@ -66,7 +67,9 @@ export default function AccountPage(props: PageProps) {
                   type="email"
                   defaultValue={user.email || ''}
                   placeholder={t('email.placeholder')}
-                  errorMessage={errors.email || validationEmailForm.getValidationMessage('email')}
+                  errorMessage={
+                    toLooseErrors(errors).email || validationEmailForm.getValidationMessage('email')
+                  }
                   onChange={(event) => {
                     validationEmailForm.handleChange('email', event.target.value)
                   }}
@@ -186,7 +189,7 @@ export default function AccountPage(props: PageProps) {
                   name="password_confirmation"
                   type="password"
                   errorMessage={
-                    errors.password_confirmation ||
+                    toLooseErrors(errors).password_confirmation ||
                     validationPasswordForm.getValidationMessage('password_confirmation')
                   }
                   onChange={(event) => {
