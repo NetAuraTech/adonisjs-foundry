@@ -7,10 +7,10 @@
  * The main part here is "composite: true"
  */
 {
-  "extends": "./inertia/tsconfig.json",
-  "compilerOptions": {
-    "rootDir": "./inertia",
-    "composite": true
-  },
-  "include": ["./inertia/**/*.ts", "./inertia/**/*.tsx"]
+	"extends": "./inertia/tsconfig.json",
+	"compilerOptions": {
+		"rootDir": "./inertia",
+		"composite": true
+	},
+	"include": ["./inertia/**/*.ts", "./inertia/**/*.tsx"]
 }

@@ -1,10 +1,10 @@
 interface LabelProps {
-  /** The visible text content of the label. */
-  label: string
-  /** Must match the `name`/`id` of the associated input element. */
-  htmlFor: string
-  /** When `true`, appends a red asterisk (`*`) to signal a required field. */
-  required?: boolean
+	/** The visible text content of the label. */
+	label: string;
+	/** Must match the `name`/`id` of the associated input element. */
+	htmlFor: string;
+	/** When `true`, appends a red asterisk (`*`) to signal a required field. */
+	required?: boolean;
 }
 
 /**
@@ -20,12 +20,12 @@ interface LabelProps {
  * <Input name="email" type="email" required />
  */
 export function Label(props: LabelProps) {
-  const { label, htmlFor, required } = props
+	const { label, htmlFor, required } = props;
 
-  return (
-    <label htmlFor={htmlFor} className="text-ink font-bold">
-      {label}
-      {required && <span className="ml-1 text-danger">*</span>}
-    </label>
-  )
+	return (
+		<label htmlFor={htmlFor} className="text-ink font-bold">
+			{label}
+			{required && <span className="ml-1 text-danger">*</span>}
+		</label>
+	);
 }

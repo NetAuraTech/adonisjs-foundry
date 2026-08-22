@@ -5,9 +5,7 @@
  * JSON (with `/` escaped as `\/`, a form `JSON.parse` accepts directly).
  */
 export function parseInertiaPage(html: string) {
-  const match = html.match(
-    /<script data-page="[^"]*" type="application\/json">([\s\S]*?)<\/script>/
-  )
-  if (!match) throw new Error('No Inertia data-page script in response')
-  return JSON.parse(match[1])
+	const match = html.match(/<script data-page="[^"]*" type="application\/json">([\s\S]*?)<\/script>/);
+	if (!match) throw new Error('No Inertia data-page script in response');
+	return JSON.parse(match[1]);
 }

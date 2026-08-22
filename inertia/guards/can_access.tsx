@@ -1,12 +1,12 @@
-import { ReactNode } from 'react'
-import type { PermissionSlug } from '#start/permissions'
-import { useAuth } from '~/hooks/use_auth'
+import { ReactNode } from 'react';
+import { useAuth } from '~/hooks/use_auth';
+import type { PermissionSlug } from '#start/permissions';
 
 interface CanAccessProps {
-  permission: PermissionSlug | PermissionSlug[]
-  requireAll?: boolean
-  fallback?: ReactNode
-  children: ReactNode
+	permission: PermissionSlug | PermissionSlug[];
+	requireAll?: boolean;
+	fallback?: ReactNode;
+	children: ReactNode;
 }
 
 /**
@@ -39,19 +39,14 @@ interface CanAccessProps {
  *   <DangerZone />
  * </CanAccess>
  */
-export function CanAccess({
-  permission,
-  requireAll = false,
-  fallback = null,
-  children,
-}: CanAccessProps) {
-  const { can, canAny, canAll } = useAuth()
+export function CanAccess({ permission, requireAll = false, fallback = null, children }: CanAccessProps) {
+	const { can, canAny, canAll } = useAuth();
 
-  const hasAccess = Array.isArray(permission)
-    ? requireAll
-      ? canAll(permission)
-      : canAny(permission)
-    : can(permission)
+	const hasAccess = Array.isArray(permission)
+		? requireAll
+			? canAll(permission)
+			: canAny(permission)
+		: can(permission);
 
-  return hasAccess ? <>{children}</> : <>{fallback}</>
+	return hasAccess ? <>{children}</> : <>{fallback}</>;
 }

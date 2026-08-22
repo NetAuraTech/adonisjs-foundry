@@ -1,6 +1,6 @@
-import { BaseCommand, flags } from '@adonisjs/core/ace'
-import type { CommandOptions } from '@adonisjs/core/types/ace'
-import { MaintenanceService } from '#services/maintenance/maintenance_service'
+import { BaseCommand, flags } from '@adonisjs/core/ace';
+import { MaintenanceService } from '#services/maintenance/maintenance_service';
+import type { CommandOptions } from '@adonisjs/core/types/ace';
 
 /**
  * ACE command to remove an IP from the maintenance allowlist.
@@ -10,46 +10,46 @@ import { MaintenanceService } from '#services/maintenance/maintenance_service'
  * node ace maintenance:remove-ip 10.0.0.5/32
  */
 export default class MaintenanceRemoveIp extends BaseCommand {
-  static commandName = 'maintenance:remove-ip'
-  static description = 'Remove IP/CIDR from maintenance allowlist'
+	static commandName = 'maintenance:remove-ip';
+	static description = 'Remove IP/CIDR from maintenance allowlist';
 
-  static options: CommandOptions = {
-    startApp: true,
-    allowUnknownFlags: false,
-  }
+	static options: CommandOptions = {
+		startApp: true,
+		allowUnknownFlags: false,
+	};
 
-  @flags.string({ alias: 'r', description: 'IP/CIDR to remove' })
-  declare cidr?: string
+	@flags.string({ alias: 'r', description: 'IP/CIDR to remove' })
+	declare cidr?: string;
 
-  async run() {
-    const maintenanceService: MaintenanceService = await this.app.container.make(MaintenanceService)
+	async run() {
+		const maintenanceService: MaintenanceService = await this.app.container.make(MaintenanceService);
 
-    const cidr = this.cidr || (await this.prompt.ask('Enter IP/CIDR to remove:'))
+		const cidr = this.cidr || (await this.prompt.ask('Enter IP/CIDR to remove:'));
 
-    if (!cidr) {
-      this.logger.error('CIDR is required')
-      this.exitCode = 1
-      return
-    }
+		if (!cidr) {
+			this.logger.error('CIDR is required');
+			this.exitCode = 1;
+			return;
+		}
 
-    const config = await maintenanceService.getConfig()
+		const config = await maintenanceService.getConfig();
 
-    if (!config.allowedIps.includes(cidr)) {
-      this.logger.warning(`IP/CIDR not found in allowlist: ${cidr}`)
-      return
-    }
+		if (!config.allowedIps.includes(cidr)) {
+			this.logger.warning(`IP/CIDR not found in allowlist: ${cidr}`);
+			return;
+		}
 
-    const updatedIps = config.allowedIps.filter((ip) => ip !== cidr)
+		const updatedIps = config.allowedIps.filter((ip) => ip !== cidr);
 
-    try {
-      await maintenanceService.setConfig({ allowedIps: updatedIps })
+		try {
+			await maintenanceService.setConfig({ allowedIps: updatedIps });
 
-      this.logger.success(`Removed from allowlist: ${cidr}`)
-      this.logger.info(`Source: ${maintenanceService.getSource()}`)
-    } catch (error) {
-      this.logger.error(`Failed to remove IP: ${error.message}`)
-      this.logger.debug(error.stack)
-      this.exitCode = 1
-    }
-  }
+			this.logger.success(`Removed from allowlist: ${cidr}`);
+			this.logger.info(`Source: ${maintenanceService.getSource()}`);
+		} catch (error) {
+			this.logger.error(`Failed to remove IP: ${error.message}`);
+			this.logger.debug(error.stack);
+			this.exitCode = 1;
+		}
+	}
 }

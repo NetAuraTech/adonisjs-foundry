@@ -1,12 +1,12 @@
-import { spawn as defaultSpawn, type ChildProcess } from 'node:child_process'
+import { spawn as defaultSpawn, type ChildProcess } from 'node:child_process';
 
 export interface PsqlRestoreOptions {
-  host: string
-  port: number
-  user: string
-  database: string
-  password: string
-  sqlPath: string
+	host: string;
+	port: number;
+	user: string;
+	database: string;
+	password: string;
+	sqlPath: string;
 }
 
 /**
@@ -28,39 +28,39 @@ export interface PsqlRestoreOptions {
  * @param _spawn - Optional spawn function for testability (defaults to node:child_process.spawn).
  */
 export function restoreDatabaseWithPsql(
-  options: PsqlRestoreOptions,
-  _spawn: typeof defaultSpawn = defaultSpawn
+	options: PsqlRestoreOptions,
+	_spawn: typeof defaultSpawn = defaultSpawn,
 ): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const args = [
-      '-v',
-      'ON_ERROR_STOP=1',
-      '-1',
-      '-h',
-      options.host,
-      '-p',
-      String(options.port),
-      '-U',
-      options.user,
-      '-d',
-      options.database,
-      '-f',
-      options.sqlPath,
-    ]
+	return new Promise((resolve, reject) => {
+		const args = [
+			'-v',
+			'ON_ERROR_STOP=1',
+			'-1',
+			'-h',
+			options.host,
+			'-p',
+			String(options.port),
+			'-U',
+			options.user,
+			'-d',
+			options.database,
+			'-f',
+			options.sqlPath,
+		];
 
-    const psql: ChildProcess = _spawn('psql', args, {
-      env: { ...process.env, PGPASSWORD: options.password },
-    })
+		const psql: ChildProcess = _spawn('psql', args, {
+			env: { ...process.env, PGPASSWORD: options.password },
+		});
 
-    let errorOutput = ''
-    psql.stderr!.on('data', (data) => {
-      errorOutput += data.toString()
-    })
-    psql.on('close', (code) => {
-      code === 0 ? resolve() : reject(new Error(`psql failed with code ${code}: ${errorOutput}`))
-    })
-    psql.on('error', (error) => {
-      reject(new Error(`Failed to start psql: ${error.message}`))
-    })
-  })
+		let errorOutput = '';
+		psql.stderr!.on('data', (data) => {
+			errorOutput += data.toString();
+		});
+		psql.on('close', (code) => {
+			code === 0 ? resolve() : reject(new Error(`psql failed with code ${code}: ${errorOutput}`));
+		});
+		psql.on('error', (error) => {
+			reject(new Error(`Failed to start psql: ${error.message}`));
+		});
+	});
 }

@@ -13,11 +13,11 @@
  * getAvatarInitials('Jean-Pierre Doe') // 'JD'
  */
 export function getAvatarInitials(username: string): string {
-  return username
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((word) => word[0].toUpperCase())
-    .join('')
+	return username
+		.trim()
+		.split(/\s+/)
+		.filter(Boolean)
+		.slice(0, 2)
+		.map((word) => word[0].toUpperCase())
+		.join('');
 }

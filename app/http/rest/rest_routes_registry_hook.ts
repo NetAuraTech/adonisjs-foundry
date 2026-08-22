@@ -1,16 +1,16 @@
-import { resolve } from 'node:path'
-import type { ScannedController } from '@adonisjs/assembler/types'
+import { resolve } from 'node:path';
 import {
-  collectImportNames,
-  extractValidatorIdentifier,
-  findEndpointInitializer,
-  findEndpointsLiteral,
-  findValidatorInitializer,
-  findRestDelegation,
-  resolveValidatorImport,
-  safeRead,
-  type ExtractedValidator,
-} from './rest_registry_extractor.js'
+	collectImportNames,
+	extractValidatorIdentifier,
+	findEndpointInitializer,
+	findEndpointsLiteral,
+	findValidatorInitializer,
+	findRestDelegation,
+	resolveValidatorImport,
+	safeRead,
+	type ExtractedValidator,
+} from './rest_registry_extractor.js';
+import type { ScannedController } from '@adonisjs/assembler/types';
 
 /**
  * Map a `#rest/<name>` import specifier to the absolute path of the resource
@@ -23,10 +23,10 @@ import {
  *         specifier is not of the `#rest/*` form.
  */
 function resolveResourceFile(appRoot: string, specifier: string): string | undefined {
-  const match = specifier.match(/^#rest\/(.+)$/)
-  if (!match) return undefined
-  const name = match[1].replace(/\.(ts|js)$/u, '')
-  return resolve(appRoot, 'app/http/rest', `${name}.ts`)
+	const match = specifier.match(/^#rest\/(.+)$/);
+	if (!match) return undefined;
+	const name = match[1].replace(/\.(ts|js)$/u, '');
+	return resolve(appRoot, 'app/http/rest', `${name}.ts`);
 }
 
 /**
@@ -39,22 +39,20 @@ function resolveResourceFile(appRoot: string, specifier: string): string | undef
  * @returns The method body (between the outermost braces), or `undefined`.
  */
 function findMethodBody(sourceText: string, method: string): string | undefined {
-  const signature = new RegExp(`\\b${method}\\s*\\(\\s*ctx\\s*:\\s*HttpContext\\s*\\)`).exec(
-    sourceText
-  )
-  if (!signature) return undefined
-  const open = sourceText.indexOf('{', signature.index)
-  if (open === -1) return undefined
-  let depth = 0
-  for (let i = open; i < sourceText.length; i += 1) {
-    const ch = sourceText[i]
-    if (ch === '{') depth += 1
-    else if (ch === '}') {
-      depth -= 1
-      if (depth === 0) return sourceText.slice(open + 1, i)
-    }
-  }
-  return undefined
+	const signature = new RegExp(`\\b${method}\\s*\\(\\s*ctx\\s*:\\s*HttpContext\\s*\\)`).exec(sourceText);
+	if (!signature) return undefined;
+	const open = sourceText.indexOf('{', signature.index);
+	if (open === -1) return undefined;
+	let depth = 0;
+	for (let i = open; i < sourceText.length; i += 1) {
+		const ch = sourceText[i];
+		if (ch === '{') depth += 1;
+		else if (ch === '}') {
+			depth -= 1;
+			if (depth === 0) return sourceText.slice(open + 1, i);
+		}
+	}
+	return undefined;
 }
 
 /**
@@ -72,15 +70,15 @@ function findMethodBody(sourceText: string, method: string): string | undefined 
  * @returns The raw import specifier, or `undefined`.
  */
 function findResourceSpecifier(sourceText: string, resourceVariable: string): string | undefined {
-  const base = resourceVariable.replace(/Resource$/u, '')
-  if (!base || base === resourceVariable) return undefined
-  for (const specifier of collectImportNames(sourceText).values()) {
-    const match = specifier.match(/^#rest\/([\w$]+)$/u)
-    if (!match) continue
-    const fileBase = match[1].replace(/_resource$/u, '')
-    if (fileBase === base) return specifier
-  }
-  return undefined
+	const base = resourceVariable.replace(/Resource$/u, '');
+	if (!base || base === resourceVariable) return undefined;
+	for (const specifier of collectImportNames(sourceText).values()) {
+		const match = specifier.match(/^#rest\/([\w$]+)$/u);
+		if (!match) continue;
+		const fileBase = match[1].replace(/_resource$/u, '');
+		if (fileBase === base) return specifier;
+	}
+	return undefined;
 }
 
 /**
@@ -98,32 +96,32 @@ function findResourceSpecifier(sourceText: string, resourceVariable: string): st
  *         static extraction.
  */
 export async function extractRestResourceValidators(
-  appRoot: string,
-  controller: ScannedController
+	appRoot: string,
+	controller: ScannedController,
 ): Promise<ExtractedValidator[] | undefined> {
-  const sourceText = await safeRead(controller.path)
-  if (!sourceText) return undefined
-  const body = findMethodBody(sourceText, controller.method)
-  if (!body) return undefined
-  const delegation = findRestDelegation(body)
-  if (!delegation) return undefined
-  const specifier = findResourceSpecifier(sourceText, delegation.resourceVariable)
-  if (!specifier) return undefined
-  const resourcePath = resolveResourceFile(appRoot, specifier)
-  if (!resourcePath) return undefined
-  const resourceText = await safeRead(resourcePath)
-  if (!resourceText) return undefined
+	const sourceText = await safeRead(controller.path);
+	if (!sourceText) return undefined;
+	const body = findMethodBody(sourceText, controller.method);
+	if (!body) return undefined;
+	const delegation = findRestDelegation(body);
+	if (!delegation) return undefined;
+	const specifier = findResourceSpecifier(sourceText, delegation.resourceVariable);
+	if (!specifier) return undefined;
+	const resourcePath = resolveResourceFile(appRoot, specifier);
+	if (!resourcePath) return undefined;
+	const resourceText = await safeRead(resourcePath);
+	if (!resourceText) return undefined;
 
-  const endpoints = findEndpointsLiteral(resourceText)
-  if (!endpoints) return undefined
-  const endpointInit = findEndpointInitializer(endpoints, delegation.endpoint)
-  if (!endpointInit) return undefined
-  const validatorNode = findValidatorInitializer(endpointInit)
-  if (!validatorNode) return undefined
-  const identifier = extractValidatorIdentifier(validatorNode)
-  if (!identifier) return undefined
-  const validator = resolveValidatorImport(resourceText, identifier)
-  return validator ? [validator] : undefined
+	const endpoints = findEndpointsLiteral(resourceText);
+	if (!endpoints) return undefined;
+	const endpointInit = findEndpointInitializer(endpoints, delegation.endpoint);
+	if (!endpointInit) return undefined;
+	const validatorNode = findValidatorInitializer(endpointInit);
+	if (!validatorNode) return undefined;
+	const identifier = extractValidatorIdentifier(validatorNode);
+	if (!identifier) return undefined;
+	const validator = resolveValidatorImport(resourceText, identifier);
+	return validator ? [validator] : undefined;
 }
 
 /**
@@ -131,19 +129,16 @@ export async function extractRestResourceValidators(
  * the `extractValidators` registration point.
  */
 interface RouteScannerSurface {
-  extractValidators(
-    cb: (route: unknown, controller: ScannedController) => Promise<ExtractedValidator[] | undefined>
-  ): unknown
+	extractValidators(
+		cb: (route: unknown, controller: ScannedController) => Promise<ExtractedValidator[] | undefined>,
+	): unknown;
 }
 
 /**
  * The hook bus we subscribe to. Only `routesScanning` is used by this hook.
  */
 interface HookBus {
-  add(
-    event: 'routesScanning',
-    cb: (devServer: unknown, routesScanner: RouteScannerSurface) => void
-  ): unknown
+	add(event: 'routesScanning', cb: (devServer: unknown, routesScanner: RouteScannerSurface) => void): unknown;
 }
 
 /**
@@ -152,7 +147,7 @@ interface HookBus {
  * the `#rest/*` resource imports.
  */
 interface InitHookParent {
-  cwdPath?: string
+	cwdPath?: string;
 }
 
 /**
@@ -187,16 +182,16 @@ interface InitHookParent {
  * })
  */
 export function restRoutesRegistryHook(): {
-  run(parent: InitHookParent, hooks: HookBus): void
+	run(parent: InitHookParent, hooks: HookBus): void;
 } {
-  return {
-    run(parent: InitHookParent, hooks: HookBus): void {
-      const appRoot = parent.cwdPath ?? process.cwd()
-      hooks.add('routesScanning', (_devServer, routesScanner) => {
-        routesScanner.extractValidators(async (_route, controller) => {
-          return extractRestResourceValidators(appRoot, controller)
-        })
-      })
-    },
-  }
+	return {
+		run(parent: InitHookParent, hooks: HookBus): void {
+			const appRoot = parent.cwdPath ?? process.cwd();
+			hooks.add('routesScanning', (_devServer, routesScanner) => {
+				routesScanner.extractValidators(async (_route, controller) => {
+					return extractRestResourceValidators(appRoot, controller);
+				});
+			});
+		},
+	};
 }

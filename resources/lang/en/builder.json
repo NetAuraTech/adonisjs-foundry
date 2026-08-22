@@ -1,163 +1,163 @@
 {
-  "status": {
-    "value": "Status",
-    "draft": "Draft",
-    "published": "Published",
-    "archived": "Archived"
-  },
-  "mode": {
-    "editor": "Editor",
-    "split": "Split",
-    "preview": "Preview"
-  },
-  "toolbar": {
-    "apply_template": "Apply template",
-    "save_as_template": "Save as template",
-    "unpublish": "Unpublish",
-    "publish": "Publish",
-    "revisions": "Revisions"
-  },
-  "sidebar": {
-    "details": "Details",
-    "seo": "SEO"
-  },
-  "form": {
-    "title": {
-      "value": "Title",
-      "placeholder": "Title",
-      "slug_placeholder": "slug"
-    },
-    "meta_title": {
-      "value": "Meta title",
-      "placeholder": "Fallback to title"
-    },
-    "meta_description": {
-      "value": "Meta desc.",
-      "placeholder": "A short description shown in search results."
-    }
-  },
-  "save": {
-    "button": "Save",
-    "saving": "Saving…",
-    "saved": "Saved",
-    "retry": "Retry"
-  },
-  "locale": {
-    "add": "Add locale",
-    "new_translation": "New translation",
-    "select": "Select locale…",
-    "empty_content": "Empty content",
-    "copy_from": "Copy from {locale}",
-    "add_button": "Add"
-  },
-  "blocktree": {
-    "select_to_configure": "Select a block to configure",
-    "insert_template": "Insert template",
-    "add_block": "Add block",
-    "save_as_template": "Save as template"
-  },
-  "block_picker": {
-    "title": "Blocks",
-    "search_placeholder": "Search blocks…",
-    "no_results": "No blocks found."
-  },
-  "template_picker": {
-    "title": "Insert template",
-    "empty": "No templates found.",
-    "type_placeholder": "All",
-    "page": "Page",
-    "block": "Block"
-  },
-  "save_page_template": {
-    "title": "Save page as template",
-    "name_label": "Name",
-    "name_placeholder": "My template",
-    "submit": "Save template",
-    "error": "Name is required",
-    "reminder": "Make sure your page is saved before creating a template."
-  },
-  "apply_page_template": {
-    "title": "Apply page template",
-    "warning": "This will overwrite all existing blocks in the current translation.",
-    "apply_button": "Apply"
-  },
-  "save_block_template": {
-    "title": "Save block as template",
-    "name_label": "Name",
-    "name_placeholder": "Hero section",
-    "submit": "Save template",
-    "exists_warning": "A template named \"{name}\" already exists for this block type. Do you want to overwrite it?",
-    "overwrite": "Overwrite",
-    "cancel": "Cancel"
-  },
-  "blocks": {
-    "section": {
-      "label": "Section",
-      "description": "Full-width container with background and spacing"
-    },
-    "grid": {
-      "label": "Grid",
-      "description": "Multi-column layout container"
-    },
-    "flex": {
-      "label": "Flex Container",
-      "description": "Flexible stack for aligning elements"
-    },
-    "title": {
-      "label": "Heading",
-      "description": "H1–H4 heading"
-    },
-    "paragraph": {
-      "label": "Paragraph",
-      "description": "Rich text paragraphs"
-    },
-    "button": {
-      "label": "Button",
-      "description": "Call-to-action button"
-    },
-    "separator": {
-      "label": "Separator",
-      "description": "Horizontal dividing line"
-    },
-    "icon": {
-      "label": "Icon",
-      "description": "Inline icon"
-    },
-    "form": {
-      "label": "Form",
-      "description": "Contact or submission form"
-    },
-    "field": {
-      "label": "Field",
-      "description": "Form input field"
-    },
-    "htmltext": {
-      "label": "HTML / Text",
-      "description": "Raw HTML or text block"
-    },
-    "image": {
-      "label": "Image",
-      "description": "Single image from the media library"
-    },
-    "video": {
-      "label": "Video",
-      "description": "Provider embed or direct video file"
-    },
-    "carousel": {
-      "label": "Carousel",
-      "description": "Slideshow of child blocks"
-    },
-    "list": {
-      "label": "List",
-      "description": "Bulleted or numbered list"
-    },
-    "quote": {
-      "label": "Quote",
-      "description": "Blockquote with attribution"
-    },
-    "iframe": {
-      "label": "Embed",
-      "description": "Allowlisted external embed (map, calendar…)"
-    }
-  }
+	"status": {
+		"value": "Status",
+		"draft": "Draft",
+		"published": "Published",
+		"archived": "Archived"
+	},
+	"mode": {
+		"editor": "Editor",
+		"split": "Split",
+		"preview": "Preview"
+	},
+	"toolbar": {
+		"apply_template": "Apply template",
+		"save_as_template": "Save as template",
+		"unpublish": "Unpublish",
+		"publish": "Publish",
+		"revisions": "Revisions"
+	},
+	"sidebar": {
+		"details": "Details",
+		"seo": "SEO"
+	},
+	"form": {
+		"title": {
+			"value": "Title",
+			"placeholder": "Title",
+			"slug_placeholder": "slug"
+		},
+		"meta_title": {
+			"value": "Meta title",
+			"placeholder": "Fallback to title"
+		},
+		"meta_description": {
+			"value": "Meta desc.",
+			"placeholder": "A short description shown in search results."
+		}
+	},
+	"save": {
+		"button": "Save",
+		"saving": "Saving…",
+		"saved": "Saved",
+		"retry": "Retry"
+	},
+	"locale": {
+		"add": "Add locale",
+		"new_translation": "New translation",
+		"select": "Select locale…",
+		"empty_content": "Empty content",
+		"copy_from": "Copy from {locale}",
+		"add_button": "Add"
+	},
+	"blocktree": {
+		"select_to_configure": "Select a block to configure",
+		"insert_template": "Insert template",
+		"add_block": "Add block",
+		"save_as_template": "Save as template"
+	},
+	"block_picker": {
+		"title": "Blocks",
+		"search_placeholder": "Search blocks…",
+		"no_results": "No blocks found."
+	},
+	"template_picker": {
+		"title": "Insert template",
+		"empty": "No templates found.",
+		"type_placeholder": "All",
+		"page": "Page",
+		"block": "Block"
+	},
+	"save_page_template": {
+		"title": "Save page as template",
+		"name_label": "Name",
+		"name_placeholder": "My template",
+		"submit": "Save template",
+		"error": "Name is required",
+		"reminder": "Make sure your page is saved before creating a template."
+	},
+	"apply_page_template": {
+		"title": "Apply page template",
+		"warning": "This will overwrite all existing blocks in the current translation.",
+		"apply_button": "Apply"
+	},
+	"save_block_template": {
+		"title": "Save block as template",
+		"name_label": "Name",
+		"name_placeholder": "Hero section",
+		"submit": "Save template",
+		"exists_warning": "A template named \"{name}\" already exists for this block type. Do you want to overwrite it?",
+		"overwrite": "Overwrite",
+		"cancel": "Cancel"
+	},
+	"blocks": {
+		"section": {
+			"label": "Section",
+			"description": "Full-width container with background and spacing"
+		},
+		"grid": {
+			"label": "Grid",
+			"description": "Multi-column layout container"
+		},
+		"flex": {
+			"label": "Flex Container",
+			"description": "Flexible stack for aligning elements"
+		},
+		"title": {
+			"label": "Heading",
+			"description": "H1–H4 heading"
+		},
+		"paragraph": {
+			"label": "Paragraph",
+			"description": "Rich text paragraphs"
+		},
+		"button": {
+			"label": "Button",
+			"description": "Call-to-action button"
+		},
+		"separator": {
+			"label": "Separator",
+			"description": "Horizontal dividing line"
+		},
+		"icon": {
+			"label": "Icon",
+			"description": "Inline icon"
+		},
+		"form": {
+			"label": "Form",
+			"description": "Contact or submission form"
+		},
+		"field": {
+			"label": "Field",
+			"description": "Form input field"
+		},
+		"htmltext": {
+			"label": "HTML / Text",
+			"description": "Raw HTML or text block"
+		},
+		"image": {
+			"label": "Image",
+			"description": "Single image from the media library"
+		},
+		"video": {
+			"label": "Video",
+			"description": "Provider embed or direct video file"
+		},
+		"carousel": {
+			"label": "Carousel",
+			"description": "Slideshow of child blocks"
+		},
+		"list": {
+			"label": "List",
+			"description": "Bulleted or numbered list"
+		},
+		"quote": {
+			"label": "Quote",
+			"description": "Blockquote with attribution"
+		},
+		"iframe": {
+			"label": "Embed",
+			"description": "Allowlisted external embed (map, calendar…)"
+		}
+	}
 }

@@ -1,5 +1,5 @@
-import { defineConfig } from 'vitest/config'
-import path from 'node:path'
+import path from 'node:path';
+import { defineConfig } from 'vitest/config';
 
 /**
  * Minimal Vitest setup for frontend seams: deterministic, framework-free
@@ -12,19 +12,15 @@ import path from 'node:path'
  * the Japa functional suite (`@japa/api-client`).
  */
 export default defineConfig({
-  resolve: {
-    alias: {
-      '~': path.resolve(__dirname, 'inertia'),
-      '@generated': path.resolve(__dirname, '.adonisjs/client'),
-      '#types': path.resolve(__dirname, 'app/types'),
-    },
-  },
-  test: {
-    environment: 'node',
-    include: [
-      'inertia/components/**/*.spec.ts',
-      'inertia/helpers/**/*.spec.ts',
-      'inertia/pages/**/*.spec.tsx',
-    ],
-  },
-})
+	resolve: {
+		alias: {
+			'~': path.resolve(__dirname, 'inertia'),
+			'@generated': path.resolve(__dirname, '.adonisjs/client'),
+			'#types': path.resolve(__dirname, 'app/types'),
+		},
+	},
+	test: {
+		environment: 'node',
+		include: ['inertia/components/**/*.spec.ts', 'inertia/helpers/**/*.spec.ts', 'inertia/pages/**/*.spec.tsx'],
+	},
+});

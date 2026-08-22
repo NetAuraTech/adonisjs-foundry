@@ -7,15 +7,15 @@ One action = one business operation. Lives in `app/domain/actions/{area}/{verb}_
 ## Structure
 
 ```typescript
-import { inject } from '@adonisjs/core'
-import type Result from '#models/some/model'
-import { SomeRepository } from '#repositories/some_repository'
-import { LogService } from '#services/logging/log_service'
-import { withTransaction } from '#shared/utils/with_transaction'
+import { inject } from '@adonisjs/core';
+import type Result from '#models/some/model';
+import { SomeRepository } from '#repositories/some_repository';
+import { LogService } from '#services/logging/log_service';
+import { withTransaction } from '#shared/utils/with_transaction';
 
 interface CreateSomethingPayload {
-  name: string
-  userId: number
+	name: string;
+	userId: number;
 }
 
 /**
@@ -26,27 +26,27 @@ interface CreateSomethingPayload {
  */
 @inject()
 export class CreateSomethingAction {
-  constructor(
-    protected repository: SomeRepository,
-    protected logService: LogService
-  ) {}
+	constructor(
+		protected repository: SomeRepository,
+		protected logService: LogService,
+	) {}
 
-  /**
-   * Execute the operation.
-   *
-   * @param payload - Description of the payload fields.
-   * @returns What is returned, including null/undefined semantics.
-   * @throws {TypedException} When and why.
-   *
-   * @example
-   * const result = await createSomethingAction.execute({ name: 'test', userId: 1 })
-   */
-  async execute(payload: CreateSomethingPayload): Promise<Result> {
-    // 1. validate / check invariants, throw typed exception if violated
-    // 2. delegate persistence to this.repository
-    // 3. this.logService.logBusiness/logAuth/logSecurity(event, { userId }, metadata?)
-    // 4. return a model, primitive, or void — never an HTTP response
-  }
+	/**
+	 * Execute the operation.
+	 *
+	 * @param payload - Description of the payload fields.
+	 * @returns What is returned, including null/undefined semantics.
+	 * @throws {TypedException} When and why.
+	 *
+	 * @example
+	 * const result = await createSomethingAction.execute({ name: 'test', userId: 1 })
+	 */
+	async execute(payload: CreateSomethingPayload): Promise<Result> {
+		// 1. validate / check invariants, throw typed exception if violated
+		// 2. delegate persistence to this.repository
+		// 3. this.logService.logBusiness/logAuth/logSecurity(event, { userId }, metadata?)
+		// 4. return a model, primitive, or void — never an HTTP response
+	}
 }
 ```
 

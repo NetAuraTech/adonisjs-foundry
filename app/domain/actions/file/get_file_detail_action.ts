@@ -1,9 +1,9 @@
-﻿import { inject } from '@adonisjs/core'
-import type CmsFile from '#models/file/file'
-import { FileRepository } from '#repositories/file/file_repository'
+﻿import { inject } from '@adonisjs/core';
+import { FileRepository } from '#repositories/file/file_repository';
+import type CmsFile from '#models/file/file';
 
 interface GetFileDetailPayload {
-  id: number
+	id: number;
 }
 
 /**
@@ -11,19 +11,19 @@ interface GetFileDetailPayload {
  */
 @inject()
 export class GetFileDetailAction {
-  constructor(protected fileRepository: FileRepository) {}
+	constructor(protected fileRepository: FileRepository) {}
 
-  /**
-   * Execute file detail lookup.
-   *
-   * @param payload - The file ID to retrieve.
-   * @returns The {@link CmsFile} with alts preloaded.
-   * @throws {Exception} With code `E_ROW_NOT_FOUND` if no record exists for the given id.
-   *
-   * @example
-   * const file = await getFileDetailAction.execute({ id: 1 })
-   */
-  async execute(payload: GetFileDetailPayload): Promise<CmsFile> {
-    return this.fileRepository.findByIdOrFail(payload.id)
-  }
+	/**
+	 * Execute file detail lookup.
+	 *
+	 * @param payload - The file ID to retrieve.
+	 * @returns The {@link CmsFile} with alts preloaded.
+	 * @throws {Exception} With code `E_ROW_NOT_FOUND` if no record exists for the given id.
+	 *
+	 * @example
+	 * const file = await getFileDetailAction.execute({ id: 1 })
+	 */
+	async execute(payload: GetFileDetailPayload): Promise<CmsFile> {
+		return this.fileRepository.findByIdOrFail(payload.id);
+	}
 }

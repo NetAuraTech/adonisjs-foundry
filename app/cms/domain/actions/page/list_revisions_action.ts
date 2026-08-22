@@ -1,12 +1,12 @@
-﻿import { inject } from '@adonisjs/core'
-import { PageRevisionRepository } from '#cms/domain/repositories/page/page_revision_repository'
-import type { PaginationFilters } from '#types/pagination'
-import { ModelPaginatorContract } from '@adonisjs/lucid/types/model'
-import PageRevision from '#cms/models/page/page_revision'
+﻿import { inject } from '@adonisjs/core';
+import { ModelPaginatorContract } from '@adonisjs/lucid/types/model';
+import { PageRevisionRepository } from '#cms/domain/repositories/page/page_revision_repository';
+import PageRevision from '#cms/models/page/page_revision';
+import type { PaginationFilters } from '#types/pagination';
 
 interface ListRevisionsPayload {
-  pageId: number
-  pagination: PaginationFilters
+	pageId: number;
+	pagination: PaginationFilters;
 }
 
 /**
@@ -14,15 +14,15 @@ interface ListRevisionsPayload {
  */
 @inject()
 export class ListRevisionsAction {
-  constructor(protected revisionRepository: PageRevisionRepository) {}
+	constructor(protected revisionRepository: PageRevisionRepository) {}
 
-  /**
-   * Execute revision listing.
-   *
-   * @param payload - Page ID and pagination filters.
-   * @returns Paginated list of revisions (newest first).
-   */
-  async execute(payload: ListRevisionsPayload): Promise<ModelPaginatorContract<PageRevision>> {
-    return this.revisionRepository.list(payload.pageId, payload.pagination)
-  }
+	/**
+	 * Execute revision listing.
+	 *
+	 * @param payload - Page ID and pagination filters.
+	 * @returns Paginated list of revisions (newest first).
+	 */
+	async execute(payload: ListRevisionsPayload): Promise<ModelPaginatorContract<PageRevision>> {
+		return this.revisionRepository.list(payload.pageId, payload.pagination);
+	}
 }

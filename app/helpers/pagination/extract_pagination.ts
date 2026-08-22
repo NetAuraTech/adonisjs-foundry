@@ -1,6 +1,6 @@
-import { type HttpContext } from '@adonisjs/core/http'
-import { DEFAULT_PAGINATION, type PaginationFilters } from '#types/pagination'
-import { paginationValidator } from '#validators/pagination'
+import { type HttpContext } from '@adonisjs/core/http';
+import { DEFAULT_PAGINATION, type PaginationFilters } from '#types/pagination';
+import { paginationValidator } from '#validators/pagination';
 
 /**
  * Extracts and validates pagination parameters from the request using a Vine schema.
@@ -31,13 +31,13 @@ import { paginationValidator } from '#validators/pagination'
  * ```
  */
 export async function extractPagination(
-  request: HttpContext['request'],
-  defaults: { page?: number; perPage?: number } = DEFAULT_PAGINATION
+	request: HttpContext['request'],
+	defaults: { page?: number; perPage?: number } = DEFAULT_PAGINATION,
 ): Promise<PaginationFilters> {
-  const payload = await paginationValidator.validate(request.only(['page', 'perPage']))
+	const payload = await paginationValidator.validate(request.only(['page', 'perPage']));
 
-  return {
-    page: payload.page ?? defaults.page ?? DEFAULT_PAGINATION.page,
-    perPage: payload.perPage ?? defaults.perPage ?? DEFAULT_PAGINATION.perPage,
-  }
+	return {
+		page: payload.page ?? defaults.page ?? DEFAULT_PAGINATION.page,
+		perPage: payload.perPage ?? defaults.perPage ?? DEFAULT_PAGINATION.perPage,
+	};
 }

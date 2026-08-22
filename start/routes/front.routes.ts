@@ -11,9 +11,9 @@
 |
 */
 
-import router from '@adonisjs/core/services/router'
-import { controllers } from '#generated/controllers'
+import router from '@adonisjs/core/services/router';
+import { controllers } from '#generated/controllers';
 
 export function registerFrontRoutes(): void {
-  router.get('/', [controllers.core.front.Home, 'render']).as('front.home')
+	router.get('/', [controllers.core.front.Home, 'render']).as('front.home');
 }

@@ -1,9 +1,9 @@
-import { ReactNode } from 'react'
-import { useAuth } from '~/hooks/use_auth'
+import { ReactNode } from 'react';
+import { useAuth } from '~/hooks/use_auth';
 
 interface AuthenticatedProps {
-  fallback?: ReactNode
-  children: ReactNode
+	fallback?: ReactNode;
+	children: ReactNode;
 }
 
 /**
@@ -25,7 +25,7 @@ interface AuthenticatedProps {
  * </Authenticated>
  */
 export function Authenticated({ fallback = null, children }: AuthenticatedProps) {
-  const { isAuthenticated } = useAuth()
+	const { isAuthenticated } = useAuth();
 
-  return isAuthenticated ? <>{children}</> : <>{fallback}</>
+	return isAuthenticated ? <>{children}</> : <>{fallback}</>;
 }

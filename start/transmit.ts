@@ -1,9 +1,9 @@
-import transmit from '@adonisjs/transmit/services/main'
-import { BuilderSessionService } from '#cms/domain/services/page/builder_session_service'
-import { permissions } from '#start/permissions'
-import app from '@adonisjs/core/services/app'
+import app from '@adonisjs/core/services/app';
+import transmit from '@adonisjs/transmit/services/main';
+import { BuilderSessionService } from '#cms/domain/services/page/builder_session_service';
+import { permissions } from '#start/permissions';
 
-transmit.registerRoutes()
+transmit.registerRoutes();
 
 /**
  * Transmit channel authorisation and lifecycle hooks.
@@ -31,42 +31,42 @@ transmit.registerRoutes()
  * and a `PRESENCE_JOINED` event is broadcast to all other subscribers.
  */
 transmit.authorize<{ pageId: string; translationId: string }>(
-  'admin/pages/:pageId/translations/:translationId',
-  async (ctx, params) => {
-    try {
-      await ctx.auth.authenticate()
-    } catch {
-      return false
-    }
+	'admin/pages/:pageId/translations/:translationId',
+	async (ctx, params) => {
+		try {
+			await ctx.auth.authenticate();
+		} catch {
+			return false;
+		}
 
-    const user = ctx.auth.user!
+		const user = ctx.auth.user!;
 
-    const canEdit = await user.can(permissions.pages.update)
-    if (!canEdit) return false
+		const canEdit = await user.can(permissions.pages.update);
+		if (!canEdit) return false;
 
-    const translationId = Number(params.translationId)
-    const pageId = Number(params.pageId)
+		const translationId = Number(params.translationId);
+		const pageId = Number(params.pageId);
 
-    if (Number.isNaN(translationId) || Number.isNaN(pageId)) return false
+		if (Number.isNaN(translationId) || Number.isNaN(pageId)) return false;
 
-    const sessionService = await app.container.make(BuilderSessionService)
-    const session = await sessionService.join(translationId, {
-      userId: user.id,
-      userName: user.username,
-      userEmail: user.email,
-    })
+		const sessionService = await app.container.make(BuilderSessionService);
+		const session = await sessionService.join(translationId, {
+			userId: user.id,
+			userName: user.username,
+			userEmail: user.email,
+		});
 
-    transmit.broadcast(`admin/pages/${pageId}/translations/${translationId}`, {
-      op: 'PRESENCE_JOINED',
-      userId: user.id,
-      userName: user.username,
-      userColor: session.color,
-      timestamp: new Date().toISOString(),
-    })
+		transmit.broadcast(`admin/pages/${pageId}/translations/${translationId}`, {
+			op: 'PRESENCE_JOINED',
+			userId: user.id,
+			userName: user.username,
+			userColor: session.color,
+			timestamp: new Date().toISOString(),
+		});
 
-    return true
-  }
-)
+		return true;
+	},
+);
 
 /**
  * Cleans up all locks and presence data when a client disconnects.
@@ -76,39 +76,39 @@ transmit.authorize<{ pageId: string; translationId: string }>(
  * subscribers so their UIs can unlock the affected fields immediately.
  */
 transmit.on('unsubscribe', async ({ channel, context }) => {
-  const channelPattern = /^admin\/pages\/(\d+)\/translations\/(\d+)$/
+	const channelPattern = /^admin\/pages\/(\d+)\/translations\/(\d+)$/;
 
-  const match = channel.match(channelPattern)
-  if (!match) return
+	const match = channel.match(channelPattern);
+	if (!match) return;
 
-  const pageId = Number(match[1])
-  const translationId = Number(match[2])
+	const pageId = Number(match[1]);
+	const translationId = Number(match[2]);
 
-  const userId = context.auth.user?.id
-  if (!userId) return
+	const userId = context.auth.user?.id;
+	if (!userId) return;
 
-  const sessionService = await app.container.make(BuilderSessionService)
+	const sessionService = await app.container.make(BuilderSessionService);
 
-  const releasedLocks = await sessionService.releaseAllLocks(translationId, userId)
+	const releasedLocks = await sessionService.releaseAllLocks(translationId, userId);
 
-  for (const lock of releasedLocks) {
-    transmit.broadcast(`admin/pages/${pageId}/translations/${translationId}`, {
-      op: 'LOCK_RELEASED',
-      blockId: lock.blockId,
-      fieldKey: lock.fieldKey,
-      userId,
-      timestamp: new Date().toISOString(),
-    })
-  }
+	for (const lock of releasedLocks) {
+		transmit.broadcast(`admin/pages/${pageId}/translations/${translationId}`, {
+			op: 'LOCK_RELEASED',
+			blockId: lock.blockId,
+			fieldKey: lock.fieldKey,
+			userId,
+			timestamp: new Date().toISOString(),
+		});
+	}
 
-  await sessionService.leave(translationId, userId)
+	await sessionService.leave(translationId, userId);
 
-  transmit.broadcast(`admin/pages/${pageId}/translations/${translationId}`, {
-    op: 'PRESENCE_LEFT',
-    userId,
-    timestamp: new Date().toISOString(),
-  })
-})
+	transmit.broadcast(`admin/pages/${pageId}/translations/${translationId}`, {
+		op: 'PRESENCE_LEFT',
+		userId,
+		timestamp: new Date().toISOString(),
+	});
+});
 
 /**
  * Subscribes to Redis key expiry events.

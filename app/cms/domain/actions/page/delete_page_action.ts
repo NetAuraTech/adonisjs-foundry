@@ -1,12 +1,12 @@
-import { inject } from '@adonisjs/core'
-import Page from '#cms/models/page/page'
-import { PageRepository } from '#cms/domain/repositories/page/page_repository'
-import { LogService } from '#services/logging/log_service'
-import RowNotFoundException from '#exceptions/core/row_not_found_exception'
-import { withTransaction } from '#shared/utils/with_transaction'
+import { inject } from '@adonisjs/core';
+import { PageRepository } from '#cms/domain/repositories/page/page_repository';
+import Page from '#cms/models/page/page';
+import RowNotFoundException from '#exceptions/core/row_not_found_exception';
+import { LogService } from '#services/logging/log_service';
+import { withTransaction } from '#shared/utils/with_transaction';
 
 interface DeletePagePayload {
-  id: number
+	id: number;
 }
 
 /**
@@ -14,27 +14,27 @@ interface DeletePagePayload {
  */
 @inject()
 export class DeletePageAction {
-  constructor(
-    protected pageRepository: PageRepository,
-    protected logService: LogService
-  ) {}
+	constructor(
+		protected pageRepository: PageRepository,
+		protected logService: LogService,
+	) {}
 
-  /**
-   * Execute page deletion.
-   *
-   * @param payload - The page ID to delete.
-   * @throws {RowNotFoundException} When the page does not exist.
-   */
-  async execute(payload: DeletePagePayload): Promise<void> {
-    const page = await this.pageRepository.findById(payload.id)
+	/**
+	 * Execute page deletion.
+	 *
+	 * @param payload - The page ID to delete.
+	 * @throws {RowNotFoundException} When the page does not exist.
+	 */
+	async execute(payload: DeletePagePayload): Promise<void> {
+		const page = await this.pageRepository.findById(payload.id);
 
-    if (!page) {
-      throw new RowNotFoundException(Page)
-    }
+		if (!page) {
+			throw new RowNotFoundException(Page);
+		}
 
-    await withTransaction(async () => this.pageRepository.delete(payload.id))
+		await withTransaction(async () => this.pageRepository.delete(payload.id));
 
-    // Log only after the deletion actually succeeded.
-    this.logService.logBusiness('page.deleted', {}, { pageId: payload.id })
-  }
+		// Log only after the deletion actually succeeded.
+		this.logService.logBusiness('page.deleted', {}, { pageId: payload.id });
+	}
 }

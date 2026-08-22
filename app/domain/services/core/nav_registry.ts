@@ -1,4 +1,4 @@
-import type { AdminNavEntry } from '#types/nav'
+import type { AdminNavEntry } from '#types/nav';
 
 /**
  * Registry of admin navigation entries.
@@ -11,26 +11,26 @@ import type { AdminNavEntry } from '#types/nav'
  * sidebar without touching kept code.
  */
 export class NavRegistry {
-  private domains = new Map<string, AdminNavEntry[]>()
+	private domains = new Map<string, AdminNavEntry[]>();
 
-  /**
-   * Register the navigation entries of a domain. Registering the same
-   * domain twice replaces its previous entries.
-   *
-   * @param domain - Domain identifier (used as the replacement key only).
-   * @param entries - Entries contributed by the domain, in sidebar order.
-   *
-   * @example
-   * registry.register('auth', authNavEntries)
-   */
-  register(domain: string, entries: AdminNavEntry[]): void {
-    this.domains.set(domain, entries)
-  }
+	/**
+	 * Register the navigation entries of a domain. Registering the same
+	 * domain twice replaces its previous entries.
+	 *
+	 * @param domain - Domain identifier (used as the replacement key only).
+	 * @param entries - Entries contributed by the domain, in sidebar order.
+	 *
+	 * @example
+	 * registry.register('auth', authNavEntries)
+	 */
+	register(domain: string, entries: AdminNavEntry[]): void {
+		this.domains.set(domain, entries);
+	}
 
-  /**
-   * List the registered domains and their entries, in registration order.
-   */
-  entries(): [string, AdminNavEntry[]][] {
-    return [...this.domains.entries()]
-  }
+	/**
+	 * List the registered domains and their entries, in registration order.
+	 */
+	entries(): [string, AdminNavEntry[]][] {
+		return [...this.domains.entries()];
+	}
 }

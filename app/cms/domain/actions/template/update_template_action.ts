@@ -1,16 +1,16 @@
-﻿import { inject } from '@adonisjs/core'
-import type Template from '#cms/models/template/template'
-import { TemplateRepository } from '#cms/domain/repositories/template/template_repository'
-import { withTransaction } from '#shared/utils/with_transaction'
-import type { BlockType, PageContent } from '#cms/types/page'
+﻿import { inject } from '@adonisjs/core';
+import { TemplateRepository } from '#cms/domain/repositories/template/template_repository';
+import { withTransaction } from '#shared/utils/with_transaction';
+import type Template from '#cms/models/template/template';
+import type { BlockType, PageContent } from '#cms/types/page';
 
 interface UpdateTemplatePayload {
-  id: number
-  name?: string
-  description?: string | null
-  thumbnailId?: number | null
-  content?: PageContent
-  blockType?: BlockType | null
+	id: number;
+	name?: string;
+	description?: string | null;
+	thumbnailId?: number | null;
+	content?: PageContent;
+	blockType?: BlockType | null;
 }
 
 /**
@@ -18,31 +18,31 @@ interface UpdateTemplatePayload {
  */
 @inject()
 export class UpdateTemplateAction {
-  constructor(protected templateRepository: TemplateRepository) {}
+	constructor(protected templateRepository: TemplateRepository) {}
 
-  /**
-   * Execute template update.
-   *
-   * @param payload - Template ID and fields to update.
-   * @returns The updated {@link Template}.
-   */
-  async execute(payload: UpdateTemplatePayload): Promise<Template> {
-    const template = await this.templateRepository.findByIdOrFail(payload.id)
-    const data: Partial<{
-      name: string
-      description: string | null
-      thumbnailId: number | null
-      content: PageContent
-      blockType: BlockType | null
-    }> = {}
-    if (payload.name !== undefined) data.name = payload.name
-    if (payload.description !== undefined) data.description = payload.description
-    if (payload.thumbnailId !== undefined) data.thumbnailId = payload.thumbnailId
-    if (payload.content !== undefined) data.content = payload.content
-    if (payload.blockType !== undefined) data.blockType = payload.blockType
+	/**
+	 * Execute template update.
+	 *
+	 * @param payload - Template ID and fields to update.
+	 * @returns The updated {@link Template}.
+	 */
+	async execute(payload: UpdateTemplatePayload): Promise<Template> {
+		const template = await this.templateRepository.findByIdOrFail(payload.id);
+		const data: Partial<{
+			name: string;
+			description: string | null;
+			thumbnailId: number | null;
+			content: PageContent;
+			blockType: BlockType | null;
+		}> = {};
+		if (payload.name !== undefined) data.name = payload.name;
+		if (payload.description !== undefined) data.description = payload.description;
+		if (payload.thumbnailId !== undefined) data.thumbnailId = payload.thumbnailId;
+		if (payload.content !== undefined) data.content = payload.content;
+		if (payload.blockType !== undefined) data.blockType = payload.blockType;
 
-    return withTransaction(async () => {
-      return this.templateRepository.update(template, data)
-    })
-  }
+		return withTransaction(async () => {
+			return this.templateRepository.update(template, data);
+		});
+	}
 }

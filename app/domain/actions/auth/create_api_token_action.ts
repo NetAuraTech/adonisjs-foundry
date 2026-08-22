@@ -1,16 +1,16 @@
-import { inject } from '@adonisjs/core'
-import User from '#models/auth/user'
-import { LogService } from '#services/logging/log_service'
-import { UserRepository } from '#repositories/auth/user_repository'
+import { inject } from '@adonisjs/core';
+import User from '#models/auth/user';
+import { UserRepository } from '#repositories/auth/user_repository';
+import { LogService } from '#services/logging/log_service';
 
 interface CreateApiTokenPayload {
-  user: User
+	user: User;
 }
 
 export interface ApiTokenResult {
-  /** Plain-text token secret — only available once, at creation time. */
-  token: string
-  expiresAt: Date | null
+	/** Plain-text token secret — only available once, at creation time. */
+	token: string;
+	expiresAt: Date | null;
 }
 
 /**
@@ -21,26 +21,26 @@ export interface ApiTokenResult {
  */
 @inject()
 export class CreateApiTokenAction {
-  constructor(
-    protected logService: LogService,
-    protected userRepository: UserRepository
-  ) {}
+	constructor(
+		protected logService: LogService,
+		protected userRepository: UserRepository,
+	) {}
 
-  /**
-   * @param payload - The user the token authenticates.
-   * @returns The token secret (available only once) and its expiry.
-   */
-  async execute(payload: CreateApiTokenPayload): Promise<ApiTokenResult> {
-    const token = await this.userRepository.createAccessToken(payload.user)
+	/**
+	 * @param payload - The user the token authenticates.
+	 * @returns The token secret (available only once) and its expiry.
+	 */
+	async execute(payload: CreateApiTokenPayload): Promise<ApiTokenResult> {
+		const token = await this.userRepository.createAccessToken(payload.user);
 
-    this.logService.logAuth('api_token.issued', {
-      userId: payload.user.id,
-      userEmail: payload.user.email,
-    })
+		this.logService.logAuth('api_token.issued', {
+			userId: payload.user.id,
+			userEmail: payload.user.email,
+		});
 
-    return {
-      token: token.value!.release(),
-      expiresAt: token.expiresAt,
-    }
-  }
+		return {
+			token: token.value!.release(),
+			expiresAt: token.expiresAt,
+		};
+	}
 }

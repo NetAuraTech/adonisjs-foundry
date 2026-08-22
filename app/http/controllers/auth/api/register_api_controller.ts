@@ -1,11 +1,11 @@
-import type { HttpContext } from '@adonisjs/core/http'
-import { inject } from '@adonisjs/core'
-import { registerValidator } from '#validators/auth'
-import { I18nService } from '#services/i18n_service'
-import { preloadUserRoleWithPermissions } from '#helpers/auth/load_user_role'
-import { RegisterUserAction } from '#actions/auth/register_user_action'
-import { SendEmailVerificationAction } from '#actions/email_verification/send_email_verification_action'
-import UserTransformer from '#transformers/user_transformer'
+import { inject } from '@adonisjs/core';
+import { RegisterUserAction } from '#actions/auth/register_user_action';
+import { SendEmailVerificationAction } from '#actions/email_verification/send_email_verification_action';
+import { preloadUserRoleWithPermissions } from '#helpers/auth/load_user_role';
+import { I18nService } from '#services/i18n_service';
+import UserTransformer from '#transformers/user_transformer';
+import { registerValidator } from '#validators/auth';
+import type { HttpContext } from '@adonisjs/core/http';
 
 /**
  * POST /api/v1/auth/register — public self-registration for API clients.
@@ -13,31 +13,31 @@ import UserTransformer from '#transformers/user_transformer'
  */
 @inject()
 export default class RegisterApiController {
-  constructor(
-    protected i18n: I18nService,
-    protected registerUserAction: RegisterUserAction,
-    protected sendEmailVerificationAction: SendEmailVerificationAction
-  ) {}
+	constructor(
+		protected i18n: I18nService,
+		protected registerUserAction: RegisterUserAction,
+		protected sendEmailVerificationAction: SendEmailVerificationAction,
+	) {}
 
-  /**
-   * Register a new user and dispatch the email-verification flow.
-   */
-  async store(ctx: HttpContext) {
-    const { request, response, serialize } = ctx
+	/**
+	 * Register a new user and dispatch the email-verification flow.
+	 */
+	async store(ctx: HttpContext) {
+		const { request, response, serialize } = ctx;
 
-    const payload = await registerValidator.validate(request.all())
+		const payload = await registerValidator.validate(request.all());
 
-    const user = await this.registerUserAction.execute({
-      ...payload,
-      locale: this.i18n.getLocale(),
-    })
+		const user = await this.registerUserAction.execute({
+			...payload,
+			locale: this.i18n.getLocale(),
+		});
 
-    await this.sendEmailVerificationAction.execute({ user })
+		await this.sendEmailVerificationAction.execute({ user });
 
-    await preloadUserRoleWithPermissions(user)
+		await preloadUserRoleWithPermissions(user);
 
-    const serialized = await serialize(UserTransformer.transform(user))
+		const serialized = await serialize(UserTransformer.transform(user));
 
-    return response.created(serialized)
-  }
+		return response.created(serialized);
+	}
 }

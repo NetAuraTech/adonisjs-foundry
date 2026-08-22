@@ -1,28 +1,28 @@
-import type { ResolvedBlock } from '#cms/types/page'
-import { Fragment } from 'react'
-import ReactMarkdown from 'react-markdown'
-import rehypeRaw from 'rehype-raw'
+import { Fragment } from 'react';
+import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
+import type { ResolvedBlock } from '#cms/types/page';
 
 interface HtmlTextBlockProps {
-  block: ResolvedBlock<'htmltext'>
+	block: ResolvedBlock<'htmltext'>;
 }
 
 /**
  * Renders a HTML text.
  */
 export default function HtmlTextBlock({ block }: HtmlTextBlockProps) {
-  const { content } = block.props
+	const { content } = block.props;
 
-  return (
-    <ReactMarkdown
-      rehypePlugins={[rehypeRaw]}
-      components={{
-        em: ({ node, ...props }) => <em className="text-secondary" {...props} />,
-        strong: ({ node, ...props }) => <strong {...props} />,
-        p: Fragment,
-      }}
-    >
-      {content}
-    </ReactMarkdown>
-  )
+	return (
+		<ReactMarkdown
+			rehypePlugins={[rehypeRaw]}
+			components={{
+				em: ({ node, ...props }) => <em className="text-secondary" {...props} />,
+				strong: ({ node, ...props }) => <strong {...props} />,
+				p: Fragment,
+			}}
+		>
+			{content}
+		</ReactMarkdown>
+	);
 }

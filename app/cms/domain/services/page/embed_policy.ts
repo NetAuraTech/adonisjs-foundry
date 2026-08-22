@@ -1,5 +1,5 @@
-import cmsConfig from '#config/cms'
-import type { VideoProvider } from '#cms/types/page'
+import cmsConfig from '#config/cms';
+import type { VideoProvider } from '#cms/types/page';
 
 /**
  * Embed policy for media blocks (`video`, `iframe`).
@@ -11,12 +11,11 @@ import type { VideoProvider } from '#cms/types/page'
  * ends of the content lifecycle.
  */
 
-export type VideoSource =
-  { kind: 'embed'; provider: VideoProvider; embedUrl: string } | { kind: 'file'; url: string }
+export type VideoSource = { kind: 'embed'; provider: VideoProvider; embedUrl: string } | { kind: 'file'; url: string };
 
-const YOUTUBE_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/
-const VIMEO_ID_PATTERN = /^\d+$/
-const DIRECT_VIDEO_EXTENSIONS = ['.mp4', '.webm', '.ogg', '.mov']
+const YOUTUBE_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/;
+const VIMEO_ID_PATTERN = /^\d+$/;
+const DIRECT_VIDEO_EXTENSIONS = ['.mp4', '.webm', '.ogg', '.mov'];
 
 /**
  * CSP `frame-src` hosts required by each provider's embed player.
@@ -24,65 +23,65 @@ const DIRECT_VIDEO_EXTENSIONS = ['.mp4', '.webm', '.ogg', '.mov']
  * the CSP in sync with the enabled providers.
  */
 const PROVIDER_EMBED_HOSTS: Record<VideoProvider, string[]> = {
-  youtube: ['https://www.youtube-nocookie.com', 'https://www.youtube.com'],
-  vimeo: ['https://player.vimeo.com'],
-}
+	youtube: ['https://www.youtube-nocookie.com', 'https://www.youtube.com'],
+	vimeo: ['https://player.vimeo.com'],
+};
 
 function parseUrl(raw: string): URL | null {
-  try {
-    return new URL(raw)
-  } catch {
-    return null
-  }
+	try {
+		return new URL(raw);
+	} catch {
+		return null;
+	}
 }
 
 function isLocalhostHost(hostname: string): boolean {
-  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]'
+	return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]';
 }
 
 function extractYouTubeId(url: URL): string | null {
-  const host = url.hostname.toLowerCase()
+	const host = url.hostname.toLowerCase();
 
-  if (host === 'youtu.be') {
-    const id = url.pathname.split('/')[1] ?? ''
-    return YOUTUBE_ID_PATTERN.test(id) ? id : null
-  }
+	if (host === 'youtu.be') {
+		const id = url.pathname.split('/')[1] ?? '';
+		return YOUTUBE_ID_PATTERN.test(id) ? id : null;
+	}
 
-  if (host === 'youtube.com' || host.endsWith('.youtube.com')) {
-    if (url.pathname === '/watch') {
-      const id = url.searchParams.get('v') ?? ''
-      return YOUTUBE_ID_PATTERN.test(id) ? id : null
-    }
-    const segments = url.pathname.split('/').filter(Boolean)
-    if (segments[0] === 'embed' || segments[0] === 'shorts') {
-      const id = segments[1] ?? ''
-      return YOUTUBE_ID_PATTERN.test(id) ? id : null
-    }
-  }
+	if (host === 'youtube.com' || host.endsWith('.youtube.com')) {
+		if (url.pathname === '/watch') {
+			const id = url.searchParams.get('v') ?? '';
+			return YOUTUBE_ID_PATTERN.test(id) ? id : null;
+		}
+		const segments = url.pathname.split('/').filter(Boolean);
+		if (segments[0] === 'embed' || segments[0] === 'shorts') {
+			const id = segments[1] ?? '';
+			return YOUTUBE_ID_PATTERN.test(id) ? id : null;
+		}
+	}
 
-  return null
+	return null;
 }
 
 function extractVimeoId(url: URL): string | null {
-  const host = url.hostname.toLowerCase()
-  const segments = url.pathname.split('/').filter(Boolean)
+	const host = url.hostname.toLowerCase();
+	const segments = url.pathname.split('/').filter(Boolean);
 
-  if (host === 'player.vimeo.com' && segments[0] === 'video') {
-    const id = segments[1] ?? ''
-    return VIMEO_ID_PATTERN.test(id) ? id : null
-  }
+	if (host === 'player.vimeo.com' && segments[0] === 'video') {
+		const id = segments[1] ?? '';
+		return VIMEO_ID_PATTERN.test(id) ? id : null;
+	}
 
-  if (host === 'vimeo.com' || host.endsWith('.vimeo.com')) {
-    const id = segments[0] ?? ''
-    return VIMEO_ID_PATTERN.test(id) ? id : null
-  }
+	if (host === 'vimeo.com' || host.endsWith('.vimeo.com')) {
+		const id = segments[0] ?? '';
+		return VIMEO_ID_PATTERN.test(id) ? id : null;
+	}
 
-  return null
+	return null;
 }
 
 function hasDirectVideoExtension(pathname: string): boolean {
-  const lower = pathname.toLowerCase()
-  return DIRECT_VIDEO_EXTENSIONS.some((ext) => lower.endsWith(ext))
+	const lower = pathname.toLowerCase();
+	return DIRECT_VIDEO_EXTENSIONS.some((ext) => lower.endsWith(ext));
 }
 
 /**
@@ -105,43 +104,43 @@ function hasDirectVideoExtension(pathname: string): boolean {
  * // null — vimeo not enabled
  */
 export function classifyVideoUrl(
-  raw: string,
-  providers: readonly VideoProvider[] = cmsConfig.videoProviders
+	raw: string,
+	providers: readonly VideoProvider[] = cmsConfig.videoProviders,
 ): VideoSource | null {
-  // Same-origin relative URLs are only ever direct files.
-  if (raw.startsWith('/')) {
-    return hasDirectVideoExtension(raw) ? { kind: 'file', url: raw } : null
-  }
+	// Same-origin relative URLs are only ever direct files.
+	if (raw.startsWith('/')) {
+		return hasDirectVideoExtension(raw) ? { kind: 'file', url: raw } : null;
+	}
 
-  const url = parseUrl(raw)
-  if (!url) return null
-  if (url.protocol !== 'https:' && !(url.protocol === 'http:' && isLocalhostHost(url.hostname))) {
-    return null
-  }
+	const url = parseUrl(raw);
+	if (!url) return null;
+	if (url.protocol !== 'https:' && !(url.protocol === 'http:' && isLocalhostHost(url.hostname))) {
+		return null;
+	}
 
-  if (providers.includes('youtube')) {
-    const id = extractYouTubeId(url)
-    if (id) {
-      return {
-        kind: 'embed',
-        provider: 'youtube',
-        embedUrl: `https://www.youtube-nocookie.com/embed/${id}`,
-      }
-    }
-  }
+	if (providers.includes('youtube')) {
+		const id = extractYouTubeId(url);
+		if (id) {
+			return {
+				kind: 'embed',
+				provider: 'youtube',
+				embedUrl: `https://www.youtube-nocookie.com/embed/${id}`,
+			};
+		}
+	}
 
-  if (providers.includes('vimeo')) {
-    const id = extractVimeoId(url)
-    if (id) {
-      return { kind: 'embed', provider: 'vimeo', embedUrl: `https://player.vimeo.com/video/${id}` }
-    }
-  }
+	if (providers.includes('vimeo')) {
+		const id = extractVimeoId(url);
+		if (id) {
+			return { kind: 'embed', provider: 'vimeo', embedUrl: `https://player.vimeo.com/video/${id}` };
+		}
+	}
 
-  if (hasDirectVideoExtension(url.pathname)) {
-    return { kind: 'file', url: raw }
-  }
+	if (hasDirectVideoExtension(url.pathname)) {
+		return { kind: 'file', url: raw };
+	}
 
-  return null
+	return null;
 }
 
 /**
@@ -160,21 +159,18 @@ export function classifyVideoUrl(
  * isAllowedIframeUrl('https://maps.example.com/embed', ['example.com']) // true
  * isAllowedIframeUrl('https://example.com.evil.com', ['example.com']) // false
  */
-export function isAllowedIframeUrl(
-  raw: string,
-  allowlist: readonly string[] = cmsConfig.iframeAllowlist
-): boolean {
-  const url = parseUrl(raw)
-  if (!url) return false
-  if (url.protocol !== 'https:' && !(url.protocol === 'http:' && isLocalhostHost(url.hostname))) {
-    return false
-  }
+export function isAllowedIframeUrl(raw: string, allowlist: readonly string[] = cmsConfig.iframeAllowlist): boolean {
+	const url = parseUrl(raw);
+	if (!url) return false;
+	if (url.protocol !== 'https:' && !(url.protocol === 'http:' && isLocalhostHost(url.hostname))) {
+		return false;
+	}
 
-  const hostname = url.hostname.toLowerCase()
-  return allowlist.some((entry) => {
-    const allowed = entry.trim().toLowerCase()
-    return allowed !== '' && (hostname === allowed || hostname.endsWith(`.${allowed}`))
-  })
+	const hostname = url.hostname.toLowerCase();
+	return allowlist.some((entry) => {
+		const allowed = entry.trim().toLowerCase();
+		return allowed !== '' && (hostname === allowed || hostname.endsWith(`.${allowed}`));
+	});
 }
 
 /**
@@ -185,8 +181,6 @@ export function isAllowedIframeUrl(
  * @param providers - Enabled providers, defaults to `cmsConfig.videoProviders`.
  * @returns Fully-qualified origins (e.g. `https://player.vimeo.com`).
  */
-export function getEmbedFrameSources(
-  providers: readonly VideoProvider[] = cmsConfig.videoProviders
-): string[] {
-  return providers.flatMap((provider) => PROVIDER_EMBED_HOSTS[provider] ?? [])
+export function getEmbedFrameSources(providers: readonly VideoProvider[] = cmsConfig.videoProviders): string[] {
+	return providers.flatMap((provider) => PROVIDER_EMBED_HOSTS[provider] ?? []);
 }

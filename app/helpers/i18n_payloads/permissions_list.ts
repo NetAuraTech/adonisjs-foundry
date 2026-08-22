@@ -1,11 +1,7 @@
-import type { BuildPayloadResult, I18nService } from '#services/i18n_service'
-import type Permission from '#models/auth/permission'
-import { createI18nEntry } from '#services/i18n_service'
-import {
-  nestTranslation,
-  permissionCategoryKey,
-  type TranslationNodes,
-} from '#helpers/i18n_payloads/nest'
+import { nestTranslation, permissionCategoryKey, type TranslationNodes } from '#helpers/i18n_payloads/nest';
+import { createI18nEntry } from '#services/i18n_service';
+import type Permission from '#models/auth/permission';
+import type { BuildPayloadResult, I18nService } from '#services/i18n_service';
 
 /**
  * The flat i18n key mapping for the permissions listing page. The per-permission
@@ -13,27 +9,27 @@ import {
  * time, one entry per data-driven slug.
  */
 export const PERMISSIONS_LIST_MAPPING = {
-  title: 'admin.permissions.list.title',
-  create: { title: 'admin.permissions.create.title' },
-  table: {
-    name: 'admin.permissions.table.name',
-    slug: 'admin.permissions.table.slug',
-    description: 'admin.permissions.table.description',
-  },
-  actions: {
-    value: 'admin.permissions.actions',
-    edit: createI18nEntry('admin.permissions.edit.title', { name: '{name}' }),
-    delete: createI18nEntry('admin.permissions.delete.title', { name: '{name}' }),
-  },
-  delete: {
-    confirm: createI18nEntry('admin.permissions.delete.confirm', { name: '{name}' }),
-  },
-  system: {
-    value: 'admin.permissions.system.value',
-    hint: 'admin.permissions.system.hint',
-  },
-  empty: 'admin.permissions.empty',
-}
+	title: 'admin.permissions.list.title',
+	create: { title: 'admin.permissions.create.title' },
+	table: {
+		name: 'admin.permissions.table.name',
+		slug: 'admin.permissions.table.slug',
+		description: 'admin.permissions.table.description',
+	},
+	actions: {
+		value: 'admin.permissions.actions',
+		edit: createI18nEntry('admin.permissions.edit.title', { name: '{name}' }),
+		delete: createI18nEntry('admin.permissions.delete.title', { name: '{name}' }),
+	},
+	delete: {
+		confirm: createI18nEntry('admin.permissions.delete.confirm', { name: '{name}' }),
+	},
+	system: {
+		value: 'admin.permissions.system.value',
+		hint: 'admin.permissions.system.hint',
+	},
+	empty: 'admin.permissions.empty',
+};
 
 /**
  * Shape of the resolved translation payload for the permissions listing page:
@@ -42,12 +38,10 @@ export const PERMISSIONS_LIST_MAPPING = {
  * resolved by the `permissions` lang namespace, custom permissions store plain
  * strings returned unchanged by `i18n.t()`.
  */
-export type AdminPermissionsIndexTranslations = BuildPayloadResult<
-  typeof PERMISSIONS_LIST_MAPPING
-> & {
-  categories: TranslationNodes
-  items: TranslationNodes
-}
+export type AdminPermissionsIndexTranslations = BuildPayloadResult<typeof PERMISSIONS_LIST_MAPPING> & {
+	categories: TranslationNodes;
+	items: TranslationNodes;
+};
 
 /**
  * Builds the translation payload for the permissions listing page.
@@ -61,23 +55,23 @@ export type AdminPermissionsIndexTranslations = BuildPayloadResult<
  * @returns The permissions listing `t` object with every UI string resolved.
  */
 export function buildPermissionsListPayload(
-  i18n: I18nService,
-  permissions: Permission[]
+	i18n: I18nService,
+	permissions: Permission[],
 ): AdminPermissionsIndexTranslations {
-  const categories: TranslationNodes = {}
-  const items: TranslationNodes = {}
+	const categories: TranslationNodes = {};
+	const items: TranslationNodes = {};
 
-  for (const permission of permissions) {
-    nestTranslation(categories, permissionCategoryKey(permission.category), permission.category)
-    nestTranslation(items, permission.slug, {
-      value: permission.name,
-      description: permission.description ?? '',
-    })
-  }
+	for (const permission of permissions) {
+		nestTranslation(categories, permissionCategoryKey(permission.category), permission.category);
+		nestTranslation(items, permission.slug, {
+			value: permission.name,
+			description: permission.description ?? '',
+		});
+	}
 
-  return i18n.buildPayload({
-    ...PERMISSIONS_LIST_MAPPING,
-    categories,
-    items,
-  })
+	return i18n.buildPayload({
+		...PERMISSIONS_LIST_MAPPING,
+		categories,
+		items,
+	});
 }

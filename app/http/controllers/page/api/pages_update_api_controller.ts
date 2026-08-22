@@ -1,7 +1,7 @@
-import { inject } from '@adonisjs/core'
-import { type HttpContext } from '@adonisjs/core/http'
-import PagesResource from '#rest/pages_resource'
-import { handle } from '#rest/rest_adapter'
+import { inject } from '@adonisjs/core';
+import { type HttpContext } from '@adonisjs/core/http';
+import PagesResource from '#rest/pages_resource';
+import { handle } from '#rest/rest_adapter';
 
 /**
  * PUT  /api/v1/admin/pages/:id — update a page
@@ -14,17 +14,17 @@ import { handle } from '#rest/rest_adapter'
  */
 @inject()
 export default class PagesUpdateApiController {
-  constructor(protected pagesResource: PagesResource) {}
+	constructor(protected pagesResource: PagesResource) {}
 
-  async update(ctx: HttpContext): Promise<void> {
-    await handle(ctx, this.pagesResource.endpoints.update)
-  }
+	async update(ctx: HttpContext): Promise<void> {
+		await handle(ctx, this.pagesResource.endpoints.update);
+	}
 
-  async publish(ctx: HttpContext): Promise<void> {
-    await handle(ctx, this.pagesResource.endpoints.publish)
-  }
+	async publish(ctx: HttpContext): Promise<void> {
+		await handle(ctx, this.pagesResource.endpoints.publish);
+	}
 
-  async unpublish(ctx: HttpContext): Promise<void> {
-    await handle(ctx, this.pagesResource.endpoints.unpublish)
-  }
+	async unpublish(ctx: HttpContext): Promise<void> {
+		await handle(ctx, this.pagesResource.endpoints.unpublish);
+	}
 }

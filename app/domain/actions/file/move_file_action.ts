@@ -1,11 +1,11 @@
-﻿import { inject } from '@adonisjs/core'
-import type CmsFile from '#models/file/file'
-import { FileRepository } from '#repositories/file/file_repository'
-import { withTransaction } from '#shared/utils/with_transaction'
+﻿import { inject } from '@adonisjs/core';
+import { FileRepository } from '#repositories/file/file_repository';
+import { withTransaction } from '#shared/utils/with_transaction';
+import type CmsFile from '#models/file/file';
 
 interface MoveFilePayload {
-  id: number
-  folderId: number | null
+	id: number;
+	folderId: number | null;
 }
 
 /**
@@ -13,19 +13,19 @@ interface MoveFilePayload {
  */
 @inject()
 export class MoveFileAction {
-  constructor(protected fileRepository: FileRepository) {}
+	constructor(protected fileRepository: FileRepository) {}
 
-  /**
-   * Execute file move.
-   *
-   * @param payload - File ID and target folder ID (null for root).
-   * @returns The updated {@link CmsFile}.
-   */
-  async execute(payload: MoveFilePayload): Promise<CmsFile> {
-    const file = await this.fileRepository.findByIdOrFail(payload.id)
+	/**
+	 * Execute file move.
+	 *
+	 * @param payload - File ID and target folder ID (null for root).
+	 * @returns The updated {@link CmsFile}.
+	 */
+	async execute(payload: MoveFilePayload): Promise<CmsFile> {
+		const file = await this.fileRepository.findByIdOrFail(payload.id);
 
-    return withTransaction(async () => {
-      return this.fileRepository.update(file, { folderId: payload.folderId })
-    })
-  }
+		return withTransaction(async () => {
+			return this.fileRepository.update(file, { folderId: payload.folderId });
+		});
+	}
 }

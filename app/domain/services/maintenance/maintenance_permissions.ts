@@ -1,4 +1,4 @@
-import type { PermissionSlugs } from '#types/permissions'
+import type { PermissionSlugs } from '#types/permissions';
 
 /**
  * System permission catalog of the maintenance domain: the maintenance-mode
@@ -8,8 +8,8 @@ import type { PermissionSlugs } from '#types/permissions'
  * from this const; the permission seeder persists exactly this matrix.
  */
 export const maintenancePermissionCatalog = {
-  settings: ['maintenance'],
-} as const
+	settings: ['maintenance'],
+} as const;
 
 /** Union of every system permission slug owned by the maintenance domain. */
-export type MaintenancePermissionSlug = PermissionSlugs<typeof maintenancePermissionCatalog>
+export type MaintenancePermissionSlug = PermissionSlugs<typeof maintenancePermissionCatalog>;

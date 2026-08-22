@@ -1,7 +1,7 @@
-import { type HttpContext } from '@adonisjs/core/http'
-import { type PaginationFilters } from '#types/pagination'
-import { extractPagination } from '#helpers/pagination/extract_pagination'
-import { stripEmptyStrings } from '#helpers/core/strip_empty_strings'
+import { type HttpContext } from '@adonisjs/core/http';
+import { stripEmptyStrings } from '#helpers/core/strip_empty_strings';
+import { extractPagination } from '#helpers/pagination/extract_pagination';
+import { type PaginationFilters } from '#types/pagination';
 
 /**
  * Input handed to every endpoint step: the raw request, the route params, the
@@ -9,10 +9,10 @@ import { stripEmptyStrings } from '#helpers/core/strip_empty_strings'
  * pagination filters.
  */
 export interface RestEndpointContext {
-  request: HttpContext['request']
-  params: HttpContext['params']
-  auth: HttpContext['auth']
-  pagination?: PaginationFilters
+	request: HttpContext['request'];
+	params: HttpContext['params'];
+	auth: HttpContext['auth'];
+	pagination?: PaginationFilters;
 }
 
 /**
@@ -22,7 +22,7 @@ export interface RestEndpointContext {
  * static validators and validator factories plug in directly.
  */
 export interface RestValidator<Payload> {
-  validate(data: unknown): Promise<Payload>
+	validate(data: unknown): Promise<Payload>;
 }
 
 /**
@@ -30,8 +30,8 @@ export interface RestValidator<Payload> {
  * and the parameters used to build its URL.
  */
 export interface PageRedirect {
-  route: string
-  params?: Record<string, unknown>
+	route: string;
+	params?: Record<string, unknown>;
 }
 
 /**
@@ -48,29 +48,19 @@ export interface PageRedirect {
  * @template Result  Value returned by the domain action
  */
 export interface PageEndpoint<Prepared = unknown, Payload = unknown, Result = unknown> {
-  /** The Inertia component rendered for display methods. */
-  component?: string
-  /** Builds the Inertia props for display methods. */
-  render?(
-    context: RestEndpointContext,
-    prepared: Prepared,
-    payload: Payload,
-    result: Result
-  ): Promise<Record<string, unknown>>
-  /** Builds the success flash message for mutating methods. */
-  flash?(
-    context: RestEndpointContext,
-    prepared: Prepared,
-    payload: Payload,
-    result: Result
-  ): Promise<string> | string
-  /** Builds the redirect target for mutating methods. */
-  redirect?(
-    context: RestEndpointContext,
-    prepared: Prepared,
-    payload: Payload,
-    result: Result
-  ): PageRedirect
+	/** The Inertia component rendered for display methods. */
+	component?: string;
+	/** Builds the Inertia props for display methods. */
+	render?(
+		context: RestEndpointContext,
+		prepared: Prepared,
+		payload: Payload,
+		result: Result,
+	): Promise<Record<string, unknown>>;
+	/** Builds the success flash message for mutating methods. */
+	flash?(context: RestEndpointContext, prepared: Prepared, payload: Payload, result: Result): Promise<string> | string;
+	/** Builds the redirect target for mutating methods. */
+	redirect?(context: RestEndpointContext, prepared: Prepared, payload: Payload, result: Result): PageRedirect;
 }
 
 /**
@@ -109,22 +99,17 @@ export interface PageEndpoint<Prepared = unknown, Payload = unknown, Result = un
  * @template Entity  Entity handed to `transform` (the action result when no refetch)
  */
 export interface RestEndpoint<Prepared, Payload, Result, Entity> {
-  paginated?: boolean
-  strip?: boolean
-  status?: 201 | 204
-  wrap?: string
-  input?: (context: RestEndpointContext) => unknown
-  prepare?: (context: RestEndpointContext) => Promise<Prepared>
-  validator?: (prepared: Prepared, context: RestEndpointContext) => RestValidator<Payload>
-  execute(context: RestEndpointContext, prepared: Prepared, payload: Payload): Promise<Result>
-  refetch?(
-    context: RestEndpointContext,
-    prepared: Prepared,
-    payload: Payload,
-    result: Result
-  ): Promise<Entity>
-  transform?(entity: Entity): unknown
-  page?: PageEndpoint<Prepared, Payload, Result>
+	paginated?: boolean;
+	strip?: boolean;
+	status?: 201 | 204;
+	wrap?: string;
+	input?: (context: RestEndpointContext) => unknown;
+	prepare?: (context: RestEndpointContext) => Promise<Prepared>;
+	validator?: (prepared: Prepared, context: RestEndpointContext) => RestValidator<Payload>;
+	execute(context: RestEndpointContext, prepared: Prepared, payload: Payload): Promise<Result>;
+	refetch?(context: RestEndpointContext, prepared: Prepared, payload: Payload, result: Result): Promise<Entity>;
+	transform?(entity: Entity): unknown;
+	page?: PageEndpoint<Prepared, Payload, Result>;
 }
 
 /**
@@ -133,7 +118,7 @@ export interface RestEndpoint<Prepared, Payload, Result, Entity> {
  * Used at dispatch sites where an endpoint is selected through a route key
  * rather than a literal type.
  */
-export type AnyRestEndpoint = RestEndpoint<any, any, any, any>
+export type AnyRestEndpoint = RestEndpoint<any, any, any, any>;
 
 /**
  * Resolve the shared request interpretation of an endpoint: pagination,
@@ -152,37 +137,35 @@ export type AnyRestEndpoint = RestEndpoint<any, any, any, any>
  *          and the domain action result.
  */
 export async function resolveEndpoint<Prepared, Payload, Result, Entity>(
-  ctx: HttpContext,
-  endpoint: RestEndpoint<Prepared, Payload, Result, Entity>
+	ctx: HttpContext,
+	endpoint: RestEndpoint<Prepared, Payload, Result, Entity>,
 ): Promise<{
-  context: RestEndpointContext
-  prepared: Prepared
-  payload: Payload
-  result: Result
+	context: RestEndpointContext;
+	prepared: Prepared;
+	payload: Payload;
+	result: Result;
 }> {
-  const context: RestEndpointContext = { request: ctx.request, params: ctx.params, auth: ctx.auth }
+	const context: RestEndpointContext = { request: ctx.request, params: ctx.params, auth: ctx.auth };
 
-  if (endpoint.paginated) {
-    context.pagination = await extractPagination(ctx.request)
-  }
+	if (endpoint.paginated) {
+		context.pagination = await extractPagination(ctx.request);
+	}
 
-  let input: unknown = endpoint.input ? endpoint.input(context) : ctx.request.all()
+	let input: unknown = endpoint.input ? endpoint.input(context) : ctx.request.all();
 
-  if (endpoint.strip) {
-    input = stripEmptyStrings(input as Record<string, unknown>)
-  }
+	if (endpoint.strip) {
+		input = stripEmptyStrings(input as Record<string, unknown>);
+	}
 
-  const prepared = endpoint.prepare
-    ? await endpoint.prepare(context)
-    : (undefined as unknown as Prepared)
+	const prepared = endpoint.prepare ? await endpoint.prepare(context) : (undefined as unknown as Prepared);
 
-  const payload: Payload = endpoint.validator
-    ? await endpoint.validator(prepared, context).validate(input)
-    : (input as Payload)
+	const payload: Payload = endpoint.validator
+		? await endpoint.validator(prepared, context).validate(input)
+		: (input as Payload);
 
-  const result = await endpoint.execute(context, prepared, payload)
+	const result = await endpoint.execute(context, prepared, payload);
 
-  return { context, prepared, payload, result }
+	return { context, prepared, payload, result };
 }
 
 /**
@@ -196,7 +179,7 @@ export async function resolveEndpoint<Prepared, Payload, Result, Entity>(
  * @param endpoint - The declarative endpoint to execute.
  * @returns Resolves once the response has been sent.
  */
-export type AdapterHandler = (ctx: HttpContext, endpoint: AnyRestEndpoint) => Promise<unknown>
+export type AdapterHandler = (ctx: HttpContext, endpoint: AnyRestEndpoint) => Promise<unknown>;
 
 /**
  * Run a declarative REST endpoint and send the JSON response.
@@ -216,27 +199,23 @@ export type AdapterHandler = (ctx: HttpContext, endpoint: AnyRestEndpoint) => Pr
  * }
  */
 export const handle: AdapterHandler = async (ctx, endpoint) => {
-  const { context, prepared, payload, result } = await resolveEndpoint(ctx, endpoint)
+	const { context, prepared, payload, result } = await resolveEndpoint(ctx, endpoint);
 
-  if (endpoint.status === 204) {
-    ctx.response.noContent()
-    return
-  }
+	if (endpoint.status === 204) {
+		ctx.response.noContent();
+		return;
+	}
 
-  const entity = endpoint.refetch
-    ? await endpoint.refetch(context, prepared, payload, result)
-    : result
+	const entity = endpoint.refetch ? await endpoint.refetch(context, prepared, payload, result) : result;
 
-  const serialized = endpoint.transform
-    ? await ctx.serialize(endpoint.transform(entity))
-    : undefined
+	const serialized = endpoint.transform ? await ctx.serialize(endpoint.transform(entity)) : undefined;
 
-  if (endpoint.wrap && serialized !== undefined) {
-    const { data } = serialized as { data: unknown }
+	if (endpoint.wrap && serialized !== undefined) {
+		const { data } = serialized as { data: unknown };
 
-    ctx.response.status(endpoint.status ?? 200).send({ [endpoint.wrap]: data })
-    return
-  }
+		ctx.response.status(endpoint.status ?? 200).send({ [endpoint.wrap]: data });
+		return;
+	}
 
-  ctx.response.status(endpoint.status ?? 200).send(serialized)
-}
+	ctx.response.status(endpoint.status ?? 200).send(serialized);
+};

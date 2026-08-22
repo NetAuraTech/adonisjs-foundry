@@ -1,22 +1,22 @@
-import { ReactNode } from 'react'
-import { Paragraph } from '~/components/atoms/paragraph'
+import { ReactNode } from 'react';
+import { Paragraph } from '~/components/atoms/paragraph';
 
 interface BannerProps {
-  /**
-   * Semantic type of the banner. Controls background, text, and border colors
-   * using the design system's feedback tokens:
-   * - `'success'` — green tones, for confirmations and completed actions.
-   * - `'danger'` — red tones, for errors and destructive warnings.
-   * - `'warning'` — amber tones, for non-blocking cautions.
-   * - `'info'` — blue tones, for neutral informational messages.
-   */
-  type: 'success' | 'danger' | 'info' | 'warning'
-  /** Bold title line rendered at the top of the banner. Accepts a string or a custom node. */
-  title: string | ReactNode
-  /** Body message rendered below the title. Accepts a string or a custom node. */
-  message: string | ReactNode
-  /** Optional content rendered after the message (e.g. action buttons or a link). */
-  children?: ReactNode
+	/**
+	 * Semantic type of the banner. Controls background, text, and border colors
+	 * using the design system's feedback tokens:
+	 * - `'success'` — green tones, for confirmations and completed actions.
+	 * - `'danger'` — red tones, for errors and destructive warnings.
+	 * - `'warning'` — amber tones, for non-blocking cautions.
+	 * - `'info'` — blue tones, for neutral informational messages.
+	 */
+	type: 'success' | 'danger' | 'info' | 'warning';
+	/** Bold title line rendered at the top of the banner. Accepts a string or a custom node. */
+	title: string | ReactNode;
+	/** Body message rendered below the title. Accepts a string or a custom node. */
+	message: string | ReactNode;
+	/** Optional content rendered after the message (e.g. action buttons or a link). */
+	children?: ReactNode;
 }
 
 /**
@@ -44,22 +44,20 @@ interface BannerProps {
  * </Banner>
  */
 export function Banner(props: BannerProps) {
-  const { type, title, message, children } = props
+	const { type, title, message, children } = props;
 
-  const config = {
-    success: { bg: 'bg-success-soft', text: 'text-success', border: 'border-success' },
-    danger: { bg: 'bg-danger-soft', text: 'text-danger', border: 'border-danger' },
-    warning: { bg: 'bg-warning-soft', text: 'text-warning', border: 'border-warning' },
-    info: { bg: 'bg-info-soft', text: 'text-info', border: 'border-info' },
-  }
+	const config = {
+		success: { bg: 'bg-success-soft', text: 'text-success', border: 'border-success' },
+		danger: { bg: 'bg-danger-soft', text: 'text-danger', border: 'border-danger' },
+		warning: { bg: 'bg-warning-soft', text: 'text-warning', border: 'border-warning' },
+		info: { bg: 'bg-info-soft', text: 'text-info', border: 'border-info' },
+	};
 
-  return (
-    <div className={`p-4 rounded border ${config[type].bg} ${config[type].border}`}>
-      <Paragraph className={`font-bold ${config[type].text} text-balance leading-7`}>
-        {title}
-      </Paragraph>
-      <Paragraph className={`${config[type].text} text-balance leading-7`}>{message}</Paragraph>
-      {children}
-    </div>
-  )
+	return (
+		<div className={`p-4 rounded border ${config[type].bg} ${config[type].border}`}>
+			<Paragraph className={`font-bold ${config[type].text} text-balance leading-7`}>{title}</Paragraph>
+			<Paragraph className={`${config[type].text} text-balance leading-7`}>{message}</Paragraph>
+			{children}
+		</div>
+	);
 }

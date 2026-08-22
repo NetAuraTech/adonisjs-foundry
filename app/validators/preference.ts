@@ -1,4 +1,4 @@
-import vine from '@vinejs/vine'
+import vine from '@vinejs/vine';
 
 /**
  * Validator for the `update_preferences` action on `POST /settings/preferences`.
@@ -7,6 +7,6 @@ import vine from '@vinejs/vine'
  * (e.g. only `theme`) without having to resend the full object.
  */
 export const updateValidator = vine.create({
-  theme: vine.enum(['light', 'dark'] as const).optional(),
-  locale: vine.enum(['fr', 'en'] as const).optional(),
-})
+	theme: vine.enum(['light', 'dark'] as const).optional(),
+	locale: vine.enum(['fr', 'en'] as const).optional(),
+});

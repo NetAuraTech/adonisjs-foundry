@@ -1,47 +1,47 @@
-import type { HttpContext } from '@adonisjs/core/http'
-import { inject } from '@adonisjs/core'
-import { registerValidator } from '#validators/auth'
-import { regenerateCsrfToken } from '#helpers/auth/crsf'
-import { I18nService } from '#services/i18n_service'
-import { buildRegisterPayload } from '#helpers/i18n_payloads/register'
-import { enabledProviders } from '#helpers/auth/oauth'
-import { RegisterUserAction } from '#actions/auth/register_user_action'
-import { SendEmailVerificationAction } from '#actions/email_verification/send_email_verification_action'
+import { inject } from '@adonisjs/core';
+import { RegisterUserAction } from '#actions/auth/register_user_action';
+import { SendEmailVerificationAction } from '#actions/email_verification/send_email_verification_action';
+import { regenerateCsrfToken } from '#helpers/auth/crsf';
+import { enabledProviders } from '#helpers/auth/oauth';
+import { buildRegisterPayload } from '#helpers/i18n_payloads/register';
+import { I18nService } from '#services/i18n_service';
+import { registerValidator } from '#validators/auth';
+import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()
 export default class RegisterController {
-  constructor(
-    protected i18n: I18nService,
-    protected registerUserAction: RegisterUserAction,
-    protected sendEmailVerificationAction: SendEmailVerificationAction
-  ) {}
+	constructor(
+		protected i18n: I18nService,
+		protected registerUserAction: RegisterUserAction,
+		protected sendEmailVerificationAction: SendEmailVerificationAction,
+	) {}
 
-  render(ctx: HttpContext) {
-    const { inertia } = ctx
+	render(ctx: HttpContext) {
+		const { inertia } = ctx;
 
-    return inertia.render('auth/front/register', {
-      providers: enabledProviders,
-      translations: buildRegisterPayload(this.i18n),
-    })
-  }
+		return inertia.render('auth/front/register', {
+			providers: enabledProviders,
+			translations: buildRegisterPayload(this.i18n),
+		});
+	}
 
-  async execute(ctx: HttpContext) {
-    const { request, response, auth, session } = ctx
+	async execute(ctx: HttpContext) {
+		const { request, response, auth, session } = ctx;
 
-    const payload = await registerValidator.validate(request.all())
+		const payload = await registerValidator.validate(request.all());
 
-    const user = await this.registerUserAction.execute({
-      ...payload,
-      locale: this.i18n.getLocale(),
-    })
+		const user = await this.registerUserAction.execute({
+			...payload,
+			locale: this.i18n.getLocale(),
+		});
 
-    await auth.use('web').login(user)
-    regenerateCsrfToken(ctx)
+		await auth.use('web').login(user);
+		regenerateCsrfToken(ctx);
 
-    await this.sendEmailVerificationAction.execute({ user })
+		await this.sendEmailVerificationAction.execute({ user });
 
-    session.flash('success', this.i18n.translate('auth.session.register.success'))
+		session.flash('success', this.i18n.translate('auth.session.register.success'));
 
-    return response.redirect().toRoute('settings.profile.render')
-  }
+		return response.redirect().toRoute('settings.profile.render');
+	}
 }

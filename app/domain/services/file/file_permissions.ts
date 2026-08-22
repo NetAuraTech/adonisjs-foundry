@@ -1,4 +1,4 @@
-import type { PermissionSlugs } from '#types/permissions'
+import type { PermissionSlugs } from '#types/permissions';
 
 /**
  * System permission catalog of the file domain: the file and folder
@@ -8,9 +8,9 @@ import type { PermissionSlugs } from '#types/permissions'
  * this const; the permission seeder persists exactly this matrix.
  */
 export const filePermissionCatalog = {
-  files: ['view', 'create', 'update', 'delete'],
-  folders: ['view', 'create', 'update', 'delete'],
-} as const
+	files: ['view', 'create', 'update', 'delete'],
+	folders: ['view', 'create', 'update', 'delete'],
+} as const;
 
 /** Union of every system permission slug owned by the file domain. */
-export type FilePermissionSlug = PermissionSlugs<typeof filePermissionCatalog>
+export type FilePermissionSlug = PermissionSlugs<typeof filePermissionCatalog>;

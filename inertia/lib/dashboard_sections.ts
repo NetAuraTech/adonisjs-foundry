@@ -1,6 +1,6 @@
-import type { ComponentType } from 'react'
-import type { Data } from '@generated/data'
-import type { AdminDashboardTranslations } from '#helpers/i18n_payloads/dashboard'
+import type { AdminDashboardTranslations } from '#helpers/i18n_payloads/dashboard';
+import type { Data } from '@generated/data';
+import type { ComponentType } from 'react';
 
 /**
  * Client-side registry of admin dashboard section cards, mirroring the
@@ -22,26 +22,26 @@ import type { AdminDashboardTranslations } from '#helpers/i18n_payloads/dashboar
 
 /** Props handed to every dashboard section card. */
 export interface DashboardSectionCardProps {
-  /** The full aggregated stats payload — cards read their own section(s). */
-  stats: Data.Dashboard
-  /** Dashboard translations resolved for the request locale. */
-  translations: AdminDashboardTranslations
-  /** Format a date for the active locale; '—' for null. */
-  formatDate: (value: string | null) => string
+	/** The full aggregated stats payload — cards read their own section(s). */
+	stats: Data.Dashboard;
+	/** Dashboard translations resolved for the request locale. */
+	translations: AdminDashboardTranslations;
+	/** Format a date for the active locale; '—' for null. */
+	formatDate: (value: string | null) => string;
 }
 
 /** A React component rendering one dashboard section. */
-export type DashboardSectionCard = ComponentType<DashboardSectionCardProps>
+export type DashboardSectionCard = ComponentType<DashboardSectionCardProps>;
 
 /** The cards rendering a section: its headline card and optional recent-activity card. */
 export interface DashboardSectionCardBundle {
-  /** Headline card shown in the stats grid. */
-  Stat: DashboardSectionCard
-  /** Recent-activity card shown in the activity grid. Omit when the section has no activity list. */
-  Recent?: DashboardSectionCard
+	/** Headline card shown in the stats grid. */
+	Stat: DashboardSectionCard;
+	/** Recent-activity card shown in the activity grid. Omit when the section has no activity list. */
+	Recent?: DashboardSectionCard;
 }
 
-const registry = new Map<string, DashboardSectionCardBundle>()
+const registry = new Map<string, DashboardSectionCardBundle>();
 
 /**
  * Register the cards for a dashboard section.
@@ -53,7 +53,7 @@ const registry = new Map<string, DashboardSectionCardBundle>()
  * @param bundle - The headline (and optional recent-activity) card components.
  */
 export function registerDashboardSection(key: string, bundle: DashboardSectionCardBundle): void {
-  registry.set(key, bundle)
+	registry.set(key, bundle);
 }
 
 /**
@@ -64,5 +64,5 @@ export function registerDashboardSection(key: string, bundle: DashboardSectionCa
  * for that section (e.g. a pruned domain).
  */
 export function getDashboardSectionBundle(key: string): DashboardSectionCardBundle | undefined {
-  return registry.get(key)
+	return registry.get(key);
 }

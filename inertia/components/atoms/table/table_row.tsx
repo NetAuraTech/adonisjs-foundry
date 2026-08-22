@@ -1,8 +1,8 @@
-import { ReactNode } from 'react'
+import { ReactNode } from 'react';
 
 interface TableRowProps {
-  children: ReactNode
-  onClick?: () => void
+	children: ReactNode;
+	onClick?: () => void;
 }
 
 /**
@@ -25,7 +25,7 @@ interface TableRowProps {
  * </TableRow>
  */
 export const TableRow = (props: TableRowProps) => {
-  const { children, ...rowProps } = props
+	const { children, ...rowProps } = props;
 
-  return <tr {...rowProps}>{children}</tr>
-}
+	return <tr {...rowProps}>{children}</tr>;
+};

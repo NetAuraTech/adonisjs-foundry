@@ -1,10 +1,10 @@
-import app from '@adonisjs/core/services/app'
-import { BackupEngine } from '#services/backup/backup_engine'
-import { CacheService } from '#services/cache/cache_service'
-import { RedisCacheDriver } from '#services/cache/drivers/redis_cache_driver'
-import { BuilderSessionService } from '#cms/domain/services/page/builder_session_service'
-import { LogService } from '#services/logging/log_service'
-import { MaintenanceService } from '#services/maintenance/maintenance_service'
+import app from '@adonisjs/core/services/app';
+import { BuilderSessionService } from '#cms/domain/services/page/builder_session_service';
+import { BackupEngine } from '#services/backup/backup_engine';
+import { CacheService } from '#services/cache/cache_service';
+import { RedisCacheDriver } from '#services/cache/drivers/redis_cache_driver';
+import { LogService } from '#services/logging/log_service';
+import { MaintenanceService } from '#services/maintenance/maintenance_service';
 
 /**
  * IoC container bindings.
@@ -37,10 +37,10 @@ import { MaintenanceService } from '#services/maintenance/maintenance_service'
  * const engine = await app.container.make(BackupEngine, ['full', 'storage/temp/backups'])
  */
 app.container.bind(BackupEngine, async (resolver, runtimeValues) => {
-  const [strategyType, tempDir] = runtimeValues ?? []
-  const logService = await resolver.make(LogService)
-  return new BackupEngine(strategyType, tempDir, logService)
-})
+	const [strategyType, tempDir] = runtimeValues ?? [];
+	const logService = await resolver.make(LogService);
+	return new BackupEngine(strategyType, tempDir, logService);
+});
 
 // ─── CacheService (singleton) ─────────────────────────────────────────────────
 
@@ -54,9 +54,9 @@ app.container.bind(BackupEngine, async (resolver, runtimeValues) => {
  * const builderCache = cache.namespace('builder')
  */
 app.container.singleton(CacheService, () => {
-  const driver = new RedisCacheDriver()
-  return new CacheService(driver)
-})
+	const driver = new RedisCacheDriver();
+	return new CacheService(driver);
+});
 
 // ─── BuilderSessionService (singleton) ───────────────────────────────────────
 
@@ -66,9 +66,9 @@ app.container.singleton(CacheService, () => {
  * is reused across all requests.
  */
 app.container.singleton(BuilderSessionService, async () => {
-  const cache = await app.container.make(CacheService)
-  return new BuilderSessionService(cache)
-})
+	const cache = await app.container.make(CacheService);
+	return new BuilderSessionService(cache);
+});
 
 // ─── MaintenanceService (singleton) ──────────────────────────────────────────
 
@@ -78,7 +78,7 @@ app.container.singleton(BuilderSessionService, async () => {
  * Initializes memory fallback on first resolution.
  */
 app.container.singleton(MaintenanceService, async () => {
-  const service = MaintenanceService.getInstance()
-  await service.initializeMemoryFallback()
-  return service
-})
+	const service = MaintenanceService.getInstance();
+	await service.initializeMemoryFallback();
+	return service;
+});

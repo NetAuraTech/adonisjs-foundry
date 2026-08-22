@@ -1,62 +1,60 @@
-import type { ChangeEvent, ReactNode } from 'react'
-import { Label } from '~/components/atoms/label'
-import { getSanitizer } from '~/helpers/sanitization'
-import { Paragraph } from '~/components/atoms/paragraph'
-import { Input } from '~/components/atoms/input'
-import { Textarea } from '~/components/atoms/textarea'
-import { Select } from '~/components/atoms/select'
-import { Checkbox } from '~/components/atoms/checkbox'
-import { ImagePicker } from '~/components/molecules/image_picker'
+import { Checkbox } from '~/components/atoms/checkbox';
+import { Input } from '~/components/atoms/input';
+import { Label } from '~/components/atoms/label';
+import { Paragraph } from '~/components/atoms/paragraph';
+import { Select } from '~/components/atoms/select';
+import { Textarea } from '~/components/atoms/textarea';
+import { ImagePicker } from '~/components/molecules/image_picker';
+import { getSanitizer } from '~/helpers/sanitization';
+import type { ChangeEvent, ReactNode } from 'react';
 
 interface FieldProps {
-  /** Visible label text associated with the input. */
-  label: string
-  /** The `name` and `id` forwarded to the underlying input element. */
-  name: string
-  /**
-   * HTML input type or a compound type that maps to a different component:
-   * - `'textarea'` → `<Textarea>`
-   * - `'select'` → `<Select>` (pass options as `children`)
-   * - `'checkbox'` / `'radio'` → `<Checkbox>` with inline label layout
-   * - Anything else → `<Input>`
-   */
-  type: string
-  placeholder?: string
-  defaultValue?: string | number
-  /** Initial checked state forwarded to `<Checkbox>`. */
-  checked?: boolean
-  options?: Array<{ value: string; label: string }>
-  cols?: number
-  rows?: number
-  disabled?: boolean
-  required?: boolean
-  /**
-   * Validation or server error message displayed below the input in danger
-   * color. When present, `helpText` spacing is collapsed to `'xs'` to avoid
-   * excessive vertical gap.
-   */
-  errorMessage?: string
-  /**
-   * Secondary hint displayed below the input in muted color. Typically used
-   * for password-strength indicators or format hints. Accepts a class
-   * override via `helpClassName` (e.g. to switch color on validation state).
-   */
-  helpText?: string
-  /** Tailwind class(es) applied to the help text `<Paragraph>` wrapper. */
-  helpClassName?: string
-  onChange?: (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => void
-  onBlur?: (event?: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void
-  /**
-   * When `true` (default), the field value is sanitized on blur using the
-   * sanitizer resolved for the given `type`. Sanitization trims whitespace
-   * and normalizes casing depending on the input type. Set to `false` for
-   * sensitive fields like passwords.
-   */
-  sanitize?: boolean
-  /** `<SelectOption>` elements passed through to a `'select'` type field. */
-  children?: ReactNode
+	/** Visible label text associated with the input. */
+	label: string;
+	/** The `name` and `id` forwarded to the underlying input element. */
+	name: string;
+	/**
+	 * HTML input type or a compound type that maps to a different component:
+	 * - `'textarea'` → `<Textarea>`
+	 * - `'select'` → `<Select>` (pass options as `children`)
+	 * - `'checkbox'` / `'radio'` → `<Checkbox>` with inline label layout
+	 * - Anything else → `<Input>`
+	 */
+	type: string;
+	placeholder?: string;
+	defaultValue?: string | number;
+	/** Initial checked state forwarded to `<Checkbox>`. */
+	checked?: boolean;
+	options?: Array<{ value: string; label: string }>;
+	cols?: number;
+	rows?: number;
+	disabled?: boolean;
+	required?: boolean;
+	/**
+	 * Validation or server error message displayed below the input in danger
+	 * color. When present, `helpText` spacing is collapsed to `'xs'` to avoid
+	 * excessive vertical gap.
+	 */
+	errorMessage?: string;
+	/**
+	 * Secondary hint displayed below the input in muted color. Typically used
+	 * for password-strength indicators or format hints. Accepts a class
+	 * override via `helpClassName` (e.g. to switch color on validation state).
+	 */
+	helpText?: string;
+	/** Tailwind class(es) applied to the help text `<Paragraph>` wrapper. */
+	helpClassName?: string;
+	onChange?: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
+	onBlur?: (event?: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
+	/**
+	 * When `true` (default), the field value is sanitized on blur using the
+	 * sanitizer resolved for the given `type`. Sanitization trims whitespace
+	 * and normalizes casing depending on the input type. Set to `false` for
+	 * sensitive fields like passwords.
+	 */
+	sanitize?: boolean;
+	/** `<SelectOption>` elements passed through to a `'select'` type field. */
+	children?: ReactNode;
 }
 
 /**
@@ -106,91 +104,81 @@ interface FieldProps {
  * />
  */
 export function Field(props: FieldProps) {
-  const {
-    label,
-    name,
-    type,
-    errorMessage,
-    helpText,
-    helpClassName,
-    onChange,
-    onBlur,
-    sanitize = true,
-    ...inputProps
-  } = props
+	const {
+		label,
+		name,
+		type,
+		errorMessage,
+		helpText,
+		helpClassName,
+		onChange,
+		onBlur,
+		sanitize = true,
+		...inputProps
+	} = props;
 
-  const isInline = type === 'checkbox' || type === 'radio'
-  const variant = isInline ? 'inline' : 'grid'
-  const sanitizer = getSanitizer(type, sanitize)
+	const isInline = type === 'checkbox' || type === 'radio';
+	const variant = isInline ? 'inline' : 'grid';
+	const sanitizer = getSanitizer(type, sanitize);
 
-  /** Handle change — no sanitization during typing. */
-  const handleChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    onChange?.(event)
-  }
+	/** Handle change — no sanitization during typing. */
+	const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+		onChange?.(event);
+	};
 
-  /** Handle blur — apply sanitization when the user leaves the field. */
-  const handleBlur = (
-    event?: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> | null
-  ) => {
-    if (event && type !== 'checkbox' && type !== 'radio' && sanitize) {
-      const sanitizedValue = sanitizer(event.target.value)
+	/** Handle blur — apply sanitization when the user leaves the field. */
+	const handleBlur = (event?: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> | null) => {
+		if (event && type !== 'checkbox' && type !== 'radio' && sanitize) {
+			const sanitizedValue = sanitizer(event.target.value);
 
-      if (sanitizedValue !== event.target.value) {
-        event.target.value = sanitizedValue
-        onChange?.(event)
-      }
-    }
+			if (sanitizedValue !== event.target.value) {
+				event.target.value = sanitizedValue;
+				onChange?.(event);
+			}
+		}
 
-    onBlur?.(event ?? undefined)
-  }
+		onBlur?.(event ?? undefined);
+	};
 
-  const getComponentFromType = (type: string) => {
-    switch (type) {
-      case 'textarea':
-        return Textarea
-      case 'select':
-        return Select
-      case 'checkbox':
-        return Checkbox
-      case 'image':
-        return ImagePicker
-      default:
-        return Input
-    }
-  }
+	const getComponentFromType = (type: string) => {
+		switch (type) {
+			case 'textarea':
+				return Textarea;
+			case 'select':
+				return Select;
+			case 'checkbox':
+				return Checkbox;
+			case 'image':
+				return ImagePicker;
+			default:
+				return Input;
+		}
+	};
 
-  const Component = getComponentFromType(type)
+	const Component = getComponentFromType(type);
 
-  const variants = {
-    inline: 'flex items-center gap-2',
-    grid: 'grid gap-2',
-  }
+	const variants = {
+		inline: 'flex items-center gap-2',
+		grid: 'grid gap-2',
+	};
 
-  return (
-    <div className={`grid`}>
-      <div className={`${variants[variant]}`}>
-        {!isInline && <Label label={label} htmlFor={name} required={props.required} />}
-        <Component
-          {...inputProps}
-          name={name}
-          type={type}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
-        {isInline && <Label label={label} htmlFor={name} required={props.required} />}
-      </div>
-      {errorMessage && (
-        <Paragraph variant="error" spacing="sm">
-          {errorMessage}
-        </Paragraph>
-      )}
-      {helpText && (
-        <Paragraph variant="muted" spacing={errorMessage ? 'xs' : 'sm'}>
-          {helpText}
-        </Paragraph>
-      )}
-    </div>
-  )
+	return (
+		<div className={`grid`}>
+			<div className={`${variants[variant]}`}>
+				{!isInline && <Label label={label} htmlFor={name} required={props.required} />}
+				<Component {...inputProps} name={name} type={type} onChange={handleChange} onBlur={handleBlur} />
+				{isInline && <Label label={label} htmlFor={name} required={props.required} />}
+			</div>
+			{errorMessage && (
+				<Paragraph variant="error" spacing="sm">
+					{errorMessage}
+				</Paragraph>
+			)}
+			{helpText && (
+				<Paragraph variant="muted" spacing={errorMessage ? 'xs' : 'sm'}>
+					{helpText}
+				</Paragraph>
+			)}
+		</div>
+	);
 }

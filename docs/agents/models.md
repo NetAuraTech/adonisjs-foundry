@@ -7,22 +7,22 @@ Lucid models live in `app/models/{area}/{name}.ts`. Each model extends a generat
 ## Structure
 
 ```typescript
-import { FooSchema } from '#database/schema'
-import { belongsTo, hasMany, scope } from '@adonisjs/lucid/orm'
-import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
+import { FooSchema } from '#database/schema';
+import { belongsTo, hasMany, scope } from '@adonisjs/lucid/orm';
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations';
 
 export default class Foo extends FooSchema {
-  // ── Relations ──
-  @belongsTo(() => Bar)
-  declare bar: BelongsTo<typeof Bar>
+	// ── Relations ──
+	@belongsTo(() => Bar)
+	declare bar: BelongsTo<typeof Bar>;
 
-  // ── Scopes ──
-  public static active = scope((query) => query.where('is_active', true))
+	// ── Scopes ──
+	public static active = scope((query) => query.where('is_active', true));
 
-  // ── Helpers ──
-  displayName(): string {
-    return this.name || 'Untitled'
-  }
+	// ── Helpers ──
+	displayName(): string {
+		return this.name || 'Untitled';
+	}
 }
 ```
 

@@ -1,7 +1,7 @@
-import { ReactNode } from 'react'
+import { ReactNode } from 'react';
 
 interface TableHeaderProps {
-  children: ReactNode
+	children: ReactNode;
 }
 
 /**
@@ -20,7 +20,7 @@ interface TableHeaderProps {
  * </TableHeader>
  */
 export const TableHeader = (props: TableHeaderProps) => {
-  const { children } = props
+	const { children } = props;
 
-  return <thead>{children}</thead>
-}
+	return <thead>{children}</thead>;
+};

@@ -1,18 +1,18 @@
-import { ReactNode } from 'react'
-import { Link, type LinkProps } from '@adonisjs/inertia/react'
-import { Card } from '~/components/atoms/card'
+import { Link, type LinkProps } from '@adonisjs/inertia/react';
+import { ReactNode } from 'react';
+import { Card } from '~/components/atoms/card';
 
-type Route = NonNullable<LinkProps['route']>
+type Route = NonNullable<LinkProps['route']>;
 
 interface RecentCardProps {
-  /** Card title shown in the header. */
-  title: string
-  /** Admin route the "view all" footer link deep-links to. */
-  viewAllRoute: Route
-  /** Label of the "view all" footer link. */
-  viewAllLabel: string
-  /** Recent-activity list content. */
-  children: ReactNode
+	/** Card title shown in the header. */
+	title: string;
+	/** Admin route the "view all" footer link deep-links to. */
+	viewAllRoute: Route;
+	/** Label of the "view all" footer link. */
+	viewAllLabel: string;
+	/** Recent-activity list content. */
+	children: ReactNode;
 }
 
 /**
@@ -23,18 +23,18 @@ interface RecentCardProps {
  * all" route and list content.
  */
 export function RecentCard({ title, viewAllRoute, viewAllLabel, children }: RecentCardProps) {
-  return (
-    <Card
-      title={title}
-      padding="p-0"
-      className="h-full"
-      footer={
-        <Link route={viewAllRoute} className="text-sm text-primary hover:underline">
-          {viewAllLabel}
-        </Link>
-      }
-    >
-      {children}
-    </Card>
-  )
+	return (
+		<Card
+			title={title}
+			padding="p-0"
+			className="h-full"
+			footer={
+				<Link route={viewAllRoute} className="text-sm text-primary hover:underline">
+					{viewAllLabel}
+				</Link>
+			}
+		>
+			{children}
+		</Card>
+	);
 }

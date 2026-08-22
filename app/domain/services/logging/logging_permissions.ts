@@ -1,4 +1,4 @@
-import type { PermissionSlugs } from '#types/permissions'
+import type { PermissionSlugs } from '#types/permissions';
 
 /**
  * System permission catalog of the logging domain: the activity-log surface.
@@ -7,8 +7,8 @@ import type { PermissionSlugs } from '#types/permissions'
  * from this const; the permission seeder persists exactly this matrix.
  */
 export const loggingPermissionCatalog = {
-  logs: ['view'],
-} as const
+	logs: ['view'],
+} as const;
 
 /** Union of every system permission slug owned by the logging domain. */
-export type LoggingPermissionSlug = PermissionSlugs<typeof loggingPermissionCatalog>
+export type LoggingPermissionSlug = PermissionSlugs<typeof loggingPermissionCatalog>;

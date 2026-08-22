@@ -1,11 +1,11 @@
-import { indexPages } from '@adonisjs/inertia'
-import { indexEntities } from '@adonisjs/core'
-import { defineConfig } from '@adonisjs/core/app'
-import { generateRegistry } from '@tuyau/core/hooks'
-import { restRoutesRegistryHook } from '#rest/rest_routes_registry_hook'
+import { indexEntities } from '@adonisjs/core';
+import { defineConfig } from '@adonisjs/core/app';
+import { indexPages } from '@adonisjs/inertia';
+import { generateRegistry } from '@tuyau/core/hooks';
+import { restRoutesRegistryHook } from '#rest/rest_routes_registry_hook';
 
 export default defineConfig({
-  /*
+	/*
   |--------------------------------------------------------------------------
   | Experimental flags
   |--------------------------------------------------------------------------
@@ -15,9 +15,9 @@ export default defineConfig({
   | during upgrade.
   |
   */
-  experimental: {},
+	experimental: {},
 
-  /*
+	/*
   |--------------------------------------------------------------------------
   | Commands
   |--------------------------------------------------------------------------
@@ -26,28 +26,28 @@ export default defineConfig({
   | will be scanned automatically from the "./commands" directory.
   |
   */
-  commands: [
-    () => import('@adonisjs/core/commands'),
-    () => import('@adonisjs/lucid/commands'),
-    () => import('@adonisjs/session/commands'),
-    () => import('@adonisjs/inertia/commands'),
-    () => import('@adonisjs/mail/commands'),
-  ],
+	commands: [
+		() => import('@adonisjs/core/commands'),
+		() => import('@adonisjs/lucid/commands'),
+		() => import('@adonisjs/session/commands'),
+		() => import('@adonisjs/inertia/commands'),
+		() => import('@adonisjs/mail/commands'),
+	],
 
-  /*
+	/*
   |--------------------------------------------------------------------------
   | Directories
   |--------------------------------------------------------------------------
   |
   */
-  directories: {
-    httpControllers: 'app/http/controllers',
-    transformers: 'app/data/transformers',
-    middleware: 'app/http/middleware',
-    services: 'app/domain/services',
-  },
+	directories: {
+		httpControllers: 'app/http/controllers',
+		transformers: 'app/data/transformers',
+		middleware: 'app/http/middleware',
+		services: 'app/domain/services',
+	},
 
-  /*
+	/*
   |--------------------------------------------------------------------------
   | Service providers
   |--------------------------------------------------------------------------
@@ -56,35 +56,35 @@ export default defineConfig({
   | application
   |
   */
-  providers: [
-    () => import('@adonisjs/core/providers/app_provider'),
-    () => import('@adonisjs/core/providers/hash_provider'),
-    {
-      file: () => import('@adonisjs/core/providers/repl_provider'),
-      environment: ['repl', 'test'],
-    },
-    () => import('@adonisjs/core/providers/vinejs_provider'),
-    () => import('@adonisjs/core/providers/edge_provider'),
-    () => import('@adonisjs/session/session_provider'),
-    () => import('@adonisjs/vite/vite_provider'),
-    () => import('@adonisjs/shield/shield_provider'),
-    () => import('@adonisjs/static/static_provider'),
-    () => import('@adonisjs/lucid/database_provider'),
-    () => import('@adonisjs/cors/cors_provider'),
-    () => import('@adonisjs/inertia/inertia_provider'),
-    () => import('@adonisjs/auth/auth_provider'),
-    () => import('#providers/api_provider'),
-    () => import('@adonisjs/redis/redis_provider'),
-    () => import('#providers/sentry_provider'),
-    () => import('@adonisjs/i18n/i18n_provider'),
-    () => import('@adonisjs/ally/ally_provider'),
-    () => import('@adonisjs/mail/mail_provider'),
-    () => import('@adonisjs/drive/drive_provider'),
-    () => import('@adonisjs/limiter/limiter_provider'),
-    () => import('@adonisjs/transmit/transmit_provider'),
-  ],
+	providers: [
+		() => import('@adonisjs/core/providers/app_provider'),
+		() => import('@adonisjs/core/providers/hash_provider'),
+		{
+			file: () => import('@adonisjs/core/providers/repl_provider'),
+			environment: ['repl', 'test'],
+		},
+		() => import('@adonisjs/core/providers/vinejs_provider'),
+		() => import('@adonisjs/core/providers/edge_provider'),
+		() => import('@adonisjs/session/session_provider'),
+		() => import('@adonisjs/vite/vite_provider'),
+		() => import('@adonisjs/shield/shield_provider'),
+		() => import('@adonisjs/static/static_provider'),
+		() => import('@adonisjs/lucid/database_provider'),
+		() => import('@adonisjs/cors/cors_provider'),
+		() => import('@adonisjs/inertia/inertia_provider'),
+		() => import('@adonisjs/auth/auth_provider'),
+		() => import('#providers/api_provider'),
+		() => import('@adonisjs/redis/redis_provider'),
+		() => import('#providers/sentry_provider'),
+		() => import('@adonisjs/i18n/i18n_provider'),
+		() => import('@adonisjs/ally/ally_provider'),
+		() => import('@adonisjs/mail/mail_provider'),
+		() => import('@adonisjs/drive/drive_provider'),
+		() => import('@adonisjs/limiter/limiter_provider'),
+		() => import('@adonisjs/transmit/transmit_provider'),
+	],
 
-  /*
+	/*
   |--------------------------------------------------------------------------
   | Preloads
   |--------------------------------------------------------------------------
@@ -92,20 +92,20 @@ export default defineConfig({
   | List of modules to import before starting the application.
   |
   */
-  preloads: [
-    () => import('#start/routes'),
-    () => import('#start/kernel'),
-    () => import('#start/validator'),
-    () => import('#start/events'),
-    () => import('#start/container'),
-    () => import('#start/dashboard'),
-    () => import('#start/sitemap'),
-    () => import('#start/nav'),
-    () => import('#start/extensions'),
-    () => import('#start/transmit'),
-  ],
+	preloads: [
+		() => import('#start/routes'),
+		() => import('#start/kernel'),
+		() => import('#start/validator'),
+		() => import('#start/events'),
+		() => import('#start/container'),
+		() => import('#start/dashboard'),
+		() => import('#start/sitemap'),
+		() => import('#start/nav'),
+		() => import('#start/extensions'),
+		() => import('#start/transmit'),
+	],
 
-  /*
+	/*
   |--------------------------------------------------------------------------
   | Tests
   |--------------------------------------------------------------------------
@@ -114,28 +114,28 @@ export default defineConfig({
   | and add additional suites.
   |
   */
-  tests: {
-    suites: [
-      {
-        files: ['tests/unit/**/*.spec.{ts,js}'],
-        name: 'unit',
-        timeout: 2000,
-      },
-      {
-        files: ['tests/integration/**/*.spec.{ts,js}'],
-        name: 'integration',
-        timeout: 5000,
-      },
-      {
-        files: ['tests/functional/**/*.spec.{ts,js}'],
-        name: 'functional',
-        timeout: 30000,
-      },
-    ],
-    forceExit: false,
-  },
+	tests: {
+		suites: [
+			{
+				files: ['tests/unit/**/*.spec.{ts,js}'],
+				name: 'unit',
+				timeout: 2000,
+			},
+			{
+				files: ['tests/integration/**/*.spec.{ts,js}'],
+				name: 'integration',
+				timeout: 5000,
+			},
+			{
+				files: ['tests/functional/**/*.spec.{ts,js}'],
+				name: 'functional',
+				timeout: 30000,
+			},
+		],
+		forceExit: false,
+	},
 
-  /*
+	/*
   |--------------------------------------------------------------------------
   | Metafiles
   |--------------------------------------------------------------------------
@@ -144,43 +144,43 @@ export default defineConfig({
   | the production build.
   |
   */
-  metaFiles: [
-    {
-      pattern: 'resources/views/**/*.edge',
-      reloadServer: false,
-    },
-    {
-      pattern: 'public/**',
-      reloadServer: false,
-    },
-    {
-      pattern: 'resources/lang/**/*.{json,yaml,yml}',
-      reloadServer: false,
-    },
-  ],
+	metaFiles: [
+		{
+			pattern: 'resources/views/**/*.edge',
+			reloadServer: false,
+		},
+		{
+			pattern: 'public/**',
+			reloadServer: false,
+		},
+		{
+			pattern: 'resources/lang/**/*.{json,yaml,yml}',
+			reloadServer: false,
+		},
+	],
 
-  hooks: {
-    init: [
-      indexEntities({
-        transformers: {
-          enabled: true,
-          withSharedProps: true,
-          inertiaMiddlewareImportPath: '#middleware/core/inertia_middleware',
-          source: 'app/data/transformers',
-          importAlias: '#transformers',
-          glob: ['**\/*transformer.ts'],
-        },
-        controllers: {
-          enabled: true,
-          source: 'app/http/controllers',
-          importAlias: '#controllers',
-          glob: ['**\/*_controller.ts'],
-        },
-      }),
-      indexPages({ framework: 'react' }),
-      generateRegistry(),
-      restRoutesRegistryHook(),
-    ],
-    buildStarting: [() => import('@adonisjs/vite/build_hook')],
-  },
-})
+	hooks: {
+		init: [
+			indexEntities({
+				transformers: {
+					enabled: true,
+					withSharedProps: true,
+					inertiaMiddlewareImportPath: '#middleware/core/inertia_middleware',
+					source: 'app/data/transformers',
+					importAlias: '#transformers',
+					glob: ['**\/*transformer.ts'],
+				},
+				controllers: {
+					enabled: true,
+					source: 'app/http/controllers',
+					importAlias: '#controllers',
+					glob: ['**\/*_controller.ts'],
+				},
+			}),
+			indexPages({ framework: 'react' }),
+			generateRegistry(),
+			restRoutesRegistryHook(),
+		],
+		buildStarting: [() => import('@adonisjs/vite/build_hook')],
+	},
+});

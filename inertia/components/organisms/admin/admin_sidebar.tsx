@@ -1,22 +1,22 @@
-import { Card } from '../../atoms/card'
-import { Avatar } from '~/components/atoms/avatar'
-import { ThemeToggle } from '~/components/molecules/theme_toggle'
-import { Heading } from '../../atoms/heading'
-import { NavLink } from '../../atoms/nav_link'
-import { CanAccess } from '~/guards/can_access'
-import { useMenu } from '~/hooks/use_admin'
-import { Icon } from '~/components/atoms/icon'
-import { Lang, useTranslation } from '~/hooks/use_translation'
-import { usePage } from '@inertiajs/react'
-import { SharedProps } from '@adonisjs/inertia/types'
+import { SharedProps } from '@adonisjs/inertia/types';
+import { usePage } from '@inertiajs/react';
+import { Avatar } from '~/components/atoms/avatar';
+import { Icon } from '~/components/atoms/icon';
+import { ThemeToggle } from '~/components/molecules/theme_toggle';
+import { CanAccess } from '~/guards/can_access';
+import { useMenu } from '~/hooks/use_admin';
+import { Lang, useTranslation } from '~/hooks/use_translation';
+import { Card } from '../../atoms/card';
+import { Heading } from '../../atoms/heading';
+import { NavLink } from '../../atoms/nav_link';
 
 interface AdminSidebarProps {
-  /**
-   * Whether the sidebar is currently open. Forwarded to `aria-expanded` on
-   * the `<aside>` element so CSS transitions and screen readers react to the
-   * state change.
-   */
-  sidebarOpen: boolean
+	/**
+	 * Whether the sidebar is currently open. Forwarded to `aria-expanded` on
+	 * the `<aside>` element so CSS transitions and screen readers react to the
+	 * state change.
+	 */
+	sidebarOpen: boolean;
 }
 
 /**
@@ -41,48 +41,48 @@ interface AdminSidebarProps {
  * <AdminSidebar sidebarOpen={sidebarOpen} />
  */
 export function AdminSidebar(props: AdminSidebarProps) {
-  const { sidebarOpen } = props
-  const pageProps = usePage<SharedProps>().props
-  const { format } = useTranslation({})
+	const { sidebarOpen } = props;
+	const pageProps = usePage<SharedProps>().props;
+	const { format } = useTranslation({});
 
-  const { menu } = useMenu()
+	const { menu } = useMenu();
 
-  return (
-    <aside className="sidebar" aria-expanded={sidebarOpen}>
-      <Card>
-        <div className="grid gap-3">
-          <div className="flex items-center justify-between">
-            <Avatar showUsername />
-            <ThemeToggle />
-          </div>
-          <span>{format(new Date(), 'long', pageProps.locale as Lang)}</span>
-        </div>
-      </Card>
-      <Card>
-        <nav className="grid gap-1">
-          {menu.map((group) => (
-            <div key={`admin-category-${group.category}`}>
-              {group.label && <Heading level={4}>{group.label}</Heading>}
-              <ul className="grid gap-1 my-2">
-                {group.entries.map((entry) => (
-                  <li key={`admin-category-${group.category}-${entry.label}`}>
-                    <CanAccess permission={entry.permission}>
-                      <NavLink
-                        label={entry.label}
-                        route={entry.route as any}
-                        routeParams={entry.routeParams}
-                        variant="admin_nav"
-                      >
-                        {entry.icon && <Icon name={entry.icon} />}
-                      </NavLink>
-                    </CanAccess>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </nav>
-      </Card>
-    </aside>
-  )
+	return (
+		<aside className="sidebar" aria-expanded={sidebarOpen}>
+			<Card>
+				<div className="grid gap-3">
+					<div className="flex items-center justify-between">
+						<Avatar showUsername />
+						<ThemeToggle />
+					</div>
+					<span>{format(new Date(), 'long', pageProps.locale as Lang)}</span>
+				</div>
+			</Card>
+			<Card>
+				<nav className="grid gap-1">
+					{menu.map((group) => (
+						<div key={`admin-category-${group.category}`}>
+							{group.label && <Heading level={4}>{group.label}</Heading>}
+							<ul className="grid gap-1 my-2">
+								{group.entries.map((entry) => (
+									<li key={`admin-category-${group.category}-${entry.label}`}>
+										<CanAccess permission={entry.permission}>
+											<NavLink
+												label={entry.label}
+												route={entry.route as any}
+												routeParams={entry.routeParams}
+												variant="admin_nav"
+											>
+												{entry.icon && <Icon name={entry.icon} />}
+											</NavLink>
+										</CanAccess>
+									</li>
+								))}
+							</ul>
+						</div>
+					))}
+				</nav>
+			</Card>
+		</aside>
+	);
 }

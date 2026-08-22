@@ -1,12 +1,12 @@
-﻿import { inject } from '@adonisjs/core'
-import { FileRepository } from '#repositories/file/file_repository'
-import { withTransaction } from '#shared/utils/with_transaction'
+﻿import { inject } from '@adonisjs/core';
+import { FileRepository } from '#repositories/file/file_repository';
+import { withTransaction } from '#shared/utils/with_transaction';
 
 interface UpsertFileAltPayload {
-  fileId: number
-  locale: string
-  key: string
-  value: string
+	fileId: number;
+	locale: string;
+	key: string;
+	value: string;
 }
 
 /**
@@ -14,23 +14,18 @@ interface UpsertFileAltPayload {
  */
 @inject()
 export class UpsertFileAltAction {
-  constructor(protected fileRepository: FileRepository) {}
+	constructor(protected fileRepository: FileRepository) {}
 
-  /**
-   * Execute alt upsert.
-   *
-   * @param payload - File ID, locale, key, and value for the alt entry.
-   */
-  async execute(payload: UpsertFileAltPayload): Promise<void> {
-    await this.fileRepository.findByIdOrFail(payload.fileId)
+	/**
+	 * Execute alt upsert.
+	 *
+	 * @param payload - File ID, locale, key, and value for the alt entry.
+	 */
+	async execute(payload: UpsertFileAltPayload): Promise<void> {
+		await this.fileRepository.findByIdOrFail(payload.fileId);
 
-    return withTransaction(async () => {
-      return this.fileRepository.upsertAlt(
-        payload.fileId,
-        payload.locale,
-        payload.key,
-        payload.value
-      )
-    })
-  }
+		return withTransaction(async () => {
+			return this.fileRepository.upsertAlt(payload.fileId, payload.locale, payload.key, payload.value);
+		});
+	}
 }

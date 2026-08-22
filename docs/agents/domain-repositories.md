@@ -8,21 +8,21 @@ One repository per model, in `app/domain/repositories/{area}/{name}_repository.t
 
 ```typescript
 export class FooRepository {
-  async findById(id: number): Promise<Foo | null> {
-    return Foo.find(id)
-  }
-  async findByIdOrFail(id: number): Promise<Foo> {
-    return Foo.findOrFail(id)
-  }
-  async findAll(options?: FindOptions): Promise<Foo[]> {
-    /* optional orderBy/limit/offset */
-  }
-  async create(data: Partial<Foo>): Promise<Foo> {
-    return Foo.create(data)
-  }
-  async delete(id: number): Promise<boolean | void> {
-    /* find, then .delete() */
-  }
+	async findById(id: number): Promise<Foo | null> {
+		return Foo.find(id);
+	}
+	async findByIdOrFail(id: number): Promise<Foo> {
+		return Foo.findOrFail(id);
+	}
+	async findAll(options?: FindOptions): Promise<Foo[]> {
+		/* optional orderBy/limit/offset */
+	}
+	async create(data: Partial<Foo>): Promise<Foo> {
+		return Foo.create(data);
+	}
+	async delete(id: number): Promise<boolean | void> {
+		/* find, then .delete() */
+	}
 }
 ```
 

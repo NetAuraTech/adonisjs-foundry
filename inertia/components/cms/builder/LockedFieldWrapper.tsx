@@ -1,22 +1,22 @@
-import { useState, useEffect, useRef, ReactNode } from 'react'
-import type { LockState } from '~/components/cms/hooks/use_builder_sync'
+import { useState, useEffect, useRef, ReactNode } from 'react';
+import type { LockState } from '~/components/cms/hooks/use_builder_sync';
 
-const LOCK_RENEW_INTERVAL_MS = 3000
+const LOCK_RENEW_INTERVAL_MS = 3000;
 
 interface LockedFieldWrapperProps {
-  blockId: string
-  fieldKey: string
-  /** Current lock state for this field — null means unlocked */
-  lock: LockState | null
-  /** Whether the current user owns the lock */
-  isOwner: boolean
-  /** Whether the current user is actively editing this field (has an own lock) */
-  isEditing?: boolean
-  /** Called when this field receives focus — triggers LOCK_ACQUIRE */
-  onFocus: () => void
-  /** Called when this field loses focus — triggers LOCK_RELEASE */
-  onBlur: () => void
-  children: ReactNode
+	blockId: string;
+	fieldKey: string;
+	/** Current lock state for this field — null means unlocked */
+	lock: LockState | null;
+	/** Whether the current user owns the lock */
+	isOwner: boolean;
+	/** Whether the current user is actively editing this field (has an own lock) */
+	isEditing?: boolean;
+	/** Called when this field receives focus — triggers LOCK_ACQUIRE */
+	onFocus: () => void;
+	/** Called when this field loses focus — triggers LOCK_RELEASE */
+	onBlur: () => void;
+	children: ReactNode;
 }
 
 /**
@@ -37,90 +37,90 @@ interface LockedFieldWrapperProps {
  * DOM so form serialisation is unaffected.
  */
 export default function LockedFieldWrapper({
-  lock,
-  isOwner,
-  isEditing = false,
-  onFocus,
-  onBlur,
-  children,
+	lock,
+	isOwner,
+	isEditing = false,
+	onFocus,
+	onBlur,
+	children,
 }: LockedFieldWrapperProps) {
-  const [focused, setFocused] = useState(false)
-  const heartbeatRef = useRef<NodeJS.Timeout | null>(null)
+	const [focused, setFocused] = useState(false);
+	const heartbeatRef = useRef<NodeJS.Timeout | null>(null);
 
-  const onFocusRef = useRef(onFocus)
-  const onBlurRef = useRef(onBlur)
-  useEffect(() => {
-    onFocusRef.current = onFocus
-  }, [onFocus])
-  useEffect(() => {
-    onBlurRef.current = onBlur
-  }, [onBlur])
+	const onFocusRef = useRef(onFocus);
+	const onBlurRef = useRef(onBlur);
+	useEffect(() => {
+		onFocusRef.current = onFocus;
+	}, [onFocus]);
+	useEffect(() => {
+		onBlurRef.current = onBlur;
+	}, [onBlur]);
 
-  useEffect(() => {
-    if (!focused) return
+	useEffect(() => {
+		if (!focused) return;
 
-    onFocusRef.current()
+		onFocusRef.current();
 
-    heartbeatRef.current = setInterval(() => {
-      //onFocusRef.current()
-    }, LOCK_RENEW_INTERVAL_MS)
+		heartbeatRef.current = setInterval(() => {
+			//onFocusRef.current()
+		}, LOCK_RENEW_INTERVAL_MS);
 
-    return () => {
-      if (heartbeatRef.current) clearInterval(heartbeatRef.current)
-    }
-  }, [focused])
+		return () => {
+			if (heartbeatRef.current) clearInterval(heartbeatRef.current);
+		};
+	}, [focused]);
 
-  function handleFocus() {
-    if (isLockedByOther) return
-    setFocused(true)
-  }
+	function handleFocus() {
+		if (isLockedByOther) return;
+		setFocused(true);
+	}
 
-  function handleBlur() {
-    if (isLockedByOther) return
-    setFocused(false)
-    onBlurRef.current()
-  }
+	function handleBlur() {
+		if (isLockedByOther) return;
+		setFocused(false);
+		onBlurRef.current();
+	}
 
-  const isLockedByOther = lock !== null && !isOwner
+	const isLockedByOther = lock !== null && !isOwner;
 
-  return (
-    <div className="relative" onFocus={handleFocus} onBlur={handleBlur}>
-      {/* Field content */}
-      <div
-        className={[
-          isLockedByOther ? 'pointer-events-none opacity-50 select-none' : '',
-          isEditing ? 'ring-2 ring-primary-mid/40 rounded-lg' : '',
-        ]
-          .filter(Boolean)
-          .join(' ')}
-      >
-        {children}
-      </div>
-      {isEditing && !isLockedByOther && (
-        <div
-          className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-primary-mid border-2 border-canvas"
-          title="You're editing this field"
-        />
-      )}
-      {isLockedByOther && lock && (
-        <div
-          className="absolute inset-0 rounded-lg flex items-center justify-start px-2 gap-1.5 cursor-not-allowed"
-          style={{
-            backgroundColor: `${lock.userColor}18`,
-            borderColor: `${lock.userColor}40`,
-            borderWidth: 1,
-          }}
-          title={`${lock.userName} is editing this field`}
-        >
-          <div
-            className="w-3.5 h-3.5 rounded-full border-2 border-white shrink-0"
-            style={{ backgroundColor: lock.userColor }}
-          />
-          <span className="text-xs font-medium truncate" style={{ color: lock.userColor }}>
-            {lock.userName}
-          </span>
-        </div>
-      )}
-    </div>
-  )
+	return (
+		<div className="relative" onFocus={handleFocus} onBlur={handleBlur}>
+			{/* Field content */}
+			<div
+				className={[
+					isLockedByOther ? 'pointer-events-none opacity-50 select-none' : '',
+					isEditing ? 'ring-2 ring-primary-mid/40 rounded-lg' : '',
+				]
+					.filter(Boolean)
+					.join(' ')}
+			>
+				{children}
+			</div>
+			{isEditing && !isLockedByOther && (
+				<div
+					className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-primary-mid border-2 border-canvas"
+					title="You're editing this field"
+				/>
+			)}
+			{isLockedByOther && lock && (
+				<div
+					className="absolute inset-0 rounded-lg flex items-center justify-start px-2 gap-1.5 cursor-not-allowed"
+					style={{
+						backgroundColor: `${lock.userColor}18`,
+						borderColor: `${lock.userColor}40`,
+						borderWidth: 1,
+					}}
+					title={`${lock.userName} is editing this field`}
+				>
+					<div
+						className="w-3.5 h-3.5 rounded-full border-2 border-white shrink-0"
+						style={{ backgroundColor: lock.userColor }}
+					/>
+					<span className="text-xs font-medium truncate" style={{ color: lock.userColor }}>
+						{lock.userName}
+					</span>
+				</div>
+			)}
+		</div>
+	);
 }

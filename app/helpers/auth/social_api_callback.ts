@@ -1,8 +1,8 @@
-import type { HttpContext } from '@adonisjs/core/http'
-import type { OAuthProvider } from '#types/auth'
-import ApiClientUrlMissingException from '#exceptions/auth/api_client_url_missing_exception'
-import env from '#start/env'
-import type { SocialApiLoginAction } from '#actions/social/social_api_login_action'
+import ApiClientUrlMissingException from '#exceptions/auth/api_client_url_missing_exception';
+import env from '#start/env';
+import type { SocialApiLoginAction } from '#actions/social/social_api_login_action';
+import type { OAuthProvider } from '#types/auth';
+import type { HttpContext } from '@adonisjs/core/http';
 
 /**
  * Complete an OAuth callback in API mode: issue an API token for the provider
@@ -20,34 +20,34 @@ import type { SocialApiLoginAction } from '#actions/social/social_api_login_acti
  * @returns The redirect response to the client URL.
  */
 export async function completeSocialApiCallback(
-  ctx: HttpContext,
-  provider: OAuthProvider,
-  socialApiLoginAction: SocialApiLoginAction
+	ctx: HttpContext,
+	provider: OAuthProvider,
+	socialApiLoginAction: SocialApiLoginAction,
 ) {
-  const clientUrl = env.get('AUTH_API_CLIENT_URL')
+	const clientUrl = env.get('AUTH_API_CLIENT_URL');
 
-  if (!clientUrl) {
-    throw new ApiClientUrlMissingException()
-  }
+	if (!clientUrl) {
+		throw new ApiClientUrlMissingException();
+	}
 
-  const { ally, response } = ctx
-  const providerInstance = ally.use(provider)
+	const { ally, response } = ctx;
+	const providerInstance = ally.use(provider);
 
-  const redirectToClient = (error?: string) => {
-    const url = new URL(clientUrl)
-    if (error) url.searchParams.set('error', error)
-    return response.redirect().toPath(url.toString())
-  }
+	const redirectToClient = (error?: string) => {
+		const url = new URL(clientUrl);
+		if (error) url.searchParams.set('error', error);
+		return response.redirect().toPath(url.toString());
+	};
 
-  if (providerInstance.accessDenied()) return redirectToClient('access_denied')
-  if (providerInstance.stateMisMatch()) return redirectToClient('state_mismatch')
-  if (providerInstance.hasError()) return redirectToClient('oauth_error')
+	if (providerInstance.accessDenied()) return redirectToClient('access_denied');
+	if (providerInstance.stateMisMatch()) return redirectToClient('state_mismatch');
+	if (providerInstance.hasError()) return redirectToClient('oauth_error');
 
-  const allyUser = await providerInstance.user()
-  const { token, expiresAt } = await socialApiLoginAction.execute({ provider, allyUser })
+	const allyUser = await providerInstance.user();
+	const { token, expiresAt } = await socialApiLoginAction.execute({ provider, allyUser });
 
-  const url = new URL(clientUrl)
-  url.searchParams.set('token', token)
-  if (expiresAt) url.searchParams.set('expires_at', expiresAt.toISOString())
-  return response.redirect().toPath(url.toString())
+	const url = new URL(clientUrl);
+	url.searchParams.set('token', token);
+	if (expiresAt) url.searchParams.set('expires_at', expiresAt.toISOString());
+	return response.redirect().toPath(url.toString());
 }

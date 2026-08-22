@@ -44,29 +44,29 @@
  * - `README.md` — flavor-specific rewrite documenting its conventions.
  */
 export const REWRITE_ALLOWLIST = [
-  'adonisrc.ts',
-  'config/features.ts',
-  'config/database.ts',
-  'config/shield.ts',
-  'config/cors.ts',
-  'start/routes.ts',
-  'start/events.ts',
-  'start/nav.ts',
-  'start/dashboard.ts',
-  'start/container.ts',
-  'start/transmit.ts',
-  'start/sitemap.ts',
-  'start/permissions.ts',
-  'start/asset_middleware.ts',
-  'start/env.ts',
-  '.env.example',
-  'package.json',
-  'tsconfig.json',
-  'README.md',
-] as const
+	'adonisrc.ts',
+	'config/features.ts',
+	'config/database.ts',
+	'config/shield.ts',
+	'config/cors.ts',
+	'start/routes.ts',
+	'start/events.ts',
+	'start/nav.ts',
+	'start/dashboard.ts',
+	'start/container.ts',
+	'start/transmit.ts',
+	'start/sitemap.ts',
+	'start/permissions.ts',
+	'start/asset_middleware.ts',
+	'start/env.ts',
+	'.env.example',
+	'package.json',
+	'tsconfig.json',
+	'README.md',
+] as const;
 
 /** Type of a single allowlisted rewrite path. */
-export type RewritePath = (typeof REWRITE_ALLOWLIST)[number]
+export type RewritePath = (typeof REWRITE_ALLOWLIST)[number];
 
 /**
  * A rewrite entry: the full replacement content for one allowlisted file.
@@ -77,10 +77,10 @@ export type RewritePath = (typeof REWRITE_ALLOWLIST)[number]
  * manifest alone, with no hidden engine logic.
  */
 export interface RewriteEntry {
-  /** Allowlisted path of the file to overwrite, relative to repo root. */
-  path: RewritePath
-  /** Full replacement content written to the file. */
-  content: string
+	/** Allowlisted path of the file to overwrite, relative to repo root. */
+	path: RewritePath;
+	/** Full replacement content written to the file. */
+	content: string;
 }
 
 /**
@@ -92,8 +92,8 @@ export interface RewriteEntry {
  * supported — a manifest cannot add or rename a dependency.
  */
 export interface DependencyPrune {
-  /** npm package names removed from every dependency map of package.json. */
-  packages: string[]
+	/** npm package names removed from every dependency map of package.json. */
+	packages: string[];
 }
 
 /**
@@ -114,23 +114,23 @@ export interface DependencyPrune {
  * }
  */
 export interface FlavorManifest {
-  /** Flavor identifier — matches the branch name (`inertia`, `api`, ...). */
-  flavor: string
-  /**
-   * Paths to delete, relative to repo root. Globs are not supported — every
-   * entry is a literal file or directory path. The engine fails loudly if
-   * any listed path does not exist on `main`, so a stale manifest is
-   * detected before a flavor branch is published.
-   */
-  delete: string[]
-  /**
-   * Allowlisted config/composition files to rewrite with full replacement
-   * content. Every `path` must appear in {@link REWRITE_ALLOWLIST}.
-   */
-  rewrites: RewriteEntry[]
-  /**
-   * Dependencies to prune from `package.json`. Omit when a flavor keeps the
-   * full dependency set.
-   */
-  dependencies?: DependencyPrune
+	/** Flavor identifier — matches the branch name (`inertia`, `api`, ...). */
+	flavor: string;
+	/**
+	 * Paths to delete, relative to repo root. Globs are not supported — every
+	 * entry is a literal file or directory path. The engine fails loudly if
+	 * any listed path does not exist on `main`, so a stale manifest is
+	 * detected before a flavor branch is published.
+	 */
+	delete: string[];
+	/**
+	 * Allowlisted config/composition files to rewrite with full replacement
+	 * content. Every `path` must appear in {@link REWRITE_ALLOWLIST}.
+	 */
+	rewrites: RewriteEntry[];
+	/**
+	 * Dependencies to prune from `package.json`. Omit when a flavor keeps the
+	 * full dependency set.
+	 */
+	dependencies?: DependencyPrune;
 }

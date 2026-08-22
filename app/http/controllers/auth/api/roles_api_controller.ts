@@ -1,7 +1,7 @@
-import { inject } from '@adonisjs/core'
-import { type HttpContext } from '@adonisjs/core/http'
-import RolesResource from '#rest/roles_resource'
-import { handle } from '#rest/rest_adapter'
+import { inject } from '@adonisjs/core';
+import { type HttpContext } from '@adonisjs/core/http';
+import { handle } from '#rest/rest_adapter';
+import RolesResource from '#rest/roles_resource';
 
 /**
  * GET /api/v1/admin/roles — list roles from the admin REST API.
@@ -12,9 +12,9 @@ import { handle } from '#rest/rest_adapter'
  */
 @inject()
 export default class RolesApiController {
-  constructor(protected rolesResource: RolesResource) {}
+	constructor(protected rolesResource: RolesResource) {}
 
-  async index(ctx: HttpContext): Promise<void> {
-    await handle(ctx, this.rolesResource.endpoints.index)
-  }
+	async index(ctx: HttpContext): Promise<void> {
+		await handle(ctx, this.rolesResource.endpoints.index);
+	}
 }

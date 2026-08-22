@@ -1,4 +1,4 @@
-import type { PermissionSlugs } from '#types/permissions'
+import type { PermissionSlugs } from '#types/permissions';
 
 /**
  * System permission catalog of the page domain: the page management surface.
@@ -7,8 +7,8 @@ import type { PermissionSlugs } from '#types/permissions'
  * this const; the permission seeder persists exactly this matrix.
  */
 export const pagePermissionCatalog = {
-  pages: ['view', 'create', 'update', 'delete', 'publish'],
-} as const
+	pages: ['view', 'create', 'update', 'delete', 'publish'],
+} as const;
 
 /** Union of every system permission slug owned by the page domain. */
-export type PagePermissionSlug = PermissionSlugs<typeof pagePermissionCatalog>
+export type PagePermissionSlug = PermissionSlugs<typeof pagePermissionCatalog>;

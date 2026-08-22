@@ -101,6 +101,9 @@ npm run dev
 
 The app is available at `http://localhost:3333`.
 
+> [!NOTE]
+> This repository uses LF line endings (`oxfmt` enforces `endOfLine: lf` and `.gitattributes` sets `* text=auto`). On Windows, run `git config core.autocrlf false` before your first commit to keep the working tree LF-only and avoid CRLF churn.
+
 ### Create Your Project
 
 AdonisJS Foundry is **not meant to be used as-is**. It is a boilerplate — you should create your own repository from it while keeping a link to the source so you can pull future updates.
@@ -184,8 +187,8 @@ git checkout -b inertia origin/inertia   # or: git checkout -b api origin/api
 | `npm run build`     | Build for production            |
 | `npm start`         | Start the production server     |
 | `npm test`          | Run tests (Japa)                |
-| `npm run lint`      | Run ESLint                      |
-| `npm run format`    | Format code with Prettier       |
+| `npm run lint`      | Run oxlint                      |
+| `npm run format`    | Format code with oxfmt          |
 | `npm run typecheck` | Type-check backend and frontend |
 
 ## Configuration

@@ -1,12 +1,12 @@
-﻿import { inject } from '@adonisjs/core'
-import User from '#models/auth/user'
-import { LogService } from '#services/logging/log_service'
-import { UserRepository } from '#repositories/auth/user_repository'
-import InvalidCredentialsException from '#exceptions/auth/invalid_credentials_exception'
+﻿import { inject } from '@adonisjs/core';
+import InvalidCredentialsException from '#exceptions/auth/invalid_credentials_exception';
+import User from '#models/auth/user';
+import { UserRepository } from '#repositories/auth/user_repository';
+import { LogService } from '#services/logging/log_service';
 
 interface LoginPayload {
-  email: string
-  password: string
+	email: string;
+	password: string;
 }
 
 /**
@@ -14,31 +14,31 @@ interface LoginPayload {
  */
 @inject()
 export class LoginAction {
-  constructor(
-    protected logService: LogService,
-    protected userRepository: UserRepository
-  ) {}
+	constructor(
+		protected logService: LogService,
+		protected userRepository: UserRepository,
+	) {}
 
-  /**
-   * @param payload - Email address and plaintext password to verify.
-   * @returns The authenticated {@link User} instance.
-   */
-  async execute(payload: LoginPayload): Promise<User> {
-    try {
-      const user = await this.userRepository.verifyCredentials(payload.email, payload.password)
+	/**
+	 * @param payload - Email address and plaintext password to verify.
+	 * @returns The authenticated {@link User} instance.
+	 */
+	async execute(payload: LoginPayload): Promise<User> {
+		try {
+			const user = await this.userRepository.verifyCredentials(payload.email, payload.password);
 
-      this.logService.logAuth('login.success', {
-        userId: user.id,
-        userEmail: user.email,
-      })
+			this.logService.logAuth('login.success', {
+				userId: user.id,
+				userEmail: user.email,
+			});
 
-      return user
-    } catch {
-      this.logService.logAuth('login.failed', {
-        userEmail: payload.email,
-      })
+			return user;
+		} catch {
+			this.logService.logAuth('login.failed', {
+				userEmail: payload.email,
+			});
 
-      throw new InvalidCredentialsException()
-    }
-  }
+			throw new InvalidCredentialsException();
+		}
+	}
 }

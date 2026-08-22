@@ -2,7 +2,19 @@
  * Base Tailwind font-size scale, mapping directly to the `text-*` utilities.
  */
 export type BaseFontSize =
-  'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | '8xl' | '9xl'
+	| 'xs'
+	| 'sm'
+	| 'base'
+	| 'lg'
+	| 'xl'
+	| '2xl'
+	| '3xl'
+	| '4xl'
+	| '5xl'
+	| '6xl'
+	| '7xl'
+	| '8xl'
+	| '9xl';
 
 /**
  * A font size that can optionally be scoped to a Tailwind responsive breakpoint.
@@ -10,12 +22,12 @@ export type BaseFontSize =
  * Examples: `'base'`, `'lg'`, `'md:xl'`, `'lg:2xl'`
  */
 export type SingleFontSize =
-  | BaseFontSize
-  | `sm:${BaseFontSize}`
-  | `md:${BaseFontSize}`
-  | `lg:${BaseFontSize}`
-  | `xl:${BaseFontSize}`
-  | `2xl:${BaseFontSize}`
+	| BaseFontSize
+	| `sm:${BaseFontSize}`
+	| `md:${BaseFontSize}`
+	| `lg:${BaseFontSize}`
+	| `xl:${BaseFontSize}`
+	| `2xl:${BaseFontSize}`;
 
 /**
  * Accepted value for the `fs` prop on typography components.
@@ -31,4 +43,4 @@ export type SingleFontSize =
  * // Responsive array
  * fs={['base', 'md:lg', 'xl:xl']}
  */
-export type FontSize = SingleFontSize | SingleFontSize[]
+export type FontSize = SingleFontSize | SingleFontSize[];

@@ -8,34 +8,34 @@ Custom exceptions live in `app/exceptions/{domain}/{name}_exception.ts`, one cla
 
 ```typescript
 export default class SomethingWrongException extends Exception {
-  static status = 409
-  static code = 'E_SOMETHING_WRONG'
+	static status = 409;
+	static code = 'E_SOMETHING_WRONG';
 
-  constructor(private detail: string) {
-    super(`Human-readable default message with ${detail}.`, {
-      status: SomethingWrongException.status,
-      code: SomethingWrongException.code,
-    })
-  }
+	constructor(private detail: string) {
+		super(`Human-readable default message with ${detail}.`, {
+			status: SomethingWrongException.status,
+			code: SomethingWrongException.code,
+		});
+	}
 
-  async handle(error: this, ctx: HttpContext) {
-    const { request, response, session, i18n } = ctx
-    const message = i18n.t(`exceptions.${error.code}`)
+	async handle(error: this, ctx: HttpContext) {
+		const { request, response, session, i18n } = ctx;
+		const message = i18n.t(`exceptions.${error.code}`);
 
-    if (request.wantsJSON()) {
-      return response.status(error.status).send({
-        error: {
-          code: error.code,
-          message,
-          details: { detail: error.detail },
-          ...(app.inDev && { stack: error.stack }),
-        },
-      })
-    }
+		if (request.wantsJSON()) {
+			return response.status(error.status).send({
+				error: {
+					code: error.code,
+					message,
+					details: { detail: error.detail },
+					...(app.inDev && { stack: error.stack }),
+				},
+			});
+		}
 
-    session.flash('error', message)
-    return response.redirect().back()
-  }
+		session.flash('error', message);
+		return response.redirect().back();
+	}
 }
 ```
 

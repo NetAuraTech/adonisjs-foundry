@@ -1,12 +1,12 @@
-import { inject } from '@adonisjs/core'
-import User from '#models/auth/user'
-import { LogService } from '#services/logging/log_service'
-import { UserRepository } from '#repositories/auth/user_repository'
+import { inject } from '@adonisjs/core';
+import User from '#models/auth/user';
+import { UserRepository } from '#repositories/auth/user_repository';
+import { LogService } from '#services/logging/log_service';
 
 interface RevokeApiTokenPayload {
-  user: User
-  /** Database identifier of the token to revoke (its `id` column). */
-  tokenIdentifier: string | number | BigInt
+	user: User;
+	/** Database identifier of the token to revoke (its `id` column). */
+	tokenIdentifier: string | number | BigInt;
 }
 
 /**
@@ -15,21 +15,21 @@ interface RevokeApiTokenPayload {
  */
 @inject()
 export class RevokeApiTokenAction {
-  constructor(
-    protected logService: LogService,
-    protected userRepository: UserRepository
-  ) {}
+	constructor(
+		protected logService: LogService,
+		protected userRepository: UserRepository,
+	) {}
 
-  /**
-   * @param payload - The token owner and the identifier of the token to delete.
-   * @returns Nothing — revoking an already-gone token is not an error.
-   */
-  async execute(payload: RevokeApiTokenPayload): Promise<void> {
-    await this.userRepository.deleteAccessToken(payload.user, payload.tokenIdentifier)
+	/**
+	 * @param payload - The token owner and the identifier of the token to delete.
+	 * @returns Nothing — revoking an already-gone token is not an error.
+	 */
+	async execute(payload: RevokeApiTokenPayload): Promise<void> {
+		await this.userRepository.deleteAccessToken(payload.user, payload.tokenIdentifier);
 
-    this.logService.logAuth('api_token.revoked', {
-      userId: payload.user.id,
-      userEmail: payload.user.email,
-    })
-  }
+		this.logService.logAuth('api_token.revoked', {
+			userId: payload.user.id,
+			userEmail: payload.user.email,
+		});
+	}
 }

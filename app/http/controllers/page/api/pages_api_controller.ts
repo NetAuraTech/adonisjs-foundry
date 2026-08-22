@@ -1,7 +1,7 @@
-import { inject } from '@adonisjs/core'
-import { type HttpContext } from '@adonisjs/core/http'
-import PagesResource from '#rest/pages_resource'
-import { handle } from '#rest/rest_adapter'
+import { inject } from '@adonisjs/core';
+import { type HttpContext } from '@adonisjs/core/http';
+import PagesResource from '#rest/pages_resource';
+import { handle } from '#rest/rest_adapter';
 
 /**
  * GET  /api/v1/admin/pages — list pages
@@ -13,13 +13,13 @@ import { handle } from '#rest/rest_adapter'
  */
 @inject()
 export default class PagesApiController {
-  constructor(protected pagesResource: PagesResource) {}
+	constructor(protected pagesResource: PagesResource) {}
 
-  async index(ctx: HttpContext): Promise<void> {
-    await handle(ctx, this.pagesResource.endpoints.index)
-  }
+	async index(ctx: HttpContext): Promise<void> {
+		await handle(ctx, this.pagesResource.endpoints.index);
+	}
 
-  async setHomepage(ctx: HttpContext): Promise<void> {
-    await handle(ctx, this.pagesResource.endpoints.setHomepage)
-  }
+	async setHomepage(ctx: HttpContext): Promise<void> {
+		await handle(ctx, this.pagesResource.endpoints.setHomepage);
+	}
 }

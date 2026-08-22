@@ -1,4 +1,4 @@
-import type { FileType } from '#types/file'
+import type { FileType } from '#types/file';
 
 /**
  * Classifies a MIME type into a coarse `FileType`.
@@ -15,17 +15,17 @@ import type { FileType } from '#types/file'
  * classifyFileType('application/pdf') // → 'pdf'
  */
 export function classifyFileType(mimeType: string): FileType {
-  if (mimeType.startsWith('image/')) return 'image'
-  if (mimeType.startsWith('video/')) return 'video'
-  if (mimeType.startsWith('audio/')) return 'audio'
-  if (mimeType === 'application/pdf') return 'pdf'
+	if (mimeType.startsWith('image/')) return 'image';
+	if (mimeType.startsWith('video/')) return 'video';
+	if (mimeType.startsWith('audio/')) return 'audio';
+	if (mimeType === 'application/pdf') return 'pdf';
 
-  const isDocument = [
-    'text/',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument',
-    'application/vnd.ms-',
-  ].some((prefix) => mimeType.startsWith(prefix))
+	const isDocument = [
+		'text/',
+		'application/msword',
+		'application/vnd.openxmlformats-officedocument',
+		'application/vnd.ms-',
+	].some((prefix) => mimeType.startsWith(prefix));
 
-  return isDocument ? 'document' : 'other'
+	return isDocument ? 'document' : 'other';
 }

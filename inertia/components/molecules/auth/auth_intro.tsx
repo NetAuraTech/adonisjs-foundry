@@ -1,18 +1,18 @@
-import { ReactNode } from 'react'
-import { Heading } from '~/components/atoms/heading'
-import { Paragraph } from '~/components/atoms/paragraph'
+import { ReactNode } from 'react';
+import { Heading } from '~/components/atoms/heading';
+import { Paragraph } from '~/components/atoms/paragraph';
 
 interface AuthIntroProps {
-  /** Main heading displayed below the icon. */
-  title: string
-  /** Muted subtitle displayed below the title. */
-  text: string
-  /**
-   * SVG path element(s) rendered inside a 24×24 viewBox icon container.
-   * Pass a `<path>` or a group of `<path>` elements — the wrapping `<svg>`
-   * is provided by the component.
-   */
-  icon: ReactNode
+	/** Main heading displayed below the icon. */
+	title: string;
+	/** Muted subtitle displayed below the title. */
+	text: string;
+	/**
+	 * SVG path element(s) rendered inside a 24×24 viewBox icon container.
+	 * Pass a `<path>` or a group of `<path>` elements — the wrapping `<svg>`
+	 * is provided by the component.
+	 */
+	icon: ReactNode;
 }
 
 /**
@@ -42,17 +42,17 @@ interface AuthIntroProps {
  * />
  */
 export function AuthIntro(props: AuthIntroProps) {
-  const { title, text, icon } = props
+	const { title, text, icon } = props;
 
-  return (
-    <div className="text-center mb-8">
-      <div className="inline-flex items-center justify-center bg-primary-soft text-ink-inverted rounded-2xl p-4 mb-4">
-        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          {icon}
-        </svg>
-      </div>
-      <Heading level={1}>{title}</Heading>
-      <Paragraph variant="muted">{text}</Paragraph>
-    </div>
-  )
+	return (
+		<div className="text-center mb-8">
+			<div className="inline-flex items-center justify-center bg-primary-soft text-ink-inverted rounded-2xl p-4 mb-4">
+				<svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					{icon}
+				</svg>
+			</div>
+			<Heading level={1}>{title}</Heading>
+			<Paragraph variant="muted">{text}</Paragraph>
+		</div>
+	);
 }

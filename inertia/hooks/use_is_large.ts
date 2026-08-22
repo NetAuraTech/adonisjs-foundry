@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 
 /**
  * Tracks whether the viewport meets or exceeds the `lg` breakpoint.
@@ -18,25 +18,23 @@ import { useEffect, useState } from 'react'
  * return isLarge ? <DesktopNav /> : <MobileNav />
  */
 export function useIsLarge() {
-  const getLgValue = () => {
-    if (typeof window === 'undefined') return '1024px'
-    return (
-      getComputedStyle(document.documentElement).getPropertyValue('--breakpoint-lg') || '1024px'
-    )
-  }
+	const getLgValue = () => {
+		if (typeof window === 'undefined') return '1024px';
+		return getComputedStyle(document.documentElement).getPropertyValue('--breakpoint-lg') || '1024px';
+	};
 
-  const [isLarge, setIsLarge] = useState(false)
+	const [isLarge, setIsLarge] = useState(false);
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia(`(min-width: ${getLgValue()})`)
+	useEffect(() => {
+		const mediaQuery = window.matchMedia(`(min-width: ${getLgValue()})`);
 
-    setIsLarge(mediaQuery.matches)
+		setIsLarge(mediaQuery.matches);
 
-    const handler = (e: MediaQueryListEvent) => setIsLarge(e.matches)
-    mediaQuery.addEventListener('change', handler)
+		const handler = (e: MediaQueryListEvent) => setIsLarge(e.matches);
+		mediaQuery.addEventListener('change', handler);
 
-    return () => mediaQuery.removeEventListener('change', handler)
-  }, [])
+		return () => mediaQuery.removeEventListener('change', handler);
+	}, []);
 
-  return isLarge
+	return isLarge;
 }

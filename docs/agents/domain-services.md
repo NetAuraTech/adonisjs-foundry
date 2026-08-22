@@ -13,18 +13,18 @@ whatever operations its bounded context needs. Don't force
 ```typescript
 @inject()
 export class FooService {
-  constructor(
-    protected fooRepository: FooRepository,
-    protected logService: LogService
-  ) {}
+	constructor(
+		protected fooRepository: FooRepository,
+		protected logService: LogService,
+	) {}
 
-  async someAction(payload, userId) {
-    // 1. validate / check invariants, throw typed exception or
-    //    Object.assign(new Error(msg), { code: 'E_...' }) if violated
-    // 2. delegate persistence to this.fooRepository
-    // 3. this.logService.logBusiness/logAuth/logSecurity(event, { userId, userEmail }, metadata?)
-    // 4. return a model, primitive, or void — never an HTTP response
-  }
+	async someAction(payload, userId) {
+		// 1. validate / check invariants, throw typed exception or
+		//    Object.assign(new Error(msg), { code: 'E_...' }) if violated
+		// 2. delegate persistence to this.fooRepository
+		// 3. this.logService.logBusiness/logAuth/logSecurity(event, { userId, userEmail }, metadata?)
+		// 4. return a model, primitive, or void — never an HTTP response
+	}
 }
 ```
 

@@ -1,7 +1,7 @@
-import drive from '@adonisjs/drive/services/main'
-import { readFile as defaultReadFile } from 'node:fs/promises'
-import backupConfig from '#config/backup'
-import { type DriveDirectory, type DriveFile } from '@adonisjs/drive'
+import { readFile as defaultReadFile } from 'node:fs/promises';
+import { type DriveDirectory, type DriveFile } from '@adonisjs/drive';
+import drive from '@adonisjs/drive/services/main';
+import backupConfig from '#config/backup';
 
 /**
  * StorageUploader — Thin wrapper around AdonisJS Drive service.
@@ -23,47 +23,47 @@ import { type DriveDirectory, type DriveFile } from '@adonisjs/drive'
  *   new StorageUploader(fakeDisk, readFileStub)
  */
 export class StorageUploader {
-  private disk
-  private readonly readFileFn: typeof defaultReadFile
+	private disk;
+	private readonly readFileFn: typeof defaultReadFile;
 
-  /**
-   * @param _disk - Optional Drive disk override for testing.
-   * @param _readFile - Optional fs.readFile override for testing.
-   */
-  constructor(_disk?: ReturnType<typeof drive.use>, _readFile?: typeof defaultReadFile) {
-    this.disk = _disk ?? drive.use(backupConfig.storage.disk as Parameters<typeof drive.use>[0])
-    this.readFileFn = _readFile ?? defaultReadFile
-  }
+	/**
+	 * @param _disk - Optional Drive disk override for testing.
+	 * @param _readFile - Optional fs.readFile override for testing.
+	 */
+	constructor(_disk?: ReturnType<typeof drive.use>, _readFile?: typeof defaultReadFile) {
+		this.disk = _disk ?? drive.use(backupConfig.storage.disk as Parameters<typeof drive.use>[0]);
+		this.readFileFn = _readFile ?? defaultReadFile;
+	}
 
-  /**
-   * Build the full storage path for a backup filename.
-   */
-  buildPath(filename: string): string {
-    return `${backupConfig.storage.prefix}/${filename}`
-  }
+	/**
+	 * Build the full storage path for a backup filename.
+	 */
+	buildPath(filename: string): string {
+		return `${backupConfig.storage.prefix}/${filename}`;
+	}
 
-  /**
-   * Upload a local file to the configured storage disk.
-   */
-  async upload(localPath: string, filename: string): Promise<void> {
-    const contents = await this.readFileFn(localPath)
-    const remotePath = this.buildPath(filename)
-    await this.disk.put(remotePath, contents, { contentType: 'application/octet-stream' })
-  }
+	/**
+	 * Upload a local file to the configured storage disk.
+	 */
+	async upload(localPath: string, filename: string): Promise<void> {
+		const contents = await this.readFileFn(localPath);
+		const remotePath = this.buildPath(filename);
+		await this.disk.put(remotePath, contents, { contentType: 'application/octet-stream' });
+	}
 
-  /**
-   * List all backup objects under the configured prefix.
-   */
-  async listBackups(): Promise<Iterable<DriveFile | DriveDirectory>> {
-    const prefix = `${backupConfig.storage.prefix}/`
-    const { objects } = await this.disk.listAll(prefix)
-    return objects
-  }
+	/**
+	 * List all backup objects under the configured prefix.
+	 */
+	async listBackups(): Promise<Iterable<DriveFile | DriveDirectory>> {
+		const prefix = `${backupConfig.storage.prefix}/`;
+		const { objects } = await this.disk.listAll(prefix);
+		return objects;
+	}
 
-  /**
-   * Get metadata for a stored object.
-   */
-  async getMetaData(key: string): Promise<{ contentLength?: number; lastModified?: Date }> {
-    return this.disk.getMetaData(key)
-  }
+	/**
+	 * Get metadata for a stored object.
+	 */
+	async getMetaData(key: string): Promise<{ contentLength?: number; lastModified?: Date }> {
+		return this.disk.getMetaData(key);
+	}
 }

@@ -1,12 +1,12 @@
-import { ReactNode } from 'react'
-import type { SystemRoleSlug } from '#start/permissions'
-import { useAuth } from '~/hooks/use_auth'
+import { ReactNode } from 'react';
+import { useAuth } from '~/hooks/use_auth';
+import type { SystemRoleSlug } from '#start/permissions';
 
 interface HasRoleProps {
-  role: SystemRoleSlug | SystemRoleSlug[]
-  requireAll?: boolean
-  fallback?: ReactNode
-  children: ReactNode
+	role: SystemRoleSlug | SystemRoleSlug[];
+	requireAll?: boolean;
+	fallback?: ReactNode;
+	children: ReactNode;
 }
 
 /**
@@ -35,13 +35,9 @@ interface HasRoleProps {
  * </HasRole>
  */
 export function HasRole({ role, requireAll = false, fallback = null, children }: HasRoleProps) {
-  const { hasRole, hasAnyRole, hasAllRoles } = useAuth()
+	const { hasRole, hasAnyRole, hasAllRoles } = useAuth();
 
-  const hasAccess = Array.isArray(role)
-    ? requireAll
-      ? hasAllRoles(role)
-      : hasAnyRole(role)
-    : hasRole(role)
+	const hasAccess = Array.isArray(role) ? (requireAll ? hasAllRoles(role) : hasAnyRole(role)) : hasRole(role);
 
-  return hasAccess ? <>{children}</> : <>{fallback}</>
+	return hasAccess ? <>{children}</> : <>{fallback}</>;
 }

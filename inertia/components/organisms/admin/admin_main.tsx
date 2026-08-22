@@ -1,24 +1,24 @@
-import { Section } from '~/components/atoms/section'
-import { ReactNode } from 'react'
-import { Heading } from '~/components/atoms/heading'
-import { Icon } from '~/components/atoms/icon'
-import { Head } from '@inertiajs/react'
+import { Head } from '@inertiajs/react';
+import { ReactNode } from 'react';
+import { Heading } from '~/components/atoms/heading';
+import { Icon } from '~/components/atoms/icon';
+import { Section } from '~/components/atoms/section';
 
 interface AdminMainBaseProps {
-  /** Page title shown in the `<Head>` tag and as the section heading. */
-  title: string
-  /**
-   * Optional Lucide icon displayed to the left of the title.
-   * Must be a valid key of the Lucide `icons` map.
-   */
-  icon?: string
-  /**
-   * Optional node rendered to the right of the heading row (e.g. a primary
-   * action `<Button>` or a `<NavLink>`).
-   */
-  action?: ReactNode
-  /** Page content — typically one or more `<Card>` components. */
-  children: ReactNode
+	/** Page title shown in the `<Head>` tag and as the section heading. */
+	title: string;
+	/**
+	 * Optional Lucide icon displayed to the left of the title.
+	 * Must be a valid key of the Lucide `icons` map.
+	 */
+	icon?: string;
+	/**
+	 * Optional node rendered to the right of the heading row (e.g. a primary
+	 * action `<Button>` or a `<NavLink>`).
+	 */
+	action?: ReactNode;
+	/** Page content — typically one or more `<Card>` components. */
+	children: ReactNode;
 }
 
 /**
@@ -47,19 +47,19 @@ interface AdminMainBaseProps {
  * </AdminMain>
  */
 export function AdminMain(props: AdminMainBaseProps) {
-  const { title, icon, action, children } = props
+	const { title, icon, action, children } = props;
 
-  return (
-    <Section className="py-8 grid gap-4">
-      <Head title={title} />
-      <div className="flex gap-3 flex-col md:flex-row justify-between md:items-center w-full">
-        <Heading level={2} flex>
-          {icon && <Icon name={icon} size={32} />}
-          {title}
-        </Heading>
-        {action}
-      </div>
-      {children}
-    </Section>
-  )
+	return (
+		<Section className="py-8 grid gap-4">
+			<Head title={title} />
+			<div className="flex gap-3 flex-col md:flex-row justify-between md:items-center w-full">
+				<Heading level={2} flex>
+					{icon && <Icon name={icon} size={32} />}
+					{title}
+				</Heading>
+				{action}
+			</div>
+			{children}
+		</Section>
+	);
 }

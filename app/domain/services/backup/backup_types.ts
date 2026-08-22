@@ -6,28 +6,28 @@
  */
 
 export interface BackupResult {
-  success: boolean
-  filename: string
-  type: 'full' | 'differential'
-  size: number
-  duration: number
-  storage: string
-  error?: string
+	success: boolean;
+	filename: string;
+	type: 'full' | 'differential';
+	size: number;
+	duration: number;
+	storage: string;
+	error?: string;
 }
 
 export interface BackupManifest {
-  type: 'full' | 'differential'
-  createdAt: string
-  tables: string[]
-  fullBackupReference?: string
+	type: 'full' | 'differential';
+	createdAt: string;
+	tables: string[];
+	fullBackupReference?: string;
 }
 
 export interface BackupMetadata {
-  filename: string
-  type: 'full' | 'differential'
-  size: number
-  createdAt: Date
-  path: string
+	filename: string;
+	type: 'full' | 'differential';
+	size: number;
+	createdAt: Date;
+	path: string;
 }
 
 /**
@@ -36,7 +36,7 @@ export interface BackupMetadata {
  * instantiable without DI.
  */
 export interface BackupContext {
-  tempDir: string
-  filename: string
-  strategyType: 'full' | 'differential'
+	tempDir: string;
+	filename: string;
+	strategyType: 'full' | 'differential';
 }

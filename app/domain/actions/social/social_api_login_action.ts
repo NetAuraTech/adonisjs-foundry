@@ -1,17 +1,17 @@
-import { inject } from '@adonisjs/core'
-import type User from '#models/auth/user'
-import type { OAuthProvider } from '#types/auth'
-import type { AllyUserContract } from '@adonisjs/ally/types'
-import { FindOrCreateSocialUserAction } from '#actions/social/find_or_create_social_user_action'
-import { CreateApiTokenAction, type ApiTokenResult } from '#actions/auth/create_api_token_action'
+import { inject } from '@adonisjs/core';
+import { CreateApiTokenAction, type ApiTokenResult } from '#actions/auth/create_api_token_action';
+import { FindOrCreateSocialUserAction } from '#actions/social/find_or_create_social_user_action';
+import type User from '#models/auth/user';
+import type { OAuthProvider } from '#types/auth';
+import type { AllyUserContract } from '@adonisjs/ally/types';
 
 interface SocialApiLoginPayload {
-  provider: OAuthProvider
-  allyUser: AllyUserContract<any>
+	provider: OAuthProvider;
+	allyUser: AllyUserContract<any>;
 }
 
 export interface SocialApiLoginResult extends ApiTokenResult {
-  user: User
+	user: User;
 }
 
 /**
@@ -23,18 +23,18 @@ export interface SocialApiLoginResult extends ApiTokenResult {
  */
 @inject()
 export class SocialApiLoginAction {
-  constructor(
-    protected findOrCreateSocialUserAction: FindOrCreateSocialUserAction,
-    protected createApiTokenAction: CreateApiTokenAction
-  ) {}
+	constructor(
+		protected findOrCreateSocialUserAction: FindOrCreateSocialUserAction,
+		protected createApiTokenAction: CreateApiTokenAction,
+	) {}
 
-  /**
-   * @param payload - The provider and the authenticated provider user.
-   * @returns The resolved {@link User} and its issued API token.
-   */
-  async execute(payload: SocialApiLoginPayload): Promise<SocialApiLoginResult> {
-    const user = await this.findOrCreateSocialUserAction.execute(payload)
-    const { token, expiresAt } = await this.createApiTokenAction.execute({ user })
-    return { user, token, expiresAt }
-  }
+	/**
+	 * @param payload - The provider and the authenticated provider user.
+	 * @returns The resolved {@link User} and its issued API token.
+	 */
+	async execute(payload: SocialApiLoginPayload): Promise<SocialApiLoginResult> {
+		const user = await this.findOrCreateSocialUserAction.execute(payload);
+		const { token, expiresAt } = await this.createApiTokenAction.execute({ user });
+		return { user, token, expiresAt };
+	}
 }

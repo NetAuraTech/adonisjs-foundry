@@ -1,10 +1,10 @@
-﻿import { inject } from '@adonisjs/core'
-import type PageRevision from '#cms/models/page/page_revision'
-import { PageRevisionRepository } from '#cms/domain/repositories/page/page_revision_repository'
-import { withTransaction } from '#shared/utils/with_transaction'
+﻿import { inject } from '@adonisjs/core';
+import { PageRevisionRepository } from '#cms/domain/repositories/page/page_revision_repository';
+import { withTransaction } from '#shared/utils/with_transaction';
+import type PageRevision from '#cms/models/page/page_revision';
 
 interface ToggleRevisionKeepPayload {
-  revisionId: number
+	revisionId: number;
 }
 
 /**
@@ -12,17 +12,17 @@ interface ToggleRevisionKeepPayload {
  */
 @inject()
 export class ToggleRevisionKeepAction {
-  constructor(protected revisionRepository: PageRevisionRepository) {}
+	constructor(protected revisionRepository: PageRevisionRepository) {}
 
-  /**
-   * Execute keep toggle.
-   *
-   * @param payload - Revision ID to toggle.
-   * @returns The updated {@link PageRevision} with the new `keep` state.
-   */
-  async execute(payload: ToggleRevisionKeepPayload): Promise<PageRevision> {
-    return withTransaction(async () => {
-      return this.revisionRepository.toggleKeep(payload.revisionId)
-    })
-  }
+	/**
+	 * Execute keep toggle.
+	 *
+	 * @param payload - Revision ID to toggle.
+	 * @returns The updated {@link PageRevision} with the new `keep` state.
+	 */
+	async execute(payload: ToggleRevisionKeepPayload): Promise<PageRevision> {
+		return withTransaction(async () => {
+			return this.revisionRepository.toggleKeep(payload.revisionId);
+		});
+	}
 }

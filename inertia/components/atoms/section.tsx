@@ -1,14 +1,14 @@
-import { ReactNode } from 'react'
+import { ReactNode } from 'react';
 
 interface SectionProps {
-  children: ReactNode
-  /** Optional `id` attribute for anchor linking. */
-  id?: string
-  /**
-   * Tailwind classes applied to the `<section>` element.
-   * Defaults to `'py-8'`.
-   */
-  className?: string
+	children: ReactNode;
+	/** Optional `id` attribute for anchor linking. */
+	id?: string;
+	/**
+	 * Tailwind classes applied to the `<section>` element.
+	 * Defaults to `'py-8'`.
+	 */
+	className?: string;
 }
 
 /**
@@ -35,11 +35,11 @@ interface SectionProps {
  * </Section>
  */
 export function Section(props: SectionProps) {
-  const { children, className = 'py-8', ...sectionProps } = props
+	const { children, className = 'py-8', ...sectionProps } = props;
 
-  return (
-    <section {...sectionProps} className={className}>
-      {children}
-    </section>
-  )
+	return (
+		<section {...sectionProps} className={className}>
+			{children}
+		</section>
+	);
 }

@@ -1,8 +1,8 @@
-import { inject } from '@adonisjs/core'
-import User from '#models/auth/user'
+import { inject } from '@adonisjs/core';
+import User from '#models/auth/user';
 
 interface NeedsPasswordSetupPayload {
-  user: User
+	user: User;
 }
 
 /**
@@ -10,15 +10,14 @@ interface NeedsPasswordSetupPayload {
  */
 @inject()
 export class NeedsPasswordSetupAction {
-  constructor() {}
+	constructor() {}
 
-  /**
-   * @param payload - The User to check
-   * @returns true if the user has no password hash stored
-   */
-  async execute(payload: NeedsPasswordSetupPayload): Promise<boolean> {
-    const hasSocialAccount =
-      payload.user.githubId || payload.user.googleId || payload.user.facebookId
-    return !payload.user.password && !!hasSocialAccount
-  }
+	/**
+	 * @param payload - The User to check
+	 * @returns true if the user has no password hash stored
+	 */
+	async execute(payload: NeedsPasswordSetupPayload): Promise<boolean> {
+		const hasSocialAccount = payload.user.githubId || payload.user.googleId || payload.user.facebookId;
+		return !payload.user.password && !!hasSocialAccount;
+	}
 }

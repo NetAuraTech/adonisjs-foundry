@@ -1,5 +1,5 @@
-import { BaseTransformer } from '@adonisjs/core/transformers'
-import type { DashboardStats } from '#types/dashboard'
+import { BaseTransformer } from '@adonisjs/core/transformers';
+import type { DashboardStats } from '#types/dashboard';
 
 /**
  * Shapes the aggregated {@link DashboardStats} snapshot for the Inertia
@@ -10,7 +10,7 @@ import type { DashboardStats } from '#types/dashboard'
  * to ISO strings in the JSON payload.
  */
 export default class DashboardTransformer extends BaseTransformer<DashboardStats> {
-  async toObject() {
-    return { ...this.resource }
-  }
+	async toObject() {
+		return { ...this.resource };
+	}
 }
