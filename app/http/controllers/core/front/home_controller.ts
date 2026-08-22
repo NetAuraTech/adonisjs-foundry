@@ -1,7 +1,7 @@
-import type { HttpContext } from '@adonisjs/core/http'
-import { inject } from '@adonisjs/core'
-import { I18nService } from '#services/i18n_service'
-import { buildHomePayload } from '#helpers/i18n_payloads/home'
+import { inject } from '@adonisjs/core';
+import { buildHomePayload } from '#helpers/i18n_payloads/home';
+import { I18nService } from '#services/i18n_service';
+import type { HttpContext } from '@adonisjs/core/http';
 
 /**
  * Serves the hand-written home page of the public front.
@@ -14,16 +14,16 @@ import { buildHomePayload } from '#helpers/i18n_payloads/home'
  */
 @inject()
 export default class HomeController {
-  constructor(protected i18n: I18nService) {}
+	constructor(protected i18n: I18nService) {}
 
-  /**
-   * `GET /` — renders the blank home page as `front.home`.
-   *
-   * @returns The Inertia-rendered `core/front/home` page.
-   */
-  async render({ inertia }: HttpContext) {
-    return inertia.render('core/front/home', {
-      translations: buildHomePayload(this.i18n),
-    })
-  }
+	/**
+	 * `GET /` — renders the blank home page as `front.home`.
+	 *
+	 * @returns The Inertia-rendered `core/front/home` page.
+	 */
+	async render({ inertia }: HttpContext) {
+		return inertia.render('core/front/home', {
+			translations: buildHomePayload(this.i18n),
+		});
+	}
 }

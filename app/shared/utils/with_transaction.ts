@@ -1,5 +1,5 @@
-import db from '@adonisjs/lucid/services/db'
-import { transactionContext } from '#shared/context/transaction_context'
+import db from '@adonisjs/lucid/services/db';
+import { transactionContext } from '#shared/context/transaction_context';
 
 /**
  * Execute a callback within a database transaction that is automatically
@@ -21,7 +21,7 @@ import { transactionContext } from '#shared/context/transaction_context'
  * })
  */
 export function withTransaction<T>(callback: () => Promise<T>): Promise<T> {
-  return db.transaction((trx) => {
-    return transactionContext.run(trx, callback)
-  })
+	return db.transaction((trx) => {
+		return transactionContext.run(trx, callback);
+	});
 }

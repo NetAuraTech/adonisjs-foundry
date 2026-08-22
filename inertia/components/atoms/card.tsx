@@ -1,36 +1,36 @@
-import { ReactNode } from 'react'
-import { Heading } from '~/components/atoms/heading'
-import { Paragraph } from '~/components/atoms/paragraph'
+import { ReactNode } from 'react';
+import { Heading } from '~/components/atoms/heading';
+import { Paragraph } from '~/components/atoms/paragraph';
 
 interface CardProps {
-  /** Optional title rendered in the card header using `<Heading level={3}>`. */
-  title?: string
-  /** Optional subtitle rendered below the title as a muted paragraph. */
-  subtitle?: string
-  /** Main card content, rendered in the padded body area. */
-  children: ReactNode
-  /**
-   * Custom header content. When provided, `title` and `subtitle` are ignored
-   * and this node is rendered directly inside the header slot.
-   */
-  header?: ReactNode
-  /**
-   * Footer content rendered below the body with a top border and a sunken
-   * background to visually separate it from the main content.
-   */
-  footer?: ReactNode
-  /**
-   * Border style applied to the card container.
-   *
-   * - `'none'` — no border.
-   * - `'muted'` — subtle `edge` border, default.
-   * - `'danger'` — danger-colored border for destructive sections.
-   *
-   * Defaults to `'muted'`.
-   */
-  border?: 'none' | 'muted' | 'danger'
-  padding?: string
-  className?: string
+	/** Optional title rendered in the card header using `<Heading level={3}>`. */
+	title?: string;
+	/** Optional subtitle rendered below the title as a muted paragraph. */
+	subtitle?: string;
+	/** Main card content, rendered in the padded body area. */
+	children: ReactNode;
+	/**
+	 * Custom header content. When provided, `title` and `subtitle` are ignored
+	 * and this node is rendered directly inside the header slot.
+	 */
+	header?: ReactNode;
+	/**
+	 * Footer content rendered below the body with a top border and a sunken
+	 * background to visually separate it from the main content.
+	 */
+	footer?: ReactNode;
+	/**
+	 * Border style applied to the card container.
+	 *
+	 * - `'none'` — no border.
+	 * - `'muted'` — subtle `edge` border, default.
+	 * - `'danger'` — danger-colored border for destructive sections.
+	 *
+	 * Defaults to `'muted'`.
+	 */
+	border?: 'none' | 'muted' | 'danger';
+	padding?: string;
+	className?: string;
 }
 
 /**
@@ -58,43 +58,34 @@ interface CardProps {
  * </Card>
  */
 export function Card(props: CardProps) {
-  const {
-    children,
-    title,
-    subtitle,
-    header,
-    footer,
-    border = 'muted',
-    padding = 'p-8',
-    className,
-  } = props
+	const { children, title, subtitle, header, footer, border = 'muted', padding = 'p-8', className } = props;
 
-  const borders = {
-    none: '',
-    muted: 'border border-edge',
-    danger: 'border border-danger',
-  }
+	const borders = {
+		none: '',
+		muted: 'border border-edge',
+		danger: 'border border-danger',
+	};
 
-  return (
-    <div className={`card ${borders[border]} ${className}`}>
-      {(header || title) && (
-        <div className="p-8 border-b border-solid border-edge">
-          {header ? (
-            header
-          ) : (
-            <div>
-              {title && <Heading level={3}>{title}</Heading>}
-              {subtitle && (
-                <Paragraph variant="muted" spacing="sm">
-                  {subtitle}
-                </Paragraph>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-      <div className={`flex-1 ${padding}`}>{children}</div>
-      {footer && <div className="p-8 border-t border-solid border-edge bg-sunken">{footer}</div>}
-    </div>
-  )
+	return (
+		<div className={`card ${borders[border]} ${className}`}>
+			{(header || title) && (
+				<div className="p-8 border-b border-solid border-edge">
+					{header ? (
+						header
+					) : (
+						<div>
+							{title && <Heading level={3}>{title}</Heading>}
+							{subtitle && (
+								<Paragraph variant="muted" spacing="sm">
+									{subtitle}
+								</Paragraph>
+							)}
+						</div>
+					)}
+				</div>
+			)}
+			<div className={`flex-1 ${padding}`}>{children}</div>
+			{footer && <div className="p-8 border-t border-solid border-edge bg-sunken">{footer}</div>}
+		</div>
+	);
 }

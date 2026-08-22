@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 
 /**
  * Countdown interval hook.
@@ -12,23 +12,23 @@ import { useEffect, useState } from 'react'
  * const seconds = useInterval(300, 1000) // 5 minute countdown
  */
 export function useInterval(initialSeconds: number, intervalMs: number = 1000): number {
-  const [seconds, setSeconds] = useState(initialSeconds)
+	const [seconds, setSeconds] = useState(initialSeconds);
 
-  useEffect(() => {
-    if (seconds <= 0) return
+	useEffect(() => {
+		if (seconds <= 0) return;
 
-    const timer = setInterval(() => {
-      setSeconds((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer)
-          return 0
-        }
-        return prev - 1
-      })
-    }, intervalMs)
+		const timer = setInterval(() => {
+			setSeconds((prev) => {
+				if (prev <= 1) {
+					clearInterval(timer);
+					return 0;
+				}
+				return prev - 1;
+			});
+		}, intervalMs);
 
-    return () => clearInterval(timer)
-  }, [intervalMs])
+		return () => clearInterval(timer);
+	}, [intervalMs]);
 
-  return seconds
+	return seconds;
 }

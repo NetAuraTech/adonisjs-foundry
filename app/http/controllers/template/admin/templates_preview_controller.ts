@@ -1,10 +1,10 @@
-import type { HttpContext } from '@adonisjs/core/http'
-import { inject } from '@adonisjs/core'
-import { GetTemplateDetailAction } from '#cms/domain/actions/template/get_template_detail_action'
-import { PageResolverService } from '#cms/domain/services/page/page_resolver_service'
-import { PreviewTokenHelper } from '#helpers/core/preview_token'
-import { templatePreviewValidator } from '#cms/validators/template'
-import env from '#start/env'
+import { inject } from '@adonisjs/core';
+import { GetTemplateDetailAction } from '#cms/domain/actions/template/get_template_detail_action';
+import { PageResolverService } from '#cms/domain/services/page/page_resolver_service';
+import { templatePreviewValidator } from '#cms/validators/template';
+import { PreviewTokenHelper } from '#helpers/core/preview_token';
+import env from '#start/env';
+import type { HttpContext } from '@adonisjs/core/http';
 
 /**
  * Token-protected preview route for Template thumbnail capture.
@@ -18,74 +18,74 @@ import env from '#start/env'
  */
 @inject()
 export default class TemplatesPreviewController {
-  protected previewTokenHelper: PreviewTokenHelper
+	protected previewTokenHelper: PreviewTokenHelper;
 
-  constructor(
-    protected getTemplateDetailAction: GetTemplateDetailAction,
-    protected resolverService: PageResolverService
-  ) {
-    this.previewTokenHelper = new PreviewTokenHelper(env.get('APP_KEY').release())
-  }
+	constructor(
+		protected getTemplateDetailAction: GetTemplateDetailAction,
+		protected resolverService: PageResolverService,
+	) {
+		this.previewTokenHelper = new PreviewTokenHelper(env.get('APP_KEY').release());
+	}
 
-  /**
-   * Generates a short-lived preview token for a Template.
-   * Called via `GET /api/admin/template/preview/token?id=:id&locale=:locale`.
-   *
-   * The template id is carried in the same "pageId" slot as the page preview
-   * token, so no new signing surface is introduced.
-   */
-  async token(ctx: HttpContext) {
-    const { request, response, auth } = ctx
+	/**
+	 * Generates a short-lived preview token for a Template.
+	 * Called via `GET /api/admin/template/preview/token?id=:id&locale=:locale`.
+	 *
+	 * The template id is carried in the same "pageId" slot as the page preview
+	 * token, so no new signing surface is introduced.
+	 */
+	async token(ctx: HttpContext) {
+		const { request, response, auth } = ctx;
 
-    const user = auth.getUserOrFail()
-    const id = Number(request.input('id'))
-    const locale = String(request.input('locale', 'en'))
+		const user = auth.getUserOrFail();
+		const id = Number(request.input('id'));
+		const locale = String(request.input('locale', 'en'));
 
-    if (!id || Number.isNaN(id)) {
-      return response.badRequest({
-        error: { code: 'E_INVALID_PARAMS', message: 'id is required' },
-      })
-    }
+		if (!id || Number.isNaN(id)) {
+			return response.badRequest({
+				error: { code: 'E_INVALID_PARAMS', message: 'id is required' },
+			});
+		}
 
-    const token = this.previewTokenHelper.generate(id, user.id, locale)
-    return response.ok({ token })
-  }
+		const token = this.previewTokenHelper.generate(id, user.id, locale);
+		return response.ok({ token });
+	}
 
-  /**
-   * Renders the Template preview inside the capture iframe.
-   *
-   * Route: GET /admin/templates/preview/:id?locale=en&token=xxx
-   */
-  async render(ctx: HttpContext) {
-    const { inertia, params, request, response, auth } = ctx
+	/**
+	 * Renders the Template preview inside the capture iframe.
+	 *
+	 * Route: GET /admin/templates/preview/:id?locale=en&token=xxx
+	 */
+	async render(ctx: HttpContext) {
+		const { inertia, params, request, response, auth } = ctx;
 
-    const user = auth.getUserOrFail()
+		const user = auth.getUserOrFail();
 
-    const payload = await templatePreviewValidator.validate({
-      id: params.id,
-      locale: request.input('locale', 'en'),
-      token: request.input('token', ''),
-    })
+		const payload = await templatePreviewValidator.validate({
+			id: params.id,
+			locale: request.input('locale', 'en'),
+			token: request.input('token', ''),
+		});
 
-    if (!this.previewTokenHelper.validate(payload.token, payload.id, user.id, payload.locale)) {
-      return response.unauthorized({
-        error: { code: 'E_INVALID_TOKEN', message: 'Preview token is invalid or expired.' },
-      })
-    }
+		if (!this.previewTokenHelper.validate(payload.token, payload.id, user.id, payload.locale)) {
+			return response.unauthorized({
+				error: { code: 'E_INVALID_TOKEN', message: 'Preview token is invalid or expired.' },
+			});
+		}
 
-    const template = await this.getTemplateDetailAction.execute({ id: payload.id })
+		const template = await this.getTemplateDetailAction.execute({ id: payload.id });
 
-    const resolved = await this.resolverService.resolve(template.content, payload.locale)
+		const resolved = await this.resolverService.resolve(template.content, payload.locale);
 
-    return (inertia.render as any)('cms/template/preview', {
-      template: {
-        id: template.id,
-        name: template.name,
-        type: template.type,
-        blockType: template.blockType,
-        content: resolved,
-        locale: payload.locale,
-      },
-    })
-  }
+		return (inertia.render as any)('cms/template/preview', {
+			template: {
+				id: template.id,
+				name: template.name,
+				type: template.type,
+				blockType: template.blockType,
+				content: resolved,
+				locale: payload.locale,
+			},
+		});
+	}
 }

@@ -1,7 +1,7 @@
-import { useCallback, useMemo } from 'react'
-import { type LinkProps } from '@adonisjs/inertia/react'
-import { usePage } from '@inertiajs/react'
-import { type SharedProps } from '@adonisjs/inertia/types'
+import { type LinkProps } from '@adonisjs/inertia/react';
+import { type SharedProps } from '@adonisjs/inertia/types';
+import { usePage } from '@inertiajs/react';
+import { useCallback, useMemo } from 'react';
 
 /**
  * Returns the admin menu shared by the inertia middleware (`admin_menu`
@@ -24,27 +24,27 @@ import { type SharedProps } from '@adonisjs/inertia/types'
  * const icon = getEntryIcon('admin.dashboard.render')
  */
 export function useMenu() {
-  const pageProps = usePage<SharedProps>().props
-  const menu = useMemo(() => pageProps.admin_menu ?? [], [pageProps.admin_menu])
+	const pageProps = usePage<SharedProps>().props;
+	const menu = useMemo(() => pageProps.admin_menu ?? [], [pageProps.admin_menu]);
 
-  /**
-   * Retrieves the icon of a menu entry by its route.
-   *
-   * Searches across all groups of the menu and returns the icon of the
-   * first matching entry, or `undefined` if no entry is found.
-   *
-   * @param route - The route identifier of the menu entry
-   * @returns The icon string if found, otherwise `undefined`
-   *
-   * @example
-   * const icon = getEntryIcon('admin.dashboard.render')
-   */
-  const getEntryIcon = useCallback(
-    (route: NonNullable<LinkProps['route']>): string | undefined => {
-      return menu.flatMap((group) => group.entries).find((entry) => entry.route === route)?.icon
-    },
-    [menu]
-  )
+	/**
+	 * Retrieves the icon of a menu entry by its route.
+	 *
+	 * Searches across all groups of the menu and returns the icon of the
+	 * first matching entry, or `undefined` if no entry is found.
+	 *
+	 * @param route - The route identifier of the menu entry
+	 * @returns The icon string if found, otherwise `undefined`
+	 *
+	 * @example
+	 * const icon = getEntryIcon('admin.dashboard.render')
+	 */
+	const getEntryIcon = useCallback(
+		(route: NonNullable<LinkProps['route']>): string | undefined => {
+			return menu.flatMap((group) => group.entries).find((entry) => entry.route === route)?.icon;
+		},
+		[menu],
+	);
 
-  return { menu, getEntryIcon }
+	return { menu, getEntryIcon };
 }

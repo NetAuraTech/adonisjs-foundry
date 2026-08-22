@@ -1,16 +1,16 @@
-import { DateTime } from 'luxon'
-import { UserFactory, RoleFactory } from '#factories/user_factory'
-import { PageFactory, PageTranslationFactory } from '#cms/factories/page_factory'
-import { TemplateFactory } from '#cms/factories/template_factory'
-import { FileFactory } from '#factories/file_factory'
-import { FileFolderFactory } from '#factories/file_folder_factory'
+import { DateTime } from 'luxon';
+import { PageFactory, PageTranslationFactory } from '#cms/factories/page_factory';
+import { TemplateFactory } from '#cms/factories/template_factory';
+import { FileFactory } from '#factories/file_factory';
+import { FileFolderFactory } from '#factories/file_folder_factory';
+import { UserFactory, RoleFactory } from '#factories/user_factory';
 
 /** Recognizable markers seeded by {@link seedDashboard}, one per dashboard section. */
 export interface DashboardMarkers {
-  role: string
-  pageTitle: string
-  folder: string
-  fileName: string
+	role: string;
+	pageTitle: string;
+	folder: string;
+	fileName: string;
 }
 
 /**
@@ -23,31 +23,31 @@ export interface DashboardMarkers {
  * @returns The seeded markers, for content assertions.
  */
 export async function seedDashboard(suffix: string): Promise<DashboardMarkers> {
-  const markers: DashboardMarkers = {
-    role: `e2e-dash-role-${suffix}`,
-    pageTitle: `E2E Dashboard Published Page ${suffix}`,
-    folder: `e2e-dash-folder-${suffix}`,
-    fileName: `e2e-dashboard-upload-${suffix}.txt`,
-  }
+	const markers: DashboardMarkers = {
+		role: `e2e-dash-role-${suffix}`,
+		pageTitle: `E2E Dashboard Published Page ${suffix}`,
+		folder: `e2e-dash-folder-${suffix}`,
+		fileName: `e2e-dashboard-upload-${suffix}.txt`,
+	};
 
-  const role = await RoleFactory.merge({ name: markers.role }).create()
-  await UserFactory.merge({ roleId: role.id }).create()
+	const role = await RoleFactory.merge({ name: markers.role }).create();
+	await UserFactory.merge({ roleId: role.id }).create();
 
-  const page = await PageFactory.create()
-  await PageTranslationFactory.merge({
-    pageId: page.id,
-    title: markers.pageTitle,
-    status: 'published',
-    publishedAt: DateTime.now(),
-  }).create()
+	const page = await PageFactory.create();
+	await PageTranslationFactory.merge({
+		pageId: page.id,
+		title: markers.pageTitle,
+		status: 'published',
+		publishedAt: DateTime.now(),
+	}).create();
 
-  await TemplateFactory.create()
+	await TemplateFactory.create();
 
-  const folder = await FileFolderFactory.merge({ name: markers.folder }).create()
-  await FileFactory.merge({
-    folderId: folder.id,
-    originalName: markers.fileName,
-  }).create()
+	const folder = await FileFolderFactory.merge({ name: markers.folder }).create();
+	await FileFactory.merge({
+		folderId: folder.id,
+		originalName: markers.fileName,
+	}).create();
 
-  return markers
+	return markers;
 }

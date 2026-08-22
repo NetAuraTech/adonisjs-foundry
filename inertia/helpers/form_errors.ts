@@ -1,4 +1,4 @@
-import type { ErrorValue } from '@inertiajs/core'
+import type { ErrorValue } from '@inertiajs/core';
 
 /**
  * An errors map that tolerates fields absent from the route's declared body.
@@ -6,7 +6,7 @@ import type { ErrorValue } from '@inertiajs/core'
  * Every value is an {@link ErrorValue} (a `string` in this app), so widening
  * to a free-form string index loses no meaningful precision.
  */
-export type LooseFormErrors = Record<string, ErrorValue | undefined>
+export type LooseFormErrors = Record<string, ErrorValue | undefined>;
 
 /**
  * Widens Inertia v5's strictly-typed form `errors` map so fields the route
@@ -37,5 +37,5 @@ export type LooseFormErrors = Record<string, ErrorValue | undefined>
  * </Form>
  */
 export function toLooseErrors(errors: object): LooseFormErrors {
-  return errors as LooseFormErrors
+	return errors as LooseFormErrors;
 }

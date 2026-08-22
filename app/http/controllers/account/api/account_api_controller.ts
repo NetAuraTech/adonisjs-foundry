@@ -1,7 +1,7 @@
-import { inject } from '@adonisjs/core'
-import { type HttpContext } from '@adonisjs/core/http'
-import AccountResource from '#rest/account_resource'
-import { handle } from '#rest/rest_adapter'
+import { inject } from '@adonisjs/core';
+import { type HttpContext } from '@adonisjs/core/http';
+import AccountResource from '#rest/account_resource';
+import { handle } from '#rest/rest_adapter';
 
 /**
  * PUT /api/v1/account — update the current user's email or password (self),
@@ -13,13 +13,13 @@ import { handle } from '#rest/rest_adapter'
  */
 @inject()
 export default class AccountApiController {
-  constructor(protected accountResource: AccountResource) {}
+	constructor(protected accountResource: AccountResource) {}
 
-  async update(ctx: HttpContext): Promise<void> {
-    await this.accountResource.handleUpdate(ctx)
-  }
+	async update(ctx: HttpContext): Promise<void> {
+		await this.accountResource.handleUpdate(ctx);
+	}
 
-  async destroy(ctx: HttpContext): Promise<void> {
-    await handle(ctx, this.accountResource.endpoints.destroy)
-  }
+	async destroy(ctx: HttpContext): Promise<void> {
+		await handle(ctx, this.accountResource.endpoints.destroy);
+	}
 }

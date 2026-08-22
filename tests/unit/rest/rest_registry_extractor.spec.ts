@@ -1,18 +1,18 @@
-import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises'
-import { tmpdir } from 'node:os'
-import { join } from 'node:path'
-import { test } from '@japa/runner'
-import type { ScannedController } from '@adonisjs/assembler/types'
+import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { test } from '@japa/runner';
 import {
-  collectImportNames,
-  extractValidatorIdentifier,
-  findEndpointInitializer,
-  findEndpointsLiteral,
-  findRestDelegation,
-  findValidatorInitializer,
-  resolveValidatorImport,
-} from '#rest/rest_registry_extractor'
-import { extractRestResourceValidators } from '#rest/rest_routes_registry_hook'
+	collectImportNames,
+	extractValidatorIdentifier,
+	findEndpointInitializer,
+	findEndpointsLiteral,
+	findRestDelegation,
+	findValidatorInitializer,
+	resolveValidatorImport,
+} from '#rest/rest_registry_extractor';
+import { extractRestResourceValidators } from '#rest/rest_routes_registry_hook';
+import type { ScannedController } from '@adonisjs/assembler/types';
 
 const controllerSource = `
 import { inject } from '@adonisjs/core'
@@ -32,7 +32,7 @@ export default class UsersShowApiController {
     await this.usersResource.doSomethingElse()
   }
 }
-`
+`;
 
 const resourceSource = `
 import { restIdValidator, updateValidator } from '#validators/user'
@@ -50,131 +50,131 @@ export default class UsersResource {
     },
   }
 }
-`
+`;
 
 /** Extract the property names of an `endpoints` object literal for assertions. */
 function endpointNames(endpoints: ReturnType<typeof findEndpointsLiteral>): string[] | undefined {
-  if (!endpoints) return undefined
-  return endpoints.properties.map((p) => (p as { name: { getText(): string } }).name.getText())
+	if (!endpoints) return undefined;
+	return endpoints.properties.map((p) => (p as { name: { getText(): string } }).name.getText());
 }
 
 test.group('rest registry extractor', () => {
-  test('finds the resource variable and endpoint of a delegation', ({ assert }) => {
-    const body = 'await handle(ctx, this.usersResource.endpoints.show)'
-    assert.deepEqual(findRestDelegation(body), {
-      resourceVariable: 'usersResource',
-      endpoint: 'show',
-    })
-  })
+	test('finds the resource variable and endpoint of a delegation', ({ assert }) => {
+		const body = 'await handle(ctx, this.usersResource.endpoints.show)';
+		assert.deepEqual(findRestDelegation(body), {
+			resourceVariable: 'usersResource',
+			endpoint: 'show',
+		});
+	});
 
-  test('ignores method bodies without a REST delegation', ({ assert }) => {
-    assert.isUndefined(findRestDelegation('await this.usersResource.doSomethingElse()'))
-    assert.isUndefined(findRestDelegation('return ctx.response.json(1)'))
-  })
+	test('ignores method bodies without a REST delegation', ({ assert }) => {
+		assert.isUndefined(findRestDelegation('await this.usersResource.doSomethingElse()'));
+		assert.isUndefined(findRestDelegation('return ctx.response.json(1)'));
+	});
 
-  test('maps local import names to specifiers', ({ assert }) => {
-    const names = collectImportNames(controllerSource)
-    assert.equal(names.get('UsersResource'), '#rest/users_resource')
-    assert.equal(names.get('handle'), '#rest/rest_adapter')
-    assert.equal(names.get('inject'), '@adonisjs/core')
-  })
+	test('maps local import names to specifiers', ({ assert }) => {
+		const names = collectImportNames(controllerSource);
+		assert.equal(names.get('UsersResource'), '#rest/users_resource');
+		assert.equal(names.get('handle'), '#rest/rest_adapter');
+		assert.equal(names.get('inject'), '@adonisjs/core');
+	});
 
-  test('locates the endpoints object literal of a resource', ({ assert }) => {
-    assert.deepEqual(endpointNames(findEndpointsLiteral(resourceSource)), ['show', 'update'])
-  })
+	test('locates the endpoints object literal of a resource', ({ assert }) => {
+		assert.deepEqual(endpointNames(findEndpointsLiteral(resourceSource)), ['show', 'update']);
+	});
 
-  test('does not confuse unrelated object literals with endpoints', ({ assert }) => {
-    const source = `
+	test('does not confuse unrelated object literals with endpoints', ({ assert }) => {
+		const source = `
       export default class Fake {
         readonly other = { a: 1 }
         readonly endpoints = { show: { validator: () => v } }
       }
-    `
-    assert.deepEqual(endpointNames(findEndpointsLiteral(source)), ['show'])
-  })
+    `;
+		assert.deepEqual(endpointNames(findEndpointsLiteral(source)), ['show']);
+	});
 
-  test('descends to a single endpoint and its validator initializer', ({ assert }) => {
-    const endpoints = findEndpointsLiteral(resourceSource)
-    assert.exists(endpoints)
-    const endpoint = findEndpointInitializer(endpoints!, 'show')
-    assert.exists(endpoint)
-    assert.equal(findValidatorInitializer(endpoint!)?.getText(), '() => restIdValidator')
-  })
+	test('descends to a single endpoint and its validator initializer', ({ assert }) => {
+		const endpoints = findEndpointsLiteral(resourceSource);
+		assert.exists(endpoints);
+		const endpoint = findEndpointInitializer(endpoints!, 'show');
+		assert.exists(endpoint);
+		assert.equal(findValidatorInitializer(endpoint!)?.getText(), '() => restIdValidator');
+	});
 
-  test('extracts direct and factory validator identifiers', ({ assert }) => {
-    const endpoints = findEndpointsLiteral(resourceSource)
-    const show = findEndpointInitializer(endpoints!, 'show')
-    assert.equal(extractValidatorIdentifier(findValidatorInitializer(show!)!), 'restIdValidator')
-    const update = findEndpointInitializer(endpoints!, 'update')
-    assert.equal(extractValidatorIdentifier(findValidatorInitializer(update!)!), 'updateValidator')
-  })
+	test('extracts direct and factory validator identifiers', ({ assert }) => {
+		const endpoints = findEndpointsLiteral(resourceSource);
+		const show = findEndpointInitializer(endpoints!, 'show');
+		assert.equal(extractValidatorIdentifier(findValidatorInitializer(show!)!), 'restIdValidator');
+		const update = findEndpointInitializer(endpoints!, 'update');
+		assert.equal(extractValidatorIdentifier(findValidatorInitializer(update!)!), 'updateValidator');
+	});
 
-  test('resolves a validator identifier to its import record', ({ assert }) => {
-    assert.deepEqual(resolveValidatorImport(resourceSource, 'restIdValidator'), {
-      name: 'restIdValidator',
-      import: { specifier: '#validators/user', type: 'named', value: 'restIdValidator' },
-    })
-    assert.isUndefined(resolveValidatorImport(resourceSource, 'notImported'))
-  })
-})
+	test('resolves a validator identifier to its import record', ({ assert }) => {
+		assert.deepEqual(resolveValidatorImport(resourceSource, 'restIdValidator'), {
+			name: 'restIdValidator',
+			import: { specifier: '#validators/user', type: 'named', value: 'restIdValidator' },
+		});
+		assert.isUndefined(resolveValidatorImport(resourceSource, 'notImported'));
+	});
+});
 
 /**
  * Creates a throw-away app root with one REST controller and its resource,
  * so the trace stays hermetic instead of depending on the checked-in files.
  */
 async function createFakeAppRoot(): Promise<string> {
-  const root = await mkdtemp(join(tmpdir(), 'rest-registry-'))
-  await mkdir(join(root, 'app/http/controllers'), { recursive: true })
-  await mkdir(join(root, 'app/http/rest'), { recursive: true })
-  await writeFile(join(root, 'app/http/controllers/users_show_api_controller.ts'), controllerSource)
-  await writeFile(join(root, 'app/http/rest/users_resource.ts'), resourceSource)
-  return root
+	const root = await mkdtemp(join(tmpdir(), 'rest-registry-'));
+	await mkdir(join(root, 'app/http/controllers'), { recursive: true });
+	await mkdir(join(root, 'app/http/rest'), { recursive: true });
+	await writeFile(join(root, 'app/http/controllers/users_show_api_controller.ts'), controllerSource);
+	await writeFile(join(root, 'app/http/rest/users_resource.ts'), resourceSource);
+	return root;
 }
 
 test.group('extractRestResourceValidators', () => {
-  let appRoot: string
+	let appRoot: string;
 
-  test('traces a delegation to the resource validator', async ({ assert }) => {
-    appRoot = await createFakeAppRoot()
-    try {
-      const controller = {
-        path: join(appRoot, 'app/http/controllers/users_show_api_controller.ts'),
-        method: 'show',
-      } as ScannedController
-      assert.deepEqual(await extractRestResourceValidators(appRoot, controller), [
-        {
-          name: 'restIdValidator',
-          import: { specifier: '#validators/user', type: 'named', value: 'restIdValidator' },
-        },
-      ])
-    } finally {
-      await rm(appRoot, { recursive: true, force: true })
-    }
-  })
+	test('traces a delegation to the resource validator', async ({ assert }) => {
+		appRoot = await createFakeAppRoot();
+		try {
+			const controller = {
+				path: join(appRoot, 'app/http/controllers/users_show_api_controller.ts'),
+				method: 'show',
+			} as ScannedController;
+			assert.deepEqual(await extractRestResourceValidators(appRoot, controller), [
+				{
+					name: 'restIdValidator',
+					import: { specifier: '#validators/user', type: 'named', value: 'restIdValidator' },
+				},
+			]);
+		} finally {
+			await rm(appRoot, { recursive: true, force: true });
+		}
+	});
 
-  test('falls back to the scanner default for non-delegating methods', async ({ assert }) => {
-    appRoot = await createFakeAppRoot()
-    try {
-      const controller = {
-        path: join(appRoot, 'app/http/controllers/users_show_api_controller.ts'),
-        method: 'update',
-      } as ScannedController
-      assert.isUndefined(await extractRestResourceValidators(appRoot, controller))
-    } finally {
-      await rm(appRoot, { recursive: true, force: true })
-    }
-  })
+	test('falls back to the scanner default for non-delegating methods', async ({ assert }) => {
+		appRoot = await createFakeAppRoot();
+		try {
+			const controller = {
+				path: join(appRoot, 'app/http/controllers/users_show_api_controller.ts'),
+				method: 'update',
+			} as ScannedController;
+			assert.isUndefined(await extractRestResourceValidators(appRoot, controller));
+		} finally {
+			await rm(appRoot, { recursive: true, force: true });
+		}
+	});
 
-  test('falls back when the controller file is missing', async ({ assert }) => {
-    appRoot = await createFakeAppRoot()
-    try {
-      const controller = {
-        path: join(appRoot, 'app/http/controllers/does_not_exist.ts'),
-        method: 'show',
-      } as ScannedController
-      assert.isUndefined(await extractRestResourceValidators(appRoot, controller))
-    } finally {
-      await rm(appRoot, { recursive: true, force: true })
-    }
-  })
-})
+	test('falls back when the controller file is missing', async ({ assert }) => {
+		appRoot = await createFakeAppRoot();
+		try {
+			const controller = {
+				path: join(appRoot, 'app/http/controllers/does_not_exist.ts'),
+				method: 'show',
+			} as ScannedController;
+			assert.isUndefined(await extractRestResourceValidators(appRoot, controller));
+		} finally {
+			await rm(appRoot, { recursive: true, force: true });
+		}
+	});
+});

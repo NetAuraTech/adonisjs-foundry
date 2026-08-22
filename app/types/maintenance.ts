@@ -5,10 +5,10 @@
  * `now` falls within `[startAt, endAt]` (both ISO 8601).
  */
 export type MaintenanceSchedule = {
-  enabled: boolean
-  startAt: string
-  endAt: string
-}
+	enabled: boolean;
+	startAt: string;
+	endAt: string;
+};
 
 /**
  * Maintenance configuration — the persisted single source of truth.
@@ -18,13 +18,13 @@ export type MaintenanceSchedule = {
  * toggle; `scheduled` optionally arms a maintenance window.
  */
 export type MaintenanceConfig = {
-  enabled: boolean
-  message: string
-  allowedIps: string[]
-  retryAfter: number
-  source: 'redis' | 'memory'
-  scheduled?: MaintenanceSchedule
-}
+	enabled: boolean;
+	message: string;
+	allowedIps: string[];
+	retryAfter: number;
+	source: 'redis' | 'memory';
+	scheduled?: MaintenanceSchedule;
+};
 
 /**
  * In-memory fallback config with reconciliation tracking.
@@ -34,13 +34,13 @@ export type MaintenanceConfig = {
  * whether memory changes must be pushed back on recovery.
  */
 export type MemoryConfig = {
-  enabled: boolean
-  message: string
-  allowedIps: string[]
-  retryAfter: number
-  updatedAt: Date
-  source: 'memory'
-  scheduled?: MaintenanceSchedule
-  _explicitlySet: boolean
-  _lastRedisSync?: Date
-}
+	enabled: boolean;
+	message: string;
+	allowedIps: string[];
+	retryAfter: number;
+	updatedAt: Date;
+	source: 'memory';
+	scheduled?: MaintenanceSchedule;
+	_explicitlySet: boolean;
+	_lastRedisSync?: Date;
+};

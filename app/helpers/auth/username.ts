@@ -15,15 +15,15 @@
  * extractNameFromEmail('user+tag@example.com')  // 'User Tag'
  */
 export function extractNameFromEmail(email: string): string {
-  const local = email.split('@')[0]
+	const local = email.split('@')[0];
 
-  const name = local.replace(/[0-9]/g, '').replace(/[._\-+]/g, ' ')
+	const name = local.replace(/[0-9]/g, '').replace(/[._\-+]/g, ' ');
 
-  return name
-    .split(' ')
-    .filter(Boolean)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ')
+	return name
+		.split(' ')
+		.filter(Boolean)
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+		.join(' ');
 }
 
 /**
@@ -39,17 +39,17 @@ export function extractNameFromEmail(email: string): string {
  * // 'johndoe' if free, 'johndoe1', 'johndoe2', etc.
  */
 export async function generateUniqueUsername(
-  base: string,
-  exists: (username: string) => Promise<boolean>
+	base: string,
+	exists: (username: string) => Promise<boolean>,
 ): Promise<string> {
-  if (!(await exists(base))) {
-    return base
-  }
+	if (!(await exists(base))) {
+		return base;
+	}
 
-  let counter = 1
-  while (await exists(`${base}${counter}`)) {
-    counter++
-  }
+	let counter = 1;
+	while (await exists(`${base}${counter}`)) {
+		counter++;
+	}
 
-  return `${base}${counter}`
+	return `${base}${counter}`;
 }

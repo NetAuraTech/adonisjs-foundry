@@ -1,13 +1,13 @@
-import { spawn as defaultSpawn, type ChildProcess } from 'node:child_process'
+import { spawn as defaultSpawn, type ChildProcess } from 'node:child_process';
 
 export interface DumpOptions {
-  host: string
-  port: number
-  user: string
-  database: string
-  password: string
-  outputPath: string
-  tables?: string[]
+	host: string;
+	port: number;
+	user: string;
+	database: string;
+	password: string;
+	outputPath: string;
+	tables?: string[];
 }
 
 /**
@@ -22,53 +22,50 @@ export interface DumpOptions {
  * @param options - pg_dump connection and output configuration.
  * @param _spawn - Optional spawn function for testability (defaults to node:child_process.spawn).
  */
-export function createDatabaseDump(
-  options: DumpOptions,
-  _spawn: typeof defaultSpawn = defaultSpawn
-): Promise<void> {
-  const tables = options.tables ?? []
+export function createDatabaseDump(options: DumpOptions, _spawn: typeof defaultSpawn = defaultSpawn): Promise<void> {
+	const tables = options.tables ?? [];
 
-  return new Promise((resolve, reject) => {
-    const args = [
-      '--no-owner',
-      '--no-privileges',
-      '-h',
-      options.host,
-      '-p',
-      String(options.port),
-      '-U',
-      options.user,
-      '-d',
-      options.database,
-      '-F',
-      'p',
-      '-f',
-      options.outputPath,
-    ]
+	return new Promise((resolve, reject) => {
+		const args = [
+			'--no-owner',
+			'--no-privileges',
+			'-h',
+			options.host,
+			'-p',
+			String(options.port),
+			'-U',
+			options.user,
+			'-d',
+			options.database,
+			'-F',
+			'p',
+			'-f',
+			options.outputPath,
+		];
 
-    for (const table of tables) {
-      args.push('-t', table)
-    }
+		for (const table of tables) {
+			args.push('-t', table);
+		}
 
-    const pgDump: ChildProcess = _spawn('pg_dump', args, {
-      env: { ...process.env, PGPASSWORD: options.password },
-    })
+		const pgDump: ChildProcess = _spawn('pg_dump', args, {
+			env: { ...process.env, PGPASSWORD: options.password },
+		});
 
-    let errorOutput = ''
-    pgDump.stderr!.on('data', (data) => {
-      errorOutput += data.toString()
-    })
+		let errorOutput = '';
+		pgDump.stderr!.on('data', (data) => {
+			errorOutput += data.toString();
+		});
 
-    pgDump.on('close', (code) => {
-      if (code === 0) {
-        resolve()
-      } else {
-        reject(new Error(`pg_dump failed with code ${code}: ${errorOutput}`))
-      }
-    })
+		pgDump.on('close', (code) => {
+			if (code === 0) {
+				resolve();
+			} else {
+				reject(new Error(`pg_dump failed with code ${code}: ${errorOutput}`));
+			}
+		});
 
-    pgDump.on('error', (error) => {
-      reject(new Error(`Failed to start pg_dump: ${error.message}`))
-    })
-  })
+		pgDump.on('error', (error) => {
+			reject(new Error(`Failed to start pg_dump: ${error.message}`));
+		});
+	});
 }

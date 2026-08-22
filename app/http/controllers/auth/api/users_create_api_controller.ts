@@ -1,7 +1,7 @@
-import { inject } from '@adonisjs/core'
-import { type HttpContext } from '@adonisjs/core/http'
-import UsersResource from '#rest/users_resource'
-import { handle } from '#rest/rest_adapter'
+import { inject } from '@adonisjs/core';
+import { type HttpContext } from '@adonisjs/core/http';
+import { handle } from '#rest/rest_adapter';
+import UsersResource from '#rest/users_resource';
 
 /**
  * POST /api/v1/admin/users — create a user from the admin REST API.
@@ -12,12 +12,12 @@ import { handle } from '#rest/rest_adapter'
  */
 @inject()
 export default class UsersCreateApiController {
-  constructor(protected usersResource: UsersResource) {}
+	constructor(protected usersResource: UsersResource) {}
 
-  /**
-   * Create a user and return the persisted state.
-   */
-  async store(ctx: HttpContext): Promise<void> {
-    await handle(ctx, this.usersResource.endpoints.store)
-  }
+	/**
+	 * Create a user and return the persisted state.
+	 */
+	async store(ctx: HttpContext): Promise<void> {
+		await handle(ctx, this.usersResource.endpoints.store);
+	}
 }

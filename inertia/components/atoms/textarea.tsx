@@ -1,19 +1,19 @@
-import { ChangeEvent, ReactNode } from 'react'
+import { ChangeEvent, ReactNode } from 'react';
 
 interface TextareaProps {
-  /** The `name` and `id` attribute of the underlying `<textarea>`. */
-  name: string
-  placeholder?: string
-  defaultValue?: string | number
-  /** Fixed column width. Rarely needed — prefer CSS sizing. */
-  cols?: number
-  /** Number of visible text rows. Defaults to `4`. */
-  rows?: number
-  disabled?: boolean
-  required?: boolean
-  onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void
-  onBlur?: (event?: ChangeEvent<HTMLTextAreaElement>) => void
-  children?: ReactNode
+	/** The `name` and `id` attribute of the underlying `<textarea>`. */
+	name: string;
+	placeholder?: string;
+	defaultValue?: string | number;
+	/** Fixed column width. Rarely needed — prefer CSS sizing. */
+	cols?: number;
+	/** Number of visible text rows. Defaults to `4`. */
+	rows?: number;
+	disabled?: boolean;
+	required?: boolean;
+	onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+	onBlur?: (event?: ChangeEvent<HTMLTextAreaElement>) => void;
+	children?: ReactNode;
 }
 
 /**
@@ -30,34 +30,23 @@ interface TextareaProps {
  * <Textarea name="message" placeholder="Write your message…" rows={6} required />
  */
 export function Textarea(props: TextareaProps) {
-  const {
-    name,
-    placeholder,
-    defaultValue,
-    cols,
-    rows,
-    disabled,
-    required,
-    onChange,
-    onBlur,
-    children,
-    ...inputProps
-  } = props
+	const { name, placeholder, defaultValue, cols, rows, disabled, required, onChange, onBlur, children, ...inputProps } =
+		props;
 
-  return (
-    <textarea
-      name={name}
-      id={name}
-      cols={cols}
-      rows={rows || 4}
-      placeholder={placeholder}
-      defaultValue={defaultValue}
-      disabled={disabled}
-      required={required}
-      onChange={onChange as (e: ChangeEvent<HTMLTextAreaElement>) => void}
-      onBlur={onBlur}
-      className="textarea"
-      {...inputProps}
-    />
-  )
+	return (
+		<textarea
+			name={name}
+			id={name}
+			cols={cols}
+			rows={rows || 4}
+			placeholder={placeholder}
+			defaultValue={defaultValue}
+			disabled={disabled}
+			required={required}
+			onChange={onChange as (e: ChangeEvent<HTMLTextAreaElement>) => void}
+			onBlur={onBlur}
+			className="textarea"
+			{...inputProps}
+		/>
+	);
 }

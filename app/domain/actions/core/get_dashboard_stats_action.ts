@@ -1,16 +1,16 @@
-import { inject } from '@adonisjs/core'
-import { DashboardRegistry } from '#services/core/dashboard_registry'
-import { LogService } from '#services/logging/log_service'
-import { LogCategory } from '#types/logging'
-import type { DashboardStats } from '#types/dashboard'
+import { inject } from '@adonisjs/core';
+import { DashboardRegistry } from '#services/core/dashboard_registry';
+import { LogService } from '#services/logging/log_service';
+import { LogCategory } from '#types/logging';
+import type { DashboardStats } from '#types/dashboard';
 
 interface GetDashboardStatsPayload {
-  /** Maximum number of entries per recent-activity list. Defaults to 5. */
-  recentLimit?: number
+	/** Maximum number of entries per recent-activity list. Defaults to 5. */
+	recentLimit?: number;
 }
 
 /** Default number of entries per recent-activity list. */
-const DEFAULT_RECENT_LIMIT = 5
+const DEFAULT_RECENT_LIMIT = 5;
 
 /**
  * Aggregate the domain figures and recent activity shown on the admin dashboard.
@@ -22,42 +22,42 @@ const DEFAULT_RECENT_LIMIT = 5
  */
 @inject()
 export class GetDashboardStatsAction {
-  constructor(
-    protected registry: DashboardRegistry,
-    protected logService: LogService
-  ) {}
+	constructor(
+		protected registry: DashboardRegistry,
+		protected logService: LogService,
+	) {}
 
-  /**
-   * Execute the dashboard aggregation.
-   *
-   * A collector failure is logged and propagated: the request fails loudly
-   * instead of serving a partial dashboard.
-   *
-   * @param payload - Optional recent-activity list limit.
-   * @returns The aggregated {@link DashboardStats} snapshot, keyed by section.
-   *
-   * @example
-   * const stats = await getDashboardStatsAction.execute({ recentLimit: 5 })
-   */
-  async execute(payload: GetDashboardStatsPayload = {}): Promise<DashboardStats> {
-    const collectorPayload = { recentLimit: payload.recentLimit ?? DEFAULT_RECENT_LIMIT }
+	/**
+	 * Execute the dashboard aggregation.
+	 *
+	 * A collector failure is logged and propagated: the request fails loudly
+	 * instead of serving a partial dashboard.
+	 *
+	 * @param payload - Optional recent-activity list limit.
+	 * @returns The aggregated {@link DashboardStats} snapshot, keyed by section.
+	 *
+	 * @example
+	 * const stats = await getDashboardStatsAction.execute({ recentLimit: 5 })
+	 */
+	async execute(payload: GetDashboardStatsPayload = {}): Promise<DashboardStats> {
+		const collectorPayload = { recentLimit: payload.recentLimit ?? DEFAULT_RECENT_LIMIT };
 
-    const collected = await Promise.all(
-      this.registry.entries().map(async ([section, makeCollector]) => {
-        try {
-          const collector = await makeCollector()
-          return [section, await collector.collect(collectorPayload)] as const
-        } catch (error) {
-          this.logService.error({
-            message: `Dashboard collector "${String(section)}" failed`,
-            category: LogCategory.SYSTEM,
-            error,
-          })
-          throw error
-        }
-      })
-    )
+		const collected = await Promise.all(
+			this.registry.entries().map(async ([section, makeCollector]) => {
+				try {
+					const collector = await makeCollector();
+					return [section, await collector.collect(collectorPayload)] as const;
+				} catch (error) {
+					this.logService.error({
+						message: `Dashboard collector "${String(section)}" failed`,
+						category: LogCategory.SYSTEM,
+						error,
+					});
+					throw error;
+				}
+			}),
+		);
 
-    return Object.fromEntries(collected) as DashboardStats
-  }
+		return Object.fromEntries(collected) as DashboardStats;
+	}
 }

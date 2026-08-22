@@ -1,16 +1,16 @@
-import { Head } from '@inertiajs/react'
-import type { ResolvedPageContent } from '#cms/types/page'
-import PageRenderer from '~/components/cms/renderer/page_renderer'
+import { Head } from '@inertiajs/react';
+import PageRenderer from '~/components/cms/renderer/page_renderer';
+import type { ResolvedPageContent } from '#cms/types/page';
 
 interface TemplatePreviewProps {
-  template: {
-    id: number
-    name: string
-    type: 'page' | 'block'
-    blockType: string | null
-    content: ResolvedPageContent
-    locale: string
-  }
+	template: {
+		id: number;
+		name: string;
+		type: 'page' | 'block';
+		blockType: string | null;
+		content: ResolvedPageContent;
+		locale: string;
+	};
 }
 
 /**
@@ -22,17 +22,17 @@ interface TemplatePreviewProps {
  * carries `data-template-preview` so the capture targets only the content.
  */
 export default function TemplatePreviewPage({ template }: TemplatePreviewProps) {
-  return (
-    <>
-      <Head title={template.name} />
-      <div
-        data-template-preview
-        className="w-[1024px] aspect-4/3 overflow-hidden bg-white box-border flex items-center justify-center p-10"
-      >
-        <div className="w-full">
-          <PageRenderer content={template.content} pageId={0} locale={template.locale} />
-        </div>
-      </div>
-    </>
-  )
+	return (
+		<>
+			<Head title={template.name} />
+			<div
+				data-template-preview
+				className="w-[1024px] aspect-4/3 overflow-hidden bg-white box-border flex items-center justify-center p-10"
+			>
+				<div className="w-full">
+					<PageRenderer content={template.content} pageId={0} locale={template.locale} />
+				</div>
+			</div>
+		</>
+	);
 }

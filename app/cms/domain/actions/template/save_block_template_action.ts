@@ -1,18 +1,18 @@
-import { inject } from '@adonisjs/core'
-import type Template from '#cms/models/template/template'
-import { TemplateRepository } from '#cms/domain/repositories/template/template_repository'
-import { LogService } from '#services/logging/log_service'
-import { withTransaction } from '#shared/utils/with_transaction'
-import InvalidTemplateTypeException from '#cms/exceptions/template/invalid_template_type_exception'
-import type { BlockType, PageContent } from '#cms/types/page'
+import { inject } from '@adonisjs/core';
+import { TemplateRepository } from '#cms/domain/repositories/template/template_repository';
+import InvalidTemplateTypeException from '#cms/exceptions/template/invalid_template_type_exception';
+import { LogService } from '#services/logging/log_service';
+import { withTransaction } from '#shared/utils/with_transaction';
+import type Template from '#cms/models/template/template';
+import type { BlockType, PageContent } from '#cms/types/page';
 
 interface SaveBlockTemplatePayload {
-  name: string
-  description?: string | null
-  blockType: BlockType
-  content: PageContent
-  overwriteId?: number | null
-  userId: number
+	name: string;
+	description?: string | null;
+	blockType: BlockType;
+	content: PageContent;
+	overwriteId?: number | null;
+	userId: number;
 }
 
 /**
@@ -29,49 +29,49 @@ interface SaveBlockTemplatePayload {
  */
 @inject()
 export class SaveBlockTemplateAction {
-  constructor(
-    protected templateRepository: TemplateRepository,
-    protected logService: LogService
-  ) {}
+	constructor(
+		protected templateRepository: TemplateRepository,
+		protected logService: LogService,
+	) {}
 
-  /**
-   * Execute block template save (create or overwrite).
-   *
-   * @param payload - Template metadata, single-root content, optional overwrite target and user.
-   * @returns The saved {@link Template}.
-   * @throws {InvalidTemplateTypeException} When the overwrite target is not a block template.
-   */
-  async execute(payload: SaveBlockTemplatePayload): Promise<Template> {
-    if (payload.overwriteId) {
-      const existing = await this.templateRepository.findByIdOrFail(payload.overwriteId)
-      if (existing.type !== 'block') throw new InvalidTemplateTypeException()
+	/**
+	 * Execute block template save (create or overwrite).
+	 *
+	 * @param payload - Template metadata, single-root content, optional overwrite target and user.
+	 * @returns The saved {@link Template}.
+	 * @throws {InvalidTemplateTypeException} When the overwrite target is not a block template.
+	 */
+	async execute(payload: SaveBlockTemplatePayload): Promise<Template> {
+		if (payload.overwriteId) {
+			const existing = await this.templateRepository.findByIdOrFail(payload.overwriteId);
+			if (existing.type !== 'block') throw new InvalidTemplateTypeException();
 
-      return withTransaction(() =>
-        this.templateRepository.update(existing, {
-          name: payload.name,
-          description: payload.description ?? null,
-          content: payload.content,
-          blockType: payload.blockType,
-        })
-      )
-    }
+			return withTransaction(() =>
+				this.templateRepository.update(existing, {
+					name: payload.name,
+					description: payload.description ?? null,
+					content: payload.content,
+					blockType: payload.blockType,
+				}),
+			);
+		}
 
-    const template = await withTransaction(() =>
-      this.templateRepository.create({
-        name: payload.name,
-        description: payload.description,
-        type: 'block',
-        blockType: payload.blockType,
-        content: payload.content,
-        createdBy: payload.userId,
-      })
-    )
+		const template = await withTransaction(() =>
+			this.templateRepository.create({
+				name: payload.name,
+				description: payload.description,
+				type: 'block',
+				blockType: payload.blockType,
+				content: payload.content,
+				createdBy: payload.userId,
+			}),
+		);
 
-    this.logService.logBusiness(
-      'template.created',
-      { userId: payload.userId },
-      { templateId: template.id, type: template.type, blockType: template.blockType }
-    )
-    return template
-  }
+		this.logService.logBusiness(
+			'template.created',
+			{ userId: payload.userId },
+			{ templateId: template.id, type: template.type, blockType: template.blockType },
+		);
+		return template;
+	}
 }

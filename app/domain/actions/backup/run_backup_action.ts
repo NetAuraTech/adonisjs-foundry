@@ -1,10 +1,10 @@
-import app from '@adonisjs/core/services/app'
-import { inject } from '@adonisjs/core'
-import { BackupEngine } from '#services/backup/backup_engine'
-import type { BackupResult } from '#services/backup/backup_types'
+import { inject } from '@adonisjs/core';
+import app from '@adonisjs/core/services/app';
+import { BackupEngine } from '#services/backup/backup_engine';
+import type { BackupResult } from '#services/backup/backup_types';
 
 export interface RunBackupPayload {
-  strategy?: 'full' | 'differential' | 'auto'
+	strategy?: 'full' | 'differential' | 'auto';
 }
 
 /**
@@ -16,21 +16,21 @@ export interface RunBackupPayload {
  */
 @inject()
 export default class RunBackupAction {
-  private readonly tempDir = 'storage/temp/backups'
+	private readonly tempDir = 'storage/temp/backups';
 
-  /**
-   * Execute a backup run.
-   *
-   * @param payload - Optional strategy override. `'auto'` (default) selects full on the
-   *   configured `fullBackupDay`, differential on all other days.
-   * @returns A {@link BackupResult} describing the outcome.
-   *
-   * @example
-   * await runBackupAction.execute({ strategy: 'full' })
-   */
-  public async execute(payload?: RunBackupPayload): Promise<BackupResult> {
-    const strategyType = payload?.strategy ?? 'auto'
-    const engine = await app.container.make(BackupEngine, [strategyType, this.tempDir])
-    return engine.execute()
-  }
+	/**
+	 * Execute a backup run.
+	 *
+	 * @param payload - Optional strategy override. `'auto'` (default) selects full on the
+	 *   configured `fullBackupDay`, differential on all other days.
+	 * @returns A {@link BackupResult} describing the outcome.
+	 *
+	 * @example
+	 * await runBackupAction.execute({ strategy: 'full' })
+	 */
+	public async execute(payload?: RunBackupPayload): Promise<BackupResult> {
+		const strategyType = payload?.strategy ?? 'auto';
+		const engine = await app.container.make(BackupEngine, [strategyType, this.tempDir]);
+		return engine.execute();
+	}
 }

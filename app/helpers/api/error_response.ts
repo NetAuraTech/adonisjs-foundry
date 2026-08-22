@@ -1,4 +1,4 @@
-import type { HttpContext } from '@adonisjs/core/http'
+import type { HttpContext } from '@adonisjs/core/http';
 
 /**
  * Render the canonical 404 JSON body for an invalid token on the REST API.
@@ -9,10 +9,10 @@ import type { HttpContext } from '@adonisjs/core/http'
  * `{ error: { code, message } }` shape from `docs/agents/exceptions.md`.
  */
 export function invalidTokenNotFound(ctx: HttpContext) {
-  return ctx.response.notFound({
-    error: {
-      code: 'E_INVALID_TOKEN',
-      message: ctx.i18n.t('exceptions.E_INVALID_TOKEN'),
-    },
-  })
+	return ctx.response.notFound({
+		error: {
+			code: 'E_INVALID_TOKEN',
+			message: ctx.i18n.t('exceptions.E_INVALID_TOKEN'),
+		},
+	});
 }

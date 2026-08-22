@@ -21,14 +21,14 @@
 |
 */
 
-import { corePermissionCatalog, coreRoleSlugs } from '#services/core/core_permissions'
-import { authPermissionCatalog } from '#services/auth/auth_permissions'
-import { pagePermissionCatalog } from '#cms/domain/services/page/page_permissions'
-import { templatePermissionCatalog } from '#cms/domain/services/template/template_permissions'
-import { filePermissionCatalog } from '#services/file/file_permissions'
-import { maintenancePermissionCatalog } from '#services/maintenance/maintenance_permissions'
-import { loggingPermissionCatalog } from '#services/logging/logging_permissions'
-import type { PermissionSlugs, PermissionMap } from '#types/permissions'
+import { pagePermissionCatalog } from '#cms/domain/services/page/page_permissions';
+import { templatePermissionCatalog } from '#cms/domain/services/template/template_permissions';
+import { authPermissionCatalog } from '#services/auth/auth_permissions';
+import { corePermissionCatalog, coreRoleSlugs } from '#services/core/core_permissions';
+import { filePermissionCatalog } from '#services/file/file_permissions';
+import { loggingPermissionCatalog } from '#services/logging/logging_permissions';
+import { maintenancePermissionCatalog } from '#services/maintenance/maintenance_permissions';
+import type { PermissionSlugs, PermissionMap } from '#types/permissions';
 
 /**
  * The composed system permission catalog of this flavor: `category →
@@ -37,24 +37,24 @@ import type { PermissionSlugs, PermissionMap } from '#types/permissions'
  * matrix, so it is the single source of the persisted slugs.
  */
 export const permissionCatalog = {
-  ...corePermissionCatalog,
-  ...authPermissionCatalog,
-  ...pagePermissionCatalog,
-  ...templatePermissionCatalog,
-  ...filePermissionCatalog,
-  ...maintenancePermissionCatalog,
-  ...loggingPermissionCatalog,
-}
+	...corePermissionCatalog,
+	...authPermissionCatalog,
+	...pagePermissionCatalog,
+	...templatePermissionCatalog,
+	...filePermissionCatalog,
+	...maintenancePermissionCatalog,
+	...loggingPermissionCatalog,
+};
 
 /** Union of every system permission slug in this flavor. */
-export type PermissionSlug = PermissionSlugs<typeof permissionCatalog>
+export type PermissionSlug = PermissionSlugs<typeof permissionCatalog>;
 
 /**
  * The camelCase form of a snake_case permission action (`manage_roles` →
  * `manageRoles`); the runtime counterpart of the nested `permissions` keys.
  */
 const actionKey = (action: string): string =>
-  action.replace(/_([a-z])/g, (_separator, letter: string) => letter.toUpperCase())
+	action.replace(/_([a-z])/g, (_separator, letter: string) => letter.toUpperCase());
 
 /**
  * The nested identity map of this flavor's permission slugs: one group per
@@ -66,24 +66,24 @@ const actionKey = (action: string): string =>
  * every former `permissions.*` use site fails to compile until it is updated.
  */
 export const permissions = Object.fromEntries(
-  (Object.keys(permissionCatalog) as Array<keyof typeof permissionCatalog>).map(
-    (category): [string, Record<string, string>] => [
-      String(category),
-      Object.fromEntries(
-        (permissionCatalog[category] as readonly string[]).map((action): [string, string] => [
-          actionKey(action),
-          `${String(category)}.${action}`,
-        ])
-      ),
-    ]
-  )
-) as unknown as PermissionMap<typeof permissionCatalog>
+	(Object.keys(permissionCatalog) as Array<keyof typeof permissionCatalog>).map(
+		(category): [string, Record<string, string>] => [
+			String(category),
+			Object.fromEntries(
+				(permissionCatalog[category] as readonly string[]).map((action): [string, string] => [
+					actionKey(action),
+					`${String(category)}.${action}`,
+				]),
+			),
+		],
+	),
+) as unknown as PermissionMap<typeof permissionCatalog>;
 
 /**
  * The system role slugs of this flavor; the role seeder persists exactly
  * this list, so it is the single source of the persisted role slugs.
  */
-export const systemRoleSlugs = coreRoleSlugs
+export const systemRoleSlugs = coreRoleSlugs;
 
 /** Union of every system role slug in this flavor. */
-export type SystemRoleSlug = (typeof systemRoleSlugs)[number]
+export type SystemRoleSlug = (typeof systemRoleSlugs)[number];

@@ -1,7 +1,7 @@
-import { inject } from '@adonisjs/core'
-import { type HttpContext } from '@adonisjs/core/http'
-import PagesResource from '#rest/pages_resource'
-import { handle } from '#rest/rest_adapter'
+import { inject } from '@adonisjs/core';
+import { type HttpContext } from '@adonisjs/core/http';
+import PagesResource from '#rest/pages_resource';
+import { handle } from '#rest/rest_adapter';
 
 /**
  * POST /api/v1/admin/pages/:id/translations — create a page translation from
@@ -13,9 +13,9 @@ import { handle } from '#rest/rest_adapter'
  */
 @inject()
 export default class PageTranslationsApiController {
-  constructor(protected pagesResource: PagesResource) {}
+	constructor(protected pagesResource: PagesResource) {}
 
-  async store(ctx: HttpContext): Promise<void> {
-    await handle(ctx, this.pagesResource.endpoints.storeTranslation)
-  }
+	async store(ctx: HttpContext): Promise<void> {
+		await handle(ctx, this.pagesResource.endpoints.storeTranslation);
+	}
 }

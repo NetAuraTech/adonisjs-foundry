@@ -72,7 +72,7 @@ Selecting by text that the test itself created is acceptable — it is data, not
 
 ```ts
 // The template name was seeded by the test — stable regardless of locale
-await editor.getByRole('button', { name: 'ApplyFlow Template' }).click()
+await editor.getByRole('button', { name: 'ApplyFlow Template' }).click();
 ```
 
 ## Consequences

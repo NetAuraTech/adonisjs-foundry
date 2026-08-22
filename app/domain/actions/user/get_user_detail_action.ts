@@ -1,10 +1,10 @@
-﻿import { inject } from '@adonisjs/core'
-import User from '#models/auth/user'
-import RowNotFoundException from '#exceptions/core/row_not_found_exception'
-import { UserRepository } from '#repositories/auth/user_repository'
+﻿import { inject } from '@adonisjs/core';
+import RowNotFoundException from '#exceptions/core/row_not_found_exception';
+import User from '#models/auth/user';
+import { UserRepository } from '#repositories/auth/user_repository';
 
 interface GetUserDetailPayload {
-  id: number
+	id: number;
 }
 
 /**
@@ -12,29 +12,29 @@ interface GetUserDetailPayload {
  */
 @inject()
 export class GetUserDetailAction {
-  constructor(protected userRepository: UserRepository) {}
+	constructor(protected userRepository: UserRepository) {}
 
-  /**
-   * Execute user detail lookup.
-   *
-   * @param payload - The user ID to retrieve.
-   * @returns The {@link User} with role and permissions preloaded.
-   * @throws {RowNotFoundException} When no record exists for the given id.
-   *
-   * @example
-   * const user = await getUserDetailAction.execute({ id: 1 })
-   */
-  async execute(payload: GetUserDetailPayload): Promise<User> {
-    const user = await this.userRepository.findById(payload.id)
+	/**
+	 * Execute user detail lookup.
+	 *
+	 * @param payload - The user ID to retrieve.
+	 * @returns The {@link User} with role and permissions preloaded.
+	 * @throws {RowNotFoundException} When no record exists for the given id.
+	 *
+	 * @example
+	 * const user = await getUserDetailAction.execute({ id: 1 })
+	 */
+	async execute(payload: GetUserDetailPayload): Promise<User> {
+		const user = await this.userRepository.findById(payload.id);
 
-    if (!user) {
-      throw new RowNotFoundException(User)
-    }
+		if (!user) {
+			throw new RowNotFoundException(User);
+		}
 
-    await user.load('role', (query) => {
-      query.preload('permissions')
-    })
+		await user.load('role', (query) => {
+			query.preload('permissions');
+		});
 
-    return user
-  }
+		return user;
+	}
 }

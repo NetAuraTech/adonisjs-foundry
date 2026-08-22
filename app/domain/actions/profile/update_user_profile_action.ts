@@ -1,13 +1,13 @@
-﻿import { inject } from '@adonisjs/core'
-import User from '#models/auth/user'
-import { LogService } from '#services/logging/log_service'
-import { UserRepository } from '#repositories/auth/user_repository'
-import { withTransaction } from '#shared/utils/with_transaction'
-import UnverifiedAccountException from '#exceptions/auth/unverified_account_exception'
+﻿import { inject } from '@adonisjs/core';
+import UnverifiedAccountException from '#exceptions/auth/unverified_account_exception';
+import User from '#models/auth/user';
+import { UserRepository } from '#repositories/auth/user_repository';
+import { LogService } from '#services/logging/log_service';
+import { withTransaction } from '#shared/utils/with_transaction';
 
 interface UpdateUserProfilePayload {
-  user: User
-  username?: string
+	user: User;
+	username?: string;
 }
 
 /**
@@ -15,42 +15,42 @@ interface UpdateUserProfilePayload {
  */
 @inject()
 export class UpdateUserProfileAction {
-  constructor(
-    protected logService: LogService,
-    protected userRepository: UserRepository
-  ) {}
+	constructor(
+		protected logService: LogService,
+		protected userRepository: UserRepository,
+	) {}
 
-  /**
-   * Execute profile update.
-   *
-   * @param payload - Authenticated user and fields to update.
-   * @returns The updated {@link User}.
-   * @throws {UnverifiedAccountException} If the user email is not verified.
-   */
-  async execute(payload: UpdateUserProfilePayload): Promise<User> {
-    if (!payload.user.isEmailVerified) {
-      this.logService.logSecurity('Attempt to update profile with unverified email', {
-        userId: payload.user.id,
-        userEmail: payload.user.email,
-      })
-      throw new UnverifiedAccountException(payload.user.email)
-    }
+	/**
+	 * Execute profile update.
+	 *
+	 * @param payload - Authenticated user and fields to update.
+	 * @returns The updated {@link User}.
+	 * @throws {UnverifiedAccountException} If the user email is not verified.
+	 */
+	async execute(payload: UpdateUserProfilePayload): Promise<User> {
+		if (!payload.user.isEmailVerified) {
+			this.logService.logSecurity('Attempt to update profile with unverified email', {
+				userId: payload.user.id,
+				userEmail: payload.user.email,
+			});
+			throw new UnverifiedAccountException(payload.user.email);
+		}
 
-    const oldData = { username: payload.user.username }
+		const oldData = { username: payload.user.username };
 
-    const updated = await withTransaction(async () => {
-      return this.userRepository.update(payload.user, { username: payload.username })
-    })
+		const updated = await withTransaction(async () => {
+			return this.userRepository.update(payload.user, { username: payload.username });
+		});
 
-    if (updated) {
-      this.logService.logBusiness(
-        'settings.profile.updated',
-        { userId: payload.user.id, userEmail: payload.user.email },
-        { oldData, newData: { username: updated.username } }
-      )
-      return updated
-    }
+		if (updated) {
+			this.logService.logBusiness(
+				'settings.profile.updated',
+				{ userId: payload.user.id, userEmail: payload.user.email },
+				{ oldData, newData: { username: updated.username } },
+			);
+			return updated;
+		}
 
-    return payload.user
-  }
+		return payload.user;
+	}
 }

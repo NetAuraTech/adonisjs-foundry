@@ -1,25 +1,25 @@
-import { inject } from '@adonisjs/core'
-import type Page from '#cms/models/page/page'
-import { PageRepository } from '#cms/domain/repositories/page/page_repository'
-import { PageTranslationRepository } from '#cms/domain/repositories/page/page_translation_repository'
-import { LogService } from '#services/logging/log_service'
-import { withTransaction } from '#shared/utils/with_transaction'
-import { sanitizePageContent } from '#cms/domain/services/page/sanitize_content'
-import type { PageContent } from '#cms/types/page'
-import SlugExistsException from '#exceptions/core/slug_exists_exception'
+import { inject } from '@adonisjs/core';
+import { PageRepository } from '#cms/domain/repositories/page/page_repository';
+import { PageTranslationRepository } from '#cms/domain/repositories/page/page_translation_repository';
+import { sanitizePageContent } from '#cms/domain/services/page/sanitize_content';
+import SlugExistsException from '#exceptions/core/slug_exists_exception';
+import { LogService } from '#services/logging/log_service';
+import { withTransaction } from '#shared/utils/with_transaction';
+import type Page from '#cms/models/page/page';
+import type { PageContent } from '#cms/types/page';
 
 interface CreatePagePayload {
-  defaultLocale: string
-  metaImageId?: number | null
-  translation: {
-    locale: string
-    slug: string
-    title: string
-    content?: PageContent
-    metaTitle?: string | null
-    metaDescription?: string | null
-  }
-  userId: number
+	defaultLocale: string;
+	metaImageId?: number | null;
+	translation: {
+		locale: string;
+		slug: string;
+		title: string;
+		content?: PageContent;
+		metaTitle?: string | null;
+		metaDescription?: string | null;
+	};
+	userId: number;
 }
 
 /**
@@ -29,52 +29,52 @@ interface CreatePagePayload {
  */
 @inject()
 export class CreatePageAction {
-  constructor(
-    protected pageRepository: PageRepository,
-    protected translationRepository: PageTranslationRepository,
-    protected logService: LogService
-  ) {}
+	constructor(
+		protected pageRepository: PageRepository,
+		protected translationRepository: PageTranslationRepository,
+		protected logService: LogService,
+	) {}
 
-  /**
-   * Execute page creation.
-   *
-   * @param payload - Page metadata, initial translation data, and creator user ID.
-   * @returns The newly created {@link Page} with translations preloaded.
-   * @throws {Error} With code `E_SLUG_EXISTS` if the slug is already taken.
-   *
-   * @example
-   * const page = await createPageAction.execute({ defaultLocale: 'en', translation: {...}, userId: 1 })
-   */
-  async execute(payload: CreatePagePayload): Promise<Page> {
-    return withTransaction(async () => {
-      const slugExists = await this.translationRepository.slugExists(payload.translation.slug)
-      if (slugExists) throw new SlugExistsException(payload.translation.slug)
+	/**
+	 * Execute page creation.
+	 *
+	 * @param payload - Page metadata, initial translation data, and creator user ID.
+	 * @returns The newly created {@link Page} with translations preloaded.
+	 * @throws {Error} With code `E_SLUG_EXISTS` if the slug is already taken.
+	 *
+	 * @example
+	 * const page = await createPageAction.execute({ defaultLocale: 'en', translation: {...}, userId: 1 })
+	 */
+	async execute(payload: CreatePagePayload): Promise<Page> {
+		return withTransaction(async () => {
+			const slugExists = await this.translationRepository.slugExists(payload.translation.slug);
+			if (slugExists) throw new SlugExistsException(payload.translation.slug);
 
-      const safeContent = sanitizePageContent(payload.translation.content ?? { blocks: [] })
+			const safeContent = sanitizePageContent(payload.translation.content ?? { blocks: [] });
 
-      const page = await this.pageRepository.create({
-        defaultLocale: payload.defaultLocale,
-        metaImageId: payload.metaImageId ?? null,
-        createdBy: payload.userId,
-      })
+			const page = await this.pageRepository.create({
+				defaultLocale: payload.defaultLocale,
+				metaImageId: payload.metaImageId ?? null,
+				createdBy: payload.userId,
+			});
 
-      await this.translationRepository.create({
-        pageId: page.id,
-        locale: payload.translation.locale,
-        slug: payload.translation.slug,
-        title: payload.translation.title,
-        content: safeContent,
-        metaTitle: payload.translation.metaTitle ?? null,
-        metaDescription: payload.translation.metaDescription ?? null,
-        status: 'draft',
-      })
+			await this.translationRepository.create({
+				pageId: page.id,
+				locale: payload.translation.locale,
+				slug: payload.translation.slug,
+				title: payload.translation.title,
+				content: safeContent,
+				metaTitle: payload.translation.metaTitle ?? null,
+				metaDescription: payload.translation.metaDescription ?? null,
+				status: 'draft',
+			});
 
-      this.logService.logBusiness(
-        'page.created',
-        { userId: payload.userId },
-        { pageId: page.id, slug: payload.translation.slug }
-      )
-      return this.pageRepository.findByIdOrFail(page.id)
-    })
-  }
+			this.logService.logBusiness(
+				'page.created',
+				{ userId: payload.userId },
+				{ pageId: page.id, slug: payload.translation.slug },
+			);
+			return this.pageRepository.findByIdOrFail(page.id);
+		});
+	}
 }

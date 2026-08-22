@@ -1,39 +1,39 @@
-import type { DateTime } from 'luxon'
+import type { DateTime } from 'luxon';
 
 /** Number of users holding a given role; `name` is `null` for users without a role. */
 export interface DashboardRoleCount {
-  name: string | null
-  count: number
+	name: string | null;
+	count: number;
 }
 
 /** Number of files directly contained in a folder (not recursive). */
 export interface DashboardFolderFileCount {
-  id: number
-  name: string
-  count: number
+	id: number;
+	name: string;
+	count: number;
 }
 
 /** A recently uploaded file entry for the dashboard activity list. */
 export interface DashboardRecentFile {
-  id: number
-  originalName: string
-  mimeType: string
-  size: number
-  createdAt: DateTime
+	id: number;
+	originalName: string;
+	mimeType: string;
+	size: number;
+	createdAt: DateTime;
 }
 
 /** Dashboard section contributed by the auth domain. */
 export interface DashboardAuthSection {
-  users: number
-  usersByRole: DashboardRoleCount[]
+	users: number;
+	usersByRole: DashboardRoleCount[];
 }
 
 /** Dashboard section contributed by the file domain. */
 export interface DashboardFileSection {
-  files: number
-  fileFolders: number
-  filesByFolder: DashboardFolderFileCount[]
-  recentFiles: DashboardRecentFile[]
+	files: number;
+	fileFolders: number;
+	filesByFolder: DashboardFolderFileCount[];
+	recentFiles: DashboardRecentFile[];
 }
 
 /**
@@ -52,14 +52,14 @@ export interface DashboardFileSection {
  * a flavor build.
  */
 export interface DashboardStats {
-  auth?: DashboardAuthSection
-  file?: DashboardFileSection
+	auth?: DashboardAuthSection;
+	file?: DashboardFileSection;
 }
 
 /** Input forwarded by the stats action to every registered collector. */
 export interface DashboardCollectorPayload {
-  /** Maximum number of entries per recent-activity list. */
-  recentLimit: number
+	/** Maximum number of entries per recent-activity list. */
+	recentLimit: number;
 }
 
 /**
@@ -71,5 +71,5 @@ export interface DashboardCollectorPayload {
  * the React page expects.
  */
 export interface DashboardCollector<K extends keyof DashboardStats = keyof DashboardStats> {
-  collect(payload: DashboardCollectorPayload): Promise<NonNullable<DashboardStats[K]>>
+	collect(payload: DashboardCollectorPayload): Promise<NonNullable<DashboardStats[K]>>;
 }

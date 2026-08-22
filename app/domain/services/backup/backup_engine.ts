@@ -1,9 +1,9 @@
-import { DateTime } from 'luxon'
-import backupConfig from '#config/backup'
-import { type LogService } from '#services/logging/log_service'
-import { SnapshotHelper } from '#services/backup/snapshot_helper'
-import { BackupPipeline } from '#services/backup/backup_pipeline'
-import type { BackupResult, BackupContext } from '#services/backup/backup_types'
+import { DateTime } from 'luxon';
+import backupConfig from '#config/backup';
+import { BackupPipeline } from '#services/backup/backup_pipeline';
+import { SnapshotHelper } from '#services/backup/snapshot_helper';
+import { type LogService } from '#services/logging/log_service';
+import type { BackupResult, BackupContext } from '#services/backup/backup_types';
 
 /**
  * BackupEngine — Orchestrates backup execution by resolving the strategy
@@ -14,42 +14,40 @@ import type { BackupResult, BackupContext } from '#services/backup/backup_types'
  * Non-DI class: imported and instantiated directly, no @inject().
  */
 export class BackupEngine {
-  private readonly context: BackupContext
+	private readonly context: BackupContext;
 
-  constructor(
-    private readonly strategyType: 'full' | 'differential' | 'auto',
-    private readonly tempDir: string,
-    private readonly logService: LogService
-  ) {
-    const resolvedType = this.resolveStrategy()
-    this.context = {
-      tempDir: this.tempDir,
-      filename: SnapshotHelper.generateFilename(resolvedType),
-      strategyType: resolvedType,
-    }
-  }
+	constructor(
+		private readonly strategyType: 'full' | 'differential' | 'auto',
+		private readonly tempDir: string,
+		private readonly logService: LogService,
+	) {
+		const resolvedType = this.resolveStrategy();
+		this.context = {
+			tempDir: this.tempDir,
+			filename: SnapshotHelper.generateFilename(resolvedType),
+			strategyType: resolvedType,
+		};
+	}
 
-  /**
-   * Execute the backup through the shared pipeline: the full or the
-   * differential entry point, depending on the resolved strategy type.
-   */
-  async execute(): Promise<BackupResult> {
-    const pipeline = new BackupPipeline(this.context, this.logService)
-    return this.context.strategyType === 'full'
-      ? pipeline.executeFullBackup()
-      : pipeline.executeDifferentialBackup()
-  }
+	/**
+	 * Execute the backup through the shared pipeline: the full or the
+	 * differential entry point, depending on the resolved strategy type.
+	 */
+	async execute(): Promise<BackupResult> {
+		const pipeline = new BackupPipeline(this.context, this.logService);
+		return this.context.strategyType === 'full' ? pipeline.executeFullBackup() : pipeline.executeDifferentialBackup();
+	}
 
-  /**
-   * Resolve the actual strategy type. If 'auto', use the configured full backup day.
-   * Config uses JS getDay() semantics (0=Sunday), Luxon uses weekday (1=Sunday).
-   */
-  private resolveStrategy(): 'full' | 'differential' {
-    if (this.strategyType !== 'auto') return this.strategyType
+	/**
+	 * Resolve the actual strategy type. If 'auto', use the configured full backup day.
+	 * Config uses JS getDay() semantics (0=Sunday), Luxon uses weekday (1=Sunday).
+	 */
+	private resolveStrategy(): 'full' | 'differential' {
+		if (this.strategyType !== 'auto') return this.strategyType;
 
-    const now = DateTime.now()
-    // Convert Luxon weekday (1=Sun) to JS getDay () (0=Sun) for comparison with config
-    const jsDayOfWeek = now.weekday === 7 ? 0 : now.weekday
-    return jsDayOfWeek === backupConfig.schedule.fullBackupDay ? 'full' : 'differential'
-  }
+		const now = DateTime.now();
+		// Convert Luxon weekday (1=Sun) to JS getDay () (0=Sun) for comparison with config
+		const jsDayOfWeek = now.weekday === 7 ? 0 : now.weekday;
+		return jsDayOfWeek === backupConfig.schedule.fullBackupDay ? 'full' : 'differential';
+	}
 }

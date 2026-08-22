@@ -1,17 +1,17 @@
-import { ChangeEvent, ReactNode } from 'react'
+import { ChangeEvent, ReactNode } from 'react';
 
 interface CheckboxProps {
-  /** The `name` and `id` attribute of the underlying `<input>`. */
-  name: string
-  /** The submitted value when the checkbox is checked (defaults to `"on"`). */
-  value?: string | number
-  /** Sets the initial checked state via `defaultChecked`. */
-  checked?: boolean
-  disabled?: boolean
-  required?: boolean
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void
-  onBlur?: (event?: ChangeEvent<HTMLInputElement>) => void
-  children?: ReactNode
+	/** The `name` and `id` attribute of the underlying `<input>`. */
+	name: string;
+	/** The submitted value when the checkbox is checked (defaults to `"on"`). */
+	value?: string | number;
+	/** Sets the initial checked state via `defaultChecked`. */
+	checked?: boolean;
+	disabled?: boolean;
+	required?: boolean;
+	onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+	onBlur?: (event?: ChangeEvent<HTMLInputElement>) => void;
+	children?: ReactNode;
 }
 
 /**
@@ -29,20 +29,20 @@ interface CheckboxProps {
  * </div>
  */
 export function Checkbox(props: CheckboxProps) {
-  const { name, checked, disabled, required, onChange, onBlur, children, ...inputProps } = props
+	const { name, checked, disabled, required, onChange, onBlur, children, ...inputProps } = props;
 
-  return (
-    <input
-      type="checkbox"
-      name={name}
-      id={name}
-      defaultChecked={checked}
-      disabled={disabled}
-      required={required}
-      onChange={onChange as (e: ChangeEvent<HTMLInputElement>) => void}
-      onBlur={onBlur}
-      className="checkbox accent-secondary focus:border-secondary"
-      {...inputProps}
-    />
-  )
+	return (
+		<input
+			type="checkbox"
+			name={name}
+			id={name}
+			defaultChecked={checked}
+			disabled={disabled}
+			required={required}
+			onChange={onChange as (e: ChangeEvent<HTMLInputElement>) => void}
+			onBlur={onBlur}
+			className="checkbox accent-secondary focus:border-secondary"
+			{...inputProps}
+		/>
+	);
 }

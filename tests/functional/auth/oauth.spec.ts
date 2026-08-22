@@ -1,5 +1,5 @@
-import { test } from '@japa/runner'
-import testUtils from '@adonisjs/core/services/test_utils'
+import testUtils from '@adonisjs/core/services/test_utils';
+import { test } from '@japa/runner';
 
 /**
  * Functional seam for the social (OAuth) endpoints
@@ -15,58 +15,53 @@ import testUtils from '@adonisjs/core/services/test_utils'
  * auth-gated and rejects a guest with a 401.
  */
 test.group('Social (OAuth) endpoints', (group) => {
-  group.each.setup(() => testUtils.db().truncate())
+	group.each.setup(() => testUtils.db().truncate());
 
-  test('define-password (render): the page loads', async ({ client }) => {
-    const res = await client.get('/oauth/define-password')
+	test('define-password (render): the page loads', async ({ client }) => {
+		const res = await client.get('/oauth/define-password');
 
-    res.assertStatus(200)
-  })
+		res.assertStatus(200);
+	});
 
-  test('define-password (execute): a guest is rejected with a 401', async ({ client }) => {
-    const res = await client
-      .post('/oauth/define-password')
-      .redirects(0)
-      .withCsrfToken()
-      .accept('json')
-      .form({ password: 'NewPassword123!', password_confirmation: 'NewPassword123!' })
-      .send()
+	test('define-password (execute): a guest is rejected with a 401', async ({ client }) => {
+		const res = await client
+			.post('/oauth/define-password')
+			.redirects(0)
+			.withCsrfToken()
+			.accept('json')
+			.form({ password: 'NewPassword123!', password_confirmation: 'NewPassword123!' })
+			.send();
 
-    res.assertStatus(401)
-  })
+		res.assertStatus(401);
+	});
 
-  test('redirect: an unconfigured provider returns a coded 501', async ({ client, assert }) => {
-    const res = await client.get('/oauth/github').redirects(0).accept('json')
+	test('redirect: an unconfigured provider returns a coded 501', async ({ client, assert }) => {
+		const res = await client.get('/oauth/github').redirects(0).accept('json');
 
-    res.assertStatus(501)
-    assert.equal(res.body().error.code, 'E_PROVIDER_NOT_CONFIGURED')
-    assert.equal(res.body().error.details.provider, 'github')
-  })
+		res.assertStatus(501);
+		assert.equal(res.body().error.code, 'E_PROVIDER_NOT_CONFIGURED');
+		assert.equal(res.body().error.details.provider, 'github');
+	});
 
-  test('callback: an unconfigured provider returns a coded 501', async ({ client, assert }) => {
-    const res = await client.get('/oauth/github/callback').redirects(0).accept('json')
+	test('callback: an unconfigured provider returns a coded 501', async ({ client, assert }) => {
+		const res = await client.get('/oauth/github/callback').redirects(0).accept('json');
 
-    res.assertStatus(501)
-    assert.equal(res.body().error.code, 'E_PROVIDER_NOT_CONFIGURED')
-  })
+		res.assertStatus(501);
+		assert.equal(res.body().error.code, 'E_PROVIDER_NOT_CONFIGURED');
+	});
 
-  test('unlink: an unconfigured provider returns a coded 501', async ({ client, assert }) => {
-    const res = await client
-      .post('/oauth/github/unlink')
-      .redirects(0)
-      .withCsrfToken()
-      .accept('json')
-      .send()
+	test('unlink: an unconfigured provider returns a coded 501', async ({ client, assert }) => {
+		const res = await client.post('/oauth/github/unlink').redirects(0).withCsrfToken().accept('json').send();
 
-    res.assertStatus(501)
-    assert.equal(res.body().error.code, 'E_PROVIDER_NOT_CONFIGURED')
-    assert.equal(res.body().error.details.provider, 'github')
-  })
+		res.assertStatus(501);
+		assert.equal(res.body().error.code, 'E_PROVIDER_NOT_CONFIGURED');
+		assert.equal(res.body().error.details.provider, 'github');
+	});
 
-  test('redirect: an unsupported provider returns a coded 501', async ({ client, assert }) => {
-    const res = await client.get('/oauth/twitter').redirects(0).accept('json')
+	test('redirect: an unsupported provider returns a coded 501', async ({ client, assert }) => {
+		const res = await client.get('/oauth/twitter').redirects(0).accept('json');
 
-    res.assertStatus(501)
-    assert.equal(res.body().error.code, 'E_PROVIDER_NOT_CONFIGURED')
-  })
-})
+		res.assertStatus(501);
+		assert.equal(res.body().error.code, 'E_PROVIDER_NOT_CONFIGURED');
+	});
+});

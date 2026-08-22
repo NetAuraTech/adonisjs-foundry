@@ -1,18 +1,18 @@
-import { inject } from '@adonisjs/core'
-import type { Infer } from '@vinejs/vine/types'
-import { ListLogEntriesAction } from '#actions/log/list_log_entries_action'
-import { listLogsValidator } from '#validators/log'
-import LogEntryTransformer from '#transformers/log_entry_transformer'
-import { type RestEndpoint } from '#rest/rest_adapter'
+import { inject } from '@adonisjs/core';
+import { ListLogEntriesAction } from '#actions/log/list_log_entries_action';
+import { type RestEndpoint } from '#rest/rest_adapter';
+import LogEntryTransformer from '#transformers/log_entry_transformer';
+import { listLogsValidator } from '#validators/log';
+import type { Infer } from '@vinejs/vine/types';
 
-type LogListPagination = Awaited<ReturnType<ListLogEntriesAction['execute']>>
-type LogListPayload = Infer<typeof listLogsValidator>
+type LogListPagination = Awaited<ReturnType<ListLogEntriesAction['execute']>>;
+type LogListPayload = Infer<typeof listLogsValidator>;
 
 /**
  * Endpoint declarations for the logs REST resource (read-only).
  */
 export interface LogsEndpoints {
-  index: RestEndpoint<undefined, LogListPayload, LogListPagination, LogListPagination>
+	index: RestEndpoint<undefined, LogListPayload, LogListPagination, LogListPagination>;
 }
 
 /**
@@ -24,16 +24,16 @@ export interface LogsEndpoints {
  */
 @inject()
 export default class LogsResource {
-  constructor(protected listLogEntriesAction: ListLogEntriesAction) {}
+	constructor(protected listLogEntriesAction: ListLogEntriesAction) {}
 
-  readonly endpoints: LogsEndpoints = {
-    index: {
-      paginated: true,
-      strip: true,
-      validator: () => listLogsValidator,
-      execute: (context, _prepared, payload) =>
-        this.listLogEntriesAction.execute({ ...payload, ...context.pagination! }),
-      transform: (entity) => LogEntryTransformer.paginate(entity.all(), entity.getMeta()),
-    },
-  }
+	readonly endpoints: LogsEndpoints = {
+		index: {
+			paginated: true,
+			strip: true,
+			validator: () => listLogsValidator,
+			execute: (context, _prepared, payload) =>
+				this.listLogEntriesAction.execute({ ...payload, ...context.pagination! }),
+			transform: (entity) => LogEntryTransformer.paginate(entity.all(), entity.getMeta()),
+		},
+	};
 }

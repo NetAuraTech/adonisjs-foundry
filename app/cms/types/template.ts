@@ -1,6 +1,6 @@
-import type { BlockType } from '#cms/types/page'
+import type { BlockType } from '#cms/types/page';
 
-export type TemplateType = 'page' | 'block'
+export type TemplateType = 'page' | 'block';
 
 /**
  * A template can cover either a full page layout or a single pre-configured block.
@@ -14,6 +14,6 @@ export type TemplateType = 'page' | 'block'
  * { type: 'block', blockType: 'hero' }
  */
 export interface TemplateTypeDescriptor {
-  type: TemplateType
-  blockType: BlockType | null
+	type: TemplateType;
+	blockType: BlockType | null;
 }

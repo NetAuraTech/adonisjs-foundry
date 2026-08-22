@@ -1,8 +1,8 @@
 interface SelectOptionProps {
-  /** The visible text displayed in the dropdown. */
-  label: string
-  /** The value submitted with the form. Use `''` for placeholder options. */
-  value?: string | number
+	/** The visible text displayed in the dropdown. */
+	label: string;
+	/** The value submitted with the form. Use `''` for placeholder options. */
+	value?: string | number;
 }
 
 /**
@@ -15,7 +15,7 @@ interface SelectOptionProps {
  * </Select>
  */
 export function SelectOption(props: SelectOptionProps) {
-  const { label, value } = props
+	const { label, value } = props;
 
-  return <option value={value}>{label}</option>
+	return <option value={value}>{label}</option>;
 }

@@ -1,6 +1,6 @@
-import vine from '@vinejs/vine'
+import vine from '@vinejs/vine';
 
 export const paginationValidator = vine.create({
-  page: vine.number().min(1).optional(),
-  perPage: vine.number().min(1).max(100).optional(),
-})
+	page: vine.number().min(1).optional(),
+	perPage: vine.number().min(1).max(100).optional(),
+});

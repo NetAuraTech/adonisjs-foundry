@@ -1,7 +1,7 @@
-import { inject } from '@adonisjs/core'
-import { type HttpContext } from '@adonisjs/core/http'
-import TemplatesResource from '#rest/templates_resource'
-import { handle } from '#rest/rest_adapter'
+import { inject } from '@adonisjs/core';
+import { type HttpContext } from '@adonisjs/core/http';
+import { handle } from '#rest/rest_adapter';
+import TemplatesResource from '#rest/templates_resource';
 
 /**
  * JSON API consumed by the page builder and admin Templates library.
@@ -12,25 +12,25 @@ import { handle } from '#rest/rest_adapter'
  */
 @inject()
 export default class TemplatesApiController {
-  constructor(protected templatesResource: TemplatesResource) {}
+	constructor(protected templatesResource: TemplatesResource) {}
 
-  async index(ctx: HttpContext): Promise<void> {
-    await handle(ctx, this.templatesResource.endpoints.index)
-  }
+	async index(ctx: HttpContext): Promise<void> {
+		await handle(ctx, this.templatesResource.endpoints.index);
+	}
 
-  async store(ctx: HttpContext): Promise<void> {
-    await handle(ctx, this.templatesResource.endpoints.store)
-  }
+	async store(ctx: HttpContext): Promise<void> {
+		await handle(ctx, this.templatesResource.endpoints.store);
+	}
 
-  async createFromPage(ctx: HttpContext): Promise<void> {
-    await handle(ctx, this.templatesResource.endpoints.createFromPage)
-  }
+	async createFromPage(ctx: HttpContext): Promise<void> {
+		await handle(ctx, this.templatesResource.endpoints.createFromPage);
+	}
 
-  async update(ctx: HttpContext): Promise<void> {
-    await handle(ctx, this.templatesResource.endpoints.update)
-  }
+	async update(ctx: HttpContext): Promise<void> {
+		await handle(ctx, this.templatesResource.endpoints.update);
+	}
 
-  async destroy(ctx: HttpContext): Promise<void> {
-    await handle(ctx, this.templatesResource.endpoints.destroy)
-  }
+	async destroy(ctx: HttpContext): Promise<void> {
+		await handle(ctx, this.templatesResource.endpoints.destroy);
+	}
 }

@@ -1,6 +1,6 @@
-import { inject } from '@adonisjs/core'
-import type { HttpContext } from '@adonisjs/core/http'
-import { SitemapService } from '#services/core/sitemap_service'
+import { inject } from '@adonisjs/core';
+import { SitemapService } from '#services/core/sitemap_service';
+import type { HttpContext } from '@adonisjs/core/http';
 
 /**
  * Serves `sitemap.xml` for search engines.
@@ -11,19 +11,16 @@ import { SitemapService } from '#services/core/sitemap_service'
  */
 @inject()
 export default class SitemapController {
-  constructor(protected sitemapService: SitemapService) {}
+	constructor(protected sitemapService: SitemapService) {}
 
-  /**
-   * `GET /sitemap.xml`
-   *
-   * @returns The complete `sitemap.xml` document with an XML content type.
-   */
-  async show({ response }: HttpContext) {
-    const xml = await this.sitemapService.generate()
+	/**
+	 * `GET /sitemap.xml`
+	 *
+	 * @returns The complete `sitemap.xml` document with an XML content type.
+	 */
+	async show({ response }: HttpContext) {
+		const xml = await this.sitemapService.generate();
 
-    return response
-      .header('Content-Type', 'application/xml')
-      .header('Cache-Control', 'public, max-age=3600')
-      .send(xml)
-  }
+		return response.header('Content-Type', 'application/xml').header('Cache-Control', 'public, max-age=3600').send(xml);
+	}
 }

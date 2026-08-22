@@ -1,11 +1,8 @@
-import type { ImgHTMLAttributes } from 'react'
-import type { ResolvedFile } from '#types/file'
+import type { ResolvedFile } from '#types/file';
+import type { ImgHTMLAttributes } from 'react';
 
-interface FileImageProps extends Omit<
-  ImgHTMLAttributes<HTMLImageElement>,
-  'src' | 'srcSet' | 'alt'
-> {
-  file: ResolvedFile
+interface FileImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src' | 'srcSet' | 'alt'> {
+	file: ResolvedFile;
 }
 
 /**
@@ -23,21 +20,21 @@ interface FileImageProps extends Omit<
  * <FileImage file={hero} alt="" className="rounded" />
  */
 export default function FileImage({ file, className, ...imgProps }: FileImageProps) {
-  const srcset = file.variants
-    ? Object.entries(file.variants)
-        .map(([width, url]) => `${url} ${width}w`)
-        .join(', ')
-    : undefined
+	const srcset = file.variants
+		? Object.entries(file.variants)
+				.map(([width, url]) => `${url} ${width}w`)
+				.join(', ')
+		: undefined;
 
-  return (
-    <img
-      src={file.url}
-      srcSet={srcset}
-      alt={file.alt}
-      width={file.width ?? 800}
-      height={file.height ?? 600}
-      className={className}
-      {...imgProps}
-    />
-  )
+	return (
+		<img
+			src={file.url}
+			srcSet={srcset}
+			alt={file.alt}
+			width={file.width ?? 800}
+			height={file.height ?? 600}
+			className={className}
+			{...imgProps}
+		/>
+	);
 }

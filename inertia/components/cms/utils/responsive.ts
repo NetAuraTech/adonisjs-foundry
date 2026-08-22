@@ -1,4 +1,4 @@
-import type { ResponsiveValue } from '#cms/types/page'
+import type { ResponsiveValue } from '#cms/types/page';
 
 /**
  * Resolves a `ResponsiveValue<T>` into a Tailwind class string by looking up
@@ -17,22 +17,22 @@ import type { ResponsiveValue } from '#cms/types/page'
  * // → 'py-4 md:py-8'
  */
 export function resolveResponsive<T extends string | number>(
-  value: ResponsiveValue<T> | undefined | null,
-  map: Record<string | number, Partial<Record<'default' | 'sm' | 'md' | 'lg' | 'xl', string>>>
+	value: ResponsiveValue<T> | undefined | null,
+	map: Record<string | number, Partial<Record<'default' | 'sm' | 'md' | 'lg' | 'xl', string>>>,
 ): string {
-  if (!value || typeof value !== 'object') return ''
+	if (!value || typeof value !== 'object') return '';
 
-  const classes: string[] = []
+	const classes: string[] = [];
 
-  const breakpoints = ['default', 'sm', 'md', 'lg', 'xl'] as const
+	const breakpoints = ['default', 'sm', 'md', 'lg', 'xl'] as const;
 
-  for (const bp of breakpoints) {
-    const val: T | undefined = value[bp as keyof ResponsiveValue<T>]
-    if (val === undefined || val === null) continue
-    const valStr = String(val)
-    const cls = map[valStr]?.[bp]
-    if (cls) classes.push(cls)
-  }
+	for (const bp of breakpoints) {
+		const val: T | undefined = value[bp as keyof ResponsiveValue<T>];
+		if (val === undefined || val === null) continue;
+		const valStr = String(val);
+		const cls = map[valStr]?.[bp];
+		if (cls) classes.push(cls);
+	}
 
-  return classes.filter(Boolean).join(' ')
+	return classes.filter(Boolean).join(' ');
 }

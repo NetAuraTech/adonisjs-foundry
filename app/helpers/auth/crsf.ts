@@ -1,5 +1,5 @@
-import { type HttpContext } from '@adonisjs/core/http'
-import logger from '@adonisjs/core/services/logger'
+import { type HttpContext } from '@adonisjs/core/http';
+import logger from '@adonisjs/core/services/logger';
 
 /**
  * Regenerates the CSRF token by rotating the current session after any
@@ -27,14 +27,14 @@ import logger from '@adonisjs/core/services/logger'
  * return response.redirect().toRoute('dashboard')
  */
 export function regenerateCsrfToken(ctx: HttpContext): void {
-  try {
-    ctx.session.regenerate()
+	try {
+		ctx.session.regenerate();
 
-    logger.info('CSRF token regenerated', {
-      userId: ctx.auth.user?.id,
-      ip: ctx.request.ip(),
-    })
-  } catch (error) {
-    logger.error('Failed to regenerate CSRF token', { error })
-  }
+		logger.info('CSRF token regenerated', {
+			userId: ctx.auth.user?.id,
+			ip: ctx.request.ip(),
+		});
+	} catch (error) {
+		logger.error('Failed to regenerate CSRF token', { error });
+	}
 }

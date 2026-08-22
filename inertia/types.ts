@@ -1,10 +1,10 @@
-import type { Data } from '@generated/data'
-import type { PropsWithChildren } from 'react'
-import type { JSONDataTypes } from '@adonisjs/core/types/transformers'
-import type { InferFlashData } from '@adonisjs/inertia/types'
-import type InertiaMiddleware from '#middleware/core/inertia_middleware'
+import type InertiaMiddleware from '#middleware/core/inertia_middleware';
+import type { JSONDataTypes } from '@adonisjs/core/types/transformers';
+import type { InferFlashData } from '@adonisjs/inertia/types';
+import type { Data } from '@generated/data';
+import type { PropsWithChildren } from 'react';
 
-export type InertiaProps<T extends JSONDataTypes = {}> = PropsWithChildren<Data.SharedProps & T>
+export type InertiaProps<T extends JSONDataTypes = {}> = PropsWithChildren<Data.SharedProps & T>;
 
 /**
  * Connects the server's Inertia middleware types to the Inertia v3 client:
@@ -14,8 +14,8 @@ export type InertiaProps<T extends JSONDataTypes = {}> = PropsWithChildren<Data.
  * and `router.flash()` from the middleware's `flash()` method.
  */
 declare module '@inertiajs/core' {
-  interface InertiaConfig {
-    sharedPageProps: Data.SharedProps
-    flashDataType: InferFlashData<InertiaMiddleware>
-  }
+	interface InertiaConfig {
+		sharedPageProps: Data.SharedProps;
+		flashDataType: InferFlashData<InertiaMiddleware>;
+	}
 }

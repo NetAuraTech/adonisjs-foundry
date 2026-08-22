@@ -1,13 +1,13 @@
-import { ReactElement, useEffect, useState } from 'react'
-import { toast, Toaster } from 'sonner'
-import { useIsLarge } from '~/hooks/use_is_large'
-import { AdminSidebar } from '~/components/organisms/admin/admin_sidebar'
-import { AdminHeader } from '~/components/organisms/admin/admin_header'
-import { SharedProps } from '@adonisjs/inertia/types'
-import { Head, usePage } from '@inertiajs/react'
+import { SharedProps } from '@adonisjs/inertia/types';
+import { Head, usePage } from '@inertiajs/react';
+import { ReactElement, useEffect, useState } from 'react';
+import { toast, Toaster } from 'sonner';
+import { AdminHeader } from '~/components/organisms/admin/admin_header';
+import { AdminSidebar } from '~/components/organisms/admin/admin_sidebar';
+import { useIsLarge } from '~/hooks/use_is_large';
 
 interface LayoutProps {
-  children: ReactElement<SharedProps>
+	children: ReactElement<SharedProps>;
 }
 
 /**
@@ -38,67 +38,62 @@ interface LayoutProps {
  * UsersIndexPage.layout = (page) => <Layout>{page}</Layout>
  */
 export default function Layout(props: LayoutProps) {
-  const isLarge = useIsLarge()
-  const { props: pageProps, url, flash } = usePage<SharedProps>()
-  const { children } = props
+	const isLarge = useIsLarge();
+	const { props: pageProps, url, flash } = usePage<SharedProps>();
+	const { children } = props;
 
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+	const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const handleNavButtonClick = () => {
-    setSidebarOpen(!sidebarOpen)
+	const handleNavButtonClick = () => {
+		setSidebarOpen(!sidebarOpen);
 
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur()
-    }
-  }
+		if (document.activeElement instanceof HTMLElement) {
+			document.activeElement.blur();
+		}
+	};
 
-  const closeMenu = () => {
-    setSidebarOpen(false)
+	const closeMenu = () => {
+		setSidebarOpen(false);
 
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur()
-    }
-  }
+		if (document.activeElement instanceof HTMLElement) {
+			document.activeElement.blur();
+		}
+	};
 
-  useEffect(() => {
-    setSidebarOpen(isLarge)
-  }, [isLarge])
+	useEffect(() => {
+		setSidebarOpen(isLarge);
+	}, [isLarge]);
 
-  useEffect(() => {
-    toast.dismiss()
-  }, [url])
+	useEffect(() => {
+		toast.dismiss();
+	}, [url]);
 
-  if (flash.error) {
-    toast.error(flash.error)
-  }
+	if (flash.error) {
+		toast.error(flash.error);
+	}
 
-  if (flash.success) {
-    toast.success(flash.success)
-  }
+	if (flash.success) {
+		toast.success(flash.success);
+	}
 
-  if (flash.info) {
-    toast.info(flash.info)
-  }
+	if (flash.info) {
+		toast.info(flash.info);
+	}
 
-  return (
-    <>
-      <Head>
-        <meta name="csrf-token" content={pageProps.csrfToken} />
-      </Head>
-      <Toaster position="top-right" richColors />
-      <div className="admin">
-        <AdminSidebar sidebarOpen={sidebarOpen} />
-        <div className="main">
-          <AdminHeader handleClick={handleNavButtonClick} />
-          <main>{children}</main>
-        </div>
-        {sidebarOpen && (
-          <div
-            className="block lg:hidden fixed inset-0 bg-ink/50 z-49"
-            onClick={() => closeMenu()}
-          />
-        )}
-      </div>
-    </>
-  )
+	return (
+		<>
+			<Head>
+				<meta name="csrf-token" content={pageProps.csrfToken} />
+			</Head>
+			<Toaster position="top-right" richColors />
+			<div className="admin">
+				<AdminSidebar sidebarOpen={sidebarOpen} />
+				<div className="main">
+					<AdminHeader handleClick={handleNavButtonClick} />
+					<main>{children}</main>
+				</div>
+				{sidebarOpen && <div className="block lg:hidden fixed inset-0 bg-ink/50 z-49" onClick={() => closeMenu()} />}
+			</div>
+		</>
+	);
 }

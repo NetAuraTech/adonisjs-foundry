@@ -1,11 +1,11 @@
-import { Section } from '~/components/atoms/section'
-import { Heading } from '~/components/atoms/heading'
-import { Paragraph } from '~/components/atoms/paragraph'
-import { useTranslation } from '~/hooks/use_translation'
-import type { HomeTranslations } from '#helpers/i18n_payloads/home'
+import { Heading } from '~/components/atoms/heading';
+import { Paragraph } from '~/components/atoms/paragraph';
+import { Section } from '~/components/atoms/section';
+import { useTranslation } from '~/hooks/use_translation';
+import type { HomeTranslations } from '#helpers/i18n_payloads/home';
 
 interface Props {
-  translations: HomeTranslations
+	translations: HomeTranslations;
 }
 
 /**
@@ -17,16 +17,16 @@ interface Props {
  * Replace this with your own content.
  */
 export default function HomePage({ translations }: Props) {
-  const { t } = useTranslation(translations)
+	const { t } = useTranslation(translations);
 
-  return (
-    <Section className="min-h-screen flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md text-center">
-        <Heading level={1}>{t('welcome')}</Heading>
-        <Paragraph variant="muted" spacing="base">
-          {t('tagline')}
-        </Paragraph>
-      </div>
-    </Section>
-  )
+	return (
+		<Section className="min-h-screen flex items-center justify-center px-4 py-12">
+			<div className="w-full max-w-md text-center">
+				<Heading level={1}>{t('welcome')}</Heading>
+				<Paragraph variant="muted" spacing="base">
+					{t('tagline')}
+				</Paragraph>
+			</div>
+		</Section>
+	);
 }

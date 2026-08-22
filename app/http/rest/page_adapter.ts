@@ -1,4 +1,4 @@
-import { resolveEndpoint, type AdapterHandler } from '#rest/rest_adapter'
+import { resolveEndpoint, type AdapterHandler } from '#rest/rest_adapter';
 
 /**
  * Run a declarative endpoint as an admin page and send the page response.
@@ -28,41 +28,40 @@ import { resolveEndpoint, type AdapterHandler } from '#rest/rest_adapter'
  * }
  */
 export const handle: AdapterHandler = async (ctx, endpoint) => {
-  const page = endpoint.page
+	const page = endpoint.page;
 
-  if (!page) {
-    throw new Error('[page_adapter] the endpoint is missing its page declaration')
-  }
+	if (!page) {
+		throw new Error('[page_adapter] the endpoint is missing its page declaration');
+	}
 
-  const { context, prepared, payload, result } = await resolveEndpoint(ctx, endpoint)
+	const { context, prepared, payload, result } = await resolveEndpoint(ctx, endpoint);
 
-  if (ctx.request.method() === 'GET' || ctx.request.method() === 'HEAD') {
-    const { component, render } = page
+	if (ctx.request.method() === 'GET' || ctx.request.method() === 'HEAD') {
+		const { component, render } = page;
 
-    if (!component || !render) {
-      throw new Error('[page_adapter] the endpoint is missing its page render declaration')
-    }
+		if (!component || !render) {
+			throw new Error('[page_adapter] the endpoint is missing its page render declaration');
+		}
 
-    // The component name stays a plain `string` on the contract, so the
-    // dynamic render goes through the same cast the controllers use.
-    return (ctx.inertia.render as any)(component, await render(context, prepared, payload, result))
-  }
+		// The component name stays a plain `string` on the contract, so the
+		// dynamic render goes through the same cast the controllers use.
+		return (ctx.inertia.render as any)(component, await render(context, prepared, payload, result));
+	}
 
-  const { flash, redirect } = page
+	const { flash, redirect } = page;
 
-  if (!flash || !redirect) {
-    throw new Error(
-      '[page_adapter] the endpoint is missing its page flash and redirect declarations'
-    )
-  }
+	if (!flash || !redirect) {
+		throw new Error('[page_adapter] the endpoint is missing its page flash and redirect declarations');
+	}
 
-  ctx.session.flash('success', await flash(context, prepared, payload, result))
+	ctx.session.flash('success', await flash(context, prepared, payload, result));
 
-  const { route, params } = redirect(context, prepared, payload, result)
+	const { route, params } = redirect(context, prepared, payload, result);
 
-  // The route name stays a plain `string` on the contract, so the dynamic
-  // redirect goes through a cast rather than the generated route names.
-  return (
-    ctx.response.redirect().toRoute as (routeName: string, params?: Record<string, unknown>) => void
-  )(route, params ?? {})
-}
+	// The route name stays a plain `string` on the contract, so the dynamic
+	// redirect goes through a cast rather than the generated route names.
+	return (ctx.response.redirect().toRoute as (routeName: string, params?: Record<string, unknown>) => void)(
+		route,
+		params ?? {},
+	);
+};

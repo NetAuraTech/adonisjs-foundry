@@ -1,10 +1,10 @@
-import type { ResolvedPageContent } from '#cms/types/page'
-import BlockRenderer from '~/components/cms/renderer/block_renderer'
+import BlockRenderer from '~/components/cms/renderer/block_renderer';
+import type { ResolvedPageContent } from '#cms/types/page';
 
 interface PageRendererProps {
-  content: ResolvedPageContent
-  pageId: number
-  locale: string
+	content: ResolvedPageContent;
+	pageId: number;
+	locale: string;
 }
 
 /**
@@ -13,19 +13,13 @@ interface PageRendererProps {
  * `BlockRenderer`. Container blocks handle their own children recursively.
  */
 export default function PageRenderer({ content, pageId, locale }: PageRendererProps) {
-  if (!content.blocks.length) return null
+	if (!content.blocks.length) return null;
 
-  return (
-    <main>
-      {content.blocks.map((block, index) => (
-        <BlockRenderer
-          key={block.id}
-          block={block}
-          pageId={pageId}
-          locale={locale}
-          isPriority={index < 2}
-        />
-      ))}
-    </main>
-  )
+	return (
+		<main>
+			{content.blocks.map((block, index) => (
+				<BlockRenderer key={block.id} block={block} pageId={pageId} locale={locale} isPriority={index < 2} />
+			))}
+		</main>
+	);
 }

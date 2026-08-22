@@ -13,5 +13,5 @@
  * // → { name: 'Alice', age: 30 }
  */
 export function stripEmptyStrings(data: Record<string, unknown>) {
-  return Object.fromEntries(Object.entries(data).filter(([, v]) => v !== ''))
+	return Object.fromEntries(Object.entries(data).filter(([, v]) => v !== ''));
 }

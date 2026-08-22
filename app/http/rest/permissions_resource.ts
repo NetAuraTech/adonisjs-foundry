@@ -1,15 +1,15 @@
-import { inject } from '@adonisjs/core'
-import { ListAllPermissionsAction } from '#actions/permission/list_all_permissions_action'
-import PermissionTransformer from '#transformers/permission_transformer'
-import { type RestEndpoint } from '#rest/rest_adapter'
+import { inject } from '@adonisjs/core';
+import { ListAllPermissionsAction } from '#actions/permission/list_all_permissions_action';
+import { type RestEndpoint } from '#rest/rest_adapter';
+import PermissionTransformer from '#transformers/permission_transformer';
 
-type PermissionListResult = Awaited<ReturnType<ListAllPermissionsAction['execute']>>
+type PermissionListResult = Awaited<ReturnType<ListAllPermissionsAction['execute']>>;
 
 /**
  * Endpoint declarations for the permissions REST resource (read-only).
  */
 export interface PermissionsEndpoints {
-  index: RestEndpoint<undefined, unknown, PermissionListResult, PermissionListResult>
+	index: RestEndpoint<undefined, unknown, PermissionListResult, PermissionListResult>;
 }
 
 /**
@@ -21,12 +21,12 @@ export interface PermissionsEndpoints {
  */
 @inject()
 export default class PermissionsResource {
-  constructor(protected listAllPermissionsAction: ListAllPermissionsAction) {}
+	constructor(protected listAllPermissionsAction: ListAllPermissionsAction) {}
 
-  readonly endpoints: PermissionsEndpoints = {
-    index: {
-      execute: () => this.listAllPermissionsAction.execute(),
-      transform: (entity) => PermissionTransformer.transform(entity),
-    },
-  }
+	readonly endpoints: PermissionsEndpoints = {
+		index: {
+			execute: () => this.listAllPermissionsAction.execute(),
+			transform: (entity) => PermissionTransformer.transform(entity),
+		},
+	};
 }

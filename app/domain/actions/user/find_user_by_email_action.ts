@@ -1,9 +1,9 @@
-import { inject } from '@adonisjs/core'
-import User from '#models/auth/user'
-import { UserRepository } from '#repositories/auth/user_repository'
+import { inject } from '@adonisjs/core';
+import User from '#models/auth/user';
+import { UserRepository } from '#repositories/auth/user_repository';
 
 interface FindUserByEmailPayload {
-  email: string
+	email: string;
 }
 
 /**
@@ -12,13 +12,13 @@ interface FindUserByEmailPayload {
  */
 @inject()
 export class FindUserByEmailAction {
-  constructor(protected userRepository: UserRepository) {}
+	constructor(protected userRepository: UserRepository) {}
 
-  /**
-   * @param payload - The email to look up.
-   * @returns The matching {@link User}, or `null` when no user exists.
-   */
-  async execute(payload: FindUserByEmailPayload): Promise<User | null> {
-    return this.userRepository.findByEmail(payload.email)
-  }
+	/**
+	 * @param payload - The email to look up.
+	 * @returns The matching {@link User}, or `null` when no user exists.
+	 */
+	async execute(payload: FindUserByEmailPayload): Promise<User | null> {
+		return this.userRepository.findByEmail(payload.email);
+	}
 }

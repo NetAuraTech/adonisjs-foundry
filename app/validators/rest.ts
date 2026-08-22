@@ -1,4 +1,4 @@
-import vine from '@vinejs/vine'
+import vine from '@vinejs/vine';
 
 /**
  * REST API id validator — accepts any positive number without an `exists`
@@ -6,5 +6,5 @@ import vine from '@vinejs/vine'
  * `RowNotFoundException` (HTTP 404) instead of a Vine validation error (422).
  */
 export const restIdValidator = vine.create({
-  id: vine.number().positive(),
-})
+	id: vine.number().positive(),
+});

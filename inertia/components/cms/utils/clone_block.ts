@@ -1,8 +1,8 @@
-import type { Block } from '#cms/types/page'
-import { generateBlockId } from '~/components/cms/builder/block_types'
+import { generateBlockId } from '~/components/cms/builder/block_types';
+import type { Block } from '#cms/types/page';
 
 /** Function that produces a fresh block id. Injectable for deterministic tests. */
-export type BlockIdGenerator = () => string
+export type BlockIdGenerator = () => string;
 
 /**
  * Deep-clones a Block subtree and assigns every node a brand-new id.
@@ -23,38 +23,38 @@ export type BlockIdGenerator = () => string
  * @returns A structurally identical block with new ids and cloned props.
  */
 export function cloneBlock(block: Block, generateId: BlockIdGenerator = generateBlockId): Block {
-  return {
-    ...block,
-    id: generateId(),
-    props: cloneProps(block.props),
-    children: block.children?.map((child) => cloneBlock(child, generateId)),
-  }
+	return {
+		...block,
+		id: generateId(),
+		props: cloneProps(block.props),
+		children: block.children?.map((child) => cloneBlock(child, generateId)),
+	};
 }
 
 function cloneProps(props: Block['props']): Block['props'] {
-  if (Array.isArray(props)) {
-    return props.map((value) => cloneValue(value)) as Block['props']
-  }
-  if (props && typeof props === 'object') {
-    const out: Record<string, unknown> = {}
-    for (const [key, value] of Object.entries(props)) {
-      out[key] = cloneValue(value)
-    }
-    return out as Block['props']
-  }
-  return props
+	if (Array.isArray(props)) {
+		return props.map((value) => cloneValue(value)) as Block['props'];
+	}
+	if (props && typeof props === 'object') {
+		const out: Record<string, unknown> = {};
+		for (const [key, value] of Object.entries(props)) {
+			out[key] = cloneValue(value);
+		}
+		return out as Block['props'];
+	}
+	return props;
 }
 
 function cloneValue(value: unknown): unknown {
-  if (Array.isArray(value)) {
-    return value.map((entry) => cloneValue(entry))
-  }
-  if (value && typeof value === 'object') {
-    const out: Record<string, unknown> = {}
-    for (const [key, entry] of Object.entries(value as Record<string, unknown>)) {
-      out[key] = cloneValue(entry)
-    }
-    return out
-  }
-  return value
+	if (Array.isArray(value)) {
+		return value.map((entry) => cloneValue(entry));
+	}
+	if (value && typeof value === 'object') {
+		const out: Record<string, unknown> = {};
+		for (const [key, entry] of Object.entries(value as Record<string, unknown>)) {
+			out[key] = cloneValue(entry);
+		}
+		return out;
+	}
+	return value;
 }

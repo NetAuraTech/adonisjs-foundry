@@ -1,4 +1,4 @@
-import router from '@adonisjs/core/services/router'
+import router from '@adonisjs/core/services/router';
 
 /**
  * Resolve a route URL path by name against the *runtime* route table.
@@ -15,10 +15,7 @@ import router from '@adonisjs/core/services/router'
  * @param params - Route pattern params (e.g. `{ token }`).
  * @returns The resolved path, or `null` when the route is not registered.
  */
-export function routePath(
-  name: string,
-  params: Record<string, string | number> = {}
-): string | null {
-  if (!router.has(name)) return null
-  return router.builder().params(params).make(name)
+export function routePath(name: string, params: Record<string, string | number> = {}): string | null {
+	if (!router.has(name)) return null;
+	return router.builder().params(params).make(name);
 }

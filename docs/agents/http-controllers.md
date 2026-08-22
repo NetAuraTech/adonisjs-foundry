@@ -11,26 +11,26 @@ One controller = one action. `render()` serves the Inertia page; `execute()` per
 ## Structure
 
 ```typescript
-import { inject } from '@adonisjs/core'
-import type { HttpContext } from '@adonisjs/core/http'
+import { inject } from '@adonisjs/core';
+import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()
 export default class ExampleController {
-  constructor(protected service: SomeService) {}
+	constructor(protected service: SomeService) {}
 
-  async render(ctx: HttpContext) {
-    return ctx.inertia.render('path/to/page', {
-      translations: {/* i18n */},
-    })
-  }
+	async render(ctx: HttpContext) {
+		return ctx.inertia.render('path/to/page', {
+			translations: {/* i18n */},
+		});
+	}
 
-  async execute(ctx: HttpContext) {
-    const data = await someValidator.validate(ctx.request.all())
-    const user = ctx.auth.getUserOrFail()
-    const result = await this.service.doAction(data, user.id)
-    ctx.session.flash('success', ctx.i18n.t('message.key'))
-    return ctx.response.redirect().toRoute('route.name')
-  }
+	async execute(ctx: HttpContext) {
+		const data = await someValidator.validate(ctx.request.all());
+		const user = ctx.auth.getUserOrFail();
+		const result = await this.service.doAction(data, user.id);
+		ctx.session.flash('success', ctx.i18n.t('message.key'));
+		return ctx.response.redirect().toRoute('route.name');
+	}
 }
 ```
 

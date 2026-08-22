@@ -1,7 +1,7 @@
-import { inject } from '@adonisjs/core'
-import { type HttpContext } from '@adonisjs/core/http'
-import PagesResource from '#rest/pages_resource'
-import { handle } from '#rest/rest_adapter'
+import { inject } from '@adonisjs/core';
+import { type HttpContext } from '@adonisjs/core/http';
+import PagesResource from '#rest/pages_resource';
+import { handle } from '#rest/rest_adapter';
 
 /**
  * GET /api/v1/admin/pages/:id — show a page from the admin REST API.
@@ -12,9 +12,9 @@ import { handle } from '#rest/rest_adapter'
  */
 @inject()
 export default class PagesShowApiController {
-  constructor(protected pagesResource: PagesResource) {}
+	constructor(protected pagesResource: PagesResource) {}
 
-  async show(ctx: HttpContext): Promise<void> {
-    await handle(ctx, this.pagesResource.endpoints.show)
-  }
+	async show(ctx: HttpContext): Promise<void> {
+		await handle(ctx, this.pagesResource.endpoints.show);
+	}
 }

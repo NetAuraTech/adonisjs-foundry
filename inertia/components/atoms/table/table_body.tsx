@@ -1,7 +1,7 @@
-import { ReactNode } from 'react'
+import { ReactNode } from 'react';
 
 interface TableBodyProps {
-  children: ReactNode
+	children: ReactNode;
 }
 
 /**
@@ -20,7 +20,7 @@ interface TableBodyProps {
  * </TableBody>
  */
 export const TableBody = (props: TableBodyProps) => {
-  const { children } = props
+	const { children } = props;
 
-  return <tbody>{children}</tbody>
-}
+	return <tbody>{children}</tbody>;
+};

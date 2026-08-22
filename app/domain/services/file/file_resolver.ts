@@ -1,8 +1,8 @@
-import i18nManager from '@adonisjs/i18n/services/main'
-import type File from '#models/file/file'
-import { ImageOptimizerService } from '#services/file/image_optimizer_service'
-import { classifyFileType } from '#services/file/file_type'
-import type { FileDisplayIntent, ResolvedFile } from '#types/file'
+import i18nManager from '@adonisjs/i18n/services/main';
+import { classifyFileType } from '#services/file/file_type';
+import { ImageOptimizerService } from '#services/file/image_optimizer_service';
+import type File from '#models/file/file';
+import type { FileDisplayIntent, ResolvedFile } from '#types/file';
 
 /**
  * Resolves a loaded {@link File} into the render-ready `ResolvedFile` prop
@@ -22,26 +22,26 @@ import type { FileDisplayIntent, ResolvedFile } from '#types/file'
  * const prop = await resolveFileForRender(file, { locale: 'en', altKey: 'hero' })
  */
 export async function resolveFileForRender(
-  file: File,
-  intent: Partial<FileDisplayIntent> = {},
-  imageOptimizer: ImageOptimizerService = new ImageOptimizerService()
+	file: File,
+	intent: Partial<FileDisplayIntent> = {},
+	imageOptimizer: ImageOptimizerService = new ImageOptimizerService(),
 ): Promise<ResolvedFile> {
-  const url = await file.url()
-  const locale = intent.locale ?? i18nManager.defaultLocale
-  const alt = file.resolveAlt(locale, intent.altKey ?? null, intent.altOverride ?? null)
-  const optimized = await imageOptimizer.optimize(file)
+	const url = await file.url();
+	const locale = intent.locale ?? i18nManager.defaultLocale;
+	const alt = file.resolveAlt(locale, intent.altKey ?? null, intent.altOverride ?? null);
+	const optimized = await imageOptimizer.optimize(file);
 
-  return {
-    id: file.id,
-    url,
-    filename: file.filename,
-    mimeType: file.mimeType,
-    extension: file.extension,
-    size: file.size as number,
-    type: classifyFileType(file.mimeType),
-    alt,
-    width: optimized.width,
-    height: optimized.height,
-    variants: optimized.variants,
-  }
+	return {
+		id: file.id,
+		url,
+		filename: file.filename,
+		mimeType: file.mimeType,
+		extension: file.extension,
+		size: file.size as number,
+		type: classifyFileType(file.mimeType),
+		alt,
+		width: optimized.width,
+		height: optimized.height,
+		variants: optimized.variants,
+	};
 }

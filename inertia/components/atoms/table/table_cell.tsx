@@ -1,9 +1,9 @@
-import { ReactNode } from 'react'
+import { ReactNode } from 'react';
 
 interface TableCellProps {
-  colSpan?: number
-  className?: string
-  children: ReactNode
+	colSpan?: number;
+	className?: string;
+	children: ReactNode;
 }
 
 /**
@@ -24,11 +24,11 @@ interface TableCellProps {
  * </TableCell>
  */
 export const TableCell = (props: TableCellProps) => {
-  const { children, colSpan, className, ...cellProps } = props
+	const { children, colSpan, className, ...cellProps } = props;
 
-  return (
-    <td colSpan={colSpan} className={className} {...cellProps}>
-      {children}
-    </td>
-  )
-}
+	return (
+		<td colSpan={colSpan} className={className} {...cellProps}>
+			{children}
+		</td>
+	);
+};

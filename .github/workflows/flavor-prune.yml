@@ -178,6 +178,13 @@ jobs:
       - name: Reinstall dependencies (post-prune package.json)
         run: npm ci
 
+      - name: Normalize formatting (post-prune oxfmt)
+        # The prune engine rewrites the flavor package.json with a 2-space
+        # indent (JSON.stringify), which fails the oxfmt tab check. Normalizing
+        # the whole pruned tree here keeps the flavor source oxfmt-clean before
+        # the gates below and before the tree is force-pushed.
+        run: npm run format
+
       - name: Regenerate AdonisJS indexes (post-prune codegen)
         run: |
           # The dev server is the only entry point that regenerates every
@@ -221,10 +228,10 @@ jobs:
             echo 'inertia/tsconfig.json absent — skipping inertia typecheck (expected for the api flavor).'
           fi
 
-      - name: Run ESLint
+      - name: Run oxlint
         run: npm run lint:ci
 
-      - name: Run Prettier check
+      - name: Run oxfmt check
         run: npm run format:ci
 
       - name: Run frontend tests (if the inertia tree survives)

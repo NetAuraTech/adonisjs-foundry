@@ -1,18 +1,18 @@
-import { Data } from '@generated/data'
-import type { TranslationNodes } from '#helpers/i18n_payloads/nest'
-import { useTranslation } from '~/hooks/use_translation'
+import { Data } from '@generated/data';
+import { useTranslation } from '~/hooks/use_translation';
+import type { TranslationNodes } from '#helpers/i18n_payloads/nest';
 
 export enum StatusEnum {
-  VERIFIED = 'VERIFIED',
-  UNVERIFIED = 'UNVERIFIED',
-  PENDING_INVITE = 'PENDING_INVITE',
+	VERIFIED = 'VERIFIED',
+	UNVERIFIED = 'UNVERIFIED',
+	PENDING_INVITE = 'PENDING_INVITE',
 }
 
 interface UserStatusProps {
-  /** The user's current account status. */
-  status: StatusEnum
-  user: Data.User['id']
-  translations: TranslationNodes
+	/** The user's current account status. */
+	status: StatusEnum;
+	user: Data.User['id'];
+	translations: TranslationNodes;
 }
 
 /**
@@ -32,26 +32,26 @@ interface UserStatusProps {
  * <UserStatus status={StatusEnum.VERIFIED} user={user.id} />
  */
 export function UserStatus(props: UserStatusProps) {
-  const { status, translations } = props
-  const { t } = useTranslation(translations)
+	const { status, translations } = props;
+	const { t } = useTranslation(translations);
 
-  const statuses = {
-    VERIFIED: (
-      <span className="px-4 py-1 border rounded text-success border-success bg-success-soft">
-        {t('status.verified')}
-      </span>
-    ),
-    UNVERIFIED: (
-      <span className="px-4 py-1 border rounded text-danger border-danger bg-danger-soft">
-        {t('status.unverified')}
-      </span>
-    ),
-    PENDING_INVITE: (
-      <span className="px-4 py-1 border rounded text-secondary border-secondary bg-secondary-light/20">
-        {t('status.pending_invite')}
-      </span>
-    ),
-  }
+	const statuses = {
+		VERIFIED: (
+			<span className="px-4 py-1 border rounded text-success border-success bg-success-soft">
+				{t('status.verified')}
+			</span>
+		),
+		UNVERIFIED: (
+			<span className="px-4 py-1 border rounded text-danger border-danger bg-danger-soft">
+				{t('status.unverified')}
+			</span>
+		),
+		PENDING_INVITE: (
+			<span className="px-4 py-1 border rounded text-secondary border-secondary bg-secondary-light/20">
+				{t('status.pending_invite')}
+			</span>
+		),
+	};
 
-  return <>{statuses[status]}</>
+	return <>{statuses[status]}</>;
 }

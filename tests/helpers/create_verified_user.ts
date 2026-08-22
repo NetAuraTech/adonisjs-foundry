@@ -1,6 +1,6 @@
-import User from '#models/auth/user'
-import { DateTime } from 'luxon'
-import { extractNameFromEmail } from '#helpers/auth/username'
+import { DateTime } from 'luxon';
+import { extractNameFromEmail } from '#helpers/auth/username';
+import User from '#models/auth/user';
 
 /**
  * Creates a new user with a verified email address.
@@ -19,14 +19,14 @@ import { extractNameFromEmail } from '#helpers/auth/username'
  * // user.username === 'alice'
  */
 export async function createVerifiedUser(overrides: {
-  email: string
-  username?: string
-  password?: string
-  pendingEmail?: string
+	email: string;
+	username?: string;
+	password?: string;
+	pendingEmail?: string;
 }) {
-  return User.create({
-    username: extractNameFromEmail(overrides.email),
-    ...overrides,
-    emailVerifiedAt: DateTime.now(),
-  })
+	return User.create({
+		username: extractNameFromEmail(overrides.email),
+		...overrides,
+		emailVerifiedAt: DateTime.now(),
+	});
 }

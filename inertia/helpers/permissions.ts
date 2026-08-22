@@ -6,6 +6,6 @@
  * `permissionCategoryKey` in `app/helpers/i18n_payloads/nest.ts`.
  */
 export function permissionCategoryKey(raw: string): string {
-  const prefix = 'permissions.category.'
-  return raw.startsWith(prefix) ? raw.slice(prefix.length) : raw
+	const prefix = 'permissions.category.';
+	return raw.startsWith(prefix) ? raw.slice(prefix.length) : raw;
 }

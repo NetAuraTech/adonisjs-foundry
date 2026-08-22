@@ -2,7 +2,7 @@
  * The set of storage drivers supported by the CMS filesystem.
  * Mirrors the disk keys declared in `config/drive.ts`.
  */
-export type StorageDisk = 'fs' | 's3' | 'r2'
+export type StorageDisk = 'fs' | 's3' | 'r2';
 
 /**
  * A file reference embedded in a block's props.
@@ -20,9 +20,9 @@ export type StorageDisk = 'fs' | 's3' | 'r2'
  * { fileId: 12, altKey: null, altOverride: 'Custom description for this block' }
  */
 export interface FileRef {
-  fileId: number
-  altKey: string | null
-  altOverride?: string | null
+	fileId: number;
+	altKey: string | null;
+	altOverride?: string | null;
 }
 
 /**
@@ -31,7 +31,7 @@ export interface FileRef {
  * resolved file — images via the component, everything else directly from
  * the same prop (e.g. a download link).
  */
-export type FileType = 'image' | 'video' | 'audio' | 'pdf' | 'document' | 'other'
+export type FileType = 'image' | 'video' | 'audio' | 'pdf' | 'document' | 'other';
 
 /**
  * The display intent declared at resolution time (user story 2). Locale is
@@ -39,9 +39,9 @@ export type FileType = 'image' | 'video' | 'audio' | 'pdf' | 'document' | 'other
  * `altOverride` are optional.
  */
 export interface FileDisplayIntent {
-  locale: string
-  altKey: string | null
-  altOverride: string | null
+	locale: string;
+	altKey: string | null;
+	altOverride: string | null;
 }
 
 /**
@@ -51,15 +51,15 @@ export interface FileDisplayIntent {
  * DB or storage calls.
  */
 export interface ResolvedFile {
-  id: number
-  url: string
-  filename: string
-  mimeType: string
-  extension: string
-  size: number
-  type: FileType
-  alt: string
-  width?: number
-  height?: number
-  variants?: Record<number, string>
+	id: number;
+	url: string;
+	filename: string;
+	mimeType: string;
+	extension: string;
+	size: number;
+	type: FileType;
+	alt: string;
+	width?: number;
+	height?: number;
+	variants?: Record<number, string>;
 }

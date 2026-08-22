@@ -1,14 +1,14 @@
-import { type FullToken } from '#types/core'
+import { type FullToken } from '#types/core';
 
 export interface RegisterPayload {
-  email: string
-  password: string
-  locale: string
+	email: string;
+	password: string;
+	locale: string;
 }
 
 export interface ResetPasswordPayload {
-  token: FullToken
-  password: string
+	token: FullToken;
+	password: string;
 }
 
-export type OAuthProvider = 'github' | 'google' | 'facebook'
+export type OAuthProvider = 'github' | 'google' | 'facebook';

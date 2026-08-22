@@ -1,5 +1,5 @@
-import { randomBytes } from 'node:crypto'
-import type { FullToken } from '#types/core'
+import { randomBytes } from 'node:crypto';
+import type { FullToken } from '#types/core';
 
 /**
  * Generate a random token string
@@ -7,7 +7,7 @@ import type { FullToken } from '#types/core'
  * @returns Random hex string
  */
 export function generateToken(length: number = 32): string {
-  return randomBytes(length).toString('hex')
+	return randomBytes(length).toString('hex');
 }
 
 /**
@@ -27,11 +27,11 @@ export function generateToken(length: number = 32): string {
  * // token: "abc123....def456..." (sent to user)
  */
 export function generateSplitToken(selectorLength: number = 32, validatorLength: number = 32) {
-  const selector = generateToken(selectorLength)
-  const validator = generateToken(validatorLength)
-  const token = `${selector}.${validator}`
+	const selector = generateToken(selectorLength);
+	const validator = generateToken(validatorLength);
+	const token = `${selector}.${validator}`;
 
-  return { selector, validator, token }
+	return { selector, validator, token };
 }
 
 /**
@@ -48,19 +48,19 @@ export function generateSplitToken(selectorLength: number = 32, validatorLength:
  * // null
  */
 export function splitToken(token: FullToken): { selector: string; validator: string } | null {
-  const parts = token.split('.')
+	const parts = token.split('.');
 
-  if (parts.length !== 2) {
-    return null
-  }
+	if (parts.length !== 2) {
+		return null;
+	}
 
-  const [selector, validator] = parts
+	const [selector, validator] = parts;
 
-  if (!selector || !validator) {
-    return null
-  }
+	if (!selector || !validator) {
+		return null;
+	}
 
-  return { selector, validator }
+	return { selector, validator };
 }
 
 /**
@@ -81,13 +81,13 @@ export function splitToken(token: FullToken): { selector: string; validator: str
  * // "short"
  */
 export function maskToken(token: string): string {
-  if (token.length <= 12) {
-    return token
-  }
+	if (token.length <= 12) {
+		return token;
+	}
 
-  const start = token.slice(0, 8)
-  const end = token.slice(-4)
-  const masked = '*'.repeat(Math.min(token.length - 12, 20))
+	const start = token.slice(0, 8);
+	const end = token.slice(-4);
+	const masked = '*'.repeat(Math.min(token.length - 12, 20));
 
-  return `${start}${masked}${end}`
+	return `${start}${masked}${end}`;
 }

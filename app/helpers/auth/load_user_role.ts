@@ -1,5 +1,5 @@
-import type User from '#models/auth/user'
-import type Role from '#models/auth/role'
+import type Role from '#models/auth/role';
+import type User from '#models/auth/user';
 
 /**
  * Preload a user's role (with its permissions) so the {@link UserTransformer}
@@ -7,11 +7,11 @@ import type Role from '#models/auth/role'
  * called on both freshly-created and refreshed instances.
  */
 export async function preloadUserRoleWithPermissions(user: User): Promise<void> {
-  await user.load((loader) => {
-    loader.load('role', (role) => {
-      role.preload('permissions')
-    })
-  })
+	await user.load((loader) => {
+		loader.load('role', (role) => {
+			role.preload('permissions');
+		});
+	});
 }
 
 /**
@@ -19,5 +19,5 @@ export async function preloadUserRoleWithPermissions(user: User): Promise<void> 
  * `role_id` `in(...)` rule.
  */
 export function roleIdsToAllowlist(roles: Role[]): string[] {
-  return roles.map((role) => String(role.id))
+	return roles.map((role) => String(role.id));
 }

@@ -1,9 +1,9 @@
-import type { HttpContext } from '@adonisjs/core/http'
-import { inject } from '@adonisjs/core'
-import { OAuthProvider } from '#types/auth'
-import { validateProvider } from '#helpers/auth/oauth'
-import { completeSocialApiCallback } from '#helpers/auth/social_api_callback'
-import { SocialApiLoginAction } from '#actions/social/social_api_login_action'
+import { inject } from '@adonisjs/core';
+import { SocialApiLoginAction } from '#actions/social/social_api_login_action';
+import { validateProvider } from '#helpers/auth/oauth';
+import { completeSocialApiCallback } from '#helpers/auth/social_api_callback';
+import { OAuthProvider } from '#types/auth';
+import type { HttpContext } from '@adonisjs/core/http';
 
 /**
  * OAuth social login for the headless `api` flavor (spec #6 "social API mode").
@@ -15,32 +15,32 @@ import { SocialApiLoginAction } from '#actions/social/social_api_login_action'
  */
 @inject()
 export default class SocialApiController {
-  constructor(protected socialApiLoginAction: SocialApiLoginAction) {}
+	constructor(protected socialApiLoginAction: SocialApiLoginAction) {}
 
-  /**
-   * GET /oauth/:provider — start the OAuth round-trip for a provider.
-   */
-  async redirect(ctx: HttpContext) {
-    const { ally, params } = ctx
+	/**
+	 * GET /oauth/:provider — start the OAuth round-trip for a provider.
+	 */
+	async redirect(ctx: HttpContext) {
+		const { ally, params } = ctx;
 
-    const provider = params.provider as OAuthProvider
+		const provider = params.provider as OAuthProvider;
 
-    validateProvider(provider)
+		validateProvider(provider);
 
-    return ally.use(provider).redirect()
-  }
+		return ally.use(provider).redirect();
+	}
 
-  /**
-   * GET /oauth/:provider/callback — issue an API token and redirect to the
-   * client URL.
-   */
-  async callback(ctx: HttpContext) {
-    const { params } = ctx
+	/**
+	 * GET /oauth/:provider/callback — issue an API token and redirect to the
+	 * client URL.
+	 */
+	async callback(ctx: HttpContext) {
+		const { params } = ctx;
 
-    const provider = params.provider as OAuthProvider
+		const provider = params.provider as OAuthProvider;
 
-    validateProvider(provider)
+		validateProvider(provider);
 
-    return completeSocialApiCallback(ctx, provider, this.socialApiLoginAction)
-  }
+		return completeSocialApiCallback(ctx, provider, this.socialApiLoginAction);
+	}
 }

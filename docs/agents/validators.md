@@ -10,20 +10,20 @@ VineJS schemas live in `app/validators/{domain}.ts`, grouped by domain (not one 
 
 ```typescript
 export const showFileValidator = vine.create({
-  id: vine.number().positive(),
-})
+	id: vine.number().positive(),
+});
 ```
 
 **Factory function** — use only when the schema needs a closure over a runtime value, almost always for uniqueness checks that must exclude the current record (e.g. "email must be unique, except for this user's own current email"):
 
 ```typescript
 export const updateEmailValidator = (id: User['id']) =>
-  vine.create({
-    email: email().unique(async (query, value) => {
-      const user = await query.from('users').where('email', value).whereNot('id', id).first()
-      return !user
-    }),
-  })
+	vine.create({
+		email: email().unique(async (query, value) => {
+			const user = await query.from('users').where('email', value).whereNot('id', id).first();
+			return !user;
+		}),
+	});
 ```
 
 Don't default to a factory function — only reach for it when a plain `vine.create()` can't express the constraint.

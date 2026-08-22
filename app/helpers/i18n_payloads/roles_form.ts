@@ -1,11 +1,7 @@
-import type { BuildPayloadResult, I18nService } from '#services/i18n_service'
-import type Permission from '#models/auth/permission'
-import { createI18nEntry } from '#services/i18n_service'
-import {
-  nestTranslation,
-  permissionCategoryKey,
-  type TranslationNodes,
-} from '#helpers/i18n_payloads/nest'
+import { nestTranslation, permissionCategoryKey, type TranslationNodes } from '#helpers/i18n_payloads/nest';
+import { createI18nEntry } from '#services/i18n_service';
+import type Permission from '#models/auth/permission';
+import type { BuildPayloadResult, I18nService } from '#services/i18n_service';
 
 /**
  * The flat i18n key mapping for the role create/edit form. The dynamic part of
@@ -13,31 +9,31 @@ import {
  * appended at build time, one entry per data-driven slug.
  */
 export const ROLES_FORM_MAPPING = {
-  title: {
-    create: 'admin.roles.create.title',
-    edit: createI18nEntry('admin.roles.edit.title', { name: '{name}' }),
-  },
-  name: {
-    value: 'admin.roles.form.name.value',
-    placeholder: 'admin.roles.form.name.placeholder',
-  },
-  slug: {
-    value: 'admin.roles.form.slug.value',
-    placeholder: 'admin.roles.form.slug.placeholder',
-  },
-  description: {
-    value: 'admin.roles.form.description.value',
-    placeholder: 'admin.roles.form.description.placeholder',
-  },
-  submit: 'admin.roles.form.submit',
-  actions: {
-    list: 'admin.roles.list.title',
-  },
-  permissions: {
-    value: 'admin.roles.form.permissions.value',
-    system_hint: 'admin.roles.form.permissions.system_hint',
-  },
-}
+	title: {
+		create: 'admin.roles.create.title',
+		edit: createI18nEntry('admin.roles.edit.title', { name: '{name}' }),
+	},
+	name: {
+		value: 'admin.roles.form.name.value',
+		placeholder: 'admin.roles.form.name.placeholder',
+	},
+	slug: {
+		value: 'admin.roles.form.slug.value',
+		placeholder: 'admin.roles.form.slug.placeholder',
+	},
+	description: {
+		value: 'admin.roles.form.description.value',
+		placeholder: 'admin.roles.form.description.placeholder',
+	},
+	submit: 'admin.roles.form.submit',
+	actions: {
+		list: 'admin.roles.list.title',
+	},
+	permissions: {
+		value: 'admin.roles.form.permissions.value',
+		system_hint: 'admin.roles.form.permissions.system_hint',
+	},
+};
 
 /**
  * Shape of the resolved translation payload for the role create/edit form:
@@ -48,8 +44,8 @@ export const ROLES_FORM_MAPPING = {
  * returns unchanged.
  */
 export type AdminRolesFormTranslations = BuildPayloadResult<typeof ROLES_FORM_MAPPING> & {
-  permissions: TranslationNodes
-}
+	permissions: TranslationNodes;
+};
 
 /**
  * Builds the translation payload for the role create/edit form.
@@ -62,27 +58,24 @@ export type AdminRolesFormTranslations = BuildPayloadResult<typeof ROLES_FORM_MA
  * @param permissions - The permissions to build data-driven entries for.
  * @returns The role form `t` object with every UI string resolved.
  */
-export function buildRolesFormPayload(
-  i18n: I18nService,
-  permissions: Permission[]
-): AdminRolesFormTranslations {
-  const categories: TranslationNodes = {}
-  const items: TranslationNodes = {}
+export function buildRolesFormPayload(i18n: I18nService, permissions: Permission[]): AdminRolesFormTranslations {
+	const categories: TranslationNodes = {};
+	const items: TranslationNodes = {};
 
-  for (const permission of permissions) {
-    nestTranslation(categories, permissionCategoryKey(permission.category), permission.category)
-    nestTranslation(items, permission.slug, {
-      value: permission.name,
-      description: permission.description ?? '',
-    })
-  }
+	for (const permission of permissions) {
+		nestTranslation(categories, permissionCategoryKey(permission.category), permission.category);
+		nestTranslation(items, permission.slug, {
+			value: permission.name,
+			description: permission.description ?? '',
+		});
+	}
 
-  return i18n.buildPayload({
-    ...ROLES_FORM_MAPPING,
-    permissions: {
-      ...ROLES_FORM_MAPPING.permissions,
-      categories,
-      items,
-    },
-  })
+	return i18n.buildPayload({
+		...ROLES_FORM_MAPPING,
+		permissions: {
+			...ROLES_FORM_MAPPING.permissions,
+			categories,
+			items,
+		},
+	});
 }

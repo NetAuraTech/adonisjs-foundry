@@ -1,22 +1,22 @@
-import { ChangeEvent, ReactNode } from 'react'
-import { SelectOption } from '~/components/atoms/select_option'
+import { ChangeEvent, ReactNode } from 'react';
+import { SelectOption } from '~/components/atoms/select_option';
 
 interface SelectProps {
-  /** The `name` and `id` attribute of the underlying `<select>`. */
-  name: string
-  type: string
-  /**
-   * When provided, prepends a disabled empty `<option>` with this text.
-   * Useful as a default hint (e.g. `'Choose a role…'`).
-   */
-  placeholder?: string
-  defaultValue?: string | number
-  disabled?: boolean
-  required?: boolean
-  onChange?: (event: ChangeEvent<HTMLSelectElement>) => void
-  onBlur?: (event?: ChangeEvent<HTMLSelectElement>) => void
-  /** `<SelectOption>` elements rendered as the select's option list. */
-  children?: ReactNode
+	/** The `name` and `id` attribute of the underlying `<select>`. */
+	name: string;
+	type: string;
+	/**
+	 * When provided, prepends a disabled empty `<option>` with this text.
+	 * Useful as a default hint (e.g. `'Choose a role…'`).
+	 */
+	placeholder?: string;
+	defaultValue?: string | number;
+	disabled?: boolean;
+	required?: boolean;
+	onChange?: (event: ChangeEvent<HTMLSelectElement>) => void;
+	onBlur?: (event?: ChangeEvent<HTMLSelectElement>) => void;
+	/** `<SelectOption>` elements rendered as the select's option list. */
+	children?: ReactNode;
 }
 
 /**
@@ -39,33 +39,23 @@ interface SelectProps {
  * </Select>
  */
 export function Select(props: SelectProps) {
-  const {
-    name,
-    type,
-    placeholder,
-    defaultValue,
-    disabled,
-    required,
-    onChange,
-    onBlur,
-    children,
-    ...inputProps
-  } = props
+	const { name, type, placeholder, defaultValue, disabled, required, onChange, onBlur, children, ...inputProps } =
+		props;
 
-  return (
-    <select
-      name={name}
-      id={name}
-      defaultValue={defaultValue}
-      disabled={disabled}
-      required={required}
-      onChange={onChange as (e: ChangeEvent<HTMLSelectElement>) => void}
-      onBlur={onBlur}
-      className={`select`}
-      {...inputProps}
-    >
-      {placeholder && <SelectOption value="" label={placeholder} />}
-      {children}
-    </select>
-  )
+	return (
+		<select
+			name={name}
+			id={name}
+			defaultValue={defaultValue}
+			disabled={disabled}
+			required={required}
+			onChange={onChange as (e: ChangeEvent<HTMLSelectElement>) => void}
+			onBlur={onBlur}
+			className={`select`}
+			{...inputProps}
+		>
+			{placeholder && <SelectOption value="" label={placeholder} />}
+			{children}
+		</select>
+	);
 }

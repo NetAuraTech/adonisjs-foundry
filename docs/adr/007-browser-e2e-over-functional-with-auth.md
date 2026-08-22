@@ -53,17 +53,17 @@ When converting a functional test to browser E2E:
 ```typescript
 // Before: functional test (flaky with auth)
 const response = await client
-  .post(route('admin.templates.update', { id: template.id }))
-  .json({ name: 'Updated' })
-  .loginAs(admin)
+	.post(route('admin.templates.update', { id: template.id }))
+	.json({ name: 'Updated' })
+	.loginAs(admin);
 
 // After: browser E2E test (reliable)
-await login(route('auth.session.render'), visit, admin.email, 'TestPassword123!')
-const page = await visitPage(route('admin.templates.edit', { id: template.id }), visit)
-await fillField(page, 'input', 'name', 'Updated')
+await login(route('auth.session.render'), visit, admin.email, 'TestPassword123!');
+const page = await visitPage(route('admin.templates.edit', { id: template.id }), visit);
+await fillField(page, 'input', 'name', 'Updated');
 const response = await waitForInertiaResponse(page, '/admin/templates/', () =>
-  page.getByRole('button', { name: /Save changes/i }).click()
-)
+	page.getByRole('button', { name: /Save changes/i }).click(),
+);
 ```
 
 Key helpers:

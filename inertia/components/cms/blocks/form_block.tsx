@@ -1,10 +1,10 @@
-import type { ResolvedBlock } from '#cms/types/page'
-import { ReactNode } from 'react'
-import { Form } from '@adonisjs/inertia/react'
+import { Form } from '@adonisjs/inertia/react';
+import { ReactNode } from 'react';
+import type { ResolvedBlock } from '#cms/types/page';
 
 interface FormBlockProps {
-  block: ResolvedBlock<'form'>
-  children?: ReactNode
+	block: ResolvedBlock<'form'>;
+	children?: ReactNode;
 }
 
 /**
@@ -12,22 +12,22 @@ interface FormBlockProps {
  * All visual child blocks are rendered inside this container.
  */
 export default function FormBlock(props: FormBlockProps) {
-  const { block, children } = props
-  const { route, routeParams, className } = block.props
+	const { block, children } = props;
+	const { route, routeParams, className } = block.props;
 
-  const Component = route === null ? Div : Form
+	const Component = route === null ? Div : Form;
 
-  return (
-    <Component
-      className={['grid', 'gap-4', className].filter(Boolean).join(' ')}
-      route={route as any}
-      routeParams={routeParams}
-    >
-      {children}
-    </Component>
-  )
+	return (
+		<Component
+			className={['grid', 'gap-4', className].filter(Boolean).join(' ')}
+			route={route as any}
+			routeParams={routeParams}
+		>
+			{children}
+		</Component>
+	);
 }
 
 function Div({ children }: { children: ReactNode }) {
-  return <div>{children}</div>
+	return <div>{children}</div>;
 }

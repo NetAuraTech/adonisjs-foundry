@@ -10,10 +10,10 @@
 */
 
 export default {
-  auth: true,
-  settings: true,
-  admin: true,
-  adminApi: true,
-  cms: true,
-  maintenance: true,
-} as const
+	auth: true,
+	settings: true,
+	admin: true,
+	adminApi: true,
+	cms: true,
+	maintenance: true,
+} as const;

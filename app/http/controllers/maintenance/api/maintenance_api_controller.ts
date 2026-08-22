@@ -1,7 +1,7 @@
-import { inject } from '@adonisjs/core'
-import type { HttpContext } from '@adonisjs/core/http'
-import MaintenanceResource from '#rest/maintenance_resource'
-import { handle } from '#rest/rest_adapter'
+import { inject } from '@adonisjs/core';
+import MaintenanceResource from '#rest/maintenance_resource';
+import { handle } from '#rest/rest_adapter';
+import type { HttpContext } from '@adonisjs/core/http';
 
 /**
  * GET /api/v1/admin/maintenance — current maintenance configuration and
@@ -15,17 +15,17 @@ import { handle } from '#rest/rest_adapter'
  */
 @inject()
 export default class MaintenanceApiController {
-  constructor(protected maintenanceResource: MaintenanceResource) {}
+	constructor(protected maintenanceResource: MaintenanceResource) {}
 
-  async index(ctx: HttpContext): Promise<void> {
-    await handle(ctx, this.maintenanceResource.endpoints.index)
-  }
+	async index(ctx: HttpContext): Promise<void> {
+		await handle(ctx, this.maintenanceResource.endpoints.index);
+	}
 
-  async update(ctx: HttpContext): Promise<void> {
-    await handle(ctx, this.maintenanceResource.endpoints.update)
-  }
+	async update(ctx: HttpContext): Promise<void> {
+		await handle(ctx, this.maintenanceResource.endpoints.update);
+	}
 
-  async toggle(ctx: HttpContext): Promise<void> {
-    await handle(ctx, this.maintenanceResource.endpoints.toggle)
-  }
+	async toggle(ctx: HttpContext): Promise<void> {
+		await handle(ctx, this.maintenanceResource.endpoints.toggle);
+	}
 }

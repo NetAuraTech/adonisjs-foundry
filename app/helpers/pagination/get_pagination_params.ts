@@ -1,5 +1,5 @@
-import { type HttpContext } from '@adonisjs/core/http'
-import { DEFAULT_PAGINATION, type PaginationFilters } from '#types/pagination'
+import { type HttpContext } from '@adonisjs/core/http';
+import { DEFAULT_PAGINATION, type PaginationFilters } from '#types/pagination';
 
 /**
  * Extracts pagination parameters from the request without schema validation.
@@ -36,14 +36,14 @@ import { DEFAULT_PAGINATION, type PaginationFilters } from '#types/pagination'
  * ```
  */
 export function getPaginationParams(
-  request: HttpContext['request'],
-  defaults: { page?: number; perPage?: number } = DEFAULT_PAGINATION
+	request: HttpContext['request'],
+	defaults: { page?: number; perPage?: number } = DEFAULT_PAGINATION,
 ): PaginationFilters {
-  const page = Number(request.input('page')) || defaults.page || DEFAULT_PAGINATION.page
-  const perPage = Number(request.input('perPage')) || defaults.perPage || DEFAULT_PAGINATION.perPage
+	const page = Number(request.input('page')) || defaults.page || DEFAULT_PAGINATION.page;
+	const perPage = Number(request.input('perPage')) || defaults.perPage || DEFAULT_PAGINATION.perPage;
 
-  return {
-    page: Math.max(1, page),
-    perPage: Math.min(100, Math.max(1, perPage)),
-  }
+	return {
+		page: Math.max(1, page),
+		perPage: Math.min(100, Math.max(1, perPage)),
+	};
 }

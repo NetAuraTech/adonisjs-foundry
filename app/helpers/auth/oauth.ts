@@ -1,6 +1,6 @@
-import ProviderNotConfiguredException from '#exceptions/auth/provider_not_configured_exception'
-import { type OAuthProvider } from '#types/auth'
-import env from '#start/env'
+import ProviderNotConfiguredException from '#exceptions/auth/provider_not_configured_exception';
+import env from '#start/env';
+import { type OAuthProvider } from '#types/auth';
 
 /**
  * Determines whether an OAuth provider is properly configured by validating
@@ -19,14 +19,14 @@ import env from '#start/env'
  * isProviderConfigured(undefined, undefined)  // false
  */
 export function isProviderConfigured(clientId?: string, clientSecret?: string): boolean {
-  return !!(
-    clientId &&
-    clientSecret &&
-    clientId.trim() !== '' &&
-    clientSecret.trim() !== '' &&
-    clientId !== 'dummy' &&
-    clientSecret !== 'dummy'
-  )
+	return !!(
+		clientId &&
+		clientSecret &&
+		clientId.trim() !== '' &&
+		clientSecret.trim() !== '' &&
+		clientId !== 'dummy' &&
+		clientSecret !== 'dummy'
+	);
 }
 
 /**
@@ -42,10 +42,10 @@ export function isProviderConfigured(clientId?: string, clientSecret?: string): 
  * enabledProviders // ['github']
  */
 export const enabledProviders = (['github', 'google', 'facebook'] as const).filter((provider) => {
-  const clientId = env.get(`${provider.toUpperCase()}_CLIENT_ID`)
-  const clientSecret = env.get(`${provider.toUpperCase()}_CLIENT_SECRET`)
-  return isProviderConfigured(clientId, clientSecret)
-}) as Array<OAuthProvider>
+	const clientId = env.get(`${provider.toUpperCase()}_CLIENT_ID`);
+	const clientSecret = env.get(`${provider.toUpperCase()}_CLIENT_SECRET`);
+	return isProviderConfigured(clientId, clientSecret);
+}) as Array<OAuthProvider>;
 
 /**
  * Checks whether a given OAuth provider is currently enabled.
@@ -58,7 +58,7 @@ export const enabledProviders = (['github', 'google', 'facebook'] as const).filt
  * isProviderEnabled('twitter')  // false (not supported)
  */
 export function isProviderEnabled(provider: string): boolean {
-  return enabledProviders.includes(provider as any)
+	return enabledProviders.includes(provider as any);
 }
 
 /**
@@ -75,7 +75,7 @@ export function isProviderEnabled(provider: string): boolean {
  * validateProvider('twitter') // throws ProviderNotConfiguredException
  */
 export function validateProvider(provider: string): void {
-  if (!isProviderEnabled(provider)) {
-    throw new ProviderNotConfiguredException(provider)
-  }
+	if (!isProviderEnabled(provider)) {
+		throw new ProviderNotConfiguredException(provider);
+	}
 }

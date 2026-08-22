@@ -1,8 +1,8 @@
-import type { HttpContext } from '@adonisjs/core/http'
-import { inject } from '@adonisjs/core'
-import { forgotPasswordValidator } from '#validators/auth'
-import { FindUserByEmailAction } from '#actions/user/find_user_by_email_action'
-import { SendPasswordResetAction } from '#actions/password/send_password_reset_action'
+import { inject } from '@adonisjs/core';
+import { SendPasswordResetAction } from '#actions/password/send_password_reset_action';
+import { FindUserByEmailAction } from '#actions/user/find_user_by_email_action';
+import { forgotPasswordValidator } from '#validators/auth';
+import type { HttpContext } from '@adonisjs/core/http';
 
 /**
  * POST /api/v1/auth/forgot-password — request a password-reset email.
@@ -10,22 +10,22 @@ import { SendPasswordResetAction } from '#actions/password/send_password_reset_a
  */
 @inject()
 export default class ForgotPasswordApiController {
-  constructor(
-    protected findUserByEmailAction: FindUserByEmailAction,
-    protected sendPasswordResetAction: SendPasswordResetAction
-  ) {}
+	constructor(
+		protected findUserByEmailAction: FindUserByEmailAction,
+		protected sendPasswordResetAction: SendPasswordResetAction,
+	) {}
 
-  async store(ctx: HttpContext) {
-    const { request, response } = ctx
+	async store(ctx: HttpContext) {
+		const { request, response } = ctx;
 
-    const payload = await forgotPasswordValidator.validate(request.all())
+		const payload = await forgotPasswordValidator.validate(request.all());
 
-    const user = await this.findUserByEmailAction.execute({ email: payload.email })
+		const user = await this.findUserByEmailAction.execute({ email: payload.email });
 
-    if (user) {
-      await this.sendPasswordResetAction.execute({ user })
-    }
+		if (user) {
+			await this.sendPasswordResetAction.execute({ user });
+		}
 
-    return response.ok({ message: 'reset_email_sent' })
-  }
+		return response.ok({ message: 'reset_email_sent' });
+	}
 }

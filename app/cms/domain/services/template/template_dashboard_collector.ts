@@ -1,7 +1,7 @@
-import { inject } from '@adonisjs/core'
-import { TemplateRepository } from '#cms/domain/repositories/template/template_repository'
-import type { DashboardCollector } from '#types/dashboard'
-import type { DashboardTemplateSection } from '#cms/types/dashboard'
+import { inject } from '@adonisjs/core';
+import { TemplateRepository } from '#cms/domain/repositories/template/template_repository';
+import type { DashboardTemplateSection } from '#cms/types/dashboard';
+import type { DashboardCollector } from '#types/dashboard';
 
 /**
  * Contributes the template section of the admin dashboard: the total template
@@ -12,14 +12,14 @@ import type { DashboardTemplateSection } from '#cms/types/dashboard'
  */
 @inject()
 export class TemplateDashboardCollector implements DashboardCollector<'template'> {
-  constructor(protected templateRepository: TemplateRepository) {}
+	constructor(protected templateRepository: TemplateRepository) {}
 
-  /**
-   * Collect the template dashboard section.
-   *
-   * @returns The total template count.
-   */
-  async collect(): Promise<DashboardTemplateSection> {
-    return { templates: await this.templateRepository.count() }
-  }
+	/**
+	 * Collect the template dashboard section.
+	 *
+	 * @returns The total template count.
+	 */
+	async collect(): Promise<DashboardTemplateSection> {
+		return { templates: await this.templateRepository.count() };
+	}
 }

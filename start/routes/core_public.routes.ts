@@ -10,10 +10,10 @@
 |
 */
 
-import router from '@adonisjs/core/services/router'
-import { controllers } from '#generated/controllers'
+import router from '@adonisjs/core/services/router';
+import { controllers } from '#generated/controllers';
 
 export function registerCorePublicRoutes(): void {
-  router.get('/sitemap.xml', [controllers.core.front.Sitemap, 'show'])
-  router.get('/robots.txt', [controllers.core.front.Robots, 'show'])
+	router.get('/sitemap.xml', [controllers.core.front.Sitemap, 'show']);
+	router.get('/robots.txt', [controllers.core.front.Robots, 'show']);
 }

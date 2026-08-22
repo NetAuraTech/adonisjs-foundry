@@ -14,14 +14,14 @@
 |
 */
 
-import app from '@adonisjs/core/services/app'
-import { SitemapRegistry } from '#services/core/sitemap_registry'
-import { RouteSitemapCollector } from '#services/core/route_sitemap_collector'
-import { PageSitemapCollector } from '#cms/domain/services/page/page_sitemap_collector'
+import app from '@adonisjs/core/services/app';
+import { PageSitemapCollector } from '#cms/domain/services/page/page_sitemap_collector';
+import { RouteSitemapCollector } from '#services/core/route_sitemap_collector';
+import { SitemapRegistry } from '#services/core/sitemap_registry';
 
-app.container.singleton(SitemapRegistry, () => new SitemapRegistry())
+app.container.singleton(SitemapRegistry, () => new SitemapRegistry());
 
-const registry = await app.container.make(SitemapRegistry)
+const registry = await app.container.make(SitemapRegistry);
 
-registry.register('routes', () => app.container.make(RouteSitemapCollector))
-registry.register('page', () => app.container.make(PageSitemapCollector))
+registry.register('routes', () => app.container.make(RouteSitemapCollector));
+registry.register('page', () => app.container.make(PageSitemapCollector));
