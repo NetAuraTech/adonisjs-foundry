@@ -25,115 +25,115 @@ const inertiaManifest: FlavorManifest = {
 
 	delete: [
 		// ─── CMS module (page, template, builder) ───────────────────────────────
-		'app/cms',
+		'apps/web/app/cms',
 
 		// ─── CMS controllers (page + template) ──────────────────────────────────
-		'app/http/controllers/page',
-		'app/http/controllers/template',
-		'app/http/rest/pages_resource.ts',
-		'app/http/rest/templates_resource.ts',
+		'apps/web/app/http/controllers/page',
+		'apps/web/app/http/controllers/template',
+		'apps/web/app/http/rest/pages_resource.ts',
+		'apps/web/app/http/rest/templates_resource.ts',
 
 		// ─── CMS transformers (page + template) ─────────────────────────────────
-		'app/data/transformers/page',
-		'app/data/transformers/template',
+		'apps/web/app/data/transformers/page',
+		'apps/web/app/data/transformers/template',
 
 		// ─── CMS events and listeners ───────────────────────────────────────────
-		'app/events/page',
-		'app/listeners/page',
+		'apps/web/app/events/page',
+		'apps/web/app/listeners/page',
 
 		// ─── CMS mail (contact form) ────────────────────────────────────────────
-		'app/mails/page',
+		'apps/web/app/mails/page',
 
 		// ─── CMS i18n payload helpers ───────────────────────────────────────────
-		'app/helpers/i18n_payloads/pages_create.ts',
-		'app/helpers/i18n_payloads/pages_index.ts',
-		'app/helpers/i18n_payloads/pages_show.ts',
-		'app/helpers/i18n_payloads/page_editor.ts',
-		'app/helpers/i18n_payloads/page_revisions.ts',
-		'app/helpers/i18n_payloads/templates_edit.ts',
-		'app/helpers/i18n_payloads/templates_index.ts',
+		'apps/web/app/helpers/i18n_payloads/pages_create.ts',
+		'apps/web/app/helpers/i18n_payloads/pages_index.ts',
+		'apps/web/app/helpers/i18n_payloads/pages_show.ts',
+		'apps/web/app/helpers/i18n_payloads/page_editor.ts',
+		'apps/web/app/helpers/i18n_payloads/page_revisions.ts',
+		'apps/web/app/helpers/i18n_payloads/templates_edit.ts',
+		'apps/web/app/helpers/i18n_payloads/templates_index.ts',
 
 		// ─── CMS preview-token helper (page/template preview only) ──────────────
-		'app/helpers/core/preview_token.ts',
-		'tests/unit/helpers/core/preview_token.spec.ts',
-		'tests/unit/helpers/i18n_payloads_cms.spec.ts',
-		'commands/cms_normalize_migration_names.ts',
+		'apps/web/app/helpers/core/preview_token.ts',
+		'apps/web/tests/unit/helpers/core/preview_token.spec.ts',
+		'apps/web/tests/unit/helpers/i18n_payloads_cms.spec.ts',
+		'apps/web/commands/cms_normalize_migration_names.ts',
 
 		// ─── CMS migrations ─────────────────────────────────────────────────────
-		'database/migrations/cms',
+		'apps/web/database/migrations/cms',
 
 		// ─── CMS seeders ────────────────────────────────────────────────────────
-		'database/seeders/page_seeder.ts',
-		'database/seeders/template_seeder.ts',
+		'apps/web/database/seeders/page_seeder.ts',
+		'apps/web/database/seeders/template_seeder.ts',
 
 		// ─── CMS i18n namespaces (page, template, builder) ──────────────────────
-		'resources/lang/en/page.json',
-		'resources/lang/fr/page.json',
-		'resources/lang/en/template.json',
-		'resources/lang/fr/template.json',
-		'resources/lang/en/builder.json',
-		'resources/lang/fr/builder.json',
+		'apps/web/resources/lang/en/page.json',
+		'apps/web/resources/lang/fr/page.json',
+		'apps/web/resources/lang/en/template.json',
+		'apps/web/resources/lang/fr/template.json',
+		'apps/web/resources/lang/en/builder.json',
+		'apps/web/resources/lang/fr/builder.json',
 
 		// ─── CMS email template (contact form) ──────────────────────────────────
-		'resources/views/emails/contact_form_email.edge',
+		'apps/web/resources/views/emails/contact_form_email.edge',
 
 		// ─── CMS route files ────────────────────────────────────────────────────
-		'start/routes/cms_admin.routes.ts',
-		'start/routes/cms_public.routes.ts',
-		'start/routes/cms_rest_api.routes.ts',
+		'apps/web/start/routes/cms_admin.routes.ts',
+		'apps/web/start/routes/cms_public.routes.ts',
+		'apps/web/start/routes/cms_rest_api.routes.ts',
 
 		// ─── Transmit integration ───────────────────────────────────────────────
-		'start/transmit.ts',
-		'config/transmit.ts',
-		'config/cms.ts',
+		'apps/web/start/transmit.ts',
+		'apps/web/config/transmit.ts',
+		'apps/web/config/cms.ts',
 
 		// ─── CMS React subtrees (builder, renderer, pages) ──────────────────────
-		'inertia/pages/cms',
-		'inertia/components/cms',
+		'apps/web/inertia/pages/cms',
+		'apps/web/inertia/components/cms',
 
 		// ─── CMS test suites ────────────────────────────────────────────────────
-		'tests/unit/actions/page',
-		'tests/unit/actions/template',
-		'tests/unit/models/page',
-		'tests/unit/models/page.spec.ts',
-		'tests/unit/models/page_translation.spec.ts',
-		'tests/unit/models/template',
-		'tests/unit/services/page',
-		'tests/unit/services/template',
-		'tests/unit/validators/page_validator.spec.ts',
-		'tests/unit/validators/template_validator.spec.ts',
-		'tests/integration/repositories/page_repository.spec.ts',
-		'tests/integration/repositories/page_translation_repository.spec.ts',
-		'tests/integration/repositories/page_revision_repository.spec.ts',
-		'tests/integration/repositories/template_repository.spec.ts',
-		'tests/integration/services/page/page_sitemap_collector.spec.ts',
-		'tests/integration/routes_structure_cms.spec.ts',
+		'apps/web/tests/unit/actions/page',
+		'apps/web/tests/unit/actions/template',
+		'apps/web/tests/unit/models/page',
+		'apps/web/tests/unit/models/page.spec.ts',
+		'apps/web/tests/unit/models/page_translation.spec.ts',
+		'apps/web/tests/unit/models/template',
+		'apps/web/tests/unit/services/page',
+		'apps/web/tests/unit/services/template',
+		'apps/web/tests/unit/validators/page_validator.spec.ts',
+		'apps/web/tests/unit/validators/template_validator.spec.ts',
+		'apps/web/tests/integration/repositories/page_repository.spec.ts',
+		'apps/web/tests/integration/repositories/page_translation_repository.spec.ts',
+		'apps/web/tests/integration/repositories/page_revision_repository.spec.ts',
+		'apps/web/tests/integration/repositories/template_repository.spec.ts',
+		'apps/web/tests/integration/services/page/page_sitemap_collector.spec.ts',
+		'apps/web/tests/integration/routes_structure_cms.spec.ts',
 
 		// ─── CMS split-off test files ───────────────────────────────────────────
-		'tests/unit/exceptions_cms.spec.ts',
-		'tests/unit/actions/cms',
-		'tests/unit/services/cms',
-		'tests/unit/mails/notifications_cms.spec.ts',
-		'tests/unit/validators/builder_validator.spec.ts',
-		'tests/unit/validators/contact_validator.spec.ts',
-		'tests/functional/cms',
-		'tests/helpers/seed_dashboard.ts',
+		'apps/web/tests/unit/exceptions_cms.spec.ts',
+		'apps/web/tests/unit/actions/cms',
+		'apps/web/tests/unit/services/cms',
+		'apps/web/tests/unit/mails/notifications_cms.spec.ts',
+		'apps/web/tests/unit/validators/builder_validator.spec.ts',
+		'apps/web/tests/unit/validators/contact_validator.spec.ts',
+		'apps/web/tests/functional/cms',
+		'apps/web/tests/helpers/seed_dashboard.ts',
 
 		// ─── Prune pipeline (main-only infrastructure) ──────────────────────────
 		'tooling/prune',
-		'tests/unit/prune',
+		'apps/web/tests/unit/prune',
 
 		// ─── Generated indexes ──────────────────────────────────────────────────
 		// The entire .adonisjs directory is deleted so the pruned tree carries
 		// zero CMS references. `npm run dev` regenerates it fresh against the
 		// pruned source tree (init hooks + ready hook + Tuyau routesScanned).
-		'.adonisjs',
+		'apps/web/.adonisjs',
 	],
 
 	rewrites: [
 		// ─── config/features.ts — turn the cms flag off ─────────────────────────
 		{
-			path: 'config/features.ts',
+			path: 'apps/web/config/features.ts',
 			content: [
 				'/*',
 				'|--------------------------------------------------------------------------',
@@ -163,7 +163,7 @@ const inertiaManifest: FlavorManifest = {
 
 		// ─── config/database.ts — drop the CMS migration folder ─────────────────
 		{
-			path: 'config/database.ts',
+			path: 'apps/web/config/database.ts',
 			content: [
 				"import app from '@adonisjs/core/services/app'",
 				"import { defineConfig } from '@adonisjs/lucid'",
@@ -294,7 +294,7 @@ const inertiaManifest: FlavorManifest = {
 
 		// ─── config/shield.ts — drop the CMS iframe frame-src hosts ─────────────
 		{
-			path: 'config/shield.ts',
+			path: 'apps/web/config/shield.ts',
 			content: [
 				"import app from '@adonisjs/core/services/app'",
 				"import { defineConfig } from '@adonisjs/shield'",
@@ -461,7 +461,7 @@ const inertiaManifest: FlavorManifest = {
 
 		// ─── start/routes.ts — drop CMS, keep API, add the front routes ─────────
 		{
-			path: 'start/routes.ts',
+			path: 'apps/web/start/routes.ts',
 			content: [
 				'/*',
 				'|--------------------------------------------------------------------------',
@@ -519,7 +519,7 @@ const inertiaManifest: FlavorManifest = {
 
 		// ─── start/events.ts — drop the CMS contact-form listener ───────────────
 		{
-			path: 'start/events.ts',
+			path: 'apps/web/start/events.ts',
 			content: [
 				"import emitter from '@adonisjs/core/services/emitter'",
 				"import { events } from '#generated/events'",
@@ -546,7 +546,7 @@ const inertiaManifest: FlavorManifest = {
 
 		// ─── start/nav.ts — drop the page + template nav entries ────────────────
 		{
-			path: 'start/nav.ts',
+			path: 'apps/web/start/nav.ts',
 			content: [
 				'/*',
 				'|--------------------------------------------------------------------------',
@@ -583,7 +583,7 @@ const inertiaManifest: FlavorManifest = {
 
 		// ─── start/permissions.ts — drop the page + template catalogs ───────────
 		{
-			path: 'start/permissions.ts',
+			path: 'apps/web/start/permissions.ts',
 			content: [
 				'/*',
 				'|--------------------------------------------------------------------------',
@@ -676,7 +676,7 @@ const inertiaManifest: FlavorManifest = {
 
 		// ─── start/dashboard.ts — drop the page + template collectors ───────────
 		{
-			path: 'start/dashboard.ts',
+			path: 'apps/web/start/dashboard.ts',
 			content: [
 				'/*',
 				'|--------------------------------------------------------------------------',
@@ -707,7 +707,7 @@ const inertiaManifest: FlavorManifest = {
 
 		// ─── start/container.ts — drop the builder session binding ──────────────
 		{
-			path: 'start/container.ts',
+			path: 'apps/web/start/container.ts',
 			content: [
 				"import app from '@adonisjs/core/services/app'",
 				"import { BackupEngine } from '#services/backup/backup_engine'",
@@ -785,7 +785,7 @@ const inertiaManifest: FlavorManifest = {
 
 		// ─── start/sitemap.ts — drop the page contributor (routes only) ─────────
 		{
-			path: 'start/sitemap.ts',
+			path: 'apps/web/start/sitemap.ts',
 			content: [
 				'/*',
 				'|--------------------------------------------------------------------------',
@@ -818,7 +818,7 @@ const inertiaManifest: FlavorManifest = {
 
 		// ─── adonisrc.ts — drop the Transmit provider + preload ─────────────────
 		{
-			path: 'adonisrc.ts',
+			path: 'apps/web/adonisrc.ts',
 			content: [
 				"import { indexPages } from '@adonisjs/inertia'",
 				"import { indexEntities } from '@adonisjs/core'",
@@ -1010,7 +1010,7 @@ const inertiaManifest: FlavorManifest = {
 
 		// ─── start/env.ts — drop the CMS content-policy variables ───────────────
 		{
-			path: 'start/env.ts',
+			path: 'apps/web/start/env.ts',
 			content: [
 				'/*',
 				'|--------------------------------------------------------------------------',
@@ -1197,7 +1197,7 @@ const inertiaManifest: FlavorManifest = {
 
 		// ─── .env.example — drop the CMS content-policy variables ───────────────
 		{
-			path: '.env.example',
+			path: 'apps/web/.env.example',
 			content: [
 				'# Node',
 				'TZ=UTC',
@@ -1274,6 +1274,186 @@ const inertiaManifest: FlavorManifest = {
 				'# Sitemap — comma-separated additions (absolute or root-relative URLs) and exclusions (route names, paths, or absolute URLs)',
 				'SITEMAP_ADDITIONS=',
 				'SITEMAP_EXCLUSIONS=',
+				'',
+			].join('\n'),
+		},
+
+		// ─── package.json (root) — monorepo scripts, typecheck without the root tsc ───
+		{
+			path: 'package.json',
+			content: [
+				'{',
+				'  "name": "adonisjs-foundry",',
+				'  "version": "1.4.0",',
+				'  "private": true,',
+				'  "license": "UNLICENSED",',
+				'  "type": "module",',
+				'  "workspaces": [',
+				'    "apps/*"',
+				'  ],',
+				'  "scripts": {',
+				'    "start": "npm run start --workspace @foundry/web",',
+				'    "dev": "npm run dev --workspace @foundry/web",',
+				'    "build": "npm run build --workspace @foundry/web",',
+				'    "test": "npm run test --workspace @foundry/web",',
+				'    "test:front": "npm run test:front --workspace @foundry/web",',
+				'    "docker:up": "docker compose up -d",',
+				'    "docker:stop": "docker compose stop -d",',
+				'    "lint": "oxlint",',
+				'    "lint:ci": "oxlint",',
+				'    "lint:fix": "oxlint --fix",',
+				'    "format": "oxfmt --write .",',
+				'    "format:ci": "oxfmt --check .",',
+				'    "format:check": "oxfmt --check .",',
+				'    "typecheck": "tsc --noEmit -p apps/web/tsconfig.json && tsc --noEmit -p apps/web/inertia/tsconfig.json",',
+				'    "postinstall": "patch-package"',
+				'  },',
+				'  "devDependencies": {',
+				'    "oxfmt": "^0.64.0",',
+				'    "oxlint": "^1.79.0",',
+				'    "typescript": "~5.9.3"',
+				'  },',
+				'  "overrides": {',
+				'    "@adonisjs/ally": {',
+				'      "@adonisjs/inertia": "^5.0.0"',
+				'    }',
+				'  },',
+				'  "engines": {',
+				'    "node": ">=24.0.0"',
+				'  }',
+				'}',
+				'',
+			].join('\n'),
+		},
+
+		// ─── apps/web/package.json — drop the prune alias, keep test:front ───────
+		{
+			path: 'apps/web/package.json',
+			content: [
+				'{',
+				'  "name": "@foundry/web",',
+				'  "version": "1.4.0",',
+				'  "private": true,',
+				'  "license": "UNLICENSED",',
+				'  "type": "module",',
+				'  "imports": {',
+				'    "#controllers/*": "./app/http/controllers/*.js",',
+				'    "#exceptions/*": "./app/exceptions/*.js",',
+				'    "#helpers/*": "./app/helpers/*.js",',
+				'    "#models/*": "./app/models/*.js",',
+				'    "#mails/*": "./app/mails/*.js",',
+				'    "#listeners/*": "./app/listeners/*.js",',
+				'    "#events/*": "./app/events/*.js",',
+				'    "#generated/*": "./.adonisjs/server/*.js",',
+				'    "#middleware/*": "./app/http/middleware/*.js",',
+				'    "#rest/*": "./app/http/rest/*.js",',
+				'    "#repositories/*": "./app/domain/repositories/*.js",',
+				'    "#services/*": "./app/domain/services/*.js",',
+				'    "#contracts/*": "./app/domain/contracts/*.js",',
+				'    "#transformers/*": "./app/data/transformers/*.js",',
+				'    "#types/*": "./app/types/*.js",',
+				'    "#validators/*": "./app/validators/*.js",',
+				'    "#providers/*": "./providers/*.js",',
+				'    "#policies/*": "./app/policies/*.js",',
+				'    "#abilities/*": "./app/abilities/*.js",',
+				'    "#database/*": "./database/*.js",',
+				'    "#factories/*": "./database/factories/*.js",',
+				'    "#shared/*": "./app/shared/*.js",',
+				'    "#tests/*": "./tests/*.js",',
+				'    "#start/*": "./start/*.js",',
+				'    "#config/*": "./config/*.js",',
+				'    "#actions/*": "./app/domain/actions/*.js",',
+				'    "#cms/*": "./app/cms/*.js"',
+				'  },',
+				'  "scripts": {',
+				'    "start": "node bin/server.js",',
+				'    "build": "node ace build",',
+				'    "dev": "node ace serve --hmr",',
+				'    "test": "node ace test",',
+				'    "test:front": "vitest run"',
+				'  },',
+				'  "dependencies": {',
+				'    "@adonisjs/ally": "^6.0.0",',
+				'    "@adonisjs/auth": "^10.0.0",',
+				'    "@adonisjs/core": "^7.0.0",',
+				'    "@adonisjs/cors": "^3.0.0",',
+				'    "@adonisjs/drive": "^4.0.0",',
+				'    "@adonisjs/i18n": "^3.0.0",',
+				'    "@adonisjs/inertia": "^5.0.0",',
+				'    "@adonisjs/limiter": "^3.0.1",',
+				'    "@adonisjs/lucid": "^22.0.0",',
+				'    "@adonisjs/mail": "^10.0.0",',
+				'    "@adonisjs/redis": "^10.0.0",',
+				'    "@adonisjs/session": "^8.0.0",',
+				'    "@adonisjs/shield": "^9.0.0",',
+				'    "@adonisjs/static": "^2.0.0",',
+				'    "@adonisjs/transmit": "^3.0.1",',
+				'    "@adonisjs/transmit-client": "^1.1.0",',
+				'    "@adonisjs/vite": "^6.0.0",',
+				'    "@aws-sdk/client-s3": "^3.1102.0",',
+				'    "@aws-sdk/s3-request-presigner": "^3.1102.0",',
+				'    "@fontsource/cormorant-garamond": "^5.2.11",',
+				'    "@fontsource/jost": "^5.3.0",',
+				'    "@fontsource/playfair-display": "^5.3.0",',
+				'    "@iconify/react": "^6.0.2",',
+				'    "@inertiajs/react": "^3.0.0",',
+				'    "@sentry/node": "^10.70.0",',
+				'    "@tailwindcss/vite": "^4.2.1",',
+				'    "@tuyau/core": "^1.0.0",',
+				'    "@vinejs/vine": "^4.3.0",',
+				'    "better-sqlite3": "^13.0.3",',
+				'    "dompurify": "^3.4.13",',
+				'    "edge.js": "^6.5.1",',
+				'    "html-to-image": "^1.11.13",',
+				'    "ipaddr.js": "^2.4.0",',
+				'    "jsdom": "^29.0.1",',
+				'    "luxon": "^3.7.2",',
+				'    "patch-package": "^8.0.1",',
+				'    "pg": "^8.22.0",',
+				'    "react": "^19.2.4",',
+				'    "react-dom": "^19.2.4",',
+				'    "react-markdown": "^10.1.0",',
+				'    "reflect-metadata": "^0.2.2",',
+				'    "rehype-raw": "^7.0.0",',
+				'    "sharp": "^0.35.3",',
+				'    "sinon": "^22.1.0",',
+				'    "sonner": "^2.0.7",',
+				'    "tailwindcss": "^4.3.3",',
+				'    "uuid": "^14.0.1"',
+				'  },',
+				'  "devDependencies": {',
+				'    "@adonisjs/assembler": "^8.0.0",',
+				'    "@adonisjs/tsconfig": "^2.0.0",',
+				'    "@japa/api-client": "^3.2.1",',
+				'    "@japa/assert": "^4.2.0",',
+				'    "@japa/plugin-adonisjs": "^5.1.0",',
+				'    "@japa/runner": "^5.3.0",',
+				'    "@poppinss/ts-exec": "^1.4.4",',
+				'    "@types/dompurify": "^3.2.0",',
+				'    "@types/jsdom": "^28.0.1",',
+				'    "@types/luxon": "^3.7.4",',
+				'    "@types/node": "~26.2.0",',
+				'    "@types/react": "^19.2.14",',
+				'    "@types/react-dom": "^19.2.3",',
+				'    "@types/sinon": "^22.0.0",',
+				'    "@vitejs/plugin-react": "^6.0.0",',
+				'    "hot-hook": "^1.0.0",',
+				'    "pino-pretty": "^13.1.3",',
+				'    "vite": "^8.0.0",',
+				'    "vitest": "^4.1.10",',
+				'    "youch": "^4.1.0"',
+				'  },',
+				'  "engines": {',
+				'    "node": ">=24.0.0"',
+				'  },',
+				'  "hotHook": {',
+				'    "boundaries": [',
+				'      "./app/http/controllers/**/*.ts",',
+				'      "./app/http/middleware/**/*.ts",',
+				'      "./app/http/rest/**/*.ts"',
+				'    ]',
+				'  }',
+				'}',
 				'',
 			].join('\n'),
 		},
@@ -1364,9 +1544,12 @@ const inertiaManifest: FlavorManifest = {
 		},
 	],
 
-	dependencies: {
-		packages: ['@adonisjs/transmit', '@adonisjs/transmit-client'],
-	},
+	dependencies: [
+		{
+			file: 'apps/web/package.json',
+			packages: ['@adonisjs/transmit', '@adonisjs/transmit-client'],
+		},
+	],
 };
 
 export default inertiaManifest;

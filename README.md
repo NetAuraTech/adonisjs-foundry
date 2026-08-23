@@ -87,12 +87,11 @@ npm install
 docker compose up -d
 
 # Configure environment
-cp .env.example .env
+cp apps/web/.env.example apps/web/.env
 
-# Generate app key
+# Generate app key and run migrations (from the app workspace)
+cd apps/web
 node ace generate:key
-
-# Run migrations
 node ace migration:run
 
 # Start the development server
@@ -100,6 +99,9 @@ npm run dev
 ```
 
 The app is available at `http://localhost:3333`.
+
+> [!NOTE]
+> The application lives in the `apps/web` workspace. `node ace` commands always run from there; the npm scripts (`dev`, `build`, `test`, `lint`, `format`, `typecheck`, …) also work from the repo root.
 
 > [!NOTE]
 > This repository uses LF line endings (`oxfmt` enforces `endOfLine: lf` and `.gitattributes` sets `* text=auto`). On Windows, run `git config core.autocrlf false` before your first commit to keep the working tree LF-only and avoid CRLF churn.
@@ -181,21 +183,22 @@ git checkout -b inertia origin/inertia   # or: git checkout -b api origin/api
 
 ### Available Scripts
 
-| Script              | Description                     |
-| ------------------- | ------------------------------- |
-| `npm run dev`       | Start the dev server with HMR   |
-| `npm run build`     | Build for production            |
-| `npm start`         | Start the production server     |
-| `npm test`          | Run tests (Japa)                |
-| `npm run lint`      | Run oxlint                      |
-| `npm run format`    | Format code with oxfmt          |
-| `npm run typecheck` | Type-check backend and frontend |
+| Script               | Description                     |
+| -------------------- | ------------------------------- |
+| `npm run dev`        | Start the dev server with HMR   |
+| `npm run build`      | Build for production            |
+| `npm start`          | Start the production server     |
+| `npm test`           | Run tests (Japa)                |
+| `npm run test:front` | Run frontend tests (Vitest)     |
+| `npm run lint`       | Run oxlint                      |
+| `npm run format`     | Format code with oxfmt          |
+| `npm run typecheck`  | Type-check backend and frontend |
 
 ## Configuration
 
 ### Environment Setup
 
-Copy `.env.example` to `.env` and configure:
+Copy `apps/web/.env.example` to `apps/web/.env` and configure:
 
 ```env
 # Node
@@ -612,6 +615,23 @@ BACKUP_EXCLUDED_TABLES=
 
 Foundry follows a **domain-driven architecture** with a strict layering convention.
 
+The application lives in the `apps/web` workspace (`@foundry/web`); the repo root holds the workspaces manifest, the single lockfile, repo-wide lint/format configs, the prune pipeline, CI, Docker and docs.
+
+```
+adonisjs-foundry/
+├── apps/
+│   └── web/                # The complete AdonisJS application (layout below)
+├── docs/                   # Agent docs, ADRs, flavor matrix
+├── tooling/
+│   └── prune/              # Flavor prune pipeline (engine + declarative manifests)
+├── .github/workflows/      # CI: tests, codegen drift check, flavor regeneration
+├── docker-compose.yml      # Dev infrastructure (PostgreSQL, Redis, MailHog, Typesense)
+├── docker-compose.prod.yml # Production stack (Nginx + app replicas)
+└── Dockerfile              # Multi-stage production image
+```
+
+The `apps/web` layout:
+
 ```
 app/
 ├── data/
@@ -820,7 +840,7 @@ start/
 
 ### Path Aliases
 
-The project uses Node.js subpath imports for clean module resolution:
+The project uses Node.js subpath imports for clean module resolution (paths relative to `apps/web/`):
 
 | Alias             | Path                        |
 | ----------------- | --------------------------- |
@@ -1072,7 +1092,8 @@ git clone https://github.com/NetAuraTech/adonisjs-foundry.git
 cd adonisjs-foundry
 npm install
 docker compose up -d
-cp .env.example .env
+cp apps/web/.env.example apps/web/.env
+cd apps/web
 node ace generate:key
 node ace migration:run
 npm run dev

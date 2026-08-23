@@ -15,5 +15,5 @@ export default {
 	printWidth: 120,
 	useTabs: true,
 	endOfLine: 'lf',
-	ignorePatterns: ['**/.adonisjs/**', 'apps/web/types/db.ts', 'node_modules/**', 'dist/**', 'build/**', '*.yml'],
+	ignorePatterns: ['**/.adonisjs/**', 'node_modules/**', 'dist/**', '**/build/**', '*.yml', '**/package.json'],
 };

@@ -2,12 +2,7 @@
 	"extends": "@adonisjs/tsconfig/tsconfig.app.json",
 	"compilerOptions": {
 		"rootDir": "./",
-		"jsx": "react",
-		"outDir": "./build"
+		"noEmit": true
 	},
-	"references": [
-		{
-			"path": "./tsconfig.inertia.json"
-		}
-	]
+	"include": ["tooling/**/*", "apps/web/tests/unit/prune/**/*"]
 }

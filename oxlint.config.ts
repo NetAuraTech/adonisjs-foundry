@@ -1,14 +1,14 @@
 import { defineConfig } from 'oxlint';
 
 export default defineConfig({
-	ignorePatterns: ['**/.adonisjs/**', 'apps/web/types/db.ts'],
+	ignorePatterns: ['**/.adonisjs/**'],
 	plugins: ['typescript', 'react'],
 	rules: {
 		'typescript/no-namespace': 'off',
 	},
 	overrides: [
 		{
-			files: ['inertia/**/*.{ts,tsx}', 'apps/web/src/**/*.{ts,tsx}'],
+			files: ['apps/web/inertia/**/*.{ts,tsx}'],
 			rules: {
 				'no-restricted-imports': [
 					'error',

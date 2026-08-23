@@ -58,5 +58,5 @@ Flavors are **not one-way doors**: every flavor branch is derived from `main`, s
 When you add code to `main` (full), keep the whole repo **prune-safe**:
 
 - Flavor variation is confined to config/composition/docs files on the `REWRITE_ALLOWLIST`. Library/business code can only be identical across flavors or deleted wholesale.
-- Rule of thumb: **if it dies when the CMS dies, it lives in `app/cms/`** (see [ADR 0001](../adr/0001-cms-module-extraction.md)).
+- Rule of thumb: **if it dies when the CMS dies, it lives in `apps/web/app/cms/`** (see [ADR 0001](../adr/0001-cms-module-extraction.md)).
 - A hard coupling found while pruning means **refactoring `main`**, never patching a flavor branch.

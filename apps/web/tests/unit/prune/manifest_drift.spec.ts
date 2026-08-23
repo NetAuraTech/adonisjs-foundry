@@ -1,18 +1,20 @@
+import '@japa/assert';
 import { existsSync, readFileSync } from 'node:fs';
 import { readdir } from 'node:fs/promises';
-import { join } from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { test } from '@japa/runner';
-import { PruneEngine, REWRITE_ALLOWLIST } from '#prune/engine';
-import type { FlavorManifest } from '#prune/types';
+import { PruneEngine, REWRITE_ALLOWLIST } from '../../../../../tooling/prune/engine.js';
+import type { FlavorManifest } from '../../../../../tooling/prune/types.js';
 
 /**
  * Manifest drift seam.
  *
  * The fastest, cheapest CI check in the prune pipeline: every `delete` path in
  * every flavor manifest exists on `main`, every `rewrite` path is in the closed
- * allowlist, and the `package.json` rewrite never drifts from main (version and
- * dependency ranges). Catches a renamed or deleted file — or a dependency bump
+ * allowlist, and no `package.json` rewrite (root or workspace) ever drifts from
+ * the file main carries at the same path (version and dependency ranges).
+ * Catches a renamed or deleted file — or a dependency bump
  * on main that desyncs the frozen rewrite from the lock file — before the
  * engine ever runs in a flavor job, so a stale manifest is reported at push
  * time (breaking this unit test) instead of at publication time (breaking the
@@ -24,8 +26,12 @@ import type { FlavorManifest } from '#prune/types';
  * validate them with no edits needed here).
  */
 
-/** Absolute path to the repo root (cwd when Japa runs from the repo root). */
-const REPO_ROOT = process.cwd();
+/**
+ * Absolute path to the repo root, derived from this file's location
+ * (`apps/web/tests/unit/prune/` → five levels up) rather than cwd, since Japa
+ * now runs from the `apps/web` workspace.
+ */
+const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..', '..');
 
 /** Directory holding flavor manifest files. */
 const FLAVORS_DIR = join(REPO_ROOT, 'tooling', 'prune', 'flavors');
@@ -121,13 +127,8 @@ test.group('Manifest drift seam', () => {
 		assert.isTrue(true, 'all manifests pass engine validation against main');
 	});
 
-	test('a package.json rewrite never drifts from main', async ({ assert }) => {
+	test('every package.json rewrite never drifts from main', async ({ assert }) => {
 		const manifests = await loadAllManifests();
-		const mainPkg = JSON.parse(readFileSync(join(REPO_ROOT, 'package.json'), 'utf8')) as {
-			version: string;
-			dependencies?: Record<string, string>;
-			devDependencies?: Record<string, string>;
-		};
 
 		if (manifests.length === 0) {
 			assert.isTrue(true, 'no flavor manifests yet — package.json drift seam is a no-op until #5/#8');
@@ -136,41 +137,49 @@ test.group('Manifest drift seam', () => {
 
 		const drifted: { flavor: string; detail: string }[] = [];
 		for (const { flavor, manifest } of manifests) {
-			const rewrite = manifest.rewrites.find((r) => r.path === 'package.json');
-			if (!rewrite) continue;
+			for (const rewrite of manifest.rewrites) {
+				if (rewrite.path !== 'package.json' && !rewrite.path.endsWith('/package.json')) {
+					continue;
+				}
 
-			const parsed = JSON.parse(rewrite.content) as {
-				version?: string;
-				dependencies?: Record<string, string>;
-				devDependencies?: Record<string, string>;
-			};
+				const mainPkg = JSON.parse(readFileSync(join(REPO_ROOT, rewrite.path), 'utf8')) as {
+					version: string;
+					dependencies?: Record<string, string>;
+					devDependencies?: Record<string, string>;
+				};
+				const parsed = JSON.parse(rewrite.content) as {
+					version?: string;
+					dependencies?: Record<string, string>;
+					devDependencies?: Record<string, string>;
+				};
 
-			if (parsed.version !== mainPkg.version) {
-				drifted.push({
-					flavor,
-					detail: `version is ${parsed.version ?? '(missing)'} (main is ${mainPkg.version})`,
-				});
-			}
+				if (parsed.version !== mainPkg.version) {
+					drifted.push({
+						flavor,
+						detail: `${rewrite.path}: version is ${parsed.version ?? '(missing)'} (main is ${mainPkg.version})`,
+					});
+				}
 
-			// The flavor pipeline runs `npm ci` with main's lock file, so every range
-			// in the frozen rewrite must still be satisfied by it: the rewrite may
-			// omit packages main no longer (or never) needs in that flavor, but it may
-			// never carry a range main has since bumped — that is exactly what breaks
-			// the flavor's install.
-			for (const label of ['dependencies', 'devDependencies'] as const) {
-				const rewriteDeps = parsed[label] ?? {};
-				const mainDeps = mainPkg[label] ?? {};
-				for (const [name, range] of Object.entries(rewriteDeps)) {
-					if (!(name in mainDeps)) {
-						drifted.push({
-							flavor,
-							detail: `${label}.${name} is not a dependency on main anymore`,
-						});
-					} else if (mainDeps[name] !== range) {
-						drifted.push({
-							flavor,
-							detail: `${label}.${name} is ${range} (main is ${mainDeps[name]})`,
-						});
+				// The flavor pipeline runs `npm ci` with main's lock file, so every range
+				// in the frozen rewrite must still be satisfied by it: the rewrite may
+				// omit packages main no longer (or never) needs in that flavor, but it may
+				// never carry a range main has since bumped — that is exactly what breaks
+				// the flavor's install.
+				for (const label of ['dependencies', 'devDependencies'] as const) {
+					const rewriteDeps = parsed[label] ?? {};
+					const mainDeps = mainPkg[label] ?? {};
+					for (const [name, range] of Object.entries(rewriteDeps)) {
+						if (!(name in mainDeps)) {
+							drifted.push({
+								flavor,
+								detail: `${rewrite.path}: ${label}.${name} is not a dependency on main anymore`,
+							});
+						} else if (mainDeps[name] !== range) {
+							drifted.push({
+								flavor,
+								detail: `${rewrite.path}: ${label}.${name} is ${range} (main is ${mainDeps[name]})`,
+							});
+						}
 					}
 				}
 			}
@@ -179,7 +188,7 @@ test.group('Manifest drift seam', () => {
 		assert.deepEqual(
 			drifted,
 			[],
-			'the package.json rewrite must stay in sync with main — update the manifest when main bumps its version or dependency ranges:\n' +
+			'every package.json rewrite must stay in sync with main — update the manifest when main bumps its version or dependency ranges:\n' +
 				drifted.map((d) => `  - [${d.flavor}] ${d.detail}`).join('\n'),
 		);
 	});

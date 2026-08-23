@@ -1,28 +1,35 @@
+import '@japa/assert';
 import { mkdtemp, mkdir, writeFile, rm, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from '@japa/runner';
-import { PruneEngine, StaleManifestError, DisallowedRewriteError, REWRITE_ALLOWLIST } from '#prune/engine';
-import type { FlavorManifest } from '#prune/types';
+import {
+	PruneEngine,
+	StaleManifestError,
+	DisallowedRewriteError,
+	REWRITE_ALLOWLIST,
+} from '../../../../../tooling/prune/engine.js';
+import type { FlavorManifest } from '../../../../../tooling/prune/types.js';
 
 /**
- * Builds a synthetic fixture tree mimicking the repo's composition layout:
- * config/, start/, app/cms/, app/http/controllers/page/, package.json, and
- * a few allowlisted files with content. Tests prune against this tree so
- * the engine stays structure-agnostic and never depends on the real repo.
+ * Builds a synthetic fixture tree mimicking the repo's monorepo composition
+ * layout: `apps/web/config/`, `apps/web/start/`, `apps/web/app/cms/`,
+ * `apps/web/app/http/controllers/page/`, `apps/web/package.json`, and a few
+ * allowlisted files with content. Tests prune against this tree so the engine
+ * stays structure-agnostic and never depends on the real repo.
  */
 async function buildFixtureTree(root: string): Promise<void> {
-	await mkdir(join(root, 'app/cms/domain/services/page'), { recursive: true });
-	await mkdir(join(root, 'app/http/controllers/page/admin'), { recursive: true });
-	await mkdir(join(root, 'start/routes'), { recursive: true });
-	await mkdir(join(root, 'config'), { recursive: true });
+	await mkdir(join(root, 'apps/web/app/cms/domain/services/page'), { recursive: true });
+	await mkdir(join(root, 'apps/web/app/http/controllers/page/admin'), { recursive: true });
+	await mkdir(join(root, 'apps/web/start/routes'), { recursive: true });
+	await mkdir(join(root, 'apps/web/config'), { recursive: true });
 
-	await writeFile(join(root, 'app/cms/domain/services/page/page_service.ts'), 'export {}', 'utf8');
-	await writeFile(join(root, 'app/http/controllers/page/admin/pages_controller.ts'), 'export {}', 'utf8');
-	await writeFile(join(root, 'start/routes/cms_admin.routes.ts'), 'export {}', 'utf8');
+	await writeFile(join(root, 'apps/web/app/cms/domain/services/page/page_service.ts'), 'export {}', 'utf8');
+	await writeFile(join(root, 'apps/web/app/http/controllers/page/admin/pages_controller.ts'), 'export {}', 'utf8');
+	await writeFile(join(root, 'apps/web/start/routes/cms_admin.routes.ts'), 'export {}', 'utf8');
 
 	await writeFile(
-		join(root, 'start/routes.ts'),
+		join(root, 'apps/web/start/routes.ts'),
 		[
 			'import features from "#config/features"',
 			'if (features.cms) registerCmsAdminRoutes()',
@@ -33,19 +40,19 @@ async function buildFixtureTree(root: string): Promise<void> {
 	);
 
 	await writeFile(
-		join(root, 'config/features.ts'),
+		join(root, 'apps/web/config/features.ts'),
 		'export default { auth: true, cms: true, admin: true } as const',
 		'utf8',
 	);
 
 	await writeFile(
-		join(root, 'config/database.ts'),
+		join(root, 'apps/web/config/database.ts'),
 		"export default { migrations: { paths: ['database/migrations', 'database/migrations/cms'] } }",
 		'utf8',
 	);
 
 	await writeFile(
-		join(root, 'package.json'),
+		join(root, 'apps/web/package.json'),
 		JSON.stringify(
 			{
 				name: 'fixture',
@@ -70,22 +77,22 @@ async function freshFixture(): Promise<string> {
 function sampleManifest(): FlavorManifest {
 	return {
 		flavor: 'inertia',
-		delete: ['app/cms', 'app/http/controllers/page', 'start/routes/cms_admin.routes.ts'],
+		delete: ['apps/web/app/cms', 'apps/web/app/http/controllers/page', 'apps/web/start/routes/cms_admin.routes.ts'],
 		rewrites: [
 			{
-				path: 'start/routes.ts',
+				path: 'apps/web/start/routes.ts',
 				content: 'import features from "#config/features"\nregisterAdminRoutes()\n',
 			},
 			{
-				path: 'config/features.ts',
+				path: 'apps/web/config/features.ts',
 				content: 'export default { auth: true, cms: false, admin: true } as const\n',
 			},
 			{
-				path: 'config/database.ts',
+				path: 'apps/web/config/database.ts',
 				content: "export default { migrations: { paths: ['database/migrations'] } }\n",
 			},
 		],
-		dependencies: { packages: ['@adonisjs/transmit'] },
+		dependencies: [{ file: 'apps/web/package.json', packages: ['@adonisjs/transmit'] }],
 	};
 }
 
@@ -101,23 +108,23 @@ test.group('PruneEngine', (group) => {
 		const engine = new PruneEngine();
 		const result = await engine.apply(root, sampleManifest());
 
-		assert.isTrue(result.deletedPaths.includes('app/cms'));
-		assert.isTrue(result.deletedPaths.includes('app/http/controllers/page'));
-		assert.isTrue(result.deletedPaths.includes('start/routes/cms_admin.routes.ts'));
-		assert.isFalse(result.deletedPaths.includes('start/routes.ts'));
+		assert.isTrue(result.deletedPaths.includes('apps/web/app/cms'));
+		assert.isTrue(result.deletedPaths.includes('apps/web/app/http/controllers/page'));
+		assert.isTrue(result.deletedPaths.includes('apps/web/start/routes/cms_admin.routes.ts'));
+		assert.isFalse(result.deletedPaths.includes('apps/web/start/routes.ts'));
 	});
 
 	test('rewrites allowlisted files with the manifest content', async ({ assert }) => {
 		const engine = new PruneEngine();
 		await engine.apply(root, sampleManifest());
 
-		const routes = await readFile(join(root, 'start/routes.ts'), 'utf8');
+		const routes = await readFile(join(root, 'apps/web/start/routes.ts'), 'utf8');
 		assert.equal(routes, 'import features from "#config/features"\nregisterAdminRoutes()\n');
 
-		const features = await readFile(join(root, 'config/features.ts'), 'utf8');
+		const features = await readFile(join(root, 'apps/web/config/features.ts'), 'utf8');
 		assert.equal(features, 'export default { auth: true, cms: false, admin: true } as const\n');
 
-		const db = await readFile(join(root, 'config/database.ts'), 'utf8');
+		const db = await readFile(join(root, 'apps/web/config/database.ts'), 'utf8');
 		assert.equal(db, "export default { migrations: { paths: ['database/migrations'] } }\n");
 	});
 
@@ -127,7 +134,7 @@ test.group('PruneEngine', (group) => {
 
 		assert.includeMembers(result.prunedPackages, ['@adonisjs/transmit']);
 
-		const pkg = JSON.parse(await readFile(join(root, 'package.json'), 'utf8')) as Record<
+		const pkg = JSON.parse(await readFile(join(root, 'apps/web/package.json'), 'utf8')) as Record<
 			string,
 			Record<string, string>
 		>;
@@ -140,7 +147,7 @@ test.group('PruneEngine', (group) => {
 		const engine = new PruneEngine();
 		const result = await engine.apply(root, {
 			...sampleManifest(),
-			dependencies: { packages: ['@adonisjs/transmit', 'non-existent-pkg'] },
+			dependencies: [{ file: 'apps/web/package.json', packages: ['@adonisjs/transmit', 'non-existent-pkg'] }],
 		});
 
 		assert.includeMembers(result.prunedPackages, ['@adonisjs/transmit']);
@@ -151,23 +158,23 @@ test.group('PruneEngine', (group) => {
 		const engine = new PruneEngine();
 		const manifest = sampleManifest();
 		delete manifest.dependencies;
-		const before = await readFile(join(root, 'package.json'), 'utf8');
+		const before = await readFile(join(root, 'apps/web/package.json'), 'utf8');
 
 		await engine.apply(root, manifest);
 
-		const after = await readFile(join(root, 'package.json'), 'utf8');
+		const after = await readFile(join(root, 'apps/web/package.json'), 'utf8');
 		assert.equal(after, before);
 	});
 
 	test('fails loudly when a delete path does not exist (stale manifest)', async ({ assert }) => {
 		const engine = new PruneEngine();
 		const manifest = sampleManifest();
-		manifest.delete.push('app/nonexistent/domain');
+		manifest.delete.push('apps/web/app/nonexistent/domain');
 
 		await assert.rejects(() => engine.apply(root, manifest), StaleManifestError);
 
 		assert.isTrue(
-			await fileExists(join(root, 'app/cms')),
+			await fileExists(join(root, 'apps/web/app/cms')),
 			'a stale manifest must not delete anything — the tree stays intact',
 		);
 	});
@@ -175,7 +182,7 @@ test.group('PruneEngine', (group) => {
 	test('collects every missing path into one stale-manifest error', async ({ assert }) => {
 		const engine = new PruneEngine();
 		const manifest = sampleManifest();
-		manifest.delete.push('app/nonexistent/a', 'app/nonexistent/b');
+		manifest.delete.push('apps/web/app/nonexistent/a', 'apps/web/app/nonexistent/b');
 
 		try {
 			await engine.apply(root, manifest);
@@ -183,7 +190,7 @@ test.group('PruneEngine', (group) => {
 		} catch (error) {
 			assert.instanceOf(error, StaleManifestError);
 			const stale = error as StaleManifestError;
-			assert.includeMembers(stale.missingPaths, ['app/nonexistent/a', 'app/nonexistent/b']);
+			assert.includeMembers(stale.missingPaths, ['apps/web/app/nonexistent/a', 'apps/web/app/nonexistent/b']);
 		}
 	});
 
@@ -191,34 +198,34 @@ test.group('PruneEngine', (group) => {
 		const engine = new PruneEngine();
 		const manifest = sampleManifest();
 		manifest.rewrites.push({
-			path: 'app/types/dashboard.ts' as never,
+			path: 'apps/web/app/types/dashboard.ts' as never,
 			content: '// tampered business code',
 		});
 
 		await assert.rejects(() => engine.apply(root, manifest), DisallowedRewriteError);
 
-		const untouched = await readFile(join(root, 'app/cms/domain/services/page/page_service.ts'), 'utf8');
+		const untouched = await readFile(join(root, 'apps/web/app/cms/domain/services/page/page_service.ts'), 'utf8');
 		assert.equal(untouched, 'export {}', 'a disallowed rewrite must not mutate the tree');
 	});
 
 	test('dry-run reports planned actions without touching the tree', async ({ assert }) => {
 		const engine = new PruneEngine();
-		const routesBefore = await readFile(join(root, 'start/routes.ts'), 'utf8');
+		const routesBefore = await readFile(join(root, 'apps/web/start/routes.ts'), 'utf8');
 
 		const plan = engine.dryRun(root, sampleManifest());
 
-		assert.includeMembers(plan.deletedPaths, ['app/cms', 'app/http/controllers/page']);
-		assert.includeMembers(plan.rewrittenFiles, ['start/routes.ts', 'config/features.ts']);
+		assert.includeMembers(plan.deletedPaths, ['apps/web/app/cms', 'apps/web/app/http/controllers/page']);
+		assert.includeMembers(plan.rewrittenFiles, ['apps/web/start/routes.ts', 'apps/web/config/features.ts']);
 		assert.includeMembers(plan.prunedPackages, ['@adonisjs/transmit']);
 
-		const routesAfter = await readFile(join(root, 'start/routes.ts'), 'utf8');
+		const routesAfter = await readFile(join(root, 'apps/web/start/routes.ts'), 'utf8');
 		assert.equal(routesAfter, routesBefore, 'dry-run must not modify files');
 	});
 
 	test('dry-run fails on a stale manifest just like apply', async ({ assert }) => {
 		const engine = new PruneEngine();
 		const manifest = sampleManifest();
-		manifest.delete.push('app/nonexistent');
+		manifest.delete.push('apps/web/app/nonexistent');
 
 		await assert.rejects(() => engine.dryRun(root, manifest), StaleManifestError);
 	});
@@ -241,7 +248,7 @@ test.group('PruneEngine end-to-end on a fixture tree', (group) => {
 		assert.isAbove(result.rewrittenFiles.length, 0);
 		assert.includeMembers(result.prunedPackages, ['@adonisjs/transmit']);
 
-		const routes = await readFile(join(root, 'start/routes.ts'), 'utf8');
+		const routes = await readFile(join(root, 'apps/web/start/routes.ts'), 'utf8');
 		assert.notInclude(routes, 'cms');
 		assert.include(routes, 'registerAdminRoutes');
 	});
@@ -252,17 +259,17 @@ test.group('REWRITE_ALLOWLIST', () => {
 		assert.includeMembers(
 			[...REWRITE_ALLOWLIST],
 			[
-				'adonisrc.ts',
-				'config/features.ts',
-				'config/database.ts',
-				'config/shield.ts',
-				'start/routes.ts',
-				'start/events.ts',
-				'start/nav.ts',
-				'start/dashboard.ts',
-				'start/container.ts',
-				'start/transmit.ts',
-				'start/sitemap.ts',
+				'apps/web/adonisrc.ts',
+				'apps/web/config/features.ts',
+				'apps/web/config/database.ts',
+				'apps/web/config/shield.ts',
+				'apps/web/start/routes.ts',
+				'apps/web/start/events.ts',
+				'apps/web/start/nav.ts',
+				'apps/web/start/dashboard.ts',
+				'apps/web/start/container.ts',
+				'apps/web/start/transmit.ts',
+				'apps/web/start/sitemap.ts',
 			],
 		);
 	});

@@ -21,48 +21,59 @@
  * business code. A path not in this set referenced by a manifest is a
  * validation error, caught before the engine runs.
  *
- * The set reflects ADR-0001's post-extraction composition layout:
- * - `adonisrc.ts` — provider/preload/command list varies per flavor.
- * - `config/features.ts` — feature flags toggled off for dropped domains.
- * - `config/database.ts` — Lucid migration `paths` drop the CMS folder.
- * - `config/shield.ts` — CSP `frame-src` hosts for the CMS iframe block.
- * - `start/{routes,events,nav,dashboard,container,transmit,sitemap,permissions}.ts`
- *   — startup composition: each registers domain contributors, and a flavor
- *   rewrites the file to drop the registrations of pruned domains.
- * - `start/asset_middleware.ts` — the server middleware for the view-layer
- *   asset pipeline (Vite + Inertia); the `api` flavor rewrites it to `[]`.
- * - `config/cors.ts` — CORS policy; the `api` flavor makes it an explicit
- *   env-driven allowlist (essential for a token-guarded REST backend).
- * - `start/env.ts` — environment validation; a flavor drops the variables of
- *   its pruned domains (e.g. the CMS content-policy vars) and adds its own.
- * - `.env.example` — the environment template mirrors the kept variables.
- * - `package.json` — scripts referencing pruned tooling (e.g. the Inertia
- *   typecheck, front Vitest) are removed; dependency maps are pruned through
- *   the manifest's `dependencies` field.
- * - `tsconfig.json` — a flavor that prunes the Inertia tree drops the
+ * The set reflects the two-workspace monorepo layout (ADR-0001's
+ * post-extraction composition, re-anchored under the app workspace):
+ * - `package.json` (root) — the root manifest's script names vary per flavor
+ *   (e.g. `test:front` drops with the Inertia tree).
+ * - `README.md` (root) — flavor-specific rewrite documenting its conventions.
+ * - `apps/web/AGENTS.md` — the app-workspace convention doc.
+ * - `apps/web/adonisrc.ts` — provider/preload/command list varies per flavor.
+ * - `apps/web/config/features.ts` — feature flags toggled off for dropped domains.
+ * - `apps/web/config/database.ts` — Lucid migration `paths` drop the CMS folder.
+ * - `apps/web/config/shield.ts` — CSP `frame-src` hosts for the CMS iframe block.
+ * - `apps/web/config/cors.ts` — CORS policy; the `api` flavor makes it an
+ *   explicit env-driven allowlist (essential for a token-guarded REST backend).
+ * - `apps/web/start/{routes,events,nav,dashboard,container,transmit,sitemap,
+ *   permissions,asset_middleware,env}.ts` — startup composition: each
+ *   registers domain contributors, and a flavor rewrites the file to drop the
+ *   registrations of pruned domains. `asset_middleware.ts` is the server
+ *   middleware for the view-layer asset pipeline (Vite + Inertia); the `api`
+ *   flavor rewrites it to `[]`. `env.ts` drops the variables of pruned
+ *   domains and adds the flavor's own.
+ * - `apps/web/.env.example` — the environment template mirrors the kept variables.
+ * - `apps/web/package.json` — scripts referencing pruned tooling (e.g.
+ *   `test:front`) are removed; dependency maps are pruned through the
+ *   manifest's `dependencies` field.
+ * - `apps/web/tsconfig.json` — a flavor that prunes the Inertia tree drops the
  *   project reference (`tsconfig.inertia.json`) and the `jsx` setting.
- * - `README.md` — flavor-specific rewrite documenting its conventions.
+ *
+ * Deliberate exclusions: CI workflow copies, bundler/vitest configs
+ * (`vite.config.ts`, `vitest.config.ts`), repo-wide lint configs, the root
+ * tsconfig, and anything inside the future design-system package — those stay
+ * mechanically identical across flavors.
  */
 export const REWRITE_ALLOWLIST = [
-	'adonisrc.ts',
-	'config/features.ts',
-	'config/database.ts',
-	'config/shield.ts',
-	'config/cors.ts',
-	'start/routes.ts',
-	'start/events.ts',
-	'start/nav.ts',
-	'start/dashboard.ts',
-	'start/container.ts',
-	'start/transmit.ts',
-	'start/sitemap.ts',
-	'start/permissions.ts',
-	'start/asset_middleware.ts',
-	'start/env.ts',
-	'.env.example',
 	'package.json',
-	'tsconfig.json',
 	'README.md',
+	'apps/web/AGENTS.md',
+	'apps/web/adonisrc.ts',
+	'apps/web/config/features.ts',
+	'apps/web/config/database.ts',
+	'apps/web/config/shield.ts',
+	'apps/web/config/cors.ts',
+	'apps/web/start/routes.ts',
+	'apps/web/start/events.ts',
+	'apps/web/start/nav.ts',
+	'apps/web/start/dashboard.ts',
+	'apps/web/start/container.ts',
+	'apps/web/start/transmit.ts',
+	'apps/web/start/sitemap.ts',
+	'apps/web/start/permissions.ts',
+	'apps/web/start/asset_middleware.ts',
+	'apps/web/start/env.ts',
+	'apps/web/.env.example',
+	'apps/web/package.json',
+	'apps/web/tsconfig.json',
 ] as const;
 
 /** Type of a single allowlisted rewrite path. */
@@ -84,15 +95,20 @@ export interface RewriteEntry {
 }
 
 /**
- * A dependency to prune from `package.json`.
+ * A targeted dependency prune for one package manifest.
  *
  * The engine removes the listed package names from `dependencies`,
  * `devDependencies`, `optionalDependencies`, and `peerDependencies` of the
- * flavor's `package.json`, then rewrites the file. Only removal is
- * supported — a manifest cannot add or rename a dependency.
+ * targeted manifest, then rewrites that file. Only removal is supported — a
+ * manifest cannot add or rename a dependency.
  */
 export interface DependencyPrune {
-	/** npm package names removed from every dependency map of package.json. */
+	/**
+	 * Manifest to prune, relative to repo root. Defaults to the root
+	 * `package.json` when omitted.
+	 */
+	file?: string;
+	/** npm package names removed from every dependency map of the targeted manifest. */
 	packages: string[];
 }
 
@@ -105,12 +121,12 @@ export interface DependencyPrune {
  * @example
  * const inertiaManifest: FlavorManifest = {
  *   flavor: 'inertia',
- *   delete: ['app/cms', 'app/http/controllers/page', ...],
+ *   delete: ['apps/web/app/cms', 'apps/web/app/http/controllers/page', ...],
  *   rewrites: [
- *     { path: 'start/routes.ts', content: '...' },
+ *     { path: 'apps/web/start/routes.ts', content: '...' },
  *     ...
  *   ],
- *   dependencies: { packages: ['@adonisjs/transmit'] },
+ *   dependencies: [{ file: 'apps/web/package.json', packages: ['@adonisjs/transmit'] }],
  * }
  */
 export interface FlavorManifest {
@@ -129,8 +145,8 @@ export interface FlavorManifest {
 	 */
 	rewrites: RewriteEntry[];
 	/**
-	 * Dependencies to prune from `package.json`. Omit when a flavor keeps the
-	 * full dependency set.
+	 * Dependency prunes, one per targeted package manifest. Omit when a flavor
+	 * keeps the full dependency set.
 	 */
-	dependencies?: DependencyPrune;
+	dependencies?: DependencyPrune[];
 }
