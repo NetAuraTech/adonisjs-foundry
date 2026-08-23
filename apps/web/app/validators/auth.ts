@@ -1,5 +1,5 @@
 import vine from '@vinejs/vine';
-import { email, password } from '#validators/rules';
+import { email, password } from '#app/core/validators/rules';
 import type User from '#models/auth/user';
 
 /**

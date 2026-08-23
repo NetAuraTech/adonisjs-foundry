@@ -1,5 +1,5 @@
 import db from '@adonisjs/lucid/services/db';
-import { transactionContext } from '#shared/context/transaction_context';
+import { transactionContext } from '#core/services/transaction_context';
 
 /**
  * Execute a callback within a database transaction that is automatically

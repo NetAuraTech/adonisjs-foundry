@@ -8,6 +8,30 @@ export default defineConfig({
 	},
 	overrides: [
 		{
+			// Business layer (src) never depends on the app delivery layer.
+			// This path-scoped override is the reference mechanism; it also
+			// carries the design-system boundary later.
+			files: ['apps/web/src/**/*.{ts,tsx}'],
+			rules: {
+				'no-restricted-imports': [
+					'error',
+					{
+						patterns: [
+							{
+								regex:
+									'^#(?:app|controllers|exceptions|mails|listeners|events|middleware|rest|transformers|validators|policies|abilities)/',
+								message: 'Business code under src must not depend on the app delivery layer.',
+							},
+							{
+								regex: '^\\.\\./(?:\\.\\./)*app(?:/|$)',
+								message: 'Business code under src must not escape the src tree to reach the app delivery layer.',
+							},
+						],
+					},
+				],
+			},
+		},
+		{
 			files: ['apps/web/inertia/**/*.{ts,tsx}'],
 			rules: {
 				'no-restricted-imports': [

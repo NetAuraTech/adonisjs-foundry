@@ -1,6 +1,6 @@
-﻿import { inject } from '@adonisjs/core';
+import { inject } from '@adonisjs/core';
 import { PageRevisionRepository } from '#cms/domain/repositories/page/page_revision_repository';
-import { withTransaction } from '#shared/utils/with_transaction';
+import { withTransaction } from '#core/services/with_transaction';
 import type PageRevision from '#cms/models/page/page_revision';
 
 interface ToggleRevisionKeepPayload {

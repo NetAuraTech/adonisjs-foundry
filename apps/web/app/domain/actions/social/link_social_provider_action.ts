@@ -1,10 +1,10 @@
-﻿import { inject } from '@adonisjs/core';
+import { inject } from '@adonisjs/core';
+import { withTransaction } from '#core/services/with_transaction';
 import ProviderAlreadyLinkedException from '#exceptions/auth/provider_already_linked_exception';
 import UnverifiedAccountException from '#exceptions/auth/unverified_account_exception';
 import User from '#models/auth/user';
 import { UserRepository } from '#repositories/auth/user_repository';
 import { LogService } from '#services/logging/log_service';
-import { withTransaction } from '#shared/utils/with_transaction';
 import { OAuthProvider } from '#types/auth';
 
 interface LinkSocialProviderPayload {

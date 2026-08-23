@@ -1,4 +1,4 @@
-import { BaseHttpException } from '#exceptions/base_http_exception';
+import { BaseHttpException } from '#core/exceptions/base_http_exception';
 
 export default class InvalidCurrentPasswordException extends BaseHttpException {
 	static status = 400;

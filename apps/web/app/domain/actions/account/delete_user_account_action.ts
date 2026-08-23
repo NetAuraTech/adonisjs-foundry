@@ -1,9 +1,9 @@
-﻿import { inject } from '@adonisjs/core';
+import { inject } from '@adonisjs/core';
 import hash from '@adonisjs/core/services/hash';
+import { withTransaction } from '#core/services/with_transaction';
 import InvalidCurrentPasswordException from '#exceptions/auth/invalid_current_password_exception';
 import User from '#models/auth/user';
 import { LogService } from '#services/logging/log_service';
-import { withTransaction } from '#shared/utils/with_transaction';
 
 interface DeleteUserAccountPayload {
 	user: User;

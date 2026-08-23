@@ -1,6 +1,6 @@
+import { transactionContext } from '#core/services/transaction_context';
 import File from '#models/file/file';
 import { BaseRepository } from '#repositories/base_repository';
-import { transactionContext } from '#shared/context/transaction_context';
 import type { PaginationFilters } from '#types/pagination';
 import type { ModelPaginatorContract } from '@adonisjs/lucid/types/model';
 

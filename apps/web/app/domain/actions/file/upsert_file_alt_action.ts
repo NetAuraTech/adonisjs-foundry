@@ -1,6 +1,6 @@
-﻿import { inject } from '@adonisjs/core';
+import { inject } from '@adonisjs/core';
+import { withTransaction } from '#core/services/with_transaction';
 import { FileRepository } from '#repositories/file/file_repository';
-import { withTransaction } from '#shared/utils/with_transaction';
 
 interface UpsertFileAltPayload {
 	fileId: number;

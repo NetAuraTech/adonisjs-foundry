@@ -1,9 +1,9 @@
 import { inject } from '@adonisjs/core';
 import { PageTranslationRepository } from '#cms/domain/repositories/page/page_translation_repository';
 import { TemplateRepository } from '#cms/domain/repositories/template/template_repository';
+import { withTransaction } from '#core/services/with_transaction';
 import RowNotFoundException from '#exceptions/core/row_not_found_exception';
 import { LogService } from '#services/logging/log_service';
-import { withTransaction } from '#shared/utils/with_transaction';
 import type Template from '#cms/models/template/template';
 import type { PageContent } from '#cms/types/page';
 

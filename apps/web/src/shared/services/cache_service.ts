@@ -1,4 +1,4 @@
-import { type CacheDriver } from '#contracts/cache/cache_driver';
+import { type CacheDriver } from '#core/contracts/cache_driver';
 
 /**
  * Application-wide cache service.

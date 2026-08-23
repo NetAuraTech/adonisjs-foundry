@@ -1,9 +1,9 @@
-﻿import { inject } from '@adonisjs/core';
+import { inject } from '@adonisjs/core';
 import { DateTime } from 'luxon';
 import { PageTranslationRepository } from '#cms/domain/repositories/page/page_translation_repository';
 import MissingTranslationException from '#cms/exceptions/page/missing_translation_exception';
+import { withTransaction } from '#core/services/with_transaction';
 import { LogService } from '#services/logging/log_service';
-import { withTransaction } from '#shared/utils/with_transaction';
 import type PageTranslation from '#cms/models/page/page_translation';
 import type { PageStatus } from '#cms/types/page';
 

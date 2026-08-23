@@ -1,6 +1,6 @@
 import redis from '@adonisjs/redis/services/main';
 import { test } from '@japa/runner';
-import { RedisCacheDriver } from '#services/cache/drivers/redis_cache_driver';
+import { RedisCacheDriver } from '#shared/services/cache/drivers/redis_cache_driver';
 
 test.group('RedisCacheDriver', (group) => {
 	let driver: RedisCacheDriver;

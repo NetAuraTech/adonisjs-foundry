@@ -1,6 +1,6 @@
-﻿import Role from '#models/auth/role';
+import { transactionContext } from '#core/services/transaction_context';
+import Role from '#models/auth/role';
 import { BaseRepository } from '#repositories/base_repository';
-import { transactionContext } from '#shared/context/transaction_context';
 import { type FindOptions } from '#types/core';
 
 /**

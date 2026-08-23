@@ -1,6 +1,6 @@
 import { test } from '@japa/runner';
-import { CacheService } from '#services/cache/cache_service';
-import type { CacheDriver } from '#contracts/cache/cache_driver';
+import { CacheService } from '#shared/services/cache_service';
+import type { CacheDriver } from '#core/contracts/cache_driver';
 
 class FakeCacheDriver implements CacheDriver {
 	public calls: { method: string; args: any[] }[] = [];

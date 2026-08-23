@@ -1,6 +1,7 @@
-﻿import { AllyUserContract } from '@adonisjs/ally/types';
+import { AllyUserContract } from '@adonisjs/ally/types';
 import { inject } from '@adonisjs/core';
 import { DateTime } from 'luxon';
+import { withTransaction } from '#core/services/with_transaction';
 import UnverifiedAccountException from '#exceptions/auth/unverified_account_exception';
 import { generateUniqueUsername } from '#helpers/auth/username';
 import User from '#models/auth/user';
@@ -8,7 +9,6 @@ import { RoleRepository } from '#repositories/auth/role_repository';
 import { UserRepository } from '#repositories/auth/user_repository';
 import PreferencesRepository from '#repositories/preferences/preferences_repository';
 import { LogService } from '#services/logging/log_service';
-import { withTransaction } from '#shared/utils/with_transaction';
 import { OAuthProvider } from '#types/auth';
 
 interface FindOrCreateSocialUserPayload {

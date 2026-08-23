@@ -1,11 +1,11 @@
 import { inject } from '@adonisjs/core';
 import { DateTime } from 'luxon';
+import { withTransaction } from '#core/services/with_transaction';
 import RowNotFoundException from '#exceptions/core/row_not_found_exception';
 import User from '#models/auth/user';
 import { UserRepository } from '#repositories/auth/user_repository';
 import { TokenRepository } from '#repositories/core/token_repository';
 import { LogService } from '#services/logging/log_service';
-import { withTransaction } from '#shared/utils/with_transaction';
 import { FullToken } from '#types/core';
 
 interface AcceptInvitationPayload {

@@ -1,8 +1,8 @@
 import { inject } from '@adonisjs/core';
+import { withTransaction } from '#core/services/with_transaction';
 import SlugExistsException from '#exceptions/core/slug_exists_exception';
 import Permission from '#models/auth/permission';
 import { PermissionRepository } from '#repositories/auth/permission_repository';
-import { withTransaction } from '#shared/utils/with_transaction';
 
 interface CreatePermissionPayload {
 	name: string;

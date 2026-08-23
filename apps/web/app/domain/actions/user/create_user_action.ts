@@ -1,11 +1,11 @@
-﻿import { inject } from '@adonisjs/core';
+import { inject } from '@adonisjs/core';
+import { withTransaction } from '#core/services/with_transaction';
 import EmailAlreadyExistsException from '#exceptions/account/email_already_exists_exception';
 import { events } from '#generated/events';
 import { extractNameFromEmail } from '#helpers/auth/username';
 import User from '#models/auth/user';
 import { UserRepository } from '#repositories/auth/user_repository';
 import { LogService } from '#services/logging/log_service';
-import { withTransaction } from '#shared/utils/with_transaction';
 
 interface CreateUserPayload {
 	email: string;

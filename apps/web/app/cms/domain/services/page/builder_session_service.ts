@@ -1,5 +1,5 @@
 import { inject } from '@adonisjs/core';
-import { CacheService } from '#services/cache/cache_service';
+import { CacheService } from '#shared/services/cache_service';
 import type { Lock, UserSession } from '#cms/types/builder';
 
 const LOCK_TTL_S = 5;

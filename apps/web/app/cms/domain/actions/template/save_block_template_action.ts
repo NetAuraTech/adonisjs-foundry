@@ -1,8 +1,8 @@
 import { inject } from '@adonisjs/core';
 import { TemplateRepository } from '#cms/domain/repositories/template/template_repository';
 import InvalidTemplateTypeException from '#cms/exceptions/template/invalid_template_type_exception';
+import { withTransaction } from '#core/services/with_transaction';
 import { LogService } from '#services/logging/log_service';
-import { withTransaction } from '#shared/utils/with_transaction';
 import type Template from '#cms/models/template/template';
 import type { BlockType, PageContent } from '#cms/types/page';
 

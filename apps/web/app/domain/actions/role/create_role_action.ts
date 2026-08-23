@@ -1,8 +1,8 @@
 import { inject } from '@adonisjs/core';
+import { withTransaction } from '#core/services/with_transaction';
 import SlugExistsException from '#exceptions/core/slug_exists_exception';
 import Role from '#models/auth/role';
 import { RoleRepository } from '#repositories/auth/role_repository';
-import { withTransaction } from '#shared/utils/with_transaction';
 
 interface CreateRolePayload {
 	name: string;

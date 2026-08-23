@@ -1175,10 +1175,10 @@ export interface Registry {
     methods: ["PUT"]
     pattern: '/api/v1/admin/maintenance'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/maintenance').updateMaintenanceValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#app/core/validators/maintenance').updateMaintenanceValidator)>>
       paramsTuple: []
       params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/maintenance').updateMaintenanceValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#app/core/validators/maintenance').updateMaintenanceValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/maintenance/api/maintenance_api_controller').default['update']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/maintenance/api/maintenance_api_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -1187,10 +1187,10 @@ export interface Registry {
     methods: ["PUT"]
     pattern: '/api/v1/admin/maintenance/toggle'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/maintenance').toggleMaintenanceValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#app/core/validators/maintenance').toggleMaintenanceValidator)>>
       paramsTuple: []
       params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/maintenance').toggleMaintenanceValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#app/core/validators/maintenance').toggleMaintenanceValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/maintenance/api/maintenance_api_controller').default['toggle']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/maintenance/api/maintenance_api_controller').default['toggle']>>> | { status: 422; response: { errors: SimpleError[] } }
     }

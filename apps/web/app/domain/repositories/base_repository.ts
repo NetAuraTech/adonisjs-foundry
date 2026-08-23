@@ -1,4 +1,4 @@
-import { transactionContext } from '#shared/context/transaction_context';
+import { transactionContext } from '#core/services/transaction_context';
 
 /**
  * Base class for all repositories providing transaction-aware query client resolution.

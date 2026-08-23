@@ -1,7 +1,7 @@
-﻿import { inject } from '@adonisjs/core';
+import { inject } from '@adonisjs/core';
+import { withTransaction } from '#core/services/with_transaction';
 import { FileRepository } from '#repositories/file/file_repository';
 import { LogService } from '#services/logging/log_service';
-import { withTransaction } from '#shared/utils/with_transaction';
 
 interface DeleteFilePayload {
 	id: number;
