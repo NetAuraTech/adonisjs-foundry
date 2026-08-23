@@ -62,10 +62,14 @@ export class DisallowedRewriteError extends Error {
 }
 
 /**
- * Read a package.json and return its dependency maps.
+ * Read a package manifest and return its parsed object.
+ *
+ * @param root - Absolute path to the repo root.
+ * @param file - Manifest path relative to the repo root (e.g. `package.json`
+ *   for the root manifest, `apps/web/package.json` for the app workspace).
  */
-async function readPackageJson(root: string): Promise<Record<string, unknown>> {
-	const raw = await readFile(join(root, 'package.json'), 'utf8');
+async function readPackageJson(root: string, file: string): Promise<Record<string, unknown>> {
+	const raw = await readFile(join(root, file), 'utf8');
 	return JSON.parse(raw) as Record<string, unknown>;
 }
 
@@ -172,15 +176,21 @@ export class PruneEngine {
 			rewrittenFiles.push(rewrite.path);
 		}
 
-		let prunedPackages: string[] = [];
-		if (manifest.dependencies && manifest.dependencies.packages.length > 0) {
-			const pkg = await readPackageJson(root);
-			const { pruned, removed } = pruneDepsObject(pkg, manifest.dependencies.packages);
-			await writeFile(join(root, 'package.json'), JSON.stringify(pruned, null, 2) + '\n', 'utf8');
-			prunedPackages = removed;
+		const prunedPackages = new Set<string>();
+		for (const prune of manifest.dependencies ?? []) {
+			if (prune.packages.length === 0) {
+				continue;
+			}
+			const file = prune.file ?? 'package.json';
+			const pkg = await readPackageJson(root, file);
+			const { pruned, removed } = pruneDepsObject(pkg, prune.packages);
+			await writeFile(join(root, file), JSON.stringify(pruned, null, 2) + '\n', 'utf8');
+			for (const name of removed) {
+				prunedPackages.add(name);
+			}
 		}
 
-		return { deletedPaths, rewrittenFiles, prunedPackages };
+		return { deletedPaths, rewrittenFiles, prunedPackages: [...prunedPackages].sort() };
 	}
 
 	/**
@@ -203,24 +213,34 @@ export class PruneEngine {
 	} {
 		this.validate(root, manifest);
 
-		const prunedPackages =
-			manifest.dependencies?.packages.filter((pkg) => {
+		const prunedPackages = new Set<string>();
+		for (const prune of manifest.dependencies ?? []) {
+			if (prune.packages.length === 0) {
+				continue;
+			}
+			const file = prune.file ?? 'package.json';
+			for (const pkg of prune.packages) {
 				try {
-					const pkgJson = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) as Record<string, unknown>;
+					const pkgJson = JSON.parse(readFileSync(join(root, file), 'utf8')) as Record<string, unknown>;
 					const maps = ['dependencies', 'devDependencies', 'optionalDependencies', 'peerDependencies'];
-					return maps.some((m) => {
-						const map = pkgJson[m];
-						return !!map && typeof map === 'object' && pkg in (map as Record<string, unknown>);
-					});
+					if (
+						maps.some((m) => {
+							const map = pkgJson[m];
+							return !!map && typeof map === 'object' && pkg in (map as Record<string, unknown>);
+						})
+					) {
+						prunedPackages.add(pkg);
+					}
 				} catch {
-					return false;
+					// missing manifest or dependency — nothing to report
 				}
-			}) ?? [];
+			}
+		}
 
 		return {
 			deletedPaths: [...manifest.delete],
 			rewrittenFiles: manifest.rewrites.map((r) => r.path),
-			prunedPackages,
+			prunedPackages: [...prunedPackages].sort(),
 		};
 	}
 }

@@ -186,47 +186,45 @@ jobs:
         run: npm run format
 
       - name: Regenerate AdonisJS indexes (post-prune codegen)
+        working-directory: apps/web
         run: |
-          # The dev server is the only entry point that regenerates every
-          # committed codegen file: the assembler init hooks rewrite the server
-          # indexes and pages.d.ts at startup, and the Tuyau client registry is
-          # written once the running app commits its routes (routesScanned
-          # hook), which typecheck and test commands never trigger. ".env.test"
-          # boots the full app without external services, same as ci.yml's
-          # codegen-drift job.
+          # "node ace codegen" (warmup) is the entry point that regenerates
+          # every committed codegen file: the assembler init hooks rewrite the
+          # server indexes and pages.d.ts at startup, and the Tuyau client
+          # registry is written once the app commits its routes (routesScanned
+          # hook), which typecheck and test commands never trigger. It is
+          # watched on its own completion marker ("Codegen files generated"),
+          # same as ci.yml's codegen-drift job. ".env.test" boots the full app
+          # without external services.
           cp .env.test .env
           mkdir -p tmp
-          node ace serve > tmp/codegen.log 2>&1 &
-          SERVER_PID=$!
+          node ace codegen > tmp/codegen.log 2>&1 &
+          CODEGEN_PID=$!
           for i in $(seq 1 90); do
-            if grep -q 'tuyau: created api client registry' tmp/codegen.log; then
+            if grep -q 'Codegen files generated' tmp/codegen.log; then
               break
             fi
-            if ! kill -0 "$SERVER_PID" 2>/dev/null; then
-              echo 'Dev server exited before the codegen output was regenerated:'
+            if ! kill -0 "$CODEGEN_PID" 2>/dev/null; then
+              echo 'Codegen exited before the completion marker was logged:'
               cat tmp/codegen.log
               exit 1
             fi
             sleep 1
           done
-          kill "$SERVER_PID" 2>/dev/null || true
-          if ! grep -q 'tuyau: created api client registry' tmp/codegen.log; then
-            echo 'Timed out waiting for the codegen output to be regenerated:'
+          kill "$CODEGEN_PID" 2>/dev/null || true
+          if ! grep -q 'Codegen files generated' tmp/codegen.log; then
+            echo 'Timed out waiting for the codegen completion marker:'
             cat tmp/codegen.log
             exit 1
           fi
 
-      - name: Run typecheck (backend)
-        run: npx tsc --noEmit
-
-      - name: Run typecheck (inertia, if the inertia tree survives)
-        continue-on-error: false
-        run: |
-          if [ -f inertia/tsconfig.json ]; then
-            npx tsc --noEmit --project inertia/tsconfig.json
-          else
-            echo 'inertia/tsconfig.json absent — skipping inertia typecheck (expected for the api flavor).'
-          fi
+      - name: Run typecheck
+        # The flavor package.json's typecheck script fans out to the surviving
+        # tsconfigs (backend, plus the Inertia project for the inertia flavor).
+        # The root tsconfig is intentionally omitted: tooling/ is pruned away in
+        # the flavor tree, so a bare `tsc --noEmit` at the root would fail with
+        # an empty include (TS18003).
+        run: npm run typecheck
 
       - name: Run oxlint
         run: npm run lint:ci
@@ -236,14 +234,14 @@ jobs:
 
       - name: Run frontend tests (if the inertia tree survives)
         run: |
-          if [ -d inertia ]; then
+          if [ -d apps/web/inertia ]; then
             npm run test:front
           else
-            echo 'inertia/ absent — skipping frontend tests (expected for the api flavor).'
+            echo 'apps/web/inertia/ absent — skipping frontend tests (expected for the api flavor).'
           fi
 
       - name: Run backend tests (remaining suites)
-        run: npm run test -- unit integration functional
+        run: npm run test --workspace @foundry/web -- unit integration functional
 
       - name: Configure git identity
         run: |

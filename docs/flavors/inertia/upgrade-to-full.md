@@ -21,6 +21,11 @@ Start from the `full` tree (`main`) and either:
 The artifact inventory below mirrors the manifest's `delete` list. Prefer
 restoring whole directories over individual files.
 
+All artifact paths below are relative to the app workspace `apps/web/` — on the
+flavor branch, the complete application lives there; the repo root holds the
+workspaces manifest, the prune tooling, CI and docs. `node ace` commands run
+from `apps/web/`.
+
 ## 1. Recover the CMS module
 
 | Artifact                                      | From (`main`)                                                                                   |
@@ -47,9 +52,10 @@ restoring whole directories over individual files.
 | Provider configuration    | `config/transmit.ts` |
 | CMS content policy config | `config/cms.ts`      |
 
-Then reinstall the packages pruned by the manifest:
+Then reinstall the packages pruned by the manifest (into the app workspace):
 
 ```bash
+cd apps/web
 npm install @adonisjs/transmit @adonisjs/transmit-client
 ```
 
@@ -59,6 +65,7 @@ The flavor only ever created tables for the kept domains. Once the CMS
 migrations are restored, create the page/template tables:
 
 ```bash
+cd apps/web
 node ace migration:run
 ```
 
@@ -109,11 +116,12 @@ The flavor deletes the CMS test suites. Recover from `main`:
 
 ## 7. Regenerate the codegen
 
-The flavor deletes `.adonisjs` (generated indexes). Restarting the dev server
-regenerates it against the now-full source tree:
+The flavor deletes `.adonisjs` (generated indexes). Regenerate it against the
+now-full source tree:
 
 ```bash
-npm run dev
+cd apps/web
+node ace codegen
 ```
 
 ## Acceptance check

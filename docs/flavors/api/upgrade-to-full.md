@@ -23,6 +23,11 @@ Start from the `full` tree (`main`) and either:
 The artifact inventory below mirrors the manifest's `delete` list. Prefer
 restoring whole directories over individual files.
 
+All artifact paths below are relative to the app workspace `apps/web/` — on the
+flavor branch, the complete application lives there; the repo root holds the
+workspaces manifest, the prune tooling, CI and docs. `node ace` commands run
+from `apps/web/`.
+
 ## 1. Recover the frontend tree
 
 | Artifact                    | From (`main`)                                    |
@@ -33,9 +38,10 @@ restoring whole directories over individual files.
 | Inertia / Vite config files | `config/inertia.ts`, `config/vite.ts`            |
 | Inertia middleware          | `app/http/middleware/core/inertia_middleware.ts` |
 
-Then reinstall the packages pruned by the manifest:
+Then reinstall the packages pruned by the manifest (into the app workspace):
 
 ```bash
+cd apps/web
 npm install @adonisjs/inertia @adonisjs/vite @inertiajs/react react react-dom \
   sonner html-to-image @iconify/react @fontsource/cormorant-garamond \
   @fontsource/jost @fontsource/playfair-display tailwindcss @tailwindcss/vite
@@ -59,9 +65,10 @@ The CMS lives on `main` only. Restore it from the `full` tree:
 | CMS route modules                        | `start/routes/cms_admin.routes.ts`, `cms_public.routes.ts`, `cms_rest_api.routes.ts`                                 |
 | Transmit integration                     | `start/transmit.ts`, `config/transmit.ts`, `config/cms.ts`                                                           |
 
-Reinstall the pruned Transmit packages:
+Reinstall the pruned Transmit packages (into the app workspace):
 
 ```bash
+cd apps/web
 npm install @adonisjs/transmit @adonisjs/transmit-client
 ```
 
@@ -101,10 +108,10 @@ version of each:
 - `adonisrc.ts` — restores the Inertia/Vite/Transmit providers, commands and
   preloads, `indexPages`, the Vite `buildStarting` hook, and
   `withSharedProps: true`.
-- `package.json` — restores the front scripts (`test:front`, the Inertia
-  typecheck reference) and the deps listed in steps 1 and 2.
-- `tsconfig.json` — restores the `tsconfig.inertia.json` project reference and
-  the `jsx` compiler option.
+- `apps/web/package.json` — restores the front scripts (`test:front`, the
+  Inertia typecheck reference) and the deps listed in steps 1 and 2.
+- `apps/web/tsconfig.json` — restores the `tsconfig.inertia.json` project
+  reference and the `jsx` compiler option.
 - `README.md` — restore the `full` README (or keep the flavor one).
 
 ## 5. Restore the pruned tests
@@ -121,11 +128,12 @@ version of each:
 
 ## 6. Regenerate the codegen
 
-The flavor deletes `.adonisjs` (generated indexes). Restarting the dev server
-regenerates it against the now-full source tree:
+The flavor deletes `.adonisjs` (generated indexes). Regenerate it against the
+now-full source tree:
 
 ```bash
-npm run dev
+cd apps/web
+node ace codegen
 ```
 
 ## Acceptance check

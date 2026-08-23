@@ -4,6 +4,7 @@ FROM node:26-alpine AS base
 FROM base AS deps
 WORKDIR /app
 ADD package.json package-lock.json ./
+ADD apps/web/package.json apps/web/
 ADD patches ./patches
 RUN npm ci
 
@@ -11,6 +12,7 @@ RUN npm ci
 FROM base AS production-deps
 WORKDIR /app
 ADD package.json package-lock.json ./
+ADD apps/web/package.json apps/web/
 ADD patches ./patches
 RUN npm ci --omit=dev
 
@@ -24,10 +26,9 @@ RUN npm run build
 # Production stage
 FROM base
 ENV NODE_ENV=production
-WORKDIR /app/build
+WORKDIR /app/apps/web/build
 RUN apk add --no-cache postgresql-client
 COPY --from=production-deps /app/node_modules ./node_modules
-COPY --from=build /app/build .
+COPY --from=build /app/apps/web/build .
 EXPOSE 3333
 CMD ["node", "bin/server.js"]
-

@@ -4,7 +4,10 @@ AdonisJS provides the `ace` CLI for scaffolding, migrations, and project managem
 
 ## Running commands
 
+Ace commands run from the app workspace (`apps/web/`); npm scripts (`dev`, `build`, `test`, …) run from the repo root.
+
 ```bash
+cd apps/web
 node ace <command>
 ```
 
@@ -58,20 +61,21 @@ Always run `node ace migration:run` after creating or modifying a migration — 
 Run these before committing — they are enforced by the repository expectations:
 
 ```bash
-npm run lint        # ESLint with auto-fix
-npm run format      # Prettier
+npm run lint        # oxlint
+npm run format      # oxfmt
 npm run typecheck   # TypeScript (app + Inertia)
+npm run test:front  # Vitest (frontend)
 ```
 
 ## Key generation
 
-When setting up a new environment, generate an application key:
+When setting up a new environment, generate an application key (from `apps/web/`):
 
 ```bash
-node ace app:key --generate
+node ace generate:key
 ```
 
-This writes the `APP_KEY` value to `.env`.
+This writes the `APP_KEY` value to `apps/web/.env`.
 
 ## Conventions
 
