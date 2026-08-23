@@ -1,6 +1,6 @@
-﻿import Template from '#cms/models/template/template';
+import Template from '#cms/models/template/template';
+import { transactionContext } from '#core/services/transaction_context';
 import { BaseRepository } from '#repositories/base_repository';
-import { transactionContext } from '#shared/context/transaction_context';
 import type { BlockType, PageContent } from '#cms/types/page';
 import type { TemplateType } from '#cms/types/template';
 

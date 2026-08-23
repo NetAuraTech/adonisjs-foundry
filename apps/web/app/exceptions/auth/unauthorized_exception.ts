@@ -1,4 +1,4 @@
-import { BaseHttpException } from '#exceptions/base_http_exception';
+import { BaseHttpException } from '#core/exceptions/base_http_exception';
 import { routePath } from '#helpers/router/route_path';
 import type { HttpContext } from '@adonisjs/core/http';
 

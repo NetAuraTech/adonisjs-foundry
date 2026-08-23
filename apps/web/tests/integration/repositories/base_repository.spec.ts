@@ -1,6 +1,6 @@
 import { test } from '@japa/runner';
+import { transactionContext } from '#core/services/transaction_context';
 import { BaseRepository } from '#repositories/base_repository';
-import { transactionContext } from '#shared/context/transaction_context';
 
 /**
  * Concrete subclass of BaseRepository for testing purposes.

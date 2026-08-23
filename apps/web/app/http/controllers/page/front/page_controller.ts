@@ -3,9 +3,9 @@ import { FindHomepageAction } from '#cms/domain/actions/page/find_homepage_actio
 import { FindPageBySlugAction } from '#cms/domain/actions/page/find_page_by_slug_action';
 import { PageResolverService } from '#cms/domain/services/page/page_resolver_service';
 import { ResolvedPageContent } from '#cms/types/page';
-import { CacheService } from '#services/cache/cache_service';
 import { StorageService } from '#services/file/storage_service';
 import { I18nService } from '#services/i18n_service';
+import { CacheService } from '#shared/services/cache_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

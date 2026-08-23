@@ -1,4 +1,4 @@
-﻿import { AsyncLocalStorage } from 'node:async_hooks';
+import { AsyncLocalStorage } from 'node:async_hooks';
 import type { TransactionClientContract } from '@adonisjs/lucid/types/database';
 
 /**

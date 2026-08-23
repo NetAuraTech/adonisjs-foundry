@@ -1,10 +1,10 @@
 import { inject } from '@adonisjs/core';
+import { withTransaction } from '#core/services/with_transaction';
 import SystemRoleImmutableException from '#exceptions/auth/system_role_immutable_exception';
 import RowNotFoundException from '#exceptions/core/row_not_found_exception';
 import SlugExistsException from '#exceptions/core/slug_exists_exception';
 import Role from '#models/auth/role';
 import { RoleRepository } from '#repositories/auth/role_repository';
-import { withTransaction } from '#shared/utils/with_transaction';
 
 interface UpdateRolePayload {
 	id: number;

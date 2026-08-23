@@ -1,9 +1,9 @@
-﻿import { inject } from '@adonisjs/core';
+import { inject } from '@adonisjs/core';
+import { withTransaction } from '#core/services/with_transaction';
 import RowNotFoundException from '#exceptions/core/row_not_found_exception';
 import { events } from '#generated/events';
 import User from '#models/auth/user';
 import { UserRepository } from '#repositories/auth/user_repository';
-import { withTransaction } from '#shared/utils/with_transaction';
 
 interface UpdateUserPayload {
 	id: number;

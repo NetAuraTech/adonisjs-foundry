@@ -1,4 +1,4 @@
-import { BaseHttpException } from '#exceptions/base_http_exception';
+import { BaseHttpException } from '#core/exceptions/base_http_exception';
 
 /**
  * The `_action` discriminator of an account update request is not one of the

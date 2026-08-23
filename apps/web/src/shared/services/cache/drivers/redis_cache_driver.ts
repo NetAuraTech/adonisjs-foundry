@@ -1,5 +1,5 @@
 import redis from '@adonisjs/redis/services/main';
-import { type CacheDriver } from '#contracts/cache/cache_driver';
+import { type CacheDriver } from '#core/contracts/cache_driver';
 
 /**
  * Redis-backed cache driver using `@adonisjs/redis`.

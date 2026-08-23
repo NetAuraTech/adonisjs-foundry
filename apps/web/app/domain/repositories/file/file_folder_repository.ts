@@ -1,6 +1,6 @@
+import { transactionContext } from '#core/services/transaction_context';
 import FileFolder from '#models/file/file_folder';
 import { BaseRepository } from '#repositories/base_repository';
-import { transactionContext } from '#shared/context/transaction_context';
 
 /**
  * Handles all database operations for the {@link FileFolder} model.

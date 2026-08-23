@@ -2,8 +2,8 @@ import { setTimeout as sleep } from 'node:timers/promises';
 import { test } from '@japa/runner';
 import { BuilderSessionService } from '#cms/domain/services/page/builder_session_service';
 import { LOCK_TTL_MS } from '#cms/types/builder';
-import { CacheService } from '#services/cache/cache_service';
-import { RedisCacheDriver } from '#services/cache/drivers/redis_cache_driver';
+import { RedisCacheDriver } from '#shared/services/cache/drivers/redis_cache_driver';
+import { CacheService } from '#shared/services/cache_service';
 
 /**
  * Unit tests for `BuilderSessionService`.

@@ -1,7 +1,7 @@
 import { type AccessToken } from '@adonisjs/auth/access_tokens';
+import { transactionContext } from '#core/services/transaction_context';
 import User from '#models/auth/user';
 import { BaseRepository } from '#repositories/base_repository';
-import { transactionContext } from '#shared/context/transaction_context';
 import { type OAuthProvider } from '#types/auth';
 import { type FindOptions } from '#types/core';
 

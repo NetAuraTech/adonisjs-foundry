@@ -1,6 +1,6 @@
 import { type HttpContext } from '@adonisjs/core/http';
+import { paginationValidator } from '#app/core/validators/pagination';
 import { DEFAULT_PAGINATION, type PaginationFilters } from '#types/pagination';
-import { paginationValidator } from '#validators/pagination';
 
 /**
  * Extracts and validates pagination parameters from the request using a Vine schema.

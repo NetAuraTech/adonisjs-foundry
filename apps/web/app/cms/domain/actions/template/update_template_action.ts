@@ -1,6 +1,6 @@
-﻿import { inject } from '@adonisjs/core';
+import { inject } from '@adonisjs/core';
 import { TemplateRepository } from '#cms/domain/repositories/template/template_repository';
-import { withTransaction } from '#shared/utils/with_transaction';
+import { withTransaction } from '#core/services/with_transaction';
 import type Template from '#cms/models/template/template';
 import type { BlockType, PageContent } from '#cms/types/page';
 

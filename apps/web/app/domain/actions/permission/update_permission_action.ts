@@ -1,10 +1,10 @@
 import { inject } from '@adonisjs/core';
+import { withTransaction } from '#core/services/with_transaction';
 import SystemPermissionImmutableException from '#exceptions/auth/system_permission_immutable_exception';
 import RowNotFoundException from '#exceptions/core/row_not_found_exception';
 import SlugExistsException from '#exceptions/core/slug_exists_exception';
 import Permission from '#models/auth/permission';
 import { PermissionRepository } from '#repositories/auth/permission_repository';
-import { withTransaction } from '#shared/utils/with_transaction';
 
 interface UpdatePermissionPayload {
 	id: number;
