@@ -14,7 +14,7 @@ import app from '@adonisjs/core/services/app';
 import { PageDashboardCollector } from '#cms/domain/services/page/page_dashboard_collector';
 import { TemplateDashboardCollector } from '#cms/domain/services/template/template_dashboard_collector';
 import { buildCmsDashboardPayload } from '#cms/helpers/i18n_payloads/dashboard_cms';
-import { AuthDashboardCollector } from '#services/auth/auth_dashboard_collector';
+import { IdentityDashboardCollector } from '#identity/services/dashboard_collector';
 import { DashboardRegistry } from '#services/core/dashboard_registry';
 import { FileDashboardCollector } from '#services/file/file_dashboard_collector';
 
@@ -22,7 +22,7 @@ app.container.singleton(DashboardRegistry, () => new DashboardRegistry());
 
 const registry = await app.container.make(DashboardRegistry);
 
-registry.register('auth', () => app.container.make(AuthDashboardCollector));
+registry.register('identity', () => app.container.make(IdentityDashboardCollector));
 registry.register('page', () => app.container.make(PageDashboardCollector));
 registry.register('template', () => app.container.make(TemplateDashboardCollector));
 registry.register('file', () => app.container.make(FileDashboardCollector));

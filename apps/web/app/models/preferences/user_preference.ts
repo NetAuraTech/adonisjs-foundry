@@ -1,6 +1,6 @@
 import { belongsTo, column } from '@adonisjs/lucid/orm';
 import { UserPreferenceSchema } from '#database/schema';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 import type { Locale, Theme } from '#types/preferences';
 import type { BelongsTo } from '@adonisjs/lucid/types/relations';
 

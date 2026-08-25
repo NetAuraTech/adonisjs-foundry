@@ -31,8 +31,8 @@ from `apps/web/`.
 | Artifact                                      | From (`main`)                                                                                   |
 | --------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | CMS module (page/template/builder internals)  | `app/cms`                                                                                       |
-| CMS controllers (page + template)             | `app/http/controllers/page`, `app/http/controllers/template`                                    |
-| CMS transformers (page + template)            | `app/data/transformers/page`, `app/data/transformers/template`                                  |
+| CMS controllers (page + template)             | `app/page/controllers`, `app/template/controllers`                                              |
+| CMS transformers (page + template)            | `app/page/transformers`, `app/template/transformers`                                            |
 | CMS events and listeners                      | `app/events/page`, `app/listeners/page`                                                         |
 | CMS mail (contact form)                       | `app/mails/page`                                                                                |
 | CMS i18n payload helpers                      | `app/helpers/i18n_payloads/pages_*.ts`, `page_editor.ts`, `page_revisions.ts`, `templates_*.ts` |
@@ -41,7 +41,7 @@ from `apps/web/`.
 | CMS seeders                                   | `database/seeders/page_seeder.ts`, `database/seeders/template_seeder.ts`                        |
 | CMS i18n namespaces                           | `resources/lang/{en,fr}/page.json`, `{en,fr}/template.json`, `{en,fr}/builder.json`             |
 | CMS email template (contact form)             | `resources/views/emails/contact_form_email.edge`                                                |
-| CMS route files                               | `start/routes/cms_admin.routes.ts`, `cms_public.routes.ts`                                      |
+| CMS route files                               | `start/routes/cms_admin.routes.ts`, `cms_public.routes.ts`, `cms_rest_api.routes.ts`            |
 | CMS React subtrees (builder, renderer, pages) | `inertia/pages/cms`, `inertia/components/cms`                                                   |
 
 ## 2. Recover Transmit (real-time builder collaboration)

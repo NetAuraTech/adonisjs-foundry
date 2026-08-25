@@ -1,9 +1,9 @@
 import { inject } from '@adonisjs/core';
 import { DateTime } from 'luxon';
+import EmailAlreadyExistsException from '#core/exceptions/email_already_exists_exception';
 import { withTransaction } from '#core/services/with_transaction';
-import EmailAlreadyExistsException from '#exceptions/account/email_already_exists_exception';
-import User from '#models/auth/user';
-import { UserRepository } from '#repositories/auth/user_repository';
+import User from '#identity/models/user';
+import { UserRepository } from '#identity/repositories/user_repository';
 import { TokenRepository } from '#repositories/core/token_repository';
 import { LogService } from '#services/logging/log_service';
 import { FullToken } from '#types/core';

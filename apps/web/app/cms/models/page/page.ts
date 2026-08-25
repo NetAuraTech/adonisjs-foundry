@@ -2,7 +2,7 @@ import { belongsTo, hasMany, scope } from '@adonisjs/lucid/orm';
 import { ModelQueryBuilderContract } from '@adonisjs/lucid/types/model';
 import PageTranslation from '#cms/models/page/page_translation';
 import { PageSchema } from '#database/schema';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 import File from '#models/file/file';
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations';
 

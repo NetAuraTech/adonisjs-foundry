@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 import { LinkSocialProviderAction } from '#actions/social/link_social_provider_action';
 import ProviderAlreadyLinkedException from '#exceptions/auth/provider_already_linked_exception';
 import UnverifiedAccountException from '#exceptions/auth/unverified_account_exception';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 
 test.group('LinkSocialProviderAction', () => {
 	test('execute() throws UnverifiedAccountException if email not verified', async ({ assert }) => {

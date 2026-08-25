@@ -10,7 +10,7 @@ const VIEW_PERMISSIONS = ['users.view', 'files.view'] as const;
 test.group('Admin dashboard endpoint (core sections)', (group) => {
 	group.each.setup(() => testUtils.db().truncate());
 
-	test('GET /admin renders the auth and file sections', async ({ client, assert }) => {
+	test('GET /admin renders the identity and file sections', async ({ client, assert }) => {
 		const user = await createAdminUser({
 			email: 'core-dashboard@example.com',
 			permissionSlugs: VIEW_PERMISSIONS,
@@ -25,7 +25,7 @@ test.group('Admin dashboard endpoint (core sections)', (group) => {
 		const page = parseInertiaPage(res.text());
 		const stats = page.props.stats;
 
-		assert.isAbove(stats.auth.users, 0);
+		assert.isAbove(stats.identity.users, 0);
 
 		// The file section reports the seeded folder and its file.
 		assert.isAtLeast(stats.file.fileFolders, 1);

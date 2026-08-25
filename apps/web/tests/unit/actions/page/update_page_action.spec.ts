@@ -4,8 +4,8 @@ import { UpdatePageAction } from '#cms/domain/actions/page/update_page_action';
 import MissingTranslationException from '#cms/exceptions/page/missing_translation_exception';
 import Page from '#cms/models/page/page';
 import PageTranslation from '#cms/models/page/page_translation';
+import SlugExistsException from '#core/exceptions/slug_exists_exception';
 import { UserFactory } from '#database/factories/user_factory';
-import SlugExistsException from '#exceptions/core/slug_exists_exception';
 
 test.group('UpdatePageAction', () => {
 	test('execute() updates page translation fields', async ({ assert }) => {

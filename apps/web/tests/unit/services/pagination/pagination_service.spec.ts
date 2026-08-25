@@ -1,5 +1,5 @@
 import { test } from '@japa/runner';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 import { PaginationService } from '#services/pagination/pagination_service';
 import { DEFAULT_PAGINATION } from '#types/pagination';
 

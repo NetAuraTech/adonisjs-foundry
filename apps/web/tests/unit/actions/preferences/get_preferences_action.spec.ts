@@ -1,7 +1,7 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
 import { GetPreferencesAction } from '#actions/preferences/get_preferences_action';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 import { DEFAULT_PREFERENCES } from '#types/preferences';
 
 test.group('GetPreferencesAction', () => {

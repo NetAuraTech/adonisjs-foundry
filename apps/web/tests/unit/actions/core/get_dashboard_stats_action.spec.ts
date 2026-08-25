@@ -3,10 +3,10 @@ import { GetDashboardStatsAction } from '#actions/core/get_dashboard_stats_actio
 import { DashboardRegistry } from '#services/core/dashboard_registry';
 import { LogService } from '#services/logging/log_service';
 import type {
-	DashboardAuthSection,
 	DashboardCollector,
 	DashboardCollectorPayload,
 	DashboardFileSection,
+	DashboardIdentitySection,
 } from '#types/dashboard';
 
 test.group('GetDashboardStatsAction', () => {
@@ -17,33 +17,33 @@ test.group('GetDashboardStatsAction', () => {
 	});
 
 	test('returns only the sections of registered collectors', async ({ assert }) => {
-		class FakeAuthCollector implements DashboardCollector<'auth'> {
-			async collect(): Promise<DashboardAuthSection> {
+		class FakeIdentityCollector implements DashboardCollector<'identity'> {
+			async collect(): Promise<DashboardIdentitySection> {
 				return { users: 7, usersByRole: [] };
 			}
 		}
 
 		const registry = new DashboardRegistry();
-		registry.register('auth', async () => new FakeAuthCollector());
+		registry.register('identity', async () => new FakeIdentityCollector());
 
 		const action = new GetDashboardStatsAction(registry, new LogService());
 		const stats = await action.execute();
 
-		assert.deepEqual(stats, { auth: { users: 7, usersByRole: [] } });
+		assert.deepEqual(stats, { identity: { users: 7, usersByRole: [] } });
 	});
 
 	test('runs registered collectors in parallel', async ({ assert }) => {
 		const events: string[] = [];
-		let releaseAuth!: () => void;
-		const authGate = new Promise<void>((resolve) => {
-			releaseAuth = resolve;
+		let releaseIdentity!: () => void;
+		const identityGate = new Promise<void>((resolve) => {
+			releaseIdentity = resolve;
 		});
 
-		class GatedAuthCollector implements DashboardCollector<'auth'> {
-			async collect(): Promise<DashboardAuthSection> {
-				events.push('auth:start');
-				await authGate;
-				events.push('auth:end');
+		class GatedIdentityCollector implements DashboardCollector<'identity'> {
+			async collect(): Promise<DashboardIdentitySection> {
+				events.push('identity:start');
+				await identityGate;
+				events.push('identity:end');
 				return { users: 1, usersByRole: [] };
 			}
 		}
@@ -51,31 +51,31 @@ test.group('GetDashboardStatsAction', () => {
 		class ReleasingFileCollector implements DashboardCollector<'file'> {
 			async collect(): Promise<DashboardFileSection> {
 				events.push('file:start');
-				releaseAuth();
+				releaseIdentity();
 				return { files: 2, fileFolders: 0, filesByFolder: [], recentFiles: [] };
 			}
 		}
 
 		const registry = new DashboardRegistry();
-		registry.register('auth', async () => new GatedAuthCollector());
+		registry.register('identity', async () => new GatedIdentityCollector());
 		registry.register('file', async () => new ReleasingFileCollector());
 
 		const action = new GetDashboardStatsAction(registry, new LogService());
 		const stats = await action.execute();
 
-		assert.deepEqual(events, ['auth:start', 'file:start', 'auth:end']);
-		assert.deepEqual(Object.keys(stats), ['auth', 'file']);
+		assert.deepEqual(events, ['identity:start', 'file:start', 'identity:end']);
+		assert.deepEqual(Object.keys(stats), ['identity', 'file']);
 	});
 
 	test('rejects when a collector fails', async ({ assert }) => {
-		class FailingCollector implements DashboardCollector<'auth'> {
-			async collect(): Promise<DashboardAuthSection> {
+		class FailingCollector implements DashboardCollector<'identity'> {
+			async collect(): Promise<DashboardIdentitySection> {
 				throw new Error('collector exploded');
 			}
 		}
 
 		const registry = new DashboardRegistry();
-		registry.register('auth', async () => new FailingCollector());
+		registry.register('identity', async () => new FailingCollector());
 
 		const action = new GetDashboardStatsAction(registry, new LogService());
 
@@ -85,15 +85,15 @@ test.group('GetDashboardStatsAction', () => {
 	test('forwards the recent-activity limit to collectors, defaulting to 5', async ({ assert }) => {
 		const receivedLimits: number[] = [];
 
-		class ProbingAuthCollector implements DashboardCollector<'auth'> {
-			async collect(payload: DashboardCollectorPayload): Promise<DashboardAuthSection> {
+		class ProbingIdentityCollector implements DashboardCollector<'identity'> {
+			async collect(payload: DashboardCollectorPayload): Promise<DashboardIdentitySection> {
 				receivedLimits.push(payload.recentLimit);
 				return { users: 0, usersByRole: [] };
 			}
 		}
 
 		const registry = new DashboardRegistry();
-		registry.register('auth', async () => new ProbingAuthCollector());
+		registry.register('identity', async () => new ProbingIdentityCollector());
 
 		const action = new GetDashboardStatsAction(registry, new LogService());
 		await action.execute({ recentLimit: 12 });

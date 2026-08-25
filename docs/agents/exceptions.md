@@ -3,6 +3,10 @@
 Custom exceptions live in `app/exceptions/{domain}/{name}_exception.ts`, one class per error case. Built on AdonisJS's `Exception` base class with a project-specific `handle()` convention layered on top.
 
 > **CMS exception (ADR-0001):** CMS exceptions (page, template) live under `app/cms/exceptions/{domain}/`, imported via `#cms/exceptions/...`. The layout above applies to everything outside the CMS module.
+>
+> **Identity co-location:** identity exceptions live under `src/identity/exceptions/`, imported via `#identity/exceptions/...` — co-located with the rest of the identity business module.
+>
+> **Kernel exceptions:** cross-domain exceptions shared by several business modules (`row_not_found`, `slug_exists`, `email_already_exists`) live under `src/core/exceptions/`, imported via `#core/exceptions/...`, next to the `BaseHttpException` base class they extend.
 
 ## Structure
 

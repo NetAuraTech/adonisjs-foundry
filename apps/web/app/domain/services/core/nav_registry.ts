@@ -21,7 +21,7 @@ export class NavRegistry {
 	 * @param entries - Entries contributed by the domain, in sidebar order.
 	 *
 	 * @example
-	 * registry.register('auth', authNavEntries)
+	 * registry.register('identity', identityNavEntries)
 	 */
 	register(domain: string, entries: AdminNavEntry[]): void {
 		this.domains.set(domain, entries);

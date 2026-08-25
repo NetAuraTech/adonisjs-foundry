@@ -122,7 +122,7 @@ test.group('handle', () => {
 				flash: (_context, _prepared, payload, result) =>
 					payload === 'ok' && result.pendingEmail ? 'user updated' : 'noop',
 				redirect: (_context, prepared) => ({
-					route: 'admin.users_show.render',
+					route: 'admin.identity.users_show.render',
 					params: { id: prepared.id },
 				}),
 			},
@@ -132,14 +132,14 @@ test.group('handle', () => {
 
 		assert.deepEqual(calls, [
 			{ method: 'flash', args: ['success', 'user updated'] },
-			{ method: 'toRoute', args: ['admin.users_show.render', { id: '7' }] },
+			{ method: 'toRoute', args: ['admin.identity.users_show.render', { id: '7' }] },
 		]);
 		assert.deepEqual(seen?.prepared, { id: '7' });
 		assert.equal(seen?.payload, 'ok');
 		assert.deepEqual(seen?.result, { pendingEmail: 'ada@example.com' });
 		assert.deepEqual(response, {
 			redirected: true,
-			route: 'admin.users_show.render',
+			route: 'admin.identity.users_show.render',
 			routeParams: { id: '7' },
 		});
 	});
@@ -190,7 +190,7 @@ test.group('handle', () => {
 			},
 			page: {
 				flash: () => 'ok',
-				redirect: () => ({ route: 'admin.users.render' }),
+				redirect: () => ({ route: 'admin.identity.users.render' }),
 			},
 		};
 
@@ -206,7 +206,7 @@ test.group('handle', () => {
 			execute: async () => 'ok',
 			page: {
 				flash: () => 'ok',
-				redirect: () => ({ route: 'admin.users.render' }),
+				redirect: () => ({ route: 'admin.identity.users.render' }),
 			},
 		};
 

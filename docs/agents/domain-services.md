@@ -54,7 +54,7 @@ The admin sidebar follows the same composition pattern: each domain owns a `{dom
 
 ## System permission catalog
 
-Permissions follow the same composition pattern. Each domain owns a `{domain}_permissions.ts` module exporting a `category → actions` const with `as const` (e.g. `app/domain/services/auth/auth_permissions.ts`), and the composition file `start/permissions.ts` spreads the per-domain catalogs into the single `permissionCatalog` matrix. The `permission_seeder` persists exactly that matrix, and `PermissionSlug`/`SystemRoleSlug` are derived from it — renaming a slug therefore touches exactly one file. `start/permissions.ts` is on the prune `REWRITE_ALLOWLIST`, so a flavor rewrites it to drop the catalogs of its pruned domains.
+Permissions follow the same composition pattern. Each domain owns a `{domain}_permissions.ts` module exporting a `category → actions` const with `as const` (e.g. `src/identity/permissions.ts`, `app/domain/services/core/core_permissions.ts`), and the composition file `start/permissions.ts` spreads the per-domain catalogs into the single `permissionCatalog` matrix. The `permission_seeder` persists exactly that matrix, and `PermissionSlug`/`SystemRoleSlug` are derived from it — renaming a slug therefore touches exactly one file. `start/permissions.ts` is on the prune `REWRITE_ALLOWLIST`, so a flavor rewrites it to drop the catalogs of its pruned domains.
 
 ## Decision rule
 

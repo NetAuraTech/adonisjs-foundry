@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
 import { AcceptInvitationAction } from '#actions/invitation/accept_invitation_action';
 import InvalidTokenException from '#exceptions/core/invalid_token_exception';
 import { generateSplitToken } from '#helpers/core/crypto';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 import { TokenRepository } from '#repositories/core/token_repository';
 import { TOKEN_TYPES } from '#types/core';
 

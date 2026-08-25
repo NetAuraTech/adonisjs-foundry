@@ -4,7 +4,7 @@ import { type GetPreferencesAction } from '#actions/preferences/get_preferences_
 import { type TokenRepository } from '#repositories/core/token_repository';
 import { type MailService } from '#services/mails/mail_service';
 import { TOKEN_TYPES, type TokenType } from '#types/core';
-import type User from '#models/auth/user';
+import type User from '#identity/models/user';
 import type i18nManager from '@adonisjs/i18n/services/main';
 
 /* ------------------------------------------------------------------ */

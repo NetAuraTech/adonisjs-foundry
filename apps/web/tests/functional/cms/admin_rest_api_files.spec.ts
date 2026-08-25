@@ -6,7 +6,7 @@ import limiter from '@adonisjs/limiter/services/main';
 import { test } from '@japa/runner';
 import { FileFactory } from '#factories/file_factory';
 import { FileFolderFactory } from '#factories/file_folder_factory';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 import { createAdminUser } from '#tests/helpers/create_admin_user';
 import { resetSharedState } from '#tests/helpers/shared_state';
 

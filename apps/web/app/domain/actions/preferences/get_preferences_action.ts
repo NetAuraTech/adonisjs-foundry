@@ -1,7 +1,7 @@
-﻿import { inject } from '@adonisjs/core';
+import { inject } from '@adonisjs/core';
 import PreferencesRepository from '#repositories/preferences/preferences_repository';
 import { DEFAULT_PREFERENCES, type UserPreferences } from '#types/preferences';
-import type User from '#models/auth/user';
+import type User from '#identity/models/user';
 
 interface GetPreferencesPayload {
 	user: User | undefined;

@@ -5,8 +5,8 @@ import { GetFileDetailAction } from '#actions/file/get_file_detail_action';
 import { ListFilesAction } from '#actions/file/list_files_action';
 import { MoveFileAction } from '#actions/file/move_file_action';
 import { UpsertFileAltAction } from '#actions/file/upsert_file_alt_action';
+import FileTransformer from '#app/file/transformers/file_transformer';
 import { type RestEndpoint } from '#rest/rest_adapter';
-import FileTransformer from '#transformers/file_transformer';
 import {
 	listFileValidator,
 	showFileValidator,

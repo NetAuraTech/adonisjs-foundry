@@ -3,7 +3,7 @@ import emitter from '@adonisjs/core/services/emitter';
 import { test } from '@japa/runner';
 import { SendEmailVerificationAction } from '#actions/email_verification/send_email_verification_action';
 import { events } from '#generated/events';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 
 test.group('SendEmailVerificationAction', () => {
 	test('execute() dispatches UserRegistered event', async ({ assert }) => {

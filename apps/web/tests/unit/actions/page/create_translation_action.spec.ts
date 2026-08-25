@@ -3,7 +3,7 @@ import { test } from '@japa/runner';
 import { CreateTranslationAction } from '#cms/domain/actions/page/create_translation_action';
 import Page from '#cms/models/page/page';
 import PageTranslation from '#cms/models/page/page_translation';
-import SlugExistsException from '#exceptions/core/slug_exists_exception';
+import SlugExistsException from '#core/exceptions/slug_exists_exception';
 import type { BlockType, PageContent } from '#cms/types/page';
 
 test.group('CreateTranslationAction', () => {

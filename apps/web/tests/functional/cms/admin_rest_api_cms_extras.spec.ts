@@ -5,7 +5,7 @@ import { test } from '@japa/runner';
 import Page from '#cms/models/page/page';
 import PageTranslation from '#cms/models/page/page_translation';
 import Template from '#cms/models/template/template';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 import { createAdminUser } from '#tests/helpers/create_admin_user';
 import { resetSharedState } from '#tests/helpers/shared_state';
 

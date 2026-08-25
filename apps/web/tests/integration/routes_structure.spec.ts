@@ -45,12 +45,12 @@ test.group('Routes structure', (group) => {
 
 			// Admin back-office
 			'admin.dashboard.render',
-			'admin.users.render',
-			'admin.users_create.render',
-			'admin.users_create.execute',
-			'admin.users_show.render',
-			'admin.users_update.render',
-			'admin.users_update.execute',
+			'admin.identity.users.render',
+			'admin.identity.users_create.render',
+			'admin.identity.users_create.execute',
+			'admin.identity.users_show.render',
+			'admin.identity.users_update.render',
+			'admin.identity.users_update.execute',
 			'admin.files.render',
 			'admin.file_folders.render',
 

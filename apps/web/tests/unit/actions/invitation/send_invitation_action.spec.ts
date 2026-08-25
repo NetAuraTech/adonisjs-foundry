@@ -2,7 +2,7 @@ import app from '@adonisjs/core/services/app';
 import emitter from '@adonisjs/core/services/emitter';
 import { test } from '@japa/runner';
 import { SendInvitationAction } from '#actions/invitation/send_invitation_action';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 
 test.group('SendInvitationAction', () => {
 	test('execute() creates a pending user', async ({ assert }) => {

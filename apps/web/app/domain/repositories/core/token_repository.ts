@@ -5,7 +5,7 @@ import { transactionContext } from '#core/services/transaction_context';
 import InvalidTokenException from '#exceptions/core/invalid_token_exception';
 import MaxAttemptsExceededException from '#exceptions/core/max_attempts_exceeded_exception';
 import { maskToken } from '#helpers/core/crypto';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 import Token from '#models/core/token';
 import { BaseRepository } from '#repositories/base_repository';
 import { LogService } from '#services/logging/log_service';

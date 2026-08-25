@@ -19,7 +19,7 @@ interface FileAlt {
 }
 
 interface FileAltEditorProps {
-	file: Data.File;
+	file: Data.File.File;
 	translations: AdminFilesTranslations;
 }
 
@@ -208,7 +208,7 @@ export function FileAltEditor(props: FileAltEditorProps) {
 }
 
 const AltRow = (props: {
-	file: Data.File;
+	file: Data.File.File;
 	alt: FileAlt;
 	rowKey: (locale: string, key: string) => string;
 	handleSubmit: (event: SubmitEvent<HTMLFormElement>, callback: (value: boolean) => void) => void;

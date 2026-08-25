@@ -4,8 +4,8 @@ import { RestoreRevisionAction } from '#cms/domain/actions/page/restore_revision
 import Page from '#cms/models/page/page';
 import PageRevision from '#cms/models/page/page_revision';
 import PageTranslation from '#cms/models/page/page_translation';
+import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import { UserFactory } from '#database/factories/user_factory';
-import RowNotFoundException from '#exceptions/core/row_not_found_exception';
 
 test.group('RestoreRevisionAction', () => {
 	test('execute() restores translation to previous revision content', async ({ assert }) => {

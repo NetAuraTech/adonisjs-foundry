@@ -1,5 +1,5 @@
 import { inject } from '@adonisjs/core';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 
 interface NeedsPasswordSetupPayload {
 	user: User;

@@ -1,7 +1,7 @@
 import i18nManager from '@adonisjs/i18n/services/main';
 import { beforeDelete, belongsTo, column, hasMany } from '@adonisjs/lucid/orm';
 import { FileSchema } from '#database/schema';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 import FileAlt from '#models/file/file_alt';
 import FileFolder from '#models/file/file_folder';
 import type { StorageDisk } from '#types/file';

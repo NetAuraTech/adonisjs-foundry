@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 import { generateSplitToken } from '#helpers/core/crypto';
 import { TokenRepository } from '#repositories/core/token_repository';
 import { type TokenType } from '#types/core';
-import type User from '#models/auth/user';
+import type User from '#identity/models/user';
 
 /**
  * Creates a `selector.validator` token row for a user of the given type and

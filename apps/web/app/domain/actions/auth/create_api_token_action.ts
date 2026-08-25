@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
-import User from '#models/auth/user';
-import { UserRepository } from '#repositories/auth/user_repository';
+import User from '#identity/models/user';
+import { UserRepository } from '#identity/repositories/user_repository';
 import { LogService } from '#services/logging/log_service';
 
 interface CreateApiTokenPayload {

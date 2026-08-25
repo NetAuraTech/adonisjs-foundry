@@ -4,7 +4,7 @@ import limiter from '@adonisjs/limiter/services/main';
 import { test } from '@japa/runner';
 import Page from '#cms/models/page/page';
 import PageTranslation from '#cms/models/page/page_translation';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 import { createAdminUser } from '#tests/helpers/create_admin_user';
 import { resetSharedState } from '#tests/helpers/shared_state';
 

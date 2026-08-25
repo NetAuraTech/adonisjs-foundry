@@ -41,8 +41,8 @@ export default defineConfig({
   |
   */
 	directories: {
-		httpControllers: 'app/http/controllers',
-		transformers: 'app/data/transformers',
+		httpControllers: 'app',
+		transformers: 'app',
 		middleware: 'app/http/middleware',
 		services: 'app/domain/services',
 	},
@@ -166,14 +166,14 @@ export default defineConfig({
 					enabled: true,
 					withSharedProps: true,
 					inertiaMiddlewareImportPath: '#middleware/core/inertia_middleware',
-					source: 'app/data/transformers',
-					importAlias: '#transformers',
+					source: 'app',
+					importAlias: '#app',
 					glob: ['**\/*transformer.ts'],
 				},
 				controllers: {
 					enabled: true,
-					source: 'app/http/controllers',
-					importAlias: '#controllers',
+					source: 'app',
+					importAlias: '#app',
 					glob: ['**\/*_controller.ts'],
 				},
 			}),

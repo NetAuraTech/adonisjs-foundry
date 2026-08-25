@@ -1,6 +1,6 @@
 import { BaseSeeder } from '@adonisjs/lucid/seeders';
-import Permission from '#models/auth/permission';
-import Role from '#models/auth/role';
+import Permission from '#identity/models/permission';
+import Role from '#identity/models/role';
 import { systemRoleSlugs } from '#start/permissions';
 
 export default class extends BaseSeeder {

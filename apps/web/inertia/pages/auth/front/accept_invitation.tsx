@@ -16,7 +16,7 @@ import type { AcceptInvitationTranslations } from '#helpers/i18n_payloads/accept
 
 interface PageProps {
 	token: string;
-	user: Data.User;
+	user: Data.Identity.User;
 	translations: AcceptInvitationTranslations;
 }
 

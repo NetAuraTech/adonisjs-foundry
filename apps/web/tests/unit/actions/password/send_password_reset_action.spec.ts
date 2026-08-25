@@ -3,7 +3,7 @@ import emitter from '@adonisjs/core/services/emitter';
 import { test } from '@japa/runner';
 import { SendPasswordResetAction } from '#actions/password/send_password_reset_action';
 import { events } from '#generated/events';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 
 test.group('SendPasswordResetAction', () => {
 	test('execute() dispatches ForgotPassword event', async ({ assert }) => {

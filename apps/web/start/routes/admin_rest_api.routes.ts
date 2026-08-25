@@ -7,10 +7,12 @@
 | thin controller reusing the existing domain actions, validators, and
 | transformers — no business logic is duplicated with the Inertia admin.
 |
-| The CMS resources (`/api/v1/admin/pages`, `/templates`, `/builder`) are
-| registered separately from `start/routes/cms_rest_api.routes.ts` behind the
-| `cms` feature flag, so flavors that prune the page/template domain can
-| delete that module (and never reference CMS controllers here).
+| The identity resources (`/api/v1/admin/users`, `/roles`, `/permissions`)
+| are registered by `app/identity/routes.ts`, and the CMS resources
+| (`/api/v1/admin/pages`, `/templates`, `/builder`) are registered separately
+| from `start/routes/cms_rest_api.routes.ts` behind the `cms` feature flag,
+| so flavors that prune those domains can delete the module (and never
+| reference those controllers here).
 |
 | Registered only when the `adminApi` feature flag is on and the `api`
 | access-token guard is enabled (see `config/auth.ts`).
@@ -48,46 +50,6 @@ export function registerAdminRestApiRoutes(): void {
 		.group(() => {
 			router
 				.group(() => {
-					router
-						.group(() => {
-							router
-								.get('/', [controllers.auth.api.UsersApi, 'index'])
-								.use([middleware.permission({ permissions: [permissions.users.view] })]);
-							router
-								.post('/', [controllers.auth.api.UsersCreateApi, 'store'])
-								.use([middleware.permission({ permissions: [permissions.users.create] })]);
-							router
-								.get('/:id', [controllers.auth.api.UsersShowApi, 'show'])
-								.use([middleware.permission({ permissions: [permissions.users.view] })]);
-							router
-								.put('/:id', [controllers.auth.api.UsersUpdateApi, 'update'])
-								.use([middleware.permission({ permissions: [permissions.users.update] })]);
-							router
-								.delete('/:id', [controllers.auth.api.UsersDeleteApi, 'destroy'])
-								.use([middleware.permission({ permissions: [permissions.users.delete] })]);
-						})
-						.prefix('users');
-
-					router
-						.group(() => {
-							router
-								.get('/', [controllers.auth.api.RolesApi, 'index'])
-								.use([middleware.permission({ permissions: [permissions.roles.view] })]);
-							router
-								.post('/', [controllers.auth.api.RolesCreateApi, 'store'])
-								.use([middleware.permission({ permissions: [permissions.roles.create] })]);
-							router
-								.get('/:id', [controllers.auth.api.RolesShowApi, 'show'])
-								.use([middleware.permission({ permissions: [permissions.roles.view] })]);
-							router
-								.put('/:id', [controllers.auth.api.RolesUpdateApi, 'update'])
-								.use([middleware.permission({ permissions: [permissions.roles.update] })]);
-							router
-								.delete('/:id', [controllers.auth.api.RolesDeleteApi, 'destroy'])
-								.use([middleware.permission({ permissions: [permissions.roles.delete] })]);
-						})
-						.prefix('roles');
-
 					router
 						.group(() => {
 							router
@@ -169,10 +131,6 @@ export function registerAdminRestApiRoutes(): void {
 								.use([middleware.permission({ permissions: [permissions.settings.maintenance] })]);
 						})
 						.prefix('maintenance');
-
-					router
-						.get('permissions', [controllers.auth.api.PermissionsApi, 'index'])
-						.use([middleware.permission({ permissions: [permissions.roles.view] })]);
 				})
 				.prefix('admin')
 				.as('admin')

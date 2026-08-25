@@ -3,7 +3,10 @@
 | Admin routes
 |--------------------------------------------------------------------------
 |
-| Dashboard, users CRUD, files, file folders.
+| Dashboard, files, file folders, settings (maintenance), logs.
+|
+| The identity surface (users, roles, permissions) lives in
+| `app/identity/routes.ts`, registered by import from `start/routes.ts`.
 |
 */
 
@@ -18,108 +21,6 @@ export function registerAdminRoutes(): void {
 			router
 				.get('/', [controllers.core.admin.Dashboard, 'render'])
 				.use([middleware.permission({ permissions: [permissions.admin.access] })]);
-
-			router
-				.group(() => {
-					router
-						.get('/', [controllers.auth.admin.Users, 'render'])
-						.use([middleware.permission({ permissions: [permissions.users.view] })]);
-
-					router
-						.group(() => {
-							router.get('/', [controllers.auth.admin.UsersCreate, 'render']);
-							router.post('/', [controllers.auth.admin.UsersCreate, 'execute']);
-						})
-						.prefix('create')
-						.use([middleware.permission({ permissions: [permissions.users.create] })]);
-
-					router
-						.group(() => {
-							router
-								.delete('/', [controllers.auth.admin.Users, 'destroy'])
-								.use([middleware.permission({ permissions: [permissions.users.delete] })]);
-							router
-								.get('/', [controllers.auth.admin.UsersShow, 'render'])
-								.use([middleware.permission({ permissions: [permissions.users.view] })]);
-
-							router
-								.group(() => {
-									router.get('/', [controllers.auth.admin.UsersUpdate, 'render']);
-									router.post('/', [controllers.auth.admin.UsersUpdate, 'execute']);
-								})
-								.prefix('edit')
-								.use([middleware.permission({ permissions: [permissions.users.update] })]);
-						})
-						.prefix(':id');
-				})
-				.prefix('users');
-
-			router
-				.group(() => {
-					router
-						.get('/', [controllers.auth.admin.Roles, 'render'])
-						.use([middleware.permission({ permissions: [permissions.roles.view] })]);
-
-					router
-						.group(() => {
-							router.get('/', [controllers.auth.admin.RolesCreate, 'render']);
-							router.post('/', [controllers.auth.admin.RolesCreate, 'execute']);
-						})
-						.prefix('create')
-						.use([middleware.permission({ permissions: [permissions.roles.create] })]);
-
-					router
-						.group(() => {
-							router
-								.delete('/', [controllers.auth.admin.Roles, 'destroy'])
-								.use([middleware.permission({ permissions: [permissions.roles.delete] })]);
-							router
-								.get('/', [controllers.auth.admin.RolesShow, 'render'])
-								.use([middleware.permission({ permissions: [permissions.roles.view] })]);
-
-							router
-								.group(() => {
-									router.get('/', [controllers.auth.admin.RolesUpdate, 'render']);
-									router.post('/', [controllers.auth.admin.RolesUpdate, 'execute']);
-								})
-								.prefix('edit')
-								.use([middleware.permission({ permissions: [permissions.roles.update] })]);
-						})
-						.prefix(':id');
-				})
-				.prefix('roles');
-
-			router
-				.group(() => {
-					router
-						.get('/', [controllers.auth.admin.Permissions, 'render'])
-						.use([middleware.permission({ permissions: [permissions.permissions.view] })]);
-
-					router
-						.group(() => {
-							router.get('/', [controllers.auth.admin.PermissionsCreate, 'render']);
-							router.post('/', [controllers.auth.admin.PermissionsCreate, 'execute']);
-						})
-						.prefix('create')
-						.use([middleware.permission({ permissions: [permissions.permissions.create] })]);
-
-					router
-						.group(() => {
-							router
-								.delete('/', [controllers.auth.admin.Permissions, 'destroy'])
-								.use([middleware.permission({ permissions: [permissions.permissions.delete] })]);
-
-							router
-								.group(() => {
-									router.get('/', [controllers.auth.admin.PermissionsUpdate, 'render']);
-									router.post('/', [controllers.auth.admin.PermissionsUpdate, 'execute']);
-								})
-								.prefix('edit')
-								.use([middleware.permission({ permissions: [permissions.permissions.update] })]);
-						})
-						.prefix(':id');
-				})
-				.prefix('permissions');
 
 			router.group(() => {
 				// Files

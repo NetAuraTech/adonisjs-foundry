@@ -60,7 +60,7 @@ type PageItem = number | '...';
  *
  * @example
  * <Pagination
- *   route="admin.users.render"
+ *   route="admin.identity.users.render"
  *   metadata={users.metadata}
  *   filters={{ search: 'alice', role: 'admin' }}
  * />

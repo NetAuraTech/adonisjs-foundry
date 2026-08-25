@@ -1,8 +1,8 @@
 import { inject } from '@adonisjs/core';
 import { PageTranslationRepository } from '#cms/domain/repositories/page/page_translation_repository';
 import { sanitizePageContent } from '#cms/domain/services/page/sanitize_content';
+import SlugExistsException from '#core/exceptions/slug_exists_exception';
 import { withTransaction } from '#core/services/with_transaction';
-import SlugExistsException from '#exceptions/core/slug_exists_exception';
 import type PageTranslation from '#cms/models/page/page_translation';
 import type { PageContent } from '#cms/types/page';
 

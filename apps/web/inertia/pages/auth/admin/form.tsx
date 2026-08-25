@@ -15,11 +15,11 @@ import { useMenu } from '~/hooks/use_admin';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminUsersFormTranslations } from '#helpers/i18n_payloads/users_form';
+import type { AdminUsersFormTranslations } from '#app/identity/helpers/i18n_payloads/users_form';
 
 type PageProps = {
-	user?: Data.User;
-	roles: Data.Role[];
+	user?: Data.Identity.User;
+	roles: Data.Identity.Role[];
 	translations: AdminUsersFormTranslations;
 };
 
@@ -40,13 +40,13 @@ export default function UsersFormPage(props: PageProps) {
 	return (
 		<AdminMain
 			title={isEditing ? t('title.edit', { username: user!.username }) : t('title.create')}
-			icon={getEntryIcon('admin.users.render')}
+			icon={getEntryIcon('admin.identity.users.render')}
 		>
 			<Card
 				header={
 					<div className="flex items-center justify-between gap-3">
 						<CanAccess permission="users.view">
-							<Button variant="icon" route="admin.users.render" title={t('actions.list')} fitContent>
+							<Button variant="icon" route="admin.identity.users.render" title={t('actions.list')} fitContent>
 								<Icon name="ArrowLeft" />
 							</Button>
 						</CanAccess>
@@ -54,7 +54,7 @@ export default function UsersFormPage(props: PageProps) {
 				}
 			>
 				<Form
-					route={isEditing ? 'admin.users_update.execute' : 'admin.users_create.execute'}
+					route={isEditing ? 'admin.identity.users_update.execute' : 'admin.identity.users_create.execute'}
 					routeParams={isEditing ? { id: user!.id } : {}}
 					className="grid gap-6"
 					onBefore={(visit) => {

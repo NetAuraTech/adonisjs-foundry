@@ -15,10 +15,10 @@ import { useMenu } from '~/hooks/use_admin';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
 import { Paginated } from '~/types/paginated';
-import type { AdminRolesIndexTranslations } from '#helpers/i18n_payloads/roles_list';
+import type { AdminRolesIndexTranslations } from '#app/identity/helpers/i18n_payloads/roles_list';
 
 type PageProps = {
-	roles: Paginated<Data.Role>;
+	roles: Paginated<Data.Identity.Role>;
 	filters: {
 		search?: string;
 	};
@@ -34,10 +34,10 @@ export default function RolesIndexPage(props: PageProps) {
 	return (
 		<AdminMain
 			title={t('title')}
-			icon={getEntryIcon('admin.roles.render')}
+			icon={getEntryIcon('admin.identity.roles.render')}
 			action={
 				<CanAccess permission="roles.create">
-					<Button route="admin.roles_create.render" variant="secondary" fitContent>
+					<Button route="admin.identity.roles_create.render" variant="secondary" fitContent>
 						{t('create.title')}
 					</Button>
 				</CanAccess>
@@ -45,7 +45,7 @@ export default function RolesIndexPage(props: PageProps) {
 		>
 			<Card
 				header={
-					<Form route="admin.roles.render" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+					<Form route="admin.identity.roles.render" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
 						<Field
 							type="text"
 							name="search"
@@ -59,7 +59,7 @@ export default function RolesIndexPage(props: PageProps) {
 						</Button>
 					</Form>
 				}
-				footer={<Pagination route="admin.roles.render" filters={filters} metadata={roles.metadata} />}
+				footer={<Pagination route="admin.identity.roles.render" filters={filters} metadata={roles.metadata} />}
 			>
 				<Table>
 					<Table.Header>
@@ -79,7 +79,7 @@ export default function RolesIndexPage(props: PageProps) {
 								</Table.Cell>
 							</Table.Row>
 						) : (
-							roles.data.map((role: Data.Role) => (
+							roles.data.map((role: Data.Identity.Role) => (
 								<Table.Row key={`role-${role.id}`}>
 									<Table.Cell data-label={t('table.name')}>
 										<div className="grid">
@@ -102,7 +102,7 @@ export default function RolesIndexPage(props: PageProps) {
 											<CanAccess permission="roles.view">
 												<Button
 													variant="icon_info"
-													route="admin.roles_show.render"
+													route="admin.identity.roles_show.render"
 													routeParams={{ id: role.id }}
 													title={t('actions.show', { name: t(`roles.${role.slug}.value` as any) })}
 													fitContent
@@ -115,7 +115,7 @@ export default function RolesIndexPage(props: PageProps) {
 													<CanAccess permission="roles.update">
 														<Button
 															variant="icon_warning"
-															route="admin.roles_update.render"
+															route="admin.identity.roles_update.render"
 															routeParams={{ id: role.id }}
 															title={t('actions.edit', {
 																name: t(`roles.${role.slug}.value` as any),
@@ -134,7 +134,7 @@ export default function RolesIndexPage(props: PageProps) {
 																	}),
 																);
 															}}
-															route="admin.roles.destroy"
+															route="admin.identity.roles.destroy"
 															routeParams={{ id: role.id }}
 														>
 															<Button

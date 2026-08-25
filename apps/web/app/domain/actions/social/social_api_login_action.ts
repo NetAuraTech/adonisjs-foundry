@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { CreateApiTokenAction, type ApiTokenResult } from '#actions/auth/create_api_token_action';
 import { FindOrCreateSocialUserAction } from '#actions/social/find_or_create_social_user_action';
-import type User from '#models/auth/user';
+import type User from '#identity/models/user';
 import type { OAuthProvider } from '#types/auth';
 import type { AllyUserContract } from '@adonisjs/ally/types';
 

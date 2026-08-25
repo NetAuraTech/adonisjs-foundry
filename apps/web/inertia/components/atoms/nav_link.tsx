@@ -104,7 +104,7 @@ export const variants = {
  * <NavLink route="settings.profile.render" label="Profile" variant="setting_nav" />
  *
  * // Pagination link with query string
- * <NavLink route="admin.users.render" label="2" variant="pagination" qs={{ page: 2 }} />
+ * <NavLink route="admin.identity.users.render" label="2" variant="pagination" qs={{ page: 2 }} />
  */
 export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLinkProps<R>) {
 	const { name, label, title, children, onClick, fs = 'base', variant = 'link', disabled } = props;

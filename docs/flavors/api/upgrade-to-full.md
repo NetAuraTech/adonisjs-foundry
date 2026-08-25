@@ -55,8 +55,8 @@ The CMS lives on `main` only. Restore it from the `full` tree:
 | Artifact                                 | From (`main`)                                                                                                        |
 | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | CMS module (page/template/builder)       | `app/cms`                                                                                                            |
-| CMS controllers (admin/front/api)        | `app/http/controllers/page`, `app/http/controllers/template`                                                         |
-| CMS transformers                         | `app/data/transformers/page`, `app/data/transformers/template`                                                       |
+| CMS controllers (admin/front/api)        | `app/page/controllers`, `app/template/controllers`                                                                   |
+| CMS transformers                         | `app/page/transformers`, `app/template/transformers`                                                                 |
 | CMS events, listeners and mails          | `app/events/page`, `app/listeners/page`, `app/mails/page`                                                            |
 | CMS i18n payload helpers + preview token | `app/helpers/i18n_payloads/{pages_*,page_editor,page_revisions,templates_*}.ts`, `app/helpers/core/preview_token.ts` |
 | CMS migrations and seeders               | `database/migrations/cms`, `database/seeders/{page,template}_seeder.ts`                                              |
@@ -76,11 +76,15 @@ npm install @adonisjs/transmit @adonisjs/transmit-client
 
 | Artifact                             | From (`main`)                                                    |
 | ------------------------------------ | ---------------------------------------------------------------- |
-| Guest/session auth controllers       | `app/http/controllers/auth/front`, `auth/admin`                  |
-| Self-service (account/profile/prefs) | `app/http/controllers/{account,profile,preferences}/front`       |
-| Admin Inertia controllers            | `app/http/controllers/{core,file,log,maintenance}/admin`         |
-| Home + SEO controllers               | `app/http/controllers/core/front`                                |
+| Guest/session auth controllers       | `app/auth/controllers/front`                                     |
+| Self-service (account/profile/prefs) | `app/{account,profile,preferences}/controllers/front`            |
+| Admin Inertia controllers            | `app/{core,file,log,maintenance}/controllers/admin`              |
+| Home + SEO controllers               | `app/core/controllers/front`                                     |
 | Public route modules                 | `start/routes/{front,core_public,settings,admin,auth}.routes.ts` |
+
+The `app/identity` domain (including its admin Inertia controllers) is **kept**
+by the `api` flavor — its routes are simply gated off by `admin: false` in
+`config/features.ts`, so nothing from `app/identity/` needs to be restored.
 
 ## 4. Restore the composition rewrites
 

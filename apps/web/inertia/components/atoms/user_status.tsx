@@ -11,7 +11,7 @@ export enum StatusEnum {
 interface UserStatusProps {
 	/** The user's current account status. */
 	status: StatusEnum;
-	user: Data.User['id'];
+	user: Data.Identity.User['id'];
 	translations: TranslationNodes;
 }
 

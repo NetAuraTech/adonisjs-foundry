@@ -19,7 +19,7 @@ type CmsTranslations = AdminDashboardTranslations & CmsDashboardTranslations;
  */
 function TemplateStatCard({ stats, translations }: DashboardSectionCardProps) {
 	const { t } = useTranslation(translations as CmsTranslations);
-	const template: Data.Dashboard['template'] = stats.template;
+	const template: Data.Core.Dashboard['template'] = stats.template;
 
 	if (!template || stats.page) return null;
 

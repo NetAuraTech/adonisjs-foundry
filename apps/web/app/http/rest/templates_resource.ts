@@ -1,4 +1,5 @@
 import { inject } from '@adonisjs/core';
+import TemplateTransformer from '#app/template/transformers/template_transformer';
 import { CreateFromPageAction } from '#cms/domain/actions/template/create_from_page_action';
 import { DeleteTemplateAction } from '#cms/domain/actions/template/delete_template_action';
 import { ListTemplatesAction } from '#cms/domain/actions/template/list_templates_action';
@@ -12,7 +13,6 @@ import {
 	showTemplateValidator,
 } from '#cms/validators/template';
 import { type RestEndpoint } from '#rest/rest_adapter';
-import TemplateTransformer from '#transformers/template/template_transformer';
 import type Template from '#cms/models/template/template';
 import type { Infer } from '@vinejs/vine/types';
 

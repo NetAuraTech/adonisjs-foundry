@@ -4,8 +4,8 @@
  * @template T - The type of each item in the `data` array.
  *
  * @example
- * type UserList = Paginated<Data.User>
- * // { data: Data.User[]; metadata: MetaData }
+ * type UserList = Paginated<Data.Identity.User>
+ * // { data: Data.Identity.User[]; metadata: MetaData }
  */
 export type Paginated<T> = {
 	/** The current page's items. */

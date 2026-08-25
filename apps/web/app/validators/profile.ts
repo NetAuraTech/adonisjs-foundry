@@ -1,5 +1,5 @@
 import vine from '@vinejs/vine';
-import type User from '#models/auth/user';
+import type User from '#identity/models/user';
 
 export const profileValidator = (id: User['id']) =>
 	vine.create({

@@ -13,10 +13,10 @@ import { useMenu } from '~/hooks/use_admin';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminPermissionsFormTranslations } from '#helpers/i18n_payloads/permissions_form';
+import type { AdminPermissionsFormTranslations } from '#app/identity/helpers/i18n_payloads/permissions_form';
 
 type PageProps = {
-	permission: Data.Permission | null;
+	permission: Data.Identity.Permission | null;
 	translations: AdminPermissionsFormTranslations;
 };
 
@@ -47,13 +47,13 @@ export default function PermissionsFormPage(props: PageProps) {
 	return (
 		<AdminMain
 			title={isEditing ? t('title.edit', { name: permission.name }) : t('title.create')}
-			icon={getEntryIcon('admin.permissions.render')}
+			icon={getEntryIcon('admin.identity.permissions.render')}
 		>
 			<Card
 				header={
 					<div className="flex items-center justify-between gap-3">
 						<CanAccess permission="permissions.view">
-							<Button variant="icon" route="admin.permissions.render" title={t('actions.list')} fitContent>
+							<Button variant="icon" route="admin.identity.permissions.render" title={t('actions.list')} fitContent>
 								<Icon name="ArrowLeft" />
 							</Button>
 						</CanAccess>
@@ -61,7 +61,7 @@ export default function PermissionsFormPage(props: PageProps) {
 				}
 			>
 				<Form
-					route={isEditing ? 'admin.permissions_update.execute' : 'admin.permissions_create.execute'}
+					route={isEditing ? 'admin.identity.permissions_update.execute' : 'admin.identity.permissions_create.execute'}
 					routeParams={isEditing ? { id: permission.id } : {}}
 					className="grid gap-6"
 					onBefore={(visit) => {

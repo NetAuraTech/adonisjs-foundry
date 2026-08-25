@@ -24,8 +24,8 @@ import { humanSize, isImage } from '~/utils/file';
 import type { AdminFilesTranslations } from '#helpers/i18n_payloads/files_index';
 
 interface Props {
-	files: Paginated<Data.File>;
-	folders: Data.FileFolder[];
+	files: Paginated<Data.File.File>;
+	folders: Data.File.FileFolder[];
 	filters: {
 		folder_id?: number;
 		mime_type?: string;
@@ -316,7 +316,7 @@ export default function FilesIndexPage(props: Props) {
 }
 
 interface FolderEntryProps {
-	folder: Data.FileFolder;
+	folder: Data.File.FileFolder;
 	depth: 0 | 1 | 2 | 3 | 4 | 5;
 	filters: Props['filters'];
 }

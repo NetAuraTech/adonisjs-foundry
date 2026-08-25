@@ -3,9 +3,9 @@ import hash from '@adonisjs/core/services/hash';
 import { test } from '@japa/runner';
 import { DateTime } from 'luxon';
 import { ConfirmEmailChangeAction } from '#actions/account/confirm_email_change_action';
-import EmailAlreadyExistsException from '#exceptions/account/email_already_exists_exception';
+import EmailAlreadyExistsException from '#core/exceptions/email_already_exists_exception';
 import { generateSplitToken } from '#helpers/core/crypto';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 import { TokenRepository } from '#repositories/core/token_repository';
 import { TOKEN_TYPES } from '#types/core';
 

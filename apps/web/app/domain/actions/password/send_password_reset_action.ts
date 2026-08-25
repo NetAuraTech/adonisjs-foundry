@@ -1,7 +1,7 @@
-﻿import { inject } from '@adonisjs/core';
+import { inject } from '@adonisjs/core';
 import { events } from '#generated/events';
-import User from '#models/auth/user';
-import { UserRepository } from '#repositories/auth/user_repository';
+import User from '#identity/models/user';
+import { UserRepository } from '#identity/repositories/user_repository';
 import { TokenRepository } from '#repositories/core/token_repository';
 import { LogService } from '#services/logging/log_service';
 

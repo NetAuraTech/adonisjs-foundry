@@ -1,7 +1,7 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
 import { DefineSocialPasswordAction } from '#actions/social/define_social_password_action';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 
 test.group('DefineSocialPasswordAction', () => {
 	test('execute() updates the user password for a social-only user', async ({ assert }) => {

@@ -2,7 +2,7 @@ import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
 import { DeletePageAction } from '#cms/domain/actions/page/delete_page_action';
 import Page from '#cms/models/page/page';
-import RowNotFoundException from '#exceptions/core/row_not_found_exception';
+import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 
 test.group('DeletePageAction', () => {
 	test('execute() deletes the page and translations', async ({ assert }) => {

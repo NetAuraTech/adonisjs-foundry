@@ -2,7 +2,7 @@ import emitter from '@adonisjs/core/services/emitter';
 import testUtils from '@adonisjs/core/services/test_utils';
 import limiter from '@adonisjs/limiter/services/main';
 import { test } from '@japa/runner';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 import { createVerifiedUser } from '#tests/helpers/create_verified_user';
 import { resetSharedState } from '#tests/helpers/shared_state';
 import { fieldError } from '#tests/helpers/validation';

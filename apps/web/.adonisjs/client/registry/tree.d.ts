@@ -7,117 +7,53 @@ export interface ApiDefinition {
       serve: typeof routes['drive.fs.serve']
     }
   }
-  eventStream: typeof routes['event_stream']
-  subscribe: typeof routes['subscribe']
-  unsubscribe: typeof routes['unsubscribe']
-  health: {
-    liveness: typeof routes['health.liveness']
-    readiness: typeof routes['health.readiness']
-  }
-  sitemap: {
-    show: typeof routes['sitemap.show']
-  }
-  robots: {
-    show: typeof routes['robots.show']
-  }
-  auth: {
-    session: {
-      render: typeof routes['auth.session.render']
-      execute: typeof routes['auth.session.execute']
-      destroy: typeof routes['auth.session.destroy']
-    }
-    register: {
-      render: typeof routes['auth.register.render']
-      execute: typeof routes['auth.register.execute']
-    }
-    forgotPassword: {
-      render: typeof routes['auth.forgot_password.render']
-      execute: typeof routes['auth.forgot_password.execute']
-    }
-    resetPassword: {
-      render: typeof routes['auth.reset_password.render']
-      execute: typeof routes['auth.reset_password.execute']
-    }
-    acceptInvitation: {
-      render: typeof routes['auth.accept_invitation.render']
-      execute: typeof routes['auth.accept_invitation.execute']
-    }
-    emailVerification: {
-      execute: typeof routes['auth.email_verification.execute']
-    }
-    social: {
-      render: typeof routes['auth.social.render']
-      execute: typeof routes['auth.social.execute']
-      redirect: typeof routes['auth.social.redirect']
-      callback: typeof routes['auth.social.callback']
-      unlink: typeof routes['auth.social.unlink']
-    }
-  }
-  settings: {
-    profile: {
-      render: typeof routes['settings.profile.render']
-      execute: typeof routes['settings.profile.execute']
-    }
-    account: {
-      render: typeof routes['settings.account.render']
-      execute: typeof routes['settings.account.execute']
-      destroy: typeof routes['settings.account.destroy']
-    }
-    emailChange: {
-      render: typeof routes['settings.email_change.render']
-      execute: typeof routes['settings.email_change.execute']
-    }
-    preferences: {
-      render: typeof routes['settings.preferences.render']
-      execute: typeof routes['settings.preferences.execute']
-    }
-    index: typeof routes['settings.index']
-  }
   admin: {
+    identity: {
+      users: {
+        render: typeof routes['admin.identity.users.render']
+        destroy: typeof routes['admin.identity.users.destroy']
+      }
+      usersCreate: {
+        render: typeof routes['admin.identity.users_create.render']
+        execute: typeof routes['admin.identity.users_create.execute']
+      }
+      usersShow: {
+        render: typeof routes['admin.identity.users_show.render']
+      }
+      usersUpdate: {
+        render: typeof routes['admin.identity.users_update.render']
+        execute: typeof routes['admin.identity.users_update.execute']
+      }
+      roles: {
+        render: typeof routes['admin.identity.roles.render']
+        destroy: typeof routes['admin.identity.roles.destroy']
+      }
+      rolesCreate: {
+        render: typeof routes['admin.identity.roles_create.render']
+        execute: typeof routes['admin.identity.roles_create.execute']
+      }
+      rolesShow: {
+        render: typeof routes['admin.identity.roles_show.render']
+      }
+      rolesUpdate: {
+        render: typeof routes['admin.identity.roles_update.render']
+        execute: typeof routes['admin.identity.roles_update.execute']
+      }
+      permissions: {
+        render: typeof routes['admin.identity.permissions.render']
+        destroy: typeof routes['admin.identity.permissions.destroy']
+      }
+      permissionsCreate: {
+        render: typeof routes['admin.identity.permissions_create.render']
+        execute: typeof routes['admin.identity.permissions_create.execute']
+      }
+      permissionsUpdate: {
+        render: typeof routes['admin.identity.permissions_update.render']
+        execute: typeof routes['admin.identity.permissions_update.execute']
+      }
+    }
     dashboard: {
       render: typeof routes['admin.dashboard.render']
-    }
-    users: {
-      render: typeof routes['admin.users.render']
-      destroy: typeof routes['admin.users.destroy']
-    }
-    usersCreate: {
-      render: typeof routes['admin.users_create.render']
-      execute: typeof routes['admin.users_create.execute']
-    }
-    usersShow: {
-      render: typeof routes['admin.users_show.render']
-    }
-    usersUpdate: {
-      render: typeof routes['admin.users_update.render']
-      execute: typeof routes['admin.users_update.execute']
-    }
-    roles: {
-      render: typeof routes['admin.roles.render']
-      destroy: typeof routes['admin.roles.destroy']
-    }
-    rolesCreate: {
-      render: typeof routes['admin.roles_create.render']
-      execute: typeof routes['admin.roles_create.execute']
-    }
-    rolesShow: {
-      render: typeof routes['admin.roles_show.render']
-    }
-    rolesUpdate: {
-      render: typeof routes['admin.roles_update.render']
-      execute: typeof routes['admin.roles_update.execute']
-    }
-    permissions: {
-      render: typeof routes['admin.permissions.render']
-      destroy: typeof routes['admin.permissions.destroy']
-    }
-    permissionsCreate: {
-      render: typeof routes['admin.permissions_create.render']
-      execute: typeof routes['admin.permissions_create.execute']
-    }
-    permissionsUpdate: {
-      render: typeof routes['admin.permissions_update.render']
-      execute: typeof routes['admin.permissions_update.execute']
     }
     files: {
       render: typeof routes['admin.files.render']
@@ -187,35 +123,24 @@ export interface ApiDefinition {
   api: {
     v1: {
       admin: {
-        usersApi: {
-          index: typeof routes['api.v1.admin.users_api.index']
-        }
-        usersCreateApi: {
-          store: typeof routes['api.v1.admin.users_create_api.store']
-        }
-        usersShowApi: {
-          show: typeof routes['api.v1.admin.users_show_api.show']
-        }
-        usersUpdateApi: {
-          update: typeof routes['api.v1.admin.users_update_api.update']
-        }
-        usersDeleteApi: {
-          destroy: typeof routes['api.v1.admin.users_delete_api.destroy']
-        }
-        rolesApi: {
-          index: typeof routes['api.v1.admin.roles_api.index']
-        }
-        rolesCreateApi: {
-          store: typeof routes['api.v1.admin.roles_create_api.store']
-        }
-        rolesShowApi: {
-          show: typeof routes['api.v1.admin.roles_show_api.show']
-        }
-        rolesUpdateApi: {
-          update: typeof routes['api.v1.admin.roles_update_api.update']
-        }
-        rolesDeleteApi: {
-          destroy: typeof routes['api.v1.admin.roles_delete_api.destroy']
+        identity: {
+          users: {
+            index: typeof routes['api.v1.admin.identity.users.index']
+            store: typeof routes['api.v1.admin.identity.users.store']
+            show: typeof routes['api.v1.admin.identity.users.show']
+            update: typeof routes['api.v1.admin.identity.users.update']
+            destroy: typeof routes['api.v1.admin.identity.users.destroy']
+          }
+          roles: {
+            index: typeof routes['api.v1.admin.identity.roles.index']
+            store: typeof routes['api.v1.admin.identity.roles.store']
+            show: typeof routes['api.v1.admin.identity.roles.show']
+            update: typeof routes['api.v1.admin.identity.roles.update']
+            destroy: typeof routes['api.v1.admin.identity.roles.destroy']
+          }
+          permissions: {
+            index: typeof routes['api.v1.admin.identity.permissions.index']
+          }
         }
         filesApi: {
           index: typeof routes['api.v1.admin.files_api.index']
@@ -261,9 +186,6 @@ export interface ApiDefinition {
           index: typeof routes['api.v1.admin.maintenance_api.index']
           update: typeof routes['api.v1.admin.maintenance_api.update']
           toggle: typeof routes['api.v1.admin.maintenance_api.toggle']
-        }
-        permissionsApi: {
-          index: typeof routes['api.v1.admin.permissions_api.index']
         }
         pagesApi: {
           index: typeof routes['api.v1.admin.pages_api.index']
@@ -347,6 +269,72 @@ export interface ApiDefinition {
         }
       }
     }
+  }
+  eventStream: typeof routes['event_stream']
+  subscribe: typeof routes['subscribe']
+  unsubscribe: typeof routes['unsubscribe']
+  health: {
+    liveness: typeof routes['health.liveness']
+    readiness: typeof routes['health.readiness']
+  }
+  sitemap: {
+    show: typeof routes['sitemap.show']
+  }
+  robots: {
+    show: typeof routes['robots.show']
+  }
+  auth: {
+    session: {
+      render: typeof routes['auth.session.render']
+      execute: typeof routes['auth.session.execute']
+      destroy: typeof routes['auth.session.destroy']
+    }
+    register: {
+      render: typeof routes['auth.register.render']
+      execute: typeof routes['auth.register.execute']
+    }
+    forgotPassword: {
+      render: typeof routes['auth.forgot_password.render']
+      execute: typeof routes['auth.forgot_password.execute']
+    }
+    resetPassword: {
+      render: typeof routes['auth.reset_password.render']
+      execute: typeof routes['auth.reset_password.execute']
+    }
+    acceptInvitation: {
+      render: typeof routes['auth.accept_invitation.render']
+      execute: typeof routes['auth.accept_invitation.execute']
+    }
+    emailVerification: {
+      execute: typeof routes['auth.email_verification.execute']
+    }
+    social: {
+      render: typeof routes['auth.social.render']
+      execute: typeof routes['auth.social.execute']
+      redirect: typeof routes['auth.social.redirect']
+      callback: typeof routes['auth.social.callback']
+      unlink: typeof routes['auth.social.unlink']
+    }
+  }
+  settings: {
+    profile: {
+      render: typeof routes['settings.profile.render']
+      execute: typeof routes['settings.profile.execute']
+    }
+    account: {
+      render: typeof routes['settings.account.render']
+      execute: typeof routes['settings.account.execute']
+      destroy: typeof routes['settings.account.destroy']
+    }
+    emailChange: {
+      render: typeof routes['settings.email_change.render']
+      execute: typeof routes['settings.email_change.execute']
+    }
+    preferences: {
+      render: typeof routes['settings.preferences.render']
+      execute: typeof routes['settings.preferences.execute']
+    }
+    index: typeof routes['settings.index']
   }
   contact: {
     execute: typeof routes['contact.execute']
