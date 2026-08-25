@@ -11,8 +11,8 @@ import { Field } from '~/components/molecules/field';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
-import type { LoginTranslations } from '#helpers/i18n_payloads/session';
-import type { OAuthProvider } from '#types/auth';
+import type { LoginTranslations } from '#app/auth/helpers/i18n_payloads/session';
+import type { OAuthProvider } from '#auth/types/auth';
 
 interface PageProps {
 	providers: OAuthProvider[];

@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import hash from '@adonisjs/core/services/hash';
+import InvalidCurrentPasswordException from '#auth/exceptions/invalid_current_password_exception';
 import { withTransaction } from '#core/services/with_transaction';
-import InvalidCurrentPasswordException from '#exceptions/auth/invalid_current_password_exception';
 import User from '#identity/models/user';
 import { LogService } from '#services/logging/log_service';
 

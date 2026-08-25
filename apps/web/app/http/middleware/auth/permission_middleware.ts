@@ -1,5 +1,5 @@
-import ForbiddenException from '#exceptions/auth/forbidden_exception';
-import UnauthorizedException from '#exceptions/auth/unauthorized_exception';
+import ForbiddenException from '#auth/exceptions/forbidden_exception';
+import UnauthorizedException from '#auth/exceptions/unauthorized_exception';
 import type { HttpContext } from '@adonisjs/core/http';
 import type { NextFn } from '@adonisjs/core/types/http';
 

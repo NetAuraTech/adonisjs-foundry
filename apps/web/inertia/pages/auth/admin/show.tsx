@@ -16,7 +16,7 @@ import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
 import { capitalize } from '~/lib/string';
 import type { AdminUsersShowTranslations } from '#app/identity/helpers/i18n_payloads/users_show';
-import type { OAuthProvider } from '#types/auth';
+import type { OAuthProvider } from '#auth/types/auth';
 
 type PageProps = {
 	user: Data.Identity.User;

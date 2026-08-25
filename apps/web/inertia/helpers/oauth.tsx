@@ -1,4 +1,4 @@
-import type { OAuthProvider } from '#types/auth';
+import type { OAuthProvider } from '#auth/types/auth';
 
 /**
  * Returns the branded SVG icon for a given OAuth provider.

@@ -1,10 +1,10 @@
 import { test } from '@japa/runner';
 import { DateTime } from 'luxon';
+import { TOKEN_TYPES } from '#auth/enums/token_type';
+import Token from '#auth/models/token';
 import Permission from '#identity/models/permission';
 import Role from '#identity/models/role';
 import User from '#identity/models/user';
-import Token from '#models/core/token';
-import { TOKEN_TYPES } from '#types/core';
 
 test.group('User Model', () => {
 	test('isEmailVerified returns true if emailVerifiedAt is set', ({ assert }) => {

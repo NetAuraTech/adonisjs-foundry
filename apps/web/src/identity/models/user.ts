@@ -5,13 +5,13 @@ import { compose } from '@adonisjs/core/helpers';
 import hash from '@adonisjs/core/services/hash';
 import { afterFetch, afterFind, beforeSave, belongsTo, computed, hasMany, hasOne } from '@adonisjs/lucid/orm';
 import { DateTime } from 'luxon';
+import { TOKEN_TYPES } from '#auth/enums/token_type';
+import Token from '#auth/models/token';
 import { UserSchema } from '#database/schema';
 import { UserStatus } from '#identity/domain/user';
 import Role from '#identity/models/role';
-import Token from '#models/core/token';
 import UserPreference from '#models/preferences/user_preference';
 import env from '#start/env';
-import { TOKEN_TYPES } from '#types/core';
 import type { BelongsTo, HasMany, HasOne } from '@adonisjs/lucid/types/relations';
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {

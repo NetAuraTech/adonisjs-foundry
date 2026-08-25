@@ -1,13 +1,13 @@
 import { inject } from '@adonisjs/core';
 import i18nManager from '@adonisjs/i18n/services/main';
 import { GetPreferencesAction } from '#actions/preferences/get_preferences_action';
-import { routePath } from '#helpers/router/route_path';
-import { BaseTokenListener } from '#listeners/auth/base_token_listener';
+import { TOKEN_TYPES } from '#auth/enums/token_type';
+import { TokenRepository } from '#auth/repositories/token_repository';
+import { routePath } from '#core/services/route_path';
+import { BaseTokenListener } from '#listeners/account/base_token_listener';
 import AccountNotification from '#mails/account/account_notification';
-import { TokenRepository } from '#repositories/core/token_repository';
 import { MailService } from '#services/mails/mail_service';
 import env from '#start/env';
-import { TOKEN_TYPES } from '#types/core';
 import type InitiateEmailChange from '#events/account/initiate_email_change';
 
 @inject()

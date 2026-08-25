@@ -2,11 +2,12 @@ import emitter from '@adonisjs/core/services/emitter';
 import testUtils from '@adonisjs/core/services/test_utils';
 import limiter from '@adonisjs/limiter/services/main';
 import { test } from '@japa/runner';
+import { TOKEN_TYPES } from '#auth/enums/token_type';
 import User from '#identity/models/user';
 import { createVerifiedUser } from '#tests/helpers/create_verified_user';
+import { restoreMailClient, swapMailClient } from '#tests/helpers/mail';
 import { resetSharedState } from '#tests/helpers/shared_state';
 import { createSplitToken } from '#tests/helpers/tokens';
-import { TOKEN_TYPES } from '#types/core';
 
 async function setupGroup(group: any) {
 	group.each.setup(() => testUtils.db().truncate());
@@ -15,6 +16,13 @@ async function setupGroup(group: any) {
 	group.each.setup(() => {
 		emitter.fake();
 		return () => emitter.restore();
+	});
+	// Register and forgot-password send their mails directly through the
+	// mail client (no event bus) — swap the binding so the suite never
+	// touches a real transport.
+	group.each.setup(() => {
+		swapMailClient();
+		return () => restoreMailClient();
 	});
 	group.each.teardown(() => limiter.clear());
 }

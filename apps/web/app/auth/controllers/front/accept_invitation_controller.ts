@@ -1,11 +1,11 @@
 import { inject } from '@adonisjs/core';
-import { AcceptInvitationAction } from '#actions/invitation/accept_invitation_action';
-import { GetInvitationAction } from '#actions/invitation/get_invitation_action';
+import { buildAcceptInvitationPayload } from '#app/auth/helpers/i18n_payloads/accept_invitation';
+import { acceptInvitationValidator, invitationValidator } from '#app/auth/validators/auth';
 import UserTransformer from '#app/identity/transformers/user_transformer';
-import { buildAcceptInvitationPayload } from '#helpers/i18n_payloads/accept_invitation';
+import { AcceptInvitationAction } from '#auth/actions/invitation/accept_invitation_action';
+import { GetInvitationAction } from '#auth/actions/invitation/get_invitation_action';
 import { I18nService } from '#services/i18n_service';
-import { FullToken } from '#types/core';
-import { acceptInvitationValidator, invitationValidator } from '#validators/auth';
+import type { FullToken } from '#auth/enums/token_type';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

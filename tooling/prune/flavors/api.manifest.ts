@@ -134,7 +134,10 @@ const apiManifest: FlavorManifest = {
 		'apps/web/start/routes/cms_rest_api.routes.ts',
 		'apps/web/start/routes/settings.routes.ts',
 		'apps/web/start/routes/admin.routes.ts',
-		'apps/web/start/routes/auth.routes.ts',
+		// The domain entry dies with the pruned front surface — the api flavor
+		// self-registers the token API directly from
+		// `#app/auth/controllers/api/routes` in the start/routes.ts rewrite.
+		'apps/web/app/auth/routes.ts',
 
 		// ─── Front test suites (session-guarded Inertia-page functional, ──────
 		// ─── SEO, and the full-router structure snapshots of the pruned routes)
@@ -256,7 +259,8 @@ const apiManifest: FlavorManifest = {
 				"import { registerHealthRoutes } from '#start/routes/health.routes'",
 				"import { middleware } from '#start/kernel'",
 				'',
-				'// Identity REST routes self-register on import (feature-gated inside the module).',
+				'// Auth + identity REST routes self-register on import (feature-gated inside the modules).',
+				"import '#app/auth/controllers/api/routes'",
 				"import '#app/identity/controllers/api/routes'",
 				'',
 				'// Health routes are outside maintenance middleware (liveness/readiness probes)',
@@ -597,10 +601,6 @@ const apiManifest: FlavorManifest = {
 				"import { events } from '#generated/events'",
 				"import { listeners } from '#generated/listeners'",
 				'',
-				"emitter.on(events.auth.UserRegistered, [listeners.auth.SendVerificationEmail, 'handle'])",
-				'',
-				"emitter.on(events.auth.ForgotPassword, [listeners.auth.SendForgotPasswordEmail, 'handle'])",
-				'',
 				'emitter.on(events.account.InitiateEmailChange, [',
 				'  listeners.account.SendChangeEmailNotificationEmail,',
 				"  'handle',",
@@ -610,8 +610,6 @@ const apiManifest: FlavorManifest = {
 				'  listeners.account.SendChangeEmailConfirmationEmail,',
 				"  'handle',",
 				'])',
-				'',
-				"emitter.on(events.admin.InviteUser, [listeners.admin.SendInvitationEmail, 'handle'])",
 				'',
 			].join('\n'),
 		},

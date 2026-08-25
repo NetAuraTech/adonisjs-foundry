@@ -1,6 +1,6 @@
-import { defineConfig, services } from '@adonisjs/ally';
+﻿import { defineConfig, services } from '@adonisjs/ally';
 import env from '#start/env';
-import type { OAuthProvider } from '#types/auth';
+import type { OAuthProvider } from '#auth/types/auth';
 
 function getCallbackUrl(provider: OAuthProvider) {
 	return `${env.get('APP_URL')}/oauth/${provider}/callback`;

@@ -4,8 +4,8 @@ import hash from '@adonisjs/core/services/hash';
 import { test } from '@japa/runner';
 import { DateTime } from 'luxon';
 import { UpdateUserAccountAction } from '#actions/account/update_user_account_action';
-import InvalidCurrentPasswordException from '#exceptions/auth/invalid_current_password_exception';
-import UnverifiedAccountException from '#exceptions/auth/unverified_account_exception';
+import InvalidCurrentPasswordException from '#auth/exceptions/invalid_current_password_exception';
+import UnverifiedAccountException from '#auth/exceptions/unverified_account_exception';
 import { events } from '#generated/events';
 import User from '#identity/models/user';
 

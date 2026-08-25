@@ -15,14 +15,15 @@ export const controllers = {
   },
   auth: {
     api: {
-      AcceptInvitationApi: () => import('#app/auth/controllers/api/accept_invitation_api_controller'),
-      EmailVerificationApi: () => import('#app/auth/controllers/api/email_verification_api_controller'),
-      ForgotPasswordApi: () => import('#app/auth/controllers/api/forgot_password_api_controller'),
+      AcceptInvitation: () => import('#app/auth/controllers/api/accept_invitation_controller'),
+      EmailVerification: () => import('#app/auth/controllers/api/email_verification_controller'),
+      ForgotPassword: () => import('#app/auth/controllers/api/forgot_password_controller'),
+      Login: () => import('#app/auth/controllers/api/login_controller'),
+      Logout: () => import('#app/auth/controllers/api/logout_controller'),
       Me: () => import('#app/auth/controllers/api/me_controller'),
-      RegisterApi: () => import('#app/auth/controllers/api/register_api_controller'),
-      ResetPasswordApi: () => import('#app/auth/controllers/api/reset_password_api_controller'),
+      Register: () => import('#app/auth/controllers/api/register_controller'),
+      ResetPassword: () => import('#app/auth/controllers/api/reset_password_controller'),
       SocialApi: () => import('#app/auth/controllers/api/social_api_controller'),
-      Token: () => import('#app/auth/controllers/api/token_controller'),
     },
     front: {
       AcceptInvitation: () => import('#app/auth/controllers/front/accept_invitation_controller'),

@@ -39,10 +39,6 @@ export type ScannedRoutes = {
     'event_stream': { paramsTuple?: []; params?: {} }
     'subscribe': { paramsTuple?: []; params?: {} }
     'unsubscribe': { paramsTuple?: []; params?: {} }
-    'health.liveness': { paramsTuple?: []; params?: {} }
-    'health.readiness': { paramsTuple?: []; params?: {} }
-    'sitemap.show': { paramsTuple?: []; params?: {} }
-    'robots.show': { paramsTuple?: []; params?: {} }
     'auth.session.render': { paramsTuple?: []; params?: {} }
     'auth.session.execute': { paramsTuple?: []; params?: {} }
     'auth.register.render': { paramsTuple?: []; params?: {} }
@@ -60,6 +56,18 @@ export type ScannedRoutes = {
     'auth.social.redirect': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
     'auth.social.callback': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
     'auth.social.unlink': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
+    'api.v1.auth.login.execute': { paramsTuple?: []; params?: {} }
+    'api.v1.auth.register.store': { paramsTuple?: []; params?: {} }
+    'api.v1.auth.forgot_password.store': { paramsTuple?: []; params?: {} }
+    'api.v1.auth.reset_password.store': { paramsTuple?: []; params?: {} }
+    'api.v1.auth.email_verification.store': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'api.v1.auth.accept_invitation.store': { paramsTuple?: []; params?: {} }
+    'api.v1.auth.logout.destroy': { paramsTuple?: []; params?: {} }
+    'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
+    'health.liveness': { paramsTuple?: []; params?: {} }
+    'health.readiness': { paramsTuple?: []; params?: {} }
+    'sitemap.show': { paramsTuple?: []; params?: {} }
+    'robots.show': { paramsTuple?: []; params?: {} }
     'settings.profile.render': { paramsTuple?: []; params?: {} }
     'settings.profile.execute': { paramsTuple?: []; params?: {} }
     'settings.account.render': { paramsTuple?: []; params?: {} }
@@ -152,14 +160,6 @@ export type ScannedRoutes = {
     'page.home': { paramsTuple?: []; params?: {} }
     'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
     'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
-    'api.v1.auth.token.execute': { paramsTuple?: []; params?: {} }
-    'api.v1.auth.register_api.store': { paramsTuple?: []; params?: {} }
-    'api.v1.auth.forgot_password_api.store': { paramsTuple?: []; params?: {} }
-    'api.v1.auth.reset_password_api.store': { paramsTuple?: []; params?: {} }
-    'api.v1.auth.email_verification_api.store': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
-    'api.v1.auth.accept_invitation_api.store': { paramsTuple?: []; params?: {} }
-    'api.v1.auth.token.destroy': { paramsTuple?: []; params?: {} }
-    'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
     'api.v1.profile.profile_api.show': { paramsTuple?: []; params?: {} }
     'api.v1.profile.profile_api.update': { paramsTuple?: []; params?: {} }
     'api.v1.account.account_api.update': { paramsTuple?: []; params?: {} }
@@ -184,10 +184,6 @@ export type ScannedRoutes = {
     'api.v1.admin.identity.roles.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.identity.permissions.index': { paramsTuple?: []; params?: {} }
     'event_stream': { paramsTuple?: []; params?: {} }
-    'health.liveness': { paramsTuple?: []; params?: {} }
-    'health.readiness': { paramsTuple?: []; params?: {} }
-    'sitemap.show': { paramsTuple?: []; params?: {} }
-    'robots.show': { paramsTuple?: []; params?: {} }
     'auth.session.render': { paramsTuple?: []; params?: {} }
     'auth.register.render': { paramsTuple?: []; params?: {} }
     'auth.forgot_password.render': { paramsTuple?: []; params?: {} }
@@ -197,6 +193,11 @@ export type ScannedRoutes = {
     'auth.social.render': { paramsTuple?: []; params?: {} }
     'auth.social.redirect': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
     'auth.social.callback': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
+    'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
+    'health.liveness': { paramsTuple?: []; params?: {} }
+    'health.readiness': { paramsTuple?: []; params?: {} }
+    'sitemap.show': { paramsTuple?: []; params?: {} }
+    'robots.show': { paramsTuple?: []; params?: {} }
     'settings.profile.render': { paramsTuple?: []; params?: {} }
     'settings.account.render': { paramsTuple?: []; params?: {} }
     'settings.email_change.render': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
@@ -234,7 +235,6 @@ export type ScannedRoutes = {
     'page.home': { paramsTuple?: []; params?: {} }
     'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
     'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
-    'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
     'api.v1.profile.profile_api.show': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
@@ -256,10 +256,6 @@ export type ScannedRoutes = {
     'api.v1.admin.identity.roles.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.identity.permissions.index': { paramsTuple?: []; params?: {} }
     'event_stream': { paramsTuple?: []; params?: {} }
-    'health.liveness': { paramsTuple?: []; params?: {} }
-    'health.readiness': { paramsTuple?: []; params?: {} }
-    'sitemap.show': { paramsTuple?: []; params?: {} }
-    'robots.show': { paramsTuple?: []; params?: {} }
     'auth.session.render': { paramsTuple?: []; params?: {} }
     'auth.register.render': { paramsTuple?: []; params?: {} }
     'auth.forgot_password.render': { paramsTuple?: []; params?: {} }
@@ -269,6 +265,11 @@ export type ScannedRoutes = {
     'auth.social.render': { paramsTuple?: []; params?: {} }
     'auth.social.redirect': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
     'auth.social.callback': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
+    'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
+    'health.liveness': { paramsTuple?: []; params?: {} }
+    'health.readiness': { paramsTuple?: []; params?: {} }
+    'sitemap.show': { paramsTuple?: []; params?: {} }
+    'robots.show': { paramsTuple?: []; params?: {} }
     'settings.profile.render': { paramsTuple?: []; params?: {} }
     'settings.account.render': { paramsTuple?: []; params?: {} }
     'settings.email_change.render': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
@@ -306,7 +307,6 @@ export type ScannedRoutes = {
     'page.home': { paramsTuple?: []; params?: {} }
     'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
     'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
-    'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
     'api.v1.profile.profile_api.show': { paramsTuple?: []; params?: {} }
   }
   POST: {
@@ -328,6 +328,13 @@ export type ScannedRoutes = {
     'auth.session.destroy': { paramsTuple?: []; params?: {} }
     'auth.social.execute': { paramsTuple?: []; params?: {} }
     'auth.social.unlink': { paramsTuple: [ParamValue]; params: {'provider': ParamValue} }
+    'api.v1.auth.login.execute': { paramsTuple?: []; params?: {} }
+    'api.v1.auth.register.store': { paramsTuple?: []; params?: {} }
+    'api.v1.auth.forgot_password.store': { paramsTuple?: []; params?: {} }
+    'api.v1.auth.reset_password.store': { paramsTuple?: []; params?: {} }
+    'api.v1.auth.email_verification.store': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'api.v1.auth.accept_invitation.store': { paramsTuple?: []; params?: {} }
+    'api.v1.auth.logout.destroy': { paramsTuple?: []; params?: {} }
     'settings.profile.execute': { paramsTuple?: []; params?: {} }
     'settings.account.execute': { paramsTuple?: []; params?: {} }
     'settings.email_change.execute': { paramsTuple?: []; params?: {} }
@@ -360,13 +367,6 @@ export type ScannedRoutes = {
     'admin.templates.apply_to_page': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.templates.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'contact.execute': { paramsTuple?: []; params?: {} }
-    'api.v1.auth.token.execute': { paramsTuple?: []; params?: {} }
-    'api.v1.auth.register_api.store': { paramsTuple?: []; params?: {} }
-    'api.v1.auth.forgot_password_api.store': { paramsTuple?: []; params?: {} }
-    'api.v1.auth.reset_password_api.store': { paramsTuple?: []; params?: {} }
-    'api.v1.auth.email_verification_api.store': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
-    'api.v1.auth.accept_invitation_api.store': { paramsTuple?: []; params?: {} }
-    'api.v1.auth.token.destroy': { paramsTuple?: []; params?: {} }
   }
   DELETE: {
     'admin.identity.users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

@@ -1,8 +1,8 @@
 import { inject } from '@adonisjs/core';
-import { SocialApiLoginAction } from '#actions/social/social_api_login_action';
-import { validateProvider } from '#helpers/auth/oauth';
-import { completeSocialApiCallback } from '#helpers/auth/social_api_callback';
-import { OAuthProvider } from '#types/auth';
+import { completeSocialApiCallback } from '#app/auth/helpers/social_api_callback';
+import { SocialApiLoginAction } from '#auth/actions/social/social_api_login_action';
+import { validateProvider } from '#auth/oauth_providers';
+import { OAuthProvider } from '#auth/types/auth';
 import type { HttpContext } from '@adonisjs/core/http';
 
 /**

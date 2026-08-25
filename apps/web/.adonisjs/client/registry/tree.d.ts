@@ -233,24 +233,26 @@ export interface ApiDefinition {
         }
       }
       auth: {
-        token: {
-          execute: typeof routes['api.v1.auth.token.execute']
-          destroy: typeof routes['api.v1.auth.token.destroy']
+        login: {
+          execute: typeof routes['api.v1.auth.login.execute']
         }
-        registerApi: {
-          store: typeof routes['api.v1.auth.register_api.store']
+        register: {
+          store: typeof routes['api.v1.auth.register.store']
         }
-        forgotPasswordApi: {
-          store: typeof routes['api.v1.auth.forgot_password_api.store']
+        forgotPassword: {
+          store: typeof routes['api.v1.auth.forgot_password.store']
         }
-        resetPasswordApi: {
-          store: typeof routes['api.v1.auth.reset_password_api.store']
+        resetPassword: {
+          store: typeof routes['api.v1.auth.reset_password.store']
         }
-        emailVerificationApi: {
-          store: typeof routes['api.v1.auth.email_verification_api.store']
+        emailVerification: {
+          store: typeof routes['api.v1.auth.email_verification.store']
         }
-        acceptInvitationApi: {
-          store: typeof routes['api.v1.auth.accept_invitation_api.store']
+        acceptInvitation: {
+          store: typeof routes['api.v1.auth.accept_invitation.store']
+        }
+        logout: {
+          destroy: typeof routes['api.v1.auth.logout.destroy']
         }
         me: {
           show: typeof routes['api.v1.auth.me.show']
@@ -273,16 +275,6 @@ export interface ApiDefinition {
   eventStream: typeof routes['event_stream']
   subscribe: typeof routes['subscribe']
   unsubscribe: typeof routes['unsubscribe']
-  health: {
-    liveness: typeof routes['health.liveness']
-    readiness: typeof routes['health.readiness']
-  }
-  sitemap: {
-    show: typeof routes['sitemap.show']
-  }
-  robots: {
-    show: typeof routes['robots.show']
-  }
   auth: {
     session: {
       render: typeof routes['auth.session.render']
@@ -315,6 +307,16 @@ export interface ApiDefinition {
       callback: typeof routes['auth.social.callback']
       unlink: typeof routes['auth.social.unlink']
     }
+  }
+  health: {
+    liveness: typeof routes['health.liveness']
+    readiness: typeof routes['health.readiness']
+  }
+  sitemap: {
+    show: typeof routes['sitemap.show']
+  }
+  robots: {
+    show: typeof routes['robots.show']
   }
   settings: {
     profile: {

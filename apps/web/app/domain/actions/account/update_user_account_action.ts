@@ -1,8 +1,8 @@
 import { inject } from '@adonisjs/core';
 import hash from '@adonisjs/core/services/hash';
+import InvalidCurrentPasswordException from '#auth/exceptions/invalid_current_password_exception';
+import UnverifiedAccountException from '#auth/exceptions/unverified_account_exception';
 import { withTransaction } from '#core/services/with_transaction';
-import InvalidCurrentPasswordException from '#exceptions/auth/invalid_current_password_exception';
-import UnverifiedAccountException from '#exceptions/auth/unverified_account_exception';
 import { events } from '#generated/events';
 import User from '#identity/models/user';
 import { UserRepository } from '#identity/repositories/user_repository';

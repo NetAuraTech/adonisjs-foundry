@@ -1,9 +1,9 @@
 import testUtils from '@adonisjs/core/services/test_utils';
 import { test } from '@japa/runner';
+import { TOKEN_TYPES } from '#auth/enums/token_type';
 import User from '#identity/models/user';
 import { resetSharedState } from '#tests/helpers/shared_state';
 import { createSplitToken } from '#tests/helpers/tokens';
-import { TOKEN_TYPES } from '#types/core';
 
 /**
  * Functional seam for email verification (`GET /verify/:token`).

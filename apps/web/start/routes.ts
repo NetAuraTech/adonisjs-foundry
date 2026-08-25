@@ -8,7 +8,8 @@
 |
 */
 
-// Identity routes self-register on import (feature-gated inside the module).
+// Auth and identity routes self-register on import (feature-gated inside the modules).
+import '#app/auth/routes';
 import '#app/identity/routes';
 import router from '@adonisjs/core/services/router';
 import { enabledAuthGuards } from '#config/auth';
@@ -17,7 +18,6 @@ import { middleware } from '#start/kernel';
 import { registerAdminRoutes } from '#start/routes/admin.routes';
 import { registerAdminRestApiRoutes } from '#start/routes/admin_rest_api.routes';
 import { registerApiRoutes } from '#start/routes/api.routes';
-import { registerAuthRoutes } from '#start/routes/auth.routes';
 import { registerCmsAdminRoutes } from '#start/routes/cms_admin.routes';
 import { registerCmsPublicRoutes } from '#start/routes/cms_public.routes';
 import { registerCmsRestApiRoutes } from '#start/routes/cms_rest_api.routes';
@@ -36,7 +36,6 @@ router
 		// Core SEO endpoints (sitemap.xml, robots.txt) — flavor-independent.
 		registerCorePublicRoutes();
 
-		if (features.auth) registerAuthRoutes();
 		if (features.settings) registerSettingsRoutes();
 		if (features.admin) registerAdminRoutes();
 		if (features.adminApi) registerAdminRestApiRoutes();
