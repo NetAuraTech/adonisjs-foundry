@@ -532,12 +532,12 @@ const inertiaManifest: FlavorManifest = {
 				"  'handle',",
 				'])',
 				'',
-			'emitter.on(events.account.InitiateEmailChange, [',
-			'  listeners.account.SendChangeEmailConfirmationEmail,',
-			"  'handle',",
-			'])',
-			'',
-		].join('\n'),
+				'emitter.on(events.account.InitiateEmailChange, [',
+				'  listeners.account.SendChangeEmailConfirmationEmail,',
+				"  'handle',",
+				'])',
+				'',
+			].join('\n'),
 		},
 
 		// ─── start/nav.ts — drop the page + template nav entries ────────────────
