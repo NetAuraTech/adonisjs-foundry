@@ -57,8 +57,15 @@ export class User {
 		isEmailVerified?: boolean;
 		emailVerifiedAt?: Date | null;
 	}): User {
-		const isEmailVerified = model.isEmailVerified ?? (model.emailVerifiedAt !== null && model.emailVerifiedAt !== undefined);
-		return new User(UserIdentifier.of(model.id), model.username, model.email, !!model.hasPendingInvite, isEmailVerified);
+		const isEmailVerified =
+			model.isEmailVerified ?? (model.emailVerifiedAt !== null && model.emailVerifiedAt !== undefined);
+		return new User(
+			UserIdentifier.of(model.id),
+			model.username,
+			model.email,
+			!!model.hasPendingInvite,
+			isEmailVerified,
+		);
 	}
 
 	/** The derived lifecycle status of this user. */

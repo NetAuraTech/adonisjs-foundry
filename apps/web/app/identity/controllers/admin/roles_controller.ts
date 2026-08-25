@@ -1,12 +1,12 @@
 import { inject } from '@adonisjs/core';
-import { DeleteRoleAction } from '#identity/actions/role/delete_role_action';
-import { ListRolesAction } from '#identity/actions/role/list_roles_action';
-import { stripEmptyStrings } from '#helpers/core/strip_empty_strings';
 import { buildRolesListPayload } from '#app/identity/helpers/i18n_payloads/roles_list';
-import { extractPagination } from '#helpers/pagination/extract_pagination';
-import { I18nService } from '#services/i18n_service';
 import RoleTransformer from '#app/identity/transformers/role_transformer';
 import { deleteRoleValidator, listRolesValidator } from '#app/identity/validators/role';
+import { stripEmptyStrings } from '#helpers/core/strip_empty_strings';
+import { extractPagination } from '#helpers/pagination/extract_pagination';
+import { DeleteRoleAction } from '#identity/actions/role/delete_role_action';
+import { ListRolesAction } from '#identity/actions/role/list_roles_action';
+import { I18nService } from '#services/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

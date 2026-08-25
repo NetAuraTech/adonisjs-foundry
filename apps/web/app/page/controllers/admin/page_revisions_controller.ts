@@ -1,4 +1,5 @@
 import { inject } from '@adonisjs/core';
+import PageRevisionTransformer from '#app/page/transformers/page_revision_transformer';
 import { ListRevisionsAction } from '#cms/domain/actions/page/list_revisions_action';
 import { RestoreRevisionAction } from '#cms/domain/actions/page/restore_revision_action';
 import { ToggleRevisionKeepAction } from '#cms/domain/actions/page/toggle_revision_keep_action';
@@ -6,7 +7,6 @@ import { revisionValidator } from '#cms/validators/page';
 import { buildPageRevisionsPayload } from '#helpers/i18n_payloads/page_revisions';
 import { extractPagination } from '#helpers/pagination/extract_pagination';
 import { I18nService } from '#services/i18n_service';
-import PageRevisionTransformer from '#app/page/transformers/page_revision_transformer';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

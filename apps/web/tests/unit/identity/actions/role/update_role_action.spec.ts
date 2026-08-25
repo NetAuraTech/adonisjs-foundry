@@ -1,9 +1,9 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
-import { UpdateRoleAction } from '#identity/actions/role/update_role_action';
-import SystemRoleImmutableException from '#identity/exceptions/system_role_immutable_exception';
 import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import SlugExistsException from '#core/exceptions/slug_exists_exception';
+import { UpdateRoleAction } from '#identity/actions/role/update_role_action';
+import SystemRoleImmutableException from '#identity/exceptions/system_role_immutable_exception';
 import Permission from '#identity/models/permission';
 import Role from '#identity/models/role';
 

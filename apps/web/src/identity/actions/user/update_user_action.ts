@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
-import { withTransaction } from '#core/services/with_transaction';
 import RowNotFoundException from '#core/exceptions/row_not_found_exception';
+import { withTransaction } from '#core/services/with_transaction';
 import { events } from '#generated/events';
 import User from '#identity/models/user';
 import { UserRepository } from '#identity/repositories/user_repository';

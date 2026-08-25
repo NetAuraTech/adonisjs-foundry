@@ -1,10 +1,10 @@
 import { inject } from '@adonisjs/core';
-import { ListAllPermissionsAction } from '#identity/actions/permission/list_all_permissions_action';
-import { GetRoleDetailAction } from '#identity/actions/role/get_role_detail_action';
 import { buildRolesShowPayload } from '#app/identity/helpers/i18n_payloads/roles_show';
-import { I18nService } from '#services/i18n_service';
 import RoleTransformer from '#app/identity/transformers/role_transformer';
 import { showRoleValidator } from '#app/identity/validators/role';
+import { ListAllPermissionsAction } from '#identity/actions/permission/list_all_permissions_action';
+import { GetRoleDetailAction } from '#identity/actions/role/get_role_detail_action';
+import { I18nService } from '#services/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

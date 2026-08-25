@@ -1,8 +1,8 @@
 import { inject } from '@adonisjs/core';
-import { withTransaction } from '#core/services/with_transaction';
-import SystemRoleImmutableException from '#identity/exceptions/system_role_immutable_exception';
 import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import SlugExistsException from '#core/exceptions/slug_exists_exception';
+import { withTransaction } from '#core/services/with_transaction';
+import SystemRoleImmutableException from '#identity/exceptions/system_role_immutable_exception';
 import Role from '#identity/models/role';
 import { RoleRepository } from '#identity/repositories/role_repository';
 

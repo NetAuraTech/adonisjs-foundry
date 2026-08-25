@@ -1,7 +1,7 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
-import { CreatePermissionAction } from '#identity/actions/permission/create_permission_action';
 import SlugExistsException from '#core/exceptions/slug_exists_exception';
+import { CreatePermissionAction } from '#identity/actions/permission/create_permission_action';
 import Permission from '#identity/models/permission';
 
 test.group('CreatePermissionAction', () => {

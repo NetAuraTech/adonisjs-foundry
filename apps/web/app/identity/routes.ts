@@ -17,9 +17,9 @@
 |
 */
 
-import features from '#config/features';
-import { enabledAuthGuards } from '#config/auth';
 import router from '@adonisjs/core/services/router';
+import { enabledAuthGuards } from '#config/auth';
+import features from '#config/features';
 import { controllers } from '#generated/controllers';
 import { middleware } from '#start/kernel';
 import { permissions } from '#start/permissions';
@@ -148,10 +148,7 @@ if (features.admin) {
 		})
 		.prefix('admin')
 		.as('admin.identity')
-		.use([
-			...maintenanceMiddleware,
-			middleware.auth({ guards: ['web'] }),
-		]);
+		.use([...maintenanceMiddleware, middleware.auth({ guards: ['web'] })]);
 }
 
 if (features.adminApi) {

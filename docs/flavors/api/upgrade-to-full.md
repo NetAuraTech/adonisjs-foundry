@@ -76,10 +76,10 @@ npm install @adonisjs/transmit @adonisjs/transmit-client
 
 | Artifact                             | From (`main`)                                                    |
 | ------------------------------------ | ---------------------------------------------------------------- |
-| Guest/session auth controllers       | `app/auth/controllers/front`                                      |
-| Self-service (account/profile/prefs) | `app/{account,profile,preferences}/controllers/front`             |
-| Admin Inertia controllers            | `app/{core,file,log,maintenance}/controllers/admin`               |
-| Home + SEO controllers               | `app/core/controllers/front`                                      |
+| Guest/session auth controllers       | `app/auth/controllers/front`                                     |
+| Self-service (account/profile/prefs) | `app/{account,profile,preferences}/controllers/front`            |
+| Admin Inertia controllers            | `app/{core,file,log,maintenance}/controllers/admin`              |
+| Home + SEO controllers               | `app/core/controllers/front`                                     |
 | Public route modules                 | `start/routes/{front,core_public,settings,admin,auth}.routes.ts` |
 
 The `app/identity` domain (including its admin Inertia controllers) is **kept**

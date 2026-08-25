@@ -1,10 +1,10 @@
 import { inject } from '@adonisjs/core';
 import { ListLogEntriesAction } from '#actions/log/list_log_entries_action';
+import LogEntryTransformer from '#app/log/transformers/log_entry_transformer';
 import { stripEmptyStrings } from '#helpers/core/strip_empty_strings';
 import { buildLogsListPayload } from '#helpers/i18n_payloads/logs_list';
 import { extractPagination } from '#helpers/pagination/extract_pagination';
 import { I18nService } from '#services/i18n_service';
-import LogEntryTransformer from '#app/log/transformers/log_entry_transformer';
 import { listLogsValidator } from '#validators/log';
 import type { HttpContext } from '@adonisjs/core/http';
 

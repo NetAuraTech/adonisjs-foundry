@@ -41,7 +41,7 @@ from `apps/web/`.
 | CMS seeders                                   | `database/seeders/page_seeder.ts`, `database/seeders/template_seeder.ts`                        |
 | CMS i18n namespaces                           | `resources/lang/{en,fr}/page.json`, `{en,fr}/template.json`, `{en,fr}/builder.json`             |
 | CMS email template (contact form)             | `resources/views/emails/contact_form_email.edge`                                                |
-| CMS route files                               | `start/routes/cms_admin.routes.ts`, `cms_public.routes.ts`, `cms_rest_api.routes.ts`             |
+| CMS route files                               | `start/routes/cms_admin.routes.ts`, `cms_public.routes.ts`, `cms_rest_api.routes.ts`            |
 | CMS React subtrees (builder, renderer, pages) | `inertia/pages/cms`, `inertia/components/cms`                                                   |
 
 ## 2. Recover Transmit (real-time builder collaboration)

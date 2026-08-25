@@ -4,9 +4,9 @@ import { GetFileDetailAction } from '#actions/file/get_file_detail_action';
 import { ListFilesAction } from '#actions/file/list_files_action';
 import { UploadFileAction } from '#actions/file/upload_file_action';
 import { ListRootFoldersAction } from '#actions/file_folder/list_root_folders_action';
-import { extractPagination } from '#helpers/pagination/extract_pagination';
 import FileFolderTransformer from '#app/file/transformers/file_folder_transformer';
 import FileTransformer from '#app/file/transformers/file_transformer';
+import { extractPagination } from '#helpers/pagination/extract_pagination';
 
 @inject()
 export default class FilesController {

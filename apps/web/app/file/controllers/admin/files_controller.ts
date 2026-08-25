@@ -7,13 +7,13 @@ import { MoveFileAction } from '#actions/file/move_file_action';
 import { UploadFileAction } from '#actions/file/upload_file_action';
 import { UpsertFileAltAction } from '#actions/file/upsert_file_alt_action';
 import { ListRootFoldersAction } from '#actions/file_folder/list_root_folders_action';
+import FileFolderTransformer from '#app/file/transformers/file_folder_transformer';
+import FileTransformer from '#app/file/transformers/file_transformer';
 import { stripEmptyStrings } from '#helpers/core/strip_empty_strings';
 import { buildFilesIndexPayload } from '#helpers/i18n_payloads/files_index';
 import { buildFilesShowPayload } from '#helpers/i18n_payloads/files_show';
 import { extractPagination } from '#helpers/pagination/extract_pagination';
 import { I18nService } from '#services/i18n_service';
-import FileFolderTransformer from '#app/file/transformers/file_folder_transformer';
-import FileTransformer from '#app/file/transformers/file_transformer';
 import {
 	listFileValidator,
 	showFileValidator,

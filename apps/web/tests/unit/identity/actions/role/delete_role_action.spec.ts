@@ -1,8 +1,8 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
+import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import { DeleteRoleAction } from '#identity/actions/role/delete_role_action';
 import SystemRoleImmutableException from '#identity/exceptions/system_role_immutable_exception';
-import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import Role from '#identity/models/role';
 import User from '#identity/models/user';
 

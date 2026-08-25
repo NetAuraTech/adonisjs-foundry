@@ -1,7 +1,7 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
-import { CreateRoleAction } from '#identity/actions/role/create_role_action';
 import SlugExistsException from '#core/exceptions/slug_exists_exception';
+import { CreateRoleAction } from '#identity/actions/role/create_role_action';
 import Permission from '#identity/models/permission';
 import Role from '#identity/models/role';
 

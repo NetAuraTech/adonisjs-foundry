@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
-import { withTransaction } from '#core/services/with_transaction';
 import EmailAlreadyExistsException from '#core/exceptions/email_already_exists_exception';
+import { withTransaction } from '#core/services/with_transaction';
 import { events } from '#generated/events';
 import { extractNameFromEmail } from '#identity/domain/user';
 import User from '#identity/models/user';

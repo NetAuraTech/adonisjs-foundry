@@ -1,10 +1,10 @@
 import { test } from '@japa/runner';
 import sinon from 'sinon';
+import FileTransformer from '#app/file/transformers/file_transformer';
 import CmsFile from '#models/file/file';
 import FileAlt from '#models/file/file_alt';
 import { ImageOptimizerService } from '#services/file/image_optimizer_service';
 import { StorageService } from '#services/file/storage_service';
-import FileTransformer from '#app/file/transformers/file_transformer';
 import type { ResolvedFile } from '#types/file';
 
 /**

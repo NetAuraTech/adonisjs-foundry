@@ -1,7 +1,7 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
-import { DeleteUserAction } from '#identity/actions/user/delete_user_action';
 import RowNotFoundException from '#core/exceptions/row_not_found_exception';
+import { DeleteUserAction } from '#identity/actions/user/delete_user_action';
 import User from '#identity/models/user';
 
 test.group('DeleteUserAction', () => {

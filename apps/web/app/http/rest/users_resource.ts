@@ -1,19 +1,25 @@
 import { inject } from '@adonisjs/core';
 import { type Infer } from '@vinejs/vine/types';
+import { buildUsersFormPayload } from '#app/identity/helpers/i18n_payloads/users_form';
+import { buildUsersListPayload } from '#app/identity/helpers/i18n_payloads/users_list';
+import { roleIdsToAllowlist } from '#app/identity/helpers/load_user_role';
+import RoleTransformer from '#app/identity/transformers/role_transformer';
+import UserTransformer from '#app/identity/transformers/user_transformer';
+import {
+	listValidator,
+	editValidator,
+	createValidator,
+	updateValidator,
+	restIdValidator,
+} from '#app/identity/validators/user';
 import { ListAllRolesAction } from '#identity/actions/role/list_all_roles_action';
 import { CreateUserAction } from '#identity/actions/user/create_user_action';
 import { DeleteUserAction } from '#identity/actions/user/delete_user_action';
 import { GetUserDetailAction } from '#identity/actions/user/get_user_detail_action';
 import { ListUsersAction } from '#identity/actions/user/list_users_action';
 import { UpdateUserAction } from '#identity/actions/user/update_user_action';
-import { roleIdsToAllowlist } from '#app/identity/helpers/load_user_role';
-import { buildUsersFormPayload } from '#app/identity/helpers/i18n_payloads/users_form';
-import { buildUsersListPayload } from '#app/identity/helpers/i18n_payloads/users_list';
 import { type RestEndpoint } from '#rest/rest_adapter';
 import { I18nService } from '#services/i18n_service';
-import RoleTransformer from '#app/identity/transformers/role_transformer';
-import UserTransformer from '#app/identity/transformers/user_transformer';
-import { listValidator, editValidator, createValidator, updateValidator, restIdValidator } from '#app/identity/validators/user';
 import type Role from '#identity/models/role';
 import type User from '#identity/models/user';
 

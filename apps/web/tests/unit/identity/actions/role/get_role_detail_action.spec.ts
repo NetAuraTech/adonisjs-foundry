@@ -1,7 +1,7 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
-import { GetRoleDetailAction } from '#identity/actions/role/get_role_detail_action';
 import RowNotFoundException from '#core/exceptions/row_not_found_exception';
+import { GetRoleDetailAction } from '#identity/actions/role/get_role_detail_action';
 import Permission from '#identity/models/permission';
 import Role from '#identity/models/role';
 import User from '#identity/models/user';

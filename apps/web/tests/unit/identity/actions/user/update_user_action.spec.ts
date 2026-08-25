@@ -1,9 +1,9 @@
 import app from '@adonisjs/core/services/app';
 import emitter from '@adonisjs/core/services/emitter';
 import { test } from '@japa/runner';
-import { UpdateUserAction } from '#identity/actions/user/update_user_action';
 import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import { events } from '#generated/events';
+import { UpdateUserAction } from '#identity/actions/user/update_user_action';
 import User from '#identity/models/user';
 
 test.group('UpdateUserAction', () => {

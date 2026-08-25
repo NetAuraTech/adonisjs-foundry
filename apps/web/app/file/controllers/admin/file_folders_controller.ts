@@ -3,9 +3,9 @@ import { CreateFolderAction } from '#actions/file_folder/create_folder_action';
 import { DeleteFolderAction } from '#actions/file_folder/delete_folder_action';
 import { ListRootFoldersAction } from '#actions/file_folder/list_root_folders_action';
 import { RenameFolderAction } from '#actions/file_folder/rename_folder_action';
+import FileFolderTransformer from '#app/file/transformers/file_folder_transformer';
 import { buildFileFoldersPayload } from '#helpers/i18n_payloads/file_folders';
 import { I18nService } from '#services/i18n_service';
-import FileFolderTransformer from '#app/file/transformers/file_folder_transformer';
 import { createFolderValidator, updateFolderValidator, showFileValidator } from '#validators/file';
 import type { HttpContext } from '@adonisjs/core/http';
 

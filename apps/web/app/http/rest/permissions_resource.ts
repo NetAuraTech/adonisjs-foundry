@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
+import PermissionTransformer from '#app/identity/transformers/permission_transformer';
 import { ListAllPermissionsAction } from '#identity/actions/permission/list_all_permissions_action';
 import { type RestEndpoint } from '#rest/rest_adapter';
-import PermissionTransformer from '#app/identity/transformers/permission_transformer';
 
 type PermissionListResult = Awaited<ReturnType<ListAllPermissionsAction['execute']>>;
 

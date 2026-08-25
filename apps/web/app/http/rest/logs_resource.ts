@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { ListLogEntriesAction } from '#actions/log/list_log_entries_action';
-import { type RestEndpoint } from '#rest/rest_adapter';
 import LogEntryTransformer from '#app/log/transformers/log_entry_transformer';
+import { type RestEndpoint } from '#rest/rest_adapter';
 import { listLogsValidator } from '#validators/log';
 import type { Infer } from '@vinejs/vine/types';
 

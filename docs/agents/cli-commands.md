@@ -13,18 +13,18 @@ node ace <command>
 
 ## Scaffolding
 
-| Command                           | Creates           | Location                            |
-| --------------------------------- | ----------------- | ----------------------------------- |
-| `node ace make:model <Name>`      | Model + migration | `app/models/` + database migrations |
+| Command                           | Creates           | Location                                                  |
+| --------------------------------- | ----------------- | --------------------------------------------------------- |
+| `node ace make:model <Name>`      | Model + migration | `app/models/` + database migrations                       |
 | `node ace make:controller <Name>` | Controller class  | `app/` — move it to `app/{domain}/controllers/{context}/` |
-| `node ace make:migration <name>`  | Migration file    | `database/migrations/`              |
-| `node ace make:service <Name>`    | Service class     | Use manually in correct domain path |
-| `node ace make:repository <Name>` | Repository class  | Use manually in correct domain path |
-| `node ace make:exception <Name>`  | Exception class   | `app/exceptions/`                   |
-| `node ace make:validator <Name>`  | Validator file    | `app/validators/`                   |
-| `node ace make:middleware <Name>` | Middleware class  | `app/http/middleware/`              |
-| `node ace make:event <Name>`      | Event class       | `app/events/`                       |
-| `node ace make:listener <Name>`   | Listener class    | `app/listeners/`                    |
+| `node ace make:migration <name>`  | Migration file    | `database/migrations/`                                    |
+| `node ace make:service <Name>`    | Service class     | Use manually in correct domain path                       |
+| `node ace make:repository <Name>` | Repository class  | Use manually in correct domain path                       |
+| `node ace make:exception <Name>`  | Exception class   | `app/exceptions/`                                         |
+| `node ace make:validator <Name>`  | Validator file    | `app/validators/`                                         |
+| `node ace make:middleware <Name>` | Middleware class  | `app/http/middleware/`                                    |
+| `node ace make:event <Name>`      | Event class       | `app/events/`                                             |
+| `node ace make:listener <Name>`   | Listener class    | `app/listeners/`                                          |
 
 ### Model scaffolding
 

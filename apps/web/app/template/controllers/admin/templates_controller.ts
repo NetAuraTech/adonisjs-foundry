@@ -1,4 +1,5 @@
 import { inject } from '@adonisjs/core';
+import TemplateTransformer from '#app/template/transformers/template_transformer';
 import { ApplyToPageAction } from '#cms/domain/actions/template/apply_to_page_action';
 import { CreateTemplateAction } from '#cms/domain/actions/template/create_template_action';
 import { DeleteTemplateAction } from '#cms/domain/actions/template/delete_template_action';
@@ -16,7 +17,6 @@ import { stripEmptyStrings } from '#helpers/core/strip_empty_strings';
 import { buildTemplatesEditPayload } from '#helpers/i18n_payloads/templates_edit';
 import { buildTemplatesIndexPayload } from '#helpers/i18n_payloads/templates_index';
 import { I18nService } from '#services/i18n_service';
-import TemplateTransformer from '#app/template/transformers/template_transformer';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

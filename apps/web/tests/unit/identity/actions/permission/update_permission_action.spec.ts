@@ -1,9 +1,9 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
-import { UpdatePermissionAction } from '#identity/actions/permission/update_permission_action';
-import SystemPermissionImmutableException from '#identity/exceptions/system_permission_immutable_exception';
 import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import SlugExistsException from '#core/exceptions/slug_exists_exception';
+import { UpdatePermissionAction } from '#identity/actions/permission/update_permission_action';
+import SystemPermissionImmutableException from '#identity/exceptions/system_permission_immutable_exception';
 import Permission from '#identity/models/permission';
 
 test.group('UpdatePermissionAction', () => {

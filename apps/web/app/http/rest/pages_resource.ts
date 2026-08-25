@@ -1,4 +1,6 @@
 import { inject } from '@adonisjs/core';
+import PageRevisionTransformer from '#app/page/transformers/page_revision_transformer';
+import PageTransformer from '#app/page/transformers/page_transformer';
 import { ChangePageStatusAction } from '#cms/domain/actions/page/change_page_status_action';
 import { CreatePageAction } from '#cms/domain/actions/page/create_page_action';
 import { CreateTranslationAction } from '#cms/domain/actions/page/create_translation_action';
@@ -19,8 +21,6 @@ import {
 	createTranslationValidator,
 } from '#cms/validators/page';
 import { type RestEndpoint } from '#rest/rest_adapter';
-import PageRevisionTransformer from '#app/page/transformers/page_revision_transformer';
-import PageTransformer from '#app/page/transformers/page_transformer';
 import type Page from '#cms/models/page/page';
 import type PageRevision from '#cms/models/page/page_revision';
 import type PageTranslation from '#cms/models/page/page_translation';

@@ -1,4 +1,5 @@
 import { inject } from '@adonisjs/core';
+import PageTransformer from '#app/page/transformers/page_transformer';
 import { DeletePageAction } from '#cms/domain/actions/page/delete_page_action';
 import { ListPagesAction } from '#cms/domain/actions/page/list_pages_action';
 import { SetHomepageAction } from '#cms/domain/actions/page/set_homepage_action';
@@ -7,7 +8,6 @@ import { stripEmptyStrings } from '#helpers/core/strip_empty_strings';
 import { buildPagesIndexPayload } from '#helpers/i18n_payloads/pages_index';
 import { extractPagination } from '#helpers/pagination/extract_pagination';
 import { I18nService } from '#services/i18n_service';
-import PageTransformer from '#app/page/transformers/page_transformer';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

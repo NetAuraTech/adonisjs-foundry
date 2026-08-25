@@ -1,7 +1,7 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
-import { GetPermissionDetailAction } from '#identity/actions/permission/get_permission_detail_action';
 import RowNotFoundException from '#core/exceptions/row_not_found_exception';
+import { GetPermissionDetailAction } from '#identity/actions/permission/get_permission_detail_action';
 import Permission from '#identity/models/permission';
 
 test.group('GetPermissionDetailAction', () => {

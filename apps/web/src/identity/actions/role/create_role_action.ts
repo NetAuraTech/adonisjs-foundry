@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
-import { withTransaction } from '#core/services/with_transaction';
 import SlugExistsException from '#core/exceptions/slug_exists_exception';
+import { withTransaction } from '#core/services/with_transaction';
 import Role from '#identity/models/role';
 import { RoleRepository } from '#identity/repositories/role_repository';
 

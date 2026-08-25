@@ -1,9 +1,9 @@
 import { inject } from '@adonisjs/core';
+import PageTransformer from '#app/page/transformers/page_transformer';
 import { GetPageDetailAction } from '#cms/domain/actions/page/get_page_detail_action';
 import { showPageValidator } from '#cms/validators/page';
 import { buildPagesShowPayload } from '#helpers/i18n_payloads/pages_show';
 import { I18nService } from '#services/i18n_service';
-import PageTransformer from '#app/page/transformers/page_transformer';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

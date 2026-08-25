@@ -1,8 +1,8 @@
 import { inject } from '@adonisjs/core';
 import { UpdateUserProfileAction } from '#actions/profile/update_user_profile_action';
+import UserTransformer from '#app/identity/transformers/user_transformer';
 import { buildProfilePayload } from '#helpers/i18n_payloads/profile';
 import { I18nService } from '#services/i18n_service';
-import UserTransformer from '#app/identity/transformers/user_transformer';
 import { profileValidator } from '#validators/profile';
 import type { HttpContext } from '@adonisjs/core/http';
 

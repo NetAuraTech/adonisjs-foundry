@@ -1,5 +1,6 @@
 import { inject } from '@adonisjs/core';
 import router from '@adonisjs/core/services/router';
+import PageTransformer from '#app/page/transformers/page_transformer';
 import { ChangePageStatusAction } from '#cms/domain/actions/page/change_page_status_action';
 import { GetAvailablePagesForLinkAction } from '#cms/domain/actions/page/get_available_pages_for_link_action';
 import { GetPageDetailAction } from '#cms/domain/actions/page/get_page_detail_action';
@@ -8,7 +9,6 @@ import { showPageValidator, updatePageValidator, publishPageValidator } from '#c
 import { buildPageEditorPayload } from '#helpers/i18n_payloads/page_editor';
 import { filterRoutes } from '#helpers/router/filter_routes';
 import { I18nService } from '#services/i18n_service';
-import PageTransformer from '#app/page/transformers/page_transformer';
 import type { HttpContext } from '@adonisjs/core/http';
 
 const SHARED_EXCLUSIONS = ['admin.', 'api.', 'auth.', 'pages.show', 'settings.'];

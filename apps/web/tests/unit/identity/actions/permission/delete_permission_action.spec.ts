@@ -1,8 +1,8 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
+import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import { DeletePermissionAction } from '#identity/actions/permission/delete_permission_action';
 import SystemPermissionImmutableException from '#identity/exceptions/system_permission_immutable_exception';
-import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import Permission from '#identity/models/permission';
 
 test.group('DeletePermissionAction', () => {
