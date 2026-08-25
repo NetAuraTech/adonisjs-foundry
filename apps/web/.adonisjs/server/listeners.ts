@@ -5,16 +5,9 @@
 
 export const listeners = {
   account: {
+    BaseTokenListener: () => import('#listeners/account/base_token_listener'),
     SendChangeEmailConfirmationEmail: () => import('#listeners/account/send_change_email_confirmation_email'),
     SendChangeEmailNotificationEmail: () => import('#listeners/account/send_change_email_notification_email'),
-  },
-  admin: {
-    SendInvitationEmail: () => import('#listeners/admin/send_invitation_email'),
-  },
-  auth: {
-    BaseTokenListener: () => import('#listeners/auth/base_token_listener'),
-    SendForgotPasswordEmail: () => import('#listeners/auth/send_forgot_password_email'),
-    SendVerificationEmail: () => import('#listeners/auth/send_verification_email'),
   },
   page: {
     SendContactFormEmail: () => import('#listeners/page/send_contact_form_email'),

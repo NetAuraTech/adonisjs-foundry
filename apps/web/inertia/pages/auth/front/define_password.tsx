@@ -10,7 +10,7 @@ import { toLooseErrors } from '~/helpers/form_errors';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
-import type { DefinePasswordTranslations } from '#helpers/i18n_payloads/social_define_password';
+import type { DefinePasswordTranslations } from '#app/auth/helpers/i18n_payloads/social_define_password';
 
 interface DefinePasswordPageProps {
 	translations: DefinePasswordTranslations;

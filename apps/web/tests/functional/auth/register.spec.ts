@@ -1,9 +1,9 @@
-import emitter from '@adonisjs/core/services/emitter';
 import testUtils from '@adonisjs/core/services/test_utils';
 import limiter from '@adonisjs/limiter/services/main';
 import { test } from '@japa/runner';
 import User from '#identity/models/user';
 import { createVerifiedUser } from '#tests/helpers/create_verified_user';
+import { restoreMailClient, swapMailClient } from '#tests/helpers/mail';
 import { resetSharedState } from '#tests/helpers/shared_state';
 import { fieldError } from '#tests/helpers/validation';
 
@@ -15,17 +15,17 @@ import { fieldError } from '#tests/helpers/validation';
  * user row, the 422 coded field errors (duplicate email, weak password, mismatched
  * confirmation, missing required fields) plus the 429 after the registration
  * throttle — rather than driving a real browser. VineJS 422 bodies are a flat
- * array of `{ field, message, rule }` entries. The `UserRegistered` event (which
- * sends the verification mail) is faked so the suite never touches a real
- * transport.
+ * array of `{ field, message, rule }` entries. The verification mail (sent
+ * synchronously through the mail client) is recorded in-memory so the suite
+ * never touches a real transport.
  */
 test.group('Registration endpoint', (group) => {
 	group.each.setup(() => testUtils.db().truncate());
 	group.each.setup(resetSharedState);
 	group.each.setup(() => limiter.clear());
 	group.each.setup(() => {
-		emitter.fake();
-		return () => emitter.restore();
+		swapMailClient();
+		return () => restoreMailClient();
 	});
 	group.each.teardown(() => limiter.clear());
 

@@ -1,17 +1,17 @@
 import { inject } from '@adonisjs/core';
-import { DefineSocialPasswordAction } from '#actions/social/define_social_password_action';
-import { FindOrCreateSocialUserAction } from '#actions/social/find_or_create_social_user_action';
-import { LinkSocialProviderAction } from '#actions/social/link_social_provider_action';
-import { NeedsPasswordSetupAction } from '#actions/social/needs_password_setup_action';
-import { SocialApiLoginAction } from '#actions/social/social_api_login_action';
-import { UnlinkSocialProviderAction } from '#actions/social/unlink_social_provider_action';
-import { regenerateCsrfToken } from '#helpers/auth/crsf';
-import { validateProvider } from '#helpers/auth/oauth';
-import { completeSocialApiCallback } from '#helpers/auth/social_api_callback';
-import { buildSocialDefinePasswordPayload } from '#helpers/i18n_payloads/social_define_password';
+import { regenerateCsrfToken } from '#app/auth/helpers/crsf';
+import { buildSocialDefinePasswordPayload } from '#app/auth/helpers/i18n_payloads/social_define_password';
+import { completeSocialApiCallback } from '#app/auth/helpers/social_api_callback';
+import { definePasswordValidator } from '#app/auth/validators/auth';
+import { DefineSocialPasswordAction } from '#auth/actions/social/define_social_password_action';
+import { FindOrCreateSocialUserAction } from '#auth/actions/social/find_or_create_social_user_action';
+import { LinkSocialProviderAction } from '#auth/actions/social/link_social_provider_action';
+import { NeedsPasswordSetupAction } from '#auth/actions/social/needs_password_setup_action';
+import { SocialApiLoginAction } from '#auth/actions/social/social_api_login_action';
+import { UnlinkSocialProviderAction } from '#auth/actions/social/unlink_social_provider_action';
+import { validateProvider } from '#auth/oauth_providers';
+import { OAuthProvider } from '#auth/types/auth';
 import { I18nService } from '#services/i18n_service';
-import { OAuthProvider } from '#types/auth';
-import { definePasswordValidator } from '#validators/auth';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

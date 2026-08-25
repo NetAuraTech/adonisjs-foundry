@@ -1,6 +1,6 @@
 import { test } from '@japa/runner';
-import ApiClientUrlMissingException from '#exceptions/auth/api_client_url_missing_exception';
-import { completeSocialApiCallback } from '#helpers/auth/social_api_callback';
+import { completeSocialApiCallback } from '#app/auth/helpers/social_api_callback';
+import ApiClientUrlMissingException from '#auth/exceptions/api_client_url_missing_exception';
 
 /**
  * Unit tests for the shared OAuth API-mode callback (spec #6 social API mode).

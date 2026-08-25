@@ -1,4 +1,4 @@
-import { routePath } from '#helpers/router/route_path';
+import { routePath } from '#core/services/route_path';
 import type { Authenticators } from '@adonisjs/auth/types';
 import type { HttpContext } from '@adonisjs/core/http';
 import type { NextFn } from '@adonisjs/core/types/http';

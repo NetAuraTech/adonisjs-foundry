@@ -427,6 +427,306 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'auth.session.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/login'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/session_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/session_controller').default['render']>>>
+    }
+  }
+  'auth.session.execute': {
+    methods: ["POST"]
+    pattern: '/login'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/auth/validators/auth').loginValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/auth/validators/auth').loginValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/session_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/session_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'auth.register.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/register'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/register_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/register_controller').default['render']>>>
+    }
+  }
+  'auth.register.execute': {
+    methods: ["POST"]
+    pattern: '/register'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/auth/validators/auth').registerValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/auth/validators/auth').registerValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/register_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/register_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'auth.forgot_password.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/forgot-password'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/forgot_password_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/forgot_password_controller').default['render']>>>
+    }
+  }
+  'auth.forgot_password.execute': {
+    methods: ["POST"]
+    pattern: '/forgot-password'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/auth/validators/auth').forgotPasswordValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/auth/validators/auth').forgotPasswordValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/forgot_password_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/forgot_password_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'auth.reset_password.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/reset-password/:token'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { token: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/reset_password_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/reset_password_controller').default['render']>>>
+    }
+  }
+  'auth.reset_password.execute': {
+    methods: ["POST"]
+    pattern: '/reset-password'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/auth/validators/auth').resetPasswordValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/auth/validators/auth').resetPasswordValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/reset_password_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/reset_password_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'auth.accept_invitation.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/accept-invitation/:token'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { token: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#app/auth/validators/auth').invitationValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/accept_invitation_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/accept_invitation_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'auth.accept_invitation.execute': {
+    methods: ["POST"]
+    pattern: '/accept-invitation'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/auth/validators/auth').invitationValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/auth/validators/auth').invitationValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/accept_invitation_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/accept_invitation_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'auth.session.destroy': {
+    methods: ["POST"]
+    pattern: '/logout'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/session_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/session_controller').default['destroy']>>>
+    }
+  }
+  'auth.email_verification.execute': {
+    methods: ["GET","HEAD"]
+    pattern: '/verify/:token'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { token: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/email_verification_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/email_verification_controller').default['execute']>>>
+    }
+  }
+  'auth.social.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/oauth/define-password'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['render']>>>
+    }
+  }
+  'auth.social.execute': {
+    methods: ["POST"]
+    pattern: '/oauth/define-password'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/auth/validators/auth').definePasswordValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/auth/validators/auth').definePasswordValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'auth.social.redirect': {
+    methods: ["GET","HEAD"]
+    pattern: '/oauth/:provider'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { provider: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['redirect']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['redirect']>>>
+    }
+  }
+  'auth.social.callback': {
+    methods: ["GET","HEAD"]
+    pattern: '/oauth/:provider/callback'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { provider: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['callback']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['callback']>>>
+    }
+  }
+  'auth.social.unlink': {
+    methods: ["POST"]
+    pattern: '/oauth/:provider/unlink'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { provider: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['unlink']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['unlink']>>>
+    }
+  }
+  'api.v1.auth.login.execute': {
+    methods: ["POST"]
+    pattern: '/api/v1/auth/login'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/auth/validators/auth').loginValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/auth/validators/auth').loginValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/api/login_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/api/login_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.auth.register.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/auth/register'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/auth/validators/auth').registerValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/auth/validators/auth').registerValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/api/register_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/api/register_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.auth.forgot_password.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/auth/forgot-password'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/auth/validators/auth').forgotPasswordValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/auth/validators/auth').forgotPasswordValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/api/forgot_password_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/api/forgot_password_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.auth.reset_password.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/auth/reset-password'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/auth/validators/auth').resetPasswordValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/auth/validators/auth').resetPasswordValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/api/reset_password_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/api/reset_password_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.auth.email_verification.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/auth/verify-email/:token'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { token: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/api/email_verification_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/api/email_verification_controller').default['store']>>>
+    }
+  }
+  'api.v1.auth.accept_invitation.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/auth/accept-invitation'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/auth/validators/auth').invitationValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/auth/validators/auth').invitationValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/api/accept_invitation_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/api/accept_invitation_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.auth.logout.destroy': {
+    methods: ["POST"]
+    pattern: '/api/v1/auth/logout'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/api/logout_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/api/logout_controller').default['destroy']>>>
+    }
+  }
+  'api.v1.auth.me.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/auth/me'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/api/me_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/api/me_controller').default['show']>>>
+    }
+  }
   'health.liveness': {
     methods: ["GET","HEAD"]
     pattern: '/health'
@@ -473,210 +773,6 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#app/core/controllers/front/robots_controller').default['show']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/front/robots_controller').default['show']>>>
-    }
-  }
-  'auth.session.render': {
-    methods: ["GET","HEAD"]
-    pattern: '/login'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/session_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/session_controller').default['render']>>>
-    }
-  }
-  'auth.session.execute': {
-    methods: ["POST"]
-    pattern: '/login'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/auth').loginValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/auth').loginValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/session_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/session_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'auth.register.render': {
-    methods: ["GET","HEAD"]
-    pattern: '/register'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/register_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/register_controller').default['render']>>>
-    }
-  }
-  'auth.register.execute': {
-    methods: ["POST"]
-    pattern: '/register'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/auth').registerValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/auth').registerValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/register_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/register_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'auth.forgot_password.render': {
-    methods: ["GET","HEAD"]
-    pattern: '/forgot-password'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/forgot_password_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/forgot_password_controller').default['render']>>>
-    }
-  }
-  'auth.forgot_password.execute': {
-    methods: ["POST"]
-    pattern: '/forgot-password'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/auth').forgotPasswordValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/auth').forgotPasswordValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/forgot_password_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/forgot_password_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'auth.reset_password.render': {
-    methods: ["GET","HEAD"]
-    pattern: '/reset-password/:token'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { token: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/reset_password_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/reset_password_controller').default['render']>>>
-    }
-  }
-  'auth.reset_password.execute': {
-    methods: ["POST"]
-    pattern: '/reset-password'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/auth').resetPasswordValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/auth').resetPasswordValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/reset_password_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/reset_password_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'auth.accept_invitation.render': {
-    methods: ["GET","HEAD"]
-    pattern: '/accept-invitation/:token'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { token: ParamValue }
-      query: ExtractQueryForGet<InferInput<(typeof import('#validators/auth').invitationValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/accept_invitation_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/accept_invitation_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'auth.accept_invitation.execute': {
-    methods: ["POST"]
-    pattern: '/accept-invitation'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/auth').invitationValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/auth').invitationValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/accept_invitation_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/accept_invitation_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'auth.session.destroy': {
-    methods: ["POST"]
-    pattern: '/logout'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/session_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/session_controller').default['destroy']>>>
-    }
-  }
-  'auth.email_verification.execute': {
-    methods: ["GET","HEAD"]
-    pattern: '/verify/:token'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { token: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/email_verification_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/email_verification_controller').default['execute']>>>
-    }
-  }
-  'auth.social.render': {
-    methods: ["GET","HEAD"]
-    pattern: '/oauth/define-password'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['render']>>>
-    }
-  }
-  'auth.social.execute': {
-    methods: ["POST"]
-    pattern: '/oauth/define-password'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/auth').definePasswordValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/auth').definePasswordValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'auth.social.redirect': {
-    methods: ["GET","HEAD"]
-    pattern: '/oauth/:provider'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { provider: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['redirect']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['redirect']>>>
-    }
-  }
-  'auth.social.callback': {
-    methods: ["GET","HEAD"]
-    pattern: '/oauth/:provider/callback'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { provider: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['callback']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['callback']>>>
-    }
-  }
-  'auth.social.unlink': {
-    methods: ["POST"]
-    pattern: '/oauth/:provider/unlink'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { provider: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['unlink']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/front/social_controller').default['unlink']>>>
     }
   }
   'settings.profile.render': {
@@ -1781,102 +1877,6 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#app/page/controllers/front/page_controller').default['render']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/page/controllers/front/page_controller').default['render']>>>
-    }
-  }
-  'api.v1.auth.token.execute': {
-    methods: ["POST"]
-    pattern: '/api/v1/auth/login'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/auth').loginValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/auth').loginValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/api/token_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/api/token_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.auth.register_api.store': {
-    methods: ["POST"]
-    pattern: '/api/v1/auth/register'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/auth').registerValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/auth').registerValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/api/register_api_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/api/register_api_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.auth.forgot_password_api.store': {
-    methods: ["POST"]
-    pattern: '/api/v1/auth/forgot-password'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/auth').forgotPasswordValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/auth').forgotPasswordValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/api/forgot_password_api_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/api/forgot_password_api_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.auth.reset_password_api.store': {
-    methods: ["POST"]
-    pattern: '/api/v1/auth/reset-password'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/auth').resetPasswordValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/auth').resetPasswordValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/api/reset_password_api_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/api/reset_password_api_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.auth.email_verification_api.store': {
-    methods: ["POST"]
-    pattern: '/api/v1/auth/verify-email/:token'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { token: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/api/email_verification_api_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/api/email_verification_api_controller').default['store']>>>
-    }
-  }
-  'api.v1.auth.accept_invitation_api.store': {
-    methods: ["POST"]
-    pattern: '/api/v1/auth/accept-invitation'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/auth').invitationValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/auth').invitationValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/api/accept_invitation_api_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/api/accept_invitation_api_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.auth.token.destroy': {
-    methods: ["POST"]
-    pattern: '/api/v1/auth/logout'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/api/token_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/api/token_controller').default['destroy']>>>
-    }
-  }
-  'api.v1.auth.me.show': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/auth/me'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/auth/controllers/api/me_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/auth/controllers/api/me_controller').default['show']>>>
     }
   }
   'api.v1.profile.profile_api.show': {

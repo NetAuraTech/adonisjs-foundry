@@ -1,4 +1,3 @@
-import emitter from '@adonisjs/core/services/emitter';
 import testUtils from '@adonisjs/core/services/test_utils';
 import limiter from '@adonisjs/limiter/services/main';
 import { test } from '@japa/runner';
@@ -6,6 +5,7 @@ import Role from '#identity/models/role';
 import User from '#identity/models/user';
 import { createAdminUser } from '#tests/helpers/create_admin_user';
 import { createVerifiedUser } from '#tests/helpers/create_verified_user';
+import { restoreMailClient, swapMailClient } from '#tests/helpers/mail';
 import { resetSharedState } from '#tests/helpers/shared_state';
 
 /**
@@ -24,11 +24,11 @@ test.group('Admin REST API v1 — Users', (group) => {
 	group.each.setup(() => testUtils.db().truncate());
 	group.each.setup(resetSharedState);
 	group.each.setup(() => limiter.clear());
-	// Create/update dispatch events whose listeners send mail — fake the
-	// emitter so the suite never touches a real transport.
+	// User creation sends the invitation mail synchronously through the mail
+	// client — swap the binding so the suite never touches a real transport.
 	group.each.setup(() => {
-		emitter.fake();
-		return () => emitter.restore();
+		swapMailClient();
+		return () => restoreMailClient();
 	});
 	group.each.teardown(() => limiter.clear());
 

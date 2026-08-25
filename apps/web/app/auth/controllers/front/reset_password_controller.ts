@@ -1,11 +1,11 @@
 import { inject } from '@adonisjs/core';
-import { ResetPasswordAction } from '#actions/password/reset_password_action';
-import { ValidatePasswordTokenAction } from '#actions/password/validate_password_token_action';
-import { regenerateCsrfToken } from '#helpers/auth/crsf';
-import { buildResetPasswordPayload } from '#helpers/i18n_payloads/reset_password';
+import { regenerateCsrfToken } from '#app/auth/helpers/crsf';
+import { buildResetPasswordPayload } from '#app/auth/helpers/i18n_payloads/reset_password';
+import { resetPasswordValidator } from '#app/auth/validators/auth';
+import { ResetPasswordAction } from '#auth/actions/password/reset_password_action';
+import { ValidatePasswordTokenAction } from '#auth/actions/password/validate_password_token_action';
 import { I18nService } from '#services/i18n_service';
-import { FullToken } from '#types/core';
-import { resetPasswordValidator } from '#validators/auth';
+import type { FullToken } from '#auth/enums/token_type';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

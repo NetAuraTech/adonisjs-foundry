@@ -1,12 +1,12 @@
 import { inject } from '@adonisjs/core';
 import { DateTime } from 'luxon';
+import { FullToken } from '#auth/enums/token_type';
+import { TokenRepository } from '#auth/repositories/token_repository';
 import EmailAlreadyExistsException from '#core/exceptions/email_already_exists_exception';
 import { withTransaction } from '#core/services/with_transaction';
 import User from '#identity/models/user';
 import { UserRepository } from '#identity/repositories/user_repository';
-import { TokenRepository } from '#repositories/core/token_repository';
 import { LogService } from '#services/logging/log_service';
-import { FullToken } from '#types/core';
 
 interface ConfirmEmailChangePayload {
 	token: FullToken;

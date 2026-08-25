@@ -3,11 +3,11 @@ import hash from '@adonisjs/core/services/hash';
 import { test } from '@japa/runner';
 import { DateTime } from 'luxon';
 import { ConfirmEmailChangeAction } from '#actions/account/confirm_email_change_action';
+import { Token } from '#auth/domain/token';
+import { TOKEN_TYPES } from '#auth/enums/token_type';
+import { TokenRepository } from '#auth/repositories/token_repository';
 import EmailAlreadyExistsException from '#core/exceptions/email_already_exists_exception';
-import { generateSplitToken } from '#helpers/core/crypto';
 import User from '#identity/models/user';
-import { TokenRepository } from '#repositories/core/token_repository';
-import { TOKEN_TYPES } from '#types/core';
 
 test.group('ConfirmEmailChangeAction', () => {
 	test('execute() updates email and clears pendingEmail', async ({ assert }) => {
@@ -21,7 +21,7 @@ test.group('ConfirmEmailChangeAction', () => {
 			pendingEmail: 'new_confirm@test.com',
 		});
 
-		const { selector, validator, token: fullToken } = generateSplitToken();
+		const { selector, validator, token: fullToken } = Token.generateSplit();
 		const hashedValidator = await hash.make(validator);
 
 		await tokenRepo.create({
@@ -52,7 +52,7 @@ test.group('ConfirmEmailChangeAction', () => {
 			pendingEmail: 'taken@test.com',
 		});
 
-		const { selector, validator, token: fullToken } = generateSplitToken();
+		const { selector, validator, token: fullToken } = Token.generateSplit();
 		const hashedValidator = await hash.make(validator);
 
 		await tokenRepo.create({

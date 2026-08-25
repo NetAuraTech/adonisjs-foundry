@@ -1,9 +1,9 @@
 import { inject } from '@adonisjs/core';
 import { ConfirmEmailChangeAction } from '#actions/account/confirm_email_change_action';
-import { regenerateCsrfToken } from '#helpers/auth/crsf';
+import { regenerateCsrfToken } from '#app/auth/helpers/crsf';
+import { FullToken } from '#auth/enums/token_type';
 import { buildEmailChangePayload } from '#helpers/i18n_payloads/email_change';
 import { I18nService } from '#services/i18n_service';
-import { FullToken } from '#types/core';
 import { changeEmailValidator } from '#validators/account';
 import type { HttpContext } from '@adonisjs/core/http';
 

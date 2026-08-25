@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
+import UnverifiedAccountException from '#auth/exceptions/unverified_account_exception';
 import { withTransaction } from '#core/services/with_transaction';
-import UnverifiedAccountException from '#exceptions/auth/unverified_account_exception';
 import User from '#identity/models/user';
 import { UserRepository } from '#identity/repositories/user_repository';
 import { LogService } from '#services/logging/log_service';

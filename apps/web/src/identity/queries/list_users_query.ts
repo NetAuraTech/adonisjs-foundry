@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
+import { TOKEN_TYPES } from '#auth/enums/token_type';
 import User from '#identity/models/user';
-import { TOKEN_TYPES } from '#types/core';
 import type { PaginationFilters } from '#types/pagination';
 
 interface ListUsersCriteria {

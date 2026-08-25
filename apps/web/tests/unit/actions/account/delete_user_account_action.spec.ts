@@ -1,7 +1,7 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
 import { DeleteUserAccountAction } from '#actions/account/delete_user_account_action';
-import InvalidCurrentPasswordException from '#exceptions/auth/invalid_current_password_exception';
+import InvalidCurrentPasswordException from '#auth/exceptions/invalid_current_password_exception';
 import User from '#identity/models/user';
 
 test.group('DeleteUserAccountAction', () => {
