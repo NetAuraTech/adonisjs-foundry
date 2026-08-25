@@ -58,6 +58,11 @@ const apiManifest: FlavorManifest = {
 		// ─── View-layer server middleware ────────────────────────────────────
 		'apps/web/app/http/middleware/core/inertia_middleware.ts',
 
+		// ─── Page transport adapter — Inertia-dependent half of the REST ─────
+		// contract. rest_adapter.ts stays (transport-agnostic); only this
+		// pipeline and its unit tests need the pruned Inertia binding.
+		'apps/web/app/http/rest/page_adapter.ts',
+
 		// ─── Session-rendered front controllers ──────────────────────────────
 		// front = guest/public pages (auth, self-service, home, sitemap, robots).
 		'apps/web/app/auth/controllers/front',
@@ -67,11 +72,16 @@ const apiManifest: FlavorManifest = {
 		'apps/web/app/core/controllers/front',
 
 		// ─── Session-guarded Inertia admin controllers ───────────────────────
-		// The `app/identity` domain stays whole: its self-registering routes
-		// file (`app/identity/routes.ts`) references the admin controllers and
-		// the page adapter, so the flavor keeps both and gates the Inertia
-		// surface off at runtime through `features.admin=false`.
+		// The identity domain keeps its business layer and REST controllers;
+		// only the Inertia render controllers are pruned, like every other
+		// domain. The admin routes file dies with its controllers
+		// (`controllers/admin/routes.ts`); the domain entry
+		// (`app/identity/routes.ts`) is pruned too because it imports the
+		// admin surface — the `start/routes.ts` rewrite points straight at
+		// the API surface instead.
 		'apps/web/app/core/controllers/admin',
+		'apps/web/app/identity/controllers/admin',
+		'apps/web/app/identity/routes.ts',
 		'apps/web/app/file/controllers/admin',
 		'apps/web/app/log/controllers/admin',
 		'apps/web/app/maintenance/controllers/admin',
@@ -142,6 +152,7 @@ const apiManifest: FlavorManifest = {
 		'apps/web/tests/functional/cms/admin_dashboard_cms.spec.ts',
 		'apps/web/tests/integration/routes_structure.spec.ts',
 		'apps/web/tests/integration/routes_structure_cms.spec.ts',
+		'apps/web/tests/unit/rest/page_adapter.spec.ts',
 
 		// ─── CMS test suites ──────────────────────────────────────────────────
 		'apps/web/tests/functional/cms',
@@ -246,7 +257,7 @@ const apiManifest: FlavorManifest = {
 				"import { middleware } from '#start/kernel'",
 				'',
 				'// Identity REST routes self-register on import (feature-gated inside the module).',
-				"import '#app/identity/routes'",
+				"import '#app/identity/controllers/api/routes'",
 				'',
 				'// Health routes are outside maintenance middleware (liveness/readiness probes)',
 				'registerHealthRoutes()',
