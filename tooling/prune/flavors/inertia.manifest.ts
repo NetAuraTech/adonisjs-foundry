@@ -537,11 +537,6 @@ const inertiaManifest: FlavorManifest = {
 				"  'handle',",
 				'])',
 				'',
-				'emitter.on(events.page.ContactFormSubmitted, [',
-				'  listeners.page.SendContactFormEmail,',
-				"  'handle',",
-				'])',
-				'',
 			].join('\n'),
 		},
 
