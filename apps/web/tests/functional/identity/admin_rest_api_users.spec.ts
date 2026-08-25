@@ -1,3 +1,4 @@
+import emitter from '@adonisjs/core/services/emitter';
 import testUtils from '@adonisjs/core/services/test_utils';
 import limiter from '@adonisjs/limiter/services/main';
 import { test } from '@japa/runner';
@@ -24,11 +25,18 @@ test.group('Admin REST API v1 — Users', (group) => {
 	group.each.setup(() => testUtils.db().truncate());
 	group.each.setup(resetSharedState);
 	group.each.setup(() => limiter.clear());
-	// User creation sends the invitation mail synchronously through the mail
-	// client — swap the binding so the suite never touches a real transport.
+	// User creation sends the invitation mail synchronously through the
+	// mail client — swap the binding so the suite never touches a real
+	// transport.
 	group.each.setup(() => {
 		swapMailClient();
 		return () => restoreMailClient();
+	});
+	// The account email-change listener is still event-driven (see #168) —
+	// fake the emitter so those mails never reach a real transport.
+	group.each.setup(() => {
+		emitter.fake();
+		return () => emitter.restore();
 	});
 	group.each.teardown(() => limiter.clear());
 
