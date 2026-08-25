@@ -1,7 +1,7 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
 import { UnlinkSocialProviderAction } from '#actions/social/unlink_social_provider_action';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 
 test.group('UnlinkSocialProviderAction', () => {
 	test('execute() removes the provider association', async ({ assert }) => {

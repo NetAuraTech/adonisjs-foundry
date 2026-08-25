@@ -1,7 +1,7 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
 import { LoginAction } from '#actions/auth/login_action';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 
 test.group('LoginAction', () => {
 	test('execute() returns user on valid credentials', async ({ assert }) => {

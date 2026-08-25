@@ -3,7 +3,7 @@ import { test } from '@japa/runner';
 import { DateTime } from 'luxon';
 import { UpdateUserProfileAction } from '#actions/profile/update_user_profile_action';
 import UnverifiedAccountException from '#exceptions/auth/unverified_account_exception';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 
 test.group('UpdateUserProfileAction', () => {
 	test('execute() throws UnverifiedAccountException if email not verified', async ({ assert }) => {

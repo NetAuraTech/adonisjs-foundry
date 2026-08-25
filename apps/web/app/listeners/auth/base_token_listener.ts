@@ -4,7 +4,7 @@ import i18nManager from '@adonisjs/i18n/services/main';
 import { DateTime } from 'luxon';
 import { generateSplitToken } from '#helpers/core/crypto';
 import type { GetPreferencesAction } from '#actions/preferences/get_preferences_action';
-import type User from '#models/auth/user';
+import type User from '#identity/models/user';
 import type { TokenRepository } from '#repositories/core/token_repository';
 import type { MailService } from '#services/mails/mail_service';
 import type { TokenType } from '#types/core';

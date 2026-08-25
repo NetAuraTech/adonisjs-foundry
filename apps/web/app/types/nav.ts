@@ -17,7 +17,7 @@ export type AdminNavEntry = {
 	label: string;
 	/** Icon name resolved by the `Icon` atom; entries without an icon render text-only. */
 	icon?: string;
-	/** Named route the entry links to (tuyau route name, e.g. `admin.users.render`). */
+	/** Named route the entry links to (tuyau route name, e.g. `admin.identity.users.render`). */
 	route: string;
 	/** Optional route parameters forwarded to `urlFor`. */
 	routeParams?: Record<string, string | number>;

@@ -1,10 +1,10 @@
 import { inject } from '@adonisjs/core';
 import { UpdateUserProfileAction } from '#actions/profile/update_user_profile_action';
-import { preloadUserRoleWithPermissions } from '#helpers/auth/load_user_role';
+import { preloadUserRoleWithPermissions } from '#app/identity/helpers/load_user_role';
 import { type RestEndpoint } from '#rest/rest_adapter';
-import UserTransformer from '#transformers/user_transformer';
+import UserTransformer from '#app/identity/transformers/user_transformer';
 import { profileValidator } from '#validators/profile';
-import type User from '#models/auth/user';
+import type User from '#identity/models/user';
 import type { Infer } from '@vinejs/vine/types';
 
 type ProfileUpdatePayload = Infer<ReturnType<typeof profileValidator>>;

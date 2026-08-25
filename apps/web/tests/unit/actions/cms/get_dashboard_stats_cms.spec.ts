@@ -28,9 +28,9 @@ test.group('GetDashboardStatsAction — CMS sections', () => {
 
 		const stats = await action.execute();
 
-		assert.deepEqual(Object.keys(stats).sort(), ['auth', 'file', 'page', 'template']);
-		assert.isNumber(stats.auth?.users);
-		assert.isArray(stats.auth?.usersByRole);
+		assert.deepEqual(Object.keys(stats).sort(), ['file', 'identity', 'page', 'template']);
+		assert.isNumber(stats.identity?.users);
+		assert.isArray(stats.identity?.usersByRole);
 		assert.isNumber(stats.page?.pages);
 		assert.isNumber(stats.page?.pageTranslations.total);
 		assert.isNumber(stats.template?.templates);

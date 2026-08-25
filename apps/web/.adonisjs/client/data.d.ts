@@ -6,35 +6,55 @@
 /// <reference path="./manifest.d.ts" />
 import type { InferData, InferVariants } from '@adonisjs/core/types/transformers'
 import type { InferSharedProps, InferFlashData } from '@adonisjs/inertia/types'
-import type DashboardTransformer from '#transformers/dashboard_transformer'
-import type FileFolderTransformer from '#transformers/file_folder_transformer'
-import type FileTransformer from '#transformers/file_transformer'
-import type LogEntryTransformer from '#transformers/log_entry_transformer'
-import type PagePageRevisionTransformer from '#transformers/page/page_revision_transformer'
-import type PagePageTransformer from '#transformers/page/page_transformer'
-import type PagePageTranslationTransformer from '#transformers/page/page_translation_transformer'
-import type PermissionTransformer from '#transformers/permission_transformer'
-import type RoleTransformer from '#transformers/role_transformer'
-import type TemplateTemplateTransformer from '#transformers/template/template_transformer'
-import type UserTransformer from '#transformers/user_transformer'
+import type CoreDashboardTransformer from '#app/core/transformers/dashboard_transformer'
+import type FileFileFolderTransformer from '#app/file/transformers/file_folder_transformer'
+import type FileFileTransformer from '#app/file/transformers/file_transformer'
+import type IdentityPermissionTransformer from '#app/identity/transformers/permission_transformer'
+import type IdentityRoleTransformer from '#app/identity/transformers/role_transformer'
+import type IdentityUserTransformer from '#app/identity/transformers/user_transformer'
+import type LogLogEntryTransformer from '#app/log/transformers/log_entry_transformer'
+import type PagePageRevisionTransformer from '#app/page/transformers/page_revision_transformer'
+import type PagePageTransformer from '#app/page/transformers/page_transformer'
+import type PagePageTranslationTransformer from '#app/page/transformers/page_translation_transformer'
+import type TemplateTemplateTransformer from '#app/template/transformers/template_transformer'
 import type InertiaMiddleware from '#middleware/core/inertia_middleware'
 
 export namespace Data {
-  export type Dashboard = InferData<DashboardTransformer>
-  export namespace Dashboard {
-    export type Variants = InferVariants<DashboardTransformer>
+  export namespace Core {
+    export type Dashboard = InferData<CoreDashboardTransformer>
+    export namespace Dashboard {
+      export type Variants = InferVariants<CoreDashboardTransformer>
+    }
   }
-  export type FileFolder = InferData<FileFolderTransformer>
-  export namespace FileFolder {
-    export type Variants = InferVariants<FileFolderTransformer>
-  }
-  export type File = InferData<FileTransformer>
   export namespace File {
-    export type Variants = InferVariants<FileTransformer>
+    export type FileFolder = InferData<FileFileFolderTransformer>
+    export namespace FileFolder {
+      export type Variants = InferVariants<FileFileFolderTransformer>
+    }
+    export type File = InferData<FileFileTransformer>
+    export namespace File {
+      export type Variants = InferVariants<FileFileTransformer>
+    }
   }
-  export type LogEntry = InferData<LogEntryTransformer>
-  export namespace LogEntry {
-    export type Variants = InferVariants<LogEntryTransformer>
+  export namespace Identity {
+    export type Permission = InferData<IdentityPermissionTransformer>
+    export namespace Permission {
+      export type Variants = InferVariants<IdentityPermissionTransformer>
+    }
+    export type Role = InferData<IdentityRoleTransformer>
+    export namespace Role {
+      export type Variants = InferVariants<IdentityRoleTransformer>
+    }
+    export type User = InferData<IdentityUserTransformer>
+    export namespace User {
+      export type Variants = InferVariants<IdentityUserTransformer>
+    }
+  }
+  export namespace Log {
+    export type LogEntry = InferData<LogLogEntryTransformer>
+    export namespace LogEntry {
+      export type Variants = InferVariants<LogLogEntryTransformer>
+    }
   }
   export namespace Page {
     export type PageRevision = InferData<PagePageRevisionTransformer>
@@ -50,23 +70,11 @@ export namespace Data {
       export type Variants = InferVariants<PagePageTranslationTransformer>
     }
   }
-  export type Permission = InferData<PermissionTransformer>
-  export namespace Permission {
-    export type Variants = InferVariants<PermissionTransformer>
-  }
-  export type Role = InferData<RoleTransformer>
-  export namespace Role {
-    export type Variants = InferVariants<RoleTransformer>
-  }
   export namespace Template {
     export type Template = InferData<TemplateTemplateTransformer>
     export namespace Template {
       export type Variants = InferVariants<TemplateTemplateTransformer>
     }
-  }
-  export type User = InferData<UserTransformer>
-  export namespace User {
-    export type Variants = InferVariants<UserTransformer>
   }
   export type SharedProps = InferSharedProps<InertiaMiddleware>
   export type FlashMessages = InferFlashData<InertiaMiddleware>

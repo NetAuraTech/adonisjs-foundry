@@ -7,7 +7,7 @@ import { UpdateUserAccountAction } from '#actions/account/update_user_account_ac
 import InvalidCurrentPasswordException from '#exceptions/auth/invalid_current_password_exception';
 import UnverifiedAccountException from '#exceptions/auth/unverified_account_exception';
 import { events } from '#generated/events';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 
 test.group('UpdateUserAccountAction', () => {
 	test('execute() throws UnverifiedAccountException if email not verified', async ({ assert }) => {

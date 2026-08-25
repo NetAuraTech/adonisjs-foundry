@@ -11,7 +11,7 @@ import { Paginated } from '~/types/paginated';
 interface FileManagerProps {
 	mime_type?: 'image' | 'video' | 'audio' | 'application/pdf';
 	handleClose: () => void;
-	handleClick: (file: Data.File) => void;
+	handleClick: (file: Data.File.File) => void;
 }
 
 interface ApiFilters {
@@ -22,7 +22,7 @@ interface ApiFilters {
 
 export function FileManager(props: FileManagerProps) {
 	const { mime_type, handleClose, handleClick } = props;
-	const [files, setFiles] = useState<Paginated<Data.File>>({
+	const [files, setFiles] = useState<Paginated<Data.File.File>>({
 		data: [],
 		metadata: {
 			total: 0,
@@ -32,7 +32,7 @@ export function FileManager(props: FileManagerProps) {
 			firstPage: 0,
 		},
 	});
-	const [folders, setFolders] = useState<Data.FileFolder[]>([]);
+	const [folders, setFolders] = useState<Data.File.FileFolder[]>([]);
 	const [filters, setFilters] = useState<ApiFilters>({ mime_type });
 
 	useEffect(() => {
@@ -151,7 +151,7 @@ export function FileManager(props: FileManagerProps) {
 }
 
 interface FolderEntryProps {
-	folder: Data.FileFolder;
+	folder: Data.File.FileFolder;
 	depth: 0 | 1 | 2 | 3 | 4 | 5;
 	filters: ApiFilters;
 	onClick: (id: number) => void;

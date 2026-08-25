@@ -16,7 +16,7 @@ import Layout from '~/layouts/admin';
 import type { AdminFileFoldersTranslations } from '#helpers/i18n_payloads/file_folders';
 
 interface PageProps {
-	roots: Data.FileFolder[];
+	roots: Data.File.FileFolder[];
 	translations: AdminFileFoldersTranslations;
 }
 
@@ -60,7 +60,7 @@ export default function FileFoldersPage(props: PageProps) {
 	);
 }
 interface FolderNodeProps {
-	folder: Data.FileFolder;
+	folder: Data.File.FileFolder;
 	depth: 0 | 1 | 2 | 3 | 4 | 5;
 	translations: AdminFileFoldersTranslations;
 }

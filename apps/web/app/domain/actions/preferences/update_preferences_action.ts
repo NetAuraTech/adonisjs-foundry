@@ -2,7 +2,7 @@ import { inject } from '@adonisjs/core';
 import { withTransaction } from '#core/services/with_transaction';
 import PreferencesRepository from '#repositories/preferences/preferences_repository';
 import { DEFAULT_PREFERENCES, type UserPreferences } from '#types/preferences';
-import type User from '#models/auth/user';
+import type User from '#identity/models/user';
 
 interface UpdatePreferencesPayload {
 	user: User;

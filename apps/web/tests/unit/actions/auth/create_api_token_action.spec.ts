@@ -3,7 +3,7 @@ import testUtils from '@adonisjs/core/services/test_utils';
 import db from '@adonisjs/lucid/services/db';
 import { test } from '@japa/runner';
 import { CreateApiTokenAction } from '#actions/auth/create_api_token_action';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 
 test.group('CreateApiTokenAction', (group) => {
 	group.each.setup(() => testUtils.db().truncate());

@@ -511,11 +511,11 @@ Foundry implements a **custom role/permission system** without external authoriz
 
 | Layer                  | Location                                         | Responsibility                                                  |
 | ---------------------- | ------------------------------------------------ | --------------------------------------------------------------- |
-| **Role model**         | `app/models/auth/role.ts`                        | Roles with `hasPermission()`, `isAdmin`, system role protection |
-| **Permission model**   | `app/models/auth/permission.ts`                  | Permissions with system permission protection                   |
+| **Role model**         | `src/identity/models/role.ts`                    | Roles with `hasPermission()`, `isAdmin`, system role protection |
+| **Permission model**   | `src/identity/models/permission.ts`              | Permissions with system permission protection                   |
 | **Pivot table**        | `role_permission`                                | Many-to-many relationship between roles and permissions         |
-| **Role service**       | `app/domain/services/auth/role_service.ts`       | Role business logic                                             |
-| **Permission service** | `app/domain/services/auth/permission_service.ts` | Permission business logic                                       |
+| **Role actions**       | `src/identity/actions/role/`                     | Role business logic (create, update, delete, list)              |
+| **Permission actions** | `src/identity/actions/permission/`               | Permission business logic (create, update, delete, list)        |
 | **Seeders**            | `database/seeders/`                              | `role_seeder.ts`, `permission_seeder.ts` for default data       |
 
 Permission checking is done via model methods: `role.hasPermission(slug)`, `role.assignPermission(id)`, `role.syncPermissions(ids)`.

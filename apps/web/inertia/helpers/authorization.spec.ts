@@ -22,7 +22,7 @@ import {
  * typecheck enforces.
  */
 
-const userWith = (roleSlug: string, permissionSlugs: string[]): Data.User =>
+const userWith = (roleSlug: string, permissionSlugs: string[]): Data.Identity.User =>
 	({
 		id: 1,
 		username: 'jane',
@@ -34,7 +34,7 @@ const userWith = (roleSlug: string, permissionSlugs: string[]): Data.User =>
 		connectedProviders: { github: false, google: false, facebook: false },
 		role: { id: 1, slug: roleSlug },
 		permissions: permissionSlugs,
-	}) as unknown as Data.User;
+	}) as unknown as Data.Identity.User;
 
 const admin = userWith('admin', ['users.view', 'users.create', 'roles.view']);
 const guest = userWith('user', ['logs.view']);

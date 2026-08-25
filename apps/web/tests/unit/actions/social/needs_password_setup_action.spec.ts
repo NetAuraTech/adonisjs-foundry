@@ -1,7 +1,7 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
 import { NeedsPasswordSetupAction } from '#actions/social/needs_password_setup_action';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 
 test.group('NeedsPasswordSetupAction', () => {
 	test('execute() returns true only if user has social accounts and no password', async ({ assert }) => {

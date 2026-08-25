@@ -1,10 +1,10 @@
 import { inject } from '@adonisjs/core';
 import { withTransaction } from '#core/services/with_transaction';
-import EmailAlreadyExistsException from '#exceptions/account/email_already_exists_exception';
-import { extractNameFromEmail, generateUniqueUsername } from '#helpers/auth/username';
-import User from '#models/auth/user';
-import { RoleRepository } from '#repositories/auth/role_repository';
-import { UserRepository } from '#repositories/auth/user_repository';
+import EmailAlreadyExistsException from '#core/exceptions/email_already_exists_exception';
+import { extractNameFromEmail, generateUniqueUsername } from '#identity/domain/user';
+import User from '#identity/models/user';
+import { RoleRepository } from '#identity/repositories/role_repository';
+import { UserRepository } from '#identity/repositories/user_repository';
 import PreferencesRepository from '#repositories/preferences/preferences_repository';
 import { LogService } from '#services/logging/log_service';
 import { RegisterPayload } from '#types/auth';

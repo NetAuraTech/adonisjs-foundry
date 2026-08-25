@@ -16,7 +16,7 @@ import type { Data } from '@generated/data';
  */
 function FileStatCard({ stats, translations }: DashboardSectionCardProps) {
 	const { t } = useTranslation(translations);
-	const file: Data.Dashboard['file'] = stats.file;
+	const file: Data.Core.Dashboard['file'] = stats.file;
 
 	if (!file) return null;
 
@@ -42,7 +42,7 @@ function FileStatCard({ stats, translations }: DashboardSectionCardProps) {
 
 function FileRecentCard({ stats, translations, formatDate }: DashboardSectionCardProps) {
 	const { t } = useTranslation(translations);
-	const file: Data.Dashboard['file'] = stats.file;
+	const file: Data.Core.Dashboard['file'] = stats.file;
 
 	if (!file) return null;
 

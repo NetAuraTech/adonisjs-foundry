@@ -17,7 +17,7 @@ import type { SettingsAccountTranslations } from '#helpers/i18n_payloads/account
 import type { OAuthProvider } from '#types/auth';
 
 interface PageProps {
-	user: Data.User;
+	user: Data.Identity.User;
 	providers: OAuthProvider[];
 	translations: SettingsAccountTranslations;
 }

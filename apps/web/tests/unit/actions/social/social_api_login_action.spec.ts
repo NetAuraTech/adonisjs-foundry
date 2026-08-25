@@ -4,8 +4,8 @@ import { test } from '@japa/runner';
 import { DateTime } from 'luxon';
 import { SocialApiLoginAction } from '#actions/social/social_api_login_action';
 import UnverifiedAccountException from '#exceptions/auth/unverified_account_exception';
-import Role from '#models/auth/role';
-import User from '#models/auth/user';
+import Role from '#identity/models/role';
+import User from '#identity/models/user';
 
 test.group('SocialApiLoginAction', () => {
 	test('execute() issues an API token for an existing provider user', async ({ assert }) => {

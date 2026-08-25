@@ -4,7 +4,7 @@ import { CreatePageAction } from '#cms/domain/actions/page/create_page_action';
 import Page from '#cms/models/page/page';
 import PageTranslation from '#cms/models/page/page_translation';
 import { UserFactory } from '#database/factories/user_factory';
-import SlugExistsException from '#exceptions/core/slug_exists_exception';
+import SlugExistsException from '#core/exceptions/slug_exists_exception';
 
 test.group('CreatePageAction', () => {
 	test('execute() creates a new page with initial translation', async ({ assert }) => {

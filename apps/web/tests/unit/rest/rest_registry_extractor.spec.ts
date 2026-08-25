@@ -35,7 +35,7 @@ export default class UsersShowApiController {
 `;
 
 const resourceSource = `
-import { restIdValidator, updateValidator } from '#validators/user'
+import { restIdValidator, updateValidator } from '#app/identity/validators/user'
 
 export default class UsersResource {
   readonly endpoints = {
@@ -112,7 +112,7 @@ test.group('rest registry extractor', () => {
 	test('resolves a validator identifier to its import record', ({ assert }) => {
 		assert.deepEqual(resolveValidatorImport(resourceSource, 'restIdValidator'), {
 			name: 'restIdValidator',
-			import: { specifier: '#validators/user', type: 'named', value: 'restIdValidator' },
+			import: { specifier: '#app/identity/validators/user', type: 'named', value: 'restIdValidator' },
 		});
 		assert.isUndefined(resolveValidatorImport(resourceSource, 'notImported'));
 	});
@@ -144,7 +144,7 @@ test.group('extractRestResourceValidators', () => {
 			assert.deepEqual(await extractRestResourceValidators(appRoot, controller), [
 				{
 					name: 'restIdValidator',
-					import: { specifier: '#validators/user', type: 'named', value: 'restIdValidator' },
+					import: { specifier: '#app/identity/validators/user', type: 'named', value: 'restIdValidator' },
 				},
 			]);
 		} finally {

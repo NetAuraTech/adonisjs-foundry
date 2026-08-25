@@ -22,8 +22,8 @@ export interface DashboardRecentFile {
 	createdAt: DateTime;
 }
 
-/** Dashboard section contributed by the auth domain. */
-export interface DashboardAuthSection {
+/** Dashboard section contributed by the identity domain. */
+export interface DashboardIdentitySection {
 	users: number;
 	usersByRole: DashboardRoleCount[];
 }
@@ -52,7 +52,7 @@ export interface DashboardFileSection {
  * a flavor build.
  */
 export interface DashboardStats {
-	auth?: DashboardAuthSection;
+	identity?: DashboardIdentitySection;
 	file?: DashboardFileSection;
 }
 

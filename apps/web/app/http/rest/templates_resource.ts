@@ -12,7 +12,7 @@ import {
 	showTemplateValidator,
 } from '#cms/validators/template';
 import { type RestEndpoint } from '#rest/rest_adapter';
-import TemplateTransformer from '#transformers/template/template_transformer';
+import TemplateTransformer from '#app/template/transformers/template_transformer';
 import type Template from '#cms/models/template/template';
 import type { Infer } from '@vinejs/vine/types';
 

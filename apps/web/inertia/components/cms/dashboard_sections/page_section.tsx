@@ -22,8 +22,8 @@ type CmsTranslations = AdminDashboardTranslations & CmsDashboardTranslations;
  */
 function PageStatCard({ stats, translations }: DashboardSectionCardProps) {
 	const { t } = useTranslation(translations as CmsTranslations);
-	const page: Data.Dashboard['page'] = stats.page;
-	const template: Data.Dashboard['template'] = stats.template;
+	const page: Data.Core.Dashboard['page'] = stats.page;
+	const template: Data.Core.Dashboard['template'] = stats.template;
 
 	if (!page) return null;
 
@@ -55,7 +55,7 @@ function PageStatCard({ stats, translations }: DashboardSectionCardProps) {
 
 function PageRecentCard({ stats, translations, formatDate }: DashboardSectionCardProps) {
 	const { t } = useTranslation(translations as CmsTranslations);
-	const page: Data.Dashboard['page'] = stats.page;
+	const page: Data.Core.Dashboard['page'] = stats.page;
 
 	if (!page) return null;
 

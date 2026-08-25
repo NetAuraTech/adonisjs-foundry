@@ -1,7 +1,7 @@
 import factory from '@adonisjs/lucid/factories';
 import { DateTime } from 'luxon';
-import Role from '#models/auth/role';
-import User from '#models/auth/user';
+import Role from '#identity/models/role';
+import User from '#identity/models/user';
 
 /**
  * Monotonic sequences guarantee unique defaults within a test run: the unit

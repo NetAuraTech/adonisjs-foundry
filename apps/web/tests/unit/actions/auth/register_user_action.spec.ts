@@ -1,9 +1,9 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
 import { RegisterUserAction } from '#actions/auth/register_user_action';
-import EmailAlreadyExistsException from '#exceptions/account/email_already_exists_exception';
-import Role from '#models/auth/role';
-import User from '#models/auth/user';
+import EmailAlreadyExistsException from '#core/exceptions/email_already_exists_exception';
+import Role from '#identity/models/role';
+import User from '#identity/models/user';
 import UserPreference from '#models/preferences/user_preference';
 
 test.group('RegisterUserAction', () => {

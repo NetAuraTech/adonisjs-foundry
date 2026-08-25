@@ -14,7 +14,7 @@ import type { ReactNode } from 'react';
  *
  * This spec lives in the CMS subtree (`inertia/pages/cms/`) so the `inertia`
  * flavor prunes it alongside the CMS card modules; the core dashboard spec
- * (`inertia/pages/core/admin/dashboard.spec.tsx`) keeps the auth/file
+ * (`inertia/pages/core/admin/dashboard.spec.tsx`) keeps the identity/file
  * contract that every flavor shares.
  *
  * Inertia's server-provided context is substituted with narrow mocks; atoms,
@@ -74,7 +74,7 @@ const translations: AdminDashboardTranslations & CmsDashboardTranslations = {
 	},
 };
 
-const cmsStats: Data.Dashboard = {
+const cmsStats: Data.Core.Dashboard = {
 	page: {
 		pages: 3,
 		pageTranslations: { draft: 1, published: 2, archived: 0, total: 3 },
@@ -107,7 +107,7 @@ afterEach(async () => {
 	container.remove();
 });
 
-async function render(stats: Data.Dashboard): Promise<string> {
+async function render(stats: Data.Core.Dashboard): Promise<string> {
 	await act(async () => {
 		root.render(<DashboardPage stats={stats} translations={translations} />);
 	});

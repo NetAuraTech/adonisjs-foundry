@@ -5,7 +5,7 @@ import type { AdminNavEntry } from '#types/nav';
 const entry: AdminNavEntry = {
 	label: 'admin.users.value',
 	icon: 'Users',
-	route: 'admin.users.render',
+	route: 'admin.identity.users.render',
 	permission: 'users.view',
 	category: 'access_control',
 };
@@ -20,20 +20,20 @@ test.group('NavRegistry', () => {
 	test('entries() lists registered domains in registration order', ({ assert }) => {
 		const registry = new NavRegistry();
 
-		registry.register('auth', [entry]);
+		registry.register('identity', [entry]);
 		registry.register('file', [{ ...entry, route: 'admin.files.render' }]);
 
 		assert.deepEqual(
 			registry.entries().map(([domain]) => domain),
-			['auth', 'file'],
+			['identity', 'file'],
 		);
 	});
 
 	test('registering the same domain twice replaces its previous entries', ({ assert }) => {
 		const registry = new NavRegistry();
 
-		registry.register('auth', [entry]);
-		registry.register('auth', []);
+		registry.register('identity', [entry]);
+		registry.register('identity', []);
 
 		const entries = registry.entries();
 		assert.lengthOf(entries, 1);

@@ -13,7 +13,7 @@ import type { ComponentType } from 'react';
  * flavor pruned of a domain simply has no card registered for that key and
  * nothing renders.
  *
- * Registration happens at module load: core sections (`auth`, `file`) register
+ * Registration happens at module load: core sections (`identity`, `file`) register
  * from `inertia/components/dashboard_sections/`, the CMS sections (`page`,
  * `template`) from `inertia/components/cms/dashboard_sections/`. The page
  * eagerly imports every card module via a glob, so on a pruned flavor only the
@@ -23,7 +23,7 @@ import type { ComponentType } from 'react';
 /** Props handed to every dashboard section card. */
 export interface DashboardSectionCardProps {
 	/** The full aggregated stats payload — cards read their own section(s). */
-	stats: Data.Dashboard;
+	stats: Data.Core.Dashboard;
 	/** Dashboard translations resolved for the request locale. */
 	translations: AdminDashboardTranslations;
 	/** Format a date for the active locale; '—' for null. */
@@ -49,7 +49,7 @@ const registry = new Map<string, DashboardSectionCardBundle>();
  * Called once at module load by each section's card module. Registering the
  * same section twice replaces the previous bundle.
  *
- * @param key - Payload key the cards render (e.g. `'auth'`, `'file'`, `'page'`).
+ * @param key - Payload key the cards render (e.g. `'identity'`, `'file'`, `'page'`).
  * @param bundle - The headline (and optional recent-activity) card components.
  */
 export function registerDashboardSection(key: string, bundle: DashboardSectionCardBundle): void {

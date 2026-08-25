@@ -102,7 +102,7 @@ export const variants = {
  * <Button type="submit" loading={processing}>Save</Button>
  *
  * // Inertia link styled as a button
- * <Button route="admin.users.render" variant="outline" fitContent>
+ * <Button route="admin.identity.users.render" variant="outline" fitContent>
  *   Back
  * </Button>
  *

@@ -1,6 +1,6 @@
 import vine from '@vinejs/vine';
 import { email, password } from '#app/core/validators/rules';
-import type User from '#models/auth/user';
+import type User from '#identity/models/user';
 
 /**
  * Validator to use when performing self-register

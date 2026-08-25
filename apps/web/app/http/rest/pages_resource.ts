@@ -19,8 +19,8 @@ import {
 	createTranslationValidator,
 } from '#cms/validators/page';
 import { type RestEndpoint } from '#rest/rest_adapter';
-import PageRevisionTransformer from '#transformers/page/page_revision_transformer';
-import PageTransformer from '#transformers/page/page_transformer';
+import PageRevisionTransformer from '#app/page/transformers/page_revision_transformer';
+import PageTransformer from '#app/page/transformers/page_transformer';
 import type Page from '#cms/models/page/page';
 import type PageRevision from '#cms/models/page/page_revision';
 import type PageTranslation from '#cms/models/page/page_translation';

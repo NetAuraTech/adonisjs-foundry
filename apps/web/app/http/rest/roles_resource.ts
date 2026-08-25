@@ -1,13 +1,13 @@
 import { inject } from '@adonisjs/core';
-import { CreateRoleAction } from '#actions/role/create_role_action';
-import { DeleteRoleAction } from '#actions/role/delete_role_action';
-import { GetRoleDetailAction } from '#actions/role/get_role_detail_action';
-import { ListRolesAction } from '#actions/role/list_roles_action';
-import { UpdateRoleAction } from '#actions/role/update_role_action';
+import { CreateRoleAction } from '#identity/actions/role/create_role_action';
+import { DeleteRoleAction } from '#identity/actions/role/delete_role_action';
+import { GetRoleDetailAction } from '#identity/actions/role/get_role_detail_action';
+import { ListRolesAction } from '#identity/actions/role/list_roles_action';
+import { UpdateRoleAction } from '#identity/actions/role/update_role_action';
 import { type RestEndpoint } from '#rest/rest_adapter';
-import RoleTransformer from '#transformers/role_transformer';
-import { listRolesValidator, createRoleValidator, updateRoleValidator, restRoleIdValidator } from '#validators/role';
-import type Role from '#models/auth/role';
+import RoleTransformer from '#app/identity/transformers/role_transformer';
+import { listRolesValidator, createRoleValidator, updateRoleValidator, restRoleIdValidator } from '#app/identity/validators/role';
+import type Role from '#identity/models/role';
 import type { Infer } from '@vinejs/vine/types';
 
 type RoleListPagination = Awaited<ReturnType<ListRolesAction['execute']>>;

@@ -13,19 +13,19 @@ test.group('DashboardRegistry', () => {
 
 	test('entries() lists registered sections in registration order', ({ assert }) => {
 		const registry = new DashboardRegistry();
-		const collector: DashboardCollector<'auth'> = {
+		const collector: DashboardCollector<'identity'> = {
 			collect: async () => ({ users: 0, usersByRole: [] }),
 		};
 		const fileCollector: DashboardCollector<'file'> = {
 			collect: async () => ({ files: 0, fileFolders: 0, filesByFolder: [], recentFiles: [] }),
 		};
 
-		registry.register('auth', async () => collector);
+		registry.register('identity', async () => collector);
 		registry.register('file', async () => fileCollector);
 
 		assert.deepEqual(
 			registry.entries().map(([section]) => section),
-			['auth', 'file'],
+			['identity', 'file'],
 		);
 	});
 
@@ -33,7 +33,7 @@ test.group('DashboardRegistry', () => {
 		const registry = new DashboardRegistry();
 		let invoked = false;
 
-		registry.register('auth', async () => {
+		registry.register('identity', async () => {
 			invoked = true;
 			return { collect: async () => ({ users: 0, usersByRole: [] }) };
 		});
@@ -43,14 +43,14 @@ test.group('DashboardRegistry', () => {
 
 	test('registering the same section twice replaces the previous factory', async ({ assert }) => {
 		const registry = new DashboardRegistry();
-		const replacement: DashboardCollector<'auth'> = {
+		const replacement: DashboardCollector<'identity'> = {
 			collect: async () => ({ users: 42, usersByRole: [] }),
 		};
 
-		registry.register('auth', async () => ({
+		registry.register('identity', async () => ({
 			collect: async () => ({ users: 0, usersByRole: [] }),
 		}));
-		registry.register('auth', async () => replacement);
+		registry.register('identity', async () => replacement);
 
 		const entries = registry.entries();
 		assert.lengthOf(entries, 1);

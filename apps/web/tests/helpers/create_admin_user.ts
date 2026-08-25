@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
-import { extractNameFromEmail } from '#helpers/auth/username';
-import Permission from '#models/auth/permission';
-import Role from '#models/auth/role';
-import User from '#models/auth/user';
+import { extractNameFromEmail } from '#identity/domain/user';
+import Permission from '#identity/models/permission';
+import Role from '#identity/models/role';
+import User from '#identity/models/user';
 
 export const MAINTENANCE_PERMISSIONS = ['settings.maintenance'] as const;
 

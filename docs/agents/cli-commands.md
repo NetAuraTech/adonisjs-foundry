@@ -16,7 +16,7 @@ node ace <command>
 | Command                           | Creates           | Location                            |
 | --------------------------------- | ----------------- | ----------------------------------- |
 | `node ace make:model <Name>`      | Model + migration | `app/models/` + database migrations |
-| `node ace make:controller <Name>` | Controller class  | `app/http/controllers/`             |
+| `node ace make:controller <Name>` | Controller class  | `app/` — move it to `app/{domain}/controllers/{context}/` |
 | `node ace make:migration <name>`  | Migration file    | `database/migrations/`              |
 | `node ace make:service <Name>`    | Service class     | Use manually in correct domain path |
 | `node ace make:repository <Name>` | Repository class  | Use manually in correct domain path |

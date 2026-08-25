@@ -15,10 +15,10 @@ import { permissionCategoryKey } from '~/helpers/permissions';
 import { useMenu } from '~/hooks/use_admin';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminRolesShowTranslations } from '#helpers/i18n_payloads/roles_show';
+import type { AdminRolesShowTranslations } from '#app/identity/helpers/i18n_payloads/roles_show';
 
 type PageProps = {
-	role: Data.Role;
+	role: Data.Identity.Role;
 	translations: AdminRolesShowTranslations;
 };
 
@@ -30,7 +30,7 @@ export default function RolesShowPage(props: PageProps) {
 
 	const roleName = t(`roles.${role.slug}.value` as any);
 
-	const permissionsByCategory = (role.permissions ?? []).reduce<Record<string, Data.Permission[]>>(
+	const permissionsByCategory = (role.permissions ?? []).reduce<Record<string, Data.Identity.Permission[]>>(
 		(acc, permission) => {
 			const category = permissionCategoryKey(permission.category);
 			if (!acc[category]) {
@@ -43,12 +43,12 @@ export default function RolesShowPage(props: PageProps) {
 	);
 
 	return (
-		<AdminMain title={t('title', { name: roleName })} icon={getEntryIcon('admin.roles.render')}>
+		<AdminMain title={t('title', { name: roleName })} icon={getEntryIcon('admin.identity.roles.render')}>
 			<Card
 				header={
 					<div className="flex items-center justify-between gap-3">
 						<CanAccess permission="roles.view">
-							<Button variant="icon" route="admin.roles.render" title={t('actions.list')} fitContent>
+							<Button variant="icon" route="admin.identity.roles.render" title={t('actions.list')} fitContent>
 								<Icon name="ArrowLeft" />
 							</Button>
 						</CanAccess>
@@ -57,7 +57,7 @@ export default function RolesShowPage(props: PageProps) {
 								<CanAccess permission="roles.update">
 									<Button
 										variant="icon_warning"
-										route="admin.roles_update.render"
+										route="admin.identity.roles_update.render"
 										routeParams={{ id: role.id }}
 										title={t('actions.edit', { name: roleName })}
 										fitContent
@@ -70,7 +70,7 @@ export default function RolesShowPage(props: PageProps) {
 										onBefore={() => {
 											return window.confirm(t('delete.confirm', { name: roleName }));
 										}}
-										route="admin.roles.destroy"
+										route="admin.identity.roles.destroy"
 										routeParams={{ id: role.id }}
 									>
 										<Button variant="icon_danger" title={t('actions.delete', { name: roleName })} fitContent>
@@ -157,7 +157,7 @@ export default function RolesShowPage(props: PageProps) {
 													<CanAccess permission="users.view">
 														<Button
 															variant="icon_info"
-															route="admin.users_show.render"
+															route="admin.identity.users_show.render"
 															routeParams={{ id: user.id }}
 															title={t('users.show', { username: user.username })}
 															fitContent

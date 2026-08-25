@@ -4,11 +4,11 @@
 |--------------------------------------------------------------------------
 |
 | The composed list of system permission slugs for this flavor. Every
-| domain owns its own catalog const in `{domain}_permissions.ts` (see
-| `app/domain/services/*` and `app/cms/domain/services/*`); this file
-| composes those per-domain catalogs into the single matrix the permission
-| seeder persists. Adding or renaming a permission only touches that
-| domain's catalog file.
+| domain owns its own catalog const in its business layer (e.g.
+| `src/identity/permissions.ts`, `app/domain/services/{domain}/{domain}_permissions.ts`
+| until the domain migrates); this file composes those per-domain catalogs
+| into the single matrix the permission seeder persists. Adding or renaming
+| a permission only touches that domain's catalog file.
 |
 | The `permissionCatalog` object also drives the `PermissionSlug` union of
 | this flavor: the catalog is the single source of both the persisted slug
@@ -23,7 +23,7 @@
 
 import { pagePermissionCatalog } from '#cms/domain/services/page/page_permissions';
 import { templatePermissionCatalog } from '#cms/domain/services/template/template_permissions';
-import { authPermissionCatalog } from '#services/auth/auth_permissions';
+import { identityPermissionCatalog } from '#identity/permissions';
 import { corePermissionCatalog, coreRoleSlugs } from '#services/core/core_permissions';
 import { filePermissionCatalog } from '#services/file/file_permissions';
 import { loggingPermissionCatalog } from '#services/logging/logging_permissions';
@@ -38,7 +38,7 @@ import type { PermissionSlugs, PermissionMap } from '#types/permissions';
  */
 export const permissionCatalog = {
 	...corePermissionCatalog,
-	...authPermissionCatalog,
+	...identityPermissionCatalog,
 	...pagePermissionCatalog,
 	...templatePermissionCatalog,
 	...filePermissionCatalog,

@@ -5,7 +5,7 @@ import * as authHelpers from '~/helpers/authorization';
 import type { PermissionSlug, SystemRoleSlug } from '#start/permissions';
 
 type SharedPropsWithAuth = Omit<SharedProps, 'currentUser'> & {
-	currentUser: Data.User | undefined;
+	currentUser: Data.Identity.User | undefined;
 };
 
 /**

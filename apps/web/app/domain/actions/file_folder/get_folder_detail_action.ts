@@ -1,5 +1,5 @@
 import { inject } from '@adonisjs/core';
-import RowNotFoundException from '#exceptions/core/row_not_found_exception';
+import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import FileFolder from '#models/file/file_folder';
 import { FileFolderRepository } from '#repositories/file/file_folder_repository';
 

@@ -28,7 +28,7 @@ const LEVEL_BADGE_CLASSES: Record<string, string> = {
 };
 
 type PageProps = {
-	entries: Paginated<Data.LogEntry>;
+	entries: Paginated<Data.Log.LogEntry>;
 	filters: {
 		level?: string;
 		category?: string;
@@ -47,7 +47,7 @@ export default function LogsIndexPage(props: PageProps) {
 
 	const { getEntryIcon } = useMenu();
 
-	const hasContext = (entry: Data.LogEntry) =>
+	const hasContext = (entry: Data.Log.LogEntry) =>
 		(entry.context && Object.keys(entry.context).length > 0) || entry.ip || entry.userAgent;
 
 	return (

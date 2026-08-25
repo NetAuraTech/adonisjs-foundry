@@ -12,6 +12,8 @@ import router from '@adonisjs/core/services/router';
 import { enabledAuthGuards } from '#config/auth';
 import features from '#config/features';
 import { middleware } from '#start/kernel';
+// Identity routes self-register on import (feature-gated inside the module).
+import '#app/identity/routes';
 import { registerAdminRoutes } from '#start/routes/admin.routes';
 import { registerAdminRestApiRoutes } from '#start/routes/admin_rest_api.routes';
 import { registerApiRoutes } from '#start/routes/api.routes';

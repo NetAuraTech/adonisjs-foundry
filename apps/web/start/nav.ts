@@ -13,7 +13,7 @@
 import app from '@adonisjs/core/services/app';
 import { pageNavEntries } from '#cms/domain/services/page/page_nav';
 import { templateNavEntries } from '#cms/domain/services/template/template_nav';
-import { authNavEntries } from '#services/auth/auth_nav';
+import { identityNavEntries } from '#app/identity/nav';
 import { coreNavEntries } from '#services/core/core_nav';
 import { NavRegistry } from '#services/core/nav_registry';
 import { fileNavEntries } from '#services/file/file_nav';
@@ -28,6 +28,6 @@ registry.register('core', coreNavEntries);
 registry.register('page', pageNavEntries);
 registry.register('template', templateNavEntries);
 registry.register('file', fileNavEntries);
-registry.register('auth', authNavEntries);
+registry.register('identity', identityNavEntries);
 registry.register('maintenance', maintenanceNavEntries);
 registry.register('logging', loggingNavEntries);

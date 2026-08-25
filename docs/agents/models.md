@@ -3,6 +3,8 @@
 Lucid models live in `app/models/{area}/{name}.ts`. Each model extends a generated schema class from `database/schema.ts` that contains column definitions. The model file adds relations, hooks, scopes, and helpers on top of the schema.
 
 > **CMS exception (ADR-0001):** the CMS module (page, template) lives under `app/cms/` with the same structure — e.g. `app/cms/models/page/page.ts`, imported via `#cms/models/page/page`. The layer-first layout above applies to everything outside the CMS module.
+>
+> **Identity co-location:** identity models (user, role, permission) live under `src/identity/models/`, imported via `#identity/models/...` — co-located with the identity domain's actions, repositories and services in the `src/identity/` business module.
 
 ## Structure
 
@@ -80,7 +82,7 @@ Scopes are for filtering logic intrinsic to the model. Conditional request-drive
 ## Conventions
 
 - One file per model, named after the entity (`user.ts`, `token.ts`).
-- Models grouped by domain area: `auth/`, `core/`, `file/`, `page/`, etc.
+- Models grouped by domain area: `core/`, `file/`, `page/`, etc.
 - Relations use arrow functions for lazy resolution: `@belongsTo(() => Role)`.
 - Computed properties use `@computed()` decorator when they derive from model state.
 - A model never imports another repository directly outside a hook — cross-entity composition belongs in the service layer.

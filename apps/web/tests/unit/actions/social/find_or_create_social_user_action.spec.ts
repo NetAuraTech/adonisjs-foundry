@@ -3,8 +3,8 @@ import { test } from '@japa/runner';
 import { DateTime } from 'luxon';
 import { FindOrCreateSocialUserAction } from '#actions/social/find_or_create_social_user_action';
 import UnverifiedAccountException from '#exceptions/auth/unverified_account_exception';
-import Role from '#models/auth/role';
-import User from '#models/auth/user';
+import Role from '#identity/models/role';
+import User from '#identity/models/user';
 
 test.group('FindOrCreateSocialUserAction', () => {
 	test('execute() returns existing user by provider id', async ({ assert }) => {

@@ -1,5 +1,5 @@
-﻿import { inject } from '@adonisjs/core';
-import User from '#models/auth/user';
+import { inject } from '@adonisjs/core';
+import User from '#identity/models/user';
 import { TokenRepository } from '#repositories/core/token_repository';
 import { FullToken } from '#types/core';
 

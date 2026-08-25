@@ -2,7 +2,7 @@ import { inject } from '@adonisjs/core';
 import { PageRepository } from '#cms/domain/repositories/page/page_repository';
 import Page from '#cms/models/page/page';
 import { withTransaction } from '#core/services/with_transaction';
-import RowNotFoundException from '#exceptions/core/row_not_found_exception';
+import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import { LogService } from '#services/logging/log_service';
 
 interface DeletePagePayload {

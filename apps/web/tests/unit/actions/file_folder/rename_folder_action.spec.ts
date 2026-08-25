@@ -1,7 +1,7 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
 import { RenameFolderAction } from '#actions/file_folder/rename_folder_action';
-import RowNotFoundException from '#exceptions/core/row_not_found_exception';
+import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import FileFolder from '#models/file/file_folder';
 
 test.group('RenameFolderAction', () => {

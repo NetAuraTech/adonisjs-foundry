@@ -3,11 +3,11 @@ import { type HttpContext } from '@adonisjs/core/http';
 import { DeleteUserAccountAction } from '#actions/account/delete_user_account_action';
 import { UpdateUserAccountAction } from '#actions/account/update_user_account_action';
 import InvalidActionException from '#exceptions/account/invalid_action_exception';
-import { preloadUserRoleWithPermissions } from '#helpers/auth/load_user_role';
+import { preloadUserRoleWithPermissions } from '#app/identity/helpers/load_user_role';
 import { type RestEndpoint, handle } from '#rest/rest_adapter';
-import UserTransformer from '#transformers/user_transformer';
+import UserTransformer from '#app/identity/transformers/user_transformer';
 import { deleteAccountValidator, updateEmailValidator, updatePasswordValidator } from '#validators/account';
-import type User from '#models/auth/user';
+import type User from '#identity/models/user';
 import type { Infer } from '@vinejs/vine/types';
 
 type AccountEmailPayload = Infer<ReturnType<typeof updateEmailValidator>>;

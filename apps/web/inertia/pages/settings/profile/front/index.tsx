@@ -13,7 +13,7 @@ import { useTranslation } from '~/hooks/use_translation';
 import type { SettingsProfileTranslations } from '#helpers/i18n_payloads/profile';
 
 interface PageProps {
-	user: Data.User;
+	user: Data.Identity.User;
 	translations: SettingsProfileTranslations;
 }
 

@@ -13,10 +13,10 @@ import { permissionCategoryKey } from '~/helpers/permissions';
 import { useMenu } from '~/hooks/use_admin';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminPermissionsIndexTranslations } from '#helpers/i18n_payloads/permissions_list';
+import type { AdminPermissionsIndexTranslations } from '#app/identity/helpers/i18n_payloads/permissions_list';
 
 type PageProps = {
-	permissions: Data.Permission[];
+	permissions: Data.Identity.Permission[];
 	translations: AdminPermissionsIndexTranslations;
 };
 
@@ -26,7 +26,7 @@ export default function PermissionsIndexPage(props: PageProps) {
 
 	const { getEntryIcon } = useMenu();
 
-	const permissionsByCategory = permissions.reduce<Record<string, Data.Permission[]>>((acc, permission) => {
+	const permissionsByCategory = permissions.reduce<Record<string, Data.Identity.Permission[]>>((acc, permission) => {
 		const category = permissionCategoryKey(permission.category);
 		if (!acc[category]) {
 			acc[category] = [];
@@ -38,10 +38,10 @@ export default function PermissionsIndexPage(props: PageProps) {
 	return (
 		<AdminMain
 			title={t('title')}
-			icon={getEntryIcon('admin.permissions.render')}
+			icon={getEntryIcon('admin.identity.permissions.render')}
 			action={
 				<CanAccess permission="permissions.create">
-					<Button route="admin.permissions_create.render" variant="secondary" fitContent>
+					<Button route="admin.identity.permissions_create.render" variant="secondary" fitContent>
 						{t('create.title')}
 					</Button>
 				</CanAccess>
@@ -67,7 +67,7 @@ export default function PermissionsIndexPage(props: PageProps) {
 										</Table.Cell>
 									</Table.Row>
 								) : (
-									categoryPermissions.map((permission: Data.Permission) => (
+									categoryPermissions.map((permission: Data.Identity.Permission) => (
 										<Table.Row key={`permission-${permission.id}`}>
 											<Table.Cell data-label={t('table.name')}>
 												<div className="flex items-center gap-2">
@@ -90,7 +90,7 @@ export default function PermissionsIndexPage(props: PageProps) {
 															<CanAccess permission="permissions.update">
 																<Button
 																	variant="icon_warning"
-																	route="admin.permissions_update.render"
+																	route="admin.identity.permissions_update.render"
 																	routeParams={{ id: permission.id }}
 																	title={t('actions.edit', {
 																		name: t(`items.${permission.slug}.value` as any),
@@ -109,7 +109,7 @@ export default function PermissionsIndexPage(props: PageProps) {
 																			}),
 																		);
 																	}}
-																	route="admin.permissions.destroy"
+																	route="admin.identity.permissions.destroy"
 																	routeParams={{ id: permission.id }}
 																>
 																	<Button

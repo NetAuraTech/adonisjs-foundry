@@ -1,7 +1,7 @@
 import { belongsTo } from '@adonisjs/lucid/orm';
 import PageTranslation from '#cms/models/page/page_translation';
 import { PageRevisionSchema } from '#database/schema';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 import type { PageContent } from '#cms/types/page';
 import type { BelongsTo } from '@adonisjs/lucid/types/relations';
 

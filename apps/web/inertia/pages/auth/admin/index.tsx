@@ -17,11 +17,11 @@ import { useMenu } from '~/hooks/use_admin';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
 import { Paginated } from '~/types/paginated';
-import type { AdminUsersIndexTranslations } from '#helpers/i18n_payloads/users_list';
+import type { AdminUsersIndexTranslations } from '#app/identity/helpers/i18n_payloads/users_list';
 
 type PageProps = {
-	users: Paginated<Data.User>;
-	roles: Data.Role[];
+	users: Paginated<Data.Identity.User>;
+	roles: Data.Identity.Role[];
 	filters: {
 		search?: string;
 		role?: string;
@@ -39,10 +39,10 @@ export default function UsersIndexPage(props: PageProps) {
 	return (
 		<AdminMain
 			title={t('title')}
-			icon={getEntryIcon('admin.users.render')}
+			icon={getEntryIcon('admin.identity.users.render')}
 			action={
 				<CanAccess permission="users.create">
-					<Button route="admin.users_create.render" variant="secondary" fitContent>
+					<Button route="admin.identity.users_create.render" variant="secondary" fitContent>
 						{t('action')}
 					</Button>
 				</CanAccess>
@@ -50,7 +50,7 @@ export default function UsersIndexPage(props: PageProps) {
 		>
 			<Card
 				header={
-					<Form route="admin.users.render" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+					<Form route="admin.identity.users.render" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
 						<Field
 							type="text"
 							name="search"
@@ -77,7 +77,7 @@ export default function UsersIndexPage(props: PageProps) {
 						</Button>
 					</Form>
 				}
-				footer={<Pagination route="admin.users.render" filters={filters} metadata={users.metadata} />}
+				footer={<Pagination route="admin.identity.users.render" filters={filters} metadata={users.metadata} />}
 			>
 				<Table>
 					<Table.Header>
@@ -119,7 +119,7 @@ export default function UsersIndexPage(props: PageProps) {
 											<CanAccess permission="users.view">
 												<Button
 													variant="icon_info"
-													route="admin.users_show.render"
+													route="admin.identity.users_show.render"
 													routeParams={{ id: user.id }}
 													title={t('actions.show', { username: user.username })}
 													fitContent
@@ -130,7 +130,7 @@ export default function UsersIndexPage(props: PageProps) {
 											<CanAccess permission="users.update">
 												<Button
 													variant="icon_warning"
-													route="admin.users_update.render"
+													route="admin.identity.users_update.render"
 													routeParams={{ id: user.id }}
 													title={t('actions.edit', { username: user.username })}
 													fitContent
@@ -141,7 +141,7 @@ export default function UsersIndexPage(props: PageProps) {
 											<CanAccess permission="users.delete">
 												<Button
 													variant="icon_danger"
-													route="admin.users.destroy"
+													route="admin.identity.users.destroy"
 													routeParams={{ id: user.id }}
 													title={t('actions.delete', { username: user.username })}
 													fitContent

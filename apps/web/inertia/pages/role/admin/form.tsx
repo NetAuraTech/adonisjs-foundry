@@ -17,11 +17,11 @@ import { useMenu } from '~/hooks/use_admin';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminRolesFormTranslations } from '#helpers/i18n_payloads/roles_form';
+import type { AdminRolesFormTranslations } from '#app/identity/helpers/i18n_payloads/roles_form';
 
 type PageProps = {
-	role: Data.Role | null;
-	permissions: Data.Permission[];
+	role: Data.Identity.Role | null;
+	permissions: Data.Identity.Permission[];
 	translations: AdminRolesFormTranslations;
 };
 
@@ -46,7 +46,7 @@ export default function RolesFormPage(props: PageProps) {
 
 	const assignedPermissionIds = new Set((role?.permissions ?? []).map((permission) => permission.id));
 
-	const permissionsByCategory = permissions.reduce<Record<string, Data.Permission[]>>((acc, permission) => {
+	const permissionsByCategory = permissions.reduce<Record<string, Data.Identity.Permission[]>>((acc, permission) => {
 		const category = permissionCategoryKey(permission.category);
 		if (!acc[category]) {
 			acc[category] = [];
@@ -58,13 +58,13 @@ export default function RolesFormPage(props: PageProps) {
 	return (
 		<AdminMain
 			title={isEditing ? t('title.edit', { name: role.name }) : t('title.create')}
-			icon={getEntryIcon('admin.roles.render')}
+			icon={getEntryIcon('admin.identity.roles.render')}
 		>
 			<Card
 				header={
 					<div className="flex items-center justify-between gap-3">
 						<CanAccess permission="roles.view">
-							<Button variant="icon" route="admin.roles.render" title={t('actions.list')} fitContent>
+							<Button variant="icon" route="admin.identity.roles.render" title={t('actions.list')} fitContent>
 								<Icon name="ArrowLeft" />
 							</Button>
 						</CanAccess>
@@ -72,7 +72,7 @@ export default function RolesFormPage(props: PageProps) {
 				}
 			>
 				<Form
-					route={isEditing ? 'admin.roles_update.execute' : 'admin.roles_create.execute'}
+					route={isEditing ? 'admin.identity.roles_update.execute' : 'admin.identity.roles_create.execute'}
 					routeParams={isEditing ? { id: role.id } : {}}
 					className="grid gap-6"
 					onBefore={(visit) => {

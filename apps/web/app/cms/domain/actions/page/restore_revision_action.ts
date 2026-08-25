@@ -3,7 +3,7 @@ import { PageRevisionRepository } from '#cms/domain/repositories/page/page_revis
 import { PageTranslationRepository } from '#cms/domain/repositories/page/page_translation_repository';
 import MissingRevisionException from '#cms/exceptions/page/missing_revision_exception';
 import { withTransaction } from '#core/services/with_transaction';
-import RowNotFoundException from '#exceptions/core/row_not_found_exception';
+import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import { LogService } from '#services/logging/log_service';
 import type PageTranslation from '#cms/models/page/page_translation';
 
