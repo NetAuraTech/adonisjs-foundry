@@ -4,11 +4,6 @@
  */
 
 export const listeners = {
-  account: {
-    BaseTokenListener: () => import('#listeners/account/base_token_listener'),
-    SendChangeEmailConfirmationEmail: () => import('#listeners/account/send_change_email_confirmation_email'),
-    SendChangeEmailNotificationEmail: () => import('#listeners/account/send_change_email_notification_email'),
-  },
   page: {
     SendContactFormEmail: () => import('#listeners/page/send_contact_form_email'),
   },

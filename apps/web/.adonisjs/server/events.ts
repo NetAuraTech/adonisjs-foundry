@@ -3,13 +3,9 @@
  * DO NOT EDIT manually
  */
 
-import AccountInitiateEmailChange from '#events/account/initiate_email_change'
 import PageContactFormSubmitted from '#events/page/contact_form_submitted'
 
 export const events = {
-  account: {
-    InitiateEmailChange: AccountInitiateEmailChange,
-  },
   page: {
     ContactFormSubmitted: PageContactFormSubmitted,
   },

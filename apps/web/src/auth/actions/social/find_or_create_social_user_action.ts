@@ -1,13 +1,13 @@
 import { AllyUserContract } from '@adonisjs/ally/types';
 import { inject } from '@adonisjs/core';
 import { DateTime } from 'luxon';
+import { PreferencesRepository } from '#account/repositories/preferences_repository';
 import UnverifiedAccountException from '#auth/exceptions/unverified_account_exception';
 import { type OAuthProvider } from '#auth/types/auth';
 import { withTransaction } from '#core/services/with_transaction';
 import { generateUniqueUsername } from '#identity/domain/user';
 import { RoleRepository } from '#identity/repositories/role_repository';
 import { UserRepository } from '#identity/repositories/user_repository';
-import PreferencesRepository from '#repositories/preferences/preferences_repository';
 import { LogService } from '#services/logging/log_service';
 import type User from '#identity/models/user';
 

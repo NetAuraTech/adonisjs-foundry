@@ -1,4 +1,8 @@
 import { test } from '@japa/runner';
+import { buildAccountPayload } from '#app/account/helpers/i18n_payloads/account';
+import { buildEmailChangePayload } from '#app/account/helpers/i18n_payloads/email_change';
+import { buildPreferencesPayload } from '#app/account/helpers/i18n_payloads/preferences';
+import { buildProfilePayload } from '#app/account/helpers/i18n_payloads/profile';
 import { buildAcceptInvitationPayload } from '#app/auth/helpers/i18n_payloads/accept_invitation';
 import { buildForgotPasswordPayload } from '#app/auth/helpers/i18n_payloads/forgot_password';
 import { buildRegisterPayload } from '#app/auth/helpers/i18n_payloads/register';
@@ -13,10 +17,8 @@ import { buildRolesShowPayload } from '#app/identity/helpers/i18n_payloads/roles
 import { buildUsersFormPayload } from '#app/identity/helpers/i18n_payloads/users_form';
 import { buildUsersListPayload } from '#app/identity/helpers/i18n_payloads/users_list';
 import { buildUsersShowPayload } from '#app/identity/helpers/i18n_payloads/users_show';
-import { buildAccountPayload } from '#helpers/i18n_payloads/account';
 import { buildCommonPayload } from '#helpers/i18n_payloads/common';
 import { buildDashboardPayload } from '#helpers/i18n_payloads/dashboard';
-import { buildEmailChangePayload } from '#helpers/i18n_payloads/email_change';
 import { buildFileFoldersPayload } from '#helpers/i18n_payloads/file_folders';
 import { buildFilesIndexPayload } from '#helpers/i18n_payloads/files_index';
 import { buildFilesShowPayload } from '#helpers/i18n_payloads/files_show';
@@ -24,8 +26,6 @@ import { buildHomePayload } from '#helpers/i18n_payloads/home';
 import { buildLogsListPayload } from '#helpers/i18n_payloads/logs_list';
 import { buildAdminMaintenanceIndexPayload } from '#helpers/i18n_payloads/maintenance_index';
 import { buildMaintenanceIndexPayload } from '#helpers/i18n_payloads/maintenance_index';
-import { buildPreferencesPayload } from '#helpers/i18n_payloads/preferences';
-import { buildProfilePayload } from '#helpers/i18n_payloads/profile';
 import { I18nService } from '#services/i18n_service';
 import { FakeI18n } from '#tests/helpers/fake_i18n';
 import { LOCALES, loadLang, emptyLeaves } from '#tests/helpers/i18n_lang_loader';

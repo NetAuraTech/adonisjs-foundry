@@ -67,8 +67,6 @@ const apiManifest: FlavorManifest = {
 		// front = guest/public pages (auth, self-service, home, sitemap, robots).
 		'apps/web/app/auth/controllers/front',
 		'apps/web/app/account/controllers/front',
-		'apps/web/app/profile/controllers/front',
-		'apps/web/app/preferences/controllers/front',
 		'apps/web/app/core/controllers/front',
 
 		// ─── Session-guarded Inertia admin controllers ───────────────────────
@@ -132,12 +130,13 @@ const apiManifest: FlavorManifest = {
 		'apps/web/start/routes/cms_admin.routes.ts',
 		'apps/web/start/routes/cms_public.routes.ts',
 		'apps/web/start/routes/cms_rest_api.routes.ts',
-		'apps/web/start/routes/settings.routes.ts',
 		'apps/web/start/routes/admin.routes.ts',
-		// The domain entry dies with the pruned front surface — the api flavor
+		// The domain entries die with the pruned front surface — the api flavor
 		// self-registers the token API directly from
-		// `#app/auth/controllers/api/routes` in the start/routes.ts rewrite.
+		// `#app/auth/controllers/api/routes` and
+		// `#app/account/controllers/api/routes` in the start/routes.ts rewrite.
 		'apps/web/app/auth/routes.ts',
+		'apps/web/app/account/routes.ts',
 
 		// ─── Front test suites (session-guarded Inertia-page functional, ──────
 		// ─── SEO, and the full-router structure snapshots of the pruned routes)
@@ -252,15 +251,14 @@ const apiManifest: FlavorManifest = {
 				'',
 				"import features from '#config/features'",
 				"import router from '@adonisjs/core/services/router'",
-				"import { enabledAuthGuards } from '#config/auth'",
 				"import { controllers } from '#generated/controllers'",
 				"import { registerAdminRestApiRoutes } from '#start/routes/admin_rest_api.routes'",
-				"import { registerApiRoutes } from '#start/routes/api.routes'",
 				"import { registerHealthRoutes } from '#start/routes/health.routes'",
 				"import { middleware } from '#start/kernel'",
 				'',
-				'// Auth + identity REST routes self-register on import (feature-gated inside the modules).',
+				'// Domain token API routes self-register on import (feature-gated inside the modules).',
 				"import '#app/auth/controllers/api/routes'",
+				"import '#app/account/controllers/api/routes'",
 				"import '#app/identity/controllers/api/routes'",
 				'',
 				'// Health routes are outside maintenance middleware (liveness/readiness probes)',
@@ -283,12 +281,10 @@ const apiManifest: FlavorManifest = {
 				"      .prefix('oauth')",
 				"      .as('auth.social')",
 				'',
-				'    // Admin REST surface (token-guarded).',
+				'    // Admin REST surface (token-guarded). The domain token APIs (auth,',
+				'    // account, identity) self-register on import and gate themselves on',
+				'    // `adminApi` (and the `api` guard) inside their route modules.',
 				'    if (features.adminApi) registerAdminRestApiRoutes()',
-				'',
-				'    // Token-guarded identity/register REST API — only when the `api` guard',
-				'    // is enabled and the `adminApi` surface is on.',
-				'    if (features.adminApi && enabledAuthGuards.api) registerApiRoutes()',
 				'  })',
 				'  .use(features.maintenance ? middleware.maintenance() : [])',
 				'',
@@ -593,23 +589,21 @@ const apiManifest: FlavorManifest = {
 			].join('\n'),
 		},
 
-		// ─── start/events.ts — drop the CMS contact-form listener ───────────────
+		// ─── start/events.ts — no event-driven flows remain ─────────────────────
 		{
 			path: 'apps/web/start/events.ts',
 			content: [
-				"import emitter from '@adonisjs/core/services/emitter'",
-				"import { events } from '#generated/events'",
-				"import { listeners } from '#generated/listeners'",
-				'',
-				'emitter.on(events.account.InitiateEmailChange, [',
-				'  listeners.account.SendChangeEmailNotificationEmail,',
-				"  'handle',",
-				'])',
-				'',
-				'emitter.on(events.account.InitiateEmailChange, [',
-				'  listeners.account.SendChangeEmailConfirmationEmail,',
-				"  'handle',",
-				'])',
+				'/*',
+				'|--------------------------------------------------------------------------',
+				'| Events',
+				'|--------------------------------------------------------------------------',
+				'|',
+				'| The `api` flavor has no event-driven flows: the auth and account mail',
+				'| flows deliver through the mail client directly (no event bus), and the',
+				'| CMS contact-form listener is pruned. This file intentionally registers',
+				'| nothing.',
+				'|',
+				'*/',
 				'',
 			].join('\n'),
 		},

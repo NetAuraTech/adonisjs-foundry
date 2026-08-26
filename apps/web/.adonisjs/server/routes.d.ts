@@ -5,6 +5,21 @@ type ParamValue = string | number | bigint | boolean
 export type ScannedRoutes = {
   ALL: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
+    'account.profile.render': { paramsTuple?: []; params?: {} }
+    'account.profile.execute': { paramsTuple?: []; params?: {} }
+    'account.account.render': { paramsTuple?: []; params?: {} }
+    'account.account.execute': { paramsTuple?: []; params?: {} }
+    'account.account.destroy': { paramsTuple?: []; params?: {} }
+    'account.email_change.render': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'account.email_change.execute': { paramsTuple?: []; params?: {} }
+    'account.preferences.render': { paramsTuple?: []; params?: {} }
+    'account.preferences.execute': { paramsTuple?: []; params?: {} }
+    'account.index': { paramsTuple?: []; params?: {} }
+    'api.v1.account.profile.show': { paramsTuple?: []; params?: {} }
+    'api.v1.account.profile.update': { paramsTuple?: []; params?: {} }
+    'api.v1.account.account.update': { paramsTuple?: []; params?: {} }
+    'api.v1.account.account.destroy': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.account.preferences.execute': { paramsTuple?: []; params?: {} }
     'admin.identity.users.render': { paramsTuple?: []; params?: {} }
     'admin.identity.users_create.render': { paramsTuple?: []; params?: {} }
     'admin.identity.users_create.execute': { paramsTuple?: []; params?: {} }
@@ -68,16 +83,6 @@ export type ScannedRoutes = {
     'health.readiness': { paramsTuple?: []; params?: {} }
     'sitemap.show': { paramsTuple?: []; params?: {} }
     'robots.show': { paramsTuple?: []; params?: {} }
-    'settings.profile.render': { paramsTuple?: []; params?: {} }
-    'settings.profile.execute': { paramsTuple?: []; params?: {} }
-    'settings.account.render': { paramsTuple?: []; params?: {} }
-    'settings.account.execute': { paramsTuple?: []; params?: {} }
-    'settings.account.destroy': { paramsTuple?: []; params?: {} }
-    'settings.email_change.render': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
-    'settings.email_change.execute': { paramsTuple?: []; params?: {} }
-    'settings.preferences.render': { paramsTuple?: []; params?: {} }
-    'settings.preferences.execute': { paramsTuple?: []; params?: {} }
-    'settings.index': { paramsTuple?: []; params?: {} }
     'admin.dashboard.render': { paramsTuple?: []; params?: {} }
     'admin.files.render': { paramsTuple?: []; params?: {} }
     'admin.files.upload': { paramsTuple?: []; params?: {} }
@@ -106,7 +111,6 @@ export type ScannedRoutes = {
     'api.v1.admin.folders_show_api.children': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.folders_update_api.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.folders_delete_api.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.theme.execute': { paramsTuple?: []; params?: {} }
     'api.v1.admin.dashboard_api.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.logs_api.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.maintenance_api.index': { paramsTuple?: []; params?: {} }
@@ -160,13 +164,15 @@ export type ScannedRoutes = {
     'page.home': { paramsTuple?: []; params?: {} }
     'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
     'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
-    'api.v1.profile.profile_api.show': { paramsTuple?: []; params?: {} }
-    'api.v1.profile.profile_api.update': { paramsTuple?: []; params?: {} }
-    'api.v1.account.account_api.update': { paramsTuple?: []; params?: {} }
-    'api.v1.account.account_api.destroy': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
+    'account.profile.render': { paramsTuple?: []; params?: {} }
+    'account.account.render': { paramsTuple?: []; params?: {} }
+    'account.email_change.render': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'account.preferences.render': { paramsTuple?: []; params?: {} }
+    'account.index': { paramsTuple?: []; params?: {} }
+    'api.v1.account.profile.show': { paramsTuple?: []; params?: {} }
     'admin.identity.users.render': { paramsTuple?: []; params?: {} }
     'admin.identity.users_create.render': { paramsTuple?: []; params?: {} }
     'admin.identity.users_show.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -198,11 +204,6 @@ export type ScannedRoutes = {
     'health.readiness': { paramsTuple?: []; params?: {} }
     'sitemap.show': { paramsTuple?: []; params?: {} }
     'robots.show': { paramsTuple?: []; params?: {} }
-    'settings.profile.render': { paramsTuple?: []; params?: {} }
-    'settings.account.render': { paramsTuple?: []; params?: {} }
-    'settings.email_change.render': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
-    'settings.preferences.render': { paramsTuple?: []; params?: {} }
-    'settings.index': { paramsTuple?: []; params?: {} }
     'admin.dashboard.render': { paramsTuple?: []; params?: {} }
     'admin.files.render': { paramsTuple?: []; params?: {} }
     'admin.file_folders.render': { paramsTuple?: []; params?: {} }
@@ -235,10 +236,15 @@ export type ScannedRoutes = {
     'page.home': { paramsTuple?: []; params?: {} }
     'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
     'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
-    'api.v1.profile.profile_api.show': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
+    'account.profile.render': { paramsTuple?: []; params?: {} }
+    'account.account.render': { paramsTuple?: []; params?: {} }
+    'account.email_change.render': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'account.preferences.render': { paramsTuple?: []; params?: {} }
+    'account.index': { paramsTuple?: []; params?: {} }
+    'api.v1.account.profile.show': { paramsTuple?: []; params?: {} }
     'admin.identity.users.render': { paramsTuple?: []; params?: {} }
     'admin.identity.users_create.render': { paramsTuple?: []; params?: {} }
     'admin.identity.users_show.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -270,11 +276,6 @@ export type ScannedRoutes = {
     'health.readiness': { paramsTuple?: []; params?: {} }
     'sitemap.show': { paramsTuple?: []; params?: {} }
     'robots.show': { paramsTuple?: []; params?: {} }
-    'settings.profile.render': { paramsTuple?: []; params?: {} }
-    'settings.account.render': { paramsTuple?: []; params?: {} }
-    'settings.email_change.render': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
-    'settings.preferences.render': { paramsTuple?: []; params?: {} }
-    'settings.index': { paramsTuple?: []; params?: {} }
     'admin.dashboard.render': { paramsTuple?: []; params?: {} }
     'admin.files.render': { paramsTuple?: []; params?: {} }
     'admin.file_folders.render': { paramsTuple?: []; params?: {} }
@@ -307,9 +308,13 @@ export type ScannedRoutes = {
     'page.home': { paramsTuple?: []; params?: {} }
     'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
     'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
-    'api.v1.profile.profile_api.show': { paramsTuple?: []; params?: {} }
   }
   POST: {
+    'account.profile.execute': { paramsTuple?: []; params?: {} }
+    'account.account.execute': { paramsTuple?: []; params?: {} }
+    'account.email_change.execute': { paramsTuple?: []; params?: {} }
+    'account.preferences.execute': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.account.preferences.execute': { paramsTuple?: []; params?: {} }
     'admin.identity.users_create.execute': { paramsTuple?: []; params?: {} }
     'admin.identity.users_update.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.identity.roles_create.execute': { paramsTuple?: []; params?: {} }
@@ -335,10 +340,6 @@ export type ScannedRoutes = {
     'api.v1.auth.email_verification.store': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'api.v1.auth.accept_invitation.store': { paramsTuple?: []; params?: {} }
     'api.v1.auth.logout.destroy': { paramsTuple?: []; params?: {} }
-    'settings.profile.execute': { paramsTuple?: []; params?: {} }
-    'settings.account.execute': { paramsTuple?: []; params?: {} }
-    'settings.email_change.execute': { paramsTuple?: []; params?: {} }
-    'settings.preferences.execute': { paramsTuple?: []; params?: {} }
     'admin.files.upload': { paramsTuple?: []; params?: {} }
     'admin.files.move': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.files.upsert_alt': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -347,7 +348,6 @@ export type ScannedRoutes = {
     'admin.settings.maintenance.toggle': { paramsTuple?: []; params?: {} }
     'api.v1.admin.files_upload_api.store': { paramsTuple?: []; params?: {} }
     'api.v1.admin.folders_api.store': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.theme.execute': { paramsTuple?: []; params?: {} }
     'api.v1.admin.pages_create_api.store': { paramsTuple?: []; params?: {} }
     'api.v1.admin.page_translations_api.store': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.page_revisions_api.restore': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
@@ -369,12 +369,13 @@ export type ScannedRoutes = {
     'contact.execute': { paramsTuple?: []; params?: {} }
   }
   DELETE: {
+    'account.account.destroy': { paramsTuple?: []; params?: {} }
+    'api.v1.account.account.destroy': { paramsTuple?: []; params?: {} }
     'admin.identity.users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.identity.roles.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.identity.permissions.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.identity.users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.identity.roles.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'settings.account.destroy': { paramsTuple?: []; params?: {} }
     'admin.files.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.files.delete_alt': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.file_folders.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -385,9 +386,10 @@ export type ScannedRoutes = {
     'api.v1.admin.templates.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.pages.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.templates.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.account.account_api.destroy': { paramsTuple?: []; params?: {} }
   }
   PUT: {
+    'api.v1.account.profile.update': { paramsTuple?: []; params?: {} }
+    'api.v1.account.account.update': { paramsTuple?: []; params?: {} }
     'api.v1.admin.identity.users.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.identity.roles.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.file_folders.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -402,8 +404,6 @@ export type ScannedRoutes = {
     'api.v1.admin.pages_api.set_homepage': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.page_revisions_api.toggle': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
     'api.v1.admin.templates.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.profile.profile_api.update': { paramsTuple?: []; params?: {} }
-    'api.v1.account.account_api.update': { paramsTuple?: []; params?: {} }
   }
 }
 declare module '@adonisjs/core/types/http' {

@@ -47,6 +47,6 @@ export default class AcceptInvitationController {
 
 		session.flash('success', this.i18n.translate('auth.invitation.accepted'));
 
-		return response.redirect().toRoute('settings.index');
+		return response.redirect().toRoute('account.index');
 	}
 }

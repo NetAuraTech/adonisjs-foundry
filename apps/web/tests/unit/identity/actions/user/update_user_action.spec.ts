@@ -1,10 +1,9 @@
 import app from '@adonisjs/core/services/app';
-import emitter from '@adonisjs/core/services/emitter';
 import { test } from '@japa/runner';
 import RowNotFoundException from '#core/exceptions/row_not_found_exception';
-import { events } from '#generated/events';
 import { UpdateUserAction } from '#identity/actions/user/update_user_action';
 import User from '#identity/models/user';
+import { restoreMailClient, swapMailClient } from '#tests/helpers/mail';
 
 test.group('UpdateUserAction', () => {
 	test('execute() throws RowNotFoundException if user does not exist', async ({ assert }) => {
@@ -29,9 +28,9 @@ test.group('UpdateUserAction', () => {
 		assert.equal(updated.username, 'new_name');
 	});
 
-	test('execute() dispatches InitiateEmailChange when email changes', async ({ assert }) => {
+	test('execute() sends the email-change mail pair when email changes', async ({ assert }) => {
+		const mail = swapMailClient();
 		const action = await app.container.make(UpdateUserAction);
-		const fakeEmitter = emitter.fake();
 
 		const user = await User.create({
 			email: 'update_email@test.com',
@@ -39,9 +38,13 @@ test.group('UpdateUserAction', () => {
 			password: 'pwd',
 		});
 
-		await action.execute({ id: user.id, email: 'new_update_email@test.com' });
+		const updated = await action.execute({ id: user.id, email: 'new_update_email@test.com' });
 
-		assert.isTrue(fakeEmitter.exists(events.account.InitiateEmailChange));
-		emitter.restore();
+		restoreMailClient();
+
+		assert.equal(updated.pendingEmail, 'new_update_email@test.com');
+		assert.equal(mail.sent.length, 2);
+		assert.equal(mail.sent[0].to, 'new_update_email@test.com');
+		assert.equal(mail.sent[1].to, 'update_email@test.com');
 	});
 });

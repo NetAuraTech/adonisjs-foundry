@@ -13,8 +13,8 @@ import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
 import { capitalize } from '~/lib/string';
+import type { SettingsAccountTranslations } from '#app/account/helpers/i18n_payloads/account';
 import type { OAuthProvider } from '#auth/types/auth';
-import type { SettingsAccountTranslations } from '#helpers/i18n_payloads/account';
 
 interface PageProps {
 	user: Data.Identity.User;
@@ -51,7 +51,7 @@ export default function AccountPage(props: PageProps) {
 			<SettingsLayout tab="account" translations={translations}>
 				<Card title={t('email.title')} subtitle={t('email.sub_title')}>
 					<Form
-						route="settings.account.execute"
+						route="account.account.execute"
 						className="grid gap-6"
 						onBefore={(visit) => {
 							const isValid = validationEmailForm.validateAll(visit.data as Record<string, any>);
@@ -131,7 +131,7 @@ export default function AccountPage(props: PageProps) {
 				</Card>
 				<Card title={t('password.title')} subtitle={t('password.sub_title')}>
 					<Form
-						route="settings.account.execute"
+						route="account.account.execute"
 						className="grid gap-6"
 						onBefore={(visit) => {
 							const isValid = validationPasswordForm.validateAll(visit.data as Record<string, any>);
@@ -214,7 +214,7 @@ export default function AccountPage(props: PageProps) {
 						<div className="grid gap-4">
 							<Banner title={t('delete.confirm.title')} message={t('delete.confirm.sub_title')} type="danger" />
 							<Form
-								route="settings.account.destroy"
+								route="account.account.destroy"
 								className="grid gap-6"
 								onBefore={(visit) => {
 									const isValid = validationDeleteForm.validateAll(visit.data as Record<string, any>);

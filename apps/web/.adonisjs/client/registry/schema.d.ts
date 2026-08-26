@@ -19,6 +19,186 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'account.profile.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/settings/profile'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/front/profile_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/front/profile_controller').default['render']>>>
+    }
+  }
+  'account.profile.execute': {
+    methods: ["POST"]
+    pattern: '/settings/profile'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/front/profile_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/front/profile_controller').default['execute']>>>
+    }
+  }
+  'account.account.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/settings/account'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/front/account_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/front/account_controller').default['render']>>>
+    }
+  }
+  'account.account.execute': {
+    methods: ["POST"]
+    pattern: '/settings/account'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/account/validators/account').updatePasswordValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/account/validators/account').updatePasswordValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/front/account_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/front/account_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'account.account.destroy': {
+    methods: ["DELETE"]
+    pattern: '/settings/account'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/account/validators/account').deleteAccountValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/account/validators/account').deleteAccountValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/front/account_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/front/account_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'account.email_change.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/settings/account/email_change/:token'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { token: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/front/email_change_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/front/email_change_controller').default['render']>>>
+    }
+  }
+  'account.email_change.execute': {
+    methods: ["POST"]
+    pattern: '/settings/account/email_change'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/account/validators/account').changeEmailValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/account/validators/account').changeEmailValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/front/email_change_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/front/email_change_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'account.preferences.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/settings/preferences'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/front/preferences_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/front/preferences_controller').default['render']>>>
+    }
+  }
+  'account.preferences.execute': {
+    methods: ["POST"]
+    pattern: '/settings/preferences'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/account/validators/preference').updateValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/account/validators/preference').updateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/front/preferences_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/front/preferences_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'account.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/settings'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'api.v1.account.profile.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/profile'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/api/profile_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/api/profile_controller').default['show']>>>
+    }
+  }
+  'api.v1.account.profile.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/profile'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/account/validators/profile').profileValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/account/validators/profile').profileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/api/profile_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/api/profile_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.account.account.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/account'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/api/account_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/api/account_controller').default['update']>>>
+    }
+  }
+  'api.v1.account.account.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/account'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/account/validators/account').deleteAccountValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/account/validators/account').deleteAccountValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/api/account_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/api/account_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.account.preferences.execute': {
+    methods: ["POST"]
+    pattern: '/api/v1/admin/preferences/theme'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/account/validators/preference').updateValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/account/validators/preference').updateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/api/preferences_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/api/preferences_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'admin.identity.users.render': {
     methods: ["GET","HEAD"]
     pattern: '/admin/users'
@@ -775,126 +955,6 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/front/robots_controller').default['show']>>>
     }
   }
-  'settings.profile.render': {
-    methods: ["GET","HEAD"]
-    pattern: '/settings/profile'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/profile/controllers/front/profile_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/profile/controllers/front/profile_controller').default['render']>>>
-    }
-  }
-  'settings.profile.execute': {
-    methods: ["POST"]
-    pattern: '/settings/profile'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/profile/controllers/front/profile_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/profile/controllers/front/profile_controller').default['execute']>>>
-    }
-  }
-  'settings.account.render': {
-    methods: ["GET","HEAD"]
-    pattern: '/settings/account'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/front/account_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/front/account_controller').default['render']>>>
-    }
-  }
-  'settings.account.execute': {
-    methods: ["POST"]
-    pattern: '/settings/account'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/account').updatePasswordValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/account').updatePasswordValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/front/account_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/front/account_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'settings.account.destroy': {
-    methods: ["DELETE"]
-    pattern: '/settings/account'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/account').deleteAccountValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/account').deleteAccountValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/front/account_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/front/account_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'settings.email_change.render': {
-    methods: ["GET","HEAD"]
-    pattern: '/settings/account/email_change/:token'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { token: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/front/email_change_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/front/email_change_controller').default['render']>>>
-    }
-  }
-  'settings.email_change.execute': {
-    methods: ["POST"]
-    pattern: '/settings/account/email_change'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/account').changeEmailValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/account').changeEmailValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/front/email_change_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/front/email_change_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'settings.preferences.render': {
-    methods: ["GET","HEAD"]
-    pattern: '/settings/preferences'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/preferences/controllers/front/preferences_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/preferences/controllers/front/preferences_controller').default['render']>>>
-    }
-  }
-  'settings.preferences.execute': {
-    methods: ["POST"]
-    pattern: '/settings/preferences'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/preference').updateValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/preference').updateValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/preferences/controllers/front/preferences_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/preferences/controllers/front/preferences_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'settings.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/settings'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: unknown
-      errorResponse: unknown
-    }
-  }
   'admin.dashboard.render': {
     methods: ["GET","HEAD"]
     pattern: '/admin'
@@ -1229,18 +1289,6 @@ export interface Registry {
       query: ExtractQuery<InferInput<(typeof import('#validators/file').showFileValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_delete_api_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_delete_api_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.theme.execute': {
-    methods: ["POST"]
-    pattern: '/api/v1/admin/preferences/theme'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/preference').updateValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/preference').updateValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/preferences/controllers/api/theme_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/preferences/controllers/api/theme_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'api.v1.admin.dashboard_api.index': {
@@ -1877,54 +1925,6 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#app/page/controllers/front/page_controller').default['render']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/page/controllers/front/page_controller').default['render']>>>
-    }
-  }
-  'api.v1.profile.profile_api.show': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/profile'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/profile/controllers/api/profile_api_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/profile/controllers/api/profile_api_controller').default['show']>>>
-    }
-  }
-  'api.v1.profile.profile_api.update': {
-    methods: ["PUT"]
-    pattern: '/api/v1/profile'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/profile').profileValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/profile').profileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/profile/controllers/api/profile_api_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/profile/controllers/api/profile_api_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.account.account_api.update': {
-    methods: ["PUT"]
-    pattern: '/api/v1/account'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/api/account_api_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/api/account_api_controller').default['update']>>>
-    }
-  }
-  'api.v1.account.account_api.destroy': {
-    methods: ["DELETE"]
-    pattern: '/api/v1/account'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/account').deleteAccountValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/account').deleteAccountValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/account/controllers/api/account_api_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/api/account_api_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
 }

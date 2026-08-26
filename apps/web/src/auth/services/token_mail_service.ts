@@ -2,7 +2,7 @@ import { inject } from '@adonisjs/core';
 import hash from '@adonisjs/core/services/hash';
 import i18nManager from '@adonisjs/i18n/services/main';
 import { DateTime } from 'luxon';
-import { GetPreferencesAction } from '#actions/preferences/get_preferences_action';
+import { GetPreferencesAction } from '#account/actions/preferences/get_preferences_action';
 import { Token } from '#auth/domain/token';
 import { TOKEN_TYPES, type FullToken, type TokenType } from '#auth/enums/token_type';
 import { TokenRepository } from '#auth/repositories/token_repository';

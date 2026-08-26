@@ -33,15 +33,15 @@ test.group('Routes structure', (group) => {
 			'auth.social.callback',
 			'auth.social.unlink',
 
-			// Settings (referenced by many controllers)
-			'settings.profile.render',
-			'settings.profile.execute',
-			'settings.account.render',
-			'settings.account.execute',
-			'settings.account.destroy',
-			'settings.preferences.render',
-			'settings.preferences.execute',
-			'settings.index',
+			// Account (referenced by many controllers)
+			'account.profile.render',
+			'account.profile.execute',
+			'account.account.render',
+			'account.account.execute',
+			'account.account.destroy',
+			'account.preferences.render',
+			'account.preferences.execute',
+			'account.index',
 
 			// Admin back-office
 			'admin.dashboard.render',
@@ -85,8 +85,8 @@ test.group('Routes structure', (group) => {
 		assert.ok(home, 'Expected a home route (page.home or front.home)');
 		assert.equal(home!.pattern, '/');
 
-		// Settings index redirects to profile
-		assert.equal(byName.get('settings.index')?.pattern, '/settings');
+		// Account index redirects to profile
+		assert.equal(byName.get('account.index')?.pattern, '/settings');
 	});
 
 	test('admin routes are under /admin prefix', ({ assert }) => {
@@ -102,15 +102,15 @@ test.group('Routes structure', (group) => {
 		}
 	});
 
-	test('settings routes are under /settings prefix', ({ assert }) => {
+	test('account routes are under /settings prefix', ({ assert }) => {
 		const json = router.toJSON();
 		const routes = json['root'];
-		const settingsRoutes = routes.filter((r) => r.name?.startsWith('settings.'));
+		const accountRoutes = routes.filter((r) => r.name?.startsWith('account.'));
 
-		for (const route of settingsRoutes) {
+		for (const route of accountRoutes) {
 			assert.ok(
 				route.pattern.startsWith('/settings'),
-				`Settings route "${route.name}" should start with /settings prefix, got: ${route.pattern}`,
+				`Account route "${route.name}" should start with /settings prefix, got: ${route.pattern}`,
 			);
 		}
 	});

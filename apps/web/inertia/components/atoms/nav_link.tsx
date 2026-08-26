@@ -101,7 +101,7 @@ export const variants = {
  * <NavLink route="page.home" label="Home" variant="nav" />
  *
  * // Settings tab
- * <NavLink route="settings.profile.render" label="Profile" variant="setting_nav" />
+ * <NavLink route="account.profile.render" label="Profile" variant="setting_nav" />
  *
  * // Pagination link with query string
  * <NavLink route="admin.identity.users.render" label="2" variant="pagination" qs={{ page: 2 }} />

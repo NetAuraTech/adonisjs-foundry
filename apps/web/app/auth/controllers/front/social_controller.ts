@@ -79,7 +79,7 @@ export default class SocialController {
 			await this.linkSocialProviderAction.execute({ user: authenticatedUser, allyUser, provider });
 			regenerateCsrfToken(ctx);
 			session.flash('success', this.i18n.translate('auth.social.linked', { provider }));
-			return response.redirect().toRoute('settings.account.render');
+			return response.redirect().toRoute('account.account.render');
 		}
 
 		const user = await this.findOrCreateSocialUserAction.execute({ allyUser, provider });
@@ -91,7 +91,7 @@ export default class SocialController {
 		}
 
 		session.flash('success', this.i18n.translate('auth.session.login.success'));
-		return response.redirect().toRoute('settings.profile.render');
+		return response.redirect().toRoute('account.profile.render');
 	}
 
 	async unlink(ctx: HttpContext) {
@@ -133,6 +133,6 @@ export default class SocialController {
 
 		regenerateCsrfToken(ctx);
 		session.flash('success', this.i18n.translate('auth.social.password_defined'));
-		return response.redirect().toRoute('settings.account.render');
+		return response.redirect().toRoute('account.account.render');
 	}
 }
