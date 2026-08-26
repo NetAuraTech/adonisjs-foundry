@@ -1,6 +1,6 @@
 import { test } from '@japa/runner';
-import User from '#identity/models/user';
 import { profileValidator } from '#app/account/validators/profile';
+import User from '#identity/models/user';
 
 test.group('Profile Validators', () => {
 	test('profileValidator requires unique username except for self', async ({ assert }) => {

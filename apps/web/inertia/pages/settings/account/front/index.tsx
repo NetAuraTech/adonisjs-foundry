@@ -13,8 +13,8 @@ import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
 import { capitalize } from '~/lib/string';
-import type { OAuthProvider } from '#auth/types/auth';
 import type { SettingsAccountTranslations } from '#app/account/helpers/i18n_payloads/account';
+import type { OAuthProvider } from '#auth/types/auth';
 
 interface PageProps {
 	user: Data.Identity.User;

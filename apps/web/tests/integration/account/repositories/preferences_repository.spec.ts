@@ -1,8 +1,8 @@
 import { test } from '@japa/runner';
+import UserPreference from '#account/models/user_preference';
 import { GetUserPreferenceQuery } from '#account/queries/get_user_preference_query';
 import { PreferencesRepository } from '#account/repositories/preferences_repository';
 import { UserFactory } from '#factories/user_factory';
-import UserPreference from '#account/models/user_preference';
 
 test.group('PreferencesRepository', () => {
 	const repo = new PreferencesRepository();

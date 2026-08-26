@@ -2,12 +2,12 @@ import { inject } from '@adonisjs/core';
 import { Exception } from '@adonisjs/core/exceptions';
 import { DeleteUserAccountAction } from '#account/actions/account/delete_user_account_action';
 import { UpdateUserAccountAction } from '#account/actions/account/update_user_account_action';
+import { buildAccountPayload } from '#app/account/helpers/i18n_payloads/account';
+import { deleteAccountValidator, updateEmailValidator, updatePasswordValidator } from '#app/account/validators/account';
 import { regenerateCsrfToken } from '#app/auth/helpers/crsf';
 import UserTransformer from '#app/identity/transformers/user_transformer';
 import { enabledProviders } from '#auth/oauth_providers';
-import { buildAccountPayload } from '#app/account/helpers/i18n_payloads/account';
 import { I18nService } from '#services/i18n_service';
-import { deleteAccountValidator, updateEmailValidator, updatePasswordValidator } from '#app/account/validators/account';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

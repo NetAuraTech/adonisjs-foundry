@@ -1,11 +1,11 @@
 import { test } from '@japa/runner';
-import User from '#identity/models/user';
 import {
 	updateEmailValidator,
 	updatePasswordValidator,
 	deleteAccountValidator,
 	changeEmailValidator,
 } from '#app/account/validators/account';
+import User from '#identity/models/user';
 
 test.group('Account Validators', () => {
 	test('updateEmailValidator requires unique email except for self', async ({ assert }) => {

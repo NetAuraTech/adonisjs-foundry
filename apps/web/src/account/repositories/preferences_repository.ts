@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
-import { type UserPreferences } from '#account/types/preferences';
 import UserPreference from '#account/models/user_preference';
+import { type UserPreferences } from '#account/types/preferences';
 import { BaseRepository } from '#repositories/base_repository';
 import type User from '#identity/models/user';
 

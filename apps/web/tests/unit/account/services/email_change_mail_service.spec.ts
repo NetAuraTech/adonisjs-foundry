@@ -38,7 +38,9 @@ test.group('EmailChangeMailService', () => {
 		assert.equal(tokens.length, 1);
 	});
 
-	test('sendEmailChangeMails() expires outstanding email-change tokens before issuing a fresh one', async ({ assert }) => {
+	test('sendEmailChangeMails() expires outstanding email-change tokens before issuing a fresh one', async ({
+		assert,
+	}) => {
 		swapMailClient();
 		const service = await app.container.make(EmailChangeMailService);
 		const tokenRepo = await app.container.make(TokenRepository);
