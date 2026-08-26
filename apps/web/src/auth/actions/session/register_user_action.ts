@@ -1,13 +1,13 @@
 import { inject } from '@adonisjs/core';
+import { PreferencesRepository } from '#account/repositories/preferences_repository';
+import { Locale } from '#account/types/preferences';
 import { type RegisterPayload } from '#auth/types/auth';
 import EmailAlreadyExistsException from '#core/exceptions/email_already_exists_exception';
 import { withTransaction } from '#core/services/with_transaction';
 import { extractNameFromEmail, generateUniqueUsername } from '#identity/domain/user';
 import { RoleRepository } from '#identity/repositories/role_repository';
 import { UserRepository } from '#identity/repositories/user_repository';
-import PreferencesRepository from '#repositories/preferences/preferences_repository';
 import { LogService } from '#services/logging/log_service';
-import { Locale } from '#types/preferences';
 import type User from '#identity/models/user';
 
 /**

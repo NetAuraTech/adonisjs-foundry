@@ -9,7 +9,7 @@ import { Field } from '~/components/molecules/field';
 import { rules } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
-import type { EmailChangeTranslations } from '#helpers/i18n_payloads/email_change';
+import type { EmailChangeTranslations } from '#app/account/helpers/i18n_payloads/email_change';
 
 interface PageProps {
 	token: string;
@@ -43,7 +43,7 @@ export default function EmailChangePage(props: PageProps) {
 					/>
 					<Card>
 						<Form
-							route="settings.email_change.execute"
+							route="account.email_change.execute"
 							className="grid gap-6"
 							onBefore={(visit) => {
 								const isValid = validation.validateAll(visit.data as Record<string, any>);
@@ -74,7 +74,7 @@ export default function EmailChangePage(props: PageProps) {
 										<Button loading={processing} type={'submit'} fitContent>
 											{t('submit')}
 										</Button>
-										<Button route="settings.account.render" fitContent variant="outline">
+										<Button route="account.account.render" fitContent variant="outline">
 											{t('cancel')}
 										</Button>
 									</div>

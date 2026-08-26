@@ -2,8 +2,8 @@ import { type SharedProps } from '@adonisjs/inertia/types';
 import { usePage } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import type { Theme } from '#account/types/preferences';
 import { useAuth } from '~/hooks/use_auth';
-import type { Theme } from '#types/preferences';
 
 /**
  * Applies or removes the `dark` class on `<html>` and syncs `localStorage`.

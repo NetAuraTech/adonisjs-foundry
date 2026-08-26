@@ -6,11 +6,15 @@
 export const controllers = {
   account: {
     api: {
-      AccountApi: () => import('#app/account/controllers/api/account_api_controller'),
+      Account: () => import('#app/account/controllers/api/account_controller'),
+      Preferences: () => import('#app/account/controllers/api/preferences_controller'),
+      Profile: () => import('#app/account/controllers/api/profile_controller'),
     },
     front: {
       Account: () => import('#app/account/controllers/front/account_controller'),
       EmailChange: () => import('#app/account/controllers/front/email_change_controller'),
+      Preferences: () => import('#app/account/controllers/front/preferences_controller'),
+      Profile: () => import('#app/account/controllers/front/profile_controller'),
     },
   },
   auth: {
@@ -137,22 +141,6 @@ export const controllers = {
     front: {
       Contact: () => import('#app/page/controllers/front/contact_controller'),
       Page: () => import('#app/page/controllers/front/page_controller'),
-    },
-  },
-  preferences: {
-    api: {
-      Theme: () => import('#app/preferences/controllers/api/theme_controller'),
-    },
-    front: {
-      Preferences: () => import('#app/preferences/controllers/front/preferences_controller'),
-    },
-  },
-  profile: {
-    api: {
-      ProfileApi: () => import('#app/profile/controllers/api/profile_api_controller'),
-    },
-    front: {
-      Profile: () => import('#app/profile/controllers/front/profile_controller'),
     },
   },
   template: {

@@ -1,10 +1,10 @@
 import { inject } from '@adonisjs/core';
-import { ConfirmEmailChangeAction } from '#actions/account/confirm_email_change_action';
+import { ConfirmEmailChangeAction } from '#account/actions/account/confirm_email_change_action';
 import { regenerateCsrfToken } from '#app/auth/helpers/crsf';
 import { FullToken } from '#auth/enums/token_type';
-import { buildEmailChangePayload } from '#helpers/i18n_payloads/email_change';
+import { buildEmailChangePayload } from '#app/account/helpers/i18n_payloads/email_change';
 import { I18nService } from '#services/i18n_service';
-import { changeEmailValidator } from '#validators/account';
+import { changeEmailValidator } from '#app/account/validators/account';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()
@@ -40,6 +40,6 @@ export default class EmailChangeController {
 
 		session.flash('success', this.i18n.translate('settings.email.change.success'));
 
-		return response.redirect().toRoute('settings.account.render');
+		return response.redirect().toRoute('account.account.render');
 	}
 }

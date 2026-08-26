@@ -2,7 +2,7 @@ import { inject } from '@adonisjs/core';
 import { type HttpContext, RequestValidator } from '@adonisjs/core/http';
 import { I18n } from '@adonisjs/i18n';
 import i18nManager from '@adonisjs/i18n/services/main';
-import { GetPreferencesAction } from '#actions/preferences/get_preferences_action';
+import { GetPreferencesAction } from '#account/actions/preferences/get_preferences_action';
 import type { NextFn } from '@adonisjs/core/types/http';
 
 /**

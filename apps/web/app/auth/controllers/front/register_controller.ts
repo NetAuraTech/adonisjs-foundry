@@ -42,6 +42,6 @@ export default class RegisterController {
 
 		session.flash('success', this.i18n.translate('auth.session.register.success'));
 
-		return response.redirect().toRoute('settings.profile.render');
+		return response.redirect().toRoute('account.profile.render');
 	}
 }

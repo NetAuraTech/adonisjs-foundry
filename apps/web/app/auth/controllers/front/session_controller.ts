@@ -40,7 +40,7 @@ export default class SessionController {
 
 		session.flash('success', this.i18n.translate('auth.session.login.success'));
 
-		return response.redirect().toRoute('settings.profile.render');
+		return response.redirect().toRoute('account.profile.render');
 	}
 
 	async destroy(ctx: HttpContext) {

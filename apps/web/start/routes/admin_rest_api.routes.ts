@@ -8,11 +8,12 @@
 | transformers — no business logic is duplicated with the Inertia admin.
 |
 | The identity resources (`/api/v1/admin/users`, `/roles`, `/permissions`)
-| are registered by `app/identity/routes.ts`, and the CMS resources
-| (`/api/v1/admin/pages`, `/templates`, `/builder`) are registered separately
-| from `start/routes/cms_rest_api.routes.ts` behind the `cms` feature flag,
-| so flavors that prune those domains can delete the module (and never
-| reference those controllers here).
+| are registered by `app/identity/routes.ts`, the account theme resource
+| (`/api/v1/admin/preferences/theme`) by `app/account/routes.ts`, and the
+| CMS resources (`/api/v1/admin/pages`, `/templates`, `/builder`) are
+| registered separately from `start/routes/cms_rest_api.routes.ts` behind
+| the `cms` feature flag, so flavors that prune those domains can delete
+| the module (and never reference those controllers here).
 |
 | Registered only when the `adminApi` feature flag is on and the `api`
 | access-token guard is enabled (see `config/auth.ts`).
@@ -98,12 +99,6 @@ export function registerAdminRestApiRoutes(): void {
 								.use([middleware.permission({ permissions: [permissions.folders.delete] })]);
 						})
 						.prefix('folders');
-
-					router
-						.group(() => {
-							router.post('theme', [controllers.preferences.api.Theme, 'execute']);
-						})
-						.prefix('preferences');
 
 					router
 						.get('/', [controllers.core.api.DashboardApi, 'index'])

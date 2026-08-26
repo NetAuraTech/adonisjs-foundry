@@ -1,4 +1,3 @@
-import emitter from '@adonisjs/core/services/emitter';
 import testUtils from '@adonisjs/core/services/test_utils';
 import limiter from '@adonisjs/limiter/services/main';
 import { test } from '@japa/runner';
@@ -13,10 +12,6 @@ async function setupGroup(group: any) {
 	group.each.setup(() => testUtils.db().truncate());
 	group.each.setup(resetSharedState);
 	group.each.setup(() => limiter.clear());
-	group.each.setup(() => {
-		emitter.fake();
-		return () => emitter.restore();
-	});
 	// Register and forgot-password send their mails directly through the
 	// mail client (no event bus) — swap the binding so the suite never
 	// touches a real transport.

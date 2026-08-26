@@ -1,12 +1,12 @@
 import { inject } from '@adonisjs/core';
 import { type HttpContext } from '@adonisjs/core/http';
-import { DeleteUserAccountAction } from '#actions/account/delete_user_account_action';
-import { UpdateUserAccountAction } from '#actions/account/update_user_account_action';
+import { DeleteUserAccountAction } from '#account/actions/account/delete_user_account_action';
+import { UpdateUserAccountAction } from '#account/actions/account/update_user_account_action';
+import InvalidActionException from '#account/exceptions/invalid_action_exception';
+import { deleteAccountValidator, updateEmailValidator, updatePasswordValidator } from '#app/account/validators/account';
 import { preloadUserRoleWithPermissions } from '#app/identity/helpers/load_user_role';
 import UserTransformer from '#app/identity/transformers/user_transformer';
-import InvalidActionException from '#exceptions/account/invalid_action_exception';
 import { type RestEndpoint, handle } from '#rest/rest_adapter';
-import { deleteAccountValidator, updateEmailValidator, updatePasswordValidator } from '#validators/account';
 import type User from '#identity/models/user';
 import type { Infer } from '@vinejs/vine/types';
 

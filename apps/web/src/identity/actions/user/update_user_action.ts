@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
+import { EmailChangeMailService } from '#account/services/email_change_mail_service';
 import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import { withTransaction } from '#core/services/with_transaction';
-import { events } from '#generated/events';
 import User from '#identity/models/user';
 import { UserRepository } from '#identity/repositories/user_repository';
 
@@ -17,7 +17,10 @@ interface UpdateUserPayload {
  */
 @inject()
 export class UpdateUserAction {
-	constructor(protected userRepository: UserRepository) {}
+	constructor(
+		protected userRepository: UserRepository,
+		protected emailChangeMailService: EmailChangeMailService,
+	) {}
 
 	/**
 	 * Execute user update.
@@ -39,7 +42,7 @@ export class UpdateUserAction {
 			await withTransaction(async () => {
 				await this.userRepository.update(user, { pendingEmail: email });
 			});
-			await events.account.InitiateEmailChange.dispatch(user);
+			await this.emailChangeMailService.sendEmailChangeMails(user);
 		}
 
 		return withTransaction(async () => {

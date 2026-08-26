@@ -4,7 +4,7 @@ import { RegisterUserAction } from '#auth/actions/session/register_user_action';
 import EmailAlreadyExistsException from '#core/exceptions/email_already_exists_exception';
 import Role from '#identity/models/role';
 import User from '#identity/models/user';
-import UserPreference from '#models/preferences/user_preference';
+import UserPreference from '#account/models/user_preference';
 
 test.group('RegisterUserAction', () => {
 	test('execute() creates a new user with preferences', async ({ assert }) => {

@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
 import i18nManager from '@adonisjs/i18n/services/main';
-import { GetPreferencesAction } from '#actions/preferences/get_preferences_action';
+import { GetPreferencesAction } from '#account/actions/preferences/get_preferences_action';
 import ContactFormSubmitted from '#events/page/contact_form_submitted';
 import { UserRepository } from '#identity/repositories/user_repository';
 import ContactFormNotification from '#mails/page/contact_form_notification';

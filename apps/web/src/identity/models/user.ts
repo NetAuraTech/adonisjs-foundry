@@ -5,12 +5,12 @@ import { compose } from '@adonisjs/core/helpers';
 import hash from '@adonisjs/core/services/hash';
 import { afterFetch, afterFind, beforeSave, belongsTo, computed, hasMany, hasOne } from '@adonisjs/lucid/orm';
 import { DateTime } from 'luxon';
+import UserPreference from '#account/models/user_preference';
 import { TOKEN_TYPES } from '#auth/enums/token_type';
 import Token from '#auth/models/token';
 import { UserSchema } from '#database/schema';
 import { UserStatus } from '#identity/domain/user';
 import Role from '#identity/models/role';
-import UserPreference from '#models/preferences/user_preference';
 import env from '#start/env';
 import type { BelongsTo, HasMany, HasOne } from '@adonisjs/lucid/types/relations';
 

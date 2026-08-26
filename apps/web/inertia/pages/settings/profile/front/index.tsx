@@ -10,7 +10,7 @@ import { toLooseErrors } from '~/helpers/form_errors';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
-import type { SettingsProfileTranslations } from '#helpers/i18n_payloads/profile';
+import type { SettingsProfileTranslations } from '#app/account/helpers/i18n_payloads/profile';
 
 interface PageProps {
 	user: Data.Identity.User;
@@ -31,7 +31,7 @@ export default function ProfilePage(props: PageProps) {
 			<SettingsLayout tab="profile" translations={translations}>
 				<Card title={t('title')} subtitle={t('sub_title')}>
 					<Form
-						route="settings.profile.execute"
+						route="account.profile.execute"
 						className="grid gap-6"
 						onBefore={(visit) => {
 							const isValid = validation.validateAll(visit.data as Record<string, any>);
