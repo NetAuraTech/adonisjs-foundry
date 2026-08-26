@@ -1,5 +1,5 @@
 import { BaseTransformer } from '@adonisjs/core/transformers';
-import { StorageService } from '#services/file/storage_service';
+import { StorageService } from '#file/services/storage_service';
 import type Template from '#cms/models/template/template';
 
 export default class TemplateTransformer extends BaseTransformer<Template> {

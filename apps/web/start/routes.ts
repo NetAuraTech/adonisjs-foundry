@@ -8,9 +8,10 @@
 |
 */
 
-// Auth, identity and account routes self-register on import (feature-gated inside the modules).
+// Auth, identity, account and file routes self-register on import (feature-gated inside the modules).
 import '#app/account/routes';
 import '#app/auth/routes';
+import '#app/file/routes';
 import '#app/identity/routes';
 import router from '@adonisjs/core/services/router';
 import features from '#config/features';

@@ -9,11 +9,12 @@
 |
 | The identity resources (`/api/v1/admin/users`, `/roles`, `/permissions`)
 | are registered by `app/identity/routes.ts`, the account theme resource
-| (`/api/v1/admin/preferences/theme`) by `app/account/routes.ts`, and the
-| CMS resources (`/api/v1/admin/pages`, `/templates`, `/builder`) are
-| registered separately from `start/routes/cms_rest_api.routes.ts` behind
-| the `cms` feature flag, so flavors that prune those domains can delete
-| the module (and never reference those controllers here).
+| (`/api/v1/admin/preferences/theme`) by `app/account/routes.ts`, the file
+| resources (`/api/v1/admin/files`, `/folders`) by `app/file/routes.ts`,
+| and the CMS resources (`/api/v1/admin/pages`, `/templates`, `/builder`)
+| are registered separately from `start/routes/cms_rest_api.routes.ts`
+| behind the `cms` feature flag, so flavors that prune those domains can
+| delete the module (and never reference those controllers here).
 |
 | Registered only when the `adminApi` feature flag is on and the `api`
 | access-token guard is enabled (see `config/auth.ts`).
@@ -51,55 +52,6 @@ export function registerAdminRestApiRoutes(): void {
 		.group(() => {
 			router
 				.group(() => {
-					router
-						.group(() => {
-							router
-								.get('/', [controllers.file.api.FilesApi, 'index'])
-								.use([middleware.permission({ permissions: [permissions.files.view] })]);
-							router
-								.post('/', [controllers.file.api.FilesUploadApi, 'store'])
-								.use([middleware.permission({ permissions: [permissions.files.create] })]);
-							router
-								.get('/:id', [controllers.file.api.FilesShowApi, 'show'])
-								.use([middleware.permission({ permissions: [permissions.files.view] })]);
-							router
-								.put('/:id/move', [controllers.file.api.FilesApi, 'move'])
-								.use([middleware.permission({ permissions: [permissions.files.update] })]);
-							router
-								.delete('/:id', [controllers.file.api.FilesDeleteApi, 'destroy'])
-								.use([middleware.permission({ permissions: [permissions.files.delete] })]);
-							router
-								.put('/:id/alt', [controllers.file.api.FilesAltApi, 'upsertAlt'])
-								.use([middleware.permission({ permissions: [permissions.files.update] })]);
-							router
-								.delete('/:id/alt', [controllers.file.api.FilesAltApi, 'deleteAlt'])
-								.use([middleware.permission({ permissions: [permissions.files.update] })]);
-						})
-						.prefix('files');
-
-					router
-						.group(() => {
-							router
-								.get('/', [controllers.file.api.FoldersApi, 'index'])
-								.use([middleware.permission({ permissions: [permissions.folders.view] })]);
-							router
-								.post('/', [controllers.file.api.FoldersApi, 'store'])
-								.use([middleware.permission({ permissions: [permissions.folders.create] })]);
-							router
-								.get('/:id', [controllers.file.api.FoldersShowApi, 'show'])
-								.use([middleware.permission({ permissions: [permissions.folders.view] })]);
-							router
-								.get('/:id/children', [controllers.file.api.FoldersShowApi, 'children'])
-								.use([middleware.permission({ permissions: [permissions.folders.view] })]);
-							router
-								.put('/:id', [controllers.file.api.FoldersUpdateApi, 'update'])
-								.use([middleware.permission({ permissions: [permissions.folders.update] })]);
-							router
-								.delete('/:id', [controllers.file.api.FoldersDeleteApi, 'destroy'])
-								.use([middleware.permission({ permissions: [permissions.folders.delete] })]);
-						})
-						.prefix('folders');
-
 					router
 						.get('/', [controllers.core.api.DashboardApi, 'index'])
 						.prefix('dashboard')

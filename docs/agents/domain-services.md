@@ -3,6 +3,10 @@
 One service = one bounded context. Lives in `app/domain/services/{area}/{name}_service.ts`. Owns business logic, delegates persistence to a repository, never returns HTTP responses — only models, primitives, or `void`.
 
 > **CMS exception (ADR-0001):** CMS services (page, template) live under `app/cms/domain/services/{area}/`, imported via `#cms/domain/services/...`. The layout above applies to everything outside the CMS module.
+>
+> **Identity co-location:** identity services live under `src/identity/services/`, imported via `#identity/services/...` — co-located with the rest of the identity business module.
+>
+> **File co-location:** file services live under `src/file/services/`, imported via `#file/services/...`, and the permission catalog at `src/file/permissions.ts` — co-located with the rest of the file business module. The nav entries module is transport and lives at `app/file/nav.ts` (imported via `#app/file/nav`).
 
 Method names describe the action, not a fixed CRUD contract. A service exposes
 whatever operations its bounded context needs. Don't force

@@ -1,6 +1,6 @@
 import factory from '@adonisjs/lucid/factories';
 import { FileFolderFactory } from '#factories/file_folder_factory';
-import CmsFile from '#models/file/file';
+import CmsFile from '#file/models/file';
 
 export const FileFactory = factory
 	.define(CmsFile, async ({ faker }) => {

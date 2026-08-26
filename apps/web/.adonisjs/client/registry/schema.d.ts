@@ -199,6 +199,282 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/api/preferences_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'admin.file.files.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/files'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#app/file/validators/file').listFileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.file.files.upload': {
+    methods: ["POST"]
+    pattern: '/admin/files/upload'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['upload']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['upload']>>>
+    }
+  }
+  'admin.file.files.move': {
+    methods: ["POST"]
+    pattern: '/admin/files/:id/move'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/file/validators/file').showFileValidator)>|InferInput<(typeof import('#app/file/validators/file').moveFileValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#app/file/validators/file').showFileValidator)>|InferInput<(typeof import('#app/file/validators/file').moveFileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['move']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['move']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.file.files.destroy': {
+    methods: ["DELETE"]
+    pattern: '/admin/files/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/file/validators/file').showFileValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#app/file/validators/file').showFileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.file.files.upsert_alt': {
+    methods: ["POST"]
+    pattern: '/admin/files/:id/alts'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/file/validators/file').showFileValidator)>|InferInput<(typeof import('#app/file/validators/file').upsertAltValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#app/file/validators/file').showFileValidator)>|InferInput<(typeof import('#app/file/validators/file').upsertAltValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['upsertAlt']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['upsertAlt']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.file.files.delete_alt': {
+    methods: ["DELETE"]
+    pattern: '/admin/files/:id/alts'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/file/validators/file').showFileValidator)>|InferInput<(typeof import('#app/file/validators/file').deleteAltValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#app/file/validators/file').showFileValidator)>|InferInput<(typeof import('#app/file/validators/file').deleteAltValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['deleteAlt']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['deleteAlt']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.file.file_folders.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/files/folders'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/file_folders_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/file_folders_controller').default['render']>>>
+    }
+  }
+  'admin.file.file_folders.execute': {
+    methods: ["POST"]
+    pattern: '/admin/files/folders'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/file/validators/file').createFolderValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/file/validators/file').createFolderValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/file_folders_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/file_folders_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.file.file_folders.update': {
+    methods: ["PUT"]
+    pattern: '/admin/files/folders/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/file/validators/file').showFileValidator)>|InferInput<(typeof import('#app/file/validators/file').updateFolderValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#app/file/validators/file').showFileValidator)>|InferInput<(typeof import('#app/file/validators/file').updateFolderValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/file_folders_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/file_folders_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.file.file_folders.destroy': {
+    methods: ["DELETE"]
+    pattern: '/admin/files/folders/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/file/validators/file').showFileValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#app/file/validators/file').showFileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/file_folders_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/file_folders_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.files.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/files'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#app/file/validators/file').listFileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_api_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_api_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.files.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/admin/files'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_upload_api_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_upload_api_controller').default['store']>>>
+    }
+  }
+  'api.v1.admin.file.files.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/files/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#app/file/validators/file').showFileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_show_api_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_show_api_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.files.move': {
+    methods: ["PUT"]
+    pattern: '/api/v1/admin/files/:id/move'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/file/validators/file').moveFileValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#app/file/validators/file').moveFileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_api_controller').default['move']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_api_controller').default['move']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.files.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/admin/files/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/file/validators/file').showFileValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#app/file/validators/file').showFileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_delete_api_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_delete_api_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.files.upsert_alt': {
+    methods: ["PUT"]
+    pattern: '/api/v1/admin/files/:id/alt'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/file/validators/file').upsertAltValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#app/file/validators/file').upsertAltValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_alt_api_controller').default['upsertAlt']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_alt_api_controller').default['upsertAlt']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.files.delete_alt': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/admin/files/:id/alt'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/file/validators/file').deleteAltValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#app/file/validators/file').deleteAltValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_alt_api_controller').default['deleteAlt']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_alt_api_controller').default['deleteAlt']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.folders.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/folders'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_api_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_api_controller').default['index']>>>
+    }
+  }
+  'api.v1.admin.file.folders.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/admin/folders'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/file/validators/file').createFolderValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/file/validators/file').createFolderValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_api_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_api_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.folders.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/folders/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#app/file/validators/file').showFileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_show_api_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_show_api_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.folders.children': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/folders/:id/children'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_show_api_controller').default['children']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_show_api_controller').default['children']>>>
+    }
+  }
+  'api.v1.admin.file.folders.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/admin/folders/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/file/validators/file').updateFolderValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#app/file/validators/file').updateFolderValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_update_api_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_update_api_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.folders.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/admin/folders/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/file/validators/file').showFileValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#app/file/validators/file').showFileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_delete_api_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_delete_api_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'admin.identity.users.render': {
     methods: ["GET","HEAD"]
     pattern: '/admin/users'
@@ -967,126 +1243,6 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/admin/dashboard_controller').default['render']>>>
     }
   }
-  'admin.files.render': {
-    methods: ["GET","HEAD"]
-    pattern: '/admin/files'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: ExtractQueryForGet<InferInput<(typeof import('#validators/file').listFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'admin.files.upload': {
-    methods: ["POST"]
-    pattern: '/admin/files/upload'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['upload']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['upload']>>>
-    }
-  }
-  'admin.files.move': {
-    methods: ["POST"]
-    pattern: '/admin/files/:id/move'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/file').showFileValidator)>|InferInput<(typeof import('#validators/file').moveFileValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/file').showFileValidator)>|InferInput<(typeof import('#validators/file').moveFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['move']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['move']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'admin.files.destroy': {
-    methods: ["DELETE"]
-    pattern: '/admin/files/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/file').showFileValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/file').showFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'admin.files.upsert_alt': {
-    methods: ["POST"]
-    pattern: '/admin/files/:id/alts'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/file').showFileValidator)>|InferInput<(typeof import('#validators/file').upsertAltValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/file').showFileValidator)>|InferInput<(typeof import('#validators/file').upsertAltValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['upsertAlt']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['upsertAlt']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'admin.files.delete_alt': {
-    methods: ["DELETE"]
-    pattern: '/admin/files/:id/alts'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/file').showFileValidator)>|InferInput<(typeof import('#validators/file').deleteAltValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/file').showFileValidator)>|InferInput<(typeof import('#validators/file').deleteAltValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['deleteAlt']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/files_controller').default['deleteAlt']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'admin.file_folders.render': {
-    methods: ["GET","HEAD"]
-    pattern: '/admin/files/folders'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/file_folders_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/file_folders_controller').default['render']>>>
-    }
-  }
-  'admin.file_folders.execute': {
-    methods: ["POST"]
-    pattern: '/admin/files/folders'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/file').createFolderValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/file').createFolderValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/file_folders_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/file_folders_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'admin.file_folders.update': {
-    methods: ["PUT"]
-    pattern: '/admin/files/folders/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/file').showFileValidator)>|InferInput<(typeof import('#validators/file').updateFolderValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/file').showFileValidator)>|InferInput<(typeof import('#validators/file').updateFolderValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/file_folders_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/file_folders_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'admin.file_folders.destroy': {
-    methods: ["DELETE"]
-    pattern: '/admin/files/folders/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/file').showFileValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/file').showFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/admin/file_folders_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/admin/file_folders_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
   'admin.settings.maintenance.render': {
     methods: ["GET","HEAD"]
     pattern: '/admin/settings/maintenance'
@@ -1133,162 +1289,6 @@ export interface Registry {
       query: ExtractQueryForGet<InferInput<(typeof import('#validators/log').listLogsValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#app/log/controllers/admin/logs_controller').default['render']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/log/controllers/admin/logs_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.files_api.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/files'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: ExtractQueryForGet<InferInput<(typeof import('#validators/file').listFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_api_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_api_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.files_upload_api.store': {
-    methods: ["POST"]
-    pattern: '/api/v1/admin/files'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_upload_api_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_upload_api_controller').default['store']>>>
-    }
-  }
-  'api.v1.admin.files_show_api.show': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/files/:id'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQueryForGet<InferInput<(typeof import('#validators/file').showFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_show_api_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_show_api_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.files_api.move': {
-    methods: ["PUT"]
-    pattern: '/api/v1/admin/files/:id/move'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/file').moveFileValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/file').moveFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_api_controller').default['move']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_api_controller').default['move']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.files_delete_api.destroy': {
-    methods: ["DELETE"]
-    pattern: '/api/v1/admin/files/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/file').showFileValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/file').showFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_delete_api_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_delete_api_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.files_alt_api.upsert_alt': {
-    methods: ["PUT"]
-    pattern: '/api/v1/admin/files/:id/alt'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/file').upsertAltValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/file').upsertAltValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_alt_api_controller').default['upsertAlt']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_alt_api_controller').default['upsertAlt']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.files_alt_api.delete_alt': {
-    methods: ["DELETE"]
-    pattern: '/api/v1/admin/files/:id/alt'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/file').deleteAltValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/file').deleteAltValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_alt_api_controller').default['deleteAlt']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/files_alt_api_controller').default['deleteAlt']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.folders_api.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/folders'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_api_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_api_controller').default['index']>>>
-    }
-  }
-  'api.v1.admin.folders_api.store': {
-    methods: ["POST"]
-    pattern: '/api/v1/admin/folders'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/file').createFolderValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/file').createFolderValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_api_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_api_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.folders_show_api.show': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/folders/:id'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQueryForGet<InferInput<(typeof import('#validators/file').showFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_show_api_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_show_api_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.folders_show_api.children': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/folders/:id/children'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_show_api_controller').default['children']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_show_api_controller').default['children']>>>
-    }
-  }
-  'api.v1.admin.folders_update_api.update': {
-    methods: ["PUT"]
-    pattern: '/api/v1/admin/folders/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/file').updateFolderValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/file').updateFolderValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_update_api_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_update_api_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.folders_delete_api.destroy': {
-    methods: ["DELETE"]
-    pattern: '/api/v1/admin/folders/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/file').showFileValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/file').showFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_delete_api_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/file/controllers/api/folders_delete_api_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'api.v1.admin.dashboard_api.index': {

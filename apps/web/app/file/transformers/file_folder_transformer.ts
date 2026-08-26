@@ -1,5 +1,5 @@
 import { BaseTransformer } from '@adonisjs/core/transformers';
-import type FileFolder from '#models/file/file_folder';
+import type FileFolder from '#file/models/file_folder';
 
 type FileFolderObject = {
 	id: number;

@@ -21,7 +21,7 @@ import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
 import { Paginated } from '~/types/paginated';
 import { humanSize, isImage } from '~/utils/file';
-import type { AdminFilesTranslations } from '#helpers/i18n_payloads/files_index';
+import type { AdminFilesTranslations } from '#app/file/helpers/i18n_payloads/files_index';
 
 interface Props {
 	files: Paginated<Data.File.File>;
@@ -54,7 +54,7 @@ export default function FilesIndexPage(props: Props) {
 	return (
 		<AdminMain
 			title={t('title')}
-			icon={getEntryIcon('admin.files.render')}
+			icon={getEntryIcon('admin.file.files.render')}
 			action={
 				<div className="flex items-center gap-3">
 					<CanAccess permission="files.create">
@@ -64,7 +64,7 @@ export default function FilesIndexPage(props: Props) {
 						</Button>
 					</CanAccess>
 					<CanAccess permission="folders.view">
-						<Button route="admin.file_folders.render" variant="secondary" fitContent>
+						<Button route="admin.file.file_folders.render" variant="secondary" fitContent>
 							<Icon name="Folders" />
 							{t('action.folders')}
 						</Button>
@@ -75,7 +75,7 @@ export default function FilesIndexPage(props: Props) {
 			<div className="flex flex-col md:flex-row gap-3">
 				<Card className="md:w-fit">
 					<NavLink
-						route="admin.files.render"
+						route="admin.file.files.render"
 						qs={{
 							...Object.fromEntries(
 								Object.entries({ ...filters, folder_id: null }).filter(([_, value]) => value !== null),
@@ -93,7 +93,7 @@ export default function FilesIndexPage(props: Props) {
 				<Card
 					header={
 						<div className="flex flex-wrap items-end justify-between gap-3">
-							<Form route="admin.files.render" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+							<Form route="admin.file.files.render" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
 								{filters.folder_id && (
 									<input type="hidden" name="folder_id" id="folder_id" defaultValue={filters.folder_id} />
 								)}
@@ -129,7 +129,7 @@ export default function FilesIndexPage(props: Props) {
 							</div>
 						</div>
 					}
-					footer={<Pagination route="admin.files.render" filters={filters} metadata={files.metadata} />}
+					footer={<Pagination route="admin.file.files.render" filters={filters} metadata={files.metadata} />}
 					className="md:flex-1"
 					padding="p-0"
 				>
@@ -201,7 +201,7 @@ export default function FilesIndexPage(props: Props) {
 																onBefore={() => {
 																	return window.confirm(t('actions.delete.confirm'));
 																}}
-																route="admin.files.destroy"
+																route="admin.file.files.destroy"
 																routeParams={{ id: file.id }}
 															>
 																{({ processing }) => (
@@ -264,7 +264,7 @@ export default function FilesIndexPage(props: Props) {
 														onBefore={() => {
 															return window.confirm(t('actions.delete.confirm'));
 														}}
-														route="admin.files.destroy"
+														route="admin.file.files.destroy"
 														routeParams={{ id: selectedFile.id }}
 													>
 														{({ processing }) => (
@@ -337,7 +337,7 @@ const FolderEntry = (props: FolderEntryProps) => {
 		<div className={`${indentClass[depth]} mt-1`}>
 			<NavLink
 				key={`folder-${folder.id}`}
-				route="admin.files.render"
+				route="admin.file.files.render"
 				qs={{
 					...Object.fromEntries(
 						Object.entries({ ...filters, folder_id: folder.id }).filter(([_, value]) => value !== null),
@@ -373,7 +373,7 @@ const UploadFileForm = (props: UploadFileProps) => {
 
 	return (
 		<Form
-			route="admin.files.upload"
+			route="admin.file.files.upload"
 			className="grid gap-3"
 			onSuccess={() => {
 				if (callback) {

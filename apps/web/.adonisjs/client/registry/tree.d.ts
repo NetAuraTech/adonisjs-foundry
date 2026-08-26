@@ -45,6 +45,25 @@ export interface ApiDefinition {
             execute: typeof routes['api.v1.admin.account.preferences.execute']
           }
         }
+        file: {
+          files: {
+            index: typeof routes['api.v1.admin.file.files.index']
+            store: typeof routes['api.v1.admin.file.files.store']
+            show: typeof routes['api.v1.admin.file.files.show']
+            move: typeof routes['api.v1.admin.file.files.move']
+            destroy: typeof routes['api.v1.admin.file.files.destroy']
+            upsertAlt: typeof routes['api.v1.admin.file.files.upsert_alt']
+            deleteAlt: typeof routes['api.v1.admin.file.files.delete_alt']
+          }
+          folders: {
+            index: typeof routes['api.v1.admin.file.folders.index']
+            store: typeof routes['api.v1.admin.file.folders.store']
+            show: typeof routes['api.v1.admin.file.folders.show']
+            children: typeof routes['api.v1.admin.file.folders.children']
+            update: typeof routes['api.v1.admin.file.folders.update']
+            destroy: typeof routes['api.v1.admin.file.folders.destroy']
+          }
+        }
         identity: {
           users: {
             index: typeof routes['api.v1.admin.identity.users.index']
@@ -63,37 +82,6 @@ export interface ApiDefinition {
           permissions: {
             index: typeof routes['api.v1.admin.identity.permissions.index']
           }
-        }
-        filesApi: {
-          index: typeof routes['api.v1.admin.files_api.index']
-          move: typeof routes['api.v1.admin.files_api.move']
-        }
-        filesUploadApi: {
-          store: typeof routes['api.v1.admin.files_upload_api.store']
-        }
-        filesShowApi: {
-          show: typeof routes['api.v1.admin.files_show_api.show']
-        }
-        filesDeleteApi: {
-          destroy: typeof routes['api.v1.admin.files_delete_api.destroy']
-        }
-        filesAltApi: {
-          upsertAlt: typeof routes['api.v1.admin.files_alt_api.upsert_alt']
-          deleteAlt: typeof routes['api.v1.admin.files_alt_api.delete_alt']
-        }
-        foldersApi: {
-          index: typeof routes['api.v1.admin.folders_api.index']
-          store: typeof routes['api.v1.admin.folders_api.store']
-        }
-        foldersShowApi: {
-          show: typeof routes['api.v1.admin.folders_show_api.show']
-          children: typeof routes['api.v1.admin.folders_show_api.children']
-        }
-        foldersUpdateApi: {
-          update: typeof routes['api.v1.admin.folders_update_api.update']
-        }
-        foldersDeleteApi: {
-          destroy: typeof routes['api.v1.admin.folders_delete_api.destroy']
         }
         dashboardApi: {
           index: typeof routes['api.v1.admin.dashboard_api.index']
@@ -180,6 +168,22 @@ export interface ApiDefinition {
     }
   }
   admin: {
+    file: {
+      files: {
+        render: typeof routes['admin.file.files.render']
+        upload: typeof routes['admin.file.files.upload']
+        move: typeof routes['admin.file.files.move']
+        destroy: typeof routes['admin.file.files.destroy']
+        upsertAlt: typeof routes['admin.file.files.upsert_alt']
+        deleteAlt: typeof routes['admin.file.files.delete_alt']
+      }
+      fileFolders: {
+        render: typeof routes['admin.file.file_folders.render']
+        execute: typeof routes['admin.file.file_folders.execute']
+        update: typeof routes['admin.file.file_folders.update']
+        destroy: typeof routes['admin.file.file_folders.destroy']
+      }
+    }
     identity: {
       users: {
         render: typeof routes['admin.identity.users.render']
@@ -226,20 +230,6 @@ export interface ApiDefinition {
     }
     dashboard: {
       render: typeof routes['admin.dashboard.render']
-    }
-    files: {
-      render: typeof routes['admin.files.render']
-      upload: typeof routes['admin.files.upload']
-      move: typeof routes['admin.files.move']
-      destroy: typeof routes['admin.files.destroy']
-      upsertAlt: typeof routes['admin.files.upsert_alt']
-      deleteAlt: typeof routes['admin.files.delete_alt']
-    }
-    fileFolders: {
-      render: typeof routes['admin.file_folders.render']
-      execute: typeof routes['admin.file_folders.execute']
-      update: typeof routes['admin.file_folders.update']
-      destroy: typeof routes['admin.file_folders.destroy']
     }
     settings: {
       maintenance: {
