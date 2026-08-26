@@ -5,6 +5,8 @@ One repository per model, in `app/domain/repositories/{area}/{name}_repository.t
 > **CMS exception (ADR-0001):** CMS repositories (page, template) live under `app/cms/domain/repositories/{area}/`, imported via `#cms/domain/repositories/...`. The layout above applies to everything outside the CMS module.
 >
 > **Identity co-location:** identity repositories (user, role, permission) live under `src/identity/repositories/`, imported via `#identity/repositories/...` — co-located with the identity domain's models and actions in the `src/identity/` business module.
+>
+> **File co-location:** file repositories (file, file_folder) live under `src/file/repositories/`, imported via `#file/repositories/...` — co-located with the file domain's models and actions in the `src/file/` business module.
 
 ## Structure
 

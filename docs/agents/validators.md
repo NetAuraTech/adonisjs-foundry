@@ -5,6 +5,8 @@ VineJS schemas live in `app/validators/{domain}.ts`, grouped by domain (not one 
 > **CMS exception (ADR-0001):** CMS validators (page, template, builder, contact) live in `app/cms/validators/`, imported via `#cms/validators/...`. The layout above applies to everything outside the CMS module.
 >
 > **Identity co-location:** identity validators (user, role, permission) live in `app/identity/validators/`, imported via `#app/identity/validators/...` — co-located with the identity domain's controllers and transformers.
+>
+> **File co-location:** file validators live in `app/file/validators/`, imported via `#app/file/validators/...` — co-located with the file domain's controllers and transformers.
 
 ## Two forms
 

@@ -51,8 +51,8 @@ test.group('Routes structure', (group) => {
 			'admin.identity.users_show.render',
 			'admin.identity.users_update.render',
 			'admin.identity.users_update.execute',
-			'admin.files.render',
-			'admin.file_folders.render',
+			'admin.file.files.render',
+			'admin.file.file_folders.render',
 
 			// SEO
 			'robots.show',

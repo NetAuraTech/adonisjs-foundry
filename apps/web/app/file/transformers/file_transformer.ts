@@ -1,8 +1,8 @@
 import { BaseTransformer } from '@adonisjs/core/transformers';
-import { resolveFileForRender } from '#services/file/file_resolver';
-import { classifyFileType } from '#services/file/file_type';
-import { StorageService } from '#services/file/storage_service';
-import type File from '#models/file/file';
+import { resolveFileForRender } from '#file/services/file_resolver';
+import { classifyFileType } from '#file/services/file_type';
+import { StorageService } from '#file/services/storage_service';
+import type File from '#file/models/file';
 
 /**
  * Options passed to the transformer when producing a render-ready prop.

@@ -1,8 +1,8 @@
 import { inject } from '@adonisjs/core';
 import { classifyVideoUrl, isAllowedIframeUrl } from '#cms/domain/services/page/embed_policy';
-import { FileRepository } from '#repositories/file/file_repository';
-import { classifyFileType } from '#services/file/file_type';
-import { ImageOptimizerService } from '#services/file/image_optimizer_service';
+import { FileRepository } from '#file/repositories/file_repository';
+import { classifyFileType } from '#file/services/file_type';
+import { ImageOptimizerService } from '#file/services/image_optimizer_service';
 import type { Block, PageContent, BlockType, ImageProps, VideoProps, IframeProps } from '#cms/types/page';
 import type {
 	ResolvedBlock,
@@ -11,7 +11,7 @@ import type {
 	ResolvedVideoProps,
 	ResolvedIframeProps,
 } from '#cms/types/page';
-import type CmsFile from '#models/file/file';
+import type CmsFile from '#file/models/file';
 import type { FileRef, ResolvedFile } from '#types/file';
 
 @inject()
@@ -82,7 +82,7 @@ export class PageResolverService {
 	private async loadFiles(ids: number[]): Promise<Map<number, CmsFile>> {
 		if (ids.length === 0) return new Map();
 
-		const { default: CmsFileModel } = await import('#models/file/file');
+		const { default: CmsFileModel } = await import('#file/models/file');
 
 		const files = await CmsFileModel.query().whereIn('id', ids).preload('alts');
 

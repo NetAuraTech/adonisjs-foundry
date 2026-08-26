@@ -13,7 +13,7 @@ import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminFileFoldersTranslations } from '#helpers/i18n_payloads/file_folders';
+import type { AdminFileFoldersTranslations } from '#app/file/helpers/i18n_payloads/file_folders';
 
 interface PageProps {
 	roots: Data.File.FileFolder[];
@@ -31,7 +31,7 @@ export default function FileFoldersPage(props: PageProps) {
 				icon="Folders"
 				action={
 					<CanAccess permission="folders.create">
-						<Button variant="secondary" route="admin.file_folders.render" fitContent>
+						<Button variant="secondary" route="admin.file.file_folders.render" fitContent>
 							<Icon name="Folder" />
 							{t('action')}
 						</Button>
@@ -101,7 +101,7 @@ function FolderNode(props: FolderNodeProps) {
 					<Icon name="Folder" size={16} />
 					{renaming ? (
 						<Form
-							route="admin.file_folders.update"
+							route="admin.file.file_folders.update"
 							routeParams={{ id: folder.id }}
 							className="flex items-center gap-2 flex-1 min-w-0"
 							onSuccess={() => {
@@ -131,7 +131,7 @@ function FolderNode(props: FolderNodeProps) {
 						</span>
 					)}
 					<div className="flex items-center gap-1 shrink-0">
-						<NavLink label="" route="admin.files.render" qs={{ folder_id: folder.id }}>
+						<NavLink label="" route="admin.file.files.render" qs={{ folder_id: folder.id }}>
 							<Button variant="icon" title={t('browse')}>
 								<Icon name="SquareMenu" size={18} />
 							</Button>
@@ -158,7 +158,7 @@ function FolderNode(props: FolderNodeProps) {
 								onBefore={() => {
 									return window.confirm(t('actions.delete.confirm'));
 								}}
-								route="admin.file_folders.destroy"
+								route="admin.file.file_folders.destroy"
 								routeParams={{ id: folder.id }}
 							>
 								{({ processing }) => (
@@ -218,7 +218,7 @@ function CreateFolderForm(props: CreateFolderFormProps) {
 	return (
 		<Card>
 			<Form
-				route="admin.file_folders.execute"
+				route="admin.file.file_folders.execute"
 				className="grid gap-2"
 				onSuccess={() => {
 					if (onSuccess) {

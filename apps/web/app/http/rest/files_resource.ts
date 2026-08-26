@@ -1,20 +1,20 @@
 import { inject } from '@adonisjs/core';
-import { DeleteFileAction } from '#actions/file/delete_file_action';
-import { DeleteFileAltAction } from '#actions/file/delete_file_alt_action';
-import { GetFileDetailAction } from '#actions/file/get_file_detail_action';
-import { ListFilesAction } from '#actions/file/list_files_action';
-import { MoveFileAction } from '#actions/file/move_file_action';
-import { UpsertFileAltAction } from '#actions/file/upsert_file_alt_action';
 import FileTransformer from '#app/file/transformers/file_transformer';
-import { type RestEndpoint } from '#rest/rest_adapter';
 import {
 	listFileValidator,
 	showFileValidator,
 	moveFileValidator,
 	upsertAltValidator,
 	deleteAltValidator,
-} from '#validators/file';
-import type File from '#models/file/file';
+} from '#app/file/validators/file';
+import { DeleteFileAction } from '#file/actions/file/delete_file_action';
+import { DeleteFileAltAction } from '#file/actions/file/delete_file_alt_action';
+import { GetFileDetailAction } from '#file/actions/file/get_file_detail_action';
+import { ListFilesAction } from '#file/actions/file/list_files_action';
+import { MoveFileAction } from '#file/actions/file/move_file_action';
+import { UpsertFileAltAction } from '#file/actions/file/upsert_file_alt_action';
+import { type RestEndpoint } from '#rest/rest_adapter';
+import type File from '#file/models/file';
 import type { Infer } from '@vinejs/vine/types';
 
 type FileListPagination = Awaited<ReturnType<ListFilesAction['execute']>>;

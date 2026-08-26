@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
-import { UploadFileAction } from '#actions/file/upload_file_action';
 import FileTransformer from '#app/file/transformers/file_transformer';
+import { UploadFileAction } from '#file/actions/file/upload_file_action';
 import type { HttpContext } from '@adonisjs/core/http';
 
 /**

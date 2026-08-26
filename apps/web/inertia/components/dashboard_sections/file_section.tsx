@@ -22,7 +22,7 @@ function FileStatCard({ stats, translations }: DashboardSectionCardProps) {
 
 	return (
 		<CanAccess permission="files.view">
-			<StatCard icon="Folder" label={t('cards.files')} value={file.files} route="admin.files.render">
+			<StatCard icon="Folder" label={t('cards.files')} value={file.files} route="admin.file.files.render">
 				<Paragraph variant="muted" spacing="sm">
 					{`${t('cards.folders')}: ${file.fileFolders}`}
 				</Paragraph>
@@ -48,7 +48,7 @@ function FileRecentCard({ stats, translations, formatDate }: DashboardSectionCar
 
 	return (
 		<CanAccess permission="files.view">
-			<RecentCard title={t('recent.uploads')} viewAllRoute="admin.files.render" viewAllLabel={t('view_all')}>
+			<RecentCard title={t('recent.uploads')} viewAllRoute="admin.file.files.render" viewAllLabel={t('view_all')}>
 				{file.recentFiles.length === 0 ? (
 					<Paragraph variant="muted" spacing="xs" className="p-6">
 						{t('recent.empty')}

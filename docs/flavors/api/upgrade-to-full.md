@@ -79,12 +79,15 @@ npm install @adonisjs/transmit @adonisjs/transmit-client
 | Guest/session auth controllers       | `app/auth/controllers/front`                                     |
 | Self-service (account/profile/prefs) | `app/{account,profile,preferences}/controllers/front`            |
 | Admin Inertia controllers            | `app/{core,file,log,maintenance}/controllers/admin`              |
+| File domain route entry              | `app/file/routes.ts`                                             |
 | Home + SEO controllers               | `app/core/controllers/front`                                     |
 | Public route modules                 | `start/routes/{front,core_public,settings,admin,auth}.routes.ts` |
 
-The `app/identity` domain (including its admin Inertia controllers) is **kept**
-by the `api` flavor — its routes are simply gated off by `admin: false` in
-`config/features.ts`, so nothing from `app/identity/` needs to be restored.
+The `app/identity` and `app/file` domains (including their admin Inertia
+controllers) are **kept** by the `api` flavor — their admin routes are simply
+gated off by `admin: false` in `config/features.ts`, and the pruned pieces
+(`app/identity/routes.ts`, `app/file/routes.ts`, the `app/*/controllers/admin`
+trees) are the only things to restore from `main`.
 
 ## 4. Restore the composition rewrites
 

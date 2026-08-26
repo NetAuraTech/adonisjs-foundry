@@ -9,7 +9,7 @@ import { Paragraph } from '~/components/atoms/paragraph';
 import { SelectOption } from '~/components/atoms/select_option';
 import { Field } from '~/components/molecules/field';
 import { locales, useTranslation } from '~/hooks/use_translation';
-import type { AdminFilesTranslations } from '#helpers/i18n_payloads/files_index';
+import type { AdminFilesTranslations } from '#app/file/helpers/i18n_payloads/files_index';
 import type { Data } from '@generated/data';
 
 interface FileAlt {
@@ -141,7 +141,7 @@ export function FileAltEditor(props: FileAltEditorProps) {
 
 						await handleSubmit(e, setAdding);
 					}}
-					route={'admin.files.upsert_alt'}
+					route={'admin.file.files.upsert_alt'}
 					routeParams={{ id: file.id }}
 					className="grid gap-2 rounded border border-primary-soft bg-primary-soft/20 p-3"
 				>
@@ -259,7 +259,7 @@ const AltRow = (props: {
 										handleDelete(e);
 									}
 								}}
-								route="admin.files.delete_alt"
+								route="admin.file.files.delete_alt"
 								routeParams={{ id: file.id }}
 							>
 								{({ processing }) => (
@@ -291,7 +291,7 @@ const AltRow = (props: {
 						handleSubmit(e, setIsEditing);
 					}}
 					className="grid gap-2"
-					route={'admin.files.upsert_alt'}
+					route={'admin.file.files.upsert_alt'}
 					routeParams={{ id: file.id }}
 				>
 					{({ processing }) => (

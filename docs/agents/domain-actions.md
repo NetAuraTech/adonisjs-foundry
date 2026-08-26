@@ -5,6 +5,8 @@ One action = one business operation. Lives in `app/domain/actions/{area}/{verb}_
 > **CMS exception (ADR-0001):** CMS actions (page, template) live under `app/cms/domain/actions/{area}/`, imported via `#cms/domain/actions/...`. The layout above applies to everything outside the CMS module.
 >
 > **Identity co-location:** identity actions (user, role, permission) live under `src/identity/actions/{area}/`, imported via `#identity/actions/...` — co-located with the identity domain's models, repositories and services in the `src/identity/` business module.
+>
+> **File co-location:** file actions (file, file_folder) live under `src/file/actions/{area}/`, imported via `#file/actions/...` — co-located with the file domain's models, repositories and services in the `src/file/` business module.
 
 ## Structure
 
@@ -111,8 +113,6 @@ app/domain/actions/
   backup/            # run, list, restore, delete backups
   core/              # cross-cutting operations (dashboard stats)
   email_verification/ # send verification, verify email
-  file/              # upload, move, delete files
-  file_folder/       # create, rename, delete folders
   invitation/        # send, accept invitations
   password/          # reset password flow
   preferences/       # get, update user preferences

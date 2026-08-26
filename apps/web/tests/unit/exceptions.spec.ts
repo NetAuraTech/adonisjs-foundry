@@ -14,9 +14,9 @@ import UnverifiedAccountException from '#auth/exceptions/unverified_account_exce
 import EmailAlreadyExistsException from '#core/exceptions/email_already_exists_exception';
 import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import SlugExistsException from '#core/exceptions/slug_exists_exception';
-import FileTooLargeException from '#exceptions/file/file_too_large_exception';
-import InvalidExtensionException from '#exceptions/file/invalid_extension_exception';
 import MaintenanceException from '#exceptions/maintenance_exception';
+import FileTooLargeException from '#file/exceptions/file_too_large_exception';
+import InvalidExtensionException from '#file/exceptions/invalid_extension_exception';
 
 async function testExceptionHandle(error: any, assert: any) {
 	// --- JSON Request Simulation ---

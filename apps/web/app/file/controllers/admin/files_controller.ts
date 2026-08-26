@@ -1,26 +1,26 @@
 import { inject } from '@adonisjs/core';
-import { DeleteFileAction } from '#actions/file/delete_file_action';
-import { DeleteFileAltAction } from '#actions/file/delete_file_alt_action';
-import { GetFileDetailAction } from '#actions/file/get_file_detail_action';
-import { ListFilesAction } from '#actions/file/list_files_action';
-import { MoveFileAction } from '#actions/file/move_file_action';
-import { UploadFileAction } from '#actions/file/upload_file_action';
-import { UpsertFileAltAction } from '#actions/file/upsert_file_alt_action';
-import { ListRootFoldersAction } from '#actions/file_folder/list_root_folders_action';
+import { buildFilesIndexPayload } from '#app/file/helpers/i18n_payloads/files_index';
+import { buildFilesShowPayload } from '#app/file/helpers/i18n_payloads/files_show';
 import FileFolderTransformer from '#app/file/transformers/file_folder_transformer';
 import FileTransformer from '#app/file/transformers/file_transformer';
-import { stripEmptyStrings } from '#helpers/core/strip_empty_strings';
-import { buildFilesIndexPayload } from '#helpers/i18n_payloads/files_index';
-import { buildFilesShowPayload } from '#helpers/i18n_payloads/files_show';
-import { extractPagination } from '#helpers/pagination/extract_pagination';
-import { I18nService } from '#services/i18n_service';
 import {
 	listFileValidator,
 	showFileValidator,
 	moveFileValidator,
 	upsertAltValidator,
 	deleteAltValidator,
-} from '#validators/file';
+} from '#app/file/validators/file';
+import { DeleteFileAction } from '#file/actions/file/delete_file_action';
+import { DeleteFileAltAction } from '#file/actions/file/delete_file_alt_action';
+import { GetFileDetailAction } from '#file/actions/file/get_file_detail_action';
+import { ListFilesAction } from '#file/actions/file/list_files_action';
+import { MoveFileAction } from '#file/actions/file/move_file_action';
+import { UploadFileAction } from '#file/actions/file/upload_file_action';
+import { UpsertFileAltAction } from '#file/actions/file/upsert_file_alt_action';
+import { ListRootFoldersAction } from '#file/actions/file_folder/list_root_folders_action';
+import { stripEmptyStrings } from '#helpers/core/strip_empty_strings';
+import { extractPagination } from '#helpers/pagination/extract_pagination';
+import { I18nService } from '#services/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()
@@ -118,7 +118,7 @@ export default class FilesController {
 
 		session.flash('success', this.i18n.translate('file.deleted'));
 
-		return response.redirect().toRoute('admin.files.render');
+		return response.redirect().toRoute('admin.file.files.render');
 	}
 
 	async upsertAlt(ctx: HttpContext) {

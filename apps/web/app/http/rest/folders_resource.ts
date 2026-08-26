@@ -1,13 +1,13 @@
 import { inject } from '@adonisjs/core';
-import { CreateFolderAction } from '#actions/file_folder/create_folder_action';
-import { DeleteFolderAction } from '#actions/file_folder/delete_folder_action';
-import { GetFolderDetailAction } from '#actions/file_folder/get_folder_detail_action';
-import { ListFolderChildrenAction } from '#actions/file_folder/list_folder_children_action';
-import { ListRootFoldersAction } from '#actions/file_folder/list_root_folders_action';
-import { RenameFolderAction } from '#actions/file_folder/rename_folder_action';
 import FileFolderTransformer from '#app/file/transformers/file_folder_transformer';
+import { showFileValidator, createFolderValidator, updateFolderValidator } from '#app/file/validators/file';
+import { CreateFolderAction } from '#file/actions/file_folder/create_folder_action';
+import { DeleteFolderAction } from '#file/actions/file_folder/delete_folder_action';
+import { GetFolderDetailAction } from '#file/actions/file_folder/get_folder_detail_action';
+import { ListFolderChildrenAction } from '#file/actions/file_folder/list_folder_children_action';
+import { ListRootFoldersAction } from '#file/actions/file_folder/list_root_folders_action';
+import { RenameFolderAction } from '#file/actions/file_folder/rename_folder_action';
 import { type RestEndpoint } from '#rest/rest_adapter';
-import { showFileValidator, createFolderValidator, updateFolderValidator } from '#validators/file';
 import type { Infer } from '@vinejs/vine/types';
 
 type FolderListResult = Awaited<ReturnType<ListRootFoldersAction['execute']>>;

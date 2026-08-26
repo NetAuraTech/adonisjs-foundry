@@ -21,7 +21,7 @@ test.group('NavRegistry', () => {
 		const registry = new NavRegistry();
 
 		registry.register('identity', [entry]);
-		registry.register('file', [{ ...entry, route: 'admin.files.render' }]);
+		registry.register('file', [{ ...entry, route: 'admin.file.files.render' }]);
 
 		assert.deepEqual(
 			registry.entries().map(([domain]) => domain),

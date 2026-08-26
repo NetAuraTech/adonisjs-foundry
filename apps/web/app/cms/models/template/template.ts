@@ -1,7 +1,7 @@
 import { belongsTo, column } from '@adonisjs/lucid/orm';
 import { TemplateSchema } from '#database/schema';
+import File from '#file/models/file';
 import User from '#identity/models/user';
-import File from '#models/file/file';
 import type { BlockType, PageContent } from '#cms/types/page';
 import type { TemplateType } from '#cms/types/template';
 import type { BelongsTo } from '@adonisjs/lucid/types/relations';
