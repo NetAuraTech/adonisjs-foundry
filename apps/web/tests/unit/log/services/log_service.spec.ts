@@ -1,8 +1,8 @@
 import { HttpContextFactory } from '@adonisjs/core/factories/http';
 import { type HttpContext } from '@adonisjs/core/http';
 import { test } from '@japa/runner';
-import { LogService } from '#services/logging/log_service';
-import { LogLevel } from '#types/logging';
+import { LogService } from '#log/services/log_service';
+import { LogLevel } from '#log/types/logging';
 
 test.group('LogService', () => {
 	test('basic log levels do not throw', async ({ assert }) => {

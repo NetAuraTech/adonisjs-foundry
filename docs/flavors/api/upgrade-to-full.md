@@ -80,14 +80,16 @@ npm install @adonisjs/transmit @adonisjs/transmit-client
 | Self-service (account/profile/prefs) | `app/{account,profile,preferences}/controllers/front`            |
 | Admin Inertia controllers            | `app/{core,file,log,maintenance}/controllers/admin`              |
 | File domain route entry              | `app/file/routes.ts`                                             |
+| Log domain route entry               | `app/log/routes.ts`                                              |
 | Home + SEO controllers               | `app/core/controllers/front`                                     |
 | Public route modules                 | `start/routes/{front,core_public,settings,admin,auth}.routes.ts` |
 
-The `app/identity` and `app/file` domains (including their admin Inertia
-controllers) are **kept** by the `api` flavor — their admin routes are simply
-gated off by `admin: false` in `config/features.ts`, and the pruned pieces
-(`app/identity/routes.ts`, `app/file/routes.ts`, the `app/*/controllers/admin`
-trees) are the only things to restore from `main`.
+The `app/identity`, `app/file` and `app/log` domains (including their admin
+Inertia controllers) are **kept** by the `api` flavor — their admin routes are
+simply gated off by `admin: false` in `config/features.ts`, and the pruned
+pieces (`app/identity/routes.ts`, `app/file/routes.ts`, `app/log/routes.ts`,
+the `app/*/controllers/admin` trees) are the only things to restore from
+`main`.
 
 ## 4. Restore the composition rewrites
 
@@ -125,7 +127,7 @@ version of each:
 
 | Artifact                        | From (`main`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Session-auth functional suites  | `tests/functional/auth/{accept_invitation,email_verification,forgot_password,oauth,register,reset_password,session}.spec.ts`, `tests/functional/logs`                                                                                                                                                                                                                                                                                                                                                         |
+| Session-auth functional suites  | `tests/functional/auth/{accept_invitation,email_verification,forgot_password,oauth,register,reset_password,session}.spec.ts`, `tests/functional/log`                                                                                                                                                                                                                                                                                                                                                          |
 | Inertia-page functional suites  | `tests/functional/dashboard`, `tests/functional/maintenance`                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | CMS functional suite            | `tests/functional/cms`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | SEO endpoint suites             | `tests/functional/core/seo_endpoints.spec.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |

@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { buildAdminMaintenanceIndexPayload } from '#helpers/i18n_payloads/maintenance_index';
+import { LogService } from '#log/services/log_service';
 import { I18nService } from '#services/i18n_service';
-import { LogService } from '#services/logging/log_service';
 import { MaintenanceService } from '#services/maintenance/maintenance_service';
 import type { MaintenanceConfig } from '#types/maintenance';
 import type { HttpContext } from '@adonisjs/core/http';

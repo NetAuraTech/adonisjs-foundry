@@ -1,5 +1,5 @@
 import { BaseTransformer } from '@adonisjs/core/transformers';
-import type LogEntry from '#models/core/log_entry';
+import type LogEntry from '#log/models/log_entry';
 
 export default class LogEntryTransformer extends BaseTransformer<LogEntry> {
 	toObject() {

@@ -53,6 +53,7 @@ test.group('Routes structure', (group) => {
 			'admin.identity.users_update.execute',
 			'admin.file.files.render',
 			'admin.file.file_folders.render',
+			'admin.log.logs.render',
 
 			// SEO
 			'robots.show',

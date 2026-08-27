@@ -1,8 +1,8 @@
 import { inject } from '@adonisjs/core';
-import { ListLogEntriesAction } from '#actions/log/list_log_entries_action';
 import LogEntryTransformer from '#app/log/transformers/log_entry_transformer';
+import { listLogsValidator } from '#app/log/validators/log';
+import { ListLogEntriesAction } from '#log/actions/log/list_log_entries_action';
 import { type RestEndpoint } from '#rest/rest_adapter';
-import { listLogsValidator } from '#validators/log';
 import type { Infer } from '@vinejs/vine/types';
 
 type LogListPagination = Awaited<ReturnType<ListLogEntriesAction['execute']>>;

@@ -1,6 +1,6 @@
 import factory from '@adonisjs/lucid/factories';
-import LogEntry from '#models/core/log_entry';
-import { LogCategory, LogLevel } from '#types/logging';
+import LogEntry from '#log/models/log_entry';
+import { LogCategory, LogLevel } from '#log/types/logging';
 
 export const LogEntryFactory = factory
 	.define(LogEntry, async ({ faker }) => {

@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
 import { SendInvitationAction } from '#auth/actions/invitation/send_invitation_action';
-import { LogService } from '#services/logging/log_service';
+import { LogService } from '#log/services/log_service';
 import type User from '#identity/models/user';
 
 interface CreateUserPayload {

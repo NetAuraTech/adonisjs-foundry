@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import InvalidCredentialsException from '#auth/exceptions/invalid_credentials_exception';
 import { UserRepository } from '#identity/repositories/user_repository';
-import { LogService } from '#services/logging/log_service';
+import { LogService } from '#log/services/log_service';
 import type User from '#identity/models/user';
 
 interface LoginPayload {

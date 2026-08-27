@@ -8,8 +8,8 @@ import MaxAttemptsExceededException from '#auth/exceptions/max_attempts_exceeded
 import TokenModel from '#auth/models/token';
 import { transactionContext } from '#core/services/transaction_context';
 import User from '#identity/models/user';
+import { LogService } from '#log/services/log_service';
 import { BaseRepository } from '#repositories/base_repository';
-import { LogService } from '#services/logging/log_service';
 import { type FindOptions } from '#types/core';
 
 /**

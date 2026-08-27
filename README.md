@@ -1009,7 +1009,7 @@ These routes accept a Bearer token only — session cookies are ignored:
 
 ### LogService
 
-Foundry provides a centralised `LogService` (`app/domain/services/logging/log_service.ts`) that wraps AdonisJS's built-in logger. It offers typed convenience methods for each log level (`debug`, `info`, `warn`, `error`, `fatal`) and domain-specific helpers that automatically attach the correct category and structured context.
+Foundry provides a centralised `LogService` (`src/log/services/log_service.ts`) that wraps AdonisJS's built-in logger. It offers typed convenience methods for each log level (`debug`, `info`, `warn`, `error`, `fatal`) and domain-specific helpers that automatically attach the correct category and structured context.
 
 #### Log Categories
 

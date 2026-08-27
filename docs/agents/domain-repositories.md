@@ -7,6 +7,8 @@ One repository per model, in `app/domain/repositories/{area}/{name}_repository.t
 > **Identity co-location:** identity repositories (user, role, permission) live under `src/identity/repositories/`, imported via `#identity/repositories/...` — co-located with the identity domain's models and actions in the `src/identity/` business module.
 >
 > **File co-location:** file repositories (file, file_folder) live under `src/file/repositories/`, imported via `#file/repositories/...` — co-located with the file domain's models and actions in the `src/file/` business module.
+>
+> **Log co-location:** log repositories (log_entry) live under `src/log/repositories/`, imported via `#log/repositories/...` — co-located with the log domain's models and actions in the `src/log/` business module.
 
 ## Structure
 

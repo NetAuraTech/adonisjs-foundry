@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
 import backupConfig from '#config/backup';
+import { type LogService } from '#log/services/log_service';
 import { BackupPipeline } from '#services/backup/backup_pipeline';
 import { SnapshotHelper } from '#services/backup/snapshot_helper';
-import { type LogService } from '#services/logging/log_service';
 import type { BackupResult, BackupContext } from '#services/backup/backup_types';
 
 /**

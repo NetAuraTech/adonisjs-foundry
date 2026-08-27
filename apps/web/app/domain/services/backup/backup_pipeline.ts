@@ -6,12 +6,12 @@ import {
 } from 'node:fs/promises';
 import { join } from 'node:path';
 import backupConfig from '#config/backup';
+import { type LogService } from '#log/services/log_service';
+import { LogCategory } from '#log/types/logging';
 import { createDatabaseDump as defaultCreateDatabaseDump, type DumpOptions } from '#services/backup/dump_helper';
 import { SnapshotHelper, type SnapshotHelper as SnapshotHelperType } from '#services/backup/snapshot_helper';
 import { StorageUploader, type StorageUploader as StorageUploaderType } from '#services/backup/storage_uploader';
-import { type LogService } from '#services/logging/log_service';
 import env from '#start/env';
-import { LogCategory } from '#types/logging';
 import type { BackupResult, BackupContext, BackupMetadata } from '#services/backup/backup_types';
 
 /**

@@ -1,5 +1,5 @@
 import vine from '@vinejs/vine';
-import { LogCategory, LogLevel } from '#types/logging';
+import { LogCategory, LogLevel } from '#log/types/logging';
 
 const levels = Object.values(LogLevel);
 const categories = Object.values(LogCategory);

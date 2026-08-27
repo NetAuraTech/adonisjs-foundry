@@ -74,6 +74,8 @@ export type ScannedRoutes = {
     'api.v1.admin.identity.roles.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.identity.roles.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.identity.permissions.index': { paramsTuple?: []; params?: {} }
+    'admin.log.logs.render': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.log.logs.index': { paramsTuple?: []; params?: {} }
     'event_stream': { paramsTuple?: []; params?: {} }
     'subscribe': { paramsTuple?: []; params?: {} }
     'unsubscribe': { paramsTuple?: []; params?: {} }
@@ -110,9 +112,7 @@ export type ScannedRoutes = {
     'admin.settings.maintenance.render': { paramsTuple?: []; params?: {} }
     'admin.settings.maintenance.update': { paramsTuple?: []; params?: {} }
     'admin.settings.maintenance.toggle': { paramsTuple?: []; params?: {} }
-    'admin.logs.render': { paramsTuple?: []; params?: {} }
     'api.v1.admin.dashboard_api.index': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.logs_api.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.maintenance_api.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.maintenance_api.update': { paramsTuple?: []; params?: {} }
     'api.v1.admin.maintenance_api.toggle': { paramsTuple?: []; params?: {} }
@@ -196,6 +196,8 @@ export type ScannedRoutes = {
     'api.v1.admin.identity.roles.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.identity.roles.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.identity.permissions.index': { paramsTuple?: []; params?: {} }
+    'admin.log.logs.render': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.log.logs.index': { paramsTuple?: []; params?: {} }
     'event_stream': { paramsTuple?: []; params?: {} }
     'auth.session.render': { paramsTuple?: []; params?: {} }
     'auth.register.render': { paramsTuple?: []; params?: {} }
@@ -213,9 +215,7 @@ export type ScannedRoutes = {
     'robots.show': { paramsTuple?: []; params?: {} }
     'admin.dashboard.render': { paramsTuple?: []; params?: {} }
     'admin.settings.maintenance.render': { paramsTuple?: []; params?: {} }
-    'admin.logs.render': { paramsTuple?: []; params?: {} }
     'api.v1.admin.dashboard_api.index': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.logs_api.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.maintenance_api.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.pages_api.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.pages_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -268,6 +268,8 @@ export type ScannedRoutes = {
     'api.v1.admin.identity.roles.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.identity.roles.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.identity.permissions.index': { paramsTuple?: []; params?: {} }
+    'admin.log.logs.render': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.log.logs.index': { paramsTuple?: []; params?: {} }
     'event_stream': { paramsTuple?: []; params?: {} }
     'auth.session.render': { paramsTuple?: []; params?: {} }
     'auth.register.render': { paramsTuple?: []; params?: {} }
@@ -285,9 +287,7 @@ export type ScannedRoutes = {
     'robots.show': { paramsTuple?: []; params?: {} }
     'admin.dashboard.render': { paramsTuple?: []; params?: {} }
     'admin.settings.maintenance.render': { paramsTuple?: []; params?: {} }
-    'admin.logs.render': { paramsTuple?: []; params?: {} }
     'api.v1.admin.dashboard_api.index': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.logs_api.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.maintenance_api.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.pages_api.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.pages_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

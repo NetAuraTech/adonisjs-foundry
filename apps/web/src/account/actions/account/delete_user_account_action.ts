@@ -3,7 +3,7 @@ import hash from '@adonisjs/core/services/hash';
 import InvalidCurrentPasswordException from '#auth/exceptions/invalid_current_password_exception';
 import { withTransaction } from '#core/services/with_transaction';
 import User from '#identity/models/user';
-import { LogService } from '#services/logging/log_service';
+import { LogService } from '#log/services/log_service';
 
 interface DeleteUserAccountPayload {
 	user: User;

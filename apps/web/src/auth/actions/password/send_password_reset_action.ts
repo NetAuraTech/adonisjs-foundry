@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
 import { TokenMailService } from '#auth/services/token_mail_service';
-import { LogService } from '#services/logging/log_service';
+import { LogService } from '#log/services/log_service';
 import type User from '#identity/models/user';
 
 interface SendPasswordResetPayload {

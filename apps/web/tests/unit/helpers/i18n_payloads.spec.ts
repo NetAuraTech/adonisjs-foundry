@@ -20,10 +20,10 @@ import { buildRolesShowPayload } from '#app/identity/helpers/i18n_payloads/roles
 import { buildUsersFormPayload } from '#app/identity/helpers/i18n_payloads/users_form';
 import { buildUsersListPayload } from '#app/identity/helpers/i18n_payloads/users_list';
 import { buildUsersShowPayload } from '#app/identity/helpers/i18n_payloads/users_show';
+import { buildLogsListPayload } from '#app/log/helpers/i18n_payloads/logs_list';
 import { buildCommonPayload } from '#helpers/i18n_payloads/common';
 import { buildDashboardPayload } from '#helpers/i18n_payloads/dashboard';
 import { buildHomePayload } from '#helpers/i18n_payloads/home';
-import { buildLogsListPayload } from '#helpers/i18n_payloads/logs_list';
 import { buildAdminMaintenanceIndexPayload } from '#helpers/i18n_payloads/maintenance_index';
 import { buildMaintenanceIndexPayload } from '#helpers/i18n_payloads/maintenance_index';
 import { I18nService } from '#services/i18n_service';

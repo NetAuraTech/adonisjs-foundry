@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { updateMaintenanceValidator, toggleMaintenanceValidator } from '#app/core/validators/maintenance';
+import { LogService } from '#log/services/log_service';
 import { type RestEndpoint } from '#rest/rest_adapter';
-import { LogService } from '#services/logging/log_service';
 import { MaintenanceService } from '#services/maintenance/maintenance_service';
 import type { Infer } from '@vinejs/vine/types';
 

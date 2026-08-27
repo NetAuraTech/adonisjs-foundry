@@ -6,7 +6,7 @@ import InvalidTokenException from '#auth/exceptions/invalid_token_exception';
 import MaxAttemptsExceededException from '#auth/exceptions/max_attempts_exceeded_exception';
 import { TokenRepository } from '#auth/repositories/token_repository';
 import { UserFactory } from '#factories/user_factory';
-import { LogService } from '#services/logging/log_service';
+import { LogService } from '#log/services/log_service';
 import type Token from '#auth/models/token';
 
 test.group('TokenRepository', () => {

@@ -2,9 +2,9 @@ import db from '@adonisjs/lucid/services/db';
 import { test } from '@japa/runner';
 import { DateTime } from 'luxon';
 import { UserFactory } from '#database/factories/user_factory';
-import LogEntry from '#models/core/log_entry';
-import { LogEntryRepository } from '#repositories/logging/log_entry_repository';
-import { LogCategory, LogLevel, type CreateLogEntryInput } from '#types/logging';
+import LogEntry from '#log/models/log_entry';
+import { LogEntryRepository } from '#log/repositories/log_entry_repository';
+import { LogCategory, LogLevel, type CreateLogEntryInput } from '#log/types/logging';
 
 test.group('LogEntryRepository', (group) => {
 	const repo = new LogEntryRepository();

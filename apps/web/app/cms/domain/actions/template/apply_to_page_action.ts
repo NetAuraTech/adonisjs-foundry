@@ -4,7 +4,7 @@ import { TemplateRepository } from '#cms/domain/repositories/template/template_r
 import MissingTranslationException from '#cms/exceptions/page/missing_translation_exception';
 import InvalidTemplateTypeException from '#cms/exceptions/template/invalid_template_type_exception';
 import { withTransaction } from '#core/services/with_transaction';
-import { LogService } from '#services/logging/log_service';
+import { LogService } from '#log/services/log_service';
 
 interface ApplyToPagePayload {
 	templateId: number;

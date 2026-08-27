@@ -44,7 +44,7 @@ export default class ExampleController {
 
 - DI: always `@inject()` + constructor injection of services. Never touch Eloquent models directly — strict layering: controller → service → repository → model.
 - Validation: import from the domain's validators (`#app/{domain}/validators/...`) or the shared `#validators/...`, validate before every service call.
-- Routes: domain route modules live in `start/routes/{name}.routes.ts` as `register*` functions wired from `start/routes.ts`. Migrated domains (identity, file, …) are the exception: they self-register from `app/{domain}/routes.ts` (co-located with their controllers), imported for side effect from `start/routes.ts` and gated by the `admin` / `adminApi` feature flags inside the module.
+- Routes: domain route modules live in `start/routes/{name}.routes.ts` as `register*` functions wired from `start/routes.ts`. Migrated domains (identity, file, log, …) are the exception: they self-register from `app/{domain}/routes.ts` (co-located with their controllers), imported for side effect from `start/routes.ts` and gated by the `admin` / `adminApi` feature flags inside the module.
 - Codegen: `adonisrc.ts` scans `app/` for `**/*_controller.ts` / `**/*transformer.ts` (import alias `#app`), so a controller at `app/{domain}/controllers/{context}/{name}_controller.ts` is referenced as `controllers.{domain}.{context}.{Name}`.
 - Inertia responses: always pass a `translations` payload with i18n keys.
 - Auth: use `auth.getUserOrFail()` on authenticated routes.

@@ -1,9 +1,9 @@
 import { test } from '@japa/runner';
 import { withTransaction } from '#core/services/with_transaction';
 import { UserFactory } from '#database/factories/user_factory';
-import LogEntry from '#models/core/log_entry';
-import { LogService } from '#services/logging/log_service';
-import { LogCategory, LogLevel } from '#types/logging';
+import LogEntry from '#log/models/log_entry';
+import { LogService } from '#log/services/log_service';
+import { LogCategory, LogLevel } from '#log/types/logging';
 
 /**
  * Polls the database until a row matching `message` appears or the timeout
