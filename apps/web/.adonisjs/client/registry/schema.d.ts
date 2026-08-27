@@ -751,30 +751,6 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/cms/controllers/front/page_controller').default['home']>>>
     }
   }
-  'cms.page.localised.render': {
-    methods: ["GET","HEAD"]
-    pattern: '/:locale/:slug'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue, ParamValue]
-      params: { locale: ParamValue; slug: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/cms/controllers/front/page_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/cms/controllers/front/page_controller').default['render']>>>
-    }
-  }
-  'cms.page.render': {
-    methods: ["GET","HEAD"]
-    pattern: '/:slug'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { slug: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/cms/controllers/front/page_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/cms/controllers/front/page_controller').default['render']>>>
-    }
-  }
   'admin.core.dashboard.render': {
     methods: ["GET","HEAD"]
     pattern: '/admin'
@@ -1925,6 +1901,30 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#app/core/controllers/health_controller').default['readiness']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/health_controller').default['readiness']>>>
+    }
+  }
+  'cms.page.localised.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/:locale/:slug'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue, ParamValue]
+      params: { locale: ParamValue; slug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/cms/controllers/front/page_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/cms/controllers/front/page_controller').default['render']>>>
+    }
+  }
+  'cms.page.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/:slug'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { slug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/cms/controllers/front/page_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/cms/controllers/front/page_controller').default['render']>>>
     }
   }
 }

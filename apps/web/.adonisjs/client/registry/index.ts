@@ -378,18 +378,6 @@ const routes = {
     tokens: [{"old":"/","type":0,"val":"/","end":""}],
     types: placeholder as Registry['core.home.render']['types'],
   },
-  'cms.page.localised.render': {
-    methods: ["GET","HEAD"],
-    pattern: '/:locale/:slug',
-    tokens: [{"old":"/:locale/:slug","type":1,"val":"locale","end":""},{"old":"/:locale/:slug","type":1,"val":"slug","end":""}],
-    types: placeholder as Registry['cms.page.localised.render']['types'],
-  },
-  'cms.page.render': {
-    methods: ["GET","HEAD"],
-    pattern: '/:slug',
-    tokens: [{"old":"/:slug","type":1,"val":"slug","end":""}],
-    types: placeholder as Registry['cms.page.render']['types'],
-  },
   'admin.core.dashboard.render': {
     methods: ["GET","HEAD"],
     pattern: '/admin',
@@ -965,6 +953,18 @@ const routes = {
     pattern: '/health/ready',
     tokens: [{"old":"/health/ready","type":0,"val":"health","end":""},{"old":"/health/ready","type":0,"val":"ready","end":""}],
     types: placeholder as Registry['health.readiness']['types'],
+  },
+  'cms.page.localised.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/:locale/:slug',
+    tokens: [{"old":"/:locale/:slug","type":1,"val":"locale","end":""},{"old":"/:locale/:slug","type":1,"val":"slug","end":""}],
+    types: placeholder as Registry['cms.page.localised.render']['types'],
+  },
+  'cms.page.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/:slug',
+    tokens: [{"old":"/:slug","type":1,"val":"slug","end":""}],
+    types: placeholder as Registry['cms.page.render']['types'],
   },
 } as const satisfies Record<string, AdonisEndpoint>
 

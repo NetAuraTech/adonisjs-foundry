@@ -66,8 +66,6 @@ export type ScannedRoutes = {
     'api.v1.admin.cms.builder_operations.save_draft': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
     'cms.contact.execute': { paramsTuple?: []; params?: {} }
     'core.home.render': { paramsTuple?: []; params?: {} }
-    'cms.page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
-    'cms.page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
     'admin.core.dashboard.render': { paramsTuple?: []; params?: {} }
     'admin.core.maintenance.render': { paramsTuple?: []; params?: {} }
     'admin.core.maintenance.update': { paramsTuple?: []; params?: {} }
@@ -164,6 +162,8 @@ export type ScannedRoutes = {
     'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
     'health.liveness': { paramsTuple?: []; params?: {} }
     'health.readiness': { paramsTuple?: []; params?: {} }
+    'cms.page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
+    'cms.page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
   }
   GET: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -190,8 +190,6 @@ export type ScannedRoutes = {
     'api.v1.admin.cms.templates_preview.token': { paramsTuple?: []; params?: {} }
     'api.v1.admin.cms.builder_operations.presence': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
     'core.home.render': { paramsTuple?: []; params?: {} }
-    'cms.page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
-    'cms.page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
     'admin.core.dashboard.render': { paramsTuple?: []; params?: {} }
     'admin.core.maintenance.render': { paramsTuple?: []; params?: {} }
     'api.v1.admin.core.dashboard.index': { paramsTuple?: []; params?: {} }
@@ -236,6 +234,8 @@ export type ScannedRoutes = {
     'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
     'health.liveness': { paramsTuple?: []; params?: {} }
     'health.readiness': { paramsTuple?: []; params?: {} }
+    'cms.page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
+    'cms.page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
   }
   HEAD: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -262,8 +262,6 @@ export type ScannedRoutes = {
     'api.v1.admin.cms.templates_preview.token': { paramsTuple?: []; params?: {} }
     'api.v1.admin.cms.builder_operations.presence': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
     'core.home.render': { paramsTuple?: []; params?: {} }
-    'cms.page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
-    'cms.page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
     'admin.core.dashboard.render': { paramsTuple?: []; params?: {} }
     'admin.core.maintenance.render': { paramsTuple?: []; params?: {} }
     'api.v1.admin.core.dashboard.index': { paramsTuple?: []; params?: {} }
@@ -308,6 +306,8 @@ export type ScannedRoutes = {
     'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
     'health.liveness': { paramsTuple?: []; params?: {} }
     'health.readiness': { paramsTuple?: []; params?: {} }
+    'cms.page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
+    'cms.page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
   }
   POST: {
     'account.profile.execute': { paramsTuple?: []; params?: {} }
