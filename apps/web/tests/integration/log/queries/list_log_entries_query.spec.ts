@@ -3,8 +3,8 @@ import { test } from '@japa/runner';
 import { DateTime } from 'luxon';
 import { UserFactory } from '#database/factories/user_factory';
 import LogEntry from '#log/models/log_entry';
-import { LogEntryRepository } from '#log/repositories/log_entry_repository';
 import { ListLogEntriesQuery } from '#log/queries/list_log_entries_query';
+import { LogEntryRepository } from '#log/repositories/log_entry_repository';
 import { LogCategory, LogLevel, type CreateLogEntryInput } from '#log/types/logging';
 
 test.group('ListLogEntriesQuery', (group) => {

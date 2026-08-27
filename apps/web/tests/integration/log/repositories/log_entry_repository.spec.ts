@@ -107,11 +107,6 @@ test.group('LogEntryRepository', (group) => {
 		const remaining = await LogEntry.query().whereLike('message', `%${marker}%`);
 		assert.lengthOf(remaining, 2);
 		// The two newest entries of the marker set survive.
-		assert.deepEqual(
-			remaining
-				.map((entry) => entry.id)
-				.sort(),
-			[ids[3], ids[4]].sort(),
-		);
+		assert.deepEqual(remaining.map((entry) => entry.id).sort(), [ids[3], ids[4]].sort());
 	});
 });
