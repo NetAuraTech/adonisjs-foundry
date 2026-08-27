@@ -1,10 +1,10 @@
 import { inject } from '@adonisjs/core';
+import { I18nService } from '#app/core/helpers/i18n_service';
 import { buildRolesFormPayload } from '#app/identity/helpers/i18n_payloads/roles_form';
 import PermissionTransformer from '#app/identity/transformers/permission_transformer';
 import { createRoleValidator } from '#app/identity/validators/role';
 import { ListAllPermissionsAction } from '#identity/actions/permission/list_all_permissions_action';
 import { CreateRoleAction } from '#identity/actions/role/create_role_action';
-import { I18nService } from '#services/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

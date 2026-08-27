@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { contactValidator } from '#app/cms/validators/contact';
+import { I18nService } from '#app/core/helpers/i18n_service';
 import { ContactMailService } from '#cms/services/contact_mail_service';
-import { I18nService } from '#services/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

@@ -1,4 +1,4 @@
-import type { BuildPayloadResult, I18nService } from '#services/i18n_service';
+import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_translator';
 
 /**
  * The flat i18n key mapping for the admin page revisions listing page.
@@ -36,9 +36,9 @@ export type AdminPagesRevisionTranslations = BuildPayloadResult<typeof PAGE_REVI
 /**
  * Builds the resolved translation payload for the admin page revisions page.
  *
- * @param i18n - The request-scoped {@link I18nService}.
+ * @param i18n - The request-scoped {@link I18nTranslator}.
  * @returns The page revisions `t` object with every UI string resolved.
  */
-export function buildPageRevisionsPayload(i18n: I18nService): AdminPagesRevisionTranslations {
+export function buildPageRevisionsPayload(i18n: I18nTranslator): AdminPagesRevisionTranslations {
 	return i18n.buildPayload(PAGE_REVISIONS_MAPPING);
 }

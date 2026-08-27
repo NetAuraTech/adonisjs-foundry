@@ -1,4 +1,4 @@
-import { createI18nEntry, type BuildPayloadResult, type I18nService } from '#services/i18n_service';
+import { createI18nEntry, type BuildPayloadResult, type I18nTranslator } from '#core/contracts/i18n_translator';
 
 /**
  * The flat i18n key mapping for the visual page builder (editor modes, toolbar,
@@ -178,9 +178,9 @@ export type PageEditorTranslations = BuildPayloadResult<typeof PAGE_EDITOR_MAPPI
 /**
  * Builds the resolved translation payload for the visual page builder.
  *
- * @param i18n - The request-scoped {@link I18nService}.
+ * @param i18n - The request-scoped {@link I18nTranslator}.
  * @returns The page editor `t` object with every UI string resolved.
  */
-export function buildPageEditorPayload(i18n: I18nService): PageEditorTranslations {
+export function buildPageEditorPayload(i18n: I18nTranslator): PageEditorTranslations {
 	return i18n.buildPayload(PAGE_EDITOR_MAPPING);
 }

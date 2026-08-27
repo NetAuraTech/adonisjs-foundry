@@ -1,4 +1,4 @@
-import type { BuildPayloadResult, I18nService } from '#services/i18n_service';
+import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_translator';
 
 /**
  * The flat i18n key mapping for the login page.
@@ -31,9 +31,9 @@ export type LoginTranslations = BuildPayloadResult<typeof SESSION_MAPPING>;
 /**
  * Builds the translation payload for the login page.
  *
- * @param i18n - The request-scoped {@link I18nService}.
+ * @param i18n - The request-scoped {@link I18nTranslator}.
  * @returns The login `t` object with every UI string resolved.
  */
-export function buildSessionPayload(i18n: I18nService): LoginTranslations {
+export function buildSessionPayload(i18n: I18nTranslator): LoginTranslations {
 	return i18n.buildPayload(SESSION_MAPPING);
 }

@@ -1,10 +1,10 @@
 import { inject } from '@adonisjs/core';
+import { I18nService } from '#app/core/helpers/i18n_service';
 import { FindHomepageAction } from '#cms/actions/page/find_homepage_action';
 import { FindPageBySlugAction } from '#cms/actions/page/find_page_by_slug_action';
 import { PageResolverService } from '#cms/services/page/page_resolver_service';
 import { ResolvedPageContent } from '#cms/types/page';
 import { StorageService } from '#file/services/storage_service';
-import { I18nService } from '#services/i18n_service';
 import { CacheService } from '#shared/services/cache_service';
 import type { HttpContext } from '@adonisjs/core/http';
 

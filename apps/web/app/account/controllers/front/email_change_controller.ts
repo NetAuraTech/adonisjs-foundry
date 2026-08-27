@@ -3,8 +3,8 @@ import { ConfirmEmailChangeAction } from '#account/actions/account/confirm_email
 import { buildEmailChangePayload } from '#app/account/helpers/i18n_payloads/email_change';
 import { changeEmailValidator } from '#app/account/validators/account';
 import { regenerateCsrfToken } from '#app/auth/helpers/crsf';
+import { I18nService } from '#app/core/helpers/i18n_service';
 import { FullToken } from '#auth/enums/token_type';
-import { I18nService } from '#services/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

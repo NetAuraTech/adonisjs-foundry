@@ -1,4 +1,4 @@
-import { createI18nEntry, type BuildPayloadResult, type I18nService } from '#services/i18n_service';
+import { createI18nEntry, type BuildPayloadResult, type I18nTranslator } from '#core/contracts/i18n_translator';
 
 /**
  * The flat i18n key mapping for the account settings section (credentials,
@@ -83,9 +83,9 @@ export type SettingsAccountTranslations = BuildPayloadResult<typeof ACCOUNT_MAPP
 /**
  * Builds the resolved translation payload for the account settings section.
  *
- * @param i18n - The request-scoped {@link I18nService}.
+ * @param i18n - The request-scoped {@link I18nTranslator}.
  * @returns The account settings `t` object with every UI string resolved.
  */
-export function buildAccountPayload(i18n: I18nService): SettingsAccountTranslations {
+export function buildAccountPayload(i18n: I18nTranslator): SettingsAccountTranslations {
 	return i18n.buildPayload(ACCOUNT_MAPPING);
 }

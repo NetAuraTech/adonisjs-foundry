@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { type HttpContext } from '@adonisjs/core/http';
 import PagesResource from '#app/cms/rest/pages_resource';
-import { handle } from '#rest/rest_adapter';
+import { handle } from '#app/core/rest/rest_adapter';
 
 /**
  * PUT  /api/v1/admin/pages/:id — update a page

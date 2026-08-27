@@ -1,5 +1,5 @@
+import type { I18nTranslator } from '#core/contracts/i18n_translator';
 import type { DashboardCollector, DashboardStats } from '#core/types/dashboard';
-import type { I18nService } from '#services/i18n_service';
 
 /**
  * Lazily resolves a dashboard collector instance — typically through the IoC
@@ -13,7 +13,7 @@ export type DashboardCollectorFactory<K extends keyof DashboardStats = keyof Das
  * Builds a translation fragment for the dashboard payload from the
  * request-scoped i18n service.
  */
-export type DashboardTranslationBuilder = (i18n: I18nService) => Record<string, unknown>;
+export type DashboardTranslationBuilder = (i18n: I18nTranslator) => Record<string, unknown>;
 
 /**
  * Registry of dashboard section collectors and translation fragments.

@@ -1,10 +1,10 @@
 import { inject } from '@adonisjs/core';
 import { registerValidator } from '#app/auth/validators/auth';
+import { I18nService } from '#app/core/helpers/i18n_service';
 import { preloadUserRoleWithPermissions } from '#app/identity/helpers/load_user_role';
 import UserTransformer from '#app/identity/transformers/user_transformer';
 import { SendEmailVerificationAction } from '#auth/actions/email_verification/send_email_verification_action';
 import { RegisterUserAction } from '#auth/actions/session/register_user_action';
-import { I18nService } from '#services/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 /**

@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { type HttpContext } from '@adonisjs/core/http';
-import FilesResource from '#rest/files_resource';
-import { handle } from '#rest/rest_adapter';
+import { handle } from '#app/core/rest/rest_adapter';
+import FilesResource from '#app/file/rest/files_resource';
 
 /**
  * DELETE /api/v1/admin/files/:id — delete a file from the admin REST API.

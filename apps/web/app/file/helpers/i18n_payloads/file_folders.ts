@@ -1,4 +1,4 @@
-import { createI18nEntry, type BuildPayloadResult, type I18nService } from '#services/i18n_service';
+import { createI18nEntry, type BuildPayloadResult, type I18nTranslator } from '#core/contracts/i18n_translator';
 
 /**
  * The flat i18n key mapping for the admin folders management page.
@@ -37,9 +37,9 @@ export type AdminFileFoldersTranslations = BuildPayloadResult<typeof FILE_FOLDER
 /**
  * Builds the resolved translation payload for the admin folders management page.
  *
- * @param i18n - The request-scoped {@link I18nService}.
+ * @param i18n - The request-scoped {@link I18nTranslator}.
  * @returns The folders management `t` object with every UI string resolved.
  */
-export function buildFileFoldersPayload(i18n: I18nService): AdminFileFoldersTranslations {
+export function buildFileFoldersPayload(i18n: I18nTranslator): AdminFileFoldersTranslations {
 	return i18n.buildPayload(FILE_FOLDERS_MAPPING);
 }

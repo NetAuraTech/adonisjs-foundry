@@ -1,4 +1,4 @@
-import type { BuildPayloadResult, I18nService } from '#services/i18n_service';
+import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_translator';
 
 /**
  * The flat i18n key mapping for the admin maintenance settings page.
@@ -62,9 +62,9 @@ export type AdminMaintenanceTranslations = BuildPayloadResult<typeof ADMIN_MAINT
 /**
  * Builds the resolved translation payload for the admin maintenance settings page.
  *
- * @param i18n - The request-scoped {@link I18nService}.
+ * @param i18n - The request-scoped {@link I18nTranslator}.
  * @returns The maintenance settings `t` object with every UI string resolved.
  */
-export function buildAdminMaintenanceIndexPayload(i18n: I18nService): AdminMaintenanceTranslations {
+export function buildAdminMaintenanceIndexPayload(i18n: I18nTranslator): AdminMaintenanceTranslations {
 	return i18n.buildPayload(ADMIN_MAINTENANCE_MAPPING);
 }

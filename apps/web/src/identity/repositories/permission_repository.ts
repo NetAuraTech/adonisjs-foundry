@@ -1,6 +1,6 @@
+import { BaseRepository } from '#core/repositories/base_repository';
 import { transactionContext } from '#core/services/transaction_context';
 import Permission from '#identity/models/permission';
-import { BaseRepository } from '#repositories/base_repository';
 import { type FindOptions } from '#types/core';
 
 /**

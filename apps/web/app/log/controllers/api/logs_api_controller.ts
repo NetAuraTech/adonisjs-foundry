@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { type HttpContext } from '@adonisjs/core/http';
-import LogsResource from '#rest/logs_resource';
-import { handle } from '#rest/rest_adapter';
+import { handle } from '#app/core/rest/rest_adapter';
+import LogsResource from '#app/log/rest/logs_resource';
 
 /**
  * GET /api/v1/admin/logs — paginated, filterable application log entries.

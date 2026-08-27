@@ -1,5 +1,5 @@
-import { createI18nEntry } from '#services/i18n_service';
-import type { BuildPayloadResult, I18nService } from '#services/i18n_service';
+import { createI18nEntry } from '#core/contracts/i18n_translator';
+import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_translator';
 
 /**
  * The flat i18n key mapping for the admin template metadata edit page.
@@ -37,9 +37,9 @@ export type AdminTemplatesEditTranslations = BuildPayloadResult<typeof TEMPLATES
 /**
  * Builds the translation payload for the admin template metadata edit page.
  *
- * @param i18n - The request-scoped {@link I18nService}.
+ * @param i18n - The request-scoped {@link I18nTranslator}.
  * @returns The template edit `t` object with every UI string resolved.
  */
-export function buildTemplatesEditPayload(i18n: I18nService): AdminTemplatesEditTranslations {
+export function buildTemplatesEditPayload(i18n: I18nTranslator): AdminTemplatesEditTranslations {
 	return i18n.buildPayload(TEMPLATES_EDIT_MAPPING);
 }

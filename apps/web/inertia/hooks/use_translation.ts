@@ -1,4 +1,4 @@
-import type { TranslationNodes } from '#helpers/i18n_payloads/nest';
+import type { TranslationNodes } from '#app/core/helpers/i18n_payloads/nest';
 
 type Format = 'long' | 'full' | 'medium' | 'short';
 export type Lang = 'en' | 'fr';

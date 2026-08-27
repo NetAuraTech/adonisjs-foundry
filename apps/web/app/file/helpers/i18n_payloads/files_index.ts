@@ -1,4 +1,4 @@
-import { createI18nEntry, type BuildPayloadResult, type I18nService } from '#services/i18n_service';
+import { createI18nEntry, type BuildPayloadResult, type I18nTranslator } from '#core/contracts/i18n_translator';
 
 /**
  * The flat i18n key mapping for the admin files listing page, including the
@@ -87,9 +87,9 @@ export type AdminFilesTranslations = BuildPayloadResult<typeof FILES_INDEX_MAPPI
 /**
  * Builds the resolved translation payload for the admin files listing page.
  *
- * @param i18n - The request-scoped {@link I18nService}.
+ * @param i18n - The request-scoped {@link I18nTranslator}.
  * @returns The files listing `t` object with every UI string resolved.
  */
-export function buildFilesIndexPayload(i18n: I18nService): AdminFilesTranslations {
+export function buildFilesIndexPayload(i18n: I18nTranslator): AdminFilesTranslations {
 	return i18n.buildPayload(FILES_INDEX_MAPPING);
 }

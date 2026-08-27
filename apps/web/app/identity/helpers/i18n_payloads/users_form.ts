@@ -1,7 +1,7 @@
-import { nestTranslation, type TranslationNodes } from '#helpers/i18n_payloads/nest';
-import { createI18nEntry } from '#services/i18n_service';
+import { nestTranslation, type TranslationNodes } from '#app/core/helpers/i18n_payloads/nest';
+import { createI18nEntry } from '#core/contracts/i18n_translator';
+import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_translator';
 import type Role from '#identity/models/role';
-import type { BuildPayloadResult, I18nService } from '#services/i18n_service';
 
 /**
  * The flat i18n key mapping for the user create/edit form. The `roles` node
@@ -45,11 +45,11 @@ export type AdminUsersFormTranslations = BuildPayloadResult<typeof USERS_FORM_MA
  * lang namespace, description stored raw) keyed by slug so the role selector
  * can render without extra fetches.
  *
- * @param i18n - The request-scoped {@link I18nService}.
+ * @param i18n - The request-scoped {@link I18nTranslator}.
  * @param roles - The roles to build per-role entries for.
  * @returns The user form `t` object with every UI string resolved.
  */
-export function buildUsersFormPayload(i18n: I18nService, roles: Role[]): AdminUsersFormTranslations {
+export function buildUsersFormPayload(i18n: I18nTranslator, roles: Role[]): AdminUsersFormTranslations {
 	const rolesEntries: TranslationNodes = {};
 
 	for (const role of roles) {

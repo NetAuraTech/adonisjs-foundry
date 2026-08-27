@@ -1,8 +1,9 @@
-import { nestTranslation, permissionCategoryKey, type TranslationNodes } from '#helpers/i18n_payloads/nest';
-import { createI18nEntry } from '#services/i18n_service';
+import { nestTranslation, type TranslationNodes } from '#app/core/helpers/i18n_payloads/nest';
+import { permissionCategoryKey } from '#app/identity/helpers/i18n_payloads/permission_category';
+import { createI18nEntry } from '#core/contracts/i18n_translator';
+import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_translator';
 import type Permission from '#identity/models/permission';
 import type Role from '#identity/models/role';
-import type { BuildPayloadResult, I18nService } from '#services/i18n_service';
 
 /**
  * The flat i18n key mapping for the role detail page. The `roles` and
@@ -59,13 +60,13 @@ export type AdminRolesShowTranslations = BuildPayloadResult<typeof ROLES_SHOW_MA
  * system records store i18n keys resolved by the `roles` / `permissions` lang
  * namespaces, custom records store plain strings returned unchanged.
  *
- * @param i18n - The request-scoped {@link I18nService}.
+ * @param i18n - The request-scoped {@link I18nTranslator}.
  * @param role - The role being displayed.
  * @param permissions - The permissions assigned to the role (grouped by category).
  * @returns The role detail `t` object with every UI string resolved.
  */
 export function buildRolesShowPayload(
-	i18n: I18nService,
+	i18n: I18nTranslator,
 	role: Role,
 	permissions: Permission[],
 ): AdminRolesShowTranslations {

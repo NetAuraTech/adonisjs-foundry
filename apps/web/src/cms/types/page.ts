@@ -377,7 +377,7 @@ export interface ContactFormSubmission {
 }
 
 // ─── Resolved types ───────────────────────────────────────────────────────────
-// Append these to the bottom of app/types/page.ts
+// Append these to the bottom of types/page.ts
 // They mirror Block/Props types but with FileRef replaced by ResolvedFile,
 // built server-side by PageResolverService before being passed to Inertia.
 

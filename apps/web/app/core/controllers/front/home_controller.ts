@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
 import { buildHomePayload } from '#app/core/helpers/i18n_payloads/home';
-import { I18nService } from '#services/i18n_service';
+import { I18nService } from '#app/core/helpers/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 /**

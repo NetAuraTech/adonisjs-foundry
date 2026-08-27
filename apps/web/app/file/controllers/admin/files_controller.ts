@@ -1,4 +1,6 @@
 import { inject } from '@adonisjs/core';
+import { extractPagination } from '#app/core/helpers/extract_pagination';
+import { I18nService } from '#app/core/helpers/i18n_service';
 import { buildFilesIndexPayload } from '#app/file/helpers/i18n_payloads/files_index';
 import { buildFilesShowPayload } from '#app/file/helpers/i18n_payloads/files_show';
 import FileFolderTransformer from '#app/file/transformers/file_folder_transformer';
@@ -18,9 +20,7 @@ import { MoveFileAction } from '#file/actions/file/move_file_action';
 import { UploadFileAction } from '#file/actions/file/upload_file_action';
 import { UpsertFileAltAction } from '#file/actions/file/upsert_file_alt_action';
 import { ListRootFoldersAction } from '#file/actions/file_folder/list_root_folders_action';
-import { stripEmptyStrings } from '#helpers/core/strip_empty_strings';
-import { extractPagination } from '#helpers/pagination/extract_pagination';
-import { I18nService } from '#services/i18n_service';
+import { stripEmptyStrings } from '#shared/strip_empty_strings';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

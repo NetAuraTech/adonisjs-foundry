@@ -1,6 +1,6 @@
 # Domain Repositories
 
-One repository per model, in `app/domain/repositories/{area}/{name}_repository.ts`. Pure, focused wrappers around Lucid ORM queries — callers never touch the ORM directly. No business logic.
+One repository per model, in `src/{domain}/repositories/{name}_repository.ts` (area subdirectories for large domains) — co-located with the domain's models and imported through the domain alias (`#cms/repositories/...`, `#identity/repositories/...`). Pure, focused wrappers around Lucid ORM queries — callers never touch the ORM directly. No business logic. The shared `BaseRepository` lives in `src/core/repositories/base_repository.ts`.
 
 > **CMS exception (ADR-0001):** CMS repositories (page, template) live under `src/cms/repositories/{area}/`, imported via `#cms/repositories/...`. The layout above applies to everything outside the CMS module.
 >

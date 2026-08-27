@@ -1,11 +1,11 @@
 import { inject } from '@adonisjs/core';
+import { extractPagination } from '#app/core/helpers/extract_pagination';
+import { I18nService } from '#app/core/helpers/i18n_service';
 import { buildLogsListPayload } from '#app/log/helpers/i18n_payloads/logs_list';
 import LogEntryTransformer from '#app/log/transformers/log_entry_transformer';
 import { listLogsValidator } from '#app/log/validators/log';
-import { stripEmptyStrings } from '#helpers/core/strip_empty_strings';
-import { extractPagination } from '#helpers/pagination/extract_pagination';
 import { ListLogEntriesAction } from '#log/actions/log/list_log_entries_action';
-import { I18nService } from '#services/i18n_service';
+import { stripEmptyStrings } from '#shared/strip_empty_strings';
 import type { HttpContext } from '@adonisjs/core/http';
 
 /**

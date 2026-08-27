@@ -1,9 +1,9 @@
-import type { BuildPayloadResult, I18nService } from '#services/i18n_service';
+import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_translator';
 
 /**
  * The i18n key mapping for the CMS dashboard section.
  * Keys are nested under a `cms` branch so they never collide with the core
- * dashboard mapping (`app/helpers/i18n_payloads/dashboard.ts`).
+ * dashboard mapping (`app/core/helpers/i18n_payloads/dashboard.ts`).
  */
 export const CMS_DASHBOARD_MAPPING = {
 	cms: {
@@ -32,9 +32,9 @@ export type CmsDashboardTranslations = BuildPayloadResult<typeof CMS_DASHBOARD_M
 /**
  * Builds the resolved CMS dashboard translation fragment.
  *
- * @param i18n - The request-scoped {@link I18nService}.
+ * @param i18n - The request-scoped {@link I18nTranslator}.
  * @returns The `cms` branch of the dashboard translation payload.
  */
-export function buildCmsDashboardPayload(i18n: I18nService): CmsDashboardTranslations {
+export function buildCmsDashboardPayload(i18n: I18nTranslator): CmsDashboardTranslations {
 	return i18n.buildPayload(CMS_DASHBOARD_MAPPING);
 }
