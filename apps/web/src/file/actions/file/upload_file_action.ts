@@ -7,7 +7,7 @@ import FileTooLargeException from '#file/exceptions/file_too_large_exception';
 import InvalidExtensionException from '#file/exceptions/invalid_extension_exception';
 import { FileRepository } from '#file/repositories/file_repository';
 import { StorageService } from '#file/services/storage_service';
-import { LogService } from '#services/logging/log_service';
+import { LogService } from '#log/services/log_service';
 import env from '#start/env';
 import type CmsFile from '#file/models/file';
 import type { MultipartFile } from '@adonisjs/core/types/bodyparser';

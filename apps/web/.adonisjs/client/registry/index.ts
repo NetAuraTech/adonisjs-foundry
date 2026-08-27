@@ -426,6 +426,18 @@ const routes = {
     tokens: [{"old":"/api/v1/admin/permissions","type":0,"val":"api","end":""},{"old":"/api/v1/admin/permissions","type":0,"val":"v1","end":""},{"old":"/api/v1/admin/permissions","type":0,"val":"admin","end":""},{"old":"/api/v1/admin/permissions","type":0,"val":"permissions","end":""}],
     types: placeholder as Registry['api.v1.admin.identity.permissions.index']['types'],
   },
+  'admin.log.logs.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/logs',
+    tokens: [{"old":"/admin/logs","type":0,"val":"admin","end":""},{"old":"/admin/logs","type":0,"val":"logs","end":""}],
+    types: placeholder as Registry['admin.log.logs.render']['types'],
+  },
+  'api.v1.admin.log.logs.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/admin/logs',
+    tokens: [{"old":"/api/v1/admin/logs","type":0,"val":"api","end":""},{"old":"/api/v1/admin/logs","type":0,"val":"v1","end":""},{"old":"/api/v1/admin/logs","type":0,"val":"admin","end":""},{"old":"/api/v1/admin/logs","type":0,"val":"logs","end":""}],
+    types: placeholder as Registry['api.v1.admin.log.logs.index']['types'],
+  },
   'event_stream': {
     methods: ["GET","HEAD"],
     pattern: '/__transmit/events',
@@ -642,23 +654,11 @@ const routes = {
     tokens: [{"old":"/admin/settings/maintenance/toggle","type":0,"val":"admin","end":""},{"old":"/admin/settings/maintenance/toggle","type":0,"val":"settings","end":""},{"old":"/admin/settings/maintenance/toggle","type":0,"val":"maintenance","end":""},{"old":"/admin/settings/maintenance/toggle","type":0,"val":"toggle","end":""}],
     types: placeholder as Registry['admin.settings.maintenance.toggle']['types'],
   },
-  'admin.logs.render': {
-    methods: ["GET","HEAD"],
-    pattern: '/admin/logs',
-    tokens: [{"old":"/admin/logs","type":0,"val":"admin","end":""},{"old":"/admin/logs","type":0,"val":"logs","end":""}],
-    types: placeholder as Registry['admin.logs.render']['types'],
-  },
   'api.v1.admin.dashboard_api.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/admin/dashboard',
     tokens: [{"old":"/api/v1/admin/dashboard","type":0,"val":"api","end":""},{"old":"/api/v1/admin/dashboard","type":0,"val":"v1","end":""},{"old":"/api/v1/admin/dashboard","type":0,"val":"admin","end":""},{"old":"/api/v1/admin/dashboard","type":0,"val":"dashboard","end":""}],
     types: placeholder as Registry['api.v1.admin.dashboard_api.index']['types'],
-  },
-  'api.v1.admin.logs_api.index': {
-    methods: ["GET","HEAD"],
-    pattern: '/api/v1/admin/logs',
-    tokens: [{"old":"/api/v1/admin/logs","type":0,"val":"api","end":""},{"old":"/api/v1/admin/logs","type":0,"val":"v1","end":""},{"old":"/api/v1/admin/logs","type":0,"val":"admin","end":""},{"old":"/api/v1/admin/logs","type":0,"val":"logs","end":""}],
-    types: placeholder as Registry['api.v1.admin.logs_api.index']['types'],
   },
   'api.v1.admin.maintenance_api.index': {
     methods: ["GET","HEAD"],

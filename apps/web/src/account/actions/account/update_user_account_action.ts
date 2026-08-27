@@ -6,7 +6,7 @@ import UnverifiedAccountException from '#auth/exceptions/unverified_account_exce
 import { withTransaction } from '#core/services/with_transaction';
 import User from '#identity/models/user';
 import { UserRepository } from '#identity/repositories/user_repository';
-import { LogService } from '#services/logging/log_service';
+import { LogService } from '#log/services/log_service';
 
 interface UpdateUserAccountPayload {
 	user: User;

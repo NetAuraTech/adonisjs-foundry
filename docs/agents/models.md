@@ -7,6 +7,8 @@ Lucid models live in `app/models/{area}/{name}.ts`. Each model extends a generat
 > **Identity co-location:** identity models (user, role, permission) live under `src/identity/models/`, imported via `#identity/models/...` — co-located with the identity domain's actions, repositories and services in the `src/identity/` business module.
 >
 > **File co-location:** file models (file, file_alt, file_folder) live under `src/file/models/`, imported via `#file/models/...` — co-located with the file domain's actions, repositories and services in the `src/file/` business module.
+>
+> **Log co-location:** log models (log_entry) live under `src/log/models/`, imported via `#log/models/...` — co-located with the log domain's actions, repositories and services in the `src/log/` business module.
 
 ## Structure
 
@@ -84,7 +86,7 @@ Scopes are for filtering logic intrinsic to the model. Conditional request-drive
 ## Conventions
 
 - One file per model, named after the entity (`user.ts`, `token.ts`).
-- Models grouped by domain area under `app/models/` (e.g. `core/`). Migrated domains live co-located instead: `src/{domain}/models/` (identity, file) and `app/cms/models/` (CMS).
+- Models grouped by domain area under `app/models/` (e.g. `core/`). Migrated domains live co-located instead: `src/{domain}/models/` (identity, file, log) and `app/cms/models/` (CMS).
 - Relations use arrow functions for lazy resolution: `@belongsTo(() => Role)`.
 - Computed properties use `@computed()` decorator when they derive from model state.
 - A model never imports another repository directly outside a hook — cross-entity composition belongs in the service layer.

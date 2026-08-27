@@ -1,8 +1,8 @@
-﻿import { inject } from '@adonisjs/core';
+import { inject } from '@adonisjs/core';
 import drive from '@adonisjs/drive/services/main';
 import backupConfig from '#config/backup';
-import { LogService } from '#services/logging/log_service';
-import { LogCategory } from '#types/logging';
+import { LogService } from '#log/services/log_service';
+import { LogCategory } from '#log/types/logging';
 import type { BackupMetadata } from './list_backups_action.js';
 
 export interface HealthCheckResult {

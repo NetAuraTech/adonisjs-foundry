@@ -4,7 +4,7 @@ import { PageTranslationRepository } from '#cms/domain/repositories/page/page_tr
 import MissingRevisionException from '#cms/exceptions/page/missing_revision_exception';
 import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import { withTransaction } from '#core/services/with_transaction';
-import { LogService } from '#services/logging/log_service';
+import { LogService } from '#log/services/log_service';
 import type PageTranslation from '#cms/models/page/page_translation';
 
 interface RestoreRevisionPayload {

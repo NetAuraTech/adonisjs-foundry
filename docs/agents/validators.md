@@ -7,6 +7,8 @@ VineJS schemas live in `app/validators/{domain}.ts`, grouped by domain (not one 
 > **Identity co-location:** identity validators (user, role, permission) live in `app/identity/validators/`, imported via `#app/identity/validators/...` — co-located with the identity domain's controllers and transformers.
 >
 > **File co-location:** file validators live in `app/file/validators/`, imported via `#app/file/validators/...` — co-located with the file domain's controllers and transformers.
+>
+> **Log co-location:** log validators live in `app/log/validators/`, imported via `#app/log/validators/...` — co-located with the log domain's controllers and transformers.
 
 ## Two forms
 

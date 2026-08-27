@@ -7,6 +7,8 @@ One action = one business operation. Lives in `app/domain/actions/{area}/{verb}_
 > **Identity co-location:** identity actions (user, role, permission) live under `src/identity/actions/{area}/`, imported via `#identity/actions/...` — co-located with the identity domain's models, repositories and services in the `src/identity/` business module.
 >
 > **File co-location:** file actions (file, file_folder) live under `src/file/actions/{area}/`, imported via `#file/actions/...` — co-located with the file domain's models, repositories and services in the `src/file/` business module.
+>
+> **Log co-location:** log actions (log) live under `src/log/actions/{area}/`, imported via `#log/actions/...` — co-located with the log domain's models, repositories and services in the `src/log/` business module.
 
 ## Structure
 
@@ -14,7 +16,7 @@ One action = one business operation. Lives in `app/domain/actions/{area}/{verb}_
 import { inject } from '@adonisjs/core';
 import type Result from '#models/some/model';
 import { SomeRepository } from '#repositories/some_repository';
-import { LogService } from '#services/logging/log_service';
+import { LogService } from '#log/services/log_service';
 import { withTransaction } from '#shared/utils/with_transaction';
 
 interface CreateSomethingPayload {

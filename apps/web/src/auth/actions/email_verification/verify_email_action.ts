@@ -2,7 +2,7 @@ import { inject } from '@adonisjs/core';
 import { TokenRepository } from '#auth/repositories/token_repository';
 import { withTransaction } from '#core/services/with_transaction';
 import { UserRepository } from '#identity/repositories/user_repository';
-import { LogService } from '#services/logging/log_service';
+import { LogService } from '#log/services/log_service';
 import type { FullToken } from '#auth/enums/token_type';
 import type User from '#identity/models/user';
 

@@ -1,9 +1,9 @@
 import testUtils from '@adonisjs/core/services/test_utils';
 import { test } from '@japa/runner';
 import { LogEntryFactory } from '#factories/log_entry_factory';
+import { LogCategory, LogLevel } from '#log/types/logging';
 import { createAdminUser } from '#tests/helpers/create_admin_user';
 import { parseInertiaPage } from '#tests/helpers/inertia_page';
-import { LogCategory, LogLevel } from '#types/logging';
 
 /** Every `message` rendered on the logs page, regardless of the filter applied. */
 function renderedMessages(page: { props?: { entries?: { data?: Array<{ message?: string }> } } }) {

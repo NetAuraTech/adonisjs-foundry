@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { DateTime } from 'luxon';
-import { LogEntryRepository } from '#repositories/logging/log_entry_repository';
-import { LogService } from '#services/logging/log_service';
+import { LogEntryRepository } from '#log/repositories/log_entry_repository';
+import { LogService } from '#log/services/log_service';
 
 interface PruneLogEntriesPayload {
 	/** Entries older than this many days are pruned. */

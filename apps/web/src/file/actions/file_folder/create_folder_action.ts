@@ -2,7 +2,7 @@ import { inject } from '@adonisjs/core';
 import { withTransaction } from '#core/services/with_transaction';
 import FileFolder from '#file/models/file_folder';
 import { FileFolderRepository } from '#file/repositories/file_folder_repository';
-import { LogService } from '#services/logging/log_service';
+import { LogService } from '#log/services/log_service';
 
 interface CreateFolderPayload {
 	name: string;

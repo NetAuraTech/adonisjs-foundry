@@ -83,11 +83,13 @@ export interface ApiDefinition {
             index: typeof routes['api.v1.admin.identity.permissions.index']
           }
         }
+        log: {
+          logs: {
+            index: typeof routes['api.v1.admin.log.logs.index']
+          }
+        }
         dashboardApi: {
           index: typeof routes['api.v1.admin.dashboard_api.index']
-        }
-        logsApi: {
-          index: typeof routes['api.v1.admin.logs_api.index']
         }
         maintenanceApi: {
           index: typeof routes['api.v1.admin.maintenance_api.index']
@@ -228,6 +230,11 @@ export interface ApiDefinition {
         execute: typeof routes['admin.identity.permissions_update.execute']
       }
     }
+    log: {
+      logs: {
+        render: typeof routes['admin.log.logs.render']
+      }
+    }
     dashboard: {
       render: typeof routes['admin.dashboard.render']
     }
@@ -237,9 +244,6 @@ export interface ApiDefinition {
         update: typeof routes['admin.settings.maintenance.update']
         toggle: typeof routes['admin.settings.maintenance.toggle']
       }
-    }
-    logs: {
-      render: typeof routes['admin.logs.render']
     }
     pages: {
       render: typeof routes['admin.pages.render']

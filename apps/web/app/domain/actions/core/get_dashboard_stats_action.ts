@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
+import { LogService } from '#log/services/log_service';
+import { LogCategory } from '#log/types/logging';
 import { DashboardRegistry } from '#services/core/dashboard_registry';
-import { LogService } from '#services/logging/log_service';
-import { LogCategory } from '#types/logging';
 import type { DashboardStats } from '#types/dashboard';
 
 interface GetDashboardStatsPayload {

@@ -5,7 +5,7 @@ import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import { withTransaction } from '#core/services/with_transaction';
 import User from '#identity/models/user';
 import { UserRepository } from '#identity/repositories/user_repository';
-import { LogService } from '#services/logging/log_service';
+import { LogService } from '#log/services/log_service';
 import type { FullToken } from '#auth/enums/token_type';
 
 interface AcceptInvitationPayload {

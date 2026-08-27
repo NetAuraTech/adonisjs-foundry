@@ -4,7 +4,7 @@ import EmailAlreadyExistsException from '#core/exceptions/email_already_exists_e
 import { withTransaction } from '#core/services/with_transaction';
 import { extractNameFromEmail } from '#identity/domain/user';
 import { UserRepository } from '#identity/repositories/user_repository';
-import { LogService } from '#services/logging/log_service';
+import { LogService } from '#log/services/log_service';
 import type User from '#identity/models/user';
 
 interface SendInvitationPayload {

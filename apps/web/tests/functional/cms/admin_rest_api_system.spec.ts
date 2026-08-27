@@ -4,7 +4,7 @@ import testUtils from '@adonisjs/core/services/test_utils';
 import limiter from '@adonisjs/limiter/services/main';
 import { test } from '@japa/runner';
 import User from '#identity/models/user';
-import LogEntry from '#models/core/log_entry';
+import LogEntry from '#log/models/log_entry';
 import { MaintenanceService } from '#services/maintenance/maintenance_service';
 import { createAdminUser } from '#tests/helpers/create_admin_user';
 import { createVerifiedUser } from '#tests/helpers/create_verified_user';

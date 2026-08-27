@@ -4,7 +4,7 @@ import { sanitizePageContent } from '#cms/domain/services/page/sanitize_content'
 import MissingTranslationException from '#cms/exceptions/page/missing_translation_exception';
 import SlugExistsException from '#core/exceptions/slug_exists_exception';
 import { withTransaction } from '#core/services/with_transaction';
-import { LogService } from '#services/logging/log_service';
+import { LogService } from '#log/services/log_service';
 import type PageTranslation from '#cms/models/page/page_translation';
 import type { PageContent } from '#cms/types/page';
 

@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { TemplateRepository } from '#cms/domain/repositories/template/template_repository';
 import { withTransaction } from '#core/services/with_transaction';
-import { LogService } from '#services/logging/log_service';
+import { LogService } from '#log/services/log_service';
 
 interface DeleteTemplatePayload {
 	id: number;

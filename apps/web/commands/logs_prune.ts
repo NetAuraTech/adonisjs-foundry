@@ -1,6 +1,6 @@
 import { BaseCommand, flags } from '@adonisjs/core/ace';
-import { PruneLogEntriesAction } from '#actions/log/prune_log_entries_action';
 import loggingConfig from '#config/logging';
+import { PruneLogEntriesAction } from '#log/actions/log/prune_log_entries_action';
 import type { CommandOptions } from '@adonisjs/core/types/ace';
 
 /**

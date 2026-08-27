@@ -1,7 +1,7 @@
 import { test } from '@japa/runner';
 import { GetDashboardStatsAction } from '#actions/core/get_dashboard_stats_action';
+import { LogService } from '#log/services/log_service';
 import { DashboardRegistry } from '#services/core/dashboard_registry';
-import { LogService } from '#services/logging/log_service';
 import type {
 	DashboardCollector,
 	DashboardCollectorPayload,

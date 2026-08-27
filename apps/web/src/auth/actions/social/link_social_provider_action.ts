@@ -4,7 +4,7 @@ import UnverifiedAccountException from '#auth/exceptions/unverified_account_exce
 import { type OAuthProvider } from '#auth/types/auth';
 import { withTransaction } from '#core/services/with_transaction';
 import { UserRepository } from '#identity/repositories/user_repository';
-import { LogService } from '#services/logging/log_service';
+import { LogService } from '#log/services/log_service';
 import type User from '#identity/models/user';
 
 interface LinkSocialProviderPayload {

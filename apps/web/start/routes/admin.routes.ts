@@ -3,11 +3,12 @@
 | Admin routes
 |--------------------------------------------------------------------------
 |
-| Dashboard, settings (maintenance), logs.
+| Dashboard, settings (maintenance).
 |
 | The identity surface (users, roles, permissions) lives in
-| `app/identity/routes.ts`, and the file surface (files, file folders) in
-| `app/file/routes.ts`, both registered by import from `start/routes.ts`.
+| `app/identity/routes.ts`, the file surface (files, file folders) in
+| `app/file/routes.ts`, and the log surface (log viewer) in
+| `app/log/routes.ts`, all registered by import from `start/routes.ts`.
 |
 */
 
@@ -43,17 +44,6 @@ export function registerAdminRoutes(): void {
 							.as('settings')
 							.use([middleware.permission({ permissions: [permissions.settings.maintenance] })]);
 					})
-					.use([middleware.auth({ guards: ['web'] })]);
-
-				// Logs
-				router
-					.group(() => {
-						router
-							.get('/', [controllers.log.admin.Logs, 'render'])
-							.as('logs.render')
-							.use([middleware.permission({ permissions: [permissions.logs.view] })]);
-					})
-					.prefix('logs')
 					.use([middleware.auth({ guards: ['web'] })]);
 			});
 		})

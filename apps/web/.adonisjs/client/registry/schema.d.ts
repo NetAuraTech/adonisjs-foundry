@@ -847,6 +847,30 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/identity/controllers/api/permissions_api_controller').default['index']>>>
     }
   }
+  'admin.log.logs.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/logs'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#app/log/validators/log').listLogsValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/log/controllers/admin/logs_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/log/controllers/admin/logs_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.log.logs.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/logs'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#app/log/validators/log').listLogsValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/log/controllers/api/logs_api_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/log/controllers/api/logs_api_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'event_stream': {
     methods: ["GET","HEAD"]
     pattern: '/__transmit/events'
@@ -1279,18 +1303,6 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/maintenance/controllers/admin/maintenance_controller').default['toggle']>>>
     }
   }
-  'admin.logs.render': {
-    methods: ["GET","HEAD"]
-    pattern: '/admin/logs'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: ExtractQueryForGet<InferInput<(typeof import('#validators/log').listLogsValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/log/controllers/admin/logs_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/log/controllers/admin/logs_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
   'api.v1.admin.dashboard_api.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/admin/dashboard'
@@ -1301,18 +1313,6 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#app/core/controllers/api/dashboard_api_controller').default['index']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/api/dashboard_api_controller').default['index']>>>
-    }
-  }
-  'api.v1.admin.logs_api.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/logs'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: ExtractQueryForGet<InferInput<(typeof import('#validators/log').listLogsValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/log/controllers/api/logs_api_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/log/controllers/api/logs_api_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'api.v1.admin.maintenance_api.index': {

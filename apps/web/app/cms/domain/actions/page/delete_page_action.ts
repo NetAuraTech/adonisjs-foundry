@@ -3,7 +3,7 @@ import { PageRepository } from '#cms/domain/repositories/page/page_repository';
 import Page from '#cms/models/page/page';
 import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import { withTransaction } from '#core/services/with_transaction';
-import { LogService } from '#services/logging/log_service';
+import { LogService } from '#log/services/log_service';
 
 interface DeletePagePayload {
 	id: number;

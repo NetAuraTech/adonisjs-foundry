@@ -1,8 +1,9 @@
 import { inject } from '@adonisjs/core';
 import logger from '@adonisjs/core/services/logger';
 import loggingConfig from '#config/logging';
-import { LogEntryRepository } from '#repositories/logging/log_entry_repository';
-import { LogCategory, type CreateLogEntryInput, type LogContext, type LogEntry, LogLevel } from '#types/logging';
+import { LogEntry as LogEntryDomain } from '#log/domain/log_entry';
+import { LogEntryRepository } from '#log/repositories/log_entry_repository';
+import { LogCategory, type LogContext, type LogEntry, LogLevel } from '#log/types/logging';
 import type { HttpContext } from '@adonisjs/core/http';
 
 /**
@@ -216,8 +217,9 @@ export class LogService {
 	 *
 	 * Fire-and-forget: this method never throws. Any database failure is
 	 * caught and reported to the in-memory pino logger so that logging never
-	 * crashes the calling request. Explicit identity fields on the entry take
-	 * precedence over the legacy `context` keys (`userId`, `userEmail`, …).
+	 * crashes the calling request. The entry is normalised by the pure domain
+	 * {@link LogEntryDomain} object, which owns the identity-resolution and
+	 * error-serialisation rules.
 	 *
 	 * @param entry - The original log entry as passed to {@link LogService.log}.
 	 * @param level - The resolved log level (after convenience-method overrides).
@@ -226,29 +228,10 @@ export class LogService {
 	private async persistEntry(entry: LogEntry, level: LogLevel, category: LogCategory): Promise<void> {
 		if (!this.shouldPersist(level, category)) return;
 
-		const context = entry.context ?? {};
-
-		const input: CreateLogEntryInput = {
-			level,
-			category,
-			message: entry.message,
-			actorId: entry.actorId ?? context.userId ?? null,
-			actorEmail: entry.actorEmail ?? context.userEmail ?? null,
-			ip: entry.ip ?? context.ip ?? null,
-			userAgent: entry.userAgent ?? context.userAgent ?? null,
-			requestId: entry.requestId ?? context.requestId ?? null,
-			context: { ...context, ...(entry.metadata ?? {}) },
-			error: entry.error
-				? {
-						name: entry.error.name,
-						message: entry.error.message,
-						stack: entry.error.stack,
-					}
-				: null,
-		};
+		const record = LogEntryDomain.fromRequest({ ...entry, level, category }).toRecord();
 
 		try {
-			await this.logEntryRepository.createRecord(input);
+			await this.logEntryRepository.createRecord(record);
 		} catch (dbError) {
 			logger.warn({ err: dbError, originalMessage: entry.message }, 'Failed to persist log entry to database');
 		}

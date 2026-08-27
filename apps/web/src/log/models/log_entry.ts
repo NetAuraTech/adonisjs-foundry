@@ -1,7 +1,7 @@
 import { belongsTo, column } from '@adonisjs/lucid/orm';
 import { LogEntrySchema } from '#database/schema';
 import User from '#identity/models/user';
-import type { LogCategory, LogLevel } from '#types/logging';
+import type { LogCategory, LogLevel } from '#log/types/logging';
 import type { BelongsTo } from '@adonisjs/lucid/types/relations';
 
 export default class LogEntry extends LogEntrySchema {

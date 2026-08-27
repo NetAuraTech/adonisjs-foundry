@@ -1,13 +1,14 @@
-import LogEntry from '#models/core/log_entry';
+import LogEntry from '#log/models/log_entry';
 import { BaseRepository } from '#repositories/base_repository';
-import type { CreateLogEntryInput, LogEntryListFilters } from '#types/logging';
+import type { CreateLogEntryInput } from '#log/types/logging';
 import type { DateTime } from 'luxon';
 
 /**
  * Handles all database operations for the {@link LogEntry} model.
  *
  * Owns the persistence side of the logging pipeline (write-through inserts)
- * and the read side used by the admin log viewer, plus retention pruning.
+ * and retention pruning; the read side used by the admin log viewer lives in
+ * the {@link ListLogEntriesQuery} query.
  */
 export class LogEntryRepository extends BaseRepository {
 	/**
@@ -44,49 +45,6 @@ export class LogEntryRepository extends BaseRepository {
 			},
 			this.client(),
 		);
-	}
-
-	/**
-	 * Returns log entries matching the given filters, newest first, paginated.
-	 *
-	 * All filters combine with AND. The result is always ordered by
-	 * `created_at` descending (most recent first).
-	 *
-	 * @param filters - Optional level, category, search, actor and date-range
-	 *   filters plus pagination parameters.
-	 * @returns A paginated result set of {@link LogEntry} records.
-	 *
-	 * @example
-	 * const result = await logEntryRepository.listPaginated({ level: LogLevel.ERROR, page: 1 })
-	 */
-	async listPaginated(filters: LogEntryListFilters = {}) {
-		const query = LogEntry.query(this.client()).orderBy('created_at', 'desc');
-
-		if (filters.level) {
-			query.where('level', filters.level);
-		}
-
-		if (filters.category) {
-			query.where('category', filters.category);
-		}
-
-		if (filters.search) {
-			query.whereILike('message', `%${filters.search}%`);
-		}
-
-		if (filters.actorId !== undefined) {
-			query.where('actor_id', filters.actorId);
-		}
-
-		if (filters.from) {
-			query.where('created_at', '>=', filters.from.toSQL()!);
-		}
-
-		if (filters.to) {
-			query.where('created_at', '<=', filters.to.toSQL()!);
-		}
-
-		return query.paginate(filters.page ?? 1, filters.perPage ?? 20);
 	}
 
 	/**
