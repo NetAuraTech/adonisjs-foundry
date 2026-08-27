@@ -2,7 +2,7 @@
 
 One service = one bounded context. Lives in `app/domain/services/{area}/{name}_service.ts`. Owns business logic, delegates persistence to a repository, never returns HTTP responses — only models, primitives, or `void`.
 
-> **CMS exception (ADR-0001):** CMS services (page, template) live under `app/cms/domain/services/{area}/`, imported via `#cms/domain/services/...`. The layout above applies to everything outside the CMS module.
+> **CMS exception (ADR-0001):** CMS services (page, template) live under `src/cms/services/{area}/`, imported via `#cms/services/...`. The layout above applies to everything outside the CMS module.
 >
 > **Identity co-location:** identity services live under `src/identity/services/`, imported via `#identity/services/...` — co-located with the rest of the identity business module.
 >

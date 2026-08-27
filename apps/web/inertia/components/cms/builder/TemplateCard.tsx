@@ -2,7 +2,7 @@ import { Data } from '@generated/data';
 import { Icon } from '~/components/atoms/icon';
 
 interface TemplateCardProps {
-	template: Data.Template.Template;
+	template: Data.Cms.Template;
 	onClick: () => void;
 }
 

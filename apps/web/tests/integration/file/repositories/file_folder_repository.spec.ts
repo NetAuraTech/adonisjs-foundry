@@ -1,5 +1,5 @@
 import { test } from '@japa/runner';
-import { FileFolderFactory } from '#factories/file_folder_factory';
+import { FileFolderFactory } from '#factories/file/file_folder_factory';
 import { FileFolderRepository } from '#file/repositories/file_folder_repository';
 
 /**

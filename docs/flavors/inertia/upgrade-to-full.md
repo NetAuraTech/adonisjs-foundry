@@ -28,21 +28,17 @@ from `apps/web/`.
 
 ## 1. Recover the CMS module
 
-| Artifact                                      | From (`main`)                                                                                   |
-| --------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| CMS module (page/template/builder internals)  | `app/cms`                                                                                       |
-| CMS controllers (page + template)             | `app/page/controllers`, `app/template/controllers`                                              |
-| CMS transformers (page + template)            | `app/page/transformers`, `app/template/transformers`                                            |
-| CMS events and listeners                      | `app/events/page`, `app/listeners/page`                                                         |
-| CMS mail (contact form)                       | `app/mails/page`                                                                                |
-| CMS i18n payload helpers                      | `app/helpers/i18n_payloads/pages_*.ts`, `page_editor.ts`, `page_revisions.ts`, `templates_*.ts` |
-| Preview-token helper                          | `app/helpers/core/preview_token.ts`                                                             |
-| CMS migrations                                | `database/migrations/cms`                                                                       |
-| CMS seeders                                   | `database/seeders/page_seeder.ts`, `database/seeders/template_seeder.ts`                        |
-| CMS i18n namespaces                           | `resources/lang/{en,fr}/page.json`, `{en,fr}/template.json`, `{en,fr}/builder.json`             |
-| CMS email template (contact form)             | `resources/views/emails/contact_form_email.edge`                                                |
-| CMS route files                               | `start/routes/cms_admin.routes.ts`, `cms_public.routes.ts`, `cms_rest_api.routes.ts`            |
-| CMS React subtrees (builder, renderer, pages) | `inertia/pages/cms`, `inertia/components/cms`                                                   |
+| Artifact                                                                                                       | From (`main`)                                    |
+| -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| CMS business layer (actions, services, repositories, models, exceptions, queries, types, permissions)          | `src/cms`                                        |
+| CMS transport layer (controllers, routes, nav, i18n payload helpers, transformers, REST resources, validators) | `app/cms`                                        |
+| CMS migrations                                                                                                 | `database/migrations/cms`                        |
+| CMS seeders                                                                                                    | `database/seeders/cms`                           |
+| CMS factories                                                                                                  | `database/factories/cms`                         |
+| CMS i18n namespaces (page, template, builder)                                                                  | `resources/lang/{en,fr}/cms`                     |
+| CMS email template (contact form)                                                                              | `resources/views/emails/contact_form_email.edge` |
+| CMS ace command (migration-name normalization)                                                                 | `commands/cms_normalize_migration_names.ts`      |
+| CMS React subtrees (builder, renderer, pages)                                                                  | `inertia/pages/cms`, `inertia/components/cms`    |
 
 ## 2. Recover Transmit (real-time builder collaboration)
 
@@ -82,12 +78,15 @@ version (or set `cms: true`) to re-enable the CMS route module.
 The flavor rewrites several startup/composition files to drop CMS
 registrations. Restore the `main` version of each:
 
-- `start/routes.ts` — re-registers the `cms_public` and `cms_admin` route modules (the CMS admin JSON API is part of the shared `admin_rest_api` surface).
-- `start/events.ts` — re-registers the page event/listener pairs.
-- `start/nav.ts` — re-adds the **Pages** and **Templates** admin menu entries.
+- `start/routes.ts` — restores the `full` domain-entry list, which re-registers the CMS
+  domain entry (`#app/cms/routes`) and drops the flavor's static home route
+  (`registerCoreHomeRoute`) — the CMS page home takes over the site root as
+  `core.home.render`.
+- `start/nav.ts` — re-adds the **Pages** and **Templates** admin menu entries (`#app/cms/nav`).
+- `start/permissions.ts` — re-spreads the `cmsPermissionCatalog` (`#cms/permissions`).
 - `start/dashboard.ts` — re-registers the `page` and `template` dashboard collectors.
 - `start/sitemap.ts` — re-registers the page sitemap collector.
-- `start/container.ts` — re-binds the CMS services.
+- `start/container.ts` — re-binds the builder session service.
 - `config/database.ts` — re-adds `database/migrations/cms` to the migration paths.
 - `config/shield.ts` — restores the CMS iframe `frame-src` hosts.
 - `start/env.ts` — restores `CMS_IFRAME_ALLOWLIST` and `CMS_VIDEO_PROVIDERS`.
@@ -99,20 +98,9 @@ registrations. Restore the `main` version of each:
 
 The flavor deletes the CMS test suites. Recover from `main`:
 
-- `tests/unit/actions/page`, `tests/unit/actions/template`
-- `tests/unit/models/page`, `tests/unit/models/page.spec.ts`,
-  `tests/unit/models/page_translation.spec.ts`, `tests/unit/models/template`
-- `tests/unit/services/page`, `tests/unit/services/template`
-- `tests/unit/validators/page_validator.spec.ts`, `tests/unit/validators/template_validator.spec.ts`
-- `tests/integration/repositories/{page,page_translation,page_revision,template}_repository.spec.ts`
-- `tests/integration/services/page/page_sitemap_collector.spec.ts`
-- `tests/integration/routes_structure_cms.spec.ts`
-- `tests/functional/cms`, `tests/unit/exceptions_cms.spec.ts`,
-  `tests/unit/actions/cms`, `tests/unit/services/cms`,
-  `tests/unit/mails/notifications_cms.spec.ts`,
-  `tests/unit/validators/{builder,contact}_validator.spec.ts`
-- `tests/helpers/seed_dashboard.ts`
-- `tests/unit/helpers/core/preview_token.spec.ts`
+- `tests/unit/cms`
+- `tests/integration/cms`
+- `tests/functional/cms`
 
 ## 7. Regenerate the codegen
 

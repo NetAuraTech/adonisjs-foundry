@@ -1,6 +1,6 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
-import { UserFactory, RoleFactory } from '#factories/user_factory';
+import { UserFactory, RoleFactory } from '#factories/identity/user_factory';
 import { IdentityDashboardCollector } from '#identity/services/dashboard_collector';
 
 /**

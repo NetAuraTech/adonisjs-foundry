@@ -6,6 +6,10 @@
 /// <reference path="./manifest.d.ts" />
 import type { InferData, InferVariants } from '@adonisjs/core/types/transformers'
 import type { InferSharedProps, InferFlashData } from '@adonisjs/inertia/types'
+import type CmsPageRevisionTransformer from '#app/cms/transformers/page_revision_transformer'
+import type CmsPageTransformer from '#app/cms/transformers/page_transformer'
+import type CmsPageTranslationTransformer from '#app/cms/transformers/page_translation_transformer'
+import type CmsTemplateTransformer from '#app/cms/transformers/template_transformer'
 import type CoreDashboardTransformer from '#app/core/transformers/dashboard_transformer'
 import type FileFileFolderTransformer from '#app/file/transformers/file_folder_transformer'
 import type FileFileTransformer from '#app/file/transformers/file_transformer'
@@ -13,13 +17,27 @@ import type IdentityPermissionTransformer from '#app/identity/transformers/permi
 import type IdentityRoleTransformer from '#app/identity/transformers/role_transformer'
 import type IdentityUserTransformer from '#app/identity/transformers/user_transformer'
 import type LogLogEntryTransformer from '#app/log/transformers/log_entry_transformer'
-import type PagePageRevisionTransformer from '#app/page/transformers/page_revision_transformer'
-import type PagePageTransformer from '#app/page/transformers/page_transformer'
-import type PagePageTranslationTransformer from '#app/page/transformers/page_translation_transformer'
-import type TemplateTemplateTransformer from '#app/template/transformers/template_transformer'
 import type InertiaMiddleware from '#middleware/core/inertia_middleware'
 
 export namespace Data {
+  export namespace Cms {
+    export type PageRevision = InferData<CmsPageRevisionTransformer>
+    export namespace PageRevision {
+      export type Variants = InferVariants<CmsPageRevisionTransformer>
+    }
+    export type Page = InferData<CmsPageTransformer>
+    export namespace Page {
+      export type Variants = InferVariants<CmsPageTransformer>
+    }
+    export type PageTranslation = InferData<CmsPageTranslationTransformer>
+    export namespace PageTranslation {
+      export type Variants = InferVariants<CmsPageTranslationTransformer>
+    }
+    export type Template = InferData<CmsTemplateTransformer>
+    export namespace Template {
+      export type Variants = InferVariants<CmsTemplateTransformer>
+    }
+  }
   export namespace Core {
     export type Dashboard = InferData<CoreDashboardTransformer>
     export namespace Dashboard {
@@ -54,26 +72,6 @@ export namespace Data {
     export type LogEntry = InferData<LogLogEntryTransformer>
     export namespace LogEntry {
       export type Variants = InferVariants<LogLogEntryTransformer>
-    }
-  }
-  export namespace Page {
-    export type PageRevision = InferData<PagePageRevisionTransformer>
-    export namespace PageRevision {
-      export type Variants = InferVariants<PagePageRevisionTransformer>
-    }
-    export type Page = InferData<PagePageTransformer>
-    export namespace Page {
-      export type Variants = InferVariants<PagePageTransformer>
-    }
-    export type PageTranslation = InferData<PagePageTranslationTransformer>
-    export namespace PageTranslation {
-      export type Variants = InferVariants<PagePageTranslationTransformer>
-    }
-  }
-  export namespace Template {
-    export type Template = InferData<TemplateTemplateTransformer>
-    export namespace Template {
-      export type Variants = InferVariants<TemplateTemplateTransformer>
     }
   }
   export type SharedProps = InferSharedProps<InertiaMiddleware>

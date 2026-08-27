@@ -1,8 +1,8 @@
 import testUtils from '@adonisjs/core/services/test_utils';
 import { test } from '@japa/runner';
 import { DateTime } from 'luxon';
-import { PageFactory } from '#cms/factories/page_factory';
 import PageTranslation from '#cms/models/page/page_translation';
+import { PageFactory } from '#factories/cms/page_factory';
 import { createAdminUser, CMS_PERMISSIONS } from '#tests/helpers/create_admin_user';
 import { parseInertiaPage } from '#tests/helpers/inertia_page';
 import { resetSharedState } from '#tests/helpers/shared_state';

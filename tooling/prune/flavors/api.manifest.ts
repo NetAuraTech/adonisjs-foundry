@@ -16,10 +16,11 @@
  *   limiter, shield and a first-class env-driven CORS policy.
  *
  * Because the CMS is pruned, this manifest reuses the `inertia` flavor's CMS
- * delete inventory (module, controllers, transformers, events, listeners,
- * mails, migrations, seeders, i18n, preview-token helper, Transmit) and its
- * composition rewrites (`start/routes.ts`, events, nav, dashboard, sitemap,
- * container, `config/shield.ts`, `config/database.ts`).
+ * delete inventory (the co-located `src/cms` and `app/cms` units, CMS
+ * migrations/seeders/factories, i18n, the contact email template, the CMS
+ * ace command, Transmit) and its composition rewrites (`start/routes.ts`,
+ * events, nav, dashboard, sitemap, container, `config/shield.ts`,
+ * `config/database.ts`).
  *
  * Per the "variation only in config/composition/docs files" rule, the
  * rewrite set is exactly the allowlisted composition files: the route module
@@ -86,39 +87,22 @@ const apiManifest: FlavorManifest = {
 		'apps/web/app/log/routes.ts',
 
 		// ─── CMS module (page/template/builder) — main-only ───────────────────
-		// The whole CMS domain is pruned: the module, its controllers (admin,
-		// front AND api), transformers, events, listeners, mails, migrations,
-		// seeders, i18n namespaces, the preview-token helper and the contact
-		// email template — mirroring the `inertia` flavor's CMS delete map.
+		// The whole CMS domain is pruned: the co-located units (the `src/cms`
+		// business layer, the `app/cms` transport layer with its admin, front
+		// and api controllers, CMS migrations/seeders/factories, the
+		// `resources/lang/{en,fr}/cms` i18n namespaces, the contact email
+		// template, the CMS ace command) — mirroring the `inertia` flavor's
+		// CMS delete map. The CMS React subtrees die with the whole
+		// `apps/web/inertia` tree above.
+		'apps/web/src/cms',
 		'apps/web/app/cms',
-		'apps/web/app/page/controllers',
-		'apps/web/app/template/controllers',
-		'apps/web/app/http/rest/pages_resource.ts',
-		'apps/web/app/http/rest/templates_resource.ts',
-		'apps/web/app/page/transformers',
-		'apps/web/app/template/transformers',
-		'apps/web/app/events/page',
-		'apps/web/app/listeners/page',
-		'apps/web/app/mails/page',
-		'apps/web/app/helpers/i18n_payloads/pages_create.ts',
-		'apps/web/app/helpers/i18n_payloads/pages_index.ts',
-		'apps/web/app/helpers/i18n_payloads/pages_show.ts',
-		'apps/web/app/helpers/i18n_payloads/page_editor.ts',
-		'apps/web/app/helpers/i18n_payloads/page_revisions.ts',
-		'apps/web/app/helpers/i18n_payloads/templates_edit.ts',
-		'apps/web/app/helpers/i18n_payloads/templates_index.ts',
-		'apps/web/app/helpers/core/preview_token.ts',
-		'apps/web/commands/cms_normalize_migration_names.ts',
 		'apps/web/database/migrations/cms',
-		'apps/web/database/seeders/page_seeder.ts',
-		'apps/web/database/seeders/template_seeder.ts',
-		'apps/web/resources/lang/en/page.json',
-		'apps/web/resources/lang/fr/page.json',
-		'apps/web/resources/lang/en/template.json',
-		'apps/web/resources/lang/fr/template.json',
-		'apps/web/resources/lang/en/builder.json',
-		'apps/web/resources/lang/fr/builder.json',
+		'apps/web/database/seeders/cms',
+		'apps/web/database/factories/cms',
+		'apps/web/resources/lang/en/cms',
+		'apps/web/resources/lang/fr/cms',
 		'apps/web/resources/views/emails/contact_form_email.edge',
+		'apps/web/commands/cms_normalize_migration_names.ts',
 
 		// ─── Transmit (real-time builder collaboration) — CMS-only ────────────
 		'apps/web/start/transmit.ts',
@@ -126,9 +110,6 @@ const apiManifest: FlavorManifest = {
 		'apps/web/config/cms.ts',
 
 		// ─── Route modules — unreferenced after the start/routes.ts rewrite ───
-		'apps/web/start/routes/cms_admin.routes.ts',
-		'apps/web/start/routes/cms_public.routes.ts',
-		'apps/web/start/routes/cms_rest_api.routes.ts',
 		// The domain entries die with the pruned front surface — the api flavor
 		// self-registers the token API directly from
 		// `#app/auth/controllers/api/routes`, `#app/account/controllers/api/routes`
@@ -149,41 +130,13 @@ const apiManifest: FlavorManifest = {
 		'apps/web/tests/functional/auth/register.spec.ts',
 		'apps/web/tests/functional/auth/reset_password.spec.ts',
 		'apps/web/tests/functional/auth/session.spec.ts',
-		'apps/web/tests/functional/cms/admin_dashboard_cms.spec.ts',
 		'apps/web/tests/integration/routes_structure.spec.ts',
-		'apps/web/tests/integration/routes_structure_cms.spec.ts',
 		'apps/web/tests/unit/rest/page_adapter.spec.ts',
 
 		// ─── CMS test suites ──────────────────────────────────────────────────
+		'apps/web/tests/unit/cms',
+		'apps/web/tests/integration/cms',
 		'apps/web/tests/functional/cms',
-		'apps/web/tests/unit/actions/page',
-		'apps/web/tests/unit/actions/template',
-		'apps/web/tests/unit/actions/cms',
-		'apps/web/tests/unit/models/page',
-		'apps/web/tests/unit/models/page.spec.ts',
-		'apps/web/tests/unit/models/page_translation.spec.ts',
-		'apps/web/tests/unit/models/template',
-		'apps/web/tests/unit/services/page',
-		'apps/web/tests/unit/services/template',
-		'apps/web/tests/unit/services/cms',
-		'apps/web/tests/unit/validators/page_validator.spec.ts',
-		'apps/web/tests/unit/validators/template_validator.spec.ts',
-		'apps/web/tests/unit/validators/builder_validator.spec.ts',
-		'apps/web/tests/unit/validators/contact_validator.spec.ts',
-		'apps/web/tests/unit/exceptions_cms.spec.ts',
-		'apps/web/tests/unit/mails/notifications_cms.spec.ts',
-		'apps/web/tests/unit/helpers/core/preview_token.spec.ts',
-		'apps/web/tests/unit/helpers/i18n_payloads_cms.spec.ts',
-		'apps/web/tests/integration/repositories/page_repository.spec.ts',
-		'apps/web/tests/integration/repositories/page_translation_repository.spec.ts',
-		'apps/web/tests/integration/repositories/page_revision_repository.spec.ts',
-		'apps/web/tests/integration/repositories/template_repository.spec.ts',
-		'apps/web/tests/integration/services/page/page_sitemap_collector.spec.ts',
-
-		// ─── CMS dashboard seed helper (imports #cms factories). The REST ──────
-		// ─── suites keep the two DB-seeding helpers (create_admin_user, ────────
-		// ─── create_verified_user) that live alongside it. ─────────────────────
-		'apps/web/tests/helpers/seed_dashboard.ts',
 
 		// ─── Prune pipeline (main-only infrastructure) ────────────────────────
 		'tooling/prune',
@@ -1523,9 +1476,6 @@ const apiManifest: FlavorManifest = {
 				'    "#exceptions/*": "./app/exceptions/*.js",',
 				'    "#helpers/*": "./app/helpers/*.js",',
 				'    "#models/*": "./app/models/*.js",',
-				'    "#mails/*": "./app/mails/*.js",',
-				'    "#listeners/*": "./app/listeners/*.js",',
-				'    "#events/*": "./app/events/*.js",',
 				'    "#generated/*": "./.adonisjs/server/*.js",',
 				'    "#middleware/*": "./app/http/middleware/*.js",',
 				'    "#rest/*": "./app/http/rest/*.js",',
@@ -1549,8 +1499,7 @@ const apiManifest: FlavorManifest = {
 				'    "#backup/*": "./src/backup/*.js",',
 				'    "#tests/*": "./tests/*.js",',
 				'    "#start/*": "./start/*.js",',
-				'    "#config/*": "./config/*.js",',
-				'    "#cms/*": "./app/cms/*.js"',
+				'    "#config/*": "./config/*.js"',
 				'  },',
 				'  "scripts": {',
 				'    "start": "node bin/server.js",',

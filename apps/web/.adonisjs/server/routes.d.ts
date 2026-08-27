@@ -20,6 +20,54 @@ export type ScannedRoutes = {
     'api.v1.account.account.update': { paramsTuple?: []; params?: {} }
     'api.v1.account.account.destroy': { paramsTuple?: []; params?: {} }
     'api.v1.admin.account.preferences.execute': { paramsTuple?: []; params?: {} }
+    'admin.cms.pages.render': { paramsTuple?: []; params?: {} }
+    'admin.cms.pages_create.render': { paramsTuple?: []; params?: {} }
+    'admin.cms.pages_create.execute': { paramsTuple?: []; params?: {} }
+    'admin.cms.pages_show.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.pages_update.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.pages_update.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.pages_update.publish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.pages_update.unpublish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.pages.set_homepage': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.pages.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.page_translations.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.page_revisions.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
+    'admin.cms.page_revisions.restore': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
+    'admin.cms.page_revisions.toggle_keep': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
+    'admin.cms.pages_preview.render': { paramsTuple: [ParamValue]; params: {'pageId': ParamValue} }
+    'admin.cms.templates.render': { paramsTuple?: []; params?: {} }
+    'admin.cms.templates.execute': { paramsTuple?: []; params?: {} }
+    'admin.cms.templates.apply_to_page': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.templates.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.templates.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.templates_preview.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.templates.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.pages.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.pages.store': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.pages.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.pages.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.pages.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.pages.publish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.pages.unpublish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.pages.set_homepage': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.page_translations.store': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.page_revisions.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
+    'api.v1.admin.cms.page_revisions.restore': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
+    'api.v1.admin.cms.page_revisions.toggle': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
+    'api.v1.admin.cms.pages_preview.token': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.templates.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.templates.store': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.templates.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.templates.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.templates.create_from_page': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.templates_preview.token': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.builder_operations.execute': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.builder_operations.presence': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
+    'api.v1.admin.cms.builder_operations.save_draft': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
+    'cms.contact.execute': { paramsTuple?: []; params?: {} }
+    'core.home.render': { paramsTuple?: []; params?: {} }
+    'cms.page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
+    'cms.page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
     'admin.core.dashboard.render': { paramsTuple?: []; params?: {} }
     'admin.core.maintenance.render': { paramsTuple?: []; params?: {} }
     'admin.core.maintenance.update': { paramsTuple?: []; params?: {} }
@@ -116,54 +164,6 @@ export type ScannedRoutes = {
     'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
     'health.liveness': { paramsTuple?: []; params?: {} }
     'health.readiness': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.pages_api.index': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.pages_create_api.store': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.pages_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.pages_update_api.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.pages_delete_api.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.pages_update_api.publish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.pages_update_api.unpublish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.pages_api.set_homepage': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.page_translations_api.store': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.page_revisions_api.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
-    'api.v1.admin.page_revisions_api.restore': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
-    'api.v1.admin.page_revisions_api.toggle': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
-    'api.v1.admin.pages_preview_token.token': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.templates.index': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.templates.store': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.templates.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.templates.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.templates.create_from_page': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.templates_preview_token.token': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.builder_operations.execute': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.builder_operations.presence': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
-    'api.v1.admin.builder_operations.save_draft': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
-    'admin.pages.render': { paramsTuple?: []; params?: {} }
-    'admin.pages_create.render': { paramsTuple?: []; params?: {} }
-    'admin.pages_create.execute': { paramsTuple?: []; params?: {} }
-    'admin.pages_show.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.pages_update.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.pages_update.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.pages_update.publish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.pages_update.unpublish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.pages.set_homepage': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.pages.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.page_translations.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.page_revisions.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
-    'admin.page_revisions.restore': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
-    'admin.page_revisions.toggle_keep': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
-    'admin.pages_preview.render': { paramsTuple: [ParamValue]; params: {'pageId': ParamValue} }
-    'admin.templates.render': { paramsTuple?: []; params?: {} }
-    'admin.templates.execute': { paramsTuple?: []; params?: {} }
-    'admin.templates.apply_to_page': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.templates.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.templates.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.templates_preview.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.templates.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'contact.execute': { paramsTuple?: []; params?: {} }
-    'page.home': { paramsTuple?: []; params?: {} }
-    'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
-    'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
   }
   GET: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -173,6 +173,25 @@ export type ScannedRoutes = {
     'account.preferences.render': { paramsTuple?: []; params?: {} }
     'account.index': { paramsTuple?: []; params?: {} }
     'api.v1.account.profile.show': { paramsTuple?: []; params?: {} }
+    'admin.cms.pages.render': { paramsTuple?: []; params?: {} }
+    'admin.cms.pages_create.render': { paramsTuple?: []; params?: {} }
+    'admin.cms.pages_show.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.pages_update.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.page_revisions.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
+    'admin.cms.pages_preview.render': { paramsTuple: [ParamValue]; params: {'pageId': ParamValue} }
+    'admin.cms.templates.render': { paramsTuple?: []; params?: {} }
+    'admin.cms.templates_preview.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.templates.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.pages.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.pages.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.page_revisions.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
+    'api.v1.admin.cms.pages_preview.token': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.templates.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.templates_preview.token': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.builder_operations.presence': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
+    'core.home.render': { paramsTuple?: []; params?: {} }
+    'cms.page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
+    'cms.page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
     'admin.core.dashboard.render': { paramsTuple?: []; params?: {} }
     'admin.core.maintenance.render': { paramsTuple?: []; params?: {} }
     'api.v1.admin.core.dashboard.index': { paramsTuple?: []; params?: {} }
@@ -217,25 +236,6 @@ export type ScannedRoutes = {
     'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
     'health.liveness': { paramsTuple?: []; params?: {} }
     'health.readiness': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.pages_api.index': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.pages_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.page_revisions_api.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
-    'api.v1.admin.pages_preview_token.token': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.templates.index': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.templates_preview_token.token': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.builder_operations.presence': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
-    'admin.pages.render': { paramsTuple?: []; params?: {} }
-    'admin.pages_create.render': { paramsTuple?: []; params?: {} }
-    'admin.pages_show.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.pages_update.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.page_revisions.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
-    'admin.pages_preview.render': { paramsTuple: [ParamValue]; params: {'pageId': ParamValue} }
-    'admin.templates.render': { paramsTuple?: []; params?: {} }
-    'admin.templates_preview.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.templates.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'page.home': { paramsTuple?: []; params?: {} }
-    'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
-    'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
   }
   HEAD: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -245,6 +245,25 @@ export type ScannedRoutes = {
     'account.preferences.render': { paramsTuple?: []; params?: {} }
     'account.index': { paramsTuple?: []; params?: {} }
     'api.v1.account.profile.show': { paramsTuple?: []; params?: {} }
+    'admin.cms.pages.render': { paramsTuple?: []; params?: {} }
+    'admin.cms.pages_create.render': { paramsTuple?: []; params?: {} }
+    'admin.cms.pages_show.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.pages_update.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.page_revisions.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
+    'admin.cms.pages_preview.render': { paramsTuple: [ParamValue]; params: {'pageId': ParamValue} }
+    'admin.cms.templates.render': { paramsTuple?: []; params?: {} }
+    'admin.cms.templates_preview.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.templates.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.pages.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.pages.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.page_revisions.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
+    'api.v1.admin.cms.pages_preview.token': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.templates.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.templates_preview.token': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.builder_operations.presence': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
+    'core.home.render': { paramsTuple?: []; params?: {} }
+    'cms.page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
+    'cms.page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
     'admin.core.dashboard.render': { paramsTuple?: []; params?: {} }
     'admin.core.maintenance.render': { paramsTuple?: []; params?: {} }
     'api.v1.admin.core.dashboard.index': { paramsTuple?: []; params?: {} }
@@ -289,25 +308,6 @@ export type ScannedRoutes = {
     'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
     'health.liveness': { paramsTuple?: []; params?: {} }
     'health.readiness': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.pages_api.index': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.pages_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.page_revisions_api.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
-    'api.v1.admin.pages_preview_token.token': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.templates.index': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.templates_preview_token.token': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.builder_operations.presence': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
-    'admin.pages.render': { paramsTuple?: []; params?: {} }
-    'admin.pages_create.render': { paramsTuple?: []; params?: {} }
-    'admin.pages_show.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.pages_update.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.page_revisions.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
-    'admin.pages_preview.render': { paramsTuple: [ParamValue]; params: {'pageId': ParamValue} }
-    'admin.templates.render': { paramsTuple?: []; params?: {} }
-    'admin.templates_preview.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.templates.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'page.home': { paramsTuple?: []; params?: {} }
-    'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
-    'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
   }
   POST: {
     'account.profile.execute': { paramsTuple?: []; params?: {} }
@@ -315,6 +315,25 @@ export type ScannedRoutes = {
     'account.email_change.execute': { paramsTuple?: []; params?: {} }
     'account.preferences.execute': { paramsTuple?: []; params?: {} }
     'api.v1.admin.account.preferences.execute': { paramsTuple?: []; params?: {} }
+    'admin.cms.pages_create.execute': { paramsTuple?: []; params?: {} }
+    'admin.cms.pages_update.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.pages_update.publish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.pages_update.unpublish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.pages.set_homepage': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.page_translations.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.page_revisions.restore': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
+    'admin.cms.page_revisions.toggle_keep': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
+    'admin.cms.templates.execute': { paramsTuple?: []; params?: {} }
+    'admin.cms.templates.apply_to_page': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.templates.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.pages.store': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.page_translations.store': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.page_revisions.restore': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
+    'api.v1.admin.cms.templates.store': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.templates.create_from_page': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.builder_operations.execute': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.builder_operations.save_draft': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
+    'cms.contact.execute': { paramsTuple?: []; params?: {} }
     'admin.core.maintenance.update': { paramsTuple?: []; params?: {} }
     'admin.core.maintenance.toggle': { paramsTuple?: []; params?: {} }
     'admin.file.files.upload': { paramsTuple?: []; params?: {} }
@@ -348,29 +367,14 @@ export type ScannedRoutes = {
     'api.v1.auth.email_verification.store': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'api.v1.auth.accept_invitation.store': { paramsTuple?: []; params?: {} }
     'api.v1.auth.logout.destroy': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.pages_create_api.store': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.page_translations_api.store': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.page_revisions_api.restore': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
-    'api.v1.admin.templates.store': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.templates.create_from_page': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.builder_operations.execute': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.builder_operations.save_draft': { paramsTuple: [ParamValue]; params: {'translationId': ParamValue} }
-    'admin.pages_create.execute': { paramsTuple?: []; params?: {} }
-    'admin.pages_update.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.pages_update.publish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.pages_update.unpublish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.pages.set_homepage': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.page_translations.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.page_revisions.restore': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
-    'admin.page_revisions.toggle_keep': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
-    'admin.templates.execute': { paramsTuple?: []; params?: {} }
-    'admin.templates.apply_to_page': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.templates.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'contact.execute': { paramsTuple?: []; params?: {} }
   }
   DELETE: {
     'account.account.destroy': { paramsTuple?: []; params?: {} }
     'api.v1.account.account.destroy': { paramsTuple?: []; params?: {} }
+    'admin.cms.pages.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.cms.templates.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.pages.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.templates.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.file.files.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.file.files.delete_alt': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.file.file_folders.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -382,14 +386,16 @@ export type ScannedRoutes = {
     'admin.identity.permissions.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.identity.users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.identity.roles.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.pages_delete_api.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.templates.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.pages.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'admin.templates.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PUT: {
     'api.v1.account.profile.update': { paramsTuple?: []; params?: {} }
     'api.v1.account.account.update': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.cms.pages.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.pages.publish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.pages.unpublish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.pages.set_homepage': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'api.v1.admin.cms.page_revisions.toggle': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
+    'api.v1.admin.cms.templates.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.core.maintenance.update': { paramsTuple?: []; params?: {} }
     'api.v1.admin.core.maintenance.toggle': { paramsTuple?: []; params?: {} }
     'admin.file.file_folders.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -398,12 +404,6 @@ export type ScannedRoutes = {
     'api.v1.admin.file.folders.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.identity.users.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.identity.roles.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.pages_update_api.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.pages_update_api.publish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.pages_update_api.unpublish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.pages_api.set_homepage': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.page_revisions_api.toggle': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
-    'api.v1.admin.templates.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

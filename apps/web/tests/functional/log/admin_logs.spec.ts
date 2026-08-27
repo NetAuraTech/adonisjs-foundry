@@ -1,6 +1,6 @@
 import testUtils from '@adonisjs/core/services/test_utils';
 import { test } from '@japa/runner';
-import { LogEntryFactory } from '#factories/log_entry_factory';
+import { LogEntryFactory } from '#factories/log/log_entry_factory';
 import { LogCategory, LogLevel } from '#log/types/logging';
 import { createAdminUser } from '#tests/helpers/create_admin_user';
 import { parseInertiaPage } from '#tests/helpers/inertia_page';

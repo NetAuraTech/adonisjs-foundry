@@ -15,11 +15,11 @@ import { CanAccess } from '~/guards/can_access';
 import { useMenu } from '~/hooks/use_admin';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
+import type { AdminTemplatesEditTranslations } from '#app/cms/helpers/i18n_payloads/templates_edit';
 import type { Block, PageContent } from '#cms/types/page';
-import type { AdminTemplatesEditTranslations } from '#helpers/i18n_payloads/templates_edit';
 
 interface PageProps {
-	template: Data.Template.Template;
+	template: Data.Cms.Template;
 	translations: AdminTemplatesEditTranslations;
 }
 
@@ -55,19 +55,19 @@ export default function TemplatesEditPage({ template, translations }: PageProps)
 	}
 
 	return (
-		<AdminMain title={t('title', { name: template.name })} icon={getEntryIcon('admin.templates.render')}>
+		<AdminMain title={t('title', { name: template.name })} icon={getEntryIcon('admin.cms.templates.render')}>
 			<Card
 				header={
 					<div className="flex items-center justify-between gap-3">
 						<CanAccess permission="templates.view">
-							<Button variant="icon" route="admin.templates.render" title={t('back')} fitContent>
+							<Button variant="icon" route="admin.cms.templates.render" title={t('back')} fitContent>
 								<Icon name="ArrowLeft" />
 							</Button>
 						</CanAccess>
 					</div>
 				}
 			>
-				<Form route="admin.templates.update" routeParams={{ id: template.id }}>
+				<Form route="admin.cms.templates.update" routeParams={{ id: template.id }}>
 					{({ processing }) => (
 						<div className="grid gap-6">
 							<Field label={t('form.name')} name="name" type="text" defaultValue={template.name} required sanitize />
@@ -111,7 +111,7 @@ export default function TemplatesEditPage({ template, translations }: PageProps)
 								<Button type="submit" loading={processing} fitContent>
 									{t('form.submit')}
 								</Button>
-								<Button variant="outline" route="admin.templates.render" fitContent>
+								<Button variant="outline" route="admin.cms.templates.render" fitContent>
 									{t('form.cancel')}
 								</Button>
 							</div>

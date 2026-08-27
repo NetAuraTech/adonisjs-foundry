@@ -22,12 +22,31 @@ function flatten(root: string, obj: Record<string, any>, acc: Record<string, str
 	}
 }
 
+/**
+ * Collects every lang file under `dir` as `[namespace, absolutePath]` pairs.
+ * Subdirectories become namespace segments (`cms/page.json` → `cms.page`),
+ * mirroring the i18n runtime.
+ */
+function collectLangFiles(dir: string): Array<[string, string]> {
+	const out: Array<[string, string]> = [];
+	for (const entry of readdirSync(dir, { withFileTypes: true })) {
+		const full = join(dir, entry.name);
+		if (entry.isDirectory()) {
+			for (const [ns, file] of collectLangFiles(full)) {
+				out.push([entry.name + '.' + ns, file]);
+			}
+		} else if (entry.name.endsWith('.json')) {
+			out.push([entry.name.replace(/\.json$/, ''), full]);
+		}
+	}
+	return out;
+}
+
 export function loadLang(locale: string): Record<string, string> {
 	const dir = join(LANG_DIR, locale);
 	const acc: Record<string, string> = {};
-	for (const file of readdirSync(dir).filter((f) => f.endsWith('.json'))) {
-		const root = file.replace(/\.json$/, '');
-		const parsed = JSON.parse(readFileSync(join(dir, file), 'utf8'));
+	for (const [root, file] of collectLangFiles(dir)) {
+		const parsed = JSON.parse(readFileSync(file, 'utf8'));
 		flatten(root, parsed, acc);
 	}
 	return acc;

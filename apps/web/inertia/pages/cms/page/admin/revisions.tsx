@@ -13,10 +13,10 @@ import { CanAccess } from '~/guards/can_access';
 import { useMenu } from '~/hooks/use_admin';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminPagesRevisionTranslations } from '#helpers/i18n_payloads/page_revisions';
+import type { AdminPagesRevisionTranslations } from '#app/cms/helpers/i18n_payloads/page_revisions';
 
 interface PageProps {
-	revisions: Data.Page.PageRevision[];
+	revisions: Data.Cms.PageRevision[];
 	translation_id: number;
 	page_id: number;
 	translations: AdminPagesRevisionTranslations;
@@ -31,13 +31,13 @@ export default function PageRevisionsPage(props: PageProps) {
 
 	return (
 		<>
-			<AdminMain title={t('title')} icon={getEntryIcon('admin.pages.render')}>
+			<AdminMain title={t('title')} icon={getEntryIcon('admin.cms.pages.render')}>
 				<Card
 					header={
 						<CanAccess permission="pages.update">
 							<Button
 								variant="icon"
-								route="admin.pages_update.render"
+								route="admin.cms.pages_update.render"
 								routeParams={{ id: page_id }}
 								title={t('actions.back')}
 								fitContent
@@ -90,7 +90,7 @@ export default function PageRevisionsPage(props: PageProps) {
 															onBefore={() => {
 																return window.confirm(t('actions.restore.confirm'));
 															}}
-															route="admin.page_revisions.restore"
+															route="admin.cms.page_revisions.restore"
 															routeParams={{
 																translationId: translation_id,
 																revisionId: revision.id,
@@ -111,7 +111,7 @@ export default function PageRevisionsPage(props: PageProps) {
 												)}
 												<CanAccess permission="pages.update">
 													<Form
-														route="admin.page_revisions.toggle_keep"
+														route="admin.cms.page_revisions.toggle_keep"
 														routeParams={{
 															translationId: translation_id,
 															revisionId: revision.id,

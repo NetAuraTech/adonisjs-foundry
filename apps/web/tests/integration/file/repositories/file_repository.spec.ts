@@ -1,6 +1,6 @@
 import { test } from '@japa/runner';
-import { FileFactory } from '#factories/file_factory';
-import { FileFolderFactory } from '#factories/file_folder_factory';
+import { FileFactory } from '#factories/file/file_factory';
+import { FileFolderFactory } from '#factories/file/file_folder_factory';
 import { FileRepository } from '#file/repositories/file_repository';
 
 /**

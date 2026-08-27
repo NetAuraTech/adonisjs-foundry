@@ -15,11 +15,11 @@ import { useMenu } from '~/hooks/use_admin';
 import { locales, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
 import { Paginated } from '~/types/paginated';
+import type { AdminPagesIndexTranslations } from '#app/cms/helpers/i18n_payloads/pages_index';
 import type { PageStatus } from '#cms/types/page';
-import type { AdminPagesIndexTranslations } from '#helpers/i18n_payloads/pages_index';
 
 interface Props {
-	pages: Paginated<Data.Page.Page>;
+	pages: Paginated<Data.Cms.Page>;
 	filters: {
 		status?: string;
 		locale?: string;
@@ -46,10 +46,10 @@ export default function PagesIndexPage(props: Props) {
 		<>
 			<AdminMain
 				title={t('title')}
-				icon={getEntryIcon('admin.pages.render')}
+				icon={getEntryIcon('admin.cms.pages.render')}
 				action={
 					<CanAccess permission="pages.create">
-						<Button route="admin.pages_create.render" variant="secondary" fitContent>
+						<Button route="admin.cms.pages_create.render" variant="secondary" fitContent>
 							{t('action')}
 						</Button>
 					</CanAccess>
@@ -57,7 +57,7 @@ export default function PagesIndexPage(props: Props) {
 			>
 				<Card
 					header={
-						<Form route="admin.pages.render" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+						<Form route="admin.cms.pages.render" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
 							<Field
 								type="text"
 								name="search"
@@ -95,7 +95,7 @@ export default function PagesIndexPage(props: Props) {
 							</Button>
 						</Form>
 					}
-					footer={<Pagination route="admin.pages.render" filters={filters} metadata={pages.metadata} />}
+					footer={<Pagination route="admin.cms.pages.render" filters={filters} metadata={pages.metadata} />}
 				>
 					<Table>
 						<Table.Header>
@@ -152,7 +152,7 @@ export default function PagesIndexPage(props: Props) {
 													<CanAccess permission="pages.view">
 														<Button
 															variant="icon_info"
-															route="admin.pages_show.render"
+															route="admin.cms.pages_show.render"
 															routeParams={{ id: page.id }}
 															title={t('actions.show', { title: primary?.title ?? '—' })}
 															fitContent
@@ -163,7 +163,7 @@ export default function PagesIndexPage(props: Props) {
 													<CanAccess permission="pages.update">
 														<Button
 															variant="icon_warning"
-															route="admin.pages_update.render"
+															route="admin.cms.pages_update.render"
 															routeParams={{ id: page.id }}
 															title={t('actions.edit', { title: primary?.title ?? '—' })}
 															fitContent
@@ -176,7 +176,7 @@ export default function PagesIndexPage(props: Props) {
 															onBefore={() => {
 																return window.confirm(t('actions.delete.confirm'));
 															}}
-															route="admin.pages.destroy"
+															route="admin.cms.pages.destroy"
 															routeParams={{ id: page.id }}
 														>
 															<Button

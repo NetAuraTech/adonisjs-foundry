@@ -12,10 +12,10 @@ import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminPagesShowTranslations } from '#helpers/i18n_payloads/pages_show';
+import type { AdminPagesShowTranslations } from '#app/cms/helpers/i18n_payloads/pages_show';
 
 interface Props {
-	page: Data.Page.Page;
+	page: Data.Cms.Page;
 	translations: AdminPagesShowTranslations;
 }
 
@@ -48,7 +48,7 @@ export default function PagesShowPage(props: Props) {
 					header={
 						<div className="flex items-center justify-between gap-3">
 							<CanAccess permission="pages.view">
-								<Button variant="icon" route="admin.pages.render" title={t('actions.back')} fitContent>
+								<Button variant="icon" route="admin.cms.pages.render" title={t('actions.back')} fitContent>
 									<Icon name="ArrowLeft" />
 								</Button>
 							</CanAccess>
@@ -56,7 +56,7 @@ export default function PagesShowPage(props: Props) {
 								<CanAccess permission="pages.update">
 									<Button
 										variant="icon_warning"
-										route="admin.pages_update.render"
+										route="admin.cms.pages_update.render"
 										routeParams={{ id: page.id }}
 										title={t('actions.edit', {
 											title: primaryTranslation?.title ?? `Page #${page.id}`,
@@ -71,7 +71,7 @@ export default function PagesShowPage(props: Props) {
 										onBefore={() => {
 											return window.confirm(t('actions.delete.confirm'));
 										}}
-										route="admin.pages.destroy"
+										route="admin.cms.pages.destroy"
 										routeParams={{ id: page.id }}
 									>
 										<Button
@@ -146,7 +146,7 @@ export default function PagesShowPage(props: Props) {
 												)}
 												<Button
 													variant="icon_warning"
-													route="admin.pages_update.render"
+													route="admin.cms.pages_update.render"
 													routeParams={{ id: page.id }}
 													title={t('actions.edit', {
 														title: primaryTranslation?.title ?? `Page #${page.id}`,
@@ -183,7 +183,7 @@ export default function PagesShowPage(props: Props) {
 								<NavLink
 									label=""
 									key={translation.id}
-									route="admin.page_revisions.index"
+									route="admin.cms.page_revisions.index"
 									routeParams={{ id: page.id, translationId: translation.id }}
 								>
 									<div className="flex items-center justify-between rounded-lg border border-edge bg-canvas px-4 py-2.5 hover:bg-sunken transition-colors group">
@@ -205,7 +205,7 @@ export default function PagesShowPage(props: Props) {
 	);
 }
 
-function HomepageSection({ page, translations }: { page: Data.Page.Page; translations: AdminPagesShowTranslations }) {
+function HomepageSection({ page, translations }: { page: Data.Cms.Page; translations: AdminPagesShowTranslations }) {
 	const { t } = useTranslation(translations);
 
 	return (
@@ -230,7 +230,7 @@ function HomepageSection({ page, translations }: { page: Data.Page.Page; transla
 						onBefore={() => {
 							return window.confirm(t('homepage.confirm'));
 						}}
-						route="admin.pages.set_homepage"
+						route="admin.cms.pages.set_homepage"
 						routeParams={{ id: page.id }}
 					>
 						<Button variant="secondary" fitContent>

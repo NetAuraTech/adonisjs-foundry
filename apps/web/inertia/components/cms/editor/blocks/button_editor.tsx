@@ -74,7 +74,7 @@ export function ButtonEditor(props: EditorProps) {
 							updateNavigation({
 								pageId: v,
 								locale: defaultTrans.locale,
-								route: isDefault ? 'page.render' : 'page.localised.render',
+								route: isDefault ? 'cms.page.render' : 'cms.page.localised.render',
 								routeParams: isDefault
 									? { slug: defaultTrans.slug }
 									: { locale: defaultTrans.locale, slug: defaultTrans.slug },
@@ -100,7 +100,7 @@ export function ButtonEditor(props: EditorProps) {
 								const isDefault = v === targetPageConfig.default_locale;
 								updateNavigation({
 									locale: v,
-									route: isDefault ? 'page.render' : 'page.localised.render',
+									route: isDefault ? 'cms.page.render' : 'cms.page.localised.render',
 									routeParams: isDefault ? { slug: trans?.slug } : { locale: v, slug: trans?.slug },
 								});
 							}}

@@ -98,7 +98,7 @@ export const variants = {
  *
  * @example
  * // Simple nav link
- * <NavLink route="page.home" label="Home" variant="nav" />
+ * <NavLink route="core.home.render" label="Home" variant="nav" />
  *
  * // Settings tab
  * <NavLink route="account.profile.render" label="Profile" variant="setting_nav" />
