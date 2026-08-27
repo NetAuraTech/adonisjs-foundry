@@ -134,7 +134,7 @@ export const BLOCK_CATALOG: BlockDescriptor[] = [
 		description: 'Form',
 		isContainer: true,
 		defaultProps: {
-			route: 'contact.execute',
+			route: 'cms.contact.execute',
 			routeParams: {},
 			className: '',
 		},

@@ -8,7 +8,7 @@ import { Modal } from '~/components/atoms/modal';
 import { useTemplates } from '~/components/cms/hooks/use_templates';
 import { useTranslation } from '~/hooks/use_translation';
 import TemplateCard from './TemplateCard';
-import type { PageEditorTranslations } from '#helpers/i18n_payloads/page_editor';
+import type { PageEditorTranslations } from '#app/cms/helpers/i18n_payloads/page_editor';
 
 interface ApplyPageTemplateModalProps {
 	pageId: number;
@@ -25,7 +25,7 @@ export default function ApplyPageTemplateModal({
 }: ApplyPageTemplateModalProps) {
 	const { t } = useTranslation(translations);
 	const { templates, loading, error } = useTemplates('page');
-	const [confirmTarget, setConfirmTarget] = useState<Data.Template.Template | null>(null);
+	const [confirmTarget, setConfirmTarget] = useState<Data.Cms.Template | null>(null);
 	const [applying, setApplying] = useState(false);
 
 	function handleConfirm() {
@@ -33,7 +33,7 @@ export default function ApplyPageTemplateModal({
 		setApplying(true);
 
 		router.post(
-			urlFor('admin.templates.apply_to_page', { id: confirmTarget.id }),
+			urlFor('admin.cms.templates.apply_to_page', { id: confirmTarget.id }),
 			{ pageId, locale },
 			{
 				preserveScroll: true,

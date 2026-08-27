@@ -37,7 +37,7 @@ const guards = {
 		useRememberMeTokens: true,
 
 		provider: sessionUserProvider({
-			model: () => import('#models/auth/user'),
+			model: () => import('#identity/models/user'),
 		}),
 	}),
 
@@ -48,7 +48,7 @@ const guards = {
 	 */
 	api: tokensGuard({
 		provider: tokensUserProvider({
-			model: () => import('#models/auth/user'),
+			model: () => import('#identity/models/user'),
 			tokens: 'accessTokens',
 		}),
 	}),

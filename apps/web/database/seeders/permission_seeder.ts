@@ -1,5 +1,5 @@
 import { BaseSeeder } from '@adonisjs/lucid/seeders';
-import Permission from '#models/auth/permission';
+import Permission from '#identity/models/permission';
 import { permissionCatalog } from '#start/permissions';
 
 export default class extends BaseSeeder {

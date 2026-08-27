@@ -2,8 +2,8 @@ import { StatCard } from '~/components/dashboard_sections/stat_card';
 import { CanAccess } from '~/guards/can_access';
 import { useTranslation } from '~/hooks/use_translation';
 import { registerDashboardSection, type DashboardSectionCardProps } from '~/lib/dashboard_sections';
-import type { CmsDashboardTranslations } from '#cms/helpers/i18n_payloads/dashboard_cms';
-import type { AdminDashboardTranslations } from '#helpers/i18n_payloads/dashboard';
+import type { CmsDashboardTranslations } from '#app/cms/helpers/i18n_payloads/dashboard_cms';
+import type { AdminDashboardTranslations } from '#app/core/helpers/i18n_payloads/dashboard';
 import type { Data } from '@generated/data';
 
 type CmsTranslations = AdminDashboardTranslations & CmsDashboardTranslations;
@@ -19,7 +19,7 @@ type CmsTranslations = AdminDashboardTranslations & CmsDashboardTranslations;
  */
 function TemplateStatCard({ stats, translations }: DashboardSectionCardProps) {
 	const { t } = useTranslation(translations as CmsTranslations);
-	const template: Data.Dashboard['template'] = stats.template;
+	const template: Data.Core.Dashboard['template'] = stats.template;
 
 	if (!template || stats.page) return null;
 
@@ -29,7 +29,7 @@ function TemplateStatCard({ stats, translations }: DashboardSectionCardProps) {
 				icon="LayoutTemplate"
 				label={t('cms.cards.templates')}
 				value={template.templates}
-				route="admin.templates.render"
+				route="admin.cms.templates.render"
 			/>
 		</CanAccess>
 	);

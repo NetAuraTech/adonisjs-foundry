@@ -1,5 +1,5 @@
 import { BaseCommand, flags } from '@adonisjs/core/ace';
-import RunBackupAction from '#actions/backup/run_backup_action';
+import RunBackupAction from '#backup/actions/backup/run_backup_action';
 import type { CommandOptions } from '@adonisjs/core/types/ace';
 
 /**

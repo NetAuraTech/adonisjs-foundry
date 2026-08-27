@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
-import { extractNameFromEmail } from '#helpers/auth/username';
-import User from '#models/auth/user';
+import { extractNameFromEmail } from '#identity/domain/user';
+import User from '#identity/models/user';
 
 /**
  * Creates a new user with a verified email address.

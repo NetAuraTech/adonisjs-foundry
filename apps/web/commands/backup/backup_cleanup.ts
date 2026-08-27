@@ -1,5 +1,5 @@
 import { BaseCommand } from '@adonisjs/core/ace';
-import { EnforceRetentionPolicyAction } from '#actions/backup/enforce_retention_policy_action';
+import { EnforceRetentionPolicyAction } from '#backup/actions/backup/enforce_retention_policy_action';
 import type { CommandOptions } from '@adonisjs/core/types/ace';
 
 /**

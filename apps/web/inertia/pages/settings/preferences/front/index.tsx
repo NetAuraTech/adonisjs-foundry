@@ -11,7 +11,7 @@ import { SettingsLayout } from '~/components/organisms/settings_layout';
 import { rules } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
-import type { SettingsPreferencesTranslations } from '#helpers/i18n_payloads/preferences';
+import type { SettingsPreferencesTranslations } from '#app/account/helpers/i18n_payloads/preferences';
 
 interface PreferencesPageProps {
 	translations: SettingsPreferencesTranslations;
@@ -36,7 +36,7 @@ export default function PreferencesPage(props: PreferencesPageProps) {
 			<SettingsLayout tab="preferences" translations={translations}>
 				<Card title={t('interface.title')} subtitle={t('interface.sub_title')}>
 					<Form
-						route="settings.preferences.execute"
+						route="account.preferences.execute"
 						className="grid gap-6"
 						onBefore={(visit) => {
 							const isValid = validationLocale.validateAll(visit.data as Record<string, any>);

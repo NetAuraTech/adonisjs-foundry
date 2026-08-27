@@ -1,6 +1,6 @@
 import { Data } from '@generated/data';
 import { useTranslation } from '~/hooks/use_translation';
-import type { TranslationNodes } from '#helpers/i18n_payloads/nest';
+import type { TranslationNodes } from '#app/core/helpers/i18n_payloads/nest';
 
 export enum StatusEnum {
 	VERIFIED = 'VERIFIED',
@@ -11,7 +11,7 @@ export enum StatusEnum {
 interface UserStatusProps {
 	/** The user's current account status. */
 	status: StatusEnum;
-	user: Data.User['id'];
+	user: Data.Identity.User['id'];
 	translations: TranslationNodes;
 }
 

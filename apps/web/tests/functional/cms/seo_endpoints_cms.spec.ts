@@ -1,6 +1,6 @@
 import { test } from '@japa/runner';
-import { PageFactory, PageTranslationFactory } from '#cms/factories/page_factory';
 import Page from '#cms/models/page/page';
+import { PageFactory, PageTranslationFactory } from '#factories/cms/page_factory';
 import env from '#start/env';
 
 /**

@@ -1,4 +1,4 @@
-import { LogLevel } from '#types/logging';
+import { LogLevel } from '#log/types/logging';
 
 /**
  * Configuration for the database persistence side of the logging pipeline.

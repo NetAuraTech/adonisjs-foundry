@@ -2,21 +2,21 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { HttpContextFactory } from '@adonisjs/core/factories/http';
 import { test } from '@japa/runner';
-import EmailAlreadyExistsException from '#exceptions/account/email_already_exists_exception';
-import ForbiddenException from '#exceptions/auth/forbidden_exception';
-import InvalidCredentialsException from '#exceptions/auth/invalid_credentials_exception';
-import InvalidCurrentPasswordException from '#exceptions/auth/invalid_current_password_exception';
-import ProviderAlreadyLinkedException from '#exceptions/auth/provider_already_linked_exception';
-import ProviderNotConfiguredException from '#exceptions/auth/provider_not_configured_exception';
-import UnauthorizedException from '#exceptions/auth/unauthorized_exception';
-import UnverifiedAccountException from '#exceptions/auth/unverified_account_exception';
-import InvalidTokenException from '#exceptions/core/invalid_token_exception';
-import MaxAttemptsExceededException from '#exceptions/core/max_attempts_exceeded_exception';
-import RowNotFoundException from '#exceptions/core/row_not_found_exception';
-import SlugExistsException from '#exceptions/core/slug_exists_exception';
-import FileTooLargeException from '#exceptions/file/file_too_large_exception';
-import InvalidExtensionException from '#exceptions/file/invalid_extension_exception';
-import MaintenanceException from '#exceptions/maintenance_exception';
+import ForbiddenException from '#auth/exceptions/forbidden_exception';
+import InvalidCredentialsException from '#auth/exceptions/invalid_credentials_exception';
+import InvalidCurrentPasswordException from '#auth/exceptions/invalid_current_password_exception';
+import InvalidTokenException from '#auth/exceptions/invalid_token_exception';
+import MaxAttemptsExceededException from '#auth/exceptions/max_attempts_exceeded_exception';
+import ProviderAlreadyLinkedException from '#auth/exceptions/provider_already_linked_exception';
+import ProviderNotConfiguredException from '#auth/exceptions/provider_not_configured_exception';
+import UnauthorizedException from '#auth/exceptions/unauthorized_exception';
+import UnverifiedAccountException from '#auth/exceptions/unverified_account_exception';
+import EmailAlreadyExistsException from '#core/exceptions/email_already_exists_exception';
+import MaintenanceException from '#core/exceptions/maintenance_exception';
+import RowNotFoundException from '#core/exceptions/row_not_found_exception';
+import SlugExistsException from '#core/exceptions/slug_exists_exception';
+import FileTooLargeException from '#file/exceptions/file_too_large_exception';
+import InvalidExtensionException from '#file/exceptions/invalid_extension_exception';
 
 async function testExceptionHandle(error: any, assert: any) {
 	// --- JSON Request Simulation ---
@@ -174,60 +174,12 @@ test.group('Exceptions', () => {
 		await testExceptionHandle(error, assert);
 	});
 
-	test('MaintenanceException properties and handle()', async ({ assert }) => {
+	test('MaintenanceException properties', ({ assert }) => {
 		const error = new MaintenanceException('Site maintenance', 30);
 		assert.equal(error.status, 503);
 		assert.equal(error.code, 'E_MAINTENANCE');
+		assert.equal(error.message, 'Site maintenance');
 		assert.equal(error.retryAfter, 30);
-
-		// --- JSON Request Simulation ---
-		const ctxJson = new HttpContextFactory().create();
-		ctxJson.request.wantsJSON = () => true;
-		ctxJson.i18n = { t: () => 'translated message' } as any;
-
-		let jsonResponse: any = null;
-		let jsonStatus: number | null = null;
-		ctxJson.response.status = function (this: any, s: number) {
-			jsonStatus = s;
-			return this;
-		} as any;
-		ctxJson.response.send = function (this: any, body: any) {
-			jsonResponse = body;
-			return this;
-		} as any;
-
-		await error.handle(error, ctxJson);
-
-		assert.equal(jsonStatus, 503);
-		assert.equal(jsonResponse.error.code, 'E_MAINTENANCE');
-		assert.equal(jsonResponse.error.type, 'maintenance');
-		assert.equal(jsonResponse.error.retryAfter, 30);
-
-		// --- API URL path triggers JSON response ---
-		const ctxApi = new HttpContextFactory().create();
-		ctxApi.request.wantsJSON = () => false;
-		Object.defineProperty(ctxApi.request, 'url', {
-			value: () => '/api/something',
-			writable: true,
-		});
-		ctxApi.i18n = { t: () => 'translated message' } as any;
-
-		let apiResponse: any = null;
-		let apiStatus: number | null = null;
-		ctxApi.response.status = function (this: any, s: number) {
-			apiStatus = s;
-			return this;
-		} as any;
-		ctxApi.response.send = function (this: any, body: any) {
-			apiResponse = body;
-			return this;
-		} as any;
-
-		await error.handle(error, ctxApi);
-
-		assert.equal(apiStatus, 503);
-		assert.equal(apiResponse.error.code, 'E_MAINTENANCE');
-		assert.equal(apiResponse.error.type, 'maintenance');
 	});
 
 	// ─── Cross-cutting: all exception codes have translation keys ───

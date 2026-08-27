@@ -16,7 +16,7 @@ import { useMenu } from '~/hooks/use_admin';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { locales, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminPagesCreateTranslations } from '#helpers/i18n_payloads/pages_create';
+import type { AdminPagesCreateTranslations } from '#app/cms/helpers/i18n_payloads/pages_create';
 
 interface PagesCreatePageProps {
 	translations: AdminPagesCreateTranslations;
@@ -41,12 +41,12 @@ export default function PagesCreatePage(props: PagesCreatePageProps) {
 
 	return (
 		<>
-			<AdminMain title={t('title')} icon={getEntryIcon('admin.pages.render')}>
+			<AdminMain title={t('title')} icon={getEntryIcon('admin.cms.pages.render')}>
 				<Card
 					header={
 						<div className="flex items-center justify-between gap-3">
 							<CanAccess permission="pages.view">
-								<Button variant="icon" route="admin.pages.render" title={t('action')} fitContent>
+								<Button variant="icon" route="admin.cms.pages.render" title={t('action')} fitContent>
 									<Icon name="ArrowLeft" />
 								</Button>
 							</CanAccess>
@@ -54,7 +54,7 @@ export default function PagesCreatePage(props: PagesCreatePageProps) {
 					}
 				>
 					<Form
-						route="admin.pages_create.execute"
+						route="admin.cms.pages_create.execute"
 						className="grid gap-3"
 						onBefore={(visit) => {
 							const isValid = validation.validateAll(visit.data as Record<string, any>);

@@ -13,8 +13,8 @@ import { toLooseErrors } from '~/helpers/form_errors';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
-import type { RegisterTranslations } from '#helpers/i18n_payloads/register';
-import type { OAuthProvider } from '#types/auth';
+import type { RegisterTranslations } from '#app/auth/helpers/i18n_payloads/register';
+import type { OAuthProvider } from '#auth/types/auth';
 
 interface RegisterPageProps {
 	providers: OAuthProvider[];

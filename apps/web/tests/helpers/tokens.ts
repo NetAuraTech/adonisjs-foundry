@@ -1,10 +1,10 @@
 import app from '@adonisjs/core/services/app';
 import hash from '@adonisjs/core/services/hash';
 import { DateTime } from 'luxon';
-import { generateSplitToken } from '#helpers/core/crypto';
-import { TokenRepository } from '#repositories/core/token_repository';
-import { type TokenType } from '#types/core';
-import type User from '#models/auth/user';
+import { Token } from '#auth/domain/token';
+import { TokenRepository } from '#auth/repositories/token_repository';
+import type { TokenType } from '#auth/enums/token_type';
+import type User from '#identity/models/user';
 
 /**
  * Creates a `selector.validator` token row for a user of the given type and
@@ -19,7 +19,7 @@ export async function createSplitToken(
 	expiresIn: Record<string, number> = { hours: 1 },
 ): Promise<string> {
 	const tokenRepo = await app.container.make(TokenRepository);
-	const { selector, validator, token } = generateSplitToken();
+	const { selector, validator, token } = Token.generateSplit();
 	await tokenRepo.create({
 		userId: user.id,
 		type,

@@ -35,7 +35,7 @@ export default function SaveBlockTemplateModal({
 	const [name, setName] = useState('');
 	const [description, setDescription] = useState('');
 	const [overwriteId, setOverwriteId] = useState<number | null>(null);
-	const [existingTemplates, setExistingTemplates] = useState<Data.Template.Template[]>([]);
+	const [existingTemplates, setExistingTemplates] = useState<Data.Cms.Template[]>([]);
 	const [saving, setSaving] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 

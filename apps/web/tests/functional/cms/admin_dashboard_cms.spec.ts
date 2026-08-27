@@ -1,8 +1,8 @@
 import testUtils from '@adonisjs/core/services/test_utils';
 import { test } from '@japa/runner';
+import { seedDashboard } from '#tests/functional/cms/helpers/seed_dashboard';
 import { createAdminUser } from '#tests/helpers/create_admin_user';
 import { parseInertiaPage } from '#tests/helpers/inertia_page';
-import { seedDashboard } from '#tests/helpers/seed_dashboard';
 import { resetSharedState } from '#tests/helpers/shared_state';
 
 /**
@@ -41,11 +41,11 @@ test.group('Admin dashboard endpoint', (group) => {
 
 		// Shape: exactly the four registered sections — no more, no less.
 		const stats = page.props.stats;
-		assert.deepEqual(Object.keys(stats).sort(), ['auth', 'file', 'page', 'template']);
+		assert.deepEqual(Object.keys(stats).sort(), ['file', 'identity', 'page', 'template']);
 
 		// Content: the same figures the pre-registry action produced.
-		assert.equal(stats.auth.users, 2); // the admin and the marker user
-		const usersByRole = [...stats.auth.usersByRole].sort((a, b) => String(a.name).localeCompare(String(b.name)));
+		assert.equal(stats.identity.users, 2); // the admin and the marker user
+		const usersByRole = [...stats.identity.usersByRole].sort((a, b) => String(a.name).localeCompare(String(b.name)));
 		assert.deepEqual(usersByRole, [
 			{ name: markers.role, count: 1 },
 			// createAdminUser seeds the admin role with its i18n key as name.

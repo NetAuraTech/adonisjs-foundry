@@ -11,7 +11,7 @@ import type { PermissionSlug, SystemRoleSlug } from '#start/permissions';
  * @example
  * hasRole(user, 'admin') // true
  */
-export function hasRole(user: Data.User | undefined, roleSlug: SystemRoleSlug): boolean {
+export function hasRole(user: Data.Identity.User | undefined, roleSlug: SystemRoleSlug): boolean {
 	return user?.role.slug === roleSlug;
 }
 
@@ -31,7 +31,7 @@ export function hasRole(user: Data.User | undefined, roleSlug: SystemRoleSlug): 
  * @example
  * hasRawRole(user, 'billing_manager') // true
  */
-export function hasRawRole(user: Data.User | undefined, roleSlug: string): boolean {
+export function hasRawRole(user: Data.Identity.User | undefined, roleSlug: string): boolean {
 	return user?.role.slug === roleSlug;
 }
 
@@ -45,7 +45,7 @@ export function hasRawRole(user: Data.User | undefined, roleSlug: string): boole
  * @example
  * hasAnyRole(user, ['admin', 'user']) // true
  */
-export function hasAnyRole(user: Data.User | undefined, roleSlugs: SystemRoleSlug[]): boolean {
+export function hasAnyRole(user: Data.Identity.User | undefined, roleSlugs: SystemRoleSlug[]): boolean {
 	return !!user?.role && roleSlugs.some((slug) => slug === user.role.slug);
 }
 
@@ -62,7 +62,7 @@ export function hasAnyRole(user: Data.User | undefined, roleSlugs: SystemRoleSlu
  * hasAllRoles(user, ['admin', 'admin']) // true (same slug repeated)
  * hasAllRoles(user, ['admin', 'user']) // false (user can only have one role)
  */
-export function hasAllRoles(user: Data.User | undefined, roleSlugs: SystemRoleSlug[]): boolean {
+export function hasAllRoles(user: Data.Identity.User | undefined, roleSlugs: SystemRoleSlug[]): boolean {
 	return !!user?.role && roleSlugs.every((slug) => slug === user.role.slug);
 }
 
@@ -76,7 +76,7 @@ export function hasAllRoles(user: Data.User | undefined, roleSlugs: SystemRoleSl
  * @example
  * can(user, 'users.create') // true
  */
-export function can(user: Data.User | undefined, permissionSlug: PermissionSlug): boolean {
+export function can(user: Data.Identity.User | undefined, permissionSlug: PermissionSlug): boolean {
 	return user?.permissions.includes(permissionSlug) ?? false;
 }
 
@@ -96,7 +96,7 @@ export function can(user: Data.User | undefined, permissionSlug: PermissionSlug)
  * @example
  * hasRawPermission(user, 'billing.export') // true
  */
-export function hasRawPermission(user: Data.User | undefined, permissionSlug: string): boolean {
+export function hasRawPermission(user: Data.Identity.User | undefined, permissionSlug: string): boolean {
 	return user?.permissions.includes(permissionSlug) ?? false;
 }
 
@@ -110,7 +110,7 @@ export function hasRawPermission(user: Data.User | undefined, permissionSlug: st
  * @example
  * canAny(user, ['users.create', 'users.delete']) // true
  */
-export function canAny(user: Data.User | undefined, permissionSlugs: PermissionSlug[]): boolean {
+export function canAny(user: Data.Identity.User | undefined, permissionSlugs: PermissionSlug[]): boolean {
 	return permissionSlugs.some((slug) => user?.permissions.includes(slug) ?? false);
 }
 
@@ -124,7 +124,7 @@ export function canAny(user: Data.User | undefined, permissionSlugs: PermissionS
  * @example
  * canAll(user, ['users.view', 'users.create']) // true
  */
-export function canAll(user: Data.User | undefined, permissionSlugs: PermissionSlug[]): boolean {
+export function canAll(user: Data.Identity.User | undefined, permissionSlugs: PermissionSlug[]): boolean {
 	return permissionSlugs.every((slug) => user?.permissions.includes(slug) ?? false);
 }
 
@@ -137,7 +137,7 @@ export function canAll(user: Data.User | undefined, permissionSlugs: PermissionS
  * @example
  * getPermissions(user) // ['users.view', 'users.create', 'roles.view']
  */
-export function getPermissions(user: Data.User | undefined): string[] {
+export function getPermissions(user: Data.Identity.User | undefined): string[] {
 	return user?.permissions ?? [];
 }
 
@@ -150,6 +150,6 @@ export function getPermissions(user: Data.User | undefined): string[] {
  * @example
  * getRole(user) // 'admin'
  */
-export function getRole(user: Data.User | undefined): string | undefined {
+export function getRole(user: Data.Identity.User | undefined): string | undefined {
 	return user?.role.slug ?? undefined;
 }

@@ -1,7 +1,7 @@
 import testUtils from '@adonisjs/core/services/test_utils';
 import { test } from '@japa/runner';
+import { PreviewTokenHelper } from '#cms/domain/preview_token';
 import Template from '#cms/models/template/template';
-import { PreviewTokenHelper } from '#helpers/core/preview_token';
 import env from '#start/env';
 import { createAdminUser, CMS_PERMISSIONS } from '#tests/helpers/create_admin_user';
 import { parseInertiaPage } from '#tests/helpers/inertia_page';

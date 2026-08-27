@@ -11,7 +11,7 @@ The authenticated back-office context: `/admin/*` URLs, controllers under `{doma
 _Avoid_: CMS (the old name of this context before ADR-0001; `cms` now names only the CMS module), dashboard (a screen inside Admin, not the context)
 
 **CMS module**:
-The prunable vertical slice of content management — Page, Template, page builder, Contact — living under `app/cms/` plus its per-domain subdirectories in framework-scanned layers (`app/http/controllers/{page,template}/`, `app/data/transformers/{page,template}/`, …) and `database/migrations/cms/`. Absent from the `inertia` and `api` flavors. Rule of thumb: if it dies when the CMS dies, it lives in the CMS module.
+The prunable vertical slice of content management — Page, Template, page builder, Contact — living in the `src/cms/` business module (actions, services, repositories, models, exceptions) and the `app/cms/` transport module (controllers, routes, nav, validators, transformers, REST resources), plus the co-located per-domain units (`database/{migrations,seeders,factories}/cms/`, `resources/lang/{en,fr}/cms/`, `inertia/{pages,components}/cms/`, `tests/{unit,integration,functional}/cms/`, …). Absent from the `inertia` and `api` flavors. Rule of thumb: if it dies when the CMS dies, it lives in the CMS module.
 _Avoid_: back-office, admin panel (those are the Admin context, which survives every flavor)
 
 **Front**:
@@ -19,7 +19,7 @@ The audience-facing shell context: controllers under `{domain}/front/`, Inertia 
 _Avoid_: Public (that is the exposure axis, below), website
 
 **Public**:
-The exposure axis: unauthenticated route modules and feature flags (`cms_public.routes.ts`, the future `publicApi` flag) — anything reachable without a session. Orthogonal to Front: a Public route serves the Front audience, but a Front screen may still require a session. (Front flavors — the headless `api` flavor has no public site routes.)
+The exposure axis: unauthenticated route modules and feature flags (the CMS public front registered by `#app/cms/routes`, the future `publicApi` flag) — anything reachable without a session. Orthogonal to Front: a Public route serves the Front audience, but a Front screen may still require a session. (Front flavors — the headless `api` flavor has no public site routes.)
 _Avoid_: front, anonymous, guest
 
 ### Content

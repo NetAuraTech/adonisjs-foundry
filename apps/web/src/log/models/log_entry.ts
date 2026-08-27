@@ -1,0 +1,22 @@
+import { belongsTo, column } from '@adonisjs/lucid/orm';
+import { LogEntrySchema } from '#database/schema';
+import User from '#identity/models/user';
+import type { LogCategory, LogLevel } from '#log/types/logging';
+import type { BelongsTo } from '@adonisjs/lucid/types/relations';
+
+export default class LogEntry extends LogEntrySchema {
+	@column()
+	declare level: LogLevel;
+
+	@column()
+	declare category: LogCategory;
+
+	@column()
+	declare context: Record<string, any> | null;
+
+	@column()
+	declare error: { name: string; message: string; stack?: string } | null;
+
+	@belongsTo(() => User, { foreignKey: 'actorId' })
+	declare actor: BelongsTo<typeof User>;
+}

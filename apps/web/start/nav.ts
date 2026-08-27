@@ -11,23 +11,20 @@
 */
 
 import app from '@adonisjs/core/services/app';
-import { pageNavEntries } from '#cms/domain/services/page/page_nav';
-import { templateNavEntries } from '#cms/domain/services/template/template_nav';
-import { authNavEntries } from '#services/auth/auth_nav';
-import { coreNavEntries } from '#services/core/core_nav';
-import { NavRegistry } from '#services/core/nav_registry';
-import { fileNavEntries } from '#services/file/file_nav';
-import { loggingNavEntries } from '#services/logging/logging_nav';
-import { maintenanceNavEntries } from '#services/maintenance/maintenance_nav';
+import { cmsNavEntries } from '#app/cms/nav';
+import { coreNavEntries, maintenanceNavEntries } from '#app/core/nav';
+import { fileNavEntries } from '#app/file/nav';
+import { identityNavEntries } from '#app/identity/nav';
+import { loggingNavEntries } from '#app/log/nav';
+import { NavRegistry } from '#core/services/nav_registry';
 
 app.container.singleton(NavRegistry, () => new NavRegistry());
 
 const registry = await app.container.make(NavRegistry);
 
 registry.register('core', coreNavEntries);
-registry.register('page', pageNavEntries);
-registry.register('template', templateNavEntries);
+registry.register('cms', cmsNavEntries);
 registry.register('file', fileNavEntries);
-registry.register('auth', authNavEntries);
+registry.register('identity', identityNavEntries);
 registry.register('maintenance', maintenanceNavEntries);
 registry.register('logging', loggingNavEntries);

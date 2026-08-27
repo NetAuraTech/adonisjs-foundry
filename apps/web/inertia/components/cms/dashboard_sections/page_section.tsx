@@ -5,8 +5,8 @@ import { StatCard } from '~/components/dashboard_sections/stat_card';
 import { CanAccess } from '~/guards/can_access';
 import { useTranslation } from '~/hooks/use_translation';
 import { registerDashboardSection, type DashboardSectionCardProps } from '~/lib/dashboard_sections';
-import type { CmsDashboardTranslations } from '#cms/helpers/i18n_payloads/dashboard_cms';
-import type { AdminDashboardTranslations } from '#helpers/i18n_payloads/dashboard';
+import type { CmsDashboardTranslations } from '#app/cms/helpers/i18n_payloads/dashboard_cms';
+import type { AdminDashboardTranslations } from '#app/core/helpers/i18n_payloads/dashboard';
 import type { Data } from '@generated/data';
 
 type CmsTranslations = AdminDashboardTranslations & CmsDashboardTranslations;
@@ -22,14 +22,14 @@ type CmsTranslations = AdminDashboardTranslations & CmsDashboardTranslations;
  */
 function PageStatCard({ stats, translations }: DashboardSectionCardProps) {
 	const { t } = useTranslation(translations as CmsTranslations);
-	const page: Data.Dashboard['page'] = stats.page;
-	const template: Data.Dashboard['template'] = stats.template;
+	const page: Data.Core.Dashboard['page'] = stats.page;
+	const template: Data.Core.Dashboard['template'] = stats.template;
 
 	if (!page) return null;
 
 	return (
 		<CanAccess permission="pages.view">
-			<StatCard icon="PanelsTopLeft" label={t('cms.cards.pages')} value={page.pages} route="admin.pages.render">
+			<StatCard icon="PanelsTopLeft" label={t('cms.cards.pages')} value={page.pages} route="admin.cms.pages.render">
 				<Paragraph variant="muted" spacing="sm">
 					{`${t('cms.cards.translations')}: ${page.pageTranslations.total}`}
 				</Paragraph>
@@ -55,7 +55,7 @@ function PageStatCard({ stats, translations }: DashboardSectionCardProps) {
 
 function PageRecentCard({ stats, translations, formatDate }: DashboardSectionCardProps) {
 	const { t } = useTranslation(translations as CmsTranslations);
-	const page: Data.Dashboard['page'] = stats.page;
+	const page: Data.Core.Dashboard['page'] = stats.page;
 
 	if (!page) return null;
 
@@ -63,7 +63,7 @@ function PageRecentCard({ stats, translations, formatDate }: DashboardSectionCar
 		<CanAccess permission="pages.view">
 			<RecentCard
 				title={t('cms.recent.published_pages')}
-				viewAllRoute="admin.pages.render"
+				viewAllRoute="admin.cms.pages.render"
 				viewAllLabel={t('view_all')}
 			>
 				{page.recentPublishedPages.length === 0 ? (
@@ -75,7 +75,7 @@ function PageRecentCard({ stats, translations, formatDate }: DashboardSectionCar
 						{page.recentPublishedPages.map((entry) => (
 							<li key={entry.id}>
 								<Link
-									route="admin.pages_show.render"
+									route="admin.cms.pages_show.render"
 									routeParams={{ id: entry.pageId }}
 									className="flex items-center justify-between gap-2 px-6 py-3 hover:bg-sunken"
 								>

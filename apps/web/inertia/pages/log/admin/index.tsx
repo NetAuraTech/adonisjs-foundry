@@ -14,7 +14,7 @@ import { useMenu } from '~/hooks/use_admin';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
 import { Paginated } from '~/types/paginated';
-import type { AdminLogsIndexTranslations } from '#helpers/i18n_payloads/logs_list';
+import type { AdminLogsIndexTranslations } from '#app/log/helpers/i18n_payloads/logs_list';
 
 const LEVELS = ['debug', 'info', 'warn', 'error', 'fatal'] as const;
 const CATEGORIES = ['system', 'security', 'business', 'auth', 'api', 'database', 'performance'] as const;
@@ -28,7 +28,7 @@ const LEVEL_BADGE_CLASSES: Record<string, string> = {
 };
 
 type PageProps = {
-	entries: Paginated<Data.LogEntry>;
+	entries: Paginated<Data.Log.LogEntry>;
 	filters: {
 		level?: string;
 		category?: string;
@@ -47,14 +47,17 @@ export default function LogsIndexPage(props: PageProps) {
 
 	const { getEntryIcon } = useMenu();
 
-	const hasContext = (entry: Data.LogEntry) =>
+	const hasContext = (entry: Data.Log.LogEntry) =>
 		(entry.context && Object.keys(entry.context).length > 0) || entry.ip || entry.userAgent;
 
 	return (
-		<AdminMain title={t('title')} icon={getEntryIcon('admin.logs.render')}>
+		<AdminMain title={t('title')} icon={getEntryIcon('admin.log.logs.render')}>
 			<Card
 				header={
-					<Form route="admin.logs.render" className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-3 items-end">
+					<Form
+						route="admin.log.logs.render"
+						className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-3 items-end"
+					>
 						<Field
 							type="text"
 							name="search"
@@ -94,7 +97,7 @@ export default function LogsIndexPage(props: PageProps) {
 						</Button>
 					</Form>
 				}
-				footer={<Pagination route="admin.logs.render" filters={filters} metadata={entries.metadata} />}
+				footer={<Pagination route="admin.log.logs.render" filters={filters} metadata={entries.metadata} />}
 			>
 				<Table>
 					<Table.Header>

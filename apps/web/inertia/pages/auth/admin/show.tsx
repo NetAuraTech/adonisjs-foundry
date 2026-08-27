@@ -15,13 +15,13 @@ import { useMenu } from '~/hooks/use_admin';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
 import { capitalize } from '~/lib/string';
-import type { AdminUsersShowTranslations } from '#helpers/i18n_payloads/users_show';
-import type { OAuthProvider } from '#types/auth';
+import type { AdminUsersShowTranslations } from '#app/identity/helpers/i18n_payloads/users_show';
+import type { OAuthProvider } from '#auth/types/auth';
 
 type PageProps = {
-	user: Data.User;
+	user: Data.Identity.User;
 	providers: OAuthProvider[];
-	permissions: Data.Permission[];
+	permissions: Data.Identity.Permission[];
 	translations: AdminUsersShowTranslations;
 };
 
@@ -33,7 +33,7 @@ export default function UsersShowPage(props: PageProps) {
 	const { getEntryIcon } = useMenu();
 
 	const permissionsByCategory =
-		permissions?.reduce<Record<string, Data.Permission[]>>((acc, permission: Data.Permission) => {
+		permissions?.reduce<Record<string, Data.Identity.Permission[]>>((acc, permission: Data.Identity.Permission) => {
 			if (!acc[permission.category]) {
 				acc[permission.category] = [];
 			}
@@ -42,12 +42,12 @@ export default function UsersShowPage(props: PageProps) {
 		}, {}) || {};
 
 	return (
-		<AdminMain title={t('title', { username: user.username })} icon={getEntryIcon('admin.users.render')}>
+		<AdminMain title={t('title', { username: user.username })} icon={getEntryIcon('admin.identity.users.render')}>
 			<Card
 				header={
 					<div className="flex items-center justify-between gap-3">
 						<CanAccess permission="users.view">
-							<Button variant="icon" route="admin.users.render" title={t('title')} fitContent>
+							<Button variant="icon" route="admin.identity.users.render" title={t('title')} fitContent>
 								<Icon name="ArrowLeft" />
 							</Button>
 						</CanAccess>
@@ -55,7 +55,7 @@ export default function UsersShowPage(props: PageProps) {
 							<CanAccess permission="users.update">
 								<Button
 									variant="icon_warning"
-									route="admin.users_update.render"
+									route="admin.identity.users_update.render"
 									routeParams={{ id: user.id }}
 									title={t('actions.edit', { username: user.username })}
 									fitContent
@@ -66,7 +66,7 @@ export default function UsersShowPage(props: PageProps) {
 							<CanAccess permission="users.delete">
 								<Button
 									variant="icon_danger"
-									route="admin.users.destroy"
+									route="admin.identity.users.destroy"
 									routeParams={{ id: user.id }}
 									title={t('actions.delete', { username: user.username })}
 									fitContent

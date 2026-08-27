@@ -3,7 +3,7 @@ import limiter from '@adonisjs/limiter/services/main';
 import db from '@adonisjs/lucid/services/db';
 import { test } from '@japa/runner';
 import { DateTime } from 'luxon';
-import User from '#models/auth/user';
+import User from '#identity/models/user';
 import { createAdminUser } from '#tests/helpers/create_admin_user';
 import { createVerifiedUser } from '#tests/helpers/create_verified_user';
 import { resetSharedState } from '#tests/helpers/shared_state';

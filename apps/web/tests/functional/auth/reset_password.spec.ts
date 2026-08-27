@@ -1,11 +1,11 @@
 import testUtils from '@adonisjs/core/services/test_utils';
 import limiter from '@adonisjs/limiter/services/main';
 import { test } from '@japa/runner';
+import { TOKEN_TYPES } from '#auth/enums/token_type';
 import { createVerifiedUser } from '#tests/helpers/create_verified_user';
 import { resetSharedState } from '#tests/helpers/shared_state';
 import { createSplitToken } from '#tests/helpers/tokens';
 import { fieldError } from '#tests/helpers/validation';
-import { TOKEN_TYPES } from '#types/core';
 
 /**
  * Functional seam for the reset-password flow

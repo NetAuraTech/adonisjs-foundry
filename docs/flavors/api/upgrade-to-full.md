@@ -30,13 +30,13 @@ from `apps/web/`.
 
 ## 1. Recover the frontend tree
 
-| Artifact                    | From (`main`)                                    |
-| --------------------------- | ------------------------------------------------ |
-| Frontend app and pages      | `inertia`                                        |
-| Frontend project reference  | `tsconfig.inertia.json`                          |
-| Vite / Vitest configs       | `vite.config.ts`, `vitest.config.ts`             |
-| Inertia / Vite config files | `config/inertia.ts`, `config/vite.ts`            |
-| Inertia middleware          | `app/http/middleware/core/inertia_middleware.ts` |
+| Artifact                    | From (`main`)                               |
+| --------------------------- | ------------------------------------------- |
+| Frontend app and pages      | `inertia`                                   |
+| Frontend project reference  | `tsconfig.inertia.json`                     |
+| Vite / Vitest configs       | `vite.config.ts`, `vitest.config.ts`        |
+| Inertia / Vite config files | `config/inertia.ts`, `config/vite.ts`       |
+| Inertia middleware          | `app/core/middleware/inertia_middleware.ts` |
 
 Then reinstall the packages pruned by the manifest (into the app workspace):
 
@@ -52,18 +52,17 @@ npm install -D @vitejs/plugin-react vite vitest @types/react @types/react-dom
 
 The CMS lives on `main` only. Restore it from the `full` tree:
 
-| Artifact                                 | From (`main`)                                                                                                        |
-| ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| CMS module (page/template/builder)       | `app/cms`                                                                                                            |
-| CMS controllers (admin/front/api)        | `app/http/controllers/page`, `app/http/controllers/template`                                                         |
-| CMS transformers                         | `app/data/transformers/page`, `app/data/transformers/template`                                                       |
-| CMS events, listeners and mails          | `app/events/page`, `app/listeners/page`, `app/mails/page`                                                            |
-| CMS i18n payload helpers + preview token | `app/helpers/i18n_payloads/{pages_*,page_editor,page_revisions,templates_*}.ts`, `app/helpers/core/preview_token.ts` |
-| CMS migrations and seeders               | `database/migrations/cms`, `database/seeders/{page,template}_seeder.ts`                                              |
-| CMS i18n namespaces                      | `resources/lang/{en,fr}/{page,template,builder}.json`                                                                |
-| Contact email template                   | `resources/views/emails/contact_form_email.edge`                                                                     |
-| CMS route modules                        | `start/routes/cms_admin.routes.ts`, `cms_public.routes.ts`, `cms_rest_api.routes.ts`                                 |
-| Transmit integration                     | `start/transmit.ts`, `config/transmit.ts`, `config/cms.ts`                                                           |
+| Artifact                                                                                                       | From (`main`)                                              |
+| -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| CMS business layer (actions, services, repositories, models, exceptions, queries, types, permissions)          | `src/cms`                                                  |
+| CMS transport layer (controllers, routes, nav, i18n payload helpers, transformers, REST resources, validators) | `app/cms`                                                  |
+| CMS migrations                                                                                                 | `database/migrations/cms`                                  |
+| CMS seeders                                                                                                    | `database/seeders/cms`                                     |
+| CMS factories                                                                                                  | `database/factories/cms`                                   |
+| CMS i18n namespaces (page, template, builder)                                                                  | `resources/lang/{en,fr}/cms`                               |
+| Contact email template                                                                                         | `resources/views/emails/contact_form_email.edge`           |
+| CMS ace command (migration-name normalization)                                                                 | `commands/cms_normalize_migration_names.ts`                |
+| Transmit integration                                                                                           | `start/transmit.ts`, `config/transmit.ts`, `config/cms.ts` |
 
 Reinstall the pruned Transmit packages (into the app workspace):
 
@@ -74,13 +73,20 @@ npm install @adonisjs/transmit @adonisjs/transmit-client
 
 ## 3. Recover the session auth, admin UI and public site
 
-| Artifact                             | From (`main`)                                                    |
-| ------------------------------------ | ---------------------------------------------------------------- |
-| Guest/session auth controllers       | `app/http/controllers/auth/front`, `auth/admin`                  |
-| Self-service (account/profile/prefs) | `app/http/controllers/{account,profile,preferences}/front`       |
-| Admin Inertia controllers            | `app/http/controllers/{core,file,log,maintenance}/admin`         |
-| Home + SEO controllers               | `app/http/controllers/core/front`                                |
-| Public route modules                 | `start/routes/{front,core_public,settings,admin,auth}.routes.ts` |
+| Artifact                                | From (`main`)                                         |
+| --------------------------------------- | ----------------------------------------------------- |
+| Guest/session auth controllers          | `app/auth/controllers/front`                          |
+| Self-service (account/profile/prefs)    | `app/account/controllers/front`                       |
+| Admin Inertia controllers               | `app/{core,identity,file,log}/controllers/admin`      |
+| Domain route entries (self-registering) | `app/{auth,account,core,identity,file,log}/routes.ts` |
+| Home + SEO controllers                  | `app/core/controllers/front`                          |
+
+The `app/identity`, `app/file` and `app/log` domains (including their admin
+Inertia controllers) are **kept** by the `api` flavor — their admin routes are
+simply gated off by `admin: false` in `config/features.ts`, and the pruned
+pieces (`app/identity/routes.ts`, `app/file/routes.ts`, `app/log/routes.ts`,
+the `app/*/controllers/admin` trees) are the only things to restore from
+`main`.
 
 ## 4. Restore the composition rewrites
 
@@ -89,15 +95,16 @@ version of each:
 
 - `config/features.ts` — re-enables `auth`, `settings`, `admin` and `cms` (the
   `api` flavor keeps only `adminApi`).
-- `start/routes.ts` — re-registers the auth, settings, admin, CMS and public
-  route modules (including the CMS admin REST via `registerCmsRestApiRoutes`).
+- `start/routes.ts` — restores the pure per-domain import list, which
+  re-registers the CMS domain entry (`#app/cms/routes`) alongside the other
+  domain entries.
 - `config/database.ts` — re-adds `database/migrations/cms` to the migration
   paths.
 - `config/shield.ts` — restores the CMS iframe `frame-src` hosts.
-- `start/events.ts` — re-registers the page event/listener pairs.
-- `start/nav.ts` / `start/dashboard.ts` / `start/sitemap.ts` — re-registers the
-  page/template contributions.
-- `start/container.ts` — re-binds the CMS services.
+- `start/nav.ts` / `start/permissions.ts` / `start/dashboard.ts` /
+  `start/sitemap.ts` — re-registers the page/template contributions and the
+  `cmsPermissionCatalog`.
+- `start/container.ts` — re-binds the builder session service.
 - `config/cors.ts` — restores the default dev-origin policy (the `api` flavor
   rewrote it to read `CORS_ALLOWED_ORIGINS`).
 - `start/asset_middleware.ts` — restores the Vite + Inertia server middleware.
@@ -116,15 +123,13 @@ version of each:
 
 ## 5. Restore the pruned tests
 
-| Artifact                        | From (`main`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Session-auth functional suites  | `tests/functional/auth/{accept_invitation,email_verification,forgot_password,oauth,register,reset_password,session}.spec.ts`, `tests/functional/logs`                                                                                                                                                                                                                                                                                                                                                         |
-| Inertia-page functional suites  | `tests/functional/dashboard`, `tests/functional/maintenance`                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| CMS functional suite            | `tests/functional/cms`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| SEO endpoint suites             | `tests/functional/core/seo_endpoints.spec.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| Full-router structure snapshots | `tests/integration/routes_structure.spec.ts`, `tests/integration/routes_structure_cms.spec.ts`                                                                                                                                                                                                                                                                                                                                                                                                                |
-| CMS unit/integration suites     | `tests/unit/actions/{page,template,cms}`, `tests/unit/models/{page,template}`, `tests/unit/services/{page,template,cms}`, `tests/unit/validators/{page,template,builder,contact}_validator.spec.ts`, `tests/unit/exceptions_cms.spec.ts`, `tests/unit/mails/notifications_cms.spec.ts`, `tests/unit/helpers/core/preview_token.spec.ts`, `tests/integration/repositories/{page,page_translation,page_revision,template}_repository.spec.ts`, `tests/integration/services/page/page_sitemap_collector.spec.ts` |
-| CMS dashboard seed helper       | `tests/helpers/seed_dashboard.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| Artifact                             | From (`main`)                                                                                                                                        |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Session-auth functional suites       | `tests/functional/auth/{accept_invitation,email_verification,forgot_password,oauth,register,reset_password,session}.spec.ts`, `tests/functional/log` |
+| Inertia-page + SEO functional suites | `tests/functional/core` (dashboard, maintenance, SEO endpoints)                                                                                      |
+| CMS functional suite                 | `tests/functional/cms`                                                                                                                               |
+| Full-router structure snapshot       | `tests/integration/routes_structure.spec.ts`                                                                                                         |
+| CMS unit/integration suites          | `tests/unit/cms`, `tests/integration/cms`                                                                                                            |
 
 ## 6. Regenerate the codegen
 

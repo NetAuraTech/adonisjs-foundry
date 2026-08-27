@@ -5,7 +5,7 @@ import { useTemplates } from '~/components/cms/hooks/use_templates';
 import TemplateCard from './TemplateCard';
 
 interface TemplatePickerProps {
-	handleSelect: (template: Data.Template.Template) => void;
+	handleSelect: (template: Data.Cms.Template) => void;
 	handleClose: () => void;
 }
 

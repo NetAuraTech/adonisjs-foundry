@@ -1,10 +1,10 @@
 import emitter from '@adonisjs/core/services/emitter';
 import testUtils from '@adonisjs/core/services/test_utils';
 import { test } from '@japa/runner';
-import { PageFactory } from '#cms/factories/page_factory';
 import PageRevision from '#cms/models/page/page_revision';
 import PageTranslation from '#cms/models/page/page_translation';
 import Template from '#cms/models/template/template';
+import { PageFactory } from '#factories/cms/page_factory';
 import { createAdminUser, CMS_PERMISSIONS } from '#tests/helpers/create_admin_user';
 import { resetSharedState } from '#tests/helpers/shared_state';
 

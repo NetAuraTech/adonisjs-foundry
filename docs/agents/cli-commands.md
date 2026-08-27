@@ -13,18 +13,18 @@ node ace <command>
 
 ## Scaffolding
 
-| Command                           | Creates           | Location                            |
-| --------------------------------- | ----------------- | ----------------------------------- |
-| `node ace make:model <Name>`      | Model + migration | `app/models/` + database migrations |
-| `node ace make:controller <Name>` | Controller class  | `app/http/controllers/`             |
-| `node ace make:migration <name>`  | Migration file    | `database/migrations/`              |
-| `node ace make:service <Name>`    | Service class     | Use manually in correct domain path |
-| `node ace make:repository <Name>` | Repository class  | Use manually in correct domain path |
-| `node ace make:exception <Name>`  | Exception class   | `app/exceptions/`                   |
-| `node ace make:validator <Name>`  | Validator file    | `app/validators/`                   |
-| `node ace make:middleware <Name>` | Middleware class  | `app/http/middleware/`              |
-| `node ace make:event <Name>`      | Event class       | `app/events/`                       |
-| `node ace make:listener <Name>`   | Listener class    | `app/listeners/`                    |
+| Command                           | Creates           | Location                                                                  |
+| --------------------------------- | ----------------- | ------------------------------------------------------------------------- |
+| `node ace make:model <Name>`      | Model + migration | move it to `src/{domain}/models/` + database migrations                   |
+| `node ace make:controller <Name>` | Controller class  | `app/` — move it to `app/{domain}/controllers/{context}/`                 |
+| `node ace make:migration <name>`  | Migration file    | `database/migrations/`                                                    |
+| `node ace make:service <Name>`    | Service class     | Use manually in `src/{domain}/services/`                                  |
+| `node ace make:repository <Name>` | Repository class  | Use manually in `src/{domain}/repositories/`                              |
+| `node ace make:exception <Name>`  | Exception class   | Use manually in `src/{domain}/exceptions/`                                |
+| `node ace make:validator <Name>`  | Validator file    | Use manually in `app/{domain}/validators/`                                |
+| `node ace make:middleware <Name>` | Middleware class  | Use manually in `app/{domain}/middleware/` (core: `app/core/middleware/`) |
+| `node ace make:event <Name>`      | Event class       | `app/events/`                                                             |
+| `node ace make:listener <Name>`   | Listener class    | `app/listeners/`                                                          |
 
 ### Model scaffolding
 
@@ -80,5 +80,5 @@ This writes the `APP_KEY` value to `apps/web/.env`.
 ## Conventions
 
 - Always prefer Ace commands over manual file creation when available.
-- Model files go in `app/models/{area}/`, not the root of `models/`. If `ace make:model` places it at the root, move it to the correct domain folder.
+- Model files go in `src/{domain}/models/`. If `ace make:model` places it elsewhere, move it to the correct domain folder.
 - Migration names use snake_case with action + table: `add_slug_to_pages`, `create_tokens_table`.

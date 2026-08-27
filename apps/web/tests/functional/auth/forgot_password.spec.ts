@@ -1,8 +1,8 @@
-import emitter from '@adonisjs/core/services/emitter';
 import testUtils from '@adonisjs/core/services/test_utils';
 import limiter from '@adonisjs/limiter/services/main';
 import { test } from '@japa/runner';
 import { createVerifiedUser } from '#tests/helpers/create_verified_user';
+import { restoreMailClient, swapMailClient } from '#tests/helpers/mail';
 import { resetSharedState } from '#tests/helpers/shared_state';
 import { fieldError } from '#tests/helpers/validation';
 
@@ -12,16 +12,17 @@ import { fieldError } from '#tests/helpers/validation';
  * Replaces the Playwright browser E2E: we assert the HTTP contract a client
  * observes — the 302 to the login page for BOTH a known and an unknown email
  * (no user enumeration), the 422 field error on an invalid email format, and
- * the 429 after the throttle — instead of driving a real browser. The
- * `ForgotPassword` mail event is faked so the suite never touches a transport.
+ * the 429 after the throttle — instead of driving a real browser. The reset
+ * mail (sent synchronously through the mail client) is recorded in-memory so
+ * the suite never touches a transport.
  */
 test.group('Forgot password endpoint', (group) => {
 	group.each.setup(() => testUtils.db().truncate());
 	group.each.setup(resetSharedState);
 	group.each.setup(() => limiter.clear());
 	group.each.setup(() => {
-		emitter.fake();
-		return () => emitter.restore();
+		swapMailClient();
+		return () => restoreMailClient();
 	});
 	group.each.teardown(() => limiter.clear());
 

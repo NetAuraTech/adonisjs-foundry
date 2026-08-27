@@ -3,13 +3,13 @@ import { createRoot, type Root } from 'react-dom/client';
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import DashboardPage from '~/pages/core/admin/dashboard';
-import type { AdminDashboardTranslations } from '#helpers/i18n_payloads/dashboard';
+import type { AdminDashboardTranslations } from '#app/core/helpers/i18n_payloads/dashboard';
 import type { Data } from '@generated/data';
 import type { ReactNode } from 'react';
 
 /**
  * Conditional-rendering seam for the admin dashboard page: every core section
- * (auth, file) renders when its key is present in the payload and disappears
+ * (identity, file) renders when its key is present in the payload and disappears
  * when it is not — the contract that lets a pruned flavor drop a domain
  * without leaving empty figures behind.
  *
@@ -63,8 +63,8 @@ const translations: AdminDashboardTranslations = {
 	view_all: 'View all',
 };
 
-const coreStats: Data.Dashboard = {
-	auth: {
+const coreStats: Data.Core.Dashboard = {
+	identity: {
 		users: 2,
 		usersByRole: [
 			{ name: 'admin', count: 1 },
@@ -101,7 +101,7 @@ afterEach(async () => {
 	container.remove();
 });
 
-async function render(stats: Data.Dashboard): Promise<string> {
+async function render(stats: Data.Core.Dashboard): Promise<string> {
 	await act(async () => {
 		root.render(<DashboardPage stats={stats} translations={translations} />);
 	});
@@ -112,7 +112,7 @@ describe('DashboardPage', () => {
 	it('renders every core section when all keys are present', async () => {
 		const content = await render(coreStats);
 
-		// Auth section.
+		// Identity section.
 		expect(content).toContain('Users');
 		expect(content).toContain('1 admin');
 		expect(content).toContain('1 No role');
@@ -125,8 +125,8 @@ describe('DashboardPage', () => {
 	});
 
 	it('renders only the sections whose key is present', async () => {
-		const { file: _file, ...authOnlyStats } = coreStats;
-		const content = await render(authOnlyStats);
+		const { file: _file, ...identityOnlyStats } = coreStats;
+		const content = await render(identityOnlyStats);
 
 		expect(content).toContain('Users');
 		// The file section leaves nothing behind.
@@ -156,7 +156,7 @@ describe('DashboardPage | permission-based hiding', () => {
 		mockPageProps.props.currentUser.permissions = permissions;
 	}
 
-	it('hides the auth card when users.view is missing', async () => {
+	it('hides the identity card when users.view is missing', async () => {
 		setPermissions(['files.view']);
 		const content = await render(coreStats);
 

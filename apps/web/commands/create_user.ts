@@ -1,8 +1,8 @@
 import { BaseCommand } from '@adonisjs/core/ace';
-import { RegisterUserAction } from '#actions/auth/register_user_action';
-import { ListAllRolesAction } from '#actions/role/list_all_roles_action';
-import { UpdateUserAction } from '#actions/user/update_user_action';
-import { type Locale } from '#types/preferences';
+import { type Locale } from '#account/types/preferences';
+import { RegisterUserAction } from '#auth/actions/session/register_user_action';
+import { ListAllRolesAction } from '#identity/actions/role/list_all_roles_action';
+import { UpdateUserAction } from '#identity/actions/user/update_user_action';
 import type { CommandOptions } from '@adonisjs/core/types/ace';
 
 /**

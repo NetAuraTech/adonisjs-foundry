@@ -2,7 +2,7 @@ import { Heading } from '~/components/atoms/heading';
 import { Paragraph } from '~/components/atoms/paragraph';
 import { Section } from '~/components/atoms/section';
 import { useTranslation } from '~/hooks/use_translation';
-import type { HomeTranslations } from '#helpers/i18n_payloads/home';
+import type { HomeTranslations } from '#app/core/helpers/i18n_payloads/home';
 
 interface Props {
 	translations: HomeTranslations;
@@ -13,7 +13,7 @@ interface Props {
  *
  * The `inertia` flavor ships this as the canonical starting point: a minimal
  * page wired through the public layout, so a developer cloning the flavor
- * sees the expected `front.home` pattern from the first file they open.
+ * sees the expected `core.home.render` pattern from the first file they open.
  * Replace this with your own content.
  */
 export default function HomePage({ translations }: Props) {

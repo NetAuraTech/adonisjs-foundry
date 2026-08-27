@@ -1,8 +1,18 @@
 # Domain Services
 
-One service = one bounded context. Lives in `app/domain/services/{area}/{name}_service.ts`. Owns business logic, delegates persistence to a repository, never returns HTTP responses — only models, primitives, or `void`.
+One service = one bounded context. Lives in `src/{domain}/services/{area}/{name}_service.ts` — co-located with the domain's repositories and imported through the domain alias (`#core/services/...`, `#log/services/...`). Owns business logic, delegates persistence to a repository, never returns HTTP responses — only models, primitives, or `void`. Cross-domain services (cache, locks) live in `src/shared/services/`; registry and cross-domain business services (maintenance, dashboard, nav, sitemap, backup) live in `src/core/services/`.
 
-> **CMS exception (ADR-0001):** CMS services (page, template) live under `app/cms/domain/services/{area}/`, imported via `#cms/domain/services/...`. The layout above applies to everything outside the CMS module.
+> **CMS exception (ADR-0001):** CMS services (page, template) live under `src/cms/services/{area}/`, imported via `#cms/services/...`. The layout above applies to everything outside the CMS module.
+>
+> **Identity co-location:** identity services live under `src/identity/services/`, imported via `#identity/services/...` — co-located with the rest of the identity business module.
+>
+> **File co-location:** file services live under `src/file/services/`, imported via `#file/services/...`, and the permission catalog at `src/file/permissions.ts` — co-located with the rest of the file business module. The nav entries module is transport and lives at `app/file/nav.ts` (imported via `#app/file/nav`).
+>
+> **Log co-location:** log services live under `src/log/services/`, imported via `#log/services/...`, and the permission catalog at `src/log/permissions.ts` — co-located with the rest of the log business module. The nav entries module is transport and lives at `app/log/nav.ts` (imported via `#app/log/nav`).
+>
+> **Backup co-location:** backup services live under `src/backup/services/`, imported via `#backup/services/...` — co-located with the rest of the backup business module.
+>
+> **Core co-location:** core services live under `src/core/services/`, imported via `#core/services/...`, and the permission catalog at `src/core/permissions.ts` — co-located with the rest of the core business module. The nav entries module is transport and lives at `app/core/nav.ts` (imported via `#app/core/nav`).
 
 Method names describe the action, not a fixed CRUD contract. A service exposes
 whatever operations its bounded context needs. Don't force
@@ -54,7 +64,7 @@ The admin sidebar follows the same composition pattern: each domain owns a `{dom
 
 ## System permission catalog
 
-Permissions follow the same composition pattern. Each domain owns a `{domain}_permissions.ts` module exporting a `category → actions` const with `as const` (e.g. `app/domain/services/auth/auth_permissions.ts`), and the composition file `start/permissions.ts` spreads the per-domain catalogs into the single `permissionCatalog` matrix. The `permission_seeder` persists exactly that matrix, and `PermissionSlug`/`SystemRoleSlug` are derived from it — renaming a slug therefore touches exactly one file. `start/permissions.ts` is on the prune `REWRITE_ALLOWLIST`, so a flavor rewrites it to drop the catalogs of its pruned domains.
+Permissions follow the same composition pattern. Each domain owns a `{domain}_permissions.ts` module exporting a `category → actions` const with `as const` (e.g. `src/identity/permissions.ts`, `src/core/permissions.ts`), and the composition file `start/permissions.ts` spreads the per-domain catalogs into the single `permissionCatalog` matrix. The `permission_seeder` persists exactly that matrix, and `PermissionSlug`/`SystemRoleSlug` are derived from it — renaming a slug therefore touches exactly one file. `start/permissions.ts` is on the prune `REWRITE_ALLOWLIST`, so a flavor rewrites it to drop the catalogs of its pruned domains.
 
 ## Decision rule
 
@@ -65,4 +75,4 @@ DB-backed with custom logic → Standard service. Wraps one external system → 
 - Errors: typed exception class or `Object.assign(new Error(msg), { code: 'E_...' })` — both used, no strict preference enforced yet.
 - Logging: see /docs/agents/logging.md for conventions and categories.
 - Services may call other services directly when one operation depends on another's logic.
-- Swappable infrastructure (cache, storage, etc.) goes through a contract interface in `app/domain/contracts/` — changing backend = new container binding, no call-site changes.
+- Swappable infrastructure (cache, storage, etc.) goes through a contract interface in the owning domain's business module (e.g. `#core/contracts/mail_client`) — changing backend = new container binding, no call-site changes.

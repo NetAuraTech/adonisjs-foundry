@@ -9,9 +9,9 @@ import { test } from '@japa/runner';
  * same patterns, same middleware wiring.
  *
  * The assertions here cover routes shared by every flavor. CMS route names
- * (`admin.pages.*`, `admin.templates.*`, the `page.*` public front) are
- * asserted in `tests/integration/routes_structure_cms.spec.ts` so the
- * `inertia` flavor can prune them.
+ * (`admin.cms.pages.*`, `admin.cms.templates.*`, the `cms.page.*` public
+ * front) are asserted in `tests/integration/cms/routes_structure.spec.ts` so
+ * the `inertia` flavor can prune them.
  */
 test.group('Routes structure', (group) => {
 	group.each.setup(() => {
@@ -33,30 +33,34 @@ test.group('Routes structure', (group) => {
 			'auth.social.callback',
 			'auth.social.unlink',
 
-			// Settings (referenced by many controllers)
-			'settings.profile.render',
-			'settings.profile.execute',
-			'settings.account.render',
-			'settings.account.execute',
-			'settings.account.destroy',
-			'settings.preferences.render',
-			'settings.preferences.execute',
-			'settings.index',
+			// Account (referenced by many controllers)
+			'account.profile.render',
+			'account.profile.execute',
+			'account.account.render',
+			'account.account.execute',
+			'account.account.destroy',
+			'account.preferences.render',
+			'account.preferences.execute',
+			'account.index',
 
 			// Admin back-office
-			'admin.dashboard.render',
-			'admin.users.render',
-			'admin.users_create.render',
-			'admin.users_create.execute',
-			'admin.users_show.render',
-			'admin.users_update.render',
-			'admin.users_update.execute',
-			'admin.files.render',
-			'admin.file_folders.render',
+			'admin.core.dashboard.render',
+			'admin.core.maintenance.render',
+			'admin.core.maintenance.update',
+			'admin.core.maintenance.toggle',
+			'admin.identity.users.render',
+			'admin.identity.users_create.render',
+			'admin.identity.users_create.execute',
+			'admin.identity.users_show.render',
+			'admin.identity.users_update.render',
+			'admin.identity.users_update.execute',
+			'admin.file.files.render',
+			'admin.file.file_folders.render',
+			'admin.log.logs.render',
 
 			// SEO
-			'robots.show',
-			'sitemap.show',
+			'core.robots.show',
+			'core.sitemap.show',
 		];
 
 		for (const expectedName of expectedNames) {
@@ -79,14 +83,15 @@ test.group('Routes structure', (group) => {
 		const routes = json['root'];
 		const byName = new Map(routes.filter((r) => r.name).map((r) => [r.name!, r]));
 
-		// The home route is `page.home` on `main` and `front.home` in the
-		// `inertia` flavor — both must point at `/`.
-		const home = byName.get('page.home') ?? byName.get('front.home');
-		assert.ok(home, 'Expected a home route (page.home or front.home)');
+		// The home route is `core.home.render` in both flavors: the CMS page
+		// home on `main`, and the static core home in the `inertia` flavor.
+		// Both must point at `/`.
+		const home = byName.get('core.home.render');
+		assert.ok(home, 'Expected a home route (core.home.render)');
 		assert.equal(home!.pattern, '/');
 
-		// Settings index redirects to profile
-		assert.equal(byName.get('settings.index')?.pattern, '/settings');
+		// Account index redirects to profile
+		assert.equal(byName.get('account.index')?.pattern, '/settings');
 	});
 
 	test('admin routes are under /admin prefix', ({ assert }) => {
@@ -102,15 +107,15 @@ test.group('Routes structure', (group) => {
 		}
 	});
 
-	test('settings routes are under /settings prefix', ({ assert }) => {
+	test('account routes are under /settings prefix', ({ assert }) => {
 		const json = router.toJSON();
 		const routes = json['root'];
-		const settingsRoutes = routes.filter((r) => r.name?.startsWith('settings.'));
+		const accountRoutes = routes.filter((r) => r.name?.startsWith('account.'));
 
-		for (const route of settingsRoutes) {
+		for (const route of accountRoutes) {
 			assert.ok(
 				route.pattern.startsWith('/settings'),
-				`Settings route "${route.name}" should start with /settings prefix, got: ${route.pattern}`,
+				`Account route "${route.name}" should start with /settings prefix, got: ${route.pattern}`,
 			);
 		}
 	});

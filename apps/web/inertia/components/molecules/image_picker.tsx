@@ -17,14 +17,14 @@ interface ImagePickerProps {
 export function ImagePicker(props: ImagePickerProps) {
 	const { name, defaultValue, disabled, required, onChange, onBlur, ...inputProps } = props;
 	const [showFileManager, setShowFileManager] = useState<boolean>(false);
-	const [currentFile, setCurrentFile] = useState<Data.File | null>(null);
+	const [currentFile, setCurrentFile] = useState<Data.File.File | null>(null);
 	const ref = useRef<HTMLInputElement | null>(null);
 	const handleClick = () => {
 		ref.current?.focus();
 		setShowFileManager(true);
 	};
 
-	const handleChoose = (file: Data.File) => {
+	const handleChoose = (file: Data.File.File) => {
 		setCurrentFile(file);
 		triggerInputChange(file.id, ref.current);
 		handleClose();

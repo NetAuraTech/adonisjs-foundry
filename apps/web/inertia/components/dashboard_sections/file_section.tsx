@@ -16,13 +16,13 @@ import type { Data } from '@generated/data';
  */
 function FileStatCard({ stats, translations }: DashboardSectionCardProps) {
 	const { t } = useTranslation(translations);
-	const file: Data.Dashboard['file'] = stats.file;
+	const file: Data.Core.Dashboard['file'] = stats.file;
 
 	if (!file) return null;
 
 	return (
 		<CanAccess permission="files.view">
-			<StatCard icon="Folder" label={t('cards.files')} value={file.files} route="admin.files.render">
+			<StatCard icon="Folder" label={t('cards.files')} value={file.files} route="admin.file.files.render">
 				<Paragraph variant="muted" spacing="sm">
 					{`${t('cards.folders')}: ${file.fileFolders}`}
 				</Paragraph>
@@ -42,13 +42,13 @@ function FileStatCard({ stats, translations }: DashboardSectionCardProps) {
 
 function FileRecentCard({ stats, translations, formatDate }: DashboardSectionCardProps) {
 	const { t } = useTranslation(translations);
-	const file: Data.Dashboard['file'] = stats.file;
+	const file: Data.Core.Dashboard['file'] = stats.file;
 
 	if (!file) return null;
 
 	return (
 		<CanAccess permission="files.view">
-			<RecentCard title={t('recent.uploads')} viewAllRoute="admin.files.render" viewAllLabel={t('view_all')}>
+			<RecentCard title={t('recent.uploads')} viewAllRoute="admin.file.files.render" viewAllLabel={t('view_all')}>
 				{file.recentFiles.length === 0 ? (
 					<Paragraph variant="muted" spacing="xs" className="p-6">
 						{t('recent.empty')}

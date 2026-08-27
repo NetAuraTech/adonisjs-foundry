@@ -1,10 +1,28 @@
 import app from '@adonisjs/core/services/app';
-import { BuilderSessionService } from '#cms/domain/services/page/builder_session_service';
-import { BackupEngine } from '#services/backup/backup_engine';
-import { CacheService } from '#services/cache/cache_service';
-import { RedisCacheDriver } from '#services/cache/drivers/redis_cache_driver';
-import { LogService } from '#services/logging/log_service';
-import { MaintenanceService } from '#services/maintenance/maintenance_service';
+import mail from '@adonisjs/mail/services/main';
+import { BackupEngine } from '#backup/services/backup_engine';
+import { BuilderSessionService } from '#cms/services/page/builder_session_service';
+import { MailClientContract, type MailClientMessage } from '#core/contracts/mail_client';
+import { MaintenanceService } from '#core/services/maintenance_service';
+import { LogService } from '#log/services/log_service';
+import { RedisCacheDriver } from '#shared/services/cache/drivers/redis_cache_driver';
+import { CacheService } from '#shared/services/cache_service';
+
+/**
+ * Application-side mail client: a thin wrapper around the AdonisJS mail driver
+ * so the kernel {@link MailClientContract} is satisfied without the kernel
+ * importing the mail package.
+ */
+class AdonisMailClient extends MailClientContract {
+	async send({ to, subject, template, data }: MailClientMessage): Promise<void> {
+		await mail.send((message) => {
+			message
+				.to(to)
+				.subject(subject)
+				.htmlView(template, data ?? {});
+		});
+	}
+}
 
 /**
  * IoC container bindings.
@@ -82,3 +100,12 @@ app.container.singleton(MaintenanceService, async () => {
 	await service.initializeMemoryFallback();
 	return service;
 });
+
+// ─── MailClientContract (singleton) ──────────────────────────────────────────
+
+/**
+ * Binds the kernel {@link MailClientContract} to the AdonisJS mail driver.
+ * The kernel generic {@link MailService} resolves this through the container,
+ * keeping it decoupled from the mail package.
+ */
+app.container.bind(MailClientContract, () => new AdonisMailClient());

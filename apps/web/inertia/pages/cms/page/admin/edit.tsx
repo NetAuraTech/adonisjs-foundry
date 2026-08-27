@@ -18,12 +18,12 @@ import { useBuilderSync } from '~/components/cms/hooks/use_builder_sync';
 import { Field } from '~/components/molecules/field';
 import { CanAccess } from '~/guards/can_access';
 import { useTranslation } from '~/hooks/use_translation';
+import type { PageEditorTranslations } from '#app/cms/helpers/i18n_payloads/page_editor';
 import type { BuilderOperation } from '#cms/types/builder';
 import type { PageContent } from '#cms/types/page';
-import type { PageEditorTranslations } from '#helpers/i18n_payloads/page_editor';
 
 interface Props {
-	page: Data.Page.Page;
+	page: Data.Cms.Page;
 	translations: PageEditorTranslations;
 	availableRoutes: {
 		name: string | undefined;
@@ -121,7 +121,7 @@ export default function PagesEditPage({ page, translations }: Props) {
 		setSaveState('idle');
 
 		router.post(
-			urlFor('admin.pages_update.execute', { id: page.id }),
+			urlFor('admin.cms.pages_update.execute', { id: page.id }),
 			{
 				locale: activeLocale,
 				title,
@@ -154,7 +154,7 @@ export default function PagesEditPage({ page, translations }: Props) {
 	}, [handleSave]);
 	function handlePublish() {
 		router.post(
-			urlFor('admin.pages_update.publish', { id: page.id }),
+			urlFor('admin.cms.pages_update.publish', { id: page.id }),
 			{
 				locale: activeLocale,
 			},
@@ -165,7 +165,7 @@ export default function PagesEditPage({ page, translations }: Props) {
 	}
 	function handleUnpublish() {
 		router.post(
-			urlFor('admin.pages_update.unpublish', { id: page.id }),
+			urlFor('admin.cms.pages_update.unpublish', { id: page.id }),
 			{
 				locale: activeLocale,
 			},
@@ -293,7 +293,7 @@ export default function PagesEditPage({ page, translations }: Props) {
 										<CanAccess permission="pages.view">
 											<Button
 												variant="outline"
-												route="admin.page_revisions.index"
+												route="admin.cms.page_revisions.index"
 												routeParams={{
 													id: page.id,
 													translationId: currentTranslation?.id,
@@ -498,7 +498,7 @@ function AddTranslationButton({
 						variant="primary"
 						disabled={!form.data.locale || !form.data.title || !form.data.slug || form.processing}
 						onClick={() =>
-							form.post(urlFor('admin.page_translations.execute', { id: pageId }), {
+							form.post(urlFor('admin.cms.page_translations.execute', { id: pageId }), {
 								onSuccess: () => setOpen(false),
 							})
 						}

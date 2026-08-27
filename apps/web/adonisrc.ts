@@ -2,7 +2,7 @@ import { indexEntities } from '@adonisjs/core';
 import { defineConfig } from '@adonisjs/core/app';
 import { indexPages } from '@adonisjs/inertia';
 import { generateRegistry } from '@tuyau/core/hooks';
-import { restRoutesRegistryHook } from '#rest/rest_routes_registry_hook';
+import { restRoutesRegistryHook } from '#app/core/rest/rest_routes_registry_hook';
 
 export default defineConfig({
 	/*
@@ -33,19 +33,6 @@ export default defineConfig({
 		() => import('@adonisjs/inertia/commands'),
 		() => import('@adonisjs/mail/commands'),
 	],
-
-	/*
-  |--------------------------------------------------------------------------
-  | Directories
-  |--------------------------------------------------------------------------
-  |
-  */
-	directories: {
-		httpControllers: 'app/http/controllers',
-		transformers: 'app/data/transformers',
-		middleware: 'app/http/middleware',
-		services: 'app/domain/services',
-	},
 
 	/*
   |--------------------------------------------------------------------------
@@ -165,15 +152,15 @@ export default defineConfig({
 				transformers: {
 					enabled: true,
 					withSharedProps: true,
-					inertiaMiddlewareImportPath: '#middleware/core/inertia_middleware',
-					source: 'app/data/transformers',
-					importAlias: '#transformers',
+					inertiaMiddlewareImportPath: '#app/core/middleware/inertia_middleware',
+					source: 'app',
+					importAlias: '#app',
 					glob: ['**\/*transformer.ts'],
 				},
 				controllers: {
 					enabled: true,
-					source: 'app/http/controllers',
-					importAlias: '#controllers',
+					source: 'app',
+					importAlias: '#app',
 					glob: ['**\/*_controller.ts'],
 				},
 			}),

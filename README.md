@@ -509,14 +509,14 @@ Foundry implements a **custom role/permission system** without external authoriz
 
 ### Backend
 
-| Layer                  | Location                                         | Responsibility                                                  |
-| ---------------------- | ------------------------------------------------ | --------------------------------------------------------------- |
-| **Role model**         | `app/models/auth/role.ts`                        | Roles with `hasPermission()`, `isAdmin`, system role protection |
-| **Permission model**   | `app/models/auth/permission.ts`                  | Permissions with system permission protection                   |
-| **Pivot table**        | `role_permission`                                | Many-to-many relationship between roles and permissions         |
-| **Role service**       | `app/domain/services/auth/role_service.ts`       | Role business logic                                             |
-| **Permission service** | `app/domain/services/auth/permission_service.ts` | Permission business logic                                       |
-| **Seeders**            | `database/seeders/`                              | `role_seeder.ts`, `permission_seeder.ts` for default data       |
+| Layer                  | Location                            | Responsibility                                                  |
+| ---------------------- | ----------------------------------- | --------------------------------------------------------------- |
+| **Role model**         | `src/identity/models/role.ts`       | Roles with `hasPermission()`, `isAdmin`, system role protection |
+| **Permission model**   | `src/identity/models/permission.ts` | Permissions with system permission protection                   |
+| **Pivot table**        | `role_permission`                   | Many-to-many relationship between roles and permissions         |
+| **Role actions**       | `src/identity/actions/role/`        | Role business logic (create, update, delete, list)              |
+| **Permission actions** | `src/identity/actions/permission/`  | Permission business logic (create, update, delete, list)        |
+| **Seeders**            | `database/seeders/`                 | `role_seeder.ts`, `permission_seeder.ts` for default data       |
 
 Permission checking is done via model methods: `role.hasPermission(slug)`, `role.assignPermission(id)`, `role.syncPermissions(ids)`.
 
@@ -750,7 +750,8 @@ database/
 │                                           # create_pages_table, create_page_translations_table,
 │                                           # create_page_revisions_table, create_templates_table,
 │                                           # alter_pages_table
-├── seeders/                                # role_seeder.ts, permission_seeder.ts, page_seeder.ts, template_seeder.ts
+├── seeders/                                # role_seeder.ts, permission_seeder.ts,
+│                                           # cms/ (page_seeder.ts, template_seeder.ts)
 ├── schema.ts
 └── schema_rules.ts
 
@@ -805,9 +806,9 @@ inertia/
 
 resources/
 ├── lang/
-│   ├── en/                                 # admin.json, auth.json, builder.json, exceptions.json, page.json,
+│   ├── en/                                 # admin.json, auth.json, exceptions.json,
 │   │                                       # pagination.json, permissions.json, roles.json, settings.json,
-│   │                                       # template.json, validation.json
+│   │                                       # validation.json, cms/ (page.json, template.json, builder.json)
 │   └── fr/                                 # same namespaces as en/
 └── views/
     ├── emails/                             # account_email.edge, admin_invite_email.edge, auth_email.edge,
@@ -842,32 +843,26 @@ start/
 
 The project uses Node.js subpath imports for clean module resolution (paths relative to `apps/web/`):
 
-| Alias             | Path                        |
-| ----------------- | --------------------------- |
-| `#controllers/*`  | `app/http/controllers/*`    |
-| `#services/*`     | `app/domain/services/*`     |
-| `#repositories/*` | `app/domain/repositories/*` |
-| `#contracts/*`    | `app/domain/contracts/*`    |
-| `#models/*`       | `app/models/*`              |
-| `#transformers/*` | `app/data/transformers/*`   |
-| `#validators/*`   | `app/validators/*`          |
-| `#exceptions/*`   | `app/exceptions/*`          |
-| `#middleware/*`   | `app/http/middleware/*`     |
-| `#events/*`       | `app/events/*`              |
-| `#listeners/*`    | `app/listeners/*`           |
-| `#mails/*`        | `app/mails/*`               |
-| `#helpers/*`      | `app/helpers/*`             |
-| `#types/*`        | `app/types/*`               |
-
-| `#config/*` | `config/*` |
-| `#start/*` | `start/*` |
-| `#database/*` | `database/*` |
+| Alias          | Path                   |
+| -------------- | ---------------------- |
+| `#app/*`       | `app/*`                |
+| `#generated/*` | `.adonisjs/server/*`   |
+| `#types/*`     | `types/*`              |
+| `#providers/*` | `providers/*`          |
+| `#database/*`  | `database/*`           |
 | `#factories/*` | `database/factories/*` |
-| `#providers/*` | `providers/*` |
-| `#policies/*` | `app/policies/*` |
-| `#abilities/*` | `app/abilities/*` |
-| `#tests/*` | `tests/*` |
-| `#generated/*` | `.adonisjs/server/*` |
+| `#shared/*`    | `src/shared/*`         |
+| `#core/*`      | `src/core/*`           |
+| `#identity/*`  | `src/identity/*`       |
+| `#auth/*`      | `src/auth/*`           |
+| `#account/*`   | `src/account/*`        |
+| `#file/*`      | `src/file/*`           |
+| `#log/*`       | `src/log/*`            |
+| `#backup/*`    | `src/backup/*`         |
+| `#tests/*`     | `tests/*`              |
+| `#start/*`     | `start/*`              |
+| `#config/*`    | `config/*`             |
+| `#cms/*`       | `src/cms/*`            |
 
 ## Routes
 
@@ -1009,7 +1004,7 @@ These routes accept a Bearer token only — session cookies are ignored:
 
 ### LogService
 
-Foundry provides a centralised `LogService` (`app/domain/services/logging/log_service.ts`) that wraps AdonisJS's built-in logger. It offers typed convenience methods for each log level (`debug`, `info`, `warn`, `error`, `fatal`) and domain-specific helpers that automatically attach the correct category and structured context.
+Foundry provides a centralised `LogService` (`src/log/services/log_service.ts`) that wraps AdonisJS's built-in logger. It offers typed convenience methods for each log level (`debug`, `info`, `warn`, `error`, `fatal`) and domain-specific helpers that automatically attach the correct category and structured context.
 
 #### Log Categories
 
@@ -1031,7 +1026,7 @@ All entries include a timestamp, category, and optional context / metadata / err
 
 ### Exception Handler
 
-The global exception handler (`app/exceptions/handler.ts`) extends AdonisJS's built-in `ExceptionHandler`:
+The global exception handler (`app/core/exceptions/handler.ts`) extends AdonisJS's built-in `ExceptionHandler`:
 
 - **Debug mode** — verbose error display with stack traces (disabled in production)
 - **Status pages** — Inertia-rendered error pages (`errors/not_found` for 404, `errors/server_error` for 500–599)

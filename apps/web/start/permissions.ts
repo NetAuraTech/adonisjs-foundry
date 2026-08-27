@@ -4,8 +4,8 @@
 |--------------------------------------------------------------------------
 |
 | The composed list of system permission slugs for this flavor. Every
-| domain owns its own catalog const in `{domain}_permissions.ts` (see
-| `app/domain/services/*` and `app/cms/domain/services/*`); this file
+| domain owns its own catalog const in its business layer (e.g.
+| `src/identity/permissions.ts`, `src/cms/permissions.ts`); this file
 | composes those per-domain catalogs into the single matrix the permission
 | seeder persists. Adding or renaming a permission only touches that
 | domain's catalog file.
@@ -21,26 +21,23 @@
 |
 */
 
-import { pagePermissionCatalog } from '#cms/domain/services/page/page_permissions';
-import { templatePermissionCatalog } from '#cms/domain/services/template/template_permissions';
-import { authPermissionCatalog } from '#services/auth/auth_permissions';
-import { corePermissionCatalog, coreRoleSlugs } from '#services/core/core_permissions';
-import { filePermissionCatalog } from '#services/file/file_permissions';
-import { loggingPermissionCatalog } from '#services/logging/logging_permissions';
-import { maintenancePermissionCatalog } from '#services/maintenance/maintenance_permissions';
+import { cmsPermissionCatalog } from '#cms/permissions';
+import { corePermissionCatalog, coreRoleSlugs, maintenancePermissionCatalog } from '#core/permissions';
+import { filePermissionCatalog } from '#file/permissions';
+import { identityPermissionCatalog } from '#identity/permissions';
+import { loggingPermissionCatalog } from '#log/permissions';
 import type { PermissionSlugs, PermissionMap } from '#types/permissions';
 
 /**
  * The composed system permission catalog of this flavor: `category →
- * actions` matrix ordered by domain (core, auth, page, template, file,
+ * actions` matrix ordered by domain (core, identity, cms, file,
  * maintenance, logging). The permission seeder persists exactly this
  * matrix, so it is the single source of the persisted slugs.
  */
 export const permissionCatalog = {
 	...corePermissionCatalog,
-	...authPermissionCatalog,
-	...pagePermissionCatalog,
-	...templatePermissionCatalog,
+	...identityPermissionCatalog,
+	...cmsPermissionCatalog,
 	...filePermissionCatalog,
 	...maintenancePermissionCatalog,
 	...loggingPermissionCatalog,

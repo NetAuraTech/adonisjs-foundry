@@ -5,7 +5,7 @@ import { Label } from '~/components/atoms/label';
 import { Paragraph } from '~/components/atoms/paragraph';
 import { useTranslation } from '~/hooks/use_translation';
 import { humanSize } from '~/utils/file';
-import type { AdminFilesTranslations } from '#helpers/i18n_payloads/files_index';
+import type { AdminFilesTranslations } from '#app/file/helpers/i18n_payloads/files_index';
 
 interface FileUploadInputProps {
 	/** Input name attribute, used when inside a native <form> */
@@ -42,7 +42,7 @@ interface FileUploadInputProps {
  *
  * @example
  * // Inside an Inertia Form
- * <Form route="admin.files.upload">
+ * <Form route="admin.file.files.upload">
  *   <FileUploadInput name="file" accept="image/*,.pdf" maxSize={10 * 1024 * 1024} required />
  *   <Button type="submit">Upload</Button>
  * </Form>
