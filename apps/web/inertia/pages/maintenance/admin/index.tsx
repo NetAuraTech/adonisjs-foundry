@@ -13,8 +13,8 @@ import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminMaintenanceTranslations } from '#helpers/i18n_payloads/maintenance_index';
-import type { MaintenanceConfig } from '#types/maintenance';
+import type { AdminMaintenanceTranslations } from '#app/core/helpers/i18n_payloads/maintenance_index';
+import type { MaintenanceConfig } from '#core/types/maintenance';
 
 type MemoryConfigDto = {
 	enabled: boolean;
@@ -95,7 +95,7 @@ export default function MaintenancePage(props: PageProps) {
 
 					{/* Toggle Form */}
 					<Form
-						route="admin.settings.maintenance.update"
+						route="admin.core.maintenance.update"
 						className="grid gap-6"
 						onBefore={(visit) => {
 							const isValid = validation.validateAll(visit.data as Record<string, any>);

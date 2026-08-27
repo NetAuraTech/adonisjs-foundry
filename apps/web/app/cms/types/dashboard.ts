@@ -31,10 +31,10 @@ export interface DashboardTemplateSection {
  *
  * This augmentation lives inside the CMS module subtree, so pruning the CMS
  * (the `inertia` and `api` flavors) simply removes these keys from
- * `DashboardStats` — no import of `#types/dashboard` can break a flavor build.
+ * `DashboardStats` — no import of `#core/types/dashboard` can break a flavor build.
  * On `main`, the keys are fully type-safe.
  */
-declare module '#types/dashboard' {
+declare module '#core/types/dashboard' {
 	interface DashboardStats {
 		page?: DashboardPageSection;
 		template?: DashboardTemplateSection;

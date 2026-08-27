@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
-import { GetDashboardStatsAction } from '#actions/core/get_dashboard_stats_action';
 import DashboardTransformer from '#app/core/transformers/dashboard_transformer';
+import { GetDashboardStatsAction } from '#core/actions/get_dashboard_stats_action';
 import type { HttpContext } from '@adonisjs/core/http';
 
 /**

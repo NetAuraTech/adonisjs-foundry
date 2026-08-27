@@ -6,7 +6,7 @@ import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
 import { getDashboardSectionBundle } from '~/lib/dashboard_sections';
-import type { AdminDashboardTranslations } from '#helpers/i18n_payloads/dashboard';
+import type { AdminDashboardTranslations } from '#app/core/helpers/i18n_payloads/dashboard';
 
 interface Props {
 	stats: Data.Core.Dashboard;

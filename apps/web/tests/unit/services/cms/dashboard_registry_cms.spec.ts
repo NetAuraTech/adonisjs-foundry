@@ -1,6 +1,6 @@
 import { test } from '@japa/runner';
-import { DashboardRegistry } from '#services/core/dashboard_registry';
-import type { DashboardCollector, DashboardCollectorPayload } from '#types/dashboard';
+import { DashboardRegistry } from '#core/services/dashboard_registry';
+import type { DashboardCollector, DashboardCollectorPayload } from '#core/types/dashboard';
 
 const payload: DashboardCollectorPayload = { recentLimit: 5 };
 

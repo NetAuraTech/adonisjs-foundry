@@ -3,11 +3,11 @@ import BaseInertiaMiddleware from '@adonisjs/inertia/inertia_middleware';
 import { GetPreferencesAction } from '#account/actions/preferences/get_preferences_action';
 import { DEFAULT_PREFERENCES } from '#account/types/preferences';
 import UserTransformer from '#app/identity/transformers/user_transformer';
+import { NavRegistry } from '#core/services/nav_registry';
 import { buildCommonPayload } from '#helpers/i18n_payloads/common';
-import { NavRegistry } from '#services/core/nav_registry';
 import { I18nService } from '#services/i18n_service';
 import env from '#start/env';
-import type { AdminNavGroup } from '#types/nav';
+import type { AdminNavGroup } from '#core/types/nav';
 import type { HttpContext } from '@adonisjs/core/http';
 import type { NextFn } from '@adonisjs/core/types/http';
 

@@ -6,7 +6,7 @@ import { Paragraph } from '~/components/atoms/paragraph';
 import { Section } from '~/components/atoms/section';
 import { useInterval } from '~/hooks/use_interval';
 import { useTranslation } from '~/hooks/use_translation';
-import type { MaintenanceTranslations } from '#helpers/i18n_payloads/maintenance_index';
+import type { MaintenanceTranslations } from '#app/core/helpers/i18n_payloads/maintenance_front';
 
 interface PageProps {
 	message: string;

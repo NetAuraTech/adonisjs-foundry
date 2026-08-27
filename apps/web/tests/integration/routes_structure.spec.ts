@@ -44,7 +44,10 @@ test.group('Routes structure', (group) => {
 			'account.index',
 
 			// Admin back-office
-			'admin.dashboard.render',
+			'admin.core.dashboard.render',
+			'admin.core.maintenance.render',
+			'admin.core.maintenance.update',
+			'admin.core.maintenance.toggle',
 			'admin.identity.users.render',
 			'admin.identity.users_create.render',
 			'admin.identity.users_create.execute',
@@ -56,8 +59,8 @@ test.group('Routes structure', (group) => {
 			'admin.log.logs.render',
 
 			// SEO
-			'robots.show',
-			'sitemap.show',
+			'core.robots.show',
+			'core.sitemap.show',
 		];
 
 		for (const expectedName of expectedNames) {
@@ -80,10 +83,10 @@ test.group('Routes structure', (group) => {
 		const routes = json['root'];
 		const byName = new Map(routes.filter((r) => r.name).map((r) => [r.name!, r]));
 
-		// The home route is `page.home` on `main` and `front.home` in the
-		// `inertia` flavor — both must point at `/`.
-		const home = byName.get('page.home') ?? byName.get('front.home');
-		assert.ok(home, 'Expected a home route (page.home or front.home)');
+		// The home route is `page.home` on `main` (the CMS page home) and
+		// `core.home.render` in the `inertia` flavor — both must point at `/`.
+		const home = byName.get('page.home') ?? byName.get('core.home.render');
+		assert.ok(home, 'Expected a home route (page.home or core.home.render)');
 		assert.equal(home!.pattern, '/');
 
 		// Account index redirects to profile

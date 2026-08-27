@@ -199,6 +199,126 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/account/controllers/api/preferences_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'admin.core.dashboard.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/core/controllers/admin/dashboard_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/admin/dashboard_controller').default['render']>>>
+    }
+  }
+  'admin.core.maintenance.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/settings/maintenance'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/core/controllers/admin/maintenance_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/admin/maintenance_controller').default['render']>>>
+    }
+  }
+  'admin.core.maintenance.update': {
+    methods: ["POST"]
+    pattern: '/admin/settings/maintenance'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/core/controllers/admin/maintenance_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/admin/maintenance_controller').default['update']>>>
+    }
+  }
+  'admin.core.maintenance.toggle': {
+    methods: ["POST"]
+    pattern: '/admin/settings/maintenance/toggle'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/core/controllers/admin/maintenance_controller').default['toggle']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/admin/maintenance_controller').default['toggle']>>>
+    }
+  }
+  'api.v1.admin.core.dashboard.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/dashboard'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/core/controllers/api/dashboard_api_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/api/dashboard_api_controller').default['index']>>>
+    }
+  }
+  'api.v1.admin.core.maintenance.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/maintenance'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/core/controllers/api/maintenance_api_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/api/maintenance_api_controller').default['index']>>>
+    }
+  }
+  'api.v1.admin.core.maintenance.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/admin/maintenance'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/core/validators/maintenance').updateMaintenanceValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/core/validators/maintenance').updateMaintenanceValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/core/controllers/api/maintenance_api_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/api/maintenance_api_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.core.maintenance.toggle': {
+    methods: ["PUT"]
+    pattern: '/api/v1/admin/maintenance/toggle'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#app/core/validators/maintenance').toggleMaintenanceValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#app/core/validators/maintenance').toggleMaintenanceValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/core/controllers/api/maintenance_api_controller').default['toggle']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/api/maintenance_api_controller').default['toggle']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'core.sitemap.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/sitemap.xml'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/core/controllers/front/sitemap_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/front/sitemap_controller').default['show']>>>
+    }
+  }
+  'core.robots.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/robots.txt'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/core/controllers/front/robots_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/front/robots_controller').default['show']>>>
+    }
+  }
   'admin.file.files.render': {
     methods: ["GET","HEAD"]
     pattern: '/admin/files'
@@ -1215,8 +1335,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/health/controllers/health_controller').default['liveness']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/health/controllers/health_controller').default['liveness']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/core/controllers/health_controller').default['liveness']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/health_controller').default['liveness']>>>
     }
   }
   'health.readiness': {
@@ -1227,128 +1347,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/health/controllers/health_controller').default['readiness']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/health/controllers/health_controller').default['readiness']>>>
-    }
-  }
-  'sitemap.show': {
-    methods: ["GET","HEAD"]
-    pattern: '/sitemap.xml'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/core/controllers/front/sitemap_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/front/sitemap_controller').default['show']>>>
-    }
-  }
-  'robots.show': {
-    methods: ["GET","HEAD"]
-    pattern: '/robots.txt'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/core/controllers/front/robots_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/front/robots_controller').default['show']>>>
-    }
-  }
-  'admin.dashboard.render': {
-    methods: ["GET","HEAD"]
-    pattern: '/admin'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/core/controllers/admin/dashboard_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/admin/dashboard_controller').default['render']>>>
-    }
-  }
-  'admin.settings.maintenance.render': {
-    methods: ["GET","HEAD"]
-    pattern: '/admin/settings/maintenance'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/maintenance/controllers/admin/maintenance_controller').default['render']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/maintenance/controllers/admin/maintenance_controller').default['render']>>>
-    }
-  }
-  'admin.settings.maintenance.update': {
-    methods: ["POST"]
-    pattern: '/admin/settings/maintenance'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/maintenance/controllers/admin/maintenance_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/maintenance/controllers/admin/maintenance_controller').default['update']>>>
-    }
-  }
-  'admin.settings.maintenance.toggle': {
-    methods: ["POST"]
-    pattern: '/admin/settings/maintenance/toggle'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/maintenance/controllers/admin/maintenance_controller').default['toggle']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/maintenance/controllers/admin/maintenance_controller').default['toggle']>>>
-    }
-  }
-  'api.v1.admin.dashboard_api.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/dashboard'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/core/controllers/api/dashboard_api_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/api/dashboard_api_controller').default['index']>>>
-    }
-  }
-  'api.v1.admin.maintenance_api.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/maintenance'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/maintenance/controllers/api/maintenance_api_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/maintenance/controllers/api/maintenance_api_controller').default['index']>>>
-    }
-  }
-  'api.v1.admin.maintenance_api.update': {
-    methods: ["PUT"]
-    pattern: '/api/v1/admin/maintenance'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#app/core/validators/maintenance').updateMaintenanceValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#app/core/validators/maintenance').updateMaintenanceValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/maintenance/controllers/api/maintenance_api_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/maintenance/controllers/api/maintenance_api_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.maintenance_api.toggle': {
-    methods: ["PUT"]
-    pattern: '/api/v1/admin/maintenance/toggle'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#app/core/validators/maintenance').toggleMaintenanceValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#app/core/validators/maintenance').toggleMaintenanceValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#app/maintenance/controllers/api/maintenance_api_controller').default['toggle']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/maintenance/controllers/api/maintenance_api_controller').default['toggle']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#app/core/controllers/health_controller').default['readiness']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/core/controllers/health_controller').default['readiness']>>>
     }
   }
   'api.v1.admin.pages_api.index': {

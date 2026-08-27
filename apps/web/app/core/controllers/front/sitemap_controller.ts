@@ -1,5 +1,5 @@
 import { inject } from '@adonisjs/core';
-import { SitemapService } from '#services/core/sitemap_service';
+import { SitemapService } from '#core/services/sitemap_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 /**

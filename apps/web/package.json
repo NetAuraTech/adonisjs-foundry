@@ -36,7 +36,6 @@
     "#tests/*": "./tests/*.js",
     "#start/*": "./start/*.js",
     "#config/*": "./config/*.js",
-    "#actions/*": "./app/domain/actions/*.js",
     "#cms/*": "./app/cms/*.js"
   },
   "scripts": {

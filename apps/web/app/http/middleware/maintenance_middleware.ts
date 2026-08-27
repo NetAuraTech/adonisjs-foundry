@@ -1,5 +1,5 @@
-import MaintenanceException from '#exceptions/maintenance_exception';
-import { MaintenanceService } from '#services/maintenance/maintenance_service';
+import MaintenanceException from '#core/exceptions/maintenance_exception';
+import { MaintenanceService } from '#core/services/maintenance_service';
 import { permissions } from '#start/permissions';
 import type { HttpContext } from '@adonisjs/core/http';
 import type { NextFn } from '@adonisjs/core/types/http';

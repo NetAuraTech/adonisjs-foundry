@@ -1,5 +1,5 @@
 import { BaseCommand } from '@adonisjs/core/ace';
-import { MaintenanceService } from '#services/maintenance/maintenance_service';
+import { MaintenanceService } from '#core/services/maintenance_service';
 import type { CommandOptions } from '@adonisjs/core/types/ace';
 
 /**
