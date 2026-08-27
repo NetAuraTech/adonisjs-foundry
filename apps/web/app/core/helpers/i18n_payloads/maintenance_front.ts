@@ -1,4 +1,4 @@
-import type { BuildPayloadResult, I18nService } from '#services/i18n_service';
+import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_translator';
 
 /**
  * The flat i18n key mapping for the front-facing maintenance page shown to
@@ -19,9 +19,9 @@ export type MaintenanceTranslations = BuildPayloadResult<typeof MAINTENANCE_MAPP
 /**
  * Builds the resolved translation payload for the front-facing maintenance page.
  *
- * @param i18n - The request-scoped {@link I18nService}.
+ * @param i18n - The request-scoped {@link I18nTranslator}.
  * @returns The maintenance page `t` object with every UI string resolved.
  */
-export function buildMaintenanceIndexPayload(i18n: I18nService): MaintenanceTranslations {
+export function buildMaintenanceIndexPayload(i18n: I18nTranslator): MaintenanceTranslations {
 	return i18n.buildPayload(MAINTENANCE_MAPPING);
 }

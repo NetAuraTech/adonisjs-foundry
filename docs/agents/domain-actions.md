@@ -1,25 +1,13 @@
 ﻿# Domain Actions
 
-One action = one business operation. Lives in `app/domain/actions/{area}/{verb}_action.ts`. Owns a single use-case, delegates persistence to repositories, and exposes exactly one public method: `async execute(payload): Promise<T>`.
-
-> **CMS exception (ADR-0001):** CMS actions (page, template) live under `src/cms/actions/{area}/`, imported via `#cms/actions/...`. The layout above applies to everything outside the CMS module.
->
-> **Identity co-location:** identity actions (user, role, permission) live under `src/identity/actions/{area}/`, imported via `#identity/actions/...` — co-located with the identity domain's models, repositories and services in the `src/identity/` business module.
->
-> **File co-location:** file actions (file, file_folder) live under `src/file/actions/{area}/`, imported via `#file/actions/...` — co-located with the file domain's models, repositories and services in the `src/file/` business module.
->
-> **Log co-location:** log actions (log) live under `src/log/actions/{area}/`, imported via `#log/actions/...` — co-located with the log domain's models, repositories and services in the `src/log/` business module.
->
-> **Backup co-location:** backup actions (backup) live under `src/backup/actions/{area}/`, imported via `#backup/actions/...` — co-located with the backup domain's services and domain objects in the `src/backup/` business module.
->
-> **Core co-location:** core actions (dashboard stats, robots.txt) live under `src/core/actions/`, imported via `#core/actions/...` — co-located with the rest of the core business module.
+One action = one business operation. Lives in `src/{domain}/actions/{area}/{verb}_action.ts` — co-located with the domain's models, repositories and services, and imported through the domain alias (`#cms/actions/...`, `#identity/actions/...`, `#file/actions/...`). Owns a single use-case, delegates persistence to repositories, and exposes exactly one public method: `async execute(payload): Promise<T>`.
 
 ## Structure
 
 ```typescript
 import { inject } from '@adonisjs/core';
-import type Result from '#models/some/model';
-import { SomeRepository } from '#repositories/some_repository';
+import type File from '#file/models/file';
+import { FileRepository } from '#file/repositories/file_repository';
 import { LogService } from '#log/services/log_service';
 import { withTransaction } from '#shared/utils/with_transaction';
 
@@ -37,7 +25,7 @@ interface CreateSomethingPayload {
 @inject()
 export class CreateSomethingAction {
 	constructor(
-		protected repository: SomeRepository,
+		protected repository: FileRepository,
 		protected logService: LogService,
 	) {}
 
@@ -51,7 +39,7 @@ export class CreateSomethingAction {
 	 * @example
 	 * const result = await createSomethingAction.execute({ name: 'test', userId: 1 })
 	 */
-	async execute(payload: CreateSomethingPayload): Promise<Result> {
+	async execute(payload: CreateSomethingPayload): Promise<File> {
 		// 1. validate / check invariants, throw typed exception if violated
 		// 2. delegate persistence to this.repository
 		// 3. this.logService.logBusiness/logAuth/logSecurity(event, { userId }, metadata?)
@@ -66,7 +54,7 @@ export class CreateSomethingAction {
 - **Payload contract**: A single typed object parameter named `<ActionName>Payload`, colocated in the same file. No variadic or positional arguments.
 - **Constructor injection**: Use `@inject()` decorator and constructor injection for repositories and services. Prefer `protected` modifier on injected dependencies.
 - **Return types**: Model instance, primitive, or `void`. Never HTTP responses or Inertia payloads.
-- **Error handling**: Typed exceptions from `app/exceptions/` or coded errors with `{ code: 'E_...' }`.
+- **Error handling**: Typed exceptions from `src/{domain}/exceptions/` (or `src/core/exceptions/` for cross-domain ones) or coded errors with `{ code: 'E_...' }`.
 - **Logging**: Call LogService on meaningful mutations per `docs/agents/logging.md`; not on reads.
 
 ## Action Variants
@@ -123,8 +111,7 @@ src/
   backup/actions/        # backup
 ```
 
-> **(full flavor)** CMS actions (page, template) live under `src/cms/actions/{page,template}/`
-> — see the CMS module note at the top of this file.
+> **(full flavor)** CMS actions (page, template) live under `src/cms/actions/{page,template}/`.
 
 ## Documentation
 

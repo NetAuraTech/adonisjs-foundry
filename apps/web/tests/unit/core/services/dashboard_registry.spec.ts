@@ -75,10 +75,10 @@ test.group('DashboardRegistry', () => {
 
 		const builders = registry.getTranslationBuilders();
 		assert.lengthOf(builders, 2);
-		assert.deepEqual(builders[0]({} as unknown as import('#services/i18n_service').I18nService), {
+		assert.deepEqual(builders[0]({} as unknown as import('#core/contracts/i18n_translator').I18nTranslator), {
 			a: 'A',
 		});
-		assert.deepEqual(builders[1]({} as unknown as import('#services/i18n_service').I18nService), {
+		assert.deepEqual(builders[1]({} as unknown as import('#core/contracts/i18n_translator').I18nTranslator), {
 			b: 'B',
 		});
 	});

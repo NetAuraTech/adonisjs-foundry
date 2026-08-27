@@ -1,6 +1,6 @@
 # Domain Services
 
-One service = one bounded context. Lives in `app/domain/services/{area}/{name}_service.ts`. Owns business logic, delegates persistence to a repository, never returns HTTP responses — only models, primitives, or `void`.
+One service = one bounded context. Lives in `src/{domain}/services/{area}/{name}_service.ts` — co-located with the domain's repositories and imported through the domain alias (`#core/services/...`, `#log/services/...`). Owns business logic, delegates persistence to a repository, never returns HTTP responses — only models, primitives, or `void`. Cross-domain services (cache, locks) live in `src/shared/services/`; registry and cross-domain business services (maintenance, dashboard, nav, sitemap, backup) live in `src/core/services/`.
 
 > **CMS exception (ADR-0001):** CMS services (page, template) live under `src/cms/services/{area}/`, imported via `#cms/services/...`. The layout above applies to everything outside the CMS module.
 >

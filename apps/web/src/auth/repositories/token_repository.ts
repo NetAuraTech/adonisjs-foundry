@@ -6,10 +6,10 @@ import { TOKEN_TYPES, type FullToken, type TokenType } from '#auth/enums/token_t
 import InvalidTokenException from '#auth/exceptions/invalid_token_exception';
 import MaxAttemptsExceededException from '#auth/exceptions/max_attempts_exceeded_exception';
 import TokenModel from '#auth/models/token';
+import { BaseRepository } from '#core/repositories/base_repository';
 import { transactionContext } from '#core/services/transaction_context';
 import User from '#identity/models/user';
 import { LogService } from '#log/services/log_service';
-import { BaseRepository } from '#repositories/base_repository';
 import { type FindOptions } from '#types/core';
 
 /**

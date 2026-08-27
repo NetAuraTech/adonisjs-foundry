@@ -6,7 +6,7 @@ import { Paragraph } from '~/components/atoms/paragraph';
 import { Section } from '~/components/atoms/section';
 import { CanAccess } from '~/guards/can_access';
 import { useTranslation } from '~/hooks/use_translation';
-import type { TranslationNodes } from '#helpers/i18n_payloads/nest';
+import type { TranslationNodes } from '#app/core/helpers/i18n_payloads/nest';
 
 const tabs = [
 	{ id: 'profile', label: 'header.tabs.profile', route: 'account.profile.render' },

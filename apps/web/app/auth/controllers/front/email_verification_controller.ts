@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
+import { I18nService } from '#app/core/helpers/i18n_service';
 import { VerifyEmailAction } from '#auth/actions/email_verification/verify_email_action';
-import { I18nService } from '#services/i18n_service';
 import type { FullToken } from '#auth/enums/token_type';
 import type { HttpContext } from '@adonisjs/core/http';
 

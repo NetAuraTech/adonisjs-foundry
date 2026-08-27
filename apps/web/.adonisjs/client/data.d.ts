@@ -17,7 +17,7 @@ import type IdentityPermissionTransformer from '#app/identity/transformers/permi
 import type IdentityRoleTransformer from '#app/identity/transformers/role_transformer'
 import type IdentityUserTransformer from '#app/identity/transformers/user_transformer'
 import type LogLogEntryTransformer from '#app/log/transformers/log_entry_transformer'
-import type InertiaMiddleware from '#middleware/core/inertia_middleware'
+import type InertiaMiddleware from '#app/core/middleware/inertia_middleware'
 
 export namespace Data {
   export namespace Cms {

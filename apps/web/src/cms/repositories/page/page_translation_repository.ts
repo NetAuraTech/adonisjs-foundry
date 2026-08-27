@@ -1,6 +1,6 @@
 import PageTranslation from '#cms/models/page/page_translation';
+import { BaseRepository } from '#core/repositories/base_repository';
 import { transactionContext } from '#core/services/transaction_context';
-import { BaseRepository } from '#repositories/base_repository';
 import type { PageContent, PageStatus } from '#cms/types/page';
 import type { DateTime } from 'luxon';
 

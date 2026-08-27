@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { type HttpContext } from '@adonisjs/core/http';
-import { handle } from '#rest/rest_adapter';
-import UsersResource from '#rest/users_resource';
+import { handle } from '#app/core/rest/rest_adapter';
+import UsersResource from '#app/identity/rest/users_resource';
 
 /**
  * POST /api/v1/admin/users — create a user from the admin REST API.

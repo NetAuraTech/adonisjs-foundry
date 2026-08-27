@@ -18,8 +18,7 @@ export default defineConfig({
 					{
 						patterns: [
 							{
-								regex:
-									'^#(?:app|controllers|exceptions|mails|listeners|events|middleware|rest|transformers|validators|policies|abilities)/',
+								regex: '^#app/',
 								message: 'Business code under src must not depend on the app delivery layer.',
 							},
 							{
@@ -39,10 +38,9 @@ export default defineConfig({
 					{
 						patterns: [
 							{
-								regex:
-									'^#(?:controllers|exceptions|models|mails|listeners|events|generated|rest|repositories|services|contracts|transformers|validators|providers|policies|abilities|database|factories|shared|tests|config|actions|prune)/',
+								regex: '^#(?:generated|providers|database|factories|shared|tests|config)/',
 								message:
-									'Frontend code must not import backend modules. Type-only imports belong in the shared aliases (#types, #helpers, #start, #cms, #middleware).',
+									'Frontend code must not import backend modules. Shared imports belong in the #app, #cms, #types and #start aliases and the domain business-layer aliases.',
 							},
 							{
 								regex: '^\\.\\./(\\.\\./)*app(?:/|$)',

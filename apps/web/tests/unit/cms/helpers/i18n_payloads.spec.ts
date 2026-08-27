@@ -7,7 +7,7 @@ import { buildPagesIndexPayload } from '#app/cms/helpers/i18n_payloads/pages_ind
 import { buildPagesShowPayload } from '#app/cms/helpers/i18n_payloads/pages_show';
 import { buildTemplatesEditPayload } from '#app/cms/helpers/i18n_payloads/templates_edit';
 import { buildTemplatesIndexPayload } from '#app/cms/helpers/i18n_payloads/templates_index';
-import { I18nService } from '#services/i18n_service';
+import { I18nService } from '#app/core/helpers/i18n_service';
 import { FakeI18n } from '#tests/helpers/fake_i18n';
 import { LOCALES, loadLang, emptyLeaves } from '#tests/helpers/i18n_lang_loader';
 import type { I18n } from '@adonisjs/i18n';

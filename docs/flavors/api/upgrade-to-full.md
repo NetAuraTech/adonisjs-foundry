@@ -30,13 +30,13 @@ from `apps/web/`.
 
 ## 1. Recover the frontend tree
 
-| Artifact                    | From (`main`)                                    |
-| --------------------------- | ------------------------------------------------ |
-| Frontend app and pages      | `inertia`                                        |
-| Frontend project reference  | `tsconfig.inertia.json`                          |
-| Vite / Vitest configs       | `vite.config.ts`, `vitest.config.ts`             |
-| Inertia / Vite config files | `config/inertia.ts`, `config/vite.ts`            |
-| Inertia middleware          | `app/http/middleware/core/inertia_middleware.ts` |
+| Artifact                    | From (`main`)                               |
+| --------------------------- | ------------------------------------------- |
+| Frontend app and pages      | `inertia`                                   |
+| Frontend project reference  | `tsconfig.inertia.json`                     |
+| Vite / Vitest configs       | `vite.config.ts`, `vitest.config.ts`        |
+| Inertia / Vite config files | `config/inertia.ts`, `config/vite.ts`       |
+| Inertia middleware          | `app/core/middleware/inertia_middleware.ts` |
 
 Then reinstall the packages pruned by the manifest (into the app workspace):
 

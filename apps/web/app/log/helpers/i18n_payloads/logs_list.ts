@@ -1,4 +1,4 @@
-import type { BuildPayloadResult, I18nService } from '#services/i18n_service';
+import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_translator';
 
 /**
  * The flat i18n key mapping for the admin logs listing page.
@@ -58,9 +58,9 @@ export type AdminLogsIndexTranslations = BuildPayloadResult<typeof LOGS_MAPPING>
 /**
  * Builds the resolved translation payload for the admin logs listing page.
  *
- * @param i18n - The request-scoped {@link I18nService}.
+ * @param i18n - The request-scoped {@link I18nTranslator}.
  * @returns The logs listing `t` object with every UI string resolved.
  */
-export function buildLogsListPayload(i18n: I18nService): AdminLogsIndexTranslations {
+export function buildLogsListPayload(i18n: I18nTranslator): AdminLogsIndexTranslations {
 	return i18n.buildPayload(LOGS_MAPPING);
 }

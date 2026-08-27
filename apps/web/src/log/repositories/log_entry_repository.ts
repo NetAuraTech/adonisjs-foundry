@@ -1,5 +1,5 @@
+import { BaseRepository } from '#core/repositories/base_repository';
 import LogEntry from '#log/models/log_entry';
-import { BaseRepository } from '#repositories/base_repository';
 import type { CreateLogEntryInput } from '#log/types/logging';
 import type { DateTime } from 'luxon';
 

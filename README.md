@@ -843,38 +843,26 @@ start/
 
 The project uses Node.js subpath imports for clean module resolution (paths relative to `apps/web/`):
 
-| Alias             | Path                        |
-| ----------------- | --------------------------- |
-| `#app/*`          | `app/*`                     |
-| `#exceptions/*`   | `app/exceptions/*`          |
-| `#helpers/*`      | `app/helpers/*`             |
-| `#models/*`       | `app/models/*`              |
-| `#generated/*`    | `.adonisjs/server/*`        |
-| `#middleware/*`   | `app/http/middleware/*`     |
-| `#rest/*`         | `app/http/rest/*`           |
-| `#repositories/*` | `app/domain/repositories/*` |
-| `#services/*`     | `app/domain/services/*`     |
-| `#contracts/*`    | `app/domain/contracts/*`    |
-| `#types/*`        | `app/types/*`               |
-| `#validators/*`   | `app/validators/*`          |
-| `#providers/*`    | `providers/*`               |
-| `#policies/*`     | `app/policies/*`            |
-| `#abilities/*`    | `app/abilities/*`           |
-| `#database/*`     | `database/*`                |
-| `#factories/*`    | `database/factories/*`      |
-| `#shared/*`       | `src/shared/*`              |
-| `#core/*`         | `src/core/*`                |
-| `#identity/*`     | `src/identity/*`            |
-| `#auth/*`         | `src/auth/*`                |
-| `#account/*`      | `src/account/*`             |
-| `#file/*`         | `src/file/*`                |
-| `#log/*`          | `src/log/*`                 |
-| `#backup/*`       | `src/backup/*`              |
-| `#cms/*`          | `src/cms/*`                 |
-| `#tests/*`        | `tests/*`                   |
-| `#start/*`        | `start/*`                   |
-| `#config/*`       | `config/*`                  |
-| `#generated/*`    | `.adonisjs/server/*`        |
+| Alias          | Path                   |
+| -------------- | ---------------------- |
+| `#app/*`       | `app/*`                |
+| `#generated/*` | `.adonisjs/server/*`   |
+| `#types/*`     | `types/*`              |
+| `#providers/*` | `providers/*`          |
+| `#database/*`  | `database/*`           |
+| `#factories/*` | `database/factories/*` |
+| `#shared/*`    | `src/shared/*`         |
+| `#core/*`      | `src/core/*`           |
+| `#identity/*`  | `src/identity/*`       |
+| `#auth/*`      | `src/auth/*`           |
+| `#account/*`   | `src/account/*`        |
+| `#file/*`      | `src/file/*`           |
+| `#log/*`       | `src/log/*`            |
+| `#backup/*`    | `src/backup/*`         |
+| `#tests/*`     | `tests/*`              |
+| `#start/*`     | `start/*`              |
+| `#config/*`    | `config/*`             |
+| `#cms/*`       | `src/cms/*`            |
 
 ## Routes
 
@@ -1038,7 +1026,7 @@ All entries include a timestamp, category, and optional context / metadata / err
 
 ### Exception Handler
 
-The global exception handler (`app/exceptions/handler.ts`) extends AdonisJS's built-in `ExceptionHandler`:
+The global exception handler (`app/core/exceptions/handler.ts`) extends AdonisJS's built-in `ExceptionHandler`:
 
 - **Debug mode** — verbose error display with stack traces (disabled in production)
 - **Status pages** — Inertia-rendered error pages (`errors/not_found` for 404, `errors/server_error` for 500–599)

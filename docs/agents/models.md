@@ -1,14 +1,8 @@
 ﻿# Models
 
-Lucid models live in `app/models/{area}/{name}.ts`. Each model extends a generated schema class from `database/schema.ts` that contains column definitions. The model file adds relations, hooks, scopes, and helpers on top of the schema.
+Lucid models live in `src/{domain}/models/{name}.ts` (area subdirectories for large domains) — co-located with the domain's actions, repositories and services, and imported through the domain alias (`#identity/models/...`, `#cms/models/...`). Each model extends a generated schema class from `database/schema.ts` that contains column definitions. The model file adds relations, hooks, scopes, and helpers on top of the schema.
 
-> **CMS co-location (ADR-0001):** CMS models (page, template) live under `src/cms/models/`, imported via `#cms/models/...` — co-located with the CMS domain's actions, repositories and services in the `src/cms/` business module. Transport layers (controllers, routes, validators, transformers, REST resources) live under `app/cms/`.
->
-> **Identity co-location:** identity models (user, role, permission) live under `src/identity/models/`, imported via `#identity/models/...` — co-located with the identity domain's actions, repositories and services in the `src/identity/` business module.
->
-> **File co-location:** file models (file, file_alt, file_folder) live under `src/file/models/`, imported via `#file/models/...` — co-located with the file domain's actions, repositories and services in the `src/file/` business module.
->
-> **Log co-location:** log models (log_entry) live under `src/log/models/`, imported via `#log/models/...` — co-located with the log domain's actions, repositories and services in the `src/log/` business module.
+> The transport layer (controllers, routes, validators, transformers, REST resources) stays under `app/{domain}/`, co-located per domain; the business layer (models, actions, repositories, services, exceptions) stays under `src/{domain}/`.
 
 ## Structure
 
@@ -45,7 +39,7 @@ Lucid hooks (`@beforeSave`, `@afterFetch`, etc.) run outside the IoC container �
 ```typescript
 @beforeDelete()
 static async cleanup(foo: Foo) {
-  const { CleanupService } = await import('#services/cleanup_service')
+  const { CleanupService } = await import('#file/services/cleanup_service')
   const service = new CleanupService()
   await service.removeAssets(foo.id)
 }
@@ -81,12 +75,12 @@ public static published = scope((query) => {
 })
 ```
 
-Scopes are for filtering logic intrinsic to the model. Conditional request-driven filters belong in `PaginationService` via `ConditionalFilter`, not as model scopes.
+Scopes are for filtering logic intrinsic to the model. Conditional request-driven filters are composed in the repository (or service) that builds the query, not as model scopes.
 
 ## Conventions
 
 - One file per model, named after the entity (`user.ts`, `token.ts`).
-- Models grouped by domain area under `app/models/` (e.g. `core/`). Migrated domains live co-located instead: `src/{domain}/models/` (identity, file, log) and `src/cms/models/` (CMS).
+- Models live co-located under `src/{domain}/models/` (identity, file, log, account, auth, core) and `src/cms/models/` (CMS).
 - Relations use arrow functions for lazy resolution: `@belongsTo(() => Role)`.
 - Computed properties use `@computed()` decorator when they derive from model state.
 - A model never imports another repository directly outside a hook — cross-entity composition belongs in the service layer.

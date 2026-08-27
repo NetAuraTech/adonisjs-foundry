@@ -1,4 +1,4 @@
-import { createI18nEntry, type BuildPayloadResult, type I18nService } from '#services/i18n_service';
+import { createI18nEntry, type BuildPayloadResult, type I18nTranslator } from '#core/contracts/i18n_translator';
 
 /**
  * The flat i18n key mapping for the permission create/edit form.
@@ -38,9 +38,9 @@ export type AdminPermissionsFormTranslations = BuildPayloadResult<typeof PERMISS
 /**
  * Builds the translation payload for the permission create/edit form.
  *
- * @param i18n - The request-scoped {@link I18nService}.
+ * @param i18n - The request-scoped {@link I18nTranslator}.
  * @returns The permission form `t` object with every UI string resolved.
  */
-export function buildPermissionsFormPayload(i18n: I18nService): AdminPermissionsFormTranslations {
+export function buildPermissionsFormPayload(i18n: I18nTranslator): AdminPermissionsFormTranslations {
 	return i18n.buildPayload(PERMISSIONS_FORM_MAPPING);
 }

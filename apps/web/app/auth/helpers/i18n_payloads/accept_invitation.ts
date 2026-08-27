@@ -1,4 +1,4 @@
-import { createI18nEntry, type BuildPayloadResult, type I18nService } from '#services/i18n_service';
+import { createI18nEntry, type BuildPayloadResult, type I18nTranslator } from '#core/contracts/i18n_translator';
 
 /**
  * The flat i18n key mapping for the invitation acceptance page. `banner.title` is
@@ -41,11 +41,11 @@ export type AcceptInvitationTranslations = BuildPayloadResult<typeof ACCEPT_INVI
 /**
  * Builds the resolved translation payload for the invitation acceptance page.
  *
- * @param i18n - The request-scoped {@link I18nService}.
+ * @param i18n - The request-scoped {@link I18nTranslator}.
  * @param email - The email address the invitation was sent to.
  * @returns The invitation `t` object with every UI string resolved.
  */
-export function buildAcceptInvitationPayload(i18n: I18nService, email: string) {
+export function buildAcceptInvitationPayload(i18n: I18nTranslator, email: string) {
 	return i18n.buildPayload({
 		...ACCEPT_INVITATION_MAPPING,
 		banner: {

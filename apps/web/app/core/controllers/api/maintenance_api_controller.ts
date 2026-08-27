@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
-import MaintenanceResource from '#rest/maintenance_resource';
-import { handle } from '#rest/rest_adapter';
+import MaintenanceResource from '#app/core/rest/maintenance_resource';
+import { handle } from '#app/core/rest/rest_adapter';
 import type { HttpContext } from '@adonisjs/core/http';
 
 /**

@@ -1,4 +1,4 @@
-import type { BuildPayloadResult, I18nService } from '#services/i18n_service';
+import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_translator';
 
 /**
  * The flat i18n key mapping for the registration page.
@@ -34,9 +34,9 @@ export type RegisterTranslations = BuildPayloadResult<typeof REGISTER_MAPPING>;
 /**
  * Builds the resolved translation payload for the registration page.
  *
- * @param i18n - The request-scoped {@link I18nService}.
+ * @param i18n - The request-scoped {@link I18nTranslator}.
  * @returns The registration `t` object with every UI string resolved.
  */
-export function buildRegisterPayload(i18n: I18nService): RegisterTranslations {
+export function buildRegisterPayload(i18n: I18nTranslator): RegisterTranslations {
 	return i18n.buildPayload(REGISTER_MAPPING);
 }

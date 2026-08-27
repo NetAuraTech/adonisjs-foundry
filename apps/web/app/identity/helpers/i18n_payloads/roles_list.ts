@@ -1,7 +1,7 @@
-import { nestTranslation, type TranslationNodes } from '#helpers/i18n_payloads/nest';
-import { createI18nEntry } from '#services/i18n_service';
+import { nestTranslation, type TranslationNodes } from '#app/core/helpers/i18n_payloads/nest';
+import { createI18nEntry } from '#core/contracts/i18n_translator';
+import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_translator';
 import type Role from '#identity/models/role';
-import type { BuildPayloadResult, I18nService } from '#services/i18n_service';
 
 /**
  * The flat i18n key mapping for the roles listing page. The `roles` node is
@@ -53,11 +53,11 @@ export type AdminRolesIndexTranslations = BuildPayloadResult<typeof ROLES_LIST_M
  *
  * Includes one `roles.{slug...}` entry per role (system or custom).
  *
- * @param i18n - The request-scoped {@link I18nService}.
+ * @param i18n - The request-scoped {@link I18nTranslator}.
  * @param roles - The roles to build per-role entries for.
  * @returns The roles listing `t` object with every UI string resolved.
  */
-export function buildRolesListPayload(i18n: I18nService, roles: Role[]): AdminRolesIndexTranslations {
+export function buildRolesListPayload(i18n: I18nTranslator, roles: Role[]): AdminRolesIndexTranslations {
 	const roleEntries: TranslationNodes = {};
 
 	for (const role of roles) {

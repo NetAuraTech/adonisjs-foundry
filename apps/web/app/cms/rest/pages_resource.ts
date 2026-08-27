@@ -9,6 +9,7 @@ import {
 	publishPageValidator,
 	createTranslationValidator,
 } from '#app/cms/validators/page';
+import { type RestEndpoint } from '#app/core/rest/rest_adapter';
 import { ChangePageStatusAction } from '#cms/actions/page/change_page_status_action';
 import { CreatePageAction } from '#cms/actions/page/create_page_action';
 import { CreateTranslationAction } from '#cms/actions/page/create_translation_action';
@@ -20,7 +21,6 @@ import { RestoreRevisionAction } from '#cms/actions/page/restore_revision_action
 import { SetHomepageAction } from '#cms/actions/page/set_homepage_action';
 import { ToggleRevisionKeepAction } from '#cms/actions/page/toggle_revision_keep_action';
 import { UpdatePageAction } from '#cms/actions/page/update_page_action';
-import { type RestEndpoint } from '#rest/rest_adapter';
 import type Page from '#cms/models/page/page';
 import type PageRevision from '#cms/models/page/page_revision';
 import type PageTranslation from '#cms/models/page/page_translation';
@@ -64,7 +64,7 @@ export interface PagesEndpoints {
  *
  * Owns the `/api/v1/admin/pages` endpoint declarations (including
  * translations and revisions) consumed by the REST `handle` adapter
- * (`#rest/rest_adapter`); the controllers reduce to one-line dispatch over
+ * (`#app/core/rest/rest_adapter`); the controllers reduce to one-line dispatch over
  * `endpoints`.
  */
 @inject()

@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { type HttpContext } from '@adonisjs/core/http';
-import FoldersResource from '#rest/folders_resource';
-import { handle } from '#rest/rest_adapter';
+import { handle } from '#app/core/rest/rest_adapter';
+import FoldersResource from '#app/file/rest/folders_resource';
 
 /**
  * DELETE /api/v1/admin/folders/:id — delete a folder from the admin REST API.

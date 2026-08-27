@@ -1,6 +1,6 @@
 import { Data } from '@generated/data';
 import { useTranslation } from '~/hooks/use_translation';
-import type { TranslationNodes } from '#helpers/i18n_payloads/nest';
+import type { TranslationNodes } from '#app/core/helpers/i18n_payloads/nest';
 
 export enum StatusEnum {
 	VERIFIED = 'VERIFIED',

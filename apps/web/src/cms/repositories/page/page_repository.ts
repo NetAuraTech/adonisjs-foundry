@@ -1,6 +1,6 @@
 import Page from '#cms/models/page/page';
+import { BaseRepository } from '#core/repositories/base_repository';
 import { transactionContext } from '#core/services/transaction_context';
-import { BaseRepository } from '#repositories/base_repository';
 import type { PageStatus } from '#cms/types/page';
 import type { PaginationFilters } from '#types/pagination';
 import type { ModelPaginatorContract } from '@adonisjs/lucid/types/model';

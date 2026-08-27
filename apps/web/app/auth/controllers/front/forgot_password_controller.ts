@@ -1,9 +1,9 @@
 import { inject } from '@adonisjs/core';
 import { buildForgotPasswordPayload } from '#app/auth/helpers/i18n_payloads/forgot_password';
 import { forgotPasswordValidator } from '#app/auth/validators/auth';
+import { I18nService } from '#app/core/helpers/i18n_service';
 import { SendPasswordResetAction } from '#auth/actions/password/send_password_reset_action';
 import User from '#identity/models/user';
-import { I18nService } from '#services/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

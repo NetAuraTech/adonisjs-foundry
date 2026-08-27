@@ -1,4 +1,4 @@
-import type InertiaMiddleware from '#middleware/core/inertia_middleware';
+import type InertiaMiddleware from '#app/core/middleware/inertia_middleware';
 import type { JSONDataTypes } from '@adonisjs/core/types/transformers';
 import type { InferFlashData } from '@adonisjs/inertia/types';
 import type { Data } from '@generated/data';

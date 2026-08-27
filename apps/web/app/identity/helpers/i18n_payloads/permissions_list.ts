@@ -1,7 +1,8 @@
-import { nestTranslation, permissionCategoryKey, type TranslationNodes } from '#helpers/i18n_payloads/nest';
-import { createI18nEntry } from '#services/i18n_service';
+import { nestTranslation, type TranslationNodes } from '#app/core/helpers/i18n_payloads/nest';
+import { permissionCategoryKey } from '#app/identity/helpers/i18n_payloads/permission_category';
+import { createI18nEntry } from '#core/contracts/i18n_translator';
+import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_translator';
 import type Permission from '#identity/models/permission';
-import type { BuildPayloadResult, I18nService } from '#services/i18n_service';
 
 /**
  * The flat i18n key mapping for the permissions listing page. The per-permission
@@ -50,12 +51,12 @@ export type AdminPermissionsIndexTranslations = BuildPayloadResult<typeof PERMIS
  * per-category labels (`categories.{...}`) so the frontend can group by
  * category.
  *
- * @param i18n - The request-scoped {@link I18nService}.
+ * @param i18n - The request-scoped {@link I18nTranslator}.
  * @param permissions - The permissions to build data-driven entries for.
  * @returns The permissions listing `t` object with every UI string resolved.
  */
 export function buildPermissionsListPayload(
-	i18n: I18nService,
+	i18n: I18nTranslator,
 	permissions: Permission[],
 ): AdminPermissionsIndexTranslations {
 	const categories: TranslationNodes = {};

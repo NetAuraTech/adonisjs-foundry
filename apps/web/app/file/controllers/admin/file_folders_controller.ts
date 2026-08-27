@@ -1,4 +1,5 @@
 import { inject } from '@adonisjs/core';
+import { I18nService } from '#app/core/helpers/i18n_service';
 import { buildFileFoldersPayload } from '#app/file/helpers/i18n_payloads/file_folders';
 import FileFolderTransformer from '#app/file/transformers/file_folder_transformer';
 import { createFolderValidator, updateFolderValidator, showFileValidator } from '#app/file/validators/file';
@@ -6,7 +7,6 @@ import { CreateFolderAction } from '#file/actions/file_folder/create_folder_acti
 import { DeleteFolderAction } from '#file/actions/file_folder/delete_folder_action';
 import { ListRootFoldersAction } from '#file/actions/file_folder/list_root_folders_action';
 import { RenameFolderAction } from '#file/actions/file_folder/rename_folder_action';
-import { I18nService } from '#services/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()
