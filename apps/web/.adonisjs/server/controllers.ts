@@ -39,6 +39,36 @@ export const controllers = {
       Social: () => import('#app/auth/controllers/front/social_controller'),
     },
   },
+  cms: {
+    admin: {
+      PageRevisions: () => import('#app/cms/controllers/admin/page_revisions_controller'),
+      PageTranslations: () => import('#app/cms/controllers/admin/page_translations_controller'),
+      Pages: () => import('#app/cms/controllers/admin/pages_controller'),
+      PagesCreate: () => import('#app/cms/controllers/admin/pages_create_controller'),
+      PagesPreview: () => import('#app/cms/controllers/admin/pages_preview_controller'),
+      PagesShow: () => import('#app/cms/controllers/admin/pages_show_controller'),
+      PagesUpdate: () => import('#app/cms/controllers/admin/pages_update_controller'),
+      Templates: () => import('#app/cms/controllers/admin/templates_controller'),
+      TemplatesPreview: () => import('#app/cms/controllers/admin/templates_preview_controller'),
+    },
+    api: {
+      BuilderOperations: () => import('#app/cms/controllers/api/builder_operations_controller'),
+      PageRevisionsApi: () => import('#app/cms/controllers/api/page_revisions_api_controller'),
+      PageTranslationsApi: () => import('#app/cms/controllers/api/page_translations_api_controller'),
+      PagesApi: () => import('#app/cms/controllers/api/pages_api_controller'),
+      PagesCreateApi: () => import('#app/cms/controllers/api/pages_create_api_controller'),
+      PagesDeleteApi: () => import('#app/cms/controllers/api/pages_delete_api_controller'),
+      PagesPreviewToken: () => import('#app/cms/controllers/api/pages_preview_token_controller'),
+      PagesShowApi: () => import('#app/cms/controllers/api/pages_show_api_controller'),
+      PagesUpdateApi: () => import('#app/cms/controllers/api/pages_update_api_controller'),
+      Templates: () => import('#app/cms/controllers/api/templates_controller'),
+      TemplatesPreviewToken: () => import('#app/cms/controllers/api/templates_preview_token_controller'),
+    },
+    front: {
+      Contact: () => import('#app/cms/controllers/front/contact_controller'),
+      Page: () => import('#app/cms/controllers/front/page_controller'),
+    },
+  },
   core: {
     admin: {
       Dashboard: () => import('#app/core/controllers/admin/dashboard_controller'),
@@ -107,42 +137,6 @@ export const controllers = {
     },
     api: {
       LogsApi: () => import('#app/log/controllers/api/logs_api_controller'),
-    },
-  },
-  page: {
-    admin: {
-      PageRevisions: () => import('#app/page/controllers/admin/page_revisions_controller'),
-      PageTranslations: () => import('#app/page/controllers/admin/page_translations_controller'),
-      Pages: () => import('#app/page/controllers/admin/pages_controller'),
-      PagesCreate: () => import('#app/page/controllers/admin/pages_create_controller'),
-      PagesPreview: () => import('#app/page/controllers/admin/pages_preview_controller'),
-      PagesShow: () => import('#app/page/controllers/admin/pages_show_controller'),
-      PagesUpdate: () => import('#app/page/controllers/admin/pages_update_controller'),
-    },
-    api: {
-      BuilderOperations: () => import('#app/page/controllers/api/builder_operations_controller'),
-      PageRevisionsApi: () => import('#app/page/controllers/api/page_revisions_api_controller'),
-      PageTranslationsApi: () => import('#app/page/controllers/api/page_translations_api_controller'),
-      PagesApi: () => import('#app/page/controllers/api/pages_api_controller'),
-      PagesCreateApi: () => import('#app/page/controllers/api/pages_create_api_controller'),
-      PagesDeleteApi: () => import('#app/page/controllers/api/pages_delete_api_controller'),
-      PagesPreviewToken: () => import('#app/page/controllers/api/pages_preview_token_controller'),
-      PagesShowApi: () => import('#app/page/controllers/api/pages_show_api_controller'),
-      PagesUpdateApi: () => import('#app/page/controllers/api/pages_update_api_controller'),
-    },
-    front: {
-      Contact: () => import('#app/page/controllers/front/contact_controller'),
-      Page: () => import('#app/page/controllers/front/page_controller'),
-    },
-  },
-  template: {
-    admin: {
-      Templates: () => import('#app/template/controllers/admin/templates_controller'),
-      TemplatesPreview: () => import('#app/template/controllers/admin/templates_preview_controller'),
-    },
-    api: {
-      Templates: () => import('#app/template/controllers/api/templates_controller'),
-      TemplatesPreviewToken: () => import('#app/template/controllers/api/templates_preview_token_controller'),
     },
   },
 }

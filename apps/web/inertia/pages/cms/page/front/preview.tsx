@@ -9,7 +9,7 @@ import type { BroadcastPayload } from '#cms/types/builder';
 import type { ResolvedPageContent } from '#cms/types/page';
 
 interface PreviewPageProps {
-	page: Data.Page.PageTranslation;
+	page: Data.Cms.PageTranslation;
 	editable: boolean;
 }
 

@@ -16,10 +16,10 @@ import { CanAccess } from '~/guards/can_access';
 import { useMenu } from '~/hooks/use_admin';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminTemplatesTranslations } from '#helpers/i18n_payloads/templates_index';
+import type { AdminTemplatesTranslations } from '#app/cms/helpers/i18n_payloads/templates_index';
 
 interface TemplatesIndexPageProps {
-	templates: Data.Template.Template[];
+	templates: Data.Cms.Template[];
 	filters: {
 		type?: string;
 		block_type?: string;
@@ -36,7 +36,7 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
 
 	const [regeneratingId, setRegeneratingId] = useState<number | null>(null);
 
-	async function handleRegenerate(template: Data.Template.Template) {
+	async function handleRegenerate(template: Data.Cms.Template) {
 		setRegeneratingId(template.id);
 		try {
 			const { fileId } = await captureTemplateThumbnail({
@@ -45,7 +45,7 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
 				csrfToken: pageProps.csrfToken,
 			});
 			router.put(
-				urlFor('admin.templates.update', { id: template.id }),
+				urlFor('admin.cms.templates.update', { id: template.id }),
 				{ thumbnailId: fileId },
 				{ preserveScroll: true },
 			);
@@ -59,7 +59,7 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
 	return (
 		<AdminMain
 			title={t('title')}
-			icon={getEntryIcon('admin.templates.render')}
+			icon={getEntryIcon('admin.cms.templates.render')}
 			action={
 				<div className="max-w-xs text-right">
 					<p className="text-xs font-medium text-ink">{t('create_guidance.value')}</p>
@@ -69,7 +69,7 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
 		>
 			<Card
 				header={
-					<Form route="admin.templates.render" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+					<Form route="admin.cms.templates.render" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
 						<Field
 							type="text"
 							name="search"
@@ -152,7 +152,7 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
 										<CanAccess permission="templates.view">
 											<Button
 												variant="icon"
-												route="admin.templates.edit"
+												route="admin.cms.templates.edit"
 												routeParams={{ id: template.id }}
 												title={t('actions.edit', { name: template.name })}
 												fitContent
@@ -165,7 +165,7 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
 												onBefore={() => {
 													return window.confirm(t('delete.confirm'));
 												}}
-												route="admin.templates.destroy"
+												route="admin.cms.templates.destroy"
 												routeParams={{ id: template.id }}
 											>
 												<Button
@@ -190,7 +190,7 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
 	);
 }
 
-function ThumbnailCanvas({ template, placeholder }: { template: Data.Template.Template; placeholder: string }) {
+function ThumbnailCanvas({ template, placeholder }: { template: Data.Cms.Template; placeholder: string }) {
 	if (!template.thumbnail?.url) {
 		return (
 			<div className="h-40 w-full rounded-lg border border-dashed border-edge bg-sunken flex flex-col items-center justify-center gap-1">

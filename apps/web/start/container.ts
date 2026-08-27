@@ -1,7 +1,7 @@
 import app from '@adonisjs/core/services/app';
 import mail from '@adonisjs/mail/services/main';
 import { BackupEngine } from '#backup/services/backup_engine';
-import { BuilderSessionService } from '#cms/domain/services/page/builder_session_service';
+import { BuilderSessionService } from '#cms/services/page/builder_session_service';
 import { MailClientContract, type MailClientMessage } from '#core/contracts/mail_client';
 import { MaintenanceService } from '#core/services/maintenance_service';
 import { LogService } from '#log/services/log_service';

@@ -45,6 +45,44 @@ export interface ApiDefinition {
             execute: typeof routes['api.v1.admin.account.preferences.execute']
           }
         }
+        cms: {
+          pages: {
+            index: typeof routes['api.v1.admin.cms.pages.index']
+            store: typeof routes['api.v1.admin.cms.pages.store']
+            show: typeof routes['api.v1.admin.cms.pages.show']
+            update: typeof routes['api.v1.admin.cms.pages.update']
+            destroy: typeof routes['api.v1.admin.cms.pages.destroy']
+            publish: typeof routes['api.v1.admin.cms.pages.publish']
+            unpublish: typeof routes['api.v1.admin.cms.pages.unpublish']
+            setHomepage: typeof routes['api.v1.admin.cms.pages.set_homepage']
+          }
+          pageTranslations: {
+            store: typeof routes['api.v1.admin.cms.page_translations.store']
+          }
+          pageRevisions: {
+            index: typeof routes['api.v1.admin.cms.page_revisions.index']
+            restore: typeof routes['api.v1.admin.cms.page_revisions.restore']
+            toggle: typeof routes['api.v1.admin.cms.page_revisions.toggle']
+          }
+          pagesPreview: {
+            token: typeof routes['api.v1.admin.cms.pages_preview.token']
+          }
+          templates: {
+            index: typeof routes['api.v1.admin.cms.templates.index']
+            store: typeof routes['api.v1.admin.cms.templates.store']
+            update: typeof routes['api.v1.admin.cms.templates.update']
+            destroy: typeof routes['api.v1.admin.cms.templates.destroy']
+            createFromPage: typeof routes['api.v1.admin.cms.templates.create_from_page']
+          }
+          templatesPreview: {
+            token: typeof routes['api.v1.admin.cms.templates_preview.token']
+          }
+          builderOperations: {
+            execute: typeof routes['api.v1.admin.cms.builder_operations.execute']
+            presence: typeof routes['api.v1.admin.cms.builder_operations.presence']
+            saveDraft: typeof routes['api.v1.admin.cms.builder_operations.save_draft']
+          }
+        }
         core: {
           dashboard: {
             index: typeof routes['api.v1.admin.core.dashboard.index']
@@ -98,50 +136,6 @@ export interface ApiDefinition {
             index: typeof routes['api.v1.admin.log.logs.index']
           }
         }
-        pagesApi: {
-          index: typeof routes['api.v1.admin.pages_api.index']
-          setHomepage: typeof routes['api.v1.admin.pages_api.set_homepage']
-        }
-        pagesCreateApi: {
-          store: typeof routes['api.v1.admin.pages_create_api.store']
-        }
-        pagesShowApi: {
-          show: typeof routes['api.v1.admin.pages_show_api.show']
-        }
-        pagesUpdateApi: {
-          update: typeof routes['api.v1.admin.pages_update_api.update']
-          publish: typeof routes['api.v1.admin.pages_update_api.publish']
-          unpublish: typeof routes['api.v1.admin.pages_update_api.unpublish']
-        }
-        pagesDeleteApi: {
-          destroy: typeof routes['api.v1.admin.pages_delete_api.destroy']
-        }
-        pageTranslationsApi: {
-          store: typeof routes['api.v1.admin.page_translations_api.store']
-        }
-        pageRevisionsApi: {
-          index: typeof routes['api.v1.admin.page_revisions_api.index']
-          restore: typeof routes['api.v1.admin.page_revisions_api.restore']
-          toggle: typeof routes['api.v1.admin.page_revisions_api.toggle']
-        }
-        pagesPreviewToken: {
-          token: typeof routes['api.v1.admin.pages_preview_token.token']
-        }
-        templates: {
-          index: typeof routes['api.v1.admin.templates.index']
-          store: typeof routes['api.v1.admin.templates.store']
-          update: typeof routes['api.v1.admin.templates.update']
-          destroy: typeof routes['api.v1.admin.templates.destroy']
-          createFromPage: typeof routes['api.v1.admin.templates.create_from_page']
-        }
-        templatesPreviewToken: {
-          token: typeof routes['api.v1.admin.templates_preview_token.token']
-        }
-        builderOperations: {
-          execute: typeof routes['api.v1.admin.builder_operations.execute']
-          presence: typeof routes['api.v1.admin.builder_operations.presence']
-          saveDraft: typeof routes['api.v1.admin.builder_operations.save_draft']
-        }
       }
       auth: {
         login: {
@@ -172,6 +166,48 @@ export interface ApiDefinition {
     }
   }
   admin: {
+    cms: {
+      pages: {
+        render: typeof routes['admin.cms.pages.render']
+        setHomepage: typeof routes['admin.cms.pages.set_homepage']
+        destroy: typeof routes['admin.cms.pages.destroy']
+      }
+      pagesCreate: {
+        render: typeof routes['admin.cms.pages_create.render']
+        execute: typeof routes['admin.cms.pages_create.execute']
+      }
+      pagesShow: {
+        render: typeof routes['admin.cms.pages_show.render']
+      }
+      pagesUpdate: {
+        render: typeof routes['admin.cms.pages_update.render']
+        execute: typeof routes['admin.cms.pages_update.execute']
+        publish: typeof routes['admin.cms.pages_update.publish']
+        unpublish: typeof routes['admin.cms.pages_update.unpublish']
+      }
+      pageTranslations: {
+        execute: typeof routes['admin.cms.page_translations.execute']
+      }
+      pageRevisions: {
+        index: typeof routes['admin.cms.page_revisions.index']
+        restore: typeof routes['admin.cms.page_revisions.restore']
+        toggleKeep: typeof routes['admin.cms.page_revisions.toggle_keep']
+      }
+      pagesPreview: {
+        render: typeof routes['admin.cms.pages_preview.render']
+      }
+      templates: {
+        render: typeof routes['admin.cms.templates.render']
+        execute: typeof routes['admin.cms.templates.execute']
+        applyToPage: typeof routes['admin.cms.templates.apply_to_page']
+        update: typeof routes['admin.cms.templates.update']
+        destroy: typeof routes['admin.cms.templates.destroy']
+        edit: typeof routes['admin.cms.templates.edit']
+      }
+      templatesPreview: {
+        render: typeof routes['admin.cms.templates_preview.render']
+      }
+    }
     core: {
       dashboard: {
         render: typeof routes['admin.core.dashboard.render']
@@ -247,48 +283,22 @@ export interface ApiDefinition {
         render: typeof routes['admin.log.logs.render']
       }
     }
-    pages: {
-      render: typeof routes['admin.pages.render']
-      setHomepage: typeof routes['admin.pages.set_homepage']
-      destroy: typeof routes['admin.pages.destroy']
+  }
+  cms: {
+    contact: {
+      execute: typeof routes['cms.contact.execute']
     }
-    pagesCreate: {
-      render: typeof routes['admin.pages_create.render']
-      execute: typeof routes['admin.pages_create.execute']
-    }
-    pagesShow: {
-      render: typeof routes['admin.pages_show.render']
-    }
-    pagesUpdate: {
-      render: typeof routes['admin.pages_update.render']
-      execute: typeof routes['admin.pages_update.execute']
-      publish: typeof routes['admin.pages_update.publish']
-      unpublish: typeof routes['admin.pages_update.unpublish']
-    }
-    pageTranslations: {
-      execute: typeof routes['admin.page_translations.execute']
-    }
-    pageRevisions: {
-      index: typeof routes['admin.page_revisions.index']
-      restore: typeof routes['admin.page_revisions.restore']
-      toggleKeep: typeof routes['admin.page_revisions.toggle_keep']
-    }
-    pagesPreview: {
-      render: typeof routes['admin.pages_preview.render']
-    }
-    templates: {
-      render: typeof routes['admin.templates.render']
-      execute: typeof routes['admin.templates.execute']
-      applyToPage: typeof routes['admin.templates.apply_to_page']
-      update: typeof routes['admin.templates.update']
-      destroy: typeof routes['admin.templates.destroy']
-      edit: typeof routes['admin.templates.edit']
-    }
-    templatesPreview: {
-      render: typeof routes['admin.templates_preview.render']
+    page: {
+      localised: {
+        render: typeof routes['cms.page.localised.render']
+      }
+      render: typeof routes['cms.page.render']
     }
   }
   core: {
+    home: {
+      render: typeof routes['core.home.render']
+    }
     sitemap: {
       show: typeof routes['core.sitemap.show']
     }
@@ -335,15 +345,5 @@ export interface ApiDefinition {
   health: {
     liveness: typeof routes['health.liveness']
     readiness: typeof routes['health.readiness']
-  }
-  contact: {
-    execute: typeof routes['contact.execute']
-  }
-  page: {
-    home: typeof routes['page.home']
-    localised: {
-      render: typeof routes['page.localised.render']
-    }
-    render: typeof routes['page.render']
   }
 }

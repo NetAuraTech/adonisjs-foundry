@@ -1,6 +1,6 @@
 import { test } from '@japa/runner';
 import { withTransaction } from '#core/services/with_transaction';
-import { UserFactory } from '#database/factories/user_factory';
+import { UserFactory } from '#factories/identity/user_factory';
 import LogEntry from '#log/models/log_entry';
 import { LogService } from '#log/services/log_service';
 import { LogCategory, LogLevel } from '#log/types/logging';

@@ -3,8 +3,4 @@
  * DO NOT EDIT manually
  */
 
-export const listeners = {
-  page: {
-    SendContactFormEmail: () => import('#listeners/page/send_contact_form_email'),
-  },
-}
+export const listeners = {}

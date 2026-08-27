@@ -1,7 +1,7 @@
 import testUtils from '@adonisjs/core/services/test_utils';
 import { test } from '@japa/runner';
 import Template from '#cms/models/template/template';
-import { FileFactory } from '#factories/file_factory';
+import { FileFactory } from '#factories/file/file_factory';
 import { createAdminUser, CMS_PERMISSIONS } from '#tests/helpers/create_admin_user';
 import { parseInertiaPage } from '#tests/helpers/inertia_page';
 import { resetSharedState } from '#tests/helpers/shared_state';

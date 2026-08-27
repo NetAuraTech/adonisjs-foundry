@@ -1,5 +1,5 @@
 import { test } from '@japa/runner';
-import { UserFactory, RoleFactory } from '#factories/user_factory';
+import { UserFactory, RoleFactory } from '#factories/identity/user_factory';
 import { UserRepository } from '#identity/repositories/user_repository';
 
 test.group('UserRepository', () => {

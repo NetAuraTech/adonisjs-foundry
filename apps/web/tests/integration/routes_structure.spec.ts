@@ -9,9 +9,9 @@ import { test } from '@japa/runner';
  * same patterns, same middleware wiring.
  *
  * The assertions here cover routes shared by every flavor. CMS route names
- * (`admin.pages.*`, `admin.templates.*`, the `page.*` public front) are
- * asserted in `tests/integration/routes_structure_cms.spec.ts` so the
- * `inertia` flavor can prune them.
+ * (`admin.cms.pages.*`, `admin.cms.templates.*`, the `cms.page.*` public
+ * front) are asserted in `tests/integration/cms/routes_structure.spec.ts` so
+ * the `inertia` flavor can prune them.
  */
 test.group('Routes structure', (group) => {
 	group.each.setup(() => {
@@ -83,10 +83,11 @@ test.group('Routes structure', (group) => {
 		const routes = json['root'];
 		const byName = new Map(routes.filter((r) => r.name).map((r) => [r.name!, r]));
 
-		// The home route is `page.home` on `main` (the CMS page home) and
-		// `core.home.render` in the `inertia` flavor — both must point at `/`.
-		const home = byName.get('page.home') ?? byName.get('core.home.render');
-		assert.ok(home, 'Expected a home route (page.home or core.home.render)');
+		// The home route is `core.home.render` in both flavors: the CMS page
+		// home on `main`, and the static core home in the `inertia` flavor.
+		// Both must point at `/`.
+		const home = byName.get('core.home.render');
+		assert.ok(home, 'Expected a home route (core.home.render)');
 		assert.equal(home!.pattern, '/');
 
 		// Account index redirects to profile

@@ -2,8 +2,8 @@ import React from 'react';
 import { Button } from '~/components/atoms/button';
 import { Icon } from '~/components/atoms/icon';
 import { getBlockCatalog } from './block_types';
+import type { PageEditorTranslations } from '#app/cms/helpers/i18n_payloads/page_editor';
 import type { BlockType } from '#cms/types/page';
-import type { PageEditorTranslations } from '#helpers/i18n_payloads/page_editor';
 
 // Feather-style icon paths (inline SVG)
 const ICONS: Record<string, React.ReactNode> = {

@@ -2,7 +2,7 @@
 
 One action = one business operation. Lives in `app/domain/actions/{area}/{verb}_action.ts`. Owns a single use-case, delegates persistence to repositories, and exposes exactly one public method: `async execute(payload): Promise<T>`.
 
-> **CMS exception (ADR-0001):** CMS actions (page, template) live under `app/cms/domain/actions/{area}/`, imported via `#cms/domain/actions/...`. The layout above applies to everything outside the CMS module.
+> **CMS exception (ADR-0001):** CMS actions (page, template) live under `src/cms/actions/{area}/`, imported via `#cms/actions/...`. The layout above applies to everything outside the CMS module.
 >
 > **Identity co-location:** identity actions (user, role, permission) live under `src/identity/actions/{area}/`, imported via `#identity/actions/...` — co-located with the identity domain's models, repositories and services in the `src/identity/` business module.
 >
@@ -123,7 +123,7 @@ src/
   backup/actions/        # backup
 ```
 
-> **(full flavor)** CMS actions (page, template) live under `app/cms/domain/actions/{page,template}/`
+> **(full flavor)** CMS actions (page, template) live under `src/cms/actions/{page,template}/`
 > — see the CMS module note at the top of this file.
 
 ## Documentation

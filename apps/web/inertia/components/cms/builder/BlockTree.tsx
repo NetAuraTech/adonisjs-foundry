@@ -11,9 +11,9 @@ import { createBlock, getBlockDescriptor } from './block_types';
 import BlockPicker from './BlockPicker';
 import SaveBlockTemplateModal from './SaveBlockTemplateModal';
 import TemplatePicker from './TemplatePicker';
+import type { PageEditorTranslations } from '#app/cms/helpers/i18n_payloads/page_editor';
 import type { BuilderOperation } from '#cms/types/builder';
 import type { Block, BlockType, PageContent } from '#cms/types/page';
-import type { PageEditorTranslations } from '#helpers/i18n_payloads/page_editor';
 import type { Data } from '@generated/data';
 import type { LockState } from '~/components/cms/hooks/use_builder_sync';
 
@@ -103,7 +103,7 @@ export default function BlockTree({
 	const csrfToken = pageProps.csrfToken;
 	const locale = (pageProps.locale as string) ?? 'en';
 
-	function insertTemplateBlock(template: Data.Template.Template, parentId: 'root' | string) {
+	function insertTemplateBlock(template: Data.Cms.Template, parentId: 'root' | string) {
 		const rootBlock = template?.content?.blocks?.[0];
 		if (!rootBlock) return;
 
@@ -296,7 +296,7 @@ function BlockNode(props: {
 	onAddChild: (pid: string) => void;
 	onPickBlock: (type: BlockType, pid: string) => void;
 	onAddTemplateChild: (pid: string) => void;
-	onPickTemplate: (template: Data.Template.Template, pid: string) => void;
+	onPickTemplate: (template: Data.Cms.Template, pid: string) => void;
 	handleCloseBlockPicker: () => void;
 	handleCloseTemplatePicker: () => void;
 }) {

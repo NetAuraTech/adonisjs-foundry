@@ -51,7 +51,7 @@ function createFakePageContext(
 }
 
 test.group('handle', () => {
-	test('renders the Inertia page with the props built by `page.render` on display methods', async ({ assert }) => {
+	test('renders the Inertia page with the props built by `cms.page.render` on display methods', async ({ assert }) => {
 		const { ctx, calls } = createFakePageContext('GET', { search: 'ada' }, {});
 		let seen: { prepared?: unknown; payload?: unknown; result?: unknown } | undefined;
 

@@ -1,8 +1,8 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
 import { DateTime } from 'luxon';
-import { FileFactory } from '#factories/file_factory';
-import { FileFolderFactory } from '#factories/file_folder_factory';
+import { FileFactory } from '#factories/file/file_factory';
+import { FileFolderFactory } from '#factories/file/file_folder_factory';
 import { FileDashboardCollector } from '#file/services/dashboard_collector';
 
 /**

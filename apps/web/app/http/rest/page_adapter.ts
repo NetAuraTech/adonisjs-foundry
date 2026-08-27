@@ -8,7 +8,7 @@ import { resolveEndpoint, type AdapterHandler } from '#rest/rest_adapter';
  * then the endpoint's `page` declaration produces the page transport output:
  *
  * - display methods (GET/HEAD): the Inertia page rendered with the props
- *   built by `page.render`
+ *   built by `cms.page.render`
  * - mutating methods: the success flash from `page.flash`, then a redirect
  *   to the named route from `page.redirect`
  *

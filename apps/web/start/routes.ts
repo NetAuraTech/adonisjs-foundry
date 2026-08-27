@@ -3,38 +3,30 @@
 | Routes file
 |--------------------------------------------------------------------------
 |
-| Route module index — each domain registers its own routes.
-| Feature flags in config/features.ts gate each module at runtime.
+| Route module index — a pure per-domain import list in stable order. Each
+| domain registers its own routes on import (see its `app/<domain>/routes.ts`),
+| feature-gated inside the module and wrapped with the maintenance
+| middleware (when enabled) before its auth guards.
+|
+| Explicit `register*` calls run last: the router matches in registration
+| order, so the CMS page-render catch-alls must come after every other route.
 |
 */
 
-// Auth, identity, account, file, log and core routes self-register on import (feature-gated inside the modules).
 import '#app/account/routes';
 import '#app/auth/routes';
+import '#app/cms/routes';
 import '#app/core/routes';
 import '#app/file/routes';
 import '#app/identity/routes';
 import '#app/log/routes';
-import router from '@adonisjs/core/services/router';
+import { registerCmsPageRoutes } from '#app/cms/controllers/front/routes';
 import { registerCoreHealthRoutes } from '#app/core/health.routes';
-import features from '#config/features';
-import { middleware } from '#start/kernel';
-import { registerCmsAdminRoutes } from '#start/routes/cms_admin.routes';
-import { registerCmsPublicRoutes } from '#start/routes/cms_public.routes';
-import { registerCmsRestApiRoutes } from '#start/routes/cms_rest_api.routes';
 
 // Health routes are outside maintenance middleware (liveness/readiness probes)
 registerCoreHealthRoutes();
 
-// Wrap all feature routes with maintenance middleware
-// Health routes are registered separately above (outside this wrapper)
-
-router
-	.group(() => {
-		if (features.adminApi && features.cms) registerCmsRestApiRoutes();
-		if (features.cms) {
-			registerCmsAdminRoutes();
-			registerCmsPublicRoutes();
-		}
-	})
-	.use(features.maintenance ? middleware.maintenance() : []);
+// The CMS page-render catch-alls (`/:locale/:slug`, `/:slug`) must register
+// last so they never shadow `/admin`, `/login`, `/register`, `/health` or any
+// other single-segment route.
+registerCmsPageRoutes();

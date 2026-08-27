@@ -2,7 +2,7 @@
 
 Lucid models live in `app/models/{area}/{name}.ts`. Each model extends a generated schema class from `database/schema.ts` that contains column definitions. The model file adds relations, hooks, scopes, and helpers on top of the schema.
 
-> **CMS exception (ADR-0001):** the CMS module (page, template) lives under `app/cms/` with the same structure — e.g. `app/cms/models/page/page.ts`, imported via `#cms/models/page/page`. The layer-first layout above applies to everything outside the CMS module.
+> **CMS co-location (ADR-0001):** CMS models (page, template) live under `src/cms/models/`, imported via `#cms/models/...` — co-located with the CMS domain's actions, repositories and services in the `src/cms/` business module. Transport layers (controllers, routes, validators, transformers, REST resources) live under `app/cms/`.
 >
 > **Identity co-location:** identity models (user, role, permission) live under `src/identity/models/`, imported via `#identity/models/...` — co-located with the identity domain's actions, repositories and services in the `src/identity/` business module.
 >
@@ -86,7 +86,7 @@ Scopes are for filtering logic intrinsic to the model. Conditional request-drive
 ## Conventions
 
 - One file per model, named after the entity (`user.ts`, `token.ts`).
-- Models grouped by domain area under `app/models/` (e.g. `core/`). Migrated domains live co-located instead: `src/{domain}/models/` (identity, file, log) and `app/cms/models/` (CMS).
+- Models grouped by domain area under `app/models/` (e.g. `core/`). Migrated domains live co-located instead: `src/{domain}/models/` (identity, file, log) and `src/cms/models/` (CMS).
 - Relations use arrow functions for lazy resolution: `@belongsTo(() => Role)`.
 - Computed properties use `@computed()` decorator when they derive from model state.
 - A model never imports another repository directly outside a hook — cross-entity composition belongs in the service layer.

@@ -8,10 +8,11 @@
  * (a blank home page and error pages, each served by its own `core.*`
  * controller).
  *
- * The delete inventory mirrors ADR-0001's CMS delete map: the whole `app/cms/`
- * module, every smeared CMS path outside it (controllers, transformers,
- * events, listeners, mails, i18n payload helpers, migrations, i18n, seeders,
- * tests), the Transmit integration, and the builder/template React subtrees.
+ * The delete inventory mirrors ADR-0001's CMS delete map: the co-located CMS
+ * units (the `src/cms` business layer, the `app/cms` transport layer, CMS
+ * migrations/seeders/factories, the `resources/lang/{en,fr}/cms` i18n
+ * namespaces, the contact email template, the CMS React subtrees, the CMS
+ * test suites and the CMS ace command), plus the Transmit integration.
  * The rewrites drop the CMS and Transmit registrations from the allowlisted
  * composition files and turn the `cms` feature flag off.
  *
@@ -24,100 +25,44 @@ const inertiaManifest: FlavorManifest = {
 	flavor: 'inertia',
 
 	delete: [
-		// ─── CMS module (page, template, builder) ───────────────────────────────
+		// ─── CMS business layer (actions, services, repositories, models) ──────
+		'apps/web/src/cms',
+
+		// ─── CMS transport layer (controllers, routes, nav, helpers, REST) ─────
 		'apps/web/app/cms',
-
-		// ─── CMS controllers (page + template) ──────────────────────────────────
-		'apps/web/app/page/controllers',
-		'apps/web/app/template/controllers',
-		'apps/web/app/http/rest/pages_resource.ts',
-		'apps/web/app/http/rest/templates_resource.ts',
-
-		// ─── CMS transformers (page + template) ─────────────────────────────────
-		'apps/web/app/page/transformers',
-		'apps/web/app/template/transformers',
-
-		// ─── CMS events and listeners ───────────────────────────────────────────
-		'apps/web/app/events/page',
-		'apps/web/app/listeners/page',
-
-		// ─── CMS mail (contact form) ────────────────────────────────────────────
-		'apps/web/app/mails/page',
-
-		// ─── CMS i18n payload helpers ───────────────────────────────────────────
-		'apps/web/app/helpers/i18n_payloads/pages_create.ts',
-		'apps/web/app/helpers/i18n_payloads/pages_index.ts',
-		'apps/web/app/helpers/i18n_payloads/pages_show.ts',
-		'apps/web/app/helpers/i18n_payloads/page_editor.ts',
-		'apps/web/app/helpers/i18n_payloads/page_revisions.ts',
-		'apps/web/app/helpers/i18n_payloads/templates_edit.ts',
-		'apps/web/app/helpers/i18n_payloads/templates_index.ts',
-
-		// ─── CMS preview-token helper (page/template preview only) ──────────────
-		'apps/web/app/helpers/core/preview_token.ts',
-		'apps/web/tests/unit/helpers/core/preview_token.spec.ts',
-		'apps/web/tests/unit/helpers/i18n_payloads_cms.spec.ts',
-		'apps/web/commands/cms_normalize_migration_names.ts',
 
 		// ─── CMS migrations ─────────────────────────────────────────────────────
 		'apps/web/database/migrations/cms',
 
 		// ─── CMS seeders ────────────────────────────────────────────────────────
-		'apps/web/database/seeders/page_seeder.ts',
-		'apps/web/database/seeders/template_seeder.ts',
+		'apps/web/database/seeders/cms',
+
+		// ─── CMS factories ──────────────────────────────────────────────────────
+		'apps/web/database/factories/cms',
 
 		// ─── CMS i18n namespaces (page, template, builder) ──────────────────────
-		'apps/web/resources/lang/en/page.json',
-		'apps/web/resources/lang/fr/page.json',
-		'apps/web/resources/lang/en/template.json',
-		'apps/web/resources/lang/fr/template.json',
-		'apps/web/resources/lang/en/builder.json',
-		'apps/web/resources/lang/fr/builder.json',
+		'apps/web/resources/lang/en/cms',
+		'apps/web/resources/lang/fr/cms',
 
 		// ─── CMS email template (contact form) ──────────────────────────────────
 		'apps/web/resources/views/emails/contact_form_email.edge',
-
-		// ─── CMS route files ────────────────────────────────────────────────────
-		'apps/web/start/routes/cms_admin.routes.ts',
-		'apps/web/start/routes/cms_public.routes.ts',
-		'apps/web/start/routes/cms_rest_api.routes.ts',
-
-		// ─── Transmit integration ───────────────────────────────────────────────
-		'apps/web/start/transmit.ts',
-		'apps/web/config/transmit.ts',
-		'apps/web/config/cms.ts',
 
 		// ─── CMS React subtrees (builder, renderer, pages) ──────────────────────
 		'apps/web/inertia/pages/cms',
 		'apps/web/inertia/components/cms',
 
 		// ─── CMS test suites ────────────────────────────────────────────────────
-		'apps/web/tests/unit/actions/page',
-		'apps/web/tests/unit/actions/template',
-		'apps/web/tests/unit/models/page',
-		'apps/web/tests/unit/models/page.spec.ts',
-		'apps/web/tests/unit/models/page_translation.spec.ts',
-		'apps/web/tests/unit/models/template',
-		'apps/web/tests/unit/services/page',
-		'apps/web/tests/unit/services/template',
-		'apps/web/tests/unit/validators/page_validator.spec.ts',
-		'apps/web/tests/unit/validators/template_validator.spec.ts',
-		'apps/web/tests/integration/repositories/page_repository.spec.ts',
-		'apps/web/tests/integration/repositories/page_translation_repository.spec.ts',
-		'apps/web/tests/integration/repositories/page_revision_repository.spec.ts',
-		'apps/web/tests/integration/repositories/template_repository.spec.ts',
-		'apps/web/tests/integration/services/page/page_sitemap_collector.spec.ts',
-		'apps/web/tests/integration/routes_structure_cms.spec.ts',
-
-		// ─── CMS split-off test files ───────────────────────────────────────────
-		'apps/web/tests/unit/exceptions_cms.spec.ts',
-		'apps/web/tests/unit/actions/cms',
-		'apps/web/tests/unit/services/cms',
-		'apps/web/tests/unit/mails/notifications_cms.spec.ts',
-		'apps/web/tests/unit/validators/builder_validator.spec.ts',
-		'apps/web/tests/unit/validators/contact_validator.spec.ts',
+		'apps/web/tests/unit/cms',
+		'apps/web/tests/integration/cms',
 		'apps/web/tests/functional/cms',
-		'apps/web/tests/helpers/seed_dashboard.ts',
+
+		// ─── CMS ace command ────────────────────────────────────────────────────
+		'apps/web/commands/cms_normalize_migration_names.ts',
+
+		// ─── Transmit integration + CMS feature config ──────────────────────────
+		'apps/web/start/transmit.ts',
+		'apps/web/config/transmit.ts',
+		'apps/web/config/cms.ts',
 
 		// ─── Prune pipeline (main-only infrastructure) ──────────────────────────
 		'tooling/prune',
@@ -1322,9 +1267,6 @@ const inertiaManifest: FlavorManifest = {
 				'    "#exceptions/*": "./app/exceptions/*.js",',
 				'    "#helpers/*": "./app/helpers/*.js",',
 				'    "#models/*": "./app/models/*.js",',
-				'    "#mails/*": "./app/mails/*.js",',
-				'    "#listeners/*": "./app/listeners/*.js",',
-				'    "#events/*": "./app/events/*.js",',
 				'    "#generated/*": "./.adonisjs/server/*.js",',
 				'    "#middleware/*": "./app/http/middleware/*.js",',
 				'    "#rest/*": "./app/http/rest/*.js",',
@@ -1348,8 +1290,7 @@ const inertiaManifest: FlavorManifest = {
 				'    "#backup/*": "./src/backup/*.js",',
 				'    "#tests/*": "./tests/*.js",',
 				'    "#start/*": "./start/*.js",',
-				'    "#config/*": "./config/*.js",',
-				'    "#cms/*": "./app/cms/*.js"',
+				'    "#config/*": "./config/*.js"',
 				'  },',
 				'  "scripts": {',
 				'    "start": "node bin/server.js",',

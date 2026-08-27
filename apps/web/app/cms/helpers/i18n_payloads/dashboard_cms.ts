@@ -8,18 +8,18 @@ import type { BuildPayloadResult, I18nService } from '#services/i18n_service';
 export const CMS_DASHBOARD_MAPPING = {
 	cms: {
 		cards: {
-			pages: 'page.admin.value',
-			translations: 'page.admin.dashboard.cards.translations',
-			templates: 'template.admin.value',
-			published_locales: 'page.admin.dashboard.cards.published_locales',
+			pages: 'cms.page.admin.value',
+			translations: 'cms.page.admin.dashboard.cards.translations',
+			templates: 'cms.template.admin.value',
+			published_locales: 'cms.page.admin.dashboard.cards.published_locales',
 		},
 		status: {
-			draft: 'page.admin.status.draft',
-			published: 'page.admin.status.published',
-			archived: 'page.admin.status.archived',
+			draft: 'cms.page.admin.status.draft',
+			published: 'cms.page.admin.status.published',
+			archived: 'cms.page.admin.status.archived',
 		},
 		recent: {
-			published_pages: 'page.admin.dashboard.recent.published_pages',
+			published_pages: 'cms.page.admin.dashboard.recent.published_pages',
 		},
 	},
 };

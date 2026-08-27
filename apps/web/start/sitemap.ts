@@ -15,7 +15,7 @@
 */
 
 import app from '@adonisjs/core/services/app';
-import { PageSitemapCollector } from '#cms/domain/services/page/page_sitemap_collector';
+import { PageSitemapCollector } from '#cms/services/page/page_sitemap_collector';
 import { RouteSitemapCollector } from '#core/services/route_sitemap_collector';
 import { SitemapRegistry } from '#core/services/sitemap_registry';
 

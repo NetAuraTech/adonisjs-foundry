@@ -750,7 +750,8 @@ database/
 │                                           # create_pages_table, create_page_translations_table,
 │                                           # create_page_revisions_table, create_templates_table,
 │                                           # alter_pages_table
-├── seeders/                                # role_seeder.ts, permission_seeder.ts, page_seeder.ts, template_seeder.ts
+├── seeders/                                # role_seeder.ts, permission_seeder.ts,
+│                                           # cms/ (page_seeder.ts, template_seeder.ts)
 ├── schema.ts
 └── schema_rules.ts
 
@@ -805,9 +806,9 @@ inertia/
 
 resources/
 ├── lang/
-│   ├── en/                                 # admin.json, auth.json, builder.json, exceptions.json, page.json,
+│   ├── en/                                 # admin.json, auth.json, exceptions.json,
 │   │                                       # pagination.json, permissions.json, roles.json, settings.json,
-│   │                                       # template.json, validation.json
+│   │                                       # validation.json, cms/ (page.json, template.json, builder.json)
 │   └── fr/                                 # same namespaces as en/
 └── views/
     ├── emails/                             # account_email.edge, admin_invite_email.edge, auth_email.edge,
@@ -844,30 +845,36 @@ The project uses Node.js subpath imports for clean module resolution (paths rela
 
 | Alias             | Path                        |
 | ----------------- | --------------------------- |
-| `#controllers/*`  | `app/http/controllers/*`    |
-| `#services/*`     | `app/domain/services/*`     |
-| `#repositories/*` | `app/domain/repositories/*` |
-| `#contracts/*`    | `app/domain/contracts/*`    |
-| `#models/*`       | `app/models/*`              |
-| `#transformers/*` | `app/data/transformers/*`   |
-| `#validators/*`   | `app/validators/*`          |
+| `#app/*`          | `app/*`                     |
 | `#exceptions/*`   | `app/exceptions/*`          |
-| `#middleware/*`   | `app/http/middleware/*`     |
-| `#events/*`       | `app/events/*`              |
-| `#listeners/*`    | `app/listeners/*`           |
-| `#mails/*`        | `app/mails/*`               |
 | `#helpers/*`      | `app/helpers/*`             |
+| `#models/*`       | `app/models/*`              |
+| `#generated/*`    | `.adonisjs/server/*`        |
+| `#middleware/*`   | `app/http/middleware/*`     |
+| `#rest/*`         | `app/http/rest/*`           |
+| `#repositories/*` | `app/domain/repositories/*` |
+| `#services/*`     | `app/domain/services/*`     |
+| `#contracts/*`    | `app/domain/contracts/*`    |
 | `#types/*`        | `app/types/*`               |
-
-| `#config/*` | `config/*` |
-| `#start/*` | `start/*` |
-| `#database/*` | `database/*` |
-| `#factories/*` | `database/factories/*` |
-| `#providers/*` | `providers/*` |
-| `#policies/*` | `app/policies/*` |
-| `#abilities/*` | `app/abilities/*` |
-| `#tests/*` | `tests/*` |
-| `#generated/*` | `.adonisjs/server/*` |
+| `#validators/*`   | `app/validators/*`          |
+| `#providers/*`    | `providers/*`               |
+| `#policies/*`     | `app/policies/*`            |
+| `#abilities/*`    | `app/abilities/*`           |
+| `#database/*`     | `database/*`                |
+| `#factories/*`    | `database/factories/*`      |
+| `#shared/*`       | `src/shared/*`              |
+| `#core/*`         | `src/core/*`                |
+| `#identity/*`     | `src/identity/*`            |
+| `#auth/*`         | `src/auth/*`                |
+| `#account/*`      | `src/account/*`             |
+| `#file/*`         | `src/file/*`                |
+| `#log/*`          | `src/log/*`                 |
+| `#backup/*`       | `src/backup/*`              |
+| `#cms/*`          | `src/cms/*`                 |
+| `#tests/*`        | `tests/*`                   |
+| `#start/*`        | `start/*`                   |
+| `#config/*`       | `config/*`                  |
+| `#generated/*`    | `.adonisjs/server/*`        |
 
 ## Routes
 

@@ -1,7 +1,7 @@
 import testUtils from '@adonisjs/core/services/test_utils';
 import { test } from '@japa/runner';
-import { FileFactory } from '#factories/file_factory';
-import { FileFolderFactory } from '#factories/file_folder_factory';
+import { FileFactory } from '#factories/file/file_factory';
+import { FileFolderFactory } from '#factories/file/file_folder_factory';
 import { createAdminUser } from '#tests/helpers/create_admin_user';
 import { parseInertiaPage } from '#tests/helpers/inertia_page';
 

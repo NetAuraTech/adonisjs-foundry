@@ -1,0 +1,58 @@
+import { inject } from '@adonisjs/core';
+import { PageTranslationRepository } from '#cms/repositories/page/page_translation_repository';
+import { TemplateRepository } from '#cms/repositories/template/template_repository';
+import RowNotFoundException from '#core/exceptions/row_not_found_exception';
+import { withTransaction } from '#core/services/with_transaction';
+import { LogService } from '#log/services/log_service';
+import type Template from '#cms/models/template/template';
+import type { PageContent } from '#cms/types/page';
+
+interface CreateFromPagePayload {
+	name: string;
+	pageId: number;
+	locale: string;
+	userId: number;
+	content?: PageContent;
+}
+
+/**
+ * Create a template by extracting the content from an existing page translation.
+ */
+@inject()
+export class CreateFromPageAction {
+	constructor(
+		protected templateRepository: TemplateRepository,
+		protected translationRepository: PageTranslationRepository,
+		protected logService: LogService,
+	) {}
+
+	/**
+	 * Execute template creation from page.
+	 *
+	 * @param payload - Template name, source page ID, locale, and acting user.
+	 * @returns The newly created {@link Template}.
+	 */
+	async execute(payload: CreateFromPagePayload): Promise<Template> {
+		const translation = await this.translationRepository.findByPageAndLocale(payload.pageId, payload.locale);
+		if (!translation) throw new RowNotFoundException();
+
+		const content = payload.content ?? translation.content;
+
+		const template = await withTransaction(async () => {
+			return this.templateRepository.create({
+				name: payload.name,
+				type: 'page',
+				blockType: null,
+				content,
+				createdBy: payload.userId,
+			});
+		});
+
+		this.logService.logBusiness(
+			'template.created_from_page',
+			{ userId: payload.userId },
+			{ templateId: template.id, pageId: payload.pageId, locale: payload.locale },
+		);
+		return template;
+	}
+}

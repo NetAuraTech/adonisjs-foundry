@@ -1,6 +1,6 @@
 import app from '@adonisjs/core/services/app';
 import { defineConfig } from '@adonisjs/shield';
-import { getEmbedFrameSources } from '#cms/domain/services/page/embed_policy';
+import { getEmbedFrameSources } from '#cms/services/page/embed_policy';
 import cmsConfig from '#config/cms';
 
 /**

@@ -1,0 +1,20 @@
+import { inject } from '@adonisjs/core';
+import { type HttpContext } from '@adonisjs/core/http';
+import PagesResource from '#app/cms/rest/pages_resource';
+import { handle } from '#rest/rest_adapter';
+
+/**
+ * DELETE /api/v1/admin/pages/:id — delete a page from the admin REST API.
+ *
+ * Thin transport adapter over the `destroy` endpoint of the
+ * {@link PagesResource}; the endpoint declaration is executed by the shared
+ * REST pipeline.
+ */
+@inject()
+export default class PagesDeleteApiController {
+	constructor(protected pagesResource: PagesResource) {}
+
+	async destroy(ctx: HttpContext): Promise<void> {
+		await handle(ctx, this.pagesResource.endpoints.destroy);
+	}
+}

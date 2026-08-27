@@ -5,10 +5,10 @@
 |
 | The composed list of system permission slugs for this flavor. Every
 | domain owns its own catalog const in its business layer (e.g.
-| `src/identity/permissions.ts`, `app/domain/services/{domain}/{domain}_permissions.ts`
-| until the domain migrates); this file composes those per-domain catalogs
-| into the single matrix the permission seeder persists. Adding or renaming
-| a permission only touches that domain's catalog file.
+| `src/identity/permissions.ts`, `src/cms/permissions.ts`); this file
+| composes those per-domain catalogs into the single matrix the permission
+| seeder persists. Adding or renaming a permission only touches that
+| domain's catalog file.
 |
 | The `permissionCatalog` object also drives the `PermissionSlug` union of
 | this flavor: the catalog is the single source of both the persisted slug
@@ -21,8 +21,7 @@
 |
 */
 
-import { pagePermissionCatalog } from '#cms/domain/services/page/page_permissions';
-import { templatePermissionCatalog } from '#cms/domain/services/template/template_permissions';
+import { cmsPermissionCatalog } from '#cms/permissions';
 import { corePermissionCatalog, coreRoleSlugs, maintenancePermissionCatalog } from '#core/permissions';
 import { filePermissionCatalog } from '#file/permissions';
 import { identityPermissionCatalog } from '#identity/permissions';
@@ -31,15 +30,14 @@ import type { PermissionSlugs, PermissionMap } from '#types/permissions';
 
 /**
  * The composed system permission catalog of this flavor: `category →
- * actions` matrix ordered by domain (core, auth, page, template, file,
+ * actions` matrix ordered by domain (core, identity, cms, file,
  * maintenance, logging). The permission seeder persists exactly this
  * matrix, so it is the single source of the persisted slugs.
  */
 export const permissionCatalog = {
 	...corePermissionCatalog,
 	...identityPermissionCatalog,
-	...pagePermissionCatalog,
-	...templatePermissionCatalog,
+	...cmsPermissionCatalog,
 	...filePermissionCatalog,
 	...maintenancePermissionCatalog,
 	...loggingPermissionCatalog,

@@ -3,10 +3,4 @@
  * DO NOT EDIT manually
  */
 
-import PageContactFormSubmitted from '#events/page/contact_form_submitted'
-
-export const events = {
-  page: {
-    ContactFormSubmitted: PageContactFormSubmitted,
-  },
-}
+export const events = {}
