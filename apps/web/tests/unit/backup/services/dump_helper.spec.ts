@@ -14,7 +14,7 @@ test.group('DumpHelper', (group) => {
 	});
 
 	test('createDatabaseDump spawns pg_dump with correct base args', async ({ assert }) => {
-		const { createDatabaseDump } = await import('#services/backup/dump_helper');
+		const { createDatabaseDump } = await import('#backup/services/dump_helper');
 
 		const mockProcess = {
 			on: sinon.stub(),
@@ -57,7 +57,7 @@ test.group('DumpHelper', (group) => {
 	});
 
 	test('createDatabaseDump appends -t flags for each table', async ({ assert }) => {
-		const { createDatabaseDump } = await import('#services/backup/dump_helper');
+		const { createDatabaseDump } = await import('#backup/services/dump_helper');
 
 		const mockProcess = {
 			on: sinon.stub().callsArgWith(1, 0),
@@ -87,7 +87,7 @@ test.group('DumpHelper', (group) => {
 	});
 
 	test('createDatabaseDump passes PGPASSWORD in env', async ({ assert }) => {
-		const { createDatabaseDump } = await import('#services/backup/dump_helper');
+		const { createDatabaseDump } = await import('#backup/services/dump_helper');
 
 		const mockProcess = {
 			on: sinon.stub().callsArgWith(1, 0),
@@ -112,7 +112,7 @@ test.group('DumpHelper', (group) => {
 	});
 
 	test('createDatabaseDump rejects when pg_dump exits with non-zero code', async ({ assert }) => {
-		const { createDatabaseDump } = await import('#services/backup/dump_helper');
+		const { createDatabaseDump } = await import('#backup/services/dump_helper');
 
 		const mockProcess = {
 			on: sinon.stub().callsFake((event, cb) => {
@@ -145,7 +145,7 @@ test.group('DumpHelper', (group) => {
 	});
 
 	test('createDatabaseDump rejects on spawn error', async ({ assert }) => {
-		const { createDatabaseDump } = await import('#services/backup/dump_helper');
+		const { createDatabaseDump } = await import('#backup/services/dump_helper');
 
 		const mockProcess = {
 			on: sinon.stub().callsFake((event, cb) => {

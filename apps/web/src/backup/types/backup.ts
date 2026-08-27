@@ -5,10 +5,16 @@
  * backup engine, and the backup actions.
  */
 
+/** The kind of a backup artifact: a full dump or a delta on top of the last full. */
+export type BackupType = 'full' | 'differential';
+
+/** A backup strategy: an explicit kind, or `auto` to follow the configured schedule. */
+export type BackupStrategy = BackupType | 'auto';
+
 export interface BackupResult {
 	success: boolean;
 	filename: string;
-	type: 'full' | 'differential';
+	type: BackupType;
 	size: number;
 	duration: number;
 	storage: string;
@@ -16,18 +22,10 @@ export interface BackupResult {
 }
 
 export interface BackupManifest {
-	type: 'full' | 'differential';
+	type: BackupType;
 	createdAt: string;
 	tables: string[];
 	fullBackupReference?: string;
-}
-
-export interface BackupMetadata {
-	filename: string;
-	type: 'full' | 'differential';
-	size: number;
-	createdAt: Date;
-	path: string;
 }
 
 /**
@@ -38,5 +36,5 @@ export interface BackupMetadata {
 export interface BackupContext {
 	tempDir: string;
 	filename: string;
-	strategyType: 'full' | 'differential';
+	strategyType: BackupType;
 }

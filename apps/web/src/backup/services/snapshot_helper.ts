@@ -2,8 +2,8 @@ import { createReadStream, createWriteStream } from 'node:fs';
 import { unlink as defaultUnlink } from 'node:fs/promises';
 import { pipeline } from 'node:stream/promises';
 import { createGzip } from 'node:zlib';
+import { createEncryptionHelper, type EncryptionHelper } from '#backup/services/encryption_helper';
 import backupConfig from '#config/backup';
-import { createEncryptionHelper, type EncryptionHelper } from '#helpers/core/encryption';
 
 /**
  * SnapshotHelper — File system compression and encryption pipeline.
@@ -71,28 +71,5 @@ export class SnapshotHelper {
 		return this.encryptionHelper!.encryptFile(inputPath, outputPath).then(() => {
 			return this.unlinkFn(inputPath).then(() => outputPath);
 		});
-	}
-
-	/**
-	 * Generate the expected backup filename for a given type.
-	 * Extensions reflect configured compression and encryption settings.
-	 */
-	static generateFilename(type: 'full' | 'differential'): string {
-		const now = new Date();
-		const date = now.toISOString().slice(0, 10); // yyyy-MM-dd
-		const time = now.toTimeString().slice(0, 8).replace(/:/g, ''); // HHmmss
-
-		let filename = `backup-${type}-${date}-${time}.sql`;
-		if (backupConfig.compression.enabled) filename += '.gz';
-		if (backupConfig.encryption.enabled) filename += '.enc';
-		return filename;
-	}
-
-	/**
-	 * Derive the manifest filename from a backup filename.
-	 * Strips .sql/.gz/.enc extensions and appends .manifest.json.
-	 */
-	static manifestFilename(backupFilename: string): string {
-		return backupFilename.replace(/(\.(sql|gz|enc))+$/, '.manifest.json');
 	}
 }

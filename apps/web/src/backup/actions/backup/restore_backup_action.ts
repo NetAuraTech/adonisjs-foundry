@@ -5,11 +5,11 @@ import { pipeline } from 'node:stream/promises';
 import { createGunzip } from 'node:zlib';
 import { inject } from '@adonisjs/core';
 import drive from '@adonisjs/drive/services/main';
+import { createEncryptionHelper } from '#backup/services/encryption_helper';
+import { restoreDatabaseWithPsql } from '#backup/services/psql_helper';
 import backupConfig from '#config/backup';
-import { createEncryptionHelper } from '#helpers/core/encryption';
 import { LogService } from '#log/services/log_service';
 import { LogCategory } from '#log/types/logging';
-import { restoreDatabaseWithPsql } from '#services/backup/psql_helper';
 import env from '#start/env';
 
 interface RestoreBackupPayload {

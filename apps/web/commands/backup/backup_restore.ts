@@ -1,5 +1,5 @@
 import { BaseCommand, args, flags } from '@adonisjs/core/ace';
-import { RestoreBackupAction } from '#actions/backup/restore_backup_action';
+import { RestoreBackupAction } from '#backup/actions/backup/restore_backup_action';
 import type { CommandOptions } from '@adonisjs/core/types/ace';
 
 /**

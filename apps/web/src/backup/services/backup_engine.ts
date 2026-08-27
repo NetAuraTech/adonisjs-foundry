@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon';
+import { BackupMetadata } from '#backup/domain/backup';
+import { BackupPipeline } from '#backup/services/backup_pipeline';
 import backupConfig from '#config/backup';
 import { type LogService } from '#log/services/log_service';
-import { BackupPipeline } from '#services/backup/backup_pipeline';
-import { SnapshotHelper } from '#services/backup/snapshot_helper';
-import type { BackupResult, BackupContext } from '#services/backup/backup_types';
+import type { BackupResult, BackupContext, BackupStrategy } from '#backup/types/backup';
 
 /**
  * BackupEngine — Orchestrates backup execution by resolving the strategy
@@ -17,14 +17,14 @@ export class BackupEngine {
 	private readonly context: BackupContext;
 
 	constructor(
-		private readonly strategyType: 'full' | 'differential' | 'auto',
+		private readonly strategyType: BackupStrategy,
 		private readonly tempDir: string,
 		private readonly logService: LogService,
 	) {
 		const resolvedType = this.resolveStrategy();
 		this.context = {
 			tempDir: this.tempDir,
-			filename: SnapshotHelper.generateFilename(resolvedType),
+			filename: BackupMetadata.generateFilename(resolvedType),
 			strategyType: resolvedType,
 		};
 	}

@@ -1,6 +1,6 @@
 import { BaseCommand } from '@adonisjs/core/ace';
 import { DateTime } from 'luxon';
-import { HealthCheckBackupAction } from '#actions/backup/health_check_backup_action';
+import { HealthCheckBackupAction } from '#backup/actions/backup/health_check_backup_action';
 import type { CommandOptions } from '@adonisjs/core/types/ace';
 
 /**

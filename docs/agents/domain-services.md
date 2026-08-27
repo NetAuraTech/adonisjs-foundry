@@ -9,6 +9,8 @@ One service = one bounded context. Lives in `app/domain/services/{area}/{name}_s
 > **File co-location:** file services live under `src/file/services/`, imported via `#file/services/...`, and the permission catalog at `src/file/permissions.ts` — co-located with the rest of the file business module. The nav entries module is transport and lives at `app/file/nav.ts` (imported via `#app/file/nav`).
 >
 > **Log co-location:** log services live under `src/log/services/`, imported via `#log/services/...`, and the permission catalog at `src/log/permissions.ts` — co-located with the rest of the log business module. The nav entries module is transport and lives at `app/log/nav.ts` (imported via `#app/log/nav`).
+>
+> **Backup co-location:** backup services live under `src/backup/services/`, imported via `#backup/services/...` — co-located with the rest of the backup business module.
 
 Method names describe the action, not a fixed CRUD contract. A service exposes
 whatever operations its bounded context needs. Don't force
