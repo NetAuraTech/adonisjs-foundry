@@ -1,8 +1,8 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
-import RunBackupAction from '#actions/backup/run_backup_action';
-import { BackupEngine } from '#services/backup/backup_engine';
-import type { BackupResult } from '#services/backup/backup_types';
+import RunBackupAction from '#backup/actions/backup/run_backup_action';
+import { BackupEngine } from '#backup/services/backup_engine';
+import type { BackupResult } from '#backup/types/backup';
 
 test.group('RunBackupAction', (group) => {
 	group.each.teardown(() => {

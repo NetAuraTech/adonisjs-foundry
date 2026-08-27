@@ -1,7 +1,7 @@
-﻿import app from '@adonisjs/core/services/app';
+import app from '@adonisjs/core/services/app';
 import drive from '@adonisjs/drive/services/main';
 import { test } from '@japa/runner';
-import { ListBackupsAction } from '#actions/backup/list_backups_action';
+import { ListBackupsAction } from '#backup/actions/backup/list_backups_action';
 import backupConfig from '#config/backup';
 import { mockDriveListing } from '#tests/helpers/mock_drive_listing';
 

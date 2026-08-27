@@ -20,12 +20,12 @@ test.group('BackupEngine', (group) => {
 	test('execute() runs full backups through BackupPipeline when strategyType is "full"', async ({ assert }) => {
 		const logService = { info: sinon.stub(), error: sinon.stub(), warn: sinon.stub() } as any;
 
-		// Mock SnapshotHelper.generateFilename
-		const snapshotModule = await import('#services/backup/snapshot_helper');
-		sinon.stub(snapshotModule.SnapshotHelper, 'generateFilename').returns('backup-full-2024-01-07-020000.sql.gz.enc');
+		// Mock BackupMetadata.generateFilename
+		const domainModule = await import('#backup/domain/backup');
+		sinon.stub(domainModule.BackupMetadata, 'generateFilename').returns('backup-full-2024-01-07-020000.sql.gz.enc');
 
 		// Mock BackupPipeline.executeFullBackup
-		const pipelineModule = await import('#services/backup/backup_pipeline');
+		const pipelineModule = await import('#backup/services/backup_pipeline');
 		const executeStub = sinon.stub().resolves({
 			success: true,
 			filename: 'backup-full-2024-01-07-020000.sql.gz.enc',
@@ -36,7 +36,7 @@ test.group('BackupEngine', (group) => {
 		});
 		sinon.stub(pipelineModule.BackupPipeline.prototype, 'executeFullBackup').callsFake(executeStub);
 
-		const { BackupEngine } = await import('#services/backup/backup_engine');
+		const { BackupEngine } = await import('#backup/services/backup_engine');
 		const engine = new BackupEngine('full', '/tmp/backups', logService);
 		const result = await engine.execute();
 
@@ -52,13 +52,13 @@ test.group('BackupEngine', (group) => {
 	}) => {
 		const logService = { info: sinon.stub(), error: sinon.stub(), warn: sinon.stub() } as any;
 
-		const snapshotModule = await import('#services/backup/snapshot_helper');
+		const domainModule = await import('#backup/domain/backup');
 		sinon
-			.stub(snapshotModule.SnapshotHelper, 'generateFilename')
+			.stub(domainModule.BackupMetadata, 'generateFilename')
 			.returns('backup-differential-2024-01-08-020000.sql.gz.enc');
 
 		// Mock BackupPipeline.executeDifferentialBackup
-		const pipelineModule = await import('#services/backup/backup_pipeline');
+		const pipelineModule = await import('#backup/services/backup_pipeline');
 		const executeStub = sinon.stub().resolves({
 			success: true,
 			filename: 'backup-differential-2024-01-08-020000.sql.gz.enc',
@@ -69,7 +69,7 @@ test.group('BackupEngine', (group) => {
 		});
 		sinon.stub(pipelineModule.BackupPipeline.prototype, 'executeDifferentialBackup').callsFake(executeStub);
 
-		const { BackupEngine } = await import('#services/backup/backup_engine');
+		const { BackupEngine } = await import('#backup/services/backup_engine');
 		const engine = new BackupEngine('differential', '/tmp/backups', logService);
 		const result = await engine.execute();
 
@@ -88,10 +88,10 @@ test.group('BackupEngine', (group) => {
 		const mockSunday = DateTime.fromISO('2024-01-07T02:00:00.000Z') as any; // Sunday
 		sinon.stub(DateTime, 'now').returns(mockSunday);
 
-		const snapshotModule = await import('#services/backup/snapshot_helper');
-		sinon.stub(snapshotModule.SnapshotHelper, 'generateFilename').returns('backup-full-2024-01-07-020000.sql.gz.enc');
+		const domainModule = await import('#backup/domain/backup');
+		sinon.stub(domainModule.BackupMetadata, 'generateFilename').returns('backup-full-2024-01-07-020000.sql.gz.enc');
 
-		const pipelineModule = await import('#services/backup/backup_pipeline');
+		const pipelineModule = await import('#backup/services/backup_pipeline');
 		const executeStub = sinon.stub().resolves({
 			success: true,
 			filename: 'backup-full-2024-01-07-020000.sql.gz.enc',
@@ -102,7 +102,7 @@ test.group('BackupEngine', (group) => {
 		});
 		sinon.stub(pipelineModule.BackupPipeline.prototype, 'executeFullBackup').callsFake(executeStub);
 
-		const { BackupEngine } = await import('#services/backup/backup_engine');
+		const { BackupEngine } = await import('#backup/services/backup_engine');
 		const engine = new BackupEngine('auto', '/tmp/backups', logService);
 		const result = await engine.execute();
 
@@ -117,12 +117,12 @@ test.group('BackupEngine', (group) => {
 		const mockMonday = DateTime.fromISO('2024-01-08T02:00:00.000Z') as any;
 		sinon.stub(DateTime, 'now').returns(mockMonday);
 
-		const snapshotModule = await import('#services/backup/snapshot_helper');
+		const domainModule = await import('#backup/domain/backup');
 		sinon
-			.stub(snapshotModule.SnapshotHelper, 'generateFilename')
+			.stub(domainModule.BackupMetadata, 'generateFilename')
 			.returns('backup-differential-2024-01-08-020000.sql.gz.enc');
 
-		const pipelineModule = await import('#services/backup/backup_pipeline');
+		const pipelineModule = await import('#backup/services/backup_pipeline');
 		const executeStub = sinon.stub().resolves({
 			success: true,
 			filename: 'backup-differential-2024-01-08-020000.sql.gz.enc',
@@ -133,7 +133,7 @@ test.group('BackupEngine', (group) => {
 		});
 		sinon.stub(pipelineModule.BackupPipeline.prototype, 'executeDifferentialBackup').callsFake(executeStub);
 
-		const { BackupEngine } = await import('#services/backup/backup_engine');
+		const { BackupEngine } = await import('#backup/services/backup_engine');
 		const engine = new BackupEngine('auto', '/tmp/backups', logService);
 		const result = await engine.execute();
 
@@ -146,10 +146,10 @@ test.group('BackupEngine', (group) => {
 	test('execute() propagates failure result from the strategy', async ({ assert }) => {
 		const logService = { info: sinon.stub(), error: sinon.stub(), warn: sinon.stub() } as any;
 
-		const snapshotModule = await import('#services/backup/snapshot_helper');
-		sinon.stub(snapshotModule.SnapshotHelper, 'generateFilename').returns('backup-full-2024-01-07-020000.sql.gz.enc');
+		const domainModule = await import('#backup/domain/backup');
+		sinon.stub(domainModule.BackupMetadata, 'generateFilename').returns('backup-full-2024-01-07-020000.sql.gz.enc');
 
-		const pipelineModule = await import('#services/backup/backup_pipeline');
+		const pipelineModule = await import('#backup/services/backup_pipeline');
 		const executeStub = sinon.stub().resolves({
 			success: false,
 			filename: 'backup-full-2024-01-07-020000.sql.gz.enc',
@@ -161,7 +161,7 @@ test.group('BackupEngine', (group) => {
 		});
 		sinon.stub(pipelineModule.BackupPipeline.prototype, 'executeFullBackup').callsFake(executeStub);
 
-		const { BackupEngine } = await import('#services/backup/backup_engine');
+		const { BackupEngine } = await import('#backup/services/backup_engine');
 		const engine = new BackupEngine('full', '/tmp/backups', logService);
 		const result = await engine.execute();
 
@@ -172,15 +172,15 @@ test.group('BackupEngine', (group) => {
 
 	// ─── Context generation ──────────────────────────────────────────────────
 
-	test('constructor generates context with correct filename via SnapshotHelper', async ({ assert }) => {
+	test('constructor generates context with correct filename via BackupMetadata', async ({ assert }) => {
 		const logService = { info: sinon.stub(), error: sinon.stub(), warn: sinon.stub() } as any;
 
-		const snapshotModule = await import('#services/backup/snapshot_helper');
+		const domainModule = await import('#backup/domain/backup');
 		const generateStub = sinon
-			.stub(snapshotModule.SnapshotHelper, 'generateFilename')
+			.stub(domainModule.BackupMetadata, 'generateFilename')
 			.returns('backup-full-2024.sql.gz.enc');
 
-		const { BackupEngine } = await import('#services/backup/backup_engine');
+		const { BackupEngine } = await import('#backup/services/backup_engine');
 		new BackupEngine('full', '/tmp/backups', logService);
 
 		// generateFilename should be called with the resolved strategy type

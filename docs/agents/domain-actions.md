@@ -9,6 +9,8 @@ One action = one business operation. Lives in `app/domain/actions/{area}/{verb}_
 > **File co-location:** file actions (file, file_folder) live under `src/file/actions/{area}/`, imported via `#file/actions/...` — co-located with the file domain's models, repositories and services in the `src/file/` business module.
 >
 > **Log co-location:** log actions (log) live under `src/log/actions/{area}/`, imported via `#log/actions/...` — co-located with the log domain's models, repositories and services in the `src/log/` business module.
+>
+> **Backup co-location:** backup actions (backup) live under `src/backup/actions/{area}/`, imported via `#backup/actions/...` — co-located with the backup domain's services and domain objects in the `src/backup/` business module.
 
 ## Structure
 
@@ -112,7 +114,6 @@ Mirror the domain areas used by services and repositories:
 app/domain/actions/
   auth/              # login, register, logout
   account/           # email change, deletion
-  backup/            # run, list, restore, delete backups
   core/              # cross-cutting operations (dashboard stats)
   email_verification/ # send verification, verify email
   invitation/        # send, accept invitations

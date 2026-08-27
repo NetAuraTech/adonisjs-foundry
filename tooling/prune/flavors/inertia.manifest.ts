@@ -701,7 +701,7 @@ const inertiaManifest: FlavorManifest = {
 			path: 'apps/web/start/container.ts',
 			content: [
 				"import app from '@adonisjs/core/services/app'",
-				"import { BackupEngine } from '#services/backup/backup_engine'",
+				"import { BackupEngine } from '#backup/services/backup_engine'",
 				"import { CacheService } from '#shared/services/cache_service'",
 				"import { RedisCacheDriver } from '#shared/services/cache/drivers/redis_cache_driver'",
 				"import { LogService } from '#log/services/log_service'",

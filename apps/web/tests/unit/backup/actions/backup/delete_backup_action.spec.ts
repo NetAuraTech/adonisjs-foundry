@@ -1,7 +1,7 @@
-﻿import app from '@adonisjs/core/services/app';
+import app from '@adonisjs/core/services/app';
 import drive from '@adonisjs/drive/services/main';
 import { test } from '@japa/runner';
-import { DeleteBackupAction } from '#actions/backup/delete_backup_action';
+import { DeleteBackupAction } from '#backup/actions/backup/delete_backup_action';
 import backupConfig from '#config/backup';
 
 test.group('DeleteBackupAction', (group) => {

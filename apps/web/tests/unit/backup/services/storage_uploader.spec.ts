@@ -29,14 +29,14 @@ test.group('StorageUploader', (group) => {
 
 	test('buildPath() prepends backup/ prefix', async ({ assert }) => {
 		const readFileStub = sinon.stub().resolves(Buffer.from('data'));
-		const { StorageUploader } = await import('#services/backup/storage_uploader');
+		const { StorageUploader } = await import('#backup/services/storage_uploader');
 		const uploader = new StorageUploader(driveStub as any, readFileStub);
 		assert.equal(uploader.buildPath('dump.sql'), 'backup/dump.sql');
 	});
 
 	test('buildPath() preserves nested paths', async ({ assert }) => {
 		const readFileStub = sinon.stub().resolves(Buffer.from('data'));
-		const { StorageUploader } = await import('#services/backup/storage_uploader');
+		const { StorageUploader } = await import('#backup/services/storage_uploader');
 		const uploader = new StorageUploader(driveStub as any, readFileStub);
 		assert.equal(uploader.buildPath('sub/dump.sql'), 'backup/sub/dump.sql');
 	});
@@ -50,7 +50,7 @@ test.group('StorageUploader', (group) => {
 		const putStub = sinon.stub().resolves();
 		const diskMock = { put: putStub, listAll: sinon.stub(), getMetaData: sinon.stub() };
 
-		const { StorageUploader } = await import('#services/backup/storage_uploader');
+		const { StorageUploader } = await import('#backup/services/storage_uploader');
 		const uploader = new StorageUploader(diskMock as any, readFileStub);
 
 		await uploader.upload('/tmp/dump.sql', 'dump.sql');
@@ -66,7 +66,7 @@ test.group('StorageUploader', (group) => {
 		const readFileStub = sinon.stub().rejects(new Error('ENOENT'));
 		const diskMock = { put: sinon.stub(), listAll: sinon.stub(), getMetaData: sinon.stub() };
 
-		const { StorageUploader } = await import('#services/backup/storage_uploader');
+		const { StorageUploader } = await import('#backup/services/storage_uploader');
 		const uploader = new StorageUploader(diskMock as any, readFileStub);
 
 		try {
@@ -87,7 +87,7 @@ test.group('StorageUploader', (group) => {
 		driveStub.listAll.resolves({ objects: fakeObjects as any });
 
 		const readFileStub = sinon.stub().resolves(Buffer.from('data'));
-		const { StorageUploader } = await import('#services/backup/storage_uploader');
+		const { StorageUploader } = await import('#backup/services/storage_uploader');
 		const uploader = new StorageUploader(driveStub as any, readFileStub);
 
 		const result = await uploader.listBackups();
@@ -103,7 +103,7 @@ test.group('StorageUploader', (group) => {
 		driveStub.getMetaData.resolves(meta);
 
 		const readFileStub = sinon.stub().resolves(Buffer.from('data'));
-		const { StorageUploader } = await import('#services/backup/storage_uploader');
+		const { StorageUploader } = await import('#backup/services/storage_uploader');
 		const uploader = new StorageUploader(driveStub as any, readFileStub);
 
 		const result = await uploader.getMetaData('backup/dump.sql.gz.enc');

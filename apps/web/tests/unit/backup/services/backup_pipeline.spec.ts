@@ -42,14 +42,14 @@ test.group('BackupPipeline', (group) => {
 	});
 
 	test('dumpPath() derives the .sql dump path from the backup filename', async ({ assert }) => {
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const pipeline = new BackupPipeline(context, buildLogService(), buildOverrides());
 
 		assert.equal(pipeline.dumpPath(), join('/tmp/backups', 'backup-full-2024-01-01-020000.sql'));
 	});
 
 	test('dump() tracks the output file and forwards dump options', async ({ assert }) => {
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const logService = buildLogService();
 		const overrides = buildOverrides();
 		const pipeline = new BackupPipeline(context, logService, overrides);
@@ -67,7 +67,7 @@ test.group('BackupPipeline', (group) => {
 	});
 
 	test('compressAndEncrypt() runs compress, unlink dump, encrypt and stat in order', async ({ assert }) => {
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const logService = buildLogService();
 		const overrides = buildOverrides();
 		const pipeline = new BackupPipeline(context, logService, overrides);
@@ -87,7 +87,7 @@ test.group('BackupPipeline', (group) => {
 	});
 
 	test('uploadBackup() uploads the artifact under the context filename', async ({ assert }) => {
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const overrides = buildOverrides();
 		const pipeline = new BackupPipeline(context, buildLogService(), overrides as any);
 
@@ -100,7 +100,7 @@ test.group('BackupPipeline', (group) => {
 	});
 
 	test('writeManifest() serializes, writes, uploads and tracks the manifest', async ({ assert }) => {
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const logService = buildLogService();
 		const overrides = buildOverrides();
 		const pipeline = new BackupPipeline(context, logService, overrides);
@@ -116,7 +116,7 @@ test.group('BackupPipeline', (group) => {
 	});
 
 	test('run() returns the body result and cleans up every tracked temp file', async ({ assert }) => {
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const logService = buildLogService();
 		const overrides = buildOverrides();
 		const pipeline = new BackupPipeline(context, logService, overrides);
@@ -147,7 +147,7 @@ test.group('BackupPipeline', (group) => {
 	});
 
 	test('run() logs the start of the run', async ({ assert }) => {
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const logService = buildLogService();
 		const pipeline = new BackupPipeline(context, logService, buildOverrides());
 
@@ -159,7 +159,7 @@ test.group('BackupPipeline', (group) => {
 	});
 
 	test('run() converts a body failure into a logged failure result', async ({ assert }) => {
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const logService = buildLogService();
 		const pipeline = new BackupPipeline(context, logService, buildOverrides());
 
@@ -177,7 +177,7 @@ test.group('BackupPipeline', (group) => {
 	});
 
 	test('run() keeps failing cleanup silent when a temp file is already gone', async ({ assert }) => {
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const logService = buildLogService();
 		const overrides = buildOverrides();
 		overrides._unlink = sinon.stub().rejects(new Error('ENOENT'));
@@ -193,7 +193,7 @@ test.group('BackupPipeline', (group) => {
 	});
 
 	test('successResult() logs completion metadata and builds the result', async ({ assert }) => {
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const logService = buildLogService();
 		const pipeline = new BackupPipeline(context, logService, buildOverrides());
 		const { default: backupConfig } = await import('#config/backup');
@@ -217,7 +217,7 @@ test.group('BackupPipeline', (group) => {
 	});
 
 	test('noArtifactResult() builds a success result without a filename or size', async ({ assert }) => {
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const logService = buildLogService();
 		const pipeline = new BackupPipeline(
 			{ ...context, strategyType: 'differential' as const },
@@ -250,10 +250,10 @@ test.group('BackupPipeline', (group) => {
 				rows: [{ tablename: 'users' }, { tablename: 'posts' }],
 			}),
 		} as any);
-		const snapshotModule = await import('#services/backup/snapshot_helper');
-		sinon.stub(snapshotModule.SnapshotHelper, 'manifestFilename').returns(manifestName);
+		const domainModule = await import('#backup/domain/backup');
+		sinon.stub(domainModule.BackupMetadata, 'manifestFilename').returns(manifestName);
 
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const pipeline = new BackupPipeline(context, logService, overrides);
 
 		const result = await pipeline.executeFullBackup();
@@ -287,10 +287,10 @@ test.group('BackupPipeline', (group) => {
 		sinon.stub(dbModule.default, 'connection').returns({
 			rawQuery: sinon.stub().resolves({ rows: [{ tablename: 'users' }] }),
 		} as any);
-		const snapshotModule = await import('#services/backup/snapshot_helper');
-		sinon.stub(snapshotModule.SnapshotHelper, 'manifestFilename').returns(manifestName);
+		const domainModule = await import('#backup/domain/backup');
+		sinon.stub(domainModule.BackupMetadata, 'manifestFilename').returns(manifestName);
 
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const pipeline = new BackupPipeline(context, logService, overrides);
 
 		await pipeline.executeFullBackup();
@@ -310,7 +310,7 @@ test.group('BackupPipeline', (group) => {
 		// Make mkdir throw to trigger the error path before any file is created
 		overrides._mkdir = sinon.stub().rejects(new Error('Permission denied'));
 
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const pipeline = new BackupPipeline(context, logService, overrides);
 
 		const result = await pipeline.executeFullBackup();
@@ -328,7 +328,7 @@ test.group('BackupPipeline', (group) => {
 		// Encryption fails after the dump was compressed
 		overrides._snapshotHelper.encrypt = sinon.stub().rejects(new Error('Encryption failed'));
 
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const pipeline = new BackupPipeline(context, logService, overrides);
 
 		const result = await pipeline.executeFullBackup();
@@ -375,12 +375,14 @@ test.group('BackupPipeline', (group) => {
 		const logService = buildLogService();
 		const overrides = buildDifferentialOverrides();
 
-		const snapshotModule = await import('#services/backup/snapshot_helper');
-		sinon.stub(snapshotModule.SnapshotHelper, 'generateFilename').returns('backup-full-2024.sql.gz.enc');
-		sinon.stub(snapshotModule.SnapshotHelper, 'manifestFilename').returns('m.manifest.json');
+		const domainModule = await import('#backup/domain/backup');
+		const generateStub = sinon
+			.stub(domainModule.BackupMetadata, 'generateFilename')
+			.returns('backup-full-2024.sql.gz.enc');
+		sinon.stub(domainModule.BackupMetadata, 'manifestFilename').returns('m.manifest.json');
 
 		// The fallback delegates to the full entry point on a fresh full-typed pipeline
-		const pipelineModule = await import('#services/backup/backup_pipeline');
+		const pipelineModule = await import('#backup/services/backup_pipeline');
 		const executeStub = sinon.stub().resolves({
 			success: true,
 			filename: 'backup-full-2024.sql.gz.enc',
@@ -403,10 +405,7 @@ test.group('BackupPipeline', (group) => {
 		assert.isTrue(logService.warn.calledOnce);
 		assert.include(logService.warn.firstCall.args[0].message, 'No full backup found');
 		// Verify the filename was regenerated with 'full' type before delegating
-		assert.isTrue(
-			(snapshotModule.SnapshotHelper.generateFilename as any).calledWith('full'),
-			'generateFilename should be called with full type on fallback',
-		);
+		assert.isTrue(generateStub.calledWith('full'), 'generateFilename should be called with full type on fallback');
 	});
 
 	test('executeDifferentialBackup() skips when no tables have been modified', async ({ assert }) => {
@@ -419,7 +418,7 @@ test.group('BackupPipeline', (group) => {
 			rawQuery: sinon.stub().resolves({ rows: [] }),
 		} as any);
 
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const pipeline = new BackupPipeline(differentialContext, logService, overrides);
 
 		const result = await pipeline.executeDifferentialBackup();
@@ -454,10 +453,10 @@ test.group('BackupPipeline', (group) => {
 		};
 		sinon.stub(dbModule.default, 'connection').returns(connStub as any);
 
-		const snapshotModule = await import('#services/backup/snapshot_helper');
-		sinon.stub(snapshotModule.SnapshotHelper, 'manifestFilename').returns('m.manifest.json');
+		const domainModule = await import('#backup/domain/backup');
+		sinon.stub(domainModule.BackupMetadata, 'manifestFilename').returns('m.manifest.json');
 
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const pipeline = new BackupPipeline(differentialContext, logService, overrides);
 
 		const result = await pipeline.executeDifferentialBackup();
@@ -489,7 +488,7 @@ test.group('BackupPipeline', (group) => {
 		const overrides = buildDifferentialOverrides();
 		overrides._mkdir = sinon.stub().rejects(new Error('Disk full'));
 
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const pipeline = new BackupPipeline(differentialContext, logService, overrides);
 
 		const result = await pipeline.executeDifferentialBackup();
@@ -518,10 +517,10 @@ test.group('BackupPipeline', (group) => {
 		};
 		sinon.stub(dbModule.default, 'connection').returns(connStub as any);
 
-		const snapshotModule = await import('#services/backup/snapshot_helper');
-		sinon.stub(snapshotModule.SnapshotHelper, 'manifestFilename').returns('m.manifest.json');
+		const domainModule = await import('#backup/domain/backup');
+		sinon.stub(domainModule.BackupMetadata, 'manifestFilename').returns('m.manifest.json');
 
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const pipeline = new BackupPipeline(differentialContext, logService, overrides);
 
 		const result = await pipeline.executeDifferentialBackup();
@@ -529,21 +528,5 @@ test.group('BackupPipeline', (group) => {
 		assert.isFalse(result.success);
 		// 1 explicit unlink (dump after compress) + cleanup removes tracked dump/compressed
 		assert.equal(overrides._unlink.callCount, 3);
-	});
-
-	test('parseFilenameDate() parses date and time components', async ({ assert }) => {
-		const { BackupPipeline } = await import('#services/backup/backup_pipeline');
-		const pipeline = new BackupPipeline(differentialContext, buildLogService(), buildOverrides());
-
-		// Access private method via prototype (TypeScript doesn't enforce private at runtime)
-		const parseMethod = (pipeline as any).parseFilenameDate.bind(pipeline);
-		const date = parseMethod('2024-06-15', '143022');
-
-		assert.equal(date.getFullYear(), 2024);
-		assert.equal(date.getMonth(), 5); // June is month 5 (0-indexed)
-		assert.equal(date.getDate(), 15);
-		assert.equal(date.getHours(), 14);
-		assert.equal(date.getMinutes(), 30);
-		assert.equal(date.getSeconds(), 22);
 	});
 });

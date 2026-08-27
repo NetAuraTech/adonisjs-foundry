@@ -1,10 +1,11 @@
 import { inject } from '@adonisjs/core';
 import drive from '@adonisjs/drive/services/main';
 import { DateTime } from 'luxon';
+import { BackupMetadata } from '#backup/domain/backup';
+import { ListBackupsQuery } from '#backup/queries/list_backups_query';
 import backupConfig from '#config/backup';
 import { LogService } from '#log/services/log_service';
 import { LogCategory } from '#log/types/logging';
-import type { BackupMetadata } from './list_backups_action.js';
 
 export interface RetentionPolicyResult {
 	/** Filenames of backups that were successfully deleted. */
@@ -30,7 +31,10 @@ interface EnforceRetentionPayload {
  */
 @inject()
 export class EnforceRetentionPolicyAction {
-	constructor(protected logService: LogService) {}
+	constructor(
+		protected logService: LogService,
+		protected listBackupsQuery: ListBackupsQuery,
+	) {}
 
 	private getDisk() {
 		return drive.use(backupConfig.storage.disk as Parameters<typeof drive.use>[0]);
@@ -69,7 +73,7 @@ export class EnforceRetentionPolicyAction {
 
 		try {
 			const disk = this.getDisk();
-			const backups = await this.listBackups();
+			const backups = await this.listBackupsQuery.execute();
 			const toDelete = this.getBackupsToDelete(backups, retention);
 
 			for (const backup of toDelete) {
@@ -156,44 +160,5 @@ export class EnforceRetentionPolicyAction {
 		yearlyBackups.forEach((b) => toKeep.add(b.filename));
 
 		return sorted.filter((b) => !toKeep.has(b.filename));
-	}
-
-	private parseFilenameDate(date: string, time: string): Date {
-		const [year, month, day] = date.split('-').map(Number);
-		const hour = Number.parseInt(time.slice(0, 2));
-		const minute = Number.parseInt(time.slice(2, 4));
-		const second = Number.parseInt(time.slice(4, 6));
-		return new Date(year, month - 1, day, hour, minute, second);
-	}
-
-	private async listBackups(): Promise<BackupMetadata[]> {
-		try {
-			const disk = this.getDisk();
-			const prefix = `${backupConfig.storage.prefix}/`;
-			const { objects } = await disk.listAll(prefix);
-			const backups: BackupMetadata[] = [];
-
-			for (const object of objects) {
-				if (object.isDirectory) continue;
-
-				const filename = object.key.replace(prefix, '');
-				const match = filename.match(/backup-(full|differential)-(\d{4}-\d{2}-\d{2})-(\d{6})/);
-				if (!match) continue;
-
-				const meta = await disk.getMetaData(object.key);
-
-				backups.push({
-					filename,
-					type: match[1] as 'full' | 'differential',
-					size: meta.contentLength || 0,
-					createdAt: meta.lastModified || this.parseFilenameDate(match[2], match[3]),
-					path: object.key,
-				});
-			}
-
-			return backups.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-		} catch {
-			return [];
-		}
 	}
 }

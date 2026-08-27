@@ -1,8 +1,8 @@
-﻿import app from '@adonisjs/core/services/app';
+import app from '@adonisjs/core/services/app';
 import drive from '@adonisjs/drive/services/main';
 import { test } from '@japa/runner';
 import sinon from 'sinon';
-import { RestoreBackupAction } from '#actions/backup/restore_backup_action';
+import { RestoreBackupAction } from '#backup/actions/backup/restore_backup_action';
 import backupConfig from '#config/backup';
 
 test.group('RestoreBackupAction', (group) => {
@@ -11,7 +11,7 @@ test.group('RestoreBackupAction', (group) => {
 	});
 
 	test('restoreDatabaseWithPsql spawns psql with ON_ERROR_STOP and single-transaction flags', async ({ assert }) => {
-		const { restoreDatabaseWithPsql } = await import('#services/backup/psql_helper');
+		const { restoreDatabaseWithPsql } = await import('#backup/services/psql_helper');
 
 		const mockProcess = {
 			on: sinon.stub().callsArgWith(1, 0),
@@ -50,7 +50,7 @@ test.group('RestoreBackupAction', (group) => {
 	});
 
 	test('restoreDatabaseWithPsql passes PGPASSWORD in env', async ({ assert }) => {
-		const { restoreDatabaseWithPsql } = await import('#services/backup/psql_helper');
+		const { restoreDatabaseWithPsql } = await import('#backup/services/psql_helper');
 
 		const mockProcess = {
 			on: sinon.stub().callsArgWith(1, 0),

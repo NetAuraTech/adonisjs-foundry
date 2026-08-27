@@ -5,14 +5,15 @@ import {
 	writeFile as defaultWriteFile,
 } from 'node:fs/promises';
 import { join } from 'node:path';
+import { BackupMetadata } from '#backup/domain/backup';
+import { createDatabaseDump as defaultCreateDatabaseDump, type DumpOptions } from '#backup/services/dump_helper';
+import { SnapshotHelper, type SnapshotHelper as SnapshotHelperType } from '#backup/services/snapshot_helper';
+import { StorageUploader, type StorageUploader as StorageUploaderType } from '#backup/services/storage_uploader';
 import backupConfig from '#config/backup';
 import { type LogService } from '#log/services/log_service';
 import { LogCategory } from '#log/types/logging';
-import { createDatabaseDump as defaultCreateDatabaseDump, type DumpOptions } from '#services/backup/dump_helper';
-import { SnapshotHelper, type SnapshotHelper as SnapshotHelperType } from '#services/backup/snapshot_helper';
-import { StorageUploader, type StorageUploader as StorageUploaderType } from '#services/backup/storage_uploader';
 import env from '#start/env';
-import type { BackupResult, BackupContext, BackupMetadata } from '#services/backup/backup_types';
+import type { BackupResult, BackupContext } from '#backup/types/backup';
 
 /**
  * Test-override dependency-injection bag for the backup pipeline.
@@ -191,7 +192,7 @@ export class BackupPipeline {
 				// Fall through to a full backup — regenerate the filename to match
 				const fullContext: BackupContext = {
 					...this.context,
-					filename: SnapshotHelper.generateFilename('full'),
+					filename: BackupMetadata.generateFilename('full'),
 					strategyType: 'full',
 				};
 				return new BackupPipeline(fullContext, this.logService, this.overrides).executeFullBackup();
@@ -287,7 +288,7 @@ export class BackupPipeline {
 	 * @returns The local path of the written manifest file.
 	 */
 	async writeManifest(payload: object): Promise<string> {
-		const manifestFilename = SnapshotHelper.manifestFilename(this.context.filename);
+		const manifestFilename = BackupMetadata.manifestFilename(this.context.filename);
 		const manifestPath = join(this.context.tempDir, manifestFilename);
 		await this.writeFileFn(manifestPath, JSON.stringify(payload, null, 2));
 		await this.storageUploader.upload(manifestPath, manifestFilename);
@@ -373,18 +374,11 @@ export class BackupPipeline {
 				if (object.isDirectory) continue;
 
 				const filename = object.key.replace(backupConfig.storage.prefix + '/', '');
-				const match = filename.match(/backup-(full|differential)-(\d{4}-\d{2}-\d{2})-(\d{6})/);
-				if (!match) continue;
-
 				const meta = await this.storageUploader.getMetaData(object.key);
+				const backup = BackupMetadata.fromStorageObject(filename, meta, object.key);
+				if (!backup) continue;
 
-				backups.push({
-					filename,
-					type: match[1] as 'full' | 'differential',
-					size: meta.contentLength || 0,
-					createdAt: meta.lastModified || this.parseFilenameDate(match[2], match[3]),
-					path: object.key,
-				});
+				backups.push(backup);
 			}
 
 			return backups.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
@@ -397,17 +391,6 @@ export class BackupPipeline {
 			});
 			return [];
 		}
-	}
-
-	/**
-	 * Parse the date and time components carried by a backup filename.
-	 */
-	private parseFilenameDate(date: string, time: string): Date {
-		const [year, month, day] = date.split('-').map(Number);
-		const hour = Number.parseInt(time.slice(0, 2));
-		const minute = Number.parseInt(time.slice(2, 4));
-		const second = Number.parseInt(time.slice(4, 6));
-		return new Date(year, month - 1, day, hour, minute, second);
 	}
 
 	/**

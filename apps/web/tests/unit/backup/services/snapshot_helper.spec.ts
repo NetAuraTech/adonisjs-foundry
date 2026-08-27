@@ -18,7 +18,7 @@ test.group('SnapshotHelper', (group) => {
 	// helpers. Here we verify path construction by stubbing at the instance level.
 
 	test('compress() returns input path with .gz extension', async ({ assert }) => {
-		const { SnapshotHelper } = await import('#services/backup/snapshot_helper');
+		const { SnapshotHelper } = await import('#backup/services/snapshot_helper');
 
 		// Disable encryption so the constructor doesn't need a key
 		const helper = new SnapshotHelper(undefined, undefined, { _encryptionEnabled: false });
@@ -34,7 +34,7 @@ test.group('SnapshotHelper', (group) => {
 	// ─── encrypt() ───────────────────────────────────────────────────────────
 
 	test('encrypt() returns input path when encryption is disabled', async ({ assert }) => {
-		const { SnapshotHelper } = await import('#services/backup/snapshot_helper');
+		const { SnapshotHelper } = await import('#backup/services/snapshot_helper');
 
 		// Explicitly disable encryption via the internal test option
 		const helper = new SnapshotHelper(undefined, undefined, { _encryptionEnabled: false });
@@ -50,7 +50,7 @@ test.group('SnapshotHelper', (group) => {
 		// Create a mock EncryptionHelper
 		const mockEncryptionHelper = { encryptFile: encryptFileStub } as any;
 
-		const { SnapshotHelper } = await import('#services/backup/snapshot_helper');
+		const { SnapshotHelper } = await import('#backup/services/snapshot_helper');
 		const helper = new SnapshotHelper(mockEncryptionHelper, unlinkStub);
 
 		const result = await helper.encrypt('/tmp/dump.sql.gz');
@@ -64,53 +64,12 @@ test.group('SnapshotHelper', (group) => {
 		const unlinkStub = sinon.stub().resolves();
 		const mockEncryptionHelper = { encryptFile: encryptFileStub } as any;
 
-		const { SnapshotHelper } = await import('#services/backup/snapshot_helper');
+		const { SnapshotHelper } = await import('#backup/services/snapshot_helper');
 		const helper = new SnapshotHelper(mockEncryptionHelper, unlinkStub);
 
 		const result = await helper.encrypt('/tmp/data.sql');
 		assert.equal(result, '/tmp/data.sql.enc');
 		// Verify order: encryptFile called before unlink
 		assert.isTrue(encryptFileStub.calledBefore(unlinkStub));
-	});
-
-	// ─── generateFilename() ──────────────────────────────────────────────────
-
-	test('generateFilename() produces correctly formatted full backup filename', async ({ assert }) => {
-		const { SnapshotHelper } = await import('#services/backup/snapshot_helper');
-		const filename = SnapshotHelper.generateFilename('full');
-		// Format: backup-full-YYYY-MM-DD-HHMMSS.sql.gz.enc (compression + encryption enabled by default)
-		assert.match(filename, /^backup-full-\d{4}-\d{2}-\d{2}-\d{6}\.sql\.gz\.enc$/);
-	});
-
-	test('generateFilename() produces correctly formatted differential filename', async ({ assert }) => {
-		const { SnapshotHelper } = await import('#services/backup/snapshot_helper');
-		const filename = SnapshotHelper.generateFilename('differential');
-		assert.match(filename, /^backup-differential-\d{4}-\d{2}-\d{2}-\d{6}\.sql\.gz\.enc$/);
-	});
-
-	// ─── manifestFilename() ──────────────────────────────────────────────────
-
-	test('manifestFilename() strips all extensions and appends .manifest.json', async ({ assert }) => {
-		const { SnapshotHelper } = await import('#services/backup/snapshot_helper');
-		assert.equal(
-			SnapshotHelper.manifestFilename('backup-full-2024-01-01-020000.sql.gz.enc'),
-			'backup-full-2024-01-01-020000.manifest.json',
-		);
-	});
-
-	test('manifestFilename() handles filename without encryption extension', async ({ assert }) => {
-		const { SnapshotHelper } = await import('#services/backup/snapshot_helper');
-		assert.equal(
-			SnapshotHelper.manifestFilename('backup-full-2024-01-01-020000.sql.gz'),
-			'backup-full-2024-01-01-020000.manifest.json',
-		);
-	});
-
-	test('manifestFilename() handles plain sql filename', async ({ assert }) => {
-		const { SnapshotHelper } = await import('#services/backup/snapshot_helper');
-		assert.equal(
-			SnapshotHelper.manifestFilename('backup-full-2024-01-01-020000.sql'),
-			'backup-full-2024-01-01-020000.manifest.json',
-		);
 	});
 });

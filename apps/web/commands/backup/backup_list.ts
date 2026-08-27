@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
 import { BaseCommand, flags } from '@adonisjs/core/ace';
-import { ListBackupsAction } from '#actions/backup/list_backups_action';
+import { ListBackupsAction } from '#backup/actions/backup/list_backups_action';
 
 /**
  * Ace command that lists all backup archives found on the configured
