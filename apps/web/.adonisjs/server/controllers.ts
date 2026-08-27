@@ -42,15 +42,18 @@ export const controllers = {
   core: {
     admin: {
       Dashboard: () => import('#app/core/controllers/admin/dashboard_controller'),
+      Maintenance: () => import('#app/core/controllers/admin/maintenance_controller'),
     },
     api: {
       DashboardApi: () => import('#app/core/controllers/api/dashboard_api_controller'),
+      MaintenanceApi: () => import('#app/core/controllers/api/maintenance_api_controller'),
     },
     front: {
       Home: () => import('#app/core/controllers/front/home_controller'),
       Robots: () => import('#app/core/controllers/front/robots_controller'),
       Sitemap: () => import('#app/core/controllers/front/sitemap_controller'),
     },
+    Health: () => import('#app/core/controllers/health_controller'),
   },
   file: {
     admin: {
@@ -69,9 +72,6 @@ export const controllers = {
       FoldersShowApi: () => import('#app/file/controllers/api/folders_show_api_controller'),
       FoldersUpdateApi: () => import('#app/file/controllers/api/folders_update_api_controller'),
     },
-  },
-  health: {
-    Health: () => import('#app/health/controllers/health_controller'),
   },
   identity: {
     admin: {
@@ -107,14 +107,6 @@ export const controllers = {
     },
     api: {
       LogsApi: () => import('#app/log/controllers/api/logs_api_controller'),
-    },
-  },
-  maintenance: {
-    admin: {
-      Maintenance: () => import('#app/maintenance/controllers/admin/maintenance_controller'),
-    },
-    api: {
-      MaintenanceApi: () => import('#app/maintenance/controllers/api/maintenance_api_controller'),
     },
   },
   page: {

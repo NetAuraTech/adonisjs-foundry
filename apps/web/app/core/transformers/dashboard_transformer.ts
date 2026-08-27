@@ -1,5 +1,5 @@
 import { BaseTransformer } from '@adonisjs/core/transformers';
-import type { DashboardStats } from '#types/dashboard';
+import type { DashboardStats } from '#core/types/dashboard';
 
 /**
  * Shapes the aggregated {@link DashboardStats} snapshot for the Inertia

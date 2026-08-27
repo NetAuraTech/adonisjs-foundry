@@ -23,11 +23,10 @@
 
 import { pagePermissionCatalog } from '#cms/domain/services/page/page_permissions';
 import { templatePermissionCatalog } from '#cms/domain/services/template/template_permissions';
+import { corePermissionCatalog, coreRoleSlugs, maintenancePermissionCatalog } from '#core/permissions';
 import { filePermissionCatalog } from '#file/permissions';
 import { identityPermissionCatalog } from '#identity/permissions';
 import { loggingPermissionCatalog } from '#log/permissions';
-import { corePermissionCatalog, coreRoleSlugs } from '#services/core/core_permissions';
-import { maintenancePermissionCatalog } from '#services/maintenance/maintenance_permissions';
 import type { PermissionSlugs, PermissionMap } from '#types/permissions';
 
 /**

@@ -21,7 +21,7 @@ import { useCallback, useMemo } from 'react';
  * @example
  * // Retrieve the icon of a menu entry by its route
  * const { getEntryIcon } = useMenu()
- * const icon = getEntryIcon('admin.dashboard.render')
+ * const icon = getEntryIcon('admin.core.dashboard.render')
  */
 export function useMenu() {
 	const pageProps = usePage<SharedProps>().props;
@@ -37,7 +37,7 @@ export function useMenu() {
 	 * @returns The icon string if found, otherwise `undefined`
 	 *
 	 * @example
-	 * const icon = getEntryIcon('admin.dashboard.render')
+	 * const icon = getEntryIcon('admin.core.dashboard.render')
 	 */
 	const getEntryIcon = useCallback(
 		(route: NonNullable<LinkProps['route']>): string | undefined => {

@@ -1,10 +1,10 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
-import { GetDashboardStatsAction } from '#actions/core/get_dashboard_stats_action';
+import { GetDashboardStatsAction } from '#core/actions/get_dashboard_stats_action';
+import { DashboardRegistry } from '#core/services/dashboard_registry';
 import { LogService } from '#log/services/log_service';
-import { DashboardRegistry } from '#services/core/dashboard_registry';
 import type { DashboardTemplateSection } from '#cms/types/dashboard';
-import type { DashboardCollector, DashboardCollectorPayload } from '#types/dashboard';
+import type { DashboardCollector, DashboardCollectorPayload } from '#core/types/dashboard';
 
 class FakeTemplateCollector implements DashboardCollector<'template'> {
 	async collect(_payload: DashboardCollectorPayload): Promise<DashboardTemplateSection> {

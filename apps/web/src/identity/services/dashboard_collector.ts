@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
 import { UserRepository } from '#identity/repositories/user_repository';
-import type { DashboardIdentitySection, DashboardCollector } from '#types/dashboard';
+import type { DashboardIdentitySection, DashboardCollector } from '#core/types/dashboard';
 
 /**
  * Contributes the identity section of the admin dashboard: the total user

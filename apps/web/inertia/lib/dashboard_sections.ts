@@ -1,4 +1,4 @@
-import type { AdminDashboardTranslations } from '#helpers/i18n_payloads/dashboard';
+import type { AdminDashboardTranslations } from '#app/core/helpers/i18n_payloads/dashboard';
 import type { Data } from '@generated/data';
 import type { ComponentType } from 'react';
 

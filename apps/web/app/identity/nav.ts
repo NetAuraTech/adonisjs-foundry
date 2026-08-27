@@ -1,5 +1,5 @@
 import { permissions } from '#start/permissions';
-import type { AdminNavEntry } from '#types/nav';
+import type { AdminNavEntry } from '#core/types/nav';
 
 /** Admin navigation entries contributed by the identity domain. */
 export const identityNavEntries: AdminNavEntry[] = [

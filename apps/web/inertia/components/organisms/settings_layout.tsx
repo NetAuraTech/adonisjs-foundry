@@ -73,7 +73,7 @@ export function SettingsLayout(props: PageProps) {
 						</div>
 						<div className="flex gap-1">
 							<CanAccess permission={'admin.access'}>
-								<NavLink label={t('header.tabs.admin')} route="admin.dashboard.render" variant="setting_nav" />
+								<NavLink label={t('header.tabs.admin')} route="admin.core.dashboard.render" variant="setting_nav" />
 							</CanAccess>
 							<NavLink
 								name="logout"

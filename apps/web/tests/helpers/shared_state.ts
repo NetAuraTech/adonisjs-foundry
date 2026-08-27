@@ -1,6 +1,6 @@
 import app from '@adonisjs/core/services/app';
 import redis from '@adonisjs/redis/services/main';
-import { MaintenanceService } from '#services/maintenance/maintenance_service';
+import { MaintenanceService } from '#core/services/maintenance_service';
 
 /**
  * Maintenance state lives in Redis and persists across runs: an interrupted

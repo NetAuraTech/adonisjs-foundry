@@ -8,16 +8,16 @@
 | manifests may rewrite: remove a domain's registration and its URLs
 | disappear from `sitemap.xml`.
 |
-| The route collector is always present (hand-written `front.*` routes exist
-| in every flavor with a public front). The page collector is CMS-specific and
-| is removed by the `inertia` flavor manifest.
+| The route collector is always present (hand-written `core.*.render` routes
+| exist in every flavor with a public front). The page collector is
+| CMS-specific and is removed by the `inertia` flavor manifest.
 |
 */
 
 import app from '@adonisjs/core/services/app';
 import { PageSitemapCollector } from '#cms/domain/services/page/page_sitemap_collector';
-import { RouteSitemapCollector } from '#services/core/route_sitemap_collector';
-import { SitemapRegistry } from '#services/core/sitemap_registry';
+import { RouteSitemapCollector } from '#core/services/route_sitemap_collector';
+import { SitemapRegistry } from '#core/services/sitemap_registry';
 
 app.container.singleton(SitemapRegistry, () => new SitemapRegistry());
 

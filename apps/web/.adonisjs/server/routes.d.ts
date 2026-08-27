@@ -20,6 +20,16 @@ export type ScannedRoutes = {
     'api.v1.account.account.update': { paramsTuple?: []; params?: {} }
     'api.v1.account.account.destroy': { paramsTuple?: []; params?: {} }
     'api.v1.admin.account.preferences.execute': { paramsTuple?: []; params?: {} }
+    'admin.core.dashboard.render': { paramsTuple?: []; params?: {} }
+    'admin.core.maintenance.render': { paramsTuple?: []; params?: {} }
+    'admin.core.maintenance.update': { paramsTuple?: []; params?: {} }
+    'admin.core.maintenance.toggle': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.core.dashboard.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.core.maintenance.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.core.maintenance.update': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.core.maintenance.toggle': { paramsTuple?: []; params?: {} }
+    'core.sitemap.show': { paramsTuple?: []; params?: {} }
+    'core.robots.show': { paramsTuple?: []; params?: {} }
     'admin.file.files.render': { paramsTuple?: []; params?: {} }
     'admin.file.files.upload': { paramsTuple?: []; params?: {} }
     'admin.file.files.move': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -106,16 +116,6 @@ export type ScannedRoutes = {
     'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
     'health.liveness': { paramsTuple?: []; params?: {} }
     'health.readiness': { paramsTuple?: []; params?: {} }
-    'sitemap.show': { paramsTuple?: []; params?: {} }
-    'robots.show': { paramsTuple?: []; params?: {} }
-    'admin.dashboard.render': { paramsTuple?: []; params?: {} }
-    'admin.settings.maintenance.render': { paramsTuple?: []; params?: {} }
-    'admin.settings.maintenance.update': { paramsTuple?: []; params?: {} }
-    'admin.settings.maintenance.toggle': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.dashboard_api.index': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.maintenance_api.index': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.maintenance_api.update': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.maintenance_api.toggle': { paramsTuple?: []; params?: {} }
     'api.v1.admin.pages_api.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.pages_create_api.store': { paramsTuple?: []; params?: {} }
     'api.v1.admin.pages_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -173,6 +173,12 @@ export type ScannedRoutes = {
     'account.preferences.render': { paramsTuple?: []; params?: {} }
     'account.index': { paramsTuple?: []; params?: {} }
     'api.v1.account.profile.show': { paramsTuple?: []; params?: {} }
+    'admin.core.dashboard.render': { paramsTuple?: []; params?: {} }
+    'admin.core.maintenance.render': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.core.dashboard.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.core.maintenance.index': { paramsTuple?: []; params?: {} }
+    'core.sitemap.show': { paramsTuple?: []; params?: {} }
+    'core.robots.show': { paramsTuple?: []; params?: {} }
     'admin.file.files.render': { paramsTuple?: []; params?: {} }
     'admin.file.file_folders.render': { paramsTuple?: []; params?: {} }
     'api.v1.admin.file.files.index': { paramsTuple?: []; params?: {} }
@@ -211,12 +217,6 @@ export type ScannedRoutes = {
     'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
     'health.liveness': { paramsTuple?: []; params?: {} }
     'health.readiness': { paramsTuple?: []; params?: {} }
-    'sitemap.show': { paramsTuple?: []; params?: {} }
-    'robots.show': { paramsTuple?: []; params?: {} }
-    'admin.dashboard.render': { paramsTuple?: []; params?: {} }
-    'admin.settings.maintenance.render': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.dashboard_api.index': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.maintenance_api.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.pages_api.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.pages_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.page_revisions_api.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
@@ -245,6 +245,12 @@ export type ScannedRoutes = {
     'account.preferences.render': { paramsTuple?: []; params?: {} }
     'account.index': { paramsTuple?: []; params?: {} }
     'api.v1.account.profile.show': { paramsTuple?: []; params?: {} }
+    'admin.core.dashboard.render': { paramsTuple?: []; params?: {} }
+    'admin.core.maintenance.render': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.core.dashboard.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.core.maintenance.index': { paramsTuple?: []; params?: {} }
+    'core.sitemap.show': { paramsTuple?: []; params?: {} }
+    'core.robots.show': { paramsTuple?: []; params?: {} }
     'admin.file.files.render': { paramsTuple?: []; params?: {} }
     'admin.file.file_folders.render': { paramsTuple?: []; params?: {} }
     'api.v1.admin.file.files.index': { paramsTuple?: []; params?: {} }
@@ -283,12 +289,6 @@ export type ScannedRoutes = {
     'api.v1.auth.me.show': { paramsTuple?: []; params?: {} }
     'health.liveness': { paramsTuple?: []; params?: {} }
     'health.readiness': { paramsTuple?: []; params?: {} }
-    'sitemap.show': { paramsTuple?: []; params?: {} }
-    'robots.show': { paramsTuple?: []; params?: {} }
-    'admin.dashboard.render': { paramsTuple?: []; params?: {} }
-    'admin.settings.maintenance.render': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.dashboard_api.index': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.maintenance_api.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.pages_api.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.pages_show_api.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.page_revisions_api.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
@@ -315,6 +315,8 @@ export type ScannedRoutes = {
     'account.email_change.execute': { paramsTuple?: []; params?: {} }
     'account.preferences.execute': { paramsTuple?: []; params?: {} }
     'api.v1.admin.account.preferences.execute': { paramsTuple?: []; params?: {} }
+    'admin.core.maintenance.update': { paramsTuple?: []; params?: {} }
+    'admin.core.maintenance.toggle': { paramsTuple?: []; params?: {} }
     'admin.file.files.upload': { paramsTuple?: []; params?: {} }
     'admin.file.files.move': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.file.files.upsert_alt': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -346,8 +348,6 @@ export type ScannedRoutes = {
     'api.v1.auth.email_verification.store': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'api.v1.auth.accept_invitation.store': { paramsTuple?: []; params?: {} }
     'api.v1.auth.logout.destroy': { paramsTuple?: []; params?: {} }
-    'admin.settings.maintenance.update': { paramsTuple?: []; params?: {} }
-    'admin.settings.maintenance.toggle': { paramsTuple?: []; params?: {} }
     'api.v1.admin.pages_create_api.store': { paramsTuple?: []; params?: {} }
     'api.v1.admin.page_translations_api.store': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.page_revisions_api.restore': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
@@ -390,14 +390,14 @@ export type ScannedRoutes = {
   PUT: {
     'api.v1.account.profile.update': { paramsTuple?: []; params?: {} }
     'api.v1.account.account.update': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.core.maintenance.update': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.core.maintenance.toggle': { paramsTuple?: []; params?: {} }
     'admin.file.file_folders.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.file.files.move': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.file.files.upsert_alt': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.file.folders.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.identity.users.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.identity.roles.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'api.v1.admin.maintenance_api.update': { paramsTuple?: []; params?: {} }
-    'api.v1.admin.maintenance_api.toggle': { paramsTuple?: []; params?: {} }
     'api.v1.admin.pages_update_api.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.pages_update_api.publish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.pages_update_api.unpublish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

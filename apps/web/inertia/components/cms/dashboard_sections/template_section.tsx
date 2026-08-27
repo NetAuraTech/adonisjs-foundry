@@ -2,8 +2,8 @@ import { StatCard } from '~/components/dashboard_sections/stat_card';
 import { CanAccess } from '~/guards/can_access';
 import { useTranslation } from '~/hooks/use_translation';
 import { registerDashboardSection, type DashboardSectionCardProps } from '~/lib/dashboard_sections';
+import type { AdminDashboardTranslations } from '#app/core/helpers/i18n_payloads/dashboard';
 import type { CmsDashboardTranslations } from '#cms/helpers/i18n_payloads/dashboard_cms';
-import type { AdminDashboardTranslations } from '#helpers/i18n_payloads/dashboard';
 import type { Data } from '@generated/data';
 
 type CmsTranslations = AdminDashboardTranslations & CmsDashboardTranslations;

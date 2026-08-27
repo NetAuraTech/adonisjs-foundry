@@ -45,6 +45,16 @@ export interface ApiDefinition {
             execute: typeof routes['api.v1.admin.account.preferences.execute']
           }
         }
+        core: {
+          dashboard: {
+            index: typeof routes['api.v1.admin.core.dashboard.index']
+          }
+          maintenance: {
+            index: typeof routes['api.v1.admin.core.maintenance.index']
+            update: typeof routes['api.v1.admin.core.maintenance.update']
+            toggle: typeof routes['api.v1.admin.core.maintenance.toggle']
+          }
+        }
         file: {
           files: {
             index: typeof routes['api.v1.admin.file.files.index']
@@ -87,14 +97,6 @@ export interface ApiDefinition {
           logs: {
             index: typeof routes['api.v1.admin.log.logs.index']
           }
-        }
-        dashboardApi: {
-          index: typeof routes['api.v1.admin.dashboard_api.index']
-        }
-        maintenanceApi: {
-          index: typeof routes['api.v1.admin.maintenance_api.index']
-          update: typeof routes['api.v1.admin.maintenance_api.update']
-          toggle: typeof routes['api.v1.admin.maintenance_api.toggle']
         }
         pagesApi: {
           index: typeof routes['api.v1.admin.pages_api.index']
@@ -170,6 +172,16 @@ export interface ApiDefinition {
     }
   }
   admin: {
+    core: {
+      dashboard: {
+        render: typeof routes['admin.core.dashboard.render']
+      }
+      maintenance: {
+        render: typeof routes['admin.core.maintenance.render']
+        update: typeof routes['admin.core.maintenance.update']
+        toggle: typeof routes['admin.core.maintenance.toggle']
+      }
+    }
     file: {
       files: {
         render: typeof routes['admin.file.files.render']
@@ -235,16 +247,6 @@ export interface ApiDefinition {
         render: typeof routes['admin.log.logs.render']
       }
     }
-    dashboard: {
-      render: typeof routes['admin.dashboard.render']
-    }
-    settings: {
-      maintenance: {
-        render: typeof routes['admin.settings.maintenance.render']
-        update: typeof routes['admin.settings.maintenance.update']
-        toggle: typeof routes['admin.settings.maintenance.toggle']
-      }
-    }
     pages: {
       render: typeof routes['admin.pages.render']
       setHomepage: typeof routes['admin.pages.set_homepage']
@@ -286,6 +288,14 @@ export interface ApiDefinition {
       render: typeof routes['admin.templates_preview.render']
     }
   }
+  core: {
+    sitemap: {
+      show: typeof routes['core.sitemap.show']
+    }
+    robots: {
+      show: typeof routes['core.robots.show']
+    }
+  }
   eventStream: typeof routes['event_stream']
   subscribe: typeof routes['subscribe']
   unsubscribe: typeof routes['unsubscribe']
@@ -325,12 +335,6 @@ export interface ApiDefinition {
   health: {
     liveness: typeof routes['health.liveness']
     readiness: typeof routes['health.readiness']
-  }
-  sitemap: {
-    show: typeof routes['sitemap.show']
-  }
-  robots: {
-    show: typeof routes['robots.show']
   }
   contact: {
     execute: typeof routes['contact.execute']

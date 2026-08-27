@@ -2,7 +2,7 @@ import { inject } from '@adonisjs/core';
 import { PageRepository } from '#cms/domain/repositories/page/page_repository';
 import env from '#start/env';
 import type Page from '#cms/models/page/page';
-import type { SitemapContributor } from '#types/sitemap';
+import type { SitemapContributor } from '#core/types/sitemap';
 
 /**
  * Sitemap contributor that enumerates published CMS Pages.

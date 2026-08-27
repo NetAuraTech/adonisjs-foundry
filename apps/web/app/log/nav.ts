@@ -1,5 +1,5 @@
 import { permissions } from '#start/permissions';
-import type { AdminNavEntry } from '#types/nav';
+import type { AdminNavEntry } from '#core/types/nav';
 
 /** Admin navigation entries contributed by the logging domain. */
 export const loggingNavEntries: AdminNavEntry[] = [

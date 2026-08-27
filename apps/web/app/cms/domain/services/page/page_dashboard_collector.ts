@@ -2,7 +2,7 @@ import { inject } from '@adonisjs/core';
 import { PageRepository } from '#cms/domain/repositories/page/page_repository';
 import { PageTranslationRepository } from '#cms/domain/repositories/page/page_translation_repository';
 import type { DashboardPageSection } from '#cms/types/dashboard';
-import type { DashboardCollector, DashboardCollectorPayload } from '#types/dashboard';
+import type { DashboardCollector, DashboardCollectorPayload } from '#core/types/dashboard';
 
 /**
  * Contributes the page section of the admin dashboard: page and translation

@@ -11,6 +11,8 @@ One action = one business operation. Lives in `app/domain/actions/{area}/{verb}_
 > **Log co-location:** log actions (log) live under `src/log/actions/{area}/`, imported via `#log/actions/...` — co-located with the log domain's models, repositories and services in the `src/log/` business module.
 >
 > **Backup co-location:** backup actions (backup) live under `src/backup/actions/{area}/`, imported via `#backup/actions/...` — co-located with the backup domain's services and domain objects in the `src/backup/` business module.
+>
+> **Core co-location:** core actions (dashboard stats, robots.txt) live under `src/core/actions/`, imported via `#core/actions/...` — co-located with the rest of the core business module.
 
 ## Structure
 
@@ -108,19 +110,17 @@ The `withTransaction()` utility starts a Lucid database transaction and binds it
 
 ## Directory Structure
 
-Mirror the domain areas used by services and repositories:
+Every non-CMS domain is co-located in its `src/{domain}/` business module; mirror the domain areas used by services and repositories:
 
 ```
-app/domain/actions/
-  auth/              # login, register, logout
-  account/           # email change, deletion
-  core/              # cross-cutting operations (dashboard stats)
-  email_verification/ # send verification, verify email
-  invitation/        # send, accept invitations
-  password/          # reset password flow
-  preferences/       # get, update user preferences
-  profile/           # update user profile
-  social/            # OAuth login, link/unlink providers
+src/
+  auth/actions/          # session, email_verification, invitation, password, social, token
+  account/actions/       # account, preferences, profile
+  core/actions/          # cross-cutting operations (dashboard stats, robots.txt)
+  file/actions/          # file, file_folder
+  identity/actions/      # user, role, permission
+  log/actions/           # log
+  backup/actions/        # backup
 ```
 
 > **(full flavor)** CMS actions (page, template) live under `app/cms/domain/actions/{page,template}/`

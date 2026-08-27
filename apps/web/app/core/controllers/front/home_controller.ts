@@ -1,5 +1,5 @@
 import { inject } from '@adonisjs/core';
-import { buildHomePayload } from '#helpers/i18n_payloads/home';
+import { buildHomePayload } from '#app/core/helpers/i18n_payloads/home';
 import { I18nService } from '#services/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
@@ -17,7 +17,7 @@ export default class HomeController {
 	constructor(protected i18n: I18nService) {}
 
 	/**
-	 * `GET /` — renders the blank home page as `front.home`.
+	 * `GET /` — renders the blank home page as `core.home.render`.
 	 *
 	 * @returns The Inertia-rendered `core/front/home` page.
 	 */

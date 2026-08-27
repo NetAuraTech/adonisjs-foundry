@@ -2,7 +2,7 @@ import { StatCard } from '~/components/dashboard_sections/stat_card';
 import { CanAccess } from '~/guards/can_access';
 import { useTranslation } from '~/hooks/use_translation';
 import { registerDashboardSection, type DashboardSectionCardProps } from '~/lib/dashboard_sections';
-import type { DashboardIdentitySection } from '#types/dashboard';
+import type { DashboardIdentitySection } from '#core/types/dashboard';
 
 /**
  * Identity dashboard section card: total users and the users-by-role

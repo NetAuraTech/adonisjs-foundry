@@ -8,36 +8,29 @@
 |
 */
 
-// Auth, identity, account, file and log routes self-register on import (feature-gated inside the modules).
+// Auth, identity, account, file, log and core routes self-register on import (feature-gated inside the modules).
 import '#app/account/routes';
 import '#app/auth/routes';
+import '#app/core/routes';
 import '#app/file/routes';
 import '#app/identity/routes';
 import '#app/log/routes';
 import router from '@adonisjs/core/services/router';
+import { registerCoreHealthRoutes } from '#app/core/health.routes';
 import features from '#config/features';
 import { middleware } from '#start/kernel';
-import { registerAdminRoutes } from '#start/routes/admin.routes';
-import { registerAdminRestApiRoutes } from '#start/routes/admin_rest_api.routes';
 import { registerCmsAdminRoutes } from '#start/routes/cms_admin.routes';
 import { registerCmsPublicRoutes } from '#start/routes/cms_public.routes';
 import { registerCmsRestApiRoutes } from '#start/routes/cms_rest_api.routes';
-import { registerCorePublicRoutes } from '#start/routes/core_public.routes';
-import { registerHealthRoutes } from '#start/routes/health.routes';
 
 // Health routes are outside maintenance middleware (liveness/readiness probes)
-registerHealthRoutes();
+registerCoreHealthRoutes();
 
 // Wrap all feature routes with maintenance middleware
 // Health routes are registered separately above (outside this wrapper)
 
 router
 	.group(() => {
-		// Core SEO endpoints (sitemap.xml, robots.txt) — flavor-independent.
-		registerCorePublicRoutes();
-
-		if (features.admin) registerAdminRoutes();
-		if (features.adminApi) registerAdminRestApiRoutes();
 		if (features.adminApi && features.cms) registerCmsRestApiRoutes();
 		if (features.cms) {
 			registerCmsAdminRoutes();

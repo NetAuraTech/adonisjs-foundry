@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { FileFolderRepository } from '#file/repositories/file_folder_repository';
 import { FileRepository } from '#file/repositories/file_repository';
-import type { DashboardCollector, DashboardCollectorPayload, DashboardFileSection } from '#types/dashboard';
+import type { DashboardCollector, DashboardCollectorPayload, DashboardFileSection } from '#core/types/dashboard';
 
 /**
  * Contributes the file section of the admin dashboard: file and folder

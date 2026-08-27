@@ -1,5 +1,5 @@
 import { inject } from '@adonisjs/core';
-import { GetRobotsTxtAction } from '#actions/core/get_robots_txt_action';
+import { GetRobotsTxtAction } from '#core/actions/get_robots_txt_action';
 import type { HttpContext } from '@adonisjs/core/http';
 
 /**
