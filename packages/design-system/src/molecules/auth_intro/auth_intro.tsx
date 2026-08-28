@@ -1,6 +1,6 @@
-import { Heading } from '@foundry/design-system/heading';
-import { Paragraph } from '@foundry/design-system/paragraph';
-import { ReactNode } from 'react';
+import { Heading } from '../../atoms/heading/heading';
+import { Paragraph } from '../../atoms/paragraph/paragraph';
+import type { ReactNode } from 'react';
 
 interface AuthIntroProps {
 	/** Main heading displayed below the icon. */

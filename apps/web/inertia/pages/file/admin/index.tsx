@@ -2,9 +2,11 @@ import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
 import { Button, button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Icon } from '@foundry/design-system/icon';
 import { Modal } from '@foundry/design-system/modal';
 import { NavLink } from '@foundry/design-system/nav-link';
+import { Pagination } from '@foundry/design-system/pagination';
 import { SelectOption } from '@foundry/design-system/select';
 import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
@@ -12,11 +14,10 @@ import { usePage } from '@inertiajs/react';
 import { ReactElement, useState } from 'react';
 import { urlFor } from '~/client';
 import { FileUploadInput } from '~/components/atoms/file_upload_input';
-import { Field } from '~/components/molecules/field';
-import { Pagination } from '~/components/molecules/pagination';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { FileAltEditor } from '~/components/organisms/files/file_alt_editor';
 import { CanAccess } from '~/guards/can_access';
+import { sanitizeText } from '~/helpers/sanitization';
 import { useMenu } from '~/hooks/use_admin';
 import { useNavLinkActive } from '~/hooks/use_nav_link_active';
 import { Lang, useTranslation } from '~/hooks/use_translation';
@@ -40,6 +41,7 @@ export default function FilesIndexPage(props: Props) {
 	const { files, filters, folders, translations } = props;
 	const pageProps = usePage<SharedProps>().props;
 	const { t, format } = useTranslation(translations);
+	const { t: commonT } = useTranslation(pageProps.common_translations);
 
 	const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 	const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -110,7 +112,7 @@ export default function FilesIndexPage(props: Props) {
 									label={t('search.value')}
 									placeholder="..."
 									defaultValue={filters.search}
-									sanitize
+									sanitizeValue={sanitizeText}
 								/>
 								<Field
 									type="select"
@@ -118,7 +120,7 @@ export default function FilesIndexPage(props: Props) {
 									label={t('search.type.value')}
 									placeholder={t('search.type.options.placeholder')}
 									defaultValue={filters.mime_type}
-									sanitize
+									sanitizeValue={sanitizeText}
 								>
 									<SelectOption label={t('search.type.options.image')} value="image" />
 									<SelectOption label={t('search.type.options.video')} value="video" />
@@ -141,6 +143,9 @@ export default function FilesIndexPage(props: Props) {
 							buildHref={(page) => urlFor('admin.file.files.render', undefined, { qs: { ...filters, page } })}
 							filters={filters}
 							metadata={files.metadata}
+							summaryText={(start, end, total) => commonT('pagination.showing', { start, end, total })}
+							previousTitle={commonT('pagination.previous')}
+							nextTitle={commonT('pagination.next')}
 						/>
 					}
 					className="md:flex-1"

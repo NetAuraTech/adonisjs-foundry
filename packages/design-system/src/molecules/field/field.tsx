@@ -1,11 +1,10 @@
-import { Checkbox } from '@foundry/design-system/checkbox';
-import { Input } from '@foundry/design-system/input';
-import { Label } from '@foundry/design-system/label';
-import { Paragraph } from '@foundry/design-system/paragraph';
-import { Select } from '@foundry/design-system/select';
-import { Textarea } from '@foundry/design-system/textarea';
-import { ImagePicker } from '~/components/molecules/image_picker';
-import { getSanitizer } from '~/helpers/sanitization';
+import { cn, tv } from 'tailwind-variants';
+import { Checkbox } from '../../atoms/checkbox/checkbox';
+import { Input } from '../../atoms/input/input';
+import { Label } from '../../atoms/label/label';
+import { Paragraph } from '../../atoms/paragraph/paragraph';
+import { Select } from '../../atoms/select/select';
+import { Textarea } from '../../atoms/textarea/textarea';
 import type { ChangeEvent, ReactNode } from 'react';
 
 interface FieldProps {
@@ -18,6 +17,8 @@ interface FieldProps {
 	 * - `'textarea'` → `<Textarea>`
 	 * - `'select'` → `<Select>` (pass options as `children`)
 	 * - `'checkbox'` / `'radio'` → `<Checkbox>` with inline label layout
+	 * - `'image'` → the `renderImage` extension point (falls back to `<Input>`
+	 *   when it is not provided)
 	 * - Anything else → `<Input>`
 	 */
 	type: string;
@@ -47,15 +48,48 @@ interface FieldProps {
 	onChange?: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
 	onBlur?: (event?: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
 	/**
-	 * When `true` (default), the field value is sanitized on blur using the
-	 * sanitizer resolved for the given `type`. Sanitization trims whitespace
-	 * and normalizes casing depending on the input type. Set to `false` for
-	 * sensitive fields like passwords.
+	 * Sanitizes the value on blur — when the sanitized value differs from the
+	 * raw one, the input is updated and `onChange` is re-emitted so controlled
+	 * form state stays in sync.
+	 *
+	 * The design system owns no sanitization policy: the caller injects the
+	 * function that applies one (e.g. the app's text/email/rich-text
+	 * sanitizers), typically resolved for the field's `type`. Omit it for
+	 * sensitive fields like passwords, where the value must stay untouched.
 	 */
-	sanitize?: boolean;
+	sanitizeValue?: (value: string) => string;
+	/**
+	 * Render extension point for `type="image"`. Receives the same prop bag a
+	 * native input control receives and returns the node rendered in place of
+	 * the input — the app composes its own picker there (e.g. the design
+	 * system's `ImagePicker` wired to its file manager). When omitted,
+	 * `type="image"` falls back to the default `<Input>`.
+	 */
+	renderImage?: (inputProps: ImageFieldProps) => ReactNode;
 	/** `<SelectOption>` elements passed through to a `'select'` type field. */
 	children?: ReactNode;
 }
+
+/**
+ * Props forwarded by `<Field type="image">` to the `renderImage` extension
+ * point — the same prop bag a native input control receives.
+ */
+export type ImageFieldProps = Omit<
+	FieldProps,
+	'label' | 'errorMessage' | 'helpText' | 'helpClassName' | 'sanitizeValue' | 'renderImage'
+>;
+
+const fieldLayout = tv({
+	variants: {
+		layout: {
+			inline: 'flex items-center gap-2',
+			grid: 'grid gap-2',
+		},
+	},
+	defaultVariants: {
+		layout: 'grid',
+	},
+});
 
 /**
  * Composite form field that combines a label, an input control, an optional
@@ -64,12 +98,12 @@ interface FieldProps {
  * The rendered input component is resolved from the `type` prop:
  * `'textarea'` → `<Textarea>`, `'select'` → `<Select>`,
  * `'checkbox'`/`'radio'` → `<Checkbox>` (with label placed after the
- * control), everything else → `<Input>`.
+ * control), `'image'` → the `renderImage` extension point, everything else →
+ * `<Input>`.
  *
  * **Sanitization** runs on blur, not on change, so the user's in-progress
- * input is never interrupted. When the sanitized value differs from the raw
- * value the `onChange` handler is called again with the sanitized result so
- * that controlled form state stays in sync.
+ * input is never interrupted. The sanitization policy is injected through
+ * `sanitizeValue` — the design system owns none.
  *
  * @example
  * // Text input with validation
@@ -80,7 +114,7 @@ interface FieldProps {
  *   placeholder="you@example.com"
  *   errorMessage={errors.email}
  *   required
- *   sanitize
+ *   sanitizeValue={sanitizeEmail}
  * />
  *
  * // Select with children
@@ -92,15 +126,22 @@ interface FieldProps {
  * // Checkbox with inline label
  * <Field label="Remember me" name="remember_me" type="checkbox" />
  *
- * // Password with help text
+ * // Password with help text (no sanitization)
  * <Field
  *   label="New password"
  *   name="password"
  *   type="password"
  *   helpText="Minimum 8 characters."
  *   helpClassName={validation.getHelpClassName('password')}
- *   sanitize={false}
  *   required
+ * />
+ *
+ * // Image type through the render extension point
+ * <Field
+ *   label="Thumbnail"
+ *   name="thumbnailId"
+ *   type="image"
+ *   renderImage={(inputProps) => <ImagePicker {...inputProps} loadFile={loadFileById} />}
  * />
  */
 export function Field(props: FieldProps) {
@@ -113,23 +154,22 @@ export function Field(props: FieldProps) {
 		helpClassName,
 		onChange,
 		onBlur,
-		sanitize = true,
+		sanitizeValue,
+		renderImage,
 		...inputProps
 	} = props;
 
 	const isInline = type === 'checkbox' || type === 'radio';
-	const variant = isInline ? 'inline' : 'grid';
-	const sanitizer = getSanitizer(type, sanitize);
 
 	/** Handle change — no sanitization during typing. */
 	const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
 		onChange?.(event);
 	};
 
-	/** Handle blur — apply sanitization when the user leaves the field. */
+	/** Handle blur — apply the injected sanitization when the user leaves the field. */
 	const handleBlur = (event?: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> | null) => {
-		if (event && type !== 'checkbox' && type !== 'radio' && sanitize) {
-			const sanitizedValue = sanitizer(event.target.value);
+		if (event && type !== 'checkbox' && type !== 'radio' && sanitizeValue) {
+			const sanitizedValue = sanitizeValue(event.target.value);
 
 			if (sanitizedValue !== event.target.value) {
 				event.target.value = sanitizedValue;
@@ -148,8 +188,6 @@ export function Field(props: FieldProps) {
 				return Select;
 			case 'checkbox':
 				return Checkbox;
-			case 'image':
-				return ImagePicker;
 			default:
 				return Input;
 		}
@@ -157,25 +195,28 @@ export function Field(props: FieldProps) {
 
 	const Component = getComponentFromType(type);
 
-	const variants = {
-		inline: 'flex items-center gap-2',
-		grid: 'grid gap-2',
-	};
-
 	return (
-		<div className={`grid`}>
-			<div className={`${variants[variant]}`}>
-				{!isInline && <Label label={label} htmlFor={name} required={props.required} />}
-				<Component {...inputProps} name={name} type={type} onChange={handleChange} onBlur={handleBlur} />
-				{isInline && <Label label={label} htmlFor={name} required={props.required} />}
-			</div>
+		<div className="grid">
+			{type === 'image' && renderImage ? (
+				renderImage({ ...inputProps, name, type, onChange: handleChange, onBlur: handleBlur })
+			) : (
+				<div className={cn(fieldLayout({ layout: isInline ? 'inline' : 'grid' }))}>
+					{!isInline && <Label label={label} htmlFor={name} required={props.required} />}
+					<Component {...inputProps} name={name} type={type} onChange={handleChange} onBlur={handleBlur} />
+					{isInline && <Label label={label} htmlFor={name} required={props.required} />}
+				</div>
+			)}
 			{errorMessage && (
 				<Paragraph variant="error" spacing="sm">
 					{errorMessage}
 				</Paragraph>
 			)}
 			{helpText && (
-				<Paragraph variant="muted" spacing={errorMessage ? 'xs' : 'sm'}>
+				<Paragraph
+					variant="muted"
+					spacing={errorMessage ? 'xs' : 'sm'}
+					className={helpClassName ? cn('text-balance leading-7', helpClassName) : undefined}
+				>
 					{helpText}
 				</Paragraph>
 			)}

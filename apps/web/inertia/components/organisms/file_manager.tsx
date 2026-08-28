@@ -1,12 +1,16 @@
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Icon } from '@foundry/design-system/icon';
 import { Modal } from '@foundry/design-system/modal';
+import { Pagination } from '@foundry/design-system/pagination';
 import { Data } from '@generated/data';
+import { usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
-import { Field } from '~/components/molecules/field';
-import { Pagination } from '~/components/molecules/pagination';
+import { sanitizeText } from '~/helpers/sanitization';
+import { useTranslation } from '~/hooks/use_translation';
 import { Paginated } from '~/types/paginated';
+import type { SharedProps } from '@adonisjs/inertia/types';
 
 interface FileManagerProps {
 	mime_type?: 'image' | 'video' | 'audio' | 'application/pdf';
@@ -22,6 +26,8 @@ interface ApiFilters {
 
 export function FileManager(props: FileManagerProps) {
 	const { mime_type, handleClose, handleClick } = props;
+	const pageProps = usePage<SharedProps>().props;
+	const { t: commonT } = useTranslation(pageProps.common_translations);
 	const [files, setFiles] = useState<Paginated<Data.File.File>>({
 		data: [],
 		metadata: {
@@ -101,12 +107,15 @@ export function FileManager(props: FileManagerProps) {
 						metadata={files.metadata}
 						filters={filters as { [key: string]: string | number }}
 						onClick={handlePaginationClick}
+						summaryText={(start, end, total) => commonT('pagination.showing', { start, end, total })}
+						previousTitle={commonT('pagination.previous')}
+						nextTitle={commonT('pagination.next')}
 					/>
 				}
 			>
 				<div className="flex h-140">
 					<div className="flex flex-col items-start gap-3 w-60 border-r border-sunken p-2">
-						<Field type="text" name="search" label="Search to translate" />
+						<Field type="text" name="search" label="Search to translate" sanitizeValue={sanitizeText} />
 						<div>
 							<button
 								type="button"

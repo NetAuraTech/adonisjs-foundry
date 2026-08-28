@@ -2,20 +2,23 @@ import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Icon } from '@foundry/design-system/icon';
+import { ImagePicker } from '@foundry/design-system/image-picker';
 import { Label } from '@foundry/design-system/label';
 import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement, useState } from 'react';
 import { urlFor } from '~/client';
 import { captureTemplateThumbnail } from '~/components/cms/utils/template_thumbnail';
-import { Field } from '~/components/molecules/field';
-import { ImagePicker } from '~/components/molecules/image_picker';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
+import { FileManager } from '~/components/organisms/file_manager';
 import { CanAccess } from '~/guards/can_access';
+import { sanitizeRichText, sanitizeText } from '~/helpers/sanitization';
 import { useMenu } from '~/hooks/use_admin';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
+import { loadFileById } from '~/utils/file';
 import type { AdminTemplatesEditTranslations } from '#app/cms/helpers/i18n_payloads/templates_edit';
 import type { Block, PageContent } from '#cms/types/page';
 
@@ -71,14 +74,21 @@ export default function TemplatesEditPage({ template, translations }: PageProps)
 				<Form action={urlFor('admin.cms.templates.update', { id: template.id })}>
 					{({ processing }) => (
 						<div className="grid gap-6">
-							<Field label={t('form.name')} name="name" type="text" defaultValue={template.name} required sanitize />
+							<Field
+								label={t('form.name')}
+								name="name"
+								type="text"
+								defaultValue={template.name}
+								required
+								sanitizeValue={sanitizeText}
+							/>
 							<Field
 								label={t('form.description')}
 								name="description"
 								type="textarea"
 								defaultValue={template.description ?? ''}
 								rows={4}
-								sanitize
+								sanitizeValue={sanitizeRichText}
 							/>
 
 							<div className="grid gap-1.5">
@@ -88,6 +98,10 @@ export default function TemplatesEditPage({ template, translations }: PageProps)
 									name="thumbnailId"
 									defaultValue={thumbnailId ?? ''}
 									onChange={(event) => setThumbnailId(event.target.value ? Number(event.target.value) : null)}
+									loadFile={loadFileById}
+									renderFileManager={(onChoose, onClose) => (
+										<FileManager mime_type="image" handleClick={(file) => onChoose(file)} handleClose={onClose} />
+									)}
 								/>
 								<div className="flex items-center gap-2 mt-1">
 									<Button type="button" variant="outline" fitContent disabled={regenerating} onClick={handleRegenerate}>

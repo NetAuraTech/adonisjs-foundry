@@ -2,13 +2,14 @@ import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Icon } from '@foundry/design-system/icon';
 import { Data } from '@generated/data';
 import { ReactElement } from 'react';
 import { urlFor } from '~/client';
-import { Field } from '~/components/molecules/field';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
+import { sanitizeRichText, sanitizeText } from '~/helpers/sanitization';
 import { rules } from '~/helpers/validation_rules';
 import { useMenu } from '~/hooks/use_admin';
 import { useFormValidation } from '~/hooks/use_form_validation';
@@ -94,7 +95,7 @@ export default function PermissionsFormPage(props: PageProps) {
 									validation.handleBlur('name', event!.target.value);
 								}}
 								required
-								sanitize
+								sanitizeValue={sanitizeText}
 							/>
 							<Field
 								label={t('slug.value')}
@@ -110,7 +111,7 @@ export default function PermissionsFormPage(props: PageProps) {
 									validation.handleBlur('slug', event!.target.value);
 								}}
 								required
-								sanitize
+								sanitizeValue={sanitizeText}
 							/>
 							<Field
 								label={t('category.value')}
@@ -126,7 +127,7 @@ export default function PermissionsFormPage(props: PageProps) {
 									validation.handleBlur('category', event!.target.value);
 								}}
 								required
-								sanitize
+								sanitizeValue={sanitizeText}
 							/>
 							<Field
 								label={t('description.value')}
@@ -141,6 +142,7 @@ export default function PermissionsFormPage(props: PageProps) {
 								onBlur={(event) => {
 									validation.handleBlur('description', event!.target.value);
 								}}
+								sanitizeValue={sanitizeRichText}
 							/>
 							<Button loading={processing} type={'submit'} fitContent>
 								{t('submit')}

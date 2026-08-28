@@ -1,16 +1,17 @@
 import { Form } from '@adonisjs/inertia/react';
+import { AuthIntro } from '@foundry/design-system/auth-intro';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { NavLink } from '@foundry/design-system/nav-link';
 import { Paragraph } from '@foundry/design-system/paragraph';
 import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import { urlFor } from '~/client';
-import { AuthIntro } from '~/components/molecules/auth/auth_intro';
 import { AuthProviders } from '~/components/molecules/auth/auth_providers';
-import { Field } from '~/components/molecules/field';
 import { toLooseErrors } from '~/helpers/form_errors';
+import { sanitizeEmail } from '~/helpers/sanitization';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
@@ -90,7 +91,7 @@ export default function RegisterPage(props: RegisterPageProps) {
 											validation.handleBlur('email', event!.target.value);
 										}}
 										required
-										sanitize
+										sanitizeValue={sanitizeEmail}
 									/>
 									<Field
 										label={t('password.value')}
@@ -108,7 +109,6 @@ export default function RegisterPage(props: RegisterPageProps) {
 											validation.handleBlur('password_confirmation', confirmPassword);
 										}}
 										required
-										sanitize={false}
 										helpText={t('password.help')}
 										helpClassName={validation.getHelpClassName('password')}
 									/>
@@ -129,7 +129,6 @@ export default function RegisterPage(props: RegisterPageProps) {
 											validation.handleBlur('password_confirmation', event!.target.value);
 										}}
 										required
-										sanitize={false}
 										helpText={t('password.confirmation.help')}
 										helpClassName={validation.getHelpClassName('password_confirmation')}
 									/>

@@ -9,7 +9,7 @@ The shared React design system. Presentation **tokens** and (eventually) reusabl
 - **Source-only, no build.** Consumers add `@foundry/design-system` to their `dependencies` and import it directly; the bundler resolves the linked package to its TypeScript source. There is no `main`/`dist` — the `exports` map is the public API.
 - **The `exports` map is the public API.** One subpath per public component plus `./tokens`. Add a subpath when a component (or a token module) becomes public; keep one folder per component under `src/{atoms,molecules,organisms}/`.
 - **Presentation tokens are the package's type surface.** `src/tokens.ts` holds the shared presentation types (the Tailwind font-size scale, paragraph variants and spacing). Relocate new shared presentation types here rather than leaving them in the app — never duplicate a token definition in the app.
-- **`tailwind-variants` is the styling primitive.** One `tv()` call per component, typed variant props, built-in `className` merging. (No components have moved yet — the package currently exposes tokens and the canonical CSS.)
+- **`tailwind-variants` is the styling primitive.** One `tv()` call per component, typed variant props, built-in `className` merging. All package components (atoms and molecules) use it.
 - **React 19 is a peer dependency**, hoisted to a single copy shared with the app.
 
 ## Canonical CSS
@@ -33,11 +33,15 @@ Consumption is workspace-dep only — no bundler aliases point into the package.
 
 Storybook is a **package devDependency** and runs **locally only**: `npm run storybook --workspace @foundry/design-system`. There is no root script and no CI job for it. Stories live next to components as `*.stories.tsx` and are picked up by `.storybook/main.ts`.
 
-## App-embedded components (pre-move)
+## App-embedded components
 
-Until the component move lands, the app's React components still live in `inertia/components/`, organized as Atomic Design (atoms → molecules → organisms). No `templates`/`pages` folders — page-level layout lives in `inertia/pages/`.
+The app's React components live in `inertia/components/`, organized as Atomic Design (atoms → molecules → organisms). No `templates`/`pages` folders — page-level layout lives in `inertia/pages/`.
+
+The move of components into the package is in progress: all generic atoms and the `auth_intro`, `banner`, `field`, `image_picker` and `pagination` molecules already live in the package. The app keeps what is workflow- or app-coupled: the `theme_toggle` and `auth_providers` molecules, the `file_image` / `file_upload_input` atoms, and all organisms (header, footer, admin, settings, file manager, CMS builder).
 
 > **Flavor note:** the `inertia/components/cms/` subtree is `full`-flavor only (the `inertia` flavor prunes it too; the `api` flavor prunes the whole `inertia/` tree).
+
+Package molecules are **100% props/children**: app data reaches them through injected query functions and render props (e.g. `ImagePicker` receives a `loadFile` query and a `renderFileManager` surface; `Pagination` receives resolved label strings and a `buildHref` callback; `Field` receives a `sanitizeValue` function and a `renderImage` extension point). The package owns no app data, no API endpoint and no i18n catalog.
 
 ### Atoms
 
@@ -93,7 +97,7 @@ Match the block/domain vocabulary from `CONTEXT.md` (Block, Template, Page) rath
 
 ## Component Creation Checklist
 
-- Search `inertia/components/{atoms,molecules,organisms}` (and `packages/design-system/src/` once components have moved) for an existing pattern to extend before creating a new one.
+- Search `packages/design-system/src/` first (atoms and generic molecules live there), then `inertia/components/{atoms,molecules,organisms}`, for an existing pattern to extend before creating a new one.
 - Pick the category by responsibility, not visual size.
 - Define props around content structure, not one page's current data.
 - If creating a new block type, add both the block renderer and the editor, and register it wherever block types are enumerated (check `cms/builder/block_types.ts`).

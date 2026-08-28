@@ -3,15 +3,17 @@ import { SharedProps } from '@adonisjs/inertia/types';
 import { Badge } from '@foundry/design-system/badge';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Icon } from '@foundry/design-system/icon';
+import { Pagination } from '@foundry/design-system/pagination';
 import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
+import { usePage } from '@inertiajs/react';
 import { ReactElement } from 'react';
 import { urlFor } from '~/client';
-import { Field } from '~/components/molecules/field';
-import { Pagination } from '~/components/molecules/pagination';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
+import { sanitizeText } from '~/helpers/sanitization';
 import { useMenu } from '~/hooks/use_admin';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
@@ -28,7 +30,9 @@ type PageProps = {
 
 export default function RolesIndexPage(props: PageProps) {
 	const { roles, filters, translations } = props;
+	const pageProps = usePage<SharedProps>().props;
 	const { t } = useTranslation(translations);
+	const { t: commonT } = useTranslation(pageProps.common_translations);
 
 	const { getEntryIcon } = useMenu();
 
@@ -57,7 +61,7 @@ export default function RolesIndexPage(props: PageProps) {
 							label={t('search.value')}
 							placeholder={t('search.placeholder')}
 							defaultValue={filters.search}
-							sanitize
+							sanitizeValue={sanitizeText}
 						/>
 						<Button type="submit" fitContent>
 							{t('search.filter')}
@@ -69,6 +73,9 @@ export default function RolesIndexPage(props: PageProps) {
 						buildHref={(page) => urlFor('admin.identity.roles.render', undefined, { qs: { ...filters, page } })}
 						filters={filters}
 						metadata={roles.metadata}
+						summaryText={(start, end, total) => commonT('pagination.showing', { start, end, total })}
+						previousTitle={commonT('pagination.previous')}
+						nextTitle={commonT('pagination.next')}
 					/>
 				}
 			>
