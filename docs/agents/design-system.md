@@ -7,7 +7,7 @@ The shared React design system. Presentation **tokens** and (eventually) reusabl
 ## The `@foundry/design-system` package
 
 - **Source-only, no build.** Consumers add `@foundry/design-system` to their `dependencies` and import it directly; the bundler resolves the linked package to its TypeScript source. There is no `main`/`dist` — the `exports` map is the public API.
-- **The `exports` map is the public API.** One subpath per public component plus `./tokens`. Add a subpath when a component (or a token module) becomes public; keep one folder per component under `src/{atoms,molecules,organisms}/`.
+- **The `exports` map is the public API.** One subpath per public component plus `./tokens`, and one subpath per shared presentation hook under `src/hooks/` (e.g. `./use-nav-link-active`, used by the `header` organism). Add a subpath when a component, token module, or hook becomes public; keep one folder per component under `src/{atoms,molecules,organisms}/`.
 - **Presentation tokens are the package's type surface.** `src/tokens.ts` holds the shared presentation types (the Tailwind font-size scale, paragraph variants and spacing). Relocate new shared presentation types here rather than leaving them in the app — never duplicate a token definition in the app.
 - **`tailwind-variants` is the styling primitive.** One `tv()` call per component, typed variant props, built-in `className` merging. All package components (atoms and molecules) use it.
 - **React 19 is a peer dependency**, hoisted to a single copy shared with the app.
@@ -37,7 +37,7 @@ Storybook is a **package devDependency** and runs **locally only**: `npm run sto
 
 The app's React components live in `inertia/components/`, organized as Atomic Design (atoms → molecules → organisms). No `templates`/`pages` folders — page-level layout lives in `inertia/pages/`.
 
-The move of components into the package is in progress: all generic atoms and the `auth_intro`, `banner`, `field`, `image_picker` and `pagination` molecules already live in the package. The app keeps what is workflow- or app-coupled: the `theme_toggle` and `auth_providers` molecules, the `file_image` / `file_upload_input` atoms, and all organisms (header, footer, admin, settings, file manager, CMS builder).
+The move of components into the package is in progress: all generic atoms, the `auth_intro`, `banner`, `field`, `image_picker` and `pagination` molecules, and the `header`, `footer` and `admin` organisms (`admin_header`, `admin_main`, `admin_sidebar`) already live in the package. The app keeps what is workflow- or app-coupled: the `theme_toggle` and `auth_providers` molecules, the `file_image` / `file_upload_input` atoms, and the `settings`, `file manager` and CMS builder organisms.
 
 > **Flavor note:** the `inertia/components/cms/` subtree is `full`-flavor only (the `inertia` flavor prunes it too; the `api` flavor prunes the whole `inertia/` tree).
 

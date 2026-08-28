@@ -1,5 +1,6 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { AdminMain } from '@foundry/design-system/admin-main';
 import { Badge } from '@foundry/design-system/badge';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
@@ -9,7 +10,6 @@ import { Label } from '@foundry/design-system/label';
 import { Paragraph } from '@foundry/design-system/paragraph';
 import { ReactElement } from 'react';
 import { urlFor } from '~/client';
-import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { sanitizeRichText } from '~/helpers/sanitization';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';

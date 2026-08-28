@@ -1,5 +1,6 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { AdminMain } from '@foundry/design-system/admin-main';
 import { Button, button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
 import { Field } from '@foundry/design-system/field';
@@ -14,7 +15,6 @@ import { usePage } from '@inertiajs/react';
 import { ReactElement, useState } from 'react';
 import { urlFor } from '~/client';
 import { FileUploadInput } from '~/components/atoms/file_upload_input';
-import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { FileAltEditor } from '~/components/organisms/files/file_alt_editor';
 import { CanAccess } from '~/guards/can_access';
 import { sanitizeText } from '~/helpers/sanitization';

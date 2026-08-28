@@ -1,6 +1,14 @@
+import { cn, tv } from 'tailwind-variants';
+
+const adminHeader = tv({
+	base: 'flex items-center justify-between p-4 bg-surface border-b-2 border-edge sticky top-0 z-50',
+});
+
 interface AdminHeaderProps {
 	/** Callback fired when the sidebar toggle button is clicked. */
 	handleClick: () => void;
+	/** Additional Tailwind classes merged onto the `<header>`. */
+	className?: string;
 }
 
 /**
@@ -16,13 +24,18 @@ interface AdminHeaderProps {
  * const [sidebarOpen, setSidebarOpen] = useState(false)
  *
  * <AdminHeader handleClick={() => setSidebarOpen((v) => !v)} />
- * <AdminSidebar sidebarOpen={sidebarOpen} />
+ * <AdminSidebar
+ *   sidebarOpen={sidebarOpen}
+ *   user={user}
+ *   dateLabel={dateLabel}
+ *   menu={menu}
+ * />
  */
 export function AdminHeader(props: AdminHeaderProps) {
-	const { handleClick } = props;
+	const { handleClick, className } = props;
 
 	return (
-		<header className="flex items-center justify-between p-4 bg-surface border-b-2 border-edge sticky top-0 z-50">
+		<header className={cn(adminHeader(), className)}>
 			<button
 				onClick={handleClick}
 				className="p-2 rounded text-ink-inverted bg-primary hover:bg-primary-deep transition-colors cursor-pointer"
