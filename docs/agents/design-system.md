@@ -37,7 +37,7 @@ Storybook is a **package devDependency** and runs **locally only**: `npm run sto
 
 The app's React components live in `inertia/components/`, organized as Atomic Design (atoms → molecules → organisms). No `templates`/`pages` folders — page-level layout lives in `inertia/pages/`.
 
-The move of components into the package is in progress: all generic atoms and the `auth_intro`, `banner`, `field`, `image_picker` and `pagination` molecules already live in the package. The app keeps what is workflow- or app-coupled: the `theme_toggle` and `auth_providers` molecules, the `file_image` / `file_upload_input` atoms, and all organisms (header, footer, admin, settings, file manager, CMS builder).
+The move of components into the package is in progress: all generic atoms, the `auth_intro`, `banner`, `field`, `image_picker` and `pagination` molecules, and the `header`, `footer` and `admin` organisms (`admin_header`, `admin_main`, `admin_sidebar`) already live in the package. The app keeps what is workflow- or app-coupled: the `theme_toggle` and `auth_providers` molecules, the `file_image` / `file_upload_input` atoms, and the `settings`, `file manager` and CMS builder organisms.
 
 > **Flavor note:** the `inertia/components/cms/` subtree is `full`-flavor only (the `inertia` flavor prunes it too; the `api` flavor prunes the whole `inertia/` tree).
 

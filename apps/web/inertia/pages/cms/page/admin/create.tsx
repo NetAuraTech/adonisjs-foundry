@@ -1,5 +1,6 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { AdminMain } from '@foundry/design-system/admin-main';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
 import { Field } from '@foundry/design-system/field';
@@ -10,7 +11,6 @@ import { SelectOption } from '@foundry/design-system/select';
 import { Separator } from '@foundry/design-system/separator';
 import { ReactElement } from 'react';
 import { urlFor } from '~/client';
-import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
 import { sanitizeRichText, sanitizeText } from '~/helpers/sanitization';
 import { presets, rules } from '~/helpers/validation_rules';

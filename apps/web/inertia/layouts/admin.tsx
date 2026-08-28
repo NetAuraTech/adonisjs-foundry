@@ -1,10 +1,15 @@
 import { SharedProps } from '@adonisjs/inertia/types';
+import { AdminHeader } from '@foundry/design-system/admin-header';
+import { AdminSidebar } from '@foundry/design-system/admin-sidebar';
 import { Head, usePage } from '@inertiajs/react';
 import { ReactElement, useEffect, useState } from 'react';
 import { toast, Toaster } from 'sonner';
-import { AdminHeader } from '~/components/organisms/admin/admin_header';
-import { AdminSidebar } from '~/components/organisms/admin/admin_sidebar';
+import { urlFor } from '~/client';
+import { ThemeToggle } from '~/components/molecules/theme_toggle';
+import { useMenu } from '~/hooks/use_admin';
+import { useAuth } from '~/hooks/use_auth';
 import { useIsLarge } from '~/hooks/use_is_large';
+import { Lang, useTranslation } from '~/hooks/use_translation';
 
 interface LayoutProps {
 	children: ReactElement<SharedProps>;
@@ -43,6 +48,26 @@ export default function Layout(props: LayoutProps) {
 	const { children } = props;
 
 	const [sidebarOpen, setSidebarOpen] = useState(false);
+
+	const { menu: rawMenu } = useMenu();
+	const { user, can, canAny } = useAuth();
+	const { format } = useTranslation({});
+
+	const resolvedMenu = rawMenu
+		.map((group) => ({
+			category: group.category,
+			label: group.label,
+			entries: group.entries
+				.filter((entry) => (Array.isArray(entry.permission) ? canAny(entry.permission) : can(entry.permission)))
+				.map((entry) => ({
+					label: entry.label,
+					href: urlFor(entry.route as any, entry.routeParams as any),
+					icon: entry.icon,
+				})),
+		}))
+		.filter((group) => group.entries.length > 0);
+
+	const dateLabel = format(new Date(), 'long', pageProps.locale as Lang);
 
 	const handleNavButtonClick = () => {
 		setSidebarOpen(!sidebarOpen);
@@ -87,7 +112,13 @@ export default function Layout(props: LayoutProps) {
 			</Head>
 			<Toaster position="top-right" richColors />
 			<div className="admin">
-				<AdminSidebar sidebarOpen={sidebarOpen} />
+				<AdminSidebar
+					sidebarOpen={sidebarOpen}
+					user={user ? { username: user.username } : null}
+					dateLabel={dateLabel}
+					menu={resolvedMenu}
+					userActions={<ThemeToggle />}
+				/>
 				<div className="main">
 					<AdminHeader handleClick={handleNavButtonClick} />
 					<main>{children}</main>

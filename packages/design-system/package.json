@@ -6,6 +6,9 @@
   "type": "module",
   "exports": {
     "./tokens": "./src/tokens.ts",
+    "./admin-header": "./src/organisms/admin/admin_header.tsx",
+    "./admin-main": "./src/organisms/admin/admin_main.tsx",
+    "./admin-sidebar": "./src/organisms/admin/admin_sidebar.tsx",
     "./auth-intro": "./src/molecules/auth_intro/auth_intro.tsx",
     "./avatar": "./src/atoms/avatar/avatar.tsx",
     "./badge": "./src/atoms/badge/badge.tsx",
@@ -15,6 +18,8 @@
     "./checkbox": "./src/atoms/checkbox/checkbox.tsx",
     "./field": "./src/molecules/field/field.tsx",
     "./floating-portal": "./src/atoms/floating_portal/floating_portal.tsx",
+    "./footer": "./src/organisms/footer/footer.tsx",
+    "./header": "./src/organisms/header/header.tsx",
     "./heading": "./src/atoms/heading/heading.tsx",
     "./icon": "./src/atoms/icon/icon.tsx",
     "./image-picker": "./src/molecules/image_picker/image_picker.tsx",
@@ -29,6 +34,7 @@
     "./separator": "./src/atoms/separator/separator.tsx",
     "./table": "./src/atoms/table/table.tsx",
     "./textarea": "./src/atoms/textarea/textarea.tsx",
+    "./use-nav-link-active": "./src/hooks/use_nav_link_active.ts",
     "./user-status": "./src/atoms/user_status/user_status.tsx"
   },
   "scripts": {
