@@ -67,11 +67,11 @@ export default function RolesShowPage(props: PageProps) {
 								</CanAccess>
 								<CanAccess permission="roles.delete">
 									<Form
+										action={urlFor('admin.identity.roles.destroy', { id: role.id })}
+										method="delete"
 										onBefore={() => {
 											return window.confirm(t('delete.confirm', { name: roleName }));
 										}}
-										route="admin.identity.roles.destroy"
-										routeParams={{ id: role.id }}
 									>
 										<Button variant="icon_danger" title={t('actions.delete', { name: roleName })} fitContent>
 											<Icon name="Trash" size={18} />

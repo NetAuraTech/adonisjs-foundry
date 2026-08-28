@@ -7,6 +7,7 @@ import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement } from 'react';
+import { urlFor } from '~/client';
 import { Field } from '~/components/molecules/field';
 import { Pagination } from '~/components/molecules/pagination';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
@@ -55,7 +56,8 @@ export default function LogsIndexPage(props: PageProps) {
 			<Card
 				header={
 					<Form
-						route="admin.log.logs.render"
+						action={urlFor('admin.log.logs.render')}
+						method="get"
 						className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-3 items-end"
 					>
 						<Field
@@ -97,7 +99,13 @@ export default function LogsIndexPage(props: PageProps) {
 						</Button>
 					</Form>
 				}
-				footer={<Pagination route="admin.log.logs.render" filters={filters} metadata={entries.metadata} />}
+				footer={
+					<Pagination
+						buildHref={(page) => urlFor('admin.log.logs.render', undefined, { qs: { ...filters, page } })}
+						filters={filters}
+						metadata={entries.metadata}
+					/>
+				}
 			>
 				<Table>
 					<Table.Header>

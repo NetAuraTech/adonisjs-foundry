@@ -59,7 +59,7 @@ export default function LoginPage(props: PageProps) {
 						}
 					>
 						<Form
-							route="auth.session.execute"
+							action={urlFor('auth.session.execute')}
 							className="grid gap-6"
 							onBefore={(visit) => {
 								const isValid = validation.validateAll(visit.data as Record<string, any>);

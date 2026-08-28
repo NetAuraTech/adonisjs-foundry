@@ -69,7 +69,11 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
 		>
 			<Card
 				header={
-					<Form route="admin.cms.templates.render" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+					<Form
+						action={urlFor('admin.cms.templates.render')}
+						method="get"
+						className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end"
+					>
 						<Field
 							type="text"
 							name="search"
@@ -161,11 +165,11 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
 										</CanAccess>
 										<CanAccess permission="templates.delete">
 											<Form
+												action={urlFor('admin.cms.templates.destroy', { id: template.id })}
+												method="delete"
 												onBefore={() => {
 													return window.confirm(t('delete.confirm'));
 												}}
-												route="admin.cms.templates.destroy"
-												routeParams={{ id: template.id }}
 											>
 												<Button
 													variant="icon_danger"

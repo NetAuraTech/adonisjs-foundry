@@ -55,7 +55,7 @@ export default function PagesCreatePage(props: PagesCreatePageProps) {
 					}
 				>
 					<Form
-						route="admin.cms.pages_create.execute"
+						action={urlFor('admin.cms.pages_create.execute')}
 						className="grid gap-3"
 						onBefore={(visit) => {
 							const isValid = validation.validateAll(visit.data as Record<string, any>);

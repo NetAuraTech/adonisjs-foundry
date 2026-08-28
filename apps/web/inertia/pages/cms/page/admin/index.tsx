@@ -58,7 +58,11 @@ export default function PagesIndexPage(props: Props) {
 			>
 				<Card
 					header={
-						<Form route="admin.cms.pages.render" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+						<Form
+							action={urlFor('admin.cms.pages.render')}
+							method="get"
+							className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end"
+						>
 							<Field
 								type="text"
 								name="search"
@@ -96,7 +100,13 @@ export default function PagesIndexPage(props: Props) {
 							</Button>
 						</Form>
 					}
-					footer={<Pagination route="admin.cms.pages.render" filters={filters} metadata={pages.metadata} />}
+					footer={
+						<Pagination
+							buildHref={(page) => urlFor('admin.cms.pages.render', undefined, { qs: { ...filters, page } })}
+							filters={filters}
+							metadata={pages.metadata}
+						/>
+					}
 				>
 					<Table>
 						<Table.Header>
@@ -172,11 +182,11 @@ export default function PagesIndexPage(props: Props) {
 													</CanAccess>
 													<CanAccess permission="pages.delete">
 														<Form
+															action={urlFor('admin.cms.pages.destroy', { id: page.id })}
+															method="delete"
 															onBefore={() => {
 																return window.confirm(t('actions.delete.confirm'));
 															}}
-															route="admin.cms.pages.destroy"
-															routeParams={{ id: page.id }}
 														>
 															<Button
 																variant="icon_danger"

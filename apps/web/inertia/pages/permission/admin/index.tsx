@@ -102,6 +102,8 @@ export default function PermissionsIndexPage(props: PageProps) {
 															</CanAccess>
 															<CanAccess permission="permissions.delete">
 																<Form
+																	action={urlFor('admin.identity.permissions.destroy', { id: permission.id })}
+																	method="delete"
 																	onBefore={() => {
 																		return window.confirm(
 																			t('delete.confirm', {
@@ -109,8 +111,6 @@ export default function PermissionsIndexPage(props: PageProps) {
 																			}),
 																		);
 																	}}
-																	route="admin.identity.permissions.destroy"
-																	routeParams={{ id: permission.id }}
 																>
 																	<Button
 																		variant="icon_danger"

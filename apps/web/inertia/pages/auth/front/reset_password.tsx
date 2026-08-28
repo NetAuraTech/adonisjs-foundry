@@ -49,7 +49,7 @@ export default function ResetPasswordPage(props: ResetPasswordPageProps) {
 					/>
 					<Card>
 						<Form
-							route="auth.reset_password.execute"
+							action={urlFor('auth.reset_password.execute')}
 							className="grid gap-6"
 							onBefore={(visit) => {
 								const isValid = validation.validateAll(visit.data as Record<string, any>);

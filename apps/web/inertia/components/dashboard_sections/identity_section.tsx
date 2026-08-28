@@ -1,3 +1,4 @@
+import { urlFor } from '~/client';
 import { StatCard } from '~/components/dashboard_sections/stat_card';
 import { CanAccess } from '~/guards/can_access';
 import { useTranslation } from '~/hooks/use_translation';
@@ -20,7 +21,12 @@ function IdentityStatCard({ stats, translations }: DashboardSectionCardProps) {
 
 	return (
 		<CanAccess permission="users.view">
-			<StatCard icon="Users" label={t('cards.users')} value={identity.users} route="admin.identity.users.render">
+			<StatCard
+				icon="Users"
+				label={t('cards.users')}
+				value={identity.users}
+				href={urlFor('admin.identity.users.render')}
+			>
 				{identity.usersByRole.length > 0 && (
 					<div className="mt-4 flex flex-wrap gap-2 text-sm">
 						{identity.usersByRole.map((role) => (

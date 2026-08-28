@@ -7,6 +7,7 @@ import { SelectOption } from '@foundry/design-system/select';
 import { usePage } from '@inertiajs/react';
 import { useState, SubmitEvent, useEffect } from 'react';
 import { toast } from 'sonner';
+import { urlFor } from '~/client';
 import { Field } from '~/components/molecules/field';
 import { locales, useTranslation } from '~/hooks/use_translation';
 import type { AdminFilesTranslations } from '#app/file/helpers/i18n_payloads/files_index';
@@ -28,8 +29,8 @@ interface FileAltEditorProps {
  *
  * Displays all existing `(locale, key, value)` triplets and lets the user
  * add new ones or delete existing ones via the API routes:
- *   PATCH  /files/:id/alts  → upsertAlt
- *   DELETE /files/:id/alts  → deleteAlt
+ *   POST   /admin/files/:id/alts  → upsertAlt
+ *   DELETE /admin/files/:id/alts  → deleteAlt
  *
  * Each row shows the locale and key as read-only labels and the value as an
  * editable input. Saving is triggered by the row's "Save" button or by
@@ -141,8 +142,7 @@ export function FileAltEditor(props: FileAltEditorProps) {
 
 						await handleSubmit(e, setAdding);
 					}}
-					route={'admin.file.files.upsert_alt'}
-					routeParams={{ id: file.id }}
+					action={urlFor('admin.file.files.upsert_alt', { id: file.id })}
 					className="grid gap-2 rounded border border-primary-soft bg-primary-soft/20 p-3"
 				>
 					{({ processing }) => (
@@ -259,8 +259,8 @@ const AltRow = (props: {
 										handleDelete(e);
 									}
 								}}
-								route="admin.file.files.delete_alt"
-								routeParams={{ id: file.id }}
+								action={urlFor('admin.file.files.delete_alt', { id: file.id })}
+								method="delete"
 							>
 								{({ processing }) => (
 									<>
@@ -291,8 +291,7 @@ const AltRow = (props: {
 						handleSubmit(e, setIsEditing);
 					}}
 					className="grid gap-2"
-					route={'admin.file.files.upsert_alt'}
-					routeParams={{ id: file.id }}
+					action={urlFor('admin.file.files.upsert_alt', { id: file.id })}
 				>
 					{({ processing }) => (
 						<>

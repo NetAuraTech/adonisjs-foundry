@@ -96,7 +96,11 @@ export default function FilesIndexPage(props: Props) {
 				<Card
 					header={
 						<div className="flex flex-wrap items-end justify-between gap-3">
-							<Form route="admin.file.files.render" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+							<Form
+								action={urlFor('admin.file.files.render')}
+								method="get"
+								className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end"
+							>
 								{filters.folder_id && (
 									<input type="hidden" name="folder_id" id="folder_id" defaultValue={filters.folder_id} />
 								)}
@@ -132,7 +136,13 @@ export default function FilesIndexPage(props: Props) {
 							</div>
 						</div>
 					}
-					footer={<Pagination route="admin.file.files.render" filters={filters} metadata={files.metadata} />}
+					footer={
+						<Pagination
+							buildHref={(page) => urlFor('admin.file.files.render', undefined, { qs: { ...filters, page } })}
+							filters={filters}
+							metadata={files.metadata}
+						/>
+					}
 					className="md:flex-1"
 					padding="p-0"
 				>
@@ -204,8 +214,8 @@ export default function FilesIndexPage(props: Props) {
 																onBefore={() => {
 																	return window.confirm(t('actions.delete.confirm'));
 																}}
-																route="admin.file.files.destroy"
-																routeParams={{ id: file.id }}
+																action={urlFor('admin.file.files.destroy', { id: file.id })}
+																method="delete"
 															>
 																{({ processing }) => (
 																	<>
@@ -267,8 +277,8 @@ export default function FilesIndexPage(props: Props) {
 														onBefore={() => {
 															return window.confirm(t('actions.delete.confirm'));
 														}}
-														route="admin.file.files.destroy"
-														routeParams={{ id: selectedFile.id }}
+														action={urlFor('admin.file.files.destroy', { id: selectedFile.id })}
+														method="delete"
 													>
 														{({ processing }) => (
 															<>
@@ -377,7 +387,7 @@ const UploadFileForm = (props: UploadFileProps) => {
 
 	return (
 		<Form
-			route="admin.file.files.upload"
+			action={urlFor('admin.file.files.upload')}
 			className="grid gap-3"
 			onSuccess={() => {
 				if (callback) {

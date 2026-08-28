@@ -87,14 +87,13 @@ export default function PageRevisionsPage(props: PageProps) {
 												{index !== 0 ? (
 													<CanAccess permission="pages.update">
 														<Form
-															onBefore={() => {
-																return window.confirm(t('actions.restore.confirm'));
-															}}
-															route="admin.cms.page_revisions.restore"
-															routeParams={{
+															action={urlFor('admin.cms.page_revisions.restore', {
 																translationId: translation_id,
 																revisionId: revision.id,
 																id: page_id,
+															})}
+															onBefore={() => {
+																return window.confirm(t('actions.restore.confirm'));
 															}}
 														>
 															<Button variant="icon_info" title={t('actions.restore.value')} fitContent>
@@ -111,12 +110,11 @@ export default function PageRevisionsPage(props: PageProps) {
 												)}
 												<CanAccess permission="pages.update">
 													<Form
-														route="admin.cms.page_revisions.toggle_keep"
-														routeParams={{
+														action={urlFor('admin.cms.page_revisions.toggle_keep', {
 															translationId: translation_id,
 															revisionId: revision.id,
 															id: page_id,
-														}}
+														})}
 													>
 														<Button
 															variant={revision.keep ? 'icon_danger' : 'icon_warning'}

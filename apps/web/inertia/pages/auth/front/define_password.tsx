@@ -4,6 +4,7 @@ import { Card } from '@foundry/design-system/card';
 import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
+import { urlFor } from '~/client';
 import { AuthIntro } from '~/components/molecules/auth/auth_intro';
 import { Field } from '~/components/molecules/field';
 import { toLooseErrors } from '~/helpers/form_errors';
@@ -47,7 +48,7 @@ export default function DefinePasswordPage(props: DefinePasswordPageProps) {
 					/>
 					<Card>
 						<Form
-							route="auth.social.execute"
+							action={urlFor('auth.social.execute')}
 							className="grid gap-6"
 							onBefore={(visit) => {
 								const isValid = validation.validateAll(visit.data as Record<string, any>);

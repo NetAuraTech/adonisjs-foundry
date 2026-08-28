@@ -68,7 +68,7 @@ export default function TemplatesEditPage({ template, translations }: PageProps)
 					</div>
 				}
 			>
-				<Form route="admin.cms.templates.update" routeParams={{ id: template.id }}>
+				<Form action={urlFor('admin.cms.templates.update', { id: template.id })}>
 					{({ processing }) => (
 						<div className="grid gap-6">
 							<Field label={t('form.name')} name="name" type="text" defaultValue={template.name} required sanitize />

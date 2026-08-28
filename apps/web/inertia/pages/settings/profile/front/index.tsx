@@ -4,6 +4,7 @@ import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
 import { Label } from '@foundry/design-system/label';
 import { Data } from '@generated/data';
+import { urlFor } from '~/client';
 import { Field } from '~/components/molecules/field';
 import { SettingsLayout } from '~/components/organisms/settings_layout';
 import { toLooseErrors } from '~/helpers/form_errors';
@@ -31,7 +32,7 @@ export default function ProfilePage(props: PageProps) {
 			<SettingsLayout tab="profile" translations={translations}>
 				<Card title={t('title')} subtitle={t('sub_title')}>
 					<Form
-						route="account.profile.execute"
+						action={urlFor('account.profile.execute')}
 						className="grid gap-6"
 						onBefore={(visit) => {
 							const isValid = validation.validateAll(visit.data as Record<string, any>);

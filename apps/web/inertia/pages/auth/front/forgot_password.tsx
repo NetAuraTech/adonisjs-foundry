@@ -42,7 +42,7 @@ export default function ForgotPasswordPage(props: ForgotPasswordPageProps) {
 					/>
 					<Card>
 						<Form
-							route="auth.forgot_password.execute"
+							action={urlFor('auth.forgot_password.execute')}
 							className="grid gap-6"
 							onBefore={(visit) => {
 								const isValid = validation.validateAll(visit.data as Record<string, any>);

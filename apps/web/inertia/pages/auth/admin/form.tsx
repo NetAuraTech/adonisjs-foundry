@@ -55,8 +55,11 @@ export default function UsersFormPage(props: PageProps) {
 				}
 			>
 				<Form
-					route={isEditing ? 'admin.identity.users_update.execute' : 'admin.identity.users_create.execute'}
-					routeParams={isEditing ? { id: user!.id } : {}}
+					action={
+						isEditing
+							? urlFor('admin.identity.users_update.execute', { id: user!.id })
+							: urlFor('admin.identity.users_create.execute')
+					}
 					className="grid gap-6"
 					onBefore={(visit) => {
 						const isValid = validation.validateAll(visit.data as Record<string, any>);

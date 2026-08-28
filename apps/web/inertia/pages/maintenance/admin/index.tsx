@@ -7,6 +7,7 @@ import { Heading } from '@foundry/design-system/heading';
 import { Label } from '@foundry/design-system/label';
 import { Paragraph } from '@foundry/design-system/paragraph';
 import { ReactElement } from 'react';
+import { urlFor } from '~/client';
 import { Field } from '~/components/molecules/field';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { presets } from '~/helpers/validation_rules';
@@ -95,7 +96,7 @@ export default function MaintenancePage(props: PageProps) {
 
 					{/* Toggle Form */}
 					<Form
-						route="admin.core.maintenance.update"
+						action={urlFor('admin.core.maintenance.update')}
 						className="grid gap-6"
 						onBefore={(visit) => {
 							const isValid = validation.validateAll(visit.data as Record<string, any>);
