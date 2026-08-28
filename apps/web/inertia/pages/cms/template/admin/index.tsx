@@ -2,6 +2,7 @@ import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Icon } from '@foundry/design-system/icon';
 import { Paragraph } from '@foundry/design-system/paragraph';
 import { SelectOption } from '@foundry/design-system/select';
@@ -10,9 +11,9 @@ import { router, usePage } from '@inertiajs/react';
 import { ReactElement, useState } from 'react';
 import { urlFor } from '~/client';
 import { captureTemplateThumbnail } from '~/components/cms/utils/template_thumbnail';
-import { Field } from '~/components/molecules/field';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
+import { sanitizeText } from '~/helpers/sanitization';
 import { useMenu } from '~/hooks/use_admin';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
@@ -80,7 +81,7 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
 							label={t('search.value')}
 							placeholder={t('search.placeholder')}
 							defaultValue={filters.search}
-							sanitize
+							sanitizeValue={sanitizeText}
 						/>
 						<Field
 							type="select"
@@ -88,7 +89,7 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
 							label={t('search.type.value')}
 							placeholder={t('search.type.placeholder')}
 							defaultValue={filters.type}
-							sanitize
+							sanitizeValue={sanitizeText}
 						>
 							<SelectOption label={t('search.type.page')} value="page" />
 							<SelectOption label={t('search.type.block')} value="block" />

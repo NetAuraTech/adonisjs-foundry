@@ -2,16 +2,18 @@ import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Icon } from '@foundry/design-system/icon';
+import { Pagination } from '@foundry/design-system/pagination';
 import { SelectOption } from '@foundry/design-system/select';
 import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
+import { usePage } from '@inertiajs/react';
 import { ReactElement } from 'react';
 import { urlFor } from '~/client';
-import { Field } from '~/components/molecules/field';
-import { Pagination } from '~/components/molecules/pagination';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
+import { sanitizeText } from '~/helpers/sanitization';
 import { useMenu } from '~/hooks/use_admin';
 import { locales, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
@@ -39,7 +41,9 @@ const statusesClass = {
 
 export default function PagesIndexPage(props: Props) {
 	const { pages, filters, translations } = props;
+	const pageProps = usePage<SharedProps>().props;
 	const { t } = useTranslation(translations);
+	const { t: commonT } = useTranslation(pageProps.common_translations);
 
 	const { getEntryIcon } = useMenu();
 
@@ -69,7 +73,7 @@ export default function PagesIndexPage(props: Props) {
 								label={t('search.value')}
 								placeholder={t('search.placeholder')}
 								defaultValue={filters.search}
-								sanitize
+								sanitizeValue={sanitizeText}
 							/>
 							<Field
 								type="select"
@@ -77,7 +81,7 @@ export default function PagesIndexPage(props: Props) {
 								name="locale"
 								placeholder={t(`locale.all`)}
 								defaultValue={filters.locale}
-								sanitize
+								sanitizeValue={sanitizeText}
 							>
 								{locales.map((l) => (
 									<SelectOption key={l} value={l} label={l.toUpperCase()} />
@@ -89,7 +93,7 @@ export default function PagesIndexPage(props: Props) {
 								name="status"
 								placeholder={t(`status.all`)}
 								defaultValue={filters.status}
-								sanitize
+								sanitizeValue={sanitizeText}
 							>
 								{PAGE_STATUSES.map((status) => (
 									<SelectOption key={`status-${status}`} value={status} label={t(`status.${status}`)} />
@@ -105,6 +109,9 @@ export default function PagesIndexPage(props: Props) {
 							buildHref={(page) => urlFor('admin.cms.pages.render', undefined, { qs: { ...filters, page } })}
 							filters={filters}
 							metadata={pages.metadata}
+							summaryText={(start, end, total) => commonT('pagination.showing', { start, end, total })}
+							previousTitle={commonT('pagination.previous')}
+							nextTitle={commonT('pagination.next')}
 						/>
 					}
 				>

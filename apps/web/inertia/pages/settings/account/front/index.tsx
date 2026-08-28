@@ -1,14 +1,15 @@
 import { Form } from '@adonisjs/inertia/react';
+import { Banner } from '@foundry/design-system/banner';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Data } from '@generated/data';
 import { useState } from 'react';
 import { urlFor } from '~/client';
-import { Banner } from '~/components/molecules/banner';
-import { Field } from '~/components/molecules/field';
 import { SettingsLayout } from '~/components/organisms/settings_layout';
 import { toLooseErrors } from '~/helpers/form_errors';
 import { getIcon } from '~/helpers/oauth';
+import { sanitizeEmail } from '~/helpers/sanitization';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
@@ -75,7 +76,7 @@ export default function AccountPage(props: PageProps) {
 										validationEmailForm.handleBlur('email', event!.target.value);
 									}}
 									required
-									sanitize
+									sanitizeValue={sanitizeEmail}
 								/>
 								<Button loading={processing} type={'submit'} fitContent name="update_email_submit">
 									{t('email.submit')}
@@ -154,7 +155,6 @@ export default function AccountPage(props: PageProps) {
 										validationPasswordForm.handleBlur('current_password', event!.target.value);
 									}}
 									required
-									sanitize
 								/>
 								<Field
 									label={t('password.new.value')}
@@ -172,7 +172,6 @@ export default function AccountPage(props: PageProps) {
 										validationPasswordForm.handleBlur('password_confirmation', confirmPassword);
 									}}
 									required
-									sanitize={false}
 									helpText={t('password.new.help')}
 									helpClassName={validationPasswordForm.getHelpClassName('password')}
 								/>
@@ -193,7 +192,6 @@ export default function AccountPage(props: PageProps) {
 										validationPasswordForm.handleBlur('password_confirmation', event!.target.value);
 									}}
 									required
-									sanitize={false}
 									helpText={t('password.confirm.help')}
 									helpClassName={validationPasswordForm.getHelpClassName('password_confirmation')}
 								/>
@@ -235,7 +233,6 @@ export default function AccountPage(props: PageProps) {
 												validationDeleteForm.handleBlur('password', event!.target.value);
 											}}
 											required
-											sanitize={false}
 											helpClassName={validationDeleteForm.getHelpClassName('password')}
 										/>
 										<div className="flex gap-3">

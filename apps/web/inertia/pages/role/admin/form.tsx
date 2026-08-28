@@ -3,16 +3,17 @@ import { SharedProps } from '@adonisjs/inertia/types';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
 import { Checkbox } from '@foundry/design-system/checkbox';
+import { Field } from '@foundry/design-system/field';
 import { Heading } from '@foundry/design-system/heading';
 import { Icon } from '@foundry/design-system/icon';
 import { Paragraph } from '@foundry/design-system/paragraph';
 import { Data } from '@generated/data';
 import { ReactElement } from 'react';
 import { urlFor } from '~/client';
-import { Field } from '~/components/molecules/field';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
 import { permissionCategoryKey } from '~/helpers/permissions';
+import { sanitizeRichText, sanitizeText } from '~/helpers/sanitization';
 import { rules } from '~/helpers/validation_rules';
 import { useMenu } from '~/hooks/use_admin';
 import { useFormValidation } from '~/hooks/use_form_validation';
@@ -100,7 +101,7 @@ export default function RolesFormPage(props: PageProps) {
 									validation.handleBlur('name', event!.target.value);
 								}}
 								required
-								sanitize
+								sanitizeValue={sanitizeText}
 							/>
 							<Field
 								label={t('slug.value')}
@@ -116,7 +117,7 @@ export default function RolesFormPage(props: PageProps) {
 									validation.handleBlur('slug', event!.target.value);
 								}}
 								required
-								sanitize
+								sanitizeValue={sanitizeText}
 							/>
 							<Field
 								label={t('description.value')}
@@ -131,6 +132,7 @@ export default function RolesFormPage(props: PageProps) {
 								onBlur={(event) => {
 									validation.handleBlur('description', event!.target.value);
 								}}
+								sanitizeValue={sanitizeRichText}
 							/>
 							<div className="grid gap-3">
 								<Heading level={3}>{t('permissions.value')}</Heading>

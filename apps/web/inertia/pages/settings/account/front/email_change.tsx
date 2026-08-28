@@ -1,12 +1,13 @@
 import { Form } from '@adonisjs/inertia/react';
+import { AuthIntro } from '@foundry/design-system/auth-intro';
+import { Banner } from '@foundry/design-system/banner';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
 import { urlFor } from '~/client';
-import { AuthIntro } from '~/components/molecules/auth/auth_intro';
-import { Banner } from '~/components/molecules/banner';
-import { Field } from '~/components/molecules/field';
+import { sanitizeText } from '~/helpers/sanitization';
 import { rules } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
@@ -68,7 +69,7 @@ export default function EmailChangePage(props: PageProps) {
 										}}
 										required
 										disabled
-										sanitize
+										sanitizeValue={sanitizeText}
 									/>
 									<input id="token" name="token" type="hidden" value={token} />
 									<div className="flex gap-3">

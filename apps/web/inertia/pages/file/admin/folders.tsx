@@ -2,6 +2,7 @@ import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Icon } from '@foundry/design-system/icon';
 import { Input } from '@foundry/design-system/input';
 import { NavLink } from '@foundry/design-system/nav-link';
@@ -9,9 +10,9 @@ import { Paragraph } from '@foundry/design-system/paragraph';
 import { Data } from '@generated/data';
 import { ReactElement, useState } from 'react';
 import { urlFor } from '~/client';
-import { Field } from '~/components/molecules/field';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
+import { sanitizeText } from '~/helpers/sanitization';
 import { useNavLinkActive } from '~/hooks/use_nav_link_active';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
@@ -233,7 +234,7 @@ function CreateFolderForm(props: CreateFolderFormProps) {
 				{({ processing }) => (
 					<>
 						{parentId && <input type="hidden" name="parentId" id="parentId" defaultValue={parentId} />}
-						<Field type="text" label={label} name="name" placeholder="Folder name" sanitize />
+						<Field type="text" label={label} name="name" placeholder="Folder name" sanitizeValue={sanitizeText} />
 						<Button type="submit" variant="primary" disabled={processing} fitContent>
 							{t('actions.create')}
 						</Button>

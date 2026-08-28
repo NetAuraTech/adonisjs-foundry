@@ -1,6 +1,7 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
 import { Button } from '@foundry/design-system/button';
+import { Field } from '@foundry/design-system/field';
 import { Icon } from '@foundry/design-system/icon';
 import { Paragraph } from '@foundry/design-system/paragraph';
 import { SelectOption } from '@foundry/design-system/select';
@@ -8,7 +9,7 @@ import { usePage } from '@inertiajs/react';
 import { useState, SubmitEvent, useEffect } from 'react';
 import { toast } from 'sonner';
 import { urlFor } from '~/client';
-import { Field } from '~/components/molecules/field';
+import { sanitizeRichText, sanitizeText } from '~/helpers/sanitization';
 import { locales, useTranslation } from '~/hooks/use_translation';
 import type { AdminFilesTranslations } from '#app/file/helpers/i18n_payloads/files_index';
 import type { Data } from '@generated/data';
@@ -147,7 +148,13 @@ export function FileAltEditor(props: FileAltEditorProps) {
 				>
 					{({ processing }) => (
 						<>
-							<Field type="select" label={t('alts.form.locale.value')} name="locale" required sanitize>
+							<Field
+								type="select"
+								label={t('alts.form.locale.value')}
+								name="locale"
+								required
+								sanitizeValue={sanitizeText}
+							>
 								{locales.map((l) => (
 									<SelectOption key={l} value={l} label={l.toUpperCase()} />
 								))}
@@ -158,7 +165,7 @@ export function FileAltEditor(props: FileAltEditorProps) {
 								label={t('alts.form.key.value')}
 								placeholder={t('alts.form.key.placeholder')}
 								required
-								sanitize
+								sanitizeValue={sanitizeText}
 							/>
 							<Field
 								type="textarea"
@@ -166,7 +173,7 @@ export function FileAltEditor(props: FileAltEditorProps) {
 								label={t('alts.form.alt_text.value')}
 								placeholder={t('alts.form.alt_text.placeholder')}
 								required
-								sanitize
+								sanitizeValue={sanitizeRichText}
 							/>
 							<div className="flex gap-1.5 justify-end">
 								<Button
@@ -303,7 +310,7 @@ const AltRow = (props: {
 								label={t('alts.form.alt_text.value')}
 								placeholder={t('alts.form.alt_text.placeholder')}
 								required
-								sanitize
+								sanitizeValue={sanitizeRichText}
 								defaultValue={alt.value}
 							/>
 							<Button type="submit" variant="primary" fitContent disabled={processing}>

@@ -1,12 +1,12 @@
 import { Form } from '@adonisjs/inertia/react';
+import { AuthIntro } from '@foundry/design-system/auth-intro';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import { urlFor } from '~/client';
-import { AuthIntro } from '~/components/molecules/auth/auth_intro';
-import { Field } from '~/components/molecules/field';
 import { toLooseErrors } from '~/helpers/form_errors';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
@@ -75,7 +75,6 @@ export default function ResetPasswordPage(props: ResetPasswordPageProps) {
 											validation.handleBlur('password_confirmation', confirmPassword);
 										}}
 										required
-										sanitize={false}
 										helpText={t('password.help')}
 										helpClassName={validation.getHelpClassName('password')}
 									/>
@@ -96,7 +95,6 @@ export default function ResetPasswordPage(props: ResetPasswordPageProps) {
 											validation.handleBlur('password_confirmation', event!.target.value);
 										}}
 										required
-										sanitize={false}
 										helpText={t('password.confirmation.help')}
 										helpClassName={validation.getHelpClassName('password_confirmation')}
 									/>

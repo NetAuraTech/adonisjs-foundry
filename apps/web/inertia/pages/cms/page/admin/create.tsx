@@ -2,6 +2,7 @@ import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Heading } from '@foundry/design-system/heading';
 import { Icon } from '@foundry/design-system/icon';
 import { Paragraph } from '@foundry/design-system/paragraph';
@@ -9,9 +10,9 @@ import { SelectOption } from '@foundry/design-system/select';
 import { Separator } from '@foundry/design-system/separator';
 import { ReactElement } from 'react';
 import { urlFor } from '~/client';
-import { Field } from '~/components/molecules/field';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
+import { sanitizeRichText, sanitizeText } from '~/helpers/sanitization';
 import { presets, rules } from '~/helpers/validation_rules';
 import { useMenu } from '~/hooks/use_admin';
 import { useFormValidation } from '~/hooks/use_form_validation';
@@ -79,7 +80,7 @@ export default function PagesCreatePage(props: PagesCreatePageProps) {
 											validation.handleBlur('locale', event!.target.value);
 										}}
 										required
-										sanitize
+										sanitizeValue={sanitizeText}
 									>
 										{locales.map((l) => (
 											<SelectOption key={l} value={l} label={l.toUpperCase()} />
@@ -98,7 +99,7 @@ export default function PagesCreatePage(props: PagesCreatePageProps) {
 											validation.handleBlur('title', event!.target.value);
 										}}
 										required
-										sanitize
+										sanitizeValue={sanitizeText}
 									/>
 									<Field
 										type="text"
@@ -112,7 +113,7 @@ export default function PagesCreatePage(props: PagesCreatePageProps) {
 											validation.handleBlur('slug', event!.target.value);
 										}}
 										required
-										sanitize
+										sanitizeValue={sanitizeText}
 									/>
 								</div>
 								<div className="grid gap-3 mt-5">
@@ -133,7 +134,7 @@ export default function PagesCreatePage(props: PagesCreatePageProps) {
 										onBlur={(event) => {
 											validation.handleBlur('metaTitle', event!.target.value);
 										}}
-										sanitize
+										sanitizeValue={sanitizeText}
 									/>
 									<Field
 										type="textarea"
@@ -147,7 +148,7 @@ export default function PagesCreatePage(props: PagesCreatePageProps) {
 										onBlur={(event) => {
 											validation.handleBlur('metaDescription', event!.target.value);
 										}}
-										sanitize
+										sanitizeValue={sanitizeRichText}
 									/>
 								</div>
 								<Button loading={processing} type={'submit'} fitContent>

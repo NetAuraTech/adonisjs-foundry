@@ -2,13 +2,14 @@ import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Label } from '@foundry/design-system/label';
 import { SelectOption } from '@foundry/design-system/select';
 import { usePage } from '@inertiajs/react';
 import { urlFor } from '~/client';
-import { Field } from '~/components/molecules/field';
 import { ThemeToggle } from '~/components/molecules/theme_toggle';
 import { SettingsLayout } from '~/components/organisms/settings_layout';
+import { sanitizeText } from '~/helpers/sanitization';
 import { rules } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
@@ -59,7 +60,7 @@ export default function PreferencesPage(props: PreferencesPageProps) {
 										validationLocale.handleBlur('locale', event!.target.value);
 									}}
 									required
-									sanitize
+									sanitizeValue={sanitizeText}
 								>
 									<SelectOption value="en" label={t('interface.locale.english')} />
 									<SelectOption value="fr" label={t('interface.locale.french')} />
