@@ -1,6 +1,6 @@
+import { Icon } from '@foundry/design-system/icon';
 import { Data } from '@generated/data';
 import { ChangeEvent, CSSProperties, ReactNode, useEffect, useRef, useState } from 'react';
-import { Icon } from '~/components/atoms/icon';
 import { FileManager } from '~/components/organisms/file_manager';
 
 interface ImagePickerProps {

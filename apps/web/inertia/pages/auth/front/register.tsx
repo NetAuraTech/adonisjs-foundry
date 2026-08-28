@@ -1,11 +1,12 @@
 import { Form } from '@adonisjs/inertia/react';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { NavLink } from '@foundry/design-system/nav-link';
+import { Paragraph } from '@foundry/design-system/paragraph';
+import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { NavLink } from '~/components/atoms/nav_link';
-import { Paragraph } from '~/components/atoms/paragraph';
-import { Section } from '~/components/atoms/section';
+import { urlFor } from '~/client';
 import { AuthIntro } from '~/components/molecules/auth/auth_intro';
 import { AuthProviders } from '~/components/molecules/auth/auth_providers';
 import { Field } from '~/components/molecules/field';
@@ -24,6 +25,8 @@ interface RegisterPageProps {
 export default function RegisterPage(props: RegisterPageProps) {
 	const { providers, translations } = props;
 	const { t } = useTranslation(translations);
+
+	const loginHref = urlFor('auth.session.render');
 
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
@@ -59,7 +62,7 @@ export default function RegisterPage(props: RegisterPageProps) {
 						footer={
 							<div className="text-center">
 								<Paragraph fs="sm">
-									{t('account.has')} <NavLink route="auth.session.render" label={t('account.login')} fs="sm" />
+									{t('account.has')} <NavLink href={loginHref} label={t('account.login')} fs="sm" />
 								</Paragraph>
 							</div>
 						}

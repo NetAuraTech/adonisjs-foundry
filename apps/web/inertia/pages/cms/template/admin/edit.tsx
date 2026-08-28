@@ -1,12 +1,13 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Icon } from '@foundry/design-system/icon';
+import { Label } from '@foundry/design-system/label';
 import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement, useState } from 'react';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Icon } from '~/components/atoms/icon';
-import { Label } from '~/components/atoms/label';
+import { urlFor } from '~/client';
 import { captureTemplateThumbnail } from '~/components/cms/utils/template_thumbnail';
 import { Field } from '~/components/molecules/field';
 import { ImagePicker } from '~/components/molecules/image_picker';
@@ -60,7 +61,7 @@ export default function TemplatesEditPage({ template, translations }: PageProps)
 				header={
 					<div className="flex items-center justify-between gap-3">
 						<CanAccess permission="templates.view">
-							<Button variant="icon" route="admin.cms.templates.render" title={t('back')} fitContent>
+							<Button variant="icon" href={urlFor('admin.cms.templates.render')} title={t('back')} fitContent>
 								<Icon name="ArrowLeft" />
 							</Button>
 						</CanAccess>
@@ -111,7 +112,7 @@ export default function TemplatesEditPage({ template, translations }: PageProps)
 								<Button type="submit" loading={processing} fitContent>
 									{t('form.submit')}
 								</Button>
-								<Button variant="outline" route="admin.cms.templates.render" fitContent>
+								<Button variant="outline" href={urlFor('admin.cms.templates.render')} fitContent>
 									{t('form.cancel')}
 								</Button>
 							</div>

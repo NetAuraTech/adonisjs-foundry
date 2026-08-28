@@ -1,6 +1,6 @@
+import { Button } from '@foundry/design-system/button';
+import { Icon } from '@foundry/design-system/icon';
 import React from 'react';
-import { Button } from '~/components/atoms/button';
-import { Icon } from '~/components/atoms/icon';
 import { getBlockCatalog } from './block_types';
 import type { PageEditorTranslations } from '#app/cms/helpers/i18n_payloads/page_editor';
 import type { BlockType } from '#cms/types/page';

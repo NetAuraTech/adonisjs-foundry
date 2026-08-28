@@ -1,13 +1,14 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Button, button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Icon } from '@foundry/design-system/icon';
+import { Paragraph } from '@foundry/design-system/paragraph';
+import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement } from 'react';
-import { Button, variants } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Icon } from '~/components/atoms/icon';
-import { Paragraph } from '~/components/atoms/paragraph';
-import Table from '~/components/atoms/table/table';
+import { urlFor } from '~/client';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
 import { useMenu } from '~/hooks/use_admin';
@@ -37,8 +38,7 @@ export default function PageRevisionsPage(props: PageProps) {
 						<CanAccess permission="pages.update">
 							<Button
 								variant="icon"
-								route="admin.cms.pages_update.render"
-								routeParams={{ id: page_id }}
+								href={urlFor('admin.cms.pages_update.render', { id: page_id })}
 								title={t('actions.back')}
 								fitContent
 							>
@@ -104,7 +104,7 @@ export default function PageRevisionsPage(props: PageProps) {
 													</CanAccess>
 												) : (
 													<span
-														className={`button ${variants['icon_info']} font-medium cursor-not-allowed pointer-events-none`}
+														className={`button ${button({ variant: 'icon_info' })} font-medium cursor-not-allowed pointer-events-none`}
 													>
 														{t('latest')}
 													</span>

@@ -1,13 +1,14 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Button, button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Heading } from '@foundry/design-system/heading';
+import { Icon } from '@foundry/design-system/icon';
+import { NavLink } from '@foundry/design-system/nav-link';
 import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement } from 'react';
-import { Button, variants } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Heading } from '~/components/atoms/heading';
-import { Icon } from '~/components/atoms/icon';
-import { NavLink } from '~/components/atoms/nav_link';
+import { urlFor } from '~/client';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
 import { Lang, useTranslation } from '~/hooks/use_translation';
@@ -48,7 +49,7 @@ export default function PagesShowPage(props: Props) {
 					header={
 						<div className="flex items-center justify-between gap-3">
 							<CanAccess permission="pages.view">
-								<Button variant="icon" route="admin.cms.pages.render" title={t('actions.back')} fitContent>
+								<Button variant="icon" href={urlFor('admin.cms.pages.render')} title={t('actions.back')} fitContent>
 									<Icon name="ArrowLeft" />
 								</Button>
 							</CanAccess>
@@ -56,8 +57,7 @@ export default function PagesShowPage(props: Props) {
 								<CanAccess permission="pages.update">
 									<Button
 										variant="icon_warning"
-										route="admin.cms.pages_update.render"
-										routeParams={{ id: page.id }}
+										href={urlFor('admin.cms.pages_update.render', { id: page.id })}
 										title={t('actions.edit', {
 											title: primaryTranslation?.title ?? `Page #${page.id}`,
 										})}
@@ -136,7 +136,7 @@ export default function PagesShowPage(props: Props) {
 														href={`/${translation.locale !== page.defaultLocale ? `${translation.locale}/` : ''}${translation.slug}`}
 														target="_blank"
 														rel="noopener noreferrer"
-														className={`button ${variants['icon_info']}`}
+														className={`button ${button({ variant: 'icon_info' })}`}
 														title={t('actions.show', {
 															title: translation?.title ?? '—',
 														})}
@@ -146,8 +146,7 @@ export default function PagesShowPage(props: Props) {
 												)}
 												<Button
 													variant="icon_warning"
-													route="admin.cms.pages_update.render"
-													routeParams={{ id: page.id }}
+													href={urlFor('admin.cms.pages_update.render', { id: page.id })}
 													title={t('actions.edit', {
 														title: primaryTranslation?.title ?? `Page #${page.id}`,
 													})}
@@ -183,8 +182,7 @@ export default function PagesShowPage(props: Props) {
 								<NavLink
 									label=""
 									key={translation.id}
-									route="admin.cms.page_revisions.index"
-									routeParams={{ id: page.id, translationId: translation.id }}
+									href={urlFor('admin.cms.page_revisions.index', { id: page.id, translationId: translation.id })}
 								>
 									<div className="flex items-center justify-between rounded-lg border border-edge bg-canvas px-4 py-2.5 hover:bg-sunken transition-colors group">
 										<span className="text-ink">

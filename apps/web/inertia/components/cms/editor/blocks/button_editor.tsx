@@ -1,5 +1,5 @@
+import { SelectOption } from '@foundry/design-system/select';
 import { usePage } from '@inertiajs/react';
-import { SelectOption } from '~/components/atoms/select_option';
 import { LFW } from '~/components/cms/editor/locked_file_wrapper';
 import { EditorProps } from '~/components/cms/types/builder';
 

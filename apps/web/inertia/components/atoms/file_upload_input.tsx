@@ -1,8 +1,8 @@
+import { Button } from '@foundry/design-system/button';
+import { Icon } from '@foundry/design-system/icon';
+import { Label } from '@foundry/design-system/label';
+import { Paragraph } from '@foundry/design-system/paragraph';
 import { useRef, useState, useId, ChangeEvent, DragEvent } from 'react';
-import { Button } from '~/components/atoms/button';
-import { Icon } from '~/components/atoms/icon';
-import { Label } from '~/components/atoms/label';
-import { Paragraph } from '~/components/atoms/paragraph';
 import { useTranslation } from '~/hooks/use_translation';
 import { humanSize } from '~/utils/file';
 import type { AdminFilesTranslations } from '#app/file/helpers/i18n_payloads/files_index';

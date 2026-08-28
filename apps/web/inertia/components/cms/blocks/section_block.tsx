@@ -1,5 +1,5 @@
+import { Section } from '@foundry/design-system/section';
 import { ReactNode } from 'react';
-import { Section } from '~/components/atoms/section';
 import { resolveResponsive } from '~/components/cms/utils/responsive';
 import type { ResolvedBlock } from '#cms/types/page';
 

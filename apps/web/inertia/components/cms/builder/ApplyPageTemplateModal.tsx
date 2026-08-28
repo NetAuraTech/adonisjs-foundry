@@ -1,10 +1,10 @@
+import { Button } from '@foundry/design-system/button';
+import { Icon } from '@foundry/design-system/icon';
+import { Modal } from '@foundry/design-system/modal';
 import { Data } from '@generated/data';
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
 import { urlFor } from '~/client';
-import { Button } from '~/components/atoms/button';
-import { Icon } from '~/components/atoms/icon';
-import { Modal } from '~/components/atoms/modal';
 import { useTemplates } from '~/components/cms/hooks/use_templates';
 import { useTranslation } from '~/hooks/use_translation';
 import TemplateCard from './TemplateCard';

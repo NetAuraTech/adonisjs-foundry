@@ -1,4 +1,4 @@
-import { Icon } from '~/components/atoms/icon';
+import { Icon } from '@foundry/design-system/icon';
 import { useTheme, UseThemeOptions } from '~/hooks/use_theme';
 import type { Theme } from '#account/types/preferences';
 

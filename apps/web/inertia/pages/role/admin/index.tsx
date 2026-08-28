@@ -1,12 +1,13 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Badge } from '@foundry/design-system/badge';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Icon } from '@foundry/design-system/icon';
+import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
 import { ReactElement } from 'react';
-import { Badge } from '~/components/atoms/badge';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Icon } from '~/components/atoms/icon';
-import Table from '~/components/atoms/table/table';
+import { urlFor } from '~/client';
 import { Field } from '~/components/molecules/field';
 import { Pagination } from '~/components/molecules/pagination';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
@@ -37,7 +38,7 @@ export default function RolesIndexPage(props: PageProps) {
 			icon={getEntryIcon('admin.identity.roles.render')}
 			action={
 				<CanAccess permission="roles.create">
-					<Button route="admin.identity.roles_create.render" variant="secondary" fitContent>
+					<Button href={urlFor('admin.identity.roles_create.render')} variant="secondary" fitContent>
 						{t('create.title')}
 					</Button>
 				</CanAccess>
@@ -102,8 +103,7 @@ export default function RolesIndexPage(props: PageProps) {
 											<CanAccess permission="roles.view">
 												<Button
 													variant="icon_info"
-													route="admin.identity.roles_show.render"
-													routeParams={{ id: role.id }}
+													href={urlFor('admin.identity.roles_show.render', { id: role.id })}
 													title={t('actions.show', { name: t(`roles.${role.slug}.value` as any) })}
 													fitContent
 												>
@@ -115,8 +115,7 @@ export default function RolesIndexPage(props: PageProps) {
 													<CanAccess permission="roles.update">
 														<Button
 															variant="icon_warning"
-															route="admin.identity.roles_update.render"
-															routeParams={{ id: role.id }}
+															href={urlFor('admin.identity.roles_update.render', { id: role.id })}
 															title={t('actions.edit', {
 																name: t(`roles.${role.slug}.value` as any),
 															})}

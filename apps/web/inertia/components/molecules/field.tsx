@@ -1,9 +1,9 @@
-import { Checkbox } from '~/components/atoms/checkbox';
-import { Input } from '~/components/atoms/input';
-import { Label } from '~/components/atoms/label';
-import { Paragraph } from '~/components/atoms/paragraph';
-import { Select } from '~/components/atoms/select';
-import { Textarea } from '~/components/atoms/textarea';
+import { Checkbox } from '@foundry/design-system/checkbox';
+import { Input } from '@foundry/design-system/input';
+import { Label } from '@foundry/design-system/label';
+import { Paragraph } from '@foundry/design-system/paragraph';
+import { Select } from '@foundry/design-system/select';
+import { Textarea } from '@foundry/design-system/textarea';
 import { ImagePicker } from '~/components/molecules/image_picker';
 import { getSanitizer } from '~/helpers/sanitization';
 import type { ChangeEvent, ReactNode } from 'react';

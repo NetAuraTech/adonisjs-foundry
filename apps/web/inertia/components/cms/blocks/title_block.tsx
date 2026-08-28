@@ -1,7 +1,7 @@
+import { Heading } from '@foundry/design-system/heading';
 import { Fragment } from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
-import { Heading } from '~/components/atoms/heading';
 import { sanitizeHtml } from '~/components/cms/utils/purify';
 import type { ResolvedBlock } from '#cms/types/page';
 

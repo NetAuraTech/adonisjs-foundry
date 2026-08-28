@@ -1,7 +1,7 @@
+import { Paragraph } from '@foundry/design-system/paragraph';
 import { Fragment } from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
-import { Paragraph } from '~/components/atoms/paragraph';
 import { sanitizeHtml } from '~/components/cms/utils/purify';
 import type { ResolvedBlock } from '#cms/types/page';
 

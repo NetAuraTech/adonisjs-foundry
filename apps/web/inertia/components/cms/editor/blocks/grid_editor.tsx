@@ -1,4 +1,4 @@
-import { SelectOption } from '~/components/atoms/select_option';
+import { SelectOption } from '@foundry/design-system/select';
 import { Div } from '~/components/cms/editor/blocks/div';
 import { LFW } from '~/components/cms/editor/locked_file_wrapper';
 import { ResponsiveControl } from '~/components/cms/editor/responsive_control';

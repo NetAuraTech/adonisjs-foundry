@@ -1,12 +1,12 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { SelectOption } from '@foundry/design-system/select';
+import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement } from 'react';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { SelectOption } from '~/components/atoms/select_option';
-import Table from '~/components/atoms/table/table';
 import { Field } from '~/components/molecules/field';
 import { Pagination } from '~/components/molecules/pagination';
 import { AdminMain } from '~/components/organisms/admin/admin_main';

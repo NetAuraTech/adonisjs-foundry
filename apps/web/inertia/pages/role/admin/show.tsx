@@ -1,14 +1,15 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Badge } from '@foundry/design-system/badge';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Heading } from '@foundry/design-system/heading';
+import { Icon } from '@foundry/design-system/icon';
+import { Separator } from '@foundry/design-system/separator';
+import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
 import { ReactElement } from 'react';
-import { Badge } from '~/components/atoms/badge';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Heading } from '~/components/atoms/heading';
-import { Icon } from '~/components/atoms/icon';
-import { Separator } from '~/components/atoms/separator';
-import Table from '~/components/atoms/table/table';
+import { urlFor } from '~/client';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
 import { permissionCategoryKey } from '~/helpers/permissions';
@@ -48,7 +49,7 @@ export default function RolesShowPage(props: PageProps) {
 				header={
 					<div className="flex items-center justify-between gap-3">
 						<CanAccess permission="roles.view">
-							<Button variant="icon" route="admin.identity.roles.render" title={t('actions.list')} fitContent>
+							<Button variant="icon" href={urlFor('admin.identity.roles.render')} title={t('actions.list')} fitContent>
 								<Icon name="ArrowLeft" />
 							</Button>
 						</CanAccess>
@@ -57,8 +58,7 @@ export default function RolesShowPage(props: PageProps) {
 								<CanAccess permission="roles.update">
 									<Button
 										variant="icon_warning"
-										route="admin.identity.roles_update.render"
-										routeParams={{ id: role.id }}
+										href={urlFor('admin.identity.roles_update.render', { id: role.id })}
 										title={t('actions.edit', { name: roleName })}
 										fitContent
 									>
@@ -157,8 +157,7 @@ export default function RolesShowPage(props: PageProps) {
 													<CanAccess permission="users.view">
 														<Button
 															variant="icon_info"
-															route="admin.identity.users_show.render"
-															routeParams={{ id: user.id }}
+															href={urlFor('admin.identity.users_show.render', { id: user.id })}
 															title={t('users.show', { username: user.username })}
 															fitContent
 														>

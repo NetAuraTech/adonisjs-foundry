@@ -1,10 +1,11 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Icon } from '@foundry/design-system/icon';
 import { Data } from '@generated/data';
 import { ReactElement } from 'react';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Icon } from '~/components/atoms/icon';
+import { urlFor } from '~/client';
 import { Field } from '~/components/molecules/field';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
@@ -53,7 +54,12 @@ export default function PermissionsFormPage(props: PageProps) {
 				header={
 					<div className="flex items-center justify-between gap-3">
 						<CanAccess permission="permissions.view">
-							<Button variant="icon" route="admin.identity.permissions.render" title={t('actions.list')} fitContent>
+							<Button
+								variant="icon"
+								href={urlFor('admin.identity.permissions.render')}
+								title={t('actions.list')}
+								fitContent
+							>
 								<Icon name="ArrowLeft" />
 							</Button>
 						</CanAccess>

@@ -1,9 +1,9 @@
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Button } from '@foundry/design-system/button';
+import { FloatingPortal } from '@foundry/design-system/floating-portal';
+import { Icon } from '@foundry/design-system/icon';
 import { usePage } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '~/components/atoms/button';
-import { FloatingPortal } from '~/components/atoms/floating_portal';
-import { Icon } from '~/components/atoms/icon';
 import { cloneBlock } from '~/components/cms/utils/clone_block';
 import { useTranslation } from '~/hooks/use_translation';
 import BlockPropsEditor from '../editor/BlockPropsEditor';

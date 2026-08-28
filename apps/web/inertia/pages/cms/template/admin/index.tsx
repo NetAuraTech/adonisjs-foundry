@@ -1,14 +1,14 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Icon } from '@foundry/design-system/icon';
+import { Paragraph } from '@foundry/design-system/paragraph';
+import { SelectOption } from '@foundry/design-system/select';
 import { Data } from '@generated/data';
 import { router, usePage } from '@inertiajs/react';
 import { ReactElement, useState } from 'react';
 import { urlFor } from '~/client';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Icon } from '~/components/atoms/icon';
-import { Paragraph } from '~/components/atoms/paragraph';
-import { SelectOption } from '~/components/atoms/select_option';
 import { captureTemplateThumbnail } from '~/components/cms/utils/template_thumbnail';
 import { Field } from '~/components/molecules/field';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
@@ -152,8 +152,7 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
 										<CanAccess permission="templates.view">
 											<Button
 												variant="icon"
-												route="admin.cms.templates.edit"
-												routeParams={{ id: template.id }}
+												href={urlFor('admin.cms.templates.edit', { id: template.id })}
 												title={t('actions.edit', { name: template.name })}
 												fitContent
 											>

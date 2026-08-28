@@ -1,5 +1,5 @@
+import { Icon } from '@foundry/design-system/icon';
 import { Children, useState, type ReactNode } from 'react';
-import { Icon } from '~/components/atoms/icon';
 import { resolveResponsive } from '~/components/cms/utils/responsive';
 import type { ResolvedBlock, MediaAspect } from '#cms/types/page';
 

@@ -1,5 +1,5 @@
+import { Button } from '@foundry/design-system/button';
 import { urlFor } from '~/client';
-import { Button } from '~/components/atoms/button';
 import type { ResolvedBlock } from '#cms/types/page';
 
 interface ButtonBlockProps {
@@ -24,8 +24,7 @@ export default function ButtonBlock(props: ButtonBlockProps) {
 			finalProps.href = `${baseUrl}#${p.anchor}`;
 			finalProps.external = true;
 		} else {
-			finalProps.route = p.route;
-			finalProps.routeParams = p.routeParams;
+			finalProps.href = urlFor(p.route as any, p.routeParams as any);
 		}
 	}
 

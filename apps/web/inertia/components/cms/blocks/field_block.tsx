@@ -1,4 +1,4 @@
-import { SelectOption } from '~/components/atoms/select_option';
+import { SelectOption } from '@foundry/design-system/select';
 import { Field } from '~/components/molecules/field';
 import type { ResolvedBlock } from '#cms/types/page';
 

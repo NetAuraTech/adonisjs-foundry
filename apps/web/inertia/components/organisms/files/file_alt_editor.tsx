@@ -1,12 +1,12 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Button } from '@foundry/design-system/button';
+import { Icon } from '@foundry/design-system/icon';
+import { Paragraph } from '@foundry/design-system/paragraph';
+import { SelectOption } from '@foundry/design-system/select';
 import { usePage } from '@inertiajs/react';
 import { useState, SubmitEvent, useEffect } from 'react';
 import { toast } from 'sonner';
-import { Button } from '~/components/atoms/button';
-import { Icon } from '~/components/atoms/icon';
-import { Paragraph } from '~/components/atoms/paragraph';
-import { SelectOption } from '~/components/atoms/select_option';
 import { Field } from '~/components/molecules/field';
 import { locales, useTranslation } from '~/hooks/use_translation';
 import type { AdminFilesTranslations } from '#app/file/helpers/i18n_payloads/files_index';

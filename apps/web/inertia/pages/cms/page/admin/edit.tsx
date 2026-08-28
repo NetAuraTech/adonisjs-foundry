@@ -1,14 +1,14 @@
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Button } from '@foundry/design-system/button';
+import { Heading } from '@foundry/design-system/heading';
+import { Icon } from '@foundry/design-system/icon';
+import { Input } from '@foundry/design-system/input';
+import { Separator } from '@foundry/design-system/separator';
 import { Data } from '@generated/data';
 import { Head } from '@inertiajs/react';
 import { router, useForm } from '@inertiajs/react';
 import { useState, useCallback, useEffect, ReactElement } from 'react';
 import { urlFor } from '~/client';
-import { Button } from '~/components/atoms/button';
-import { Heading } from '~/components/atoms/heading';
-import { Icon } from '~/components/atoms/icon';
-import { Input } from '~/components/atoms/input';
-import { Separator } from '~/components/atoms/separator';
 import ApplyPageTemplateModal from '~/components/cms/builder/ApplyPageTemplateModal';
 import BlockTree from '~/components/cms/builder/BlockTree';
 import PresenceBar from '~/components/cms/builder/PresenceBar';
@@ -293,11 +293,10 @@ export default function PagesEditPage({ page, translations }: Props) {
 										<CanAccess permission="pages.view">
 											<Button
 												variant="outline"
-												route="admin.cms.page_revisions.index"
-												routeParams={{
+												href={urlFor('admin.cms.page_revisions.index', {
 													id: page.id,
-													translationId: currentTranslation?.id,
-												}}
+													translationId: currentTranslation?.id ?? 0,
+												})}
 											>
 												{t('toolbar.revisions')}
 											</Button>

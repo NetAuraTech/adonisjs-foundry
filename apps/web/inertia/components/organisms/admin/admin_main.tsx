@@ -1,8 +1,8 @@
+import { Heading } from '@foundry/design-system/heading';
+import { Icon } from '@foundry/design-system/icon';
+import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
 import { ReactNode } from 'react';
-import { Heading } from '~/components/atoms/heading';
-import { Icon } from '~/components/atoms/icon';
-import { Section } from '~/components/atoms/section';
 
 interface AdminMainBaseProps {
 	/** Page title shown in the `<Head>` tag and as the section heading. */
@@ -37,7 +37,7 @@ interface AdminMainBaseProps {
  *   icon="Users"
  *   action={
  *     <CanAccess permission="users.create">
- *       <Button route="admin.identity.users_create.render" variant="secondary" fitContent>
+ *       <Button href={urlFor('admin.identity.users_create.render')} variant="secondary" fitContent>
  *         Invite a user
  *       </Button>
  *     </CanAccess>

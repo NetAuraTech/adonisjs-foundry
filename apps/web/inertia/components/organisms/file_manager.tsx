@@ -1,9 +1,9 @@
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Icon } from '@foundry/design-system/icon';
+import { Modal } from '@foundry/design-system/modal';
 import { Data } from '@generated/data';
 import { useEffect, useState } from 'react';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Icon } from '~/components/atoms/icon';
-import { Modal } from '~/components/atoms/modal';
 import { Field } from '~/components/molecules/field';
 import { Pagination } from '~/components/molecules/pagination';
 import { Paginated } from '~/types/paginated';

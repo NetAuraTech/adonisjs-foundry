@@ -1,9 +1,9 @@
 import { Form } from '@adonisjs/inertia/react';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
 import { Data } from '@generated/data';
 import { useState } from 'react';
 import { urlFor } from '~/client';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
 import { Banner } from '~/components/molecules/banner';
 import { Field } from '~/components/molecules/field';
 import { SettingsLayout } from '~/components/organisms/settings_layout';

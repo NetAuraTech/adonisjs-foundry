@@ -1,5 +1,5 @@
+import { Icon } from '@foundry/design-system/icon';
 import { Data } from '@generated/data';
-import { Icon } from '~/components/atoms/icon';
 
 interface TemplateCardProps {
 	template: Data.Cms.Template;

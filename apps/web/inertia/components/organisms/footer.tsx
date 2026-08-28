@@ -1,8 +1,8 @@
 import { Link } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { navLink } from '@foundry/design-system/nav-link';
+import { Paragraph } from '@foundry/design-system/paragraph';
 import { usePage } from '@inertiajs/react';
-import { variants } from '~/components/atoms/nav_link';
-import { Paragraph } from '~/components/atoms/paragraph';
 
 export function Footer() {
 	const pageProps = usePage<SharedProps>().props;
@@ -38,7 +38,7 @@ export function Footer() {
 					className="text-sm font-light leading-relaxed max-w-md flex items-center gap-2"
 				>
 					Fait avec ♥ par{' '}
-					<a href="https://www.netauratech.fr" className={`${variants['external']}`}>
+					<a href="https://www.netauratech.fr" className={navLink({ variant: 'external' })}>
 						NetAuraTech
 					</a>
 				</Paragraph>
