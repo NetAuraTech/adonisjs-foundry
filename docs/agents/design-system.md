@@ -1,27 +1,43 @@
 # Design System Agent Guide
 
-Component library in `inertia/components/`, organized as Atomic Design (atoms → molecules → organisms). No `templates`/`pages` folders — page-level layout lives in `inertia/pages/`. No Storybook in this project; verification is via typecheck + manual checks in the running app.
+The shared React design system. Presentation **tokens** and (eventually) reusable **components** live in the `@foundry/design-system` workspace at `packages/design-system/`; the app consumes it as a workspace dependency. This is a **source-only** package — it ships no build output, and every consumer's bundler compiles it from source.
 
-> **Flavor note:** this guide assumes a frontend tree. The `api` flavor ships no `inertia/` directory at all; the `cms/` subtree below is `full`-flavor only (the `inertia` flavor prunes it too).
+> **Flavor note:** the design-system is a frontend concern. It is kept by the `full` and `inertia` flavors (both ship a React front) and pruned wholesale by the `api` flavor (headless, no frontend). The `api` flavor ships no `packages/` directory at all.
 
-## Sources
+## The `@foundry/design-system` package
 
-- Atomic Design, chapter 1: design systems should move work away from isolated pages and toward systems of reusable components.
-- Atomic Design, chapter 2: atoms, molecules, organisms, templates, and pages are a mental model for seeing a UI as both a whole and a collection of parts.
-- Atomic Design, chapter 3: a pattern library should be the living place where components are named, composed, documented, and tested.
-- Atomic Design, chapter 4: interface inventories help expose duplicate patterns, naming drift, and missing shared components.
-- Atomic Design, chapter 5: a design system is a living product, not a one-time style guide artifact.
+- **Source-only, no build.** Consumers add `@foundry/design-system` to their `dependencies` and import it directly; the bundler resolves the linked package to its TypeScript source. There is no `main`/`dist` — the `exports` map is the public API.
+- **The `exports` map is the public API.** One subpath per public component plus `./tokens`. Add a subpath when a component (or a token module) becomes public; keep one folder per component under `src/{atoms,molecules,organisms}/`.
+- **Presentation tokens are the package's type surface.** `src/tokens.ts` holds the shared presentation types (the Tailwind font-size scale, paragraph variants and spacing). Relocate new shared presentation types here rather than leaving them in the app — never duplicate a token definition in the app.
+- **`tailwind-variants` is the styling primitive.** One `tv()` call per component, typed variant props, built-in `className` merging. (No components have moved yet — the package currently exposes tokens and the canonical CSS.)
+- **React 19 is a peer dependency**, hoisted to a single copy shared with the app.
 
-## Local Shape
+## Canonical CSS
 
-- `inertia/components/atoms/`: foundational UI primitives (`button.tsx`, `input.tsx`, `modal.tsx`, `card.tsx`...) plus the table primitives (`atoms/table/`).
-- `inertia/components/molecules/`: small reusable compositions (`field.tsx`, `pagination.tsx`, `theme_toggle.tsx`...).
-- `inertia/components/organisms/`: distinct interface sections (`header.tsx`, `footer.tsx`, `admin/`, `files/`).
-- `inertia/components/cms/`: the CMS module subtree — static block renderers (`blocks/`), the page/block `renderer/`, builder overlays (`builder/`), the props-editing UI (`editor/`), plus the module's private `hooks/`, `utils/`, and `types/`. Everything here is prunable together when a flavor drops the CMS.
+The design tokens, custom variants, utilities and font loading live in the package's canonical entry, `packages/design-system/src/css/canonical.css`. This is **Storybook's** copy of the design system.
 
-## Classification Rules
+The app keeps its own **full** copy at `apps/web/inertia/css/app.css` as the **theme-override surface**: it carries the same canonical block (so the app can restyle it) **plus** the app-only annexes (`@source` for the app tree, `@layer base`, `@layer components`). The app **never imports the package's CSS**; instead it adds an `@source` pointing at the package source through a real relative path (not the `node_modules` symlink) so Tailwind scans the package's class names. Keep the two canonical blocks in lockstep when a token changes.
 
-Use the smallest category that preserves the component's meaning.
+Font loading is declared as CSS `@import`s (in both the package's canonical CSS and the app copy), not as JS imports.
+
+## Boundary
+
+The package is a **consumer, never a depender**, of the app. It must not import app modules — not through a `#*` alias (the package has none) and not through a relative escape to `apps/` or `tooling/`. This is enforced two ways:
+
+1. **Resolution gate** — the package's `tsconfig`/bundler cannot resolve the app's aliases, so any such import fails typecheck.
+2. **Lint gate** — a repo-wide, path-scoped `no-restricted-imports` override fails fast on any package→app import (see `oxlint.config.ts`).
+
+Consumption is workspace-dep only — no bundler aliases point into the package.
+
+## Storybook
+
+Storybook is a **package devDependency** and runs **locally only**: `npm run storybook --workspace @foundry/design-system`. There is no root script and no CI job for it. Stories live next to components as `*.stories.tsx` and are picked up by `.storybook/main.ts`.
+
+## App-embedded components (pre-move)
+
+Until the component move lands, the app's React components still live in `inertia/components/`, organized as Atomic Design (atoms → molecules → organisms). No `templates`/`pages` folders — page-level layout lives in `inertia/pages/`.
+
+> **Flavor note:** the `inertia/components/cms/` subtree is `full`-flavor only (the `inertia` flavor prunes it too; the `api` flavor prunes the whole `inertia/` tree).
 
 ### Atoms
 
@@ -62,7 +78,7 @@ Good organism signals:
 
 An organism may contain private child components inside its folder. Export only the public component through `package.json`.
 
-## Special case: cms/blocks vs cms/editor/blocks
+### Special case: cms/blocks vs cms/editor/blocks
 
 The 12 page-builder block types each have **two** components, deliberately separate:
 
@@ -77,7 +93,7 @@ Match the block/domain vocabulary from `CONTEXT.md` (Block, Template, Page) rath
 
 ## Component Creation Checklist
 
-- Search `inertia/components/{atoms,molecules,organisms}` for an existing pattern to extend before creating a new one.
+- Search `inertia/components/{atoms,molecules,organisms}` (and `packages/design-system/src/` once components have moved) for an existing pattern to extend before creating a new one.
 - Pick the category by responsibility, not visual size.
 - Define props around content structure, not one page's current data.
 - If creating a new block type, add both the block renderer and the editor, and register it wherever block types are enumerated (check `cms/builder/block_types.ts`).
@@ -86,6 +102,7 @@ Match the block/domain vocabulary from `CONTEXT.md` (Block, Template, Page) rath
 
 ```bash
 npm run typecheck
+npm run lint
 ```
 
-For UI/layout/responsive changes, verify manually in the running dev server (`npm run dev`) — there is no visual regression tooling in this project.
+For UI/layout/responsive changes, verify manually in the running dev server (`npm run dev`); for package components, Storybook is the fast local check. There is no visual regression tooling in this project.

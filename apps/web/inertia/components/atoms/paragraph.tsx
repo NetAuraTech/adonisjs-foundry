@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
 import { getFontSizeClass } from '~/utils/font';
-import type { FontSize } from '#types/font';
-import type { ParagraphSpacing, ParagraphVariants } from '#types/paragraph';
+import type { FontSize, ParagraphSpacing, ParagraphVariants } from '@foundry/design-system/tokens';
 
 interface ParagraphProps {
 	children: ReactNode;

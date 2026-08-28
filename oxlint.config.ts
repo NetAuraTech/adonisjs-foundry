@@ -9,8 +9,7 @@ export default defineConfig({
 	overrides: [
 		{
 			// Business layer (src) never depends on the app delivery layer.
-			// This path-scoped override is the reference mechanism; it also
-			// carries the design-system boundary later.
+			// This path-scoped override is the reference mechanism.
 			files: ['apps/web/src/**/*.{ts,tsx}'],
 			rules: {
 				'no-restricted-imports': [
@@ -45,6 +44,40 @@ export default defineConfig({
 							{
 								regex: '^\\.\\./(\\.\\./)*app(?:/|$)',
 								message: 'Frontend code must not escape the frontend tree to reach backend modules.',
+							},
+						],
+					},
+				],
+			},
+		},
+		{
+			// The design-system package is a consumer, never a depender, of the
+			// app. It has no knowledge of the app's aliases or layout, so any
+			// import that reaches the app (via a #* alias or a relative escape)
+			// is a boundary violation. The package's own tsconfig/bundler
+			// resolution is the second gate: it cannot resolve app aliases.
+			files: ['packages/design-system/**/*.{ts,tsx}'],
+			rules: {
+				'no-restricted-imports': [
+					'error',
+					{
+						patterns: [
+							{
+								regex: '^#',
+								message:
+									'The design-system package must not import app modules via #* aliases; it is a standalone package with no app aliases.',
+							},
+							{
+								regex: '^(?:\\.\\./)+apps(?:/|$)',
+								message: 'The design-system package must not escape the package tree to reach the app.',
+							},
+							{
+								regex: '^apps(?:/|$)',
+								message: 'The design-system package must not import from the app tree.',
+							},
+							{
+								regex: '^(?:\\.\\./)+tooling(?:/|$)',
+								message: 'The design-system package must not import from the repo tooling.',
 							},
 						],
 					},

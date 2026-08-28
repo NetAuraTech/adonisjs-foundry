@@ -56,6 +56,12 @@ const apiManifest: FlavorManifest = {
 		'apps/web/config/inertia.ts',
 		'apps/web/config/vite.ts',
 
+		// ─── Design-system package (shared React front) — main + inertia only ──
+		// The headless `api` flavor ships no frontend, so the design-system
+		// workspace is pruned wholesale (its dependency is dropped from the app
+		// manifest through the `dependencies` prune below).
+		'packages/design-system',
+
 		// ─── View-layer server middleware ────────────────────────────────────
 		'apps/web/app/core/middleware/inertia_middleware.ts',
 
@@ -1505,6 +1511,7 @@ const apiManifest: FlavorManifest = {
 				'    "@fontsource/cormorant-garamond": "^5.2.11",',
 				'    "@fontsource/jost": "^5.3.0",',
 				'    "@fontsource/playfair-display": "^5.3.0",',
+				'    "@foundry/design-system": "^1.4.0",',
 				'    "@iconify/react": "^6.0.2",',
 				'    "@inertiajs/react": "^3.0.0",',
 				'    "@sentry/node": "^10.70.0",',
@@ -1668,6 +1675,7 @@ const apiManifest: FlavorManifest = {
 				'@adonisjs/inertia',
 				'@adonisjs/vite',
 				'@inertiajs/react',
+				'@foundry/design-system',
 				'react',
 				'react-dom',
 				'sonner',
