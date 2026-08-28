@@ -24,7 +24,12 @@ interface AdminHeaderProps {
  * const [sidebarOpen, setSidebarOpen] = useState(false)
  *
  * <AdminHeader handleClick={() => setSidebarOpen((v) => !v)} />
- * <AdminSidebar sidebarOpen={sidebarOpen} />
+ * <AdminSidebar
+ *   sidebarOpen={sidebarOpen}
+ *   user={user}
+ *   dateLabel={dateLabel}
+ *   menu={menu}
+ * />
  */
 export function AdminHeader(props: AdminHeaderProps) {
 	const { handleClick, className } = props;

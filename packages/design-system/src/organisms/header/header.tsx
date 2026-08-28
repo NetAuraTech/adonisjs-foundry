@@ -26,7 +26,8 @@ interface HeaderProps {
 	appName: string;
 	/**
 	 * Primary navigation links, rendered in order inside the nav. Hrefs are
-	 * built by the caller; active state is derived from the current URL.
+	 * built by the caller; active state is derived from the current URL. The
+	 * first entry also drives the logo's href — put the home link first.
 	 */
 	links: HeaderLink[];
 	/** Additional Tailwind classes merged onto the `<header>`. */
