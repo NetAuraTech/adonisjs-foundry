@@ -7,7 +7,6 @@ import { Data } from '@generated/data';
 import { useState } from 'react';
 import { urlFor } from '~/client';
 import { SettingsLayout } from '~/components/organisms/settings_layout';
-import { toLooseErrors } from '~/helpers/form_errors';
 import { getIcon } from '~/helpers/oauth';
 import { sanitizeEmail } from '~/helpers/sanitization';
 import { presets } from '~/helpers/validation_rules';
@@ -68,13 +67,8 @@ export default function AccountPage(props: PageProps) {
 									type="email"
 									defaultValue={user.email || ''}
 									placeholder={t('email.placeholder')}
-									errorMessage={toLooseErrors(errors).email || validationEmailForm.getValidationMessage('email')}
-									onChange={(event) => {
-										validationEmailForm.handleChange('email', event.target.value);
-									}}
-									onBlur={(event) => {
-										validationEmailForm.handleBlur('email', event!.target.value);
-									}}
+									validation={validationEmailForm}
+									errors={errors}
 									required
 									sanitizeValue={sanitizeEmail}
 								/>
@@ -145,22 +139,16 @@ export default function AccountPage(props: PageProps) {
 									label={t('password.current.value')}
 									name="current_password"
 									type="password"
-									errorMessage={
-										errors.current_password || validationPasswordForm.getValidationMessage('current_password')
-									}
-									onChange={(event) => {
-										validationPasswordForm.handleChange('current_password', event.target.value);
-									}}
-									onBlur={(event) => {
-										validationPasswordForm.handleBlur('current_password', event!.target.value);
-									}}
+									validation={validationPasswordForm}
+									errors={errors}
 									required
 								/>
 								<Field
 									label={t('password.new.value')}
 									name="password"
 									type="password"
-									errorMessage={errors.password || validationPasswordForm.getValidationMessage('password')}
+									validation={validationPasswordForm}
+									errors={errors}
 									onChange={(event) => {
 										setPassword(event.target.value);
 										validationPasswordForm.handleChange('password', event.target.value);
@@ -173,16 +161,13 @@ export default function AccountPage(props: PageProps) {
 									}}
 									required
 									helpText={t('password.new.help')}
-									helpClassName={validationPasswordForm.getHelpClassName('password')}
 								/>
 								<Field
 									label={t('password.confirm.value')}
 									name="password_confirmation"
 									type="password"
-									errorMessage={
-										toLooseErrors(errors).password_confirmation ||
-										validationPasswordForm.getValidationMessage('password_confirmation')
-									}
+									validation={validationPasswordForm}
+									errors={errors}
 									onChange={(event) => {
 										setConfirmPassword(event.target.value);
 										validationPasswordForm.handleChange('password_confirmation', event.target.value);
@@ -193,7 +178,6 @@ export default function AccountPage(props: PageProps) {
 									}}
 									required
 									helpText={t('password.confirm.help')}
-									helpClassName={validationPasswordForm.getHelpClassName('password_confirmation')}
 								/>
 								<Button loading={processing} type={'submit'} fitContent name="update_password_submit">
 									{t('password.submit')}
@@ -225,15 +209,9 @@ export default function AccountPage(props: PageProps) {
 											label={t('delete.password')}
 											name="password"
 											type="password"
-											errorMessage={errors.password || validationDeleteForm.getValidationMessage('password')}
-											onChange={(event) => {
-												validationDeleteForm.handleChange('password', event.target.value);
-											}}
-											onBlur={(event) => {
-												validationDeleteForm.handleBlur('password', event!.target.value);
-											}}
+											validation={validationDeleteForm}
+											errors={errors}
 											required
-											helpClassName={validationDeleteForm.getHelpClassName('password')}
 										/>
 										<div className="flex gap-3">
 											<Button

@@ -41,7 +41,16 @@ The move of components into the package is in progress: all generic atoms and th
 
 > **Flavor note:** the `inertia/components/cms/` subtree is `full`-flavor only (the `inertia` flavor prunes it too; the `api` flavor prunes the whole `inertia/` tree).
 
-Package molecules are **100% props/children**: app data reaches them through injected query functions and render props (e.g. `ImagePicker` receives a `loadFile` query and a `renderFileManager` surface; `Pagination` receives resolved label strings and a `buildHref` callback; `Field` receives a `sanitizeValue` function and a `renderImage` extension point). The package owns no app data, no API endpoint and no i18n catalog.
+Package molecules are **100% props/children**: app data reaches them through injected query functions and render props (e.g. `ImagePicker` receives a `loadFile` query and a `renderFileManager` surface; `Pagination` receives resolved label strings and a `buildHref` callback; `Field` receives a `sanitizeValue` function, a `renderImage` extension point, and — through the validation seam — a `validation` bundle typed by the structural `FieldValidation` interface plus the Inertia `errors` record). The package owns no app data, no API endpoint and no i18n catalog.
+
+### Field validation seam
+
+`Field` accepts two optional props that move the repeated per-field validation wiring out of call sites:
+
+- `validation` — the app's `useFormValidation` instance, matched against the package's structural `FieldValidation` interface (`handleChange`, `handleBlur`, `getValidationMessage`, `getHelpClassName`, all optional). The package never imports the app's hook type — any structurally compatible object is accepted.
+- `errors` — the full Inertia `errors` record from the `Form` render-prop closure, passed as-is.
+
+When present, `Field` wires its own `name` into the bundle's change/blur handlers (value is `e.target.checked` for `checkbox`/`radio`, `e.target.value` otherwise), displays `errors[name]` first and `getValidationMessage(name)` as a fallback, and applies `getHelpClassName(name)` to the help text when `helpText` is present. Explicit `onChange`, `onBlur`, `errorMessage`, and `helpClassName` props always win — fields with custom handlers (LFW, builder editors, cross-field re-validation) keep them and are otherwise untouched.
 
 ### Atoms
 

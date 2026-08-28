@@ -93,13 +93,8 @@ export default function RolesFormPage(props: PageProps) {
 								type="text"
 								defaultValue={role?.name}
 								placeholder={t('name.placeholder')}
-								errorMessage={errors.name || validation.getValidationMessage('name')}
-								onChange={(event) => {
-									validation.handleChange('name', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('name', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
 								required
 								sanitizeValue={sanitizeText}
 							/>
@@ -109,13 +104,8 @@ export default function RolesFormPage(props: PageProps) {
 								type="text"
 								defaultValue={role?.slug}
 								placeholder={t('slug.placeholder')}
-								errorMessage={errors.slug || validation.getValidationMessage('slug')}
-								onChange={(event) => {
-									validation.handleChange('slug', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('slug', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
 								required
 								sanitizeValue={sanitizeText}
 							/>
@@ -125,13 +115,8 @@ export default function RolesFormPage(props: PageProps) {
 								type="textarea"
 								defaultValue={role?.description ?? ''}
 								placeholder={t('description.placeholder')}
-								errorMessage={errors.description || validation.getValidationMessage('description')}
-								onChange={(event) => {
-									validation.handleChange('description', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('description', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
 								sanitizeValue={sanitizeRichText}
 							/>
 							<div className="grid gap-3">

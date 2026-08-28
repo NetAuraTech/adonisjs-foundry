@@ -7,7 +7,6 @@ import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import { urlFor } from '~/client';
-import { toLooseErrors } from '~/helpers/form_errors';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
@@ -63,7 +62,8 @@ export default function ResetPasswordPage(props: ResetPasswordPageProps) {
 										label={t('password.value')}
 										name="password"
 										type="password"
-										errorMessage={errors.password || validation.getValidationMessage('password')}
+										validation={validation}
+										errors={errors}
 										onChange={(event) => {
 											setPassword(event.target.value);
 											validation.handleChange('password', event.target.value);
@@ -76,16 +76,13 @@ export default function ResetPasswordPage(props: ResetPasswordPageProps) {
 										}}
 										required
 										helpText={t('password.help')}
-										helpClassName={validation.getHelpClassName('password')}
 									/>
 									<Field
 										label={t('password.confirmation.value')}
 										name="password_confirmation"
 										type="password"
-										errorMessage={
-											toLooseErrors(errors).password_confirmation ||
-											validation.getValidationMessage('password_confirmation')
-										}
+										validation={validation}
+										errors={errors}
 										onChange={(event) => {
 											setConfirmPassword(event.target.value);
 											validation.handleChange('password_confirmation', event.target.value);
@@ -96,7 +93,6 @@ export default function ResetPasswordPage(props: ResetPasswordPageProps) {
 										}}
 										required
 										helpText={t('password.confirmation.help')}
-										helpClassName={validation.getHelpClassName('password_confirmation')}
 									/>
 									<div className="flex gap-3">
 										<Button loading={processing} type={'submit'} fitContent>

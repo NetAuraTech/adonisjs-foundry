@@ -10,7 +10,6 @@ import { ReactElement } from 'react';
 import { urlFor } from '~/client';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
-import { toLooseErrors } from '~/helpers/form_errors';
 import { sanitizeEmail, sanitizeText } from '~/helpers/sanitization';
 import { presets, rules } from '~/helpers/validation_rules';
 import { useMenu } from '~/hooks/use_admin';
@@ -75,13 +74,8 @@ export default function UsersFormPage(props: PageProps) {
 								type="email"
 								defaultValue={user?.email}
 								placeholder={t('email.placeholder')}
-								errorMessage={toLooseErrors(errors).email || validation.getValidationMessage('email')}
-								onChange={(event) => {
-									validation.handleChange('email', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('email', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
 								required
 								sanitizeValue={sanitizeEmail}
 							/>
@@ -91,13 +85,8 @@ export default function UsersFormPage(props: PageProps) {
 								type="text"
 								defaultValue={user?.username}
 								placeholder={t('username.placeholder')}
-								errorMessage={toLooseErrors(errors).username || validation.getValidationMessage('username')}
-								onChange={(event) => {
-									validation.handleChange('username', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('username', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
 								required
 								sanitizeValue={sanitizeText}
 							/>
@@ -107,13 +96,8 @@ export default function UsersFormPage(props: PageProps) {
 								type="select"
 								defaultValue={user?.role?.id}
 								placeholder={t('roles.placeholder')}
-								errorMessage={toLooseErrors(errors).role_id || validation.getValidationMessage('role_id')}
-								onChange={(event) => {
-									validation.handleChange('role_id', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('role_id', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
 								required
 								sanitizeValue={sanitizeText}
 							>

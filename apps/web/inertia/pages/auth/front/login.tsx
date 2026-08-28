@@ -74,13 +74,8 @@ export default function LoginPage(props: PageProps) {
 										name="email"
 										type="email"
 										placeholder={t('email.placeholder')}
-										errorMessage={errors.email || validation.getValidationMessage('email')}
-										onChange={(event) => {
-											validation.handleChange('email', event.target.value);
-										}}
-										onBlur={(event) => {
-											validation.handleBlur('email', event!.target.value);
-										}}
+										validation={validation}
+										errors={errors}
 										required
 										sanitizeValue={sanitizeEmail}
 									/>
@@ -88,13 +83,8 @@ export default function LoginPage(props: PageProps) {
 										label={t('password.value')}
 										name="password"
 										type="password"
-										errorMessage={errors.password || validation.getValidationMessage('password')}
-										onChange={(event) => {
-											validation.handleChange('password', event.target.value);
-										}}
-										onBlur={(event) => {
-											validation.handleBlur('password', event!.target.value);
-										}}
+										validation={validation}
+										errors={errors}
 										required
 									/>
 									<div className="grid gap-2 md:flex md:items-center md:justify-between">
