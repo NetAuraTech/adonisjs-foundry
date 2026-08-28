@@ -87,13 +87,8 @@ export default function PermissionsFormPage(props: PageProps) {
 								type="text"
 								defaultValue={permission?.name}
 								placeholder={t('name.placeholder')}
-								errorMessage={errors.name || validation.getValidationMessage('name')}
-								onChange={(event) => {
-									validation.handleChange('name', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('name', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
 								required
 								sanitizeValue={sanitizeText}
 							/>
@@ -103,13 +98,8 @@ export default function PermissionsFormPage(props: PageProps) {
 								type="text"
 								defaultValue={permission?.slug}
 								placeholder={t('slug.placeholder')}
-								errorMessage={errors.slug || validation.getValidationMessage('slug')}
-								onChange={(event) => {
-									validation.handleChange('slug', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('slug', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
 								required
 								sanitizeValue={sanitizeText}
 							/>
@@ -119,13 +109,8 @@ export default function PermissionsFormPage(props: PageProps) {
 								type="text"
 								defaultValue={permission?.category}
 								placeholder={t('category.placeholder')}
-								errorMessage={errors.category || validation.getValidationMessage('category')}
-								onChange={(event) => {
-									validation.handleChange('category', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('category', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
 								required
 								sanitizeValue={sanitizeText}
 							/>
@@ -135,13 +120,8 @@ export default function PermissionsFormPage(props: PageProps) {
 								type="textarea"
 								defaultValue={permission?.description ?? ''}
 								placeholder={t('description.placeholder')}
-								errorMessage={errors.description || validation.getValidationMessage('description')}
-								onChange={(event) => {
-									validation.handleChange('description', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('description', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
 								sanitizeValue={sanitizeRichText}
 							/>
 							<Button loading={processing} type={'submit'} fitContent>

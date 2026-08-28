@@ -7,7 +7,6 @@ import { Label } from '@foundry/design-system/label';
 import { Data } from '@generated/data';
 import { urlFor } from '~/client';
 import { SettingsLayout } from '~/components/organisms/settings_layout';
-import { toLooseErrors } from '~/helpers/form_errors';
 import { sanitizeText } from '~/helpers/sanitization';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
@@ -57,13 +56,8 @@ export default function ProfilePage(props: PageProps) {
 									type="text"
 									defaultValue={user.username || ''}
 									placeholder={t('username.placeholder')}
-									errorMessage={toLooseErrors(errors).username || validation.getValidationMessage('username')}
-									onChange={(event) => {
-										validation.handleChange('username', event.target.value);
-									}}
-									onBlur={(event) => {
-										validation.handleBlur('username', event!.target.value);
-									}}
+									validation={validation}
+									errors={errors}
 									required
 									sanitizeValue={sanitizeText}
 								/>

@@ -72,13 +72,8 @@ export default function PagesCreatePage(props: PagesCreatePageProps) {
 										type="select"
 										name="locale"
 										label={t('locale')}
-										errorMessage={errors.locale || validation.getValidationMessage('locale')}
-										onChange={(event) => {
-											validation.handleChange('locale', event.target.value);
-										}}
-										onBlur={(event) => {
-											validation.handleBlur('locale', event!.target.value);
-										}}
+										validation={validation}
+										errors={errors}
 										required
 										sanitizeValue={sanitizeText}
 									>
@@ -91,13 +86,8 @@ export default function PagesCreatePage(props: PagesCreatePageProps) {
 										name="title"
 										label={t('page_title.value')}
 										placeholder={t('page_title.placeholder')}
-										errorMessage={errors.title || validation.getValidationMessage('title')}
-										onChange={(event) => {
-											validation.handleChange('title', event.target.value);
-										}}
-										onBlur={(event) => {
-											validation.handleBlur('title', event!.target.value);
-										}}
+										validation={validation}
+										errors={errors}
 										required
 										sanitizeValue={sanitizeText}
 									/>
@@ -105,13 +95,8 @@ export default function PagesCreatePage(props: PagesCreatePageProps) {
 										type="text"
 										name="slug"
 										label={t('slug')}
-										errorMessage={errors.slug || validation.getValidationMessage('slug')}
-										onChange={(event) => {
-											validation.handleChange('slug', event.target.value);
-										}}
-										onBlur={(event) => {
-											validation.handleBlur('slug', event!.target.value);
-										}}
+										validation={validation}
+										errors={errors}
 										required
 										sanitizeValue={sanitizeText}
 									/>
@@ -127,13 +112,8 @@ export default function PagesCreatePage(props: PagesCreatePageProps) {
 										name="metaTitle"
 										label={t('meta.title.value')}
 										placeholder={t('meta.title.placeholder')}
-										errorMessage={errors.metaTitle || validation.getValidationMessage('metaTitle')}
-										onChange={(event) => {
-											validation.handleChange('metaTitle', event.target.value);
-										}}
-										onBlur={(event) => {
-											validation.handleBlur('metaTitle', event!.target.value);
-										}}
+										validation={validation}
+										errors={errors}
 										sanitizeValue={sanitizeText}
 									/>
 									<Field
@@ -141,13 +121,8 @@ export default function PagesCreatePage(props: PagesCreatePageProps) {
 										name="metaDescription"
 										label={t('meta.description.value')}
 										placeholder={t('meta.description.placeholder')}
-										errorMessage={errors.metaDescription || validation.getValidationMessage('metaDescription')}
-										onChange={(event) => {
-											validation.handleChange('metaDescription', event.target.value);
-										}}
-										onBlur={(event) => {
-											validation.handleBlur('metaDescription', event!.target.value);
-										}}
+										validation={validation}
+										errors={errors}
 										sanitizeValue={sanitizeRichText}
 									/>
 								</div>

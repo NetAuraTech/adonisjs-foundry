@@ -9,7 +9,6 @@ import { Data } from '@generated/data';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import { urlFor } from '~/client';
-import { toLooseErrors } from '~/helpers/form_errors';
 import { sanitizeEmail, sanitizeText } from '~/helpers/sanitization';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
@@ -73,13 +72,8 @@ export default function AcceptInvitationPage(props: PageProps) {
 										type="email"
 										defaultValue={user.email}
 										placeholder={t('email.placeholder')}
-										errorMessage={toLooseErrors(errors).email || validation.getValidationMessage('email')}
-										onChange={(event) => {
-											validation.handleChange('email', event.target.value);
-										}}
-										onBlur={(event) => {
-											validation.handleBlur('email', event!.target.value);
-										}}
+										validation={validation}
+										errors={errors}
 										helpText={t('email.help')}
 										required
 										sanitizeValue={sanitizeEmail}
@@ -90,13 +84,8 @@ export default function AcceptInvitationPage(props: PageProps) {
 										type="text"
 										defaultValue={user.username}
 										placeholder={t('username.placeholder')}
-										errorMessage={toLooseErrors(errors).username || validation.getValidationMessage('username')}
-										onChange={(event) => {
-											validation.handleChange('username', event.target.value);
-										}}
-										onBlur={(event) => {
-											validation.handleBlur('username', event!.target.value);
-										}}
+										validation={validation}
+										errors={errors}
 										helpText={t('username.help')}
 										required
 										sanitizeValue={sanitizeText}
@@ -105,7 +94,8 @@ export default function AcceptInvitationPage(props: PageProps) {
 										label={t('password.value')}
 										name="password"
 										type="password"
-										errorMessage={toLooseErrors(errors).password || validation.getValidationMessage('password')}
+										validation={validation}
+										errors={errors}
 										onChange={(event) => {
 											setPassword(event.target.value);
 											validation.handleChange('password', event.target.value);
@@ -118,16 +108,13 @@ export default function AcceptInvitationPage(props: PageProps) {
 										}}
 										required
 										helpText={t('password.help')}
-										helpClassName={validation.getHelpClassName('password')}
 									/>
 									<Field
 										label={t('password.confirmation.value')}
 										name="password_confirmation"
 										type="password"
-										errorMessage={
-											toLooseErrors(errors).password_confirmation ||
-											validation.getValidationMessage('password_confirmation')
-										}
+										validation={validation}
+										errors={errors}
 										onChange={(event) => {
 											setConfirmPassword(event.target.value);
 											validation.handleChange('password_confirmation', event.target.value);
@@ -138,7 +125,6 @@ export default function AcceptInvitationPage(props: PageProps) {
 										}}
 										required
 										helpText={t('password.confirmation.help')}
-										helpClassName={validation.getHelpClassName('password_confirmation')}
 									/>
 									<Button loading={processing} type={'submit'} fitContent>
 										{t('submit')}

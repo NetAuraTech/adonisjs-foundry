@@ -123,13 +123,7 @@ export default function MaintenancePage(props: PageProps) {
 									defaultValue={config.message}
 									placeholder={t('message.placeholder')}
 									rows={4}
-									errorMessage={validation.getValidationMessage('message')}
-									onChange={(event) => {
-										validation.handleChange('message', event.target.value);
-									}}
-									onBlur={(event) => {
-										validation.handleBlur('message', event!.target.value);
-									}}
+									validation={validation}
 									required
 									sanitizeValue={sanitizeRichText}
 								/>

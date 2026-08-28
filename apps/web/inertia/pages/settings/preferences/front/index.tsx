@@ -52,13 +52,8 @@ export default function PreferencesPage(props: PreferencesPageProps) {
 									name="locale"
 									type="select"
 									defaultValue={pageProps.preferences?.locale || 'en'}
-									errorMessage={errors.locale || validationLocale.getValidationMessage('locale')}
-									onChange={(event) => {
-										validationLocale.handleChange('locale', event.target.value);
-									}}
-									onBlur={(event) => {
-										validationLocale.handleBlur('locale', event!.target.value);
-									}}
+									validation={validationLocale}
+									errors={errors}
 									required
 									sanitizeValue={sanitizeText}
 								>

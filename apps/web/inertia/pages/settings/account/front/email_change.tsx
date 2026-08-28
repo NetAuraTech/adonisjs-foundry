@@ -60,13 +60,8 @@ export default function EmailChangePage(props: PageProps) {
 										name="token"
 										type="text"
 										defaultValue={token}
-										errorMessage={errors.token || validation.getValidationMessage('token')}
-										onChange={(event) => {
-											validation.handleChange('token', event.target.value);
-										}}
-										onBlur={(event) => {
-											validation.handleBlur('token', event!.target.value);
-										}}
+										validation={validation}
+										errors={errors}
 										required
 										disabled
 										sanitizeValue={sanitizeText}

@@ -57,13 +57,8 @@ export default function ForgotPasswordPage(props: ForgotPasswordPageProps) {
 										name="email"
 										type="email"
 										placeholder={t('email.placeholder')}
-										errorMessage={errors.email || validation.getValidationMessage('email')}
-										onChange={(event) => {
-											validation.handleChange('email', event.target.value);
-										}}
-										onBlur={(event) => {
-											validation.handleBlur('email', event!.target.value);
-										}}
+										validation={validation}
+										errors={errors}
 										required
 										sanitizeValue={sanitizeEmail}
 									/>

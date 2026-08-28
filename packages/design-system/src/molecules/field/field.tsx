@@ -7,6 +7,24 @@ import { Select } from '../../atoms/select/select';
 import { Textarea } from '../../atoms/textarea/textarea';
 import type { ChangeEvent, ReactNode } from 'react';
 
+/**
+ * Structural contract for a form-validation bundle (e.g. the app's
+ * `useFormValidation` return value). Declared structurally so the design
+ * system never imports an app type — any object exposing a compatible subset
+ * of these members is accepted. All members are optional so a partial bundle
+ * (e.g. messages only) is legal.
+ */
+export interface FieldValidation {
+	/** Called on change with the field name and the current value. */
+	handleChange?: (name: string, value: string | boolean) => void;
+	/** Called on blur with the field name and the current value. */
+	handleBlur?: (name: string, value: string | boolean) => void;
+	/** Returns the client-side validation message for a touched, invalid field. */
+	getValidationMessage?: (name: string) => string | undefined;
+	/** Returns a class (e.g. a status color) applied to the help text. */
+	getHelpClassName?: (name: string) => string;
+}
+
 interface FieldProps {
 	/** Visible label text associated with the input. */
 	label: string;
@@ -45,6 +63,25 @@ interface FieldProps {
 	helpText?: string;
 	/** Tailwind class(es) applied to the help text `<Paragraph>` wrapper. */
 	helpClassName?: string;
+	/**
+	 * Form-validation bundle (see {@link FieldValidation}). When provided, the
+	 * field wires its own `name` into the bundle's `handleChange` /
+	 * `handleBlur` on interaction, displays the bundle's
+	 * `getValidationMessage(name)` as a fallback error (below any server
+	 * `errors` entry), and — when `helpText` is present — applies
+	 * `getHelpClassName(name)` to the help text. Explicit `onChange`,
+	 * `onBlur`, `errorMessage`, and `helpClassName` props always win over the
+	 * values derived from this bundle.
+	 */
+	validation?: FieldValidation;
+	/**
+	 * Server-side form errors (e.g. the Inertia `errors` record from a `Form`
+	 * render prop), keyed by field name. The entry for this field's `name`
+	 * is displayed below the input, taking precedence over
+	 * `validation.getValidationMessage(name)`. An explicit `errorMessage`
+	 * prop always wins over both.
+	 */
+	errors?: Record<string, string | undefined>;
 	onChange?: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
 	onBlur?: (event?: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
 	/**
@@ -76,7 +113,7 @@ interface FieldProps {
  */
 export type ImageFieldProps = Omit<
 	FieldProps,
-	'label' | 'errorMessage' | 'helpText' | 'helpClassName' | 'sanitizeValue' | 'renderImage'
+	'label' | 'errorMessage' | 'helpText' | 'helpClassName' | 'validation' | 'errors' | 'sanitizeValue' | 'renderImage'
 >;
 
 const fieldLayout = tv({
@@ -105,14 +142,23 @@ const fieldLayout = tv({
  * input is never interrupted. The sanitization policy is injected through
  * `sanitizeValue` — the design system owns none.
  *
+ * **Validation** is injected through the `validation` bundle (see
+ * {@link FieldValidation}) and the `errors` server-error record. When
+ * provided, the field wires its own `name` into the bundle's change/blur
+ * handlers, displays `errors[name]` first and the bundle's validation message
+ * as a fallback, and applies the bundle's help class to the help text.
+ * Explicit `onChange`, `onBlur`, `errorMessage`, and `helpClassName` props
+ * always win, so fields with custom handlers stay untouched.
+ *
  * @example
- * // Text input with validation
+ * // Text input wired to a validation bundle
  * <Field
  *   label="Email"
  *   name="email"
  *   type="email"
  *   placeholder="you@example.com"
- *   errorMessage={errors.email}
+ *   validation={validation}
+ *   errors={errors}
  *   required
  *   sanitizeValue={sanitizeEmail}
  * />
@@ -126,13 +172,14 @@ const fieldLayout = tv({
  * // Checkbox with inline label
  * <Field label="Remember me" name="remember_me" type="checkbox" />
  *
- * // Password with help text (no sanitization)
+ * // Password with help text (no sanitization; help class auto-applied)
  * <Field
  *   label="New password"
  *   name="password"
  *   type="password"
+ *   validation={validation}
+ *   errors={errors}
  *   helpText="Minimum 8 characters."
- *   helpClassName={validation.getHelpClassName('password')}
  *   required
  * />
  *
@@ -152,6 +199,8 @@ export function Field(props: FieldProps) {
 		errorMessage,
 		helpText,
 		helpClassName,
+		validation,
+		errors,
 		onChange,
 		onBlur,
 		sanitizeValue,
@@ -161,9 +210,31 @@ export function Field(props: FieldProps) {
 
 	const isInline = type === 'checkbox' || type === 'radio';
 
-	/** Handle change — no sanitization during typing. */
+	/** Current value of the event target for the rendered control kind. */
+	const getFieldValue = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+		isInline ? (event.target as HTMLInputElement).checked : event.target.value;
+
+	/**
+	 * Displayed error: an explicit `errorMessage` wins, then the server error
+	 * for this field, then the client validation message for this field.
+	 */
+	const displayedError =
+		errorMessage ||
+		errors?.[name] ||
+		(validation?.getValidationMessage ? validation.getValidationMessage(name) : undefined);
+
+	/** Help text class: an explicit `helpClassName` wins, then the validation status class. */
+	const displayedHelpClassName =
+		helpClassName ?? (validation?.getHelpClassName && helpText ? validation.getHelpClassName(name) : undefined);
+
+	/** Handle change — no sanitization during typing; an explicit `onChange` wins over the validation bundle. */
 	const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-		onChange?.(event);
+		if (onChange) {
+			onChange(event);
+			return;
+		}
+
+		validation?.handleChange?.(name, getFieldValue(event));
 	};
 
 	/** Handle blur — apply the injected sanitization when the user leaves the field. */
@@ -173,11 +244,18 @@ export function Field(props: FieldProps) {
 
 			if (sanitizedValue !== event.target.value) {
 				event.target.value = sanitizedValue;
-				onChange?.(event);
+				handleChange(event);
 			}
 		}
 
-		onBlur?.(event ?? undefined);
+		if (onBlur) {
+			onBlur(event ?? undefined);
+			return;
+		}
+
+		if (event) {
+			validation?.handleBlur?.(name, getFieldValue(event));
+		}
 	};
 
 	const getComponentFromType = (type: string) => {
@@ -206,16 +284,16 @@ export function Field(props: FieldProps) {
 					{isInline && <Label label={label} htmlFor={name} required={props.required} />}
 				</div>
 			)}
-			{errorMessage && (
+			{displayedError && (
 				<Paragraph variant="error" spacing="sm">
-					{errorMessage}
+					{displayedError}
 				</Paragraph>
 			)}
 			{helpText && (
 				<Paragraph
 					variant="muted"
-					spacing={errorMessage ? 'xs' : 'sm'}
-					className={helpClassName ? cn('text-balance leading-7', helpClassName) : undefined}
+					spacing={displayedError ? 'xs' : 'sm'}
+					className={displayedHelpClassName ? cn('text-balance leading-7', displayedHelpClassName) : undefined}
 				>
 					{helpText}
 				</Paragraph>
