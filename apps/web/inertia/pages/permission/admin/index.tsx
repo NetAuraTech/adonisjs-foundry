@@ -1,12 +1,13 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Badge } from '@foundry/design-system/badge';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Icon } from '@foundry/design-system/icon';
+import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
 import { ReactElement } from 'react';
-import { Badge } from '~/components/atoms/badge';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Icon } from '~/components/atoms/icon';
-import Table from '~/components/atoms/table/table';
+import { urlFor } from '~/client';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
 import { permissionCategoryKey } from '~/helpers/permissions';
@@ -41,7 +42,7 @@ export default function PermissionsIndexPage(props: PageProps) {
 			icon={getEntryIcon('admin.identity.permissions.render')}
 			action={
 				<CanAccess permission="permissions.create">
-					<Button route="admin.identity.permissions_create.render" variant="secondary" fitContent>
+					<Button href={urlFor('admin.identity.permissions_create.render')} variant="secondary" fitContent>
 						{t('create.title')}
 					</Button>
 				</CanAccess>
@@ -90,8 +91,7 @@ export default function PermissionsIndexPage(props: PageProps) {
 															<CanAccess permission="permissions.update">
 																<Button
 																	variant="icon_warning"
-																	route="admin.identity.permissions_update.render"
-																	routeParams={{ id: permission.id }}
+																	href={urlFor('admin.identity.permissions_update.render', { id: permission.id })}
 																	title={t('actions.edit', {
 																		name: t(`items.${permission.slug}.value` as any),
 																	})}

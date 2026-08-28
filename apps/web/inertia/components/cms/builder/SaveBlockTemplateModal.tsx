@@ -1,10 +1,10 @@
+import { Button } from '@foundry/design-system/button';
+import { Icon } from '@foundry/design-system/icon';
+import { Input } from '@foundry/design-system/input';
+import { Label } from '@foundry/design-system/label';
+import { Modal } from '@foundry/design-system/modal';
 import { Data } from '@generated/data';
 import { useEffect, useState } from 'react';
-import { Button } from '~/components/atoms/button';
-import { Icon } from '~/components/atoms/icon';
-import { Input } from '~/components/atoms/input';
-import { Label } from '~/components/atoms/label';
-import { Modal } from '~/components/atoms/modal';
 import { captureTemplateThumbnail } from '~/components/cms/utils/template_thumbnail';
 import type { Block, BlockType } from '#cms/types/page';
 

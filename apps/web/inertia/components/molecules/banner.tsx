@@ -1,5 +1,5 @@
+import { Paragraph } from '@foundry/design-system/paragraph';
 import { ReactNode } from 'react';
-import { Paragraph } from '~/components/atoms/paragraph';
 
 interface BannerProps {
 	/**

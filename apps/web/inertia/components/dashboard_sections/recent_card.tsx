@@ -1,6 +1,6 @@
 import { Link, type LinkProps } from '@adonisjs/inertia/react';
+import { Card } from '@foundry/design-system/card';
 import { ReactNode } from 'react';
-import { Card } from '~/components/atoms/card';
 
 type Route = NonNullable<LinkProps['route']>;
 

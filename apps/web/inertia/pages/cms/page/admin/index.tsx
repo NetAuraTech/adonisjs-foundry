@@ -1,12 +1,13 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Icon } from '@foundry/design-system/icon';
+import { SelectOption } from '@foundry/design-system/select';
+import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
 import { ReactElement } from 'react';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Icon } from '~/components/atoms/icon';
-import { SelectOption } from '~/components/atoms/select_option';
-import Table from '~/components/atoms/table/table';
+import { urlFor } from '~/client';
 import { Field } from '~/components/molecules/field';
 import { Pagination } from '~/components/molecules/pagination';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
@@ -49,7 +50,7 @@ export default function PagesIndexPage(props: Props) {
 				icon={getEntryIcon('admin.cms.pages.render')}
 				action={
 					<CanAccess permission="pages.create">
-						<Button route="admin.cms.pages_create.render" variant="secondary" fitContent>
+						<Button href={urlFor('admin.cms.pages_create.render')} variant="secondary" fitContent>
 							{t('action')}
 						</Button>
 					</CanAccess>
@@ -152,8 +153,7 @@ export default function PagesIndexPage(props: Props) {
 													<CanAccess permission="pages.view">
 														<Button
 															variant="icon_info"
-															route="admin.cms.pages_show.render"
-															routeParams={{ id: page.id }}
+															href={urlFor('admin.cms.pages_show.render', { id: page.id })}
 															title={t('actions.show', { title: primary?.title ?? '—' })}
 															fitContent
 														>
@@ -163,8 +163,7 @@ export default function PagesIndexPage(props: Props) {
 													<CanAccess permission="pages.update">
 														<Button
 															variant="icon_warning"
-															route="admin.cms.pages_update.render"
-															routeParams={{ id: page.id }}
+															href={urlFor('admin.cms.pages_update.render', { id: page.id })}
 															title={t('actions.edit', { title: primary?.title ?? '—' })}
 															fitContent
 														>

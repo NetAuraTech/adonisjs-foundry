@@ -1,13 +1,14 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Checkbox } from '@foundry/design-system/checkbox';
+import { Heading } from '@foundry/design-system/heading';
+import { Icon } from '@foundry/design-system/icon';
+import { Paragraph } from '@foundry/design-system/paragraph';
 import { Data } from '@generated/data';
 import { ReactElement } from 'react';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Checkbox } from '~/components/atoms/checkbox';
-import { Heading } from '~/components/atoms/heading';
-import { Icon } from '~/components/atoms/icon';
-import { Paragraph } from '~/components/atoms/paragraph';
+import { urlFor } from '~/client';
 import { Field } from '~/components/molecules/field';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
@@ -64,7 +65,7 @@ export default function RolesFormPage(props: PageProps) {
 				header={
 					<div className="flex items-center justify-between gap-3">
 						<CanAccess permission="roles.view">
-							<Button variant="icon" route="admin.identity.roles.render" title={t('actions.list')} fitContent>
+							<Button variant="icon" href={urlFor('admin.identity.roles.render')} title={t('actions.list')} fitContent>
 								<Icon name="ArrowLeft" />
 							</Button>
 						</CanAccess>

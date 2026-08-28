@@ -1,8 +1,9 @@
 import { Form } from '@adonisjs/inertia/react';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Section } from '~/components/atoms/section';
+import { urlFor } from '~/client';
 import { AuthIntro } from '~/components/molecules/auth/auth_intro';
 import { Banner } from '~/components/molecules/banner';
 import { Field } from '~/components/molecules/field';
@@ -74,7 +75,7 @@ export default function EmailChangePage(props: PageProps) {
 										<Button loading={processing} type={'submit'} fitContent>
 											{t('submit')}
 										</Button>
-										<Button route="account.account.render" fitContent variant="outline">
+										<Button href={urlFor('account.account.render')} fitContent variant="outline">
 											{t('cancel')}
 										</Button>
 									</div>

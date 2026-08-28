@@ -5,7 +5,26 @@
   "license": "UNLICENSED",
   "type": "module",
   "exports": {
-    "./tokens": "./src/tokens.ts"
+    "./tokens": "./src/tokens.ts",
+    "./avatar": "./src/atoms/avatar/avatar.tsx",
+    "./badge": "./src/atoms/badge/badge.tsx",
+    "./button": "./src/atoms/button/button.tsx",
+    "./card": "./src/atoms/card/card.tsx",
+    "./checkbox": "./src/atoms/checkbox/checkbox.tsx",
+    "./floating-portal": "./src/atoms/floating_portal/floating_portal.tsx",
+    "./heading": "./src/atoms/heading/heading.tsx",
+    "./icon": "./src/atoms/icon/icon.tsx",
+    "./input": "./src/atoms/input/input.tsx",
+    "./label": "./src/atoms/label/label.tsx",
+    "./modal": "./src/atoms/modal/modal.tsx",
+    "./nav-link": "./src/atoms/nav_link/nav_link.tsx",
+    "./paragraph": "./src/atoms/paragraph/paragraph.tsx",
+    "./section": "./src/atoms/section/section.tsx",
+    "./select": "./src/atoms/select/select.tsx",
+    "./separator": "./src/atoms/separator/separator.tsx",
+    "./table": "./src/atoms/table/table.tsx",
+    "./textarea": "./src/atoms/textarea/textarea.tsx",
+    "./user-status": "./src/atoms/user_status/user_status.tsx"
   },
   "scripts": {
     "typecheck": "tsc -b",
@@ -23,9 +42,12 @@
     "@fontsource/cormorant-garamond": "^5.3.0",
     "@fontsource/jost": "^5.3.0",
     "@fontsource/playfair-display": "^5.3.0",
+    "@iconify/react": "^6.0.2",
+    "@inertiajs/react": "^3.0.0",
     "tailwind-variants": "^3.3.1"
   },
   "devDependencies": {
+    "@storybook/react": "^10.5.10",
     "@storybook/react-vite": "^10.5.10",
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.2.18",

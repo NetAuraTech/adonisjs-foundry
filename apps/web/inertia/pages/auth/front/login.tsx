@@ -1,10 +1,11 @@
 import { Form } from '@adonisjs/inertia/react';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { NavLink } from '@foundry/design-system/nav-link';
+import { Paragraph } from '@foundry/design-system/paragraph';
+import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { NavLink } from '~/components/atoms/nav_link';
-import { Paragraph } from '~/components/atoms/paragraph';
-import { Section } from '~/components/atoms/section';
+import { urlFor } from '~/client';
 import { AuthIntro } from '~/components/molecules/auth/auth_intro';
 import { AuthProviders } from '~/components/molecules/auth/auth_providers';
 import { Field } from '~/components/molecules/field';
@@ -22,6 +23,9 @@ interface PageProps {
 export default function LoginPage(props: PageProps) {
 	const { providers, translations } = props;
 	const { t } = useTranslation(translations);
+
+	const registerHref = urlFor('auth.register.render');
+	const forgotHref = urlFor('auth.forgot_password.render');
 
 	const validation = useFormValidation({
 		email: presets.email(t('email.value')),
@@ -49,7 +53,7 @@ export default function LoginPage(props: PageProps) {
 						footer={
 							<div className="text-center">
 								<Paragraph fs="sm">
-									{t('account.no')} <NavLink route={'auth.register.render'} label={t('account.create')} fs="sm" />
+									{t('account.no')} <NavLink href={registerHref} label={t('account.create')} fs="sm" />
 								</Paragraph>
 							</div>
 						}
@@ -95,7 +99,7 @@ export default function LoginPage(props: PageProps) {
 									/>
 									<div className="grid gap-2 md:flex md:items-center md:justify-between">
 										<Field label={t('remember_me')} name="remember_me" type="checkbox" />
-										<NavLink route="auth.forgot_password.render" label={t('password.forgot')} />
+										<NavLink href={forgotHref} label={t('password.forgot')} />
 									</div>
 									<Button loading={processing} type={'submit'} fitContent>
 										{t('submit')}

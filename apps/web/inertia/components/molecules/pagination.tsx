@@ -1,6 +1,7 @@
+import { NavLink } from '@foundry/design-system/nav-link';
 import { usePage } from '@inertiajs/react';
 import { useMemo, MouseEvent } from 'react';
-import { NavLink } from '~/components/atoms/nav_link';
+import { urlFor } from '~/client';
 import { useTranslation } from '~/hooks/use_translation';
 import { MetaData } from '~/types/paginated';
 import type { LinkProps, LinkParams } from '@adonisjs/inertia/react';
@@ -66,7 +67,7 @@ type PageItem = number | '...';
  * />
  */
 export function Pagination<R extends NonNullable<LinkProps['route']>>(props: PaginationProps<R>) {
-	const { metadata, showPages = 5, filters, onClick, ...routeProps } = props;
+	const { metadata, showPages = 5, filters, onClick } = props;
 	const pageProps = usePage<SharedProps>().props;
 
 	const { lastPage, perPage, currentPage, total } = metadata;
@@ -74,6 +75,9 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
 
 	const start = (currentPage - 1) * perPage + 1;
 	const end = Math.min(currentPage * perPage, total);
+
+	const buildHref = (page: number) =>
+		urlFor(props.route as any, (props as any).routeParams, { qs: { ...filters, page } });
 
 	const pages = useMemo<PageItem[]>(() => {
 		if (lastPage <= showPages + 2) {
@@ -111,8 +115,7 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
 					<NavLink
 						variant="pagination"
 						label="«"
-						{...(routeProps as any)}
-						qs={{ ...filters, page: currentPage - 1 }}
+						href={buildHref(currentPage - 1)}
 						title={t('pagination.previous')}
 						onClick={(e: MouseEvent) => handleClick(e, currentPage - 1)}
 					/>
@@ -120,8 +123,7 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
 					<NavLink
 						variant="pagination"
 						label="«"
-						{...(routeProps as any)}
-						qs={{ ...filters, page: currentPage - 1 }}
+						href={buildHref(currentPage - 1)}
 						title={t('pagination.previous')}
 						disabled
 						onClick={(e: MouseEvent) => handleClick(e, currentPage - 1)}
@@ -140,8 +142,7 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
 							key={`page-${page}`}
 							variant="pagination"
 							label={`${page}`}
-							{...(routeProps as any)}
-							qs={{ ...filters, page }}
+							href={buildHref(page)}
 							onClick={onClick ? (e: MouseEvent) => handleClick(e, page) : undefined}
 							isActive={currentPage === page}
 						/>
@@ -151,8 +152,7 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
 					<NavLink
 						variant="pagination"
 						label="»"
-						{...(routeProps as any)}
-						qs={{ ...filters, page: currentPage + 1 }}
+						href={buildHref(currentPage + 1)}
 						title={t('pagination.next')}
 						onClick={(e: MouseEvent) => handleClick(e, currentPage + 1)}
 					/>
@@ -160,8 +160,7 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
 					<NavLink
 						variant="pagination"
 						label="»"
-						{...(routeProps as any)}
-						qs={{ ...filters, page: currentPage + 1 }}
+						href={buildHref(currentPage + 1)}
 						title={t('pagination.next')}
 						disabled
 						onClick={(e: MouseEvent) => handleClick(e, currentPage + 1)}

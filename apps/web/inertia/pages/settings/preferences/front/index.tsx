@@ -1,10 +1,10 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Label } from '@foundry/design-system/label';
+import { SelectOption } from '@foundry/design-system/select';
 import { usePage } from '@inertiajs/react';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Label } from '~/components/atoms/label';
-import { SelectOption } from '~/components/atoms/select_option';
 import { Field } from '~/components/molecules/field';
 import { ThemeToggle } from '~/components/molecules/theme_toggle';
 import { SettingsLayout } from '~/components/organisms/settings_layout';

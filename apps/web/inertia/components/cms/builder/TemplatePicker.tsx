@@ -1,6 +1,6 @@
+import { Icon } from '@foundry/design-system/icon';
+import { Modal } from '@foundry/design-system/modal';
 import { Data } from '@generated/data';
-import { Icon } from '~/components/atoms/icon';
-import { Modal } from '~/components/atoms/modal';
 import { useTemplates } from '~/components/cms/hooks/use_templates';
 import TemplateCard from './TemplateCard';
 

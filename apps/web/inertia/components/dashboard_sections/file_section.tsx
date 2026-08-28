@@ -1,4 +1,4 @@
-import { Paragraph } from '~/components/atoms/paragraph';
+import { Paragraph } from '@foundry/design-system/paragraph';
 import { RecentCard } from '~/components/dashboard_sections/recent_card';
 import { StatCard } from '~/components/dashboard_sections/stat_card';
 import { CanAccess } from '~/guards/can_access';

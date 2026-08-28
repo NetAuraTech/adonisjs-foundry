@@ -1,22 +1,24 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Button, button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Icon } from '@foundry/design-system/icon';
+import { Modal } from '@foundry/design-system/modal';
+import { NavLink } from '@foundry/design-system/nav-link';
+import { SelectOption } from '@foundry/design-system/select';
+import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement, useState } from 'react';
-import { Button, variants as button_variants } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
+import { urlFor } from '~/client';
 import { FileUploadInput } from '~/components/atoms/file_upload_input';
-import { Icon } from '~/components/atoms/icon';
-import { Modal } from '~/components/atoms/modal';
-import { NavLink } from '~/components/atoms/nav_link';
-import { SelectOption } from '~/components/atoms/select_option';
-import Table from '~/components/atoms/table/table';
 import { Field } from '~/components/molecules/field';
 import { Pagination } from '~/components/molecules/pagination';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { FileAltEditor } from '~/components/organisms/files/file_alt_editor';
 import { CanAccess } from '~/guards/can_access';
 import { useMenu } from '~/hooks/use_admin';
+import { useNavLinkActive } from '~/hooks/use_nav_link_active';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
 import { Paginated } from '~/types/paginated';
@@ -51,6 +53,11 @@ export default function FilesIndexPage(props: Props) {
 
 	const selectedFile = files.data.find((f) => f.id === selectedId) ?? null;
 
+	const allFilesQs = Object.fromEntries(
+		Object.entries({ ...filters, folder_id: null }).filter(([_, value]) => value !== null),
+	);
+	const allFilesHref = urlFor('admin.file.files.render', undefined, { qs: allFilesQs });
+
 	return (
 		<AdminMain
 			title={t('title')}
@@ -64,7 +71,7 @@ export default function FilesIndexPage(props: Props) {
 						</Button>
 					</CanAccess>
 					<CanAccess permission="folders.view">
-						<Button route="admin.file.file_folders.render" variant="secondary" fitContent>
+						<Button href={urlFor('admin.file.file_folders.render')} variant="secondary" fitContent>
 							<Icon name="Folders" />
 							{t('action.folders')}
 						</Button>
@@ -75,12 +82,8 @@ export default function FilesIndexPage(props: Props) {
 			<div className="flex flex-col md:flex-row gap-3">
 				<Card className="md:w-fit">
 					<NavLink
-						route="admin.file.files.render"
-						qs={{
-							...Object.fromEntries(
-								Object.entries({ ...filters, folder_id: null }).filter(([_, value]) => value !== null),
-							),
-						}}
+						href={allFilesHref}
+						isActive={useNavLinkActive(allFilesHref)}
 						label={t('folders.all')}
 						variant="admin_nav"
 					/>
@@ -251,7 +254,7 @@ export default function FilesIndexPage(props: Props) {
 										<div className="pt-1 flex flex-col gap-1">
 											<div className="flex items-center justify-between w-full py-4 gap-2">
 												<a
-													className={`button ${button_variants['icon_info']}`}
+													className={`button ${button({ variant: 'icon_info' })}`}
 													href={selectedFile.url}
 													target="_blank"
 													rel="noopener noreferrer"
@@ -324,6 +327,11 @@ interface FolderEntryProps {
 const FolderEntry = (props: FolderEntryProps) => {
 	const { folder, depth, filters } = props;
 
+	const folderQs = Object.fromEntries(
+		Object.entries({ ...filters, folder_id: folder.id }).filter(([_, value]) => value !== null),
+	);
+	const folderHref = urlFor('admin.file.files.render', undefined, { qs: folderQs });
+
 	const indentClass = {
 		0: '',
 		1: 'ml-2',
@@ -337,12 +345,8 @@ const FolderEntry = (props: FolderEntryProps) => {
 		<div className={`${indentClass[depth]} mt-1`}>
 			<NavLink
 				key={`folder-${folder.id}`}
-				route="admin.file.files.render"
-				qs={{
-					...Object.fromEntries(
-						Object.entries({ ...filters, folder_id: folder.id }).filter(([_, value]) => value !== null),
-					),
-				}}
+				href={folderHref}
+				isActive={useNavLinkActive(folderHref)}
 				label=""
 				variant="admin_nav"
 			>

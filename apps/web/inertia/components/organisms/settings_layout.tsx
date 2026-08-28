@@ -1,10 +1,12 @@
+import { Heading } from '@foundry/design-system/heading';
+import { NavLink } from '@foundry/design-system/nav-link';
+import { Paragraph } from '@foundry/design-system/paragraph';
+import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
 import { ReactNode } from 'react';
-import { Heading } from '~/components/atoms/heading';
-import { NavLink } from '~/components/atoms/nav_link';
-import { Paragraph } from '~/components/atoms/paragraph';
-import { Section } from '~/components/atoms/section';
+import { urlFor } from '~/client';
 import { CanAccess } from '~/guards/can_access';
+import { useNavLinkActive } from '~/hooks/use_nav_link_active';
 import { useTranslation } from '~/hooks/use_translation';
 import type { TranslationNodes } from '#app/core/helpers/i18n_payloads/nest';
 
@@ -13,6 +15,12 @@ const tabs = [
 	{ id: 'account', label: 'header.tabs.account', route: 'account.account.render' },
 	{ id: 'preferences', label: 'header.tabs.preferences', route: 'account.preferences.render' },
 ] as const;
+
+function SettingsTab(props: { label: string; route: (typeof tabs)[number]['route'] }) {
+	const href = urlFor(props.route);
+
+	return <NavLink href={href} isActive={useNavLinkActive(href)} label={props.label} variant="setting_nav" />;
+}
 
 interface PageProps {
 	/** The active tab identifier — used externally to set the page context. */
@@ -54,6 +62,11 @@ export function SettingsLayout(props: PageProps) {
 
 	const { t } = useTranslation(translations);
 
+	const adminHref = urlFor('admin.core.dashboard.render');
+	const adminActive = useNavLinkActive(adminHref);
+	const logoutHref = urlFor('auth.session.destroy');
+	const logoutActive = useNavLinkActive(logoutHref);
+
 	return (
 		<>
 			<Head title={t('header.title')} />
@@ -68,17 +81,17 @@ export function SettingsLayout(props: PageProps) {
 					<div className="flex gap-1 justify-between border-b border-edge mb-8">
 						<div className="flex gap-1">
 							{tabs.map((tab) => (
-								<NavLink key={tab.id} label={t(tab.label)} route={tab.route} variant="setting_nav" />
+								<SettingsTab key={tab.id} label={t(tab.label)} route={tab.route} />
 							))}
 						</div>
 						<div className="flex gap-1">
 							<CanAccess permission={'admin.access'}>
-								<NavLink label={t('header.tabs.admin')} route="admin.core.dashboard.render" variant="setting_nav" />
+								<NavLink href={adminHref} isActive={adminActive} label={t('header.tabs.admin')} variant="setting_nav" />
 							</CanAccess>
 							<NavLink
-								name="logout"
+								href={logoutHref}
+								isActive={logoutActive}
 								label={t('header.tabs.logout')}
-								route="auth.session.destroy"
 								variant="setting_nav"
 							/>
 						</div>

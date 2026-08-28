@@ -1,9 +1,9 @@
 import { Form } from '@adonisjs/inertia/react';
+import { Avatar } from '@foundry/design-system/avatar';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Label } from '@foundry/design-system/label';
 import { Data } from '@generated/data';
-import { Avatar } from '~/components/atoms/avatar';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Label } from '~/components/atoms/label';
 import { Field } from '~/components/molecules/field';
 import { SettingsLayout } from '~/components/organisms/settings_layout';
 import { toLooseErrors } from '~/helpers/form_errors';
@@ -43,7 +43,7 @@ export default function ProfilePage(props: PageProps) {
 								<div className="grid gap-2">
 									<Label label={t('avatar.value')} htmlFor="avatar" />
 									<div className="flex gap-4">
-										<Avatar />
+										<Avatar username={user.username} />
 										<Button variant="outline" fitContent>
 											{t('avatar.change')}
 										</Button>

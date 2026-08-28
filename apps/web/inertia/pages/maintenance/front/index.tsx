@@ -1,9 +1,9 @@
+import { Badge } from '@foundry/design-system/badge';
+import { Button } from '@foundry/design-system/button';
+import { Heading } from '@foundry/design-system/heading';
+import { Paragraph } from '@foundry/design-system/paragraph';
+import { Section } from '@foundry/design-system/section';
 import { ReactElement } from 'react';
-import { Badge } from '~/components/atoms/badge';
-import { Button } from '~/components/atoms/button';
-import { Heading } from '~/components/atoms/heading';
-import { Paragraph } from '~/components/atoms/paragraph';
-import { Section } from '~/components/atoms/section';
 import { useInterval } from '~/hooks/use_interval';
 import { useTranslation } from '~/hooks/use_translation';
 import type { MaintenanceTranslations } from '#app/core/helpers/i18n_payloads/maintenance_front';

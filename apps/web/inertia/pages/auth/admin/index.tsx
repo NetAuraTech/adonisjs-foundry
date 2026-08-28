@@ -1,18 +1,20 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Icon } from '@foundry/design-system/icon';
+import { SelectOption } from '@foundry/design-system/select';
+import Table from '@foundry/design-system/table';
+import { UserStatus } from '@foundry/design-system/user-status';
 import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement } from 'react';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Icon } from '~/components/atoms/icon';
-import { SelectOption } from '~/components/atoms/select_option';
-import Table from '~/components/atoms/table/table';
-import { StatusEnum, UserStatus } from '~/components/atoms/user_status';
+import { urlFor } from '~/client';
 import { Field } from '~/components/molecules/field';
 import { Pagination } from '~/components/molecules/pagination';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
+import { toUserStatusKind } from '~/helpers/user_status';
 import { useMenu } from '~/hooks/use_admin';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
@@ -42,7 +44,7 @@ export default function UsersIndexPage(props: PageProps) {
 			icon={getEntryIcon('admin.identity.users.render')}
 			action={
 				<CanAccess permission="users.create">
-					<Button route="admin.identity.users_create.render" variant="secondary" fitContent>
+					<Button href={urlFor('admin.identity.users_create.render')} variant="secondary" fitContent>
 						{t('action')}
 					</Button>
 				</CanAccess>
@@ -109,7 +111,10 @@ export default function UsersIndexPage(props: PageProps) {
 										</span>
 									</Table.Cell>
 									<Table.Cell data-label={t('status.value')}>
-										<UserStatus status={user.status as StatusEnum} user={user.id} translations={translations} />
+										<UserStatus
+											status={toUserStatusKind(user.status)}
+											label={t(`status.${toUserStatusKind(user.status)}`)}
+										/>
 									</Table.Cell>
 									<Table.Cell data-label={t('register_on')}>
 										{format(new Date(user.createdAt!), 'medium', pageProps.locale as Lang)}
@@ -119,8 +124,7 @@ export default function UsersIndexPage(props: PageProps) {
 											<CanAccess permission="users.view">
 												<Button
 													variant="icon_info"
-													route="admin.identity.users_show.render"
-													routeParams={{ id: user.id }}
+													href={urlFor('admin.identity.users_show.render', { id: user.id })}
 													title={t('actions.show', { username: user.username })}
 													fitContent
 												>
@@ -130,8 +134,7 @@ export default function UsersIndexPage(props: PageProps) {
 											<CanAccess permission="users.update">
 												<Button
 													variant="icon_warning"
-													route="admin.identity.users_update.render"
-													routeParams={{ id: user.id }}
+													href={urlFor('admin.identity.users_update.render', { id: user.id })}
 													title={t('actions.edit', { username: user.username })}
 													fitContent
 												>
@@ -141,8 +144,7 @@ export default function UsersIndexPage(props: PageProps) {
 											<CanAccess permission="users.delete">
 												<Button
 													variant="icon_danger"
-													route="admin.identity.users.destroy"
-													routeParams={{ id: user.id }}
+													href={urlFor('admin.identity.users.destroy', { id: user.id })}
 													title={t('actions.delete', { username: user.username })}
 													fitContent
 												>

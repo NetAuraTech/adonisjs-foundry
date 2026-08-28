@@ -1,8 +1,9 @@
 import { Link } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { NavLink } from '@foundry/design-system/nav-link';
 import { router, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
-import { NavLink } from '~/components/atoms/nav_link';
+import { useNavLinkActive } from '~/hooks/use_nav_link_active';
 
 export function Header() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -40,7 +41,7 @@ export function Header() {
 			</Link>
 
 			<nav id="primary-navigation" className="header__nav" data-state={menuState} aria-expanded={isExpanded}>
-				<NavLink href="/" label="Home" variant="nav" onClick={closeMenu} />
+				<NavLink href="/" label="Home" variant="nav" isActive={useNavLinkActive('/')} onClick={closeMenu} />
 			</nav>
 			<button
 				className="header__burger md:display-hidden"

@@ -1,16 +1,18 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Icon } from '@foundry/design-system/icon';
+import { Input } from '@foundry/design-system/input';
+import { NavLink } from '@foundry/design-system/nav-link';
+import { Paragraph } from '@foundry/design-system/paragraph';
 import { Data } from '@generated/data';
 import { ReactElement, useState } from 'react';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Icon } from '~/components/atoms/icon';
-import { Input } from '~/components/atoms/input';
-import { NavLink } from '~/components/atoms/nav_link';
-import { Paragraph } from '~/components/atoms/paragraph';
+import { urlFor } from '~/client';
 import { Field } from '~/components/molecules/field';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
+import { useNavLinkActive } from '~/hooks/use_nav_link_active';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
 import type { AdminFileFoldersTranslations } from '#app/file/helpers/i18n_payloads/file_folders';
@@ -31,7 +33,7 @@ export default function FileFoldersPage(props: PageProps) {
 				icon="Folders"
 				action={
 					<CanAccess permission="folders.create">
-						<Button variant="secondary" route="admin.file.file_folders.render" fitContent>
+						<Button variant="secondary" href={urlFor('admin.file.file_folders.render')} fitContent>
 							<Icon name="Folder" />
 							{t('action')}
 						</Button>
@@ -73,6 +75,8 @@ function FolderNode(props: FolderNodeProps) {
 	const [addingChild, setAddingChild] = useState(false);
 
 	const hasChildren = folder.children?.length > 0;
+
+	const browseHref = urlFor('admin.file.files.render', undefined, { qs: { folder_id: folder.id } });
 
 	const indentClass = {
 		0: '',
@@ -131,7 +135,7 @@ function FolderNode(props: FolderNodeProps) {
 						</span>
 					)}
 					<div className="flex items-center gap-1 shrink-0">
-						<NavLink label="" route="admin.file.files.render" qs={{ folder_id: folder.id }}>
+						<NavLink label="" href={browseHref} isActive={useNavLinkActive(browseHref)}>
 							<Button variant="icon" title={t('browse')}>
 								<Icon name="SquareMenu" size={18} />
 							</Button>

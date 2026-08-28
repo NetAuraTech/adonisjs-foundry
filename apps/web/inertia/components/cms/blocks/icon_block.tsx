@@ -1,4 +1,4 @@
-import { Icon } from '~/components/atoms/icon';
+import { Icon } from '@foundry/design-system/icon';
 import type { ResolvedBlock } from '#cms/types/page';
 
 const backgroundMap: Record<string, string> = {

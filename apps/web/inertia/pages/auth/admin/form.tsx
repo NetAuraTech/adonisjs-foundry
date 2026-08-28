@@ -1,11 +1,12 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Icon } from '@foundry/design-system/icon';
+import { SelectOption } from '@foundry/design-system/select';
 import { Data } from '@generated/data';
 import { ReactElement } from 'react';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Icon } from '~/components/atoms/icon';
-import { SelectOption } from '~/components/atoms/select_option';
+import { urlFor } from '~/client';
 import { Field } from '~/components/molecules/field';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
@@ -46,7 +47,7 @@ export default function UsersFormPage(props: PageProps) {
 				header={
 					<div className="flex items-center justify-between gap-3">
 						<CanAccess permission="users.view">
-							<Button variant="icon" route="admin.identity.users.render" title={t('actions.list')} fitContent>
+							<Button variant="icon" href={urlFor('admin.identity.users.render')} title={t('actions.list')} fitContent>
 								<Icon name="ArrowLeft" />
 							</Button>
 						</CanAccess>

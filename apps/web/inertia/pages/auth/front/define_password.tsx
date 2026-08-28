@@ -1,9 +1,9 @@
 import { Form } from '@adonisjs/inertia/react';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Section } from '~/components/atoms/section';
 import { AuthIntro } from '~/components/molecules/auth/auth_intro';
 import { Field } from '~/components/molecules/field';
 import { toLooseErrors } from '~/helpers/form_errors';

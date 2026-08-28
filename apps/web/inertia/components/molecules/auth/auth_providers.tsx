@@ -1,4 +1,5 @@
-import { Button } from '~/components/atoms/button';
+import { Button } from '@foundry/design-system/button';
+import { urlFor } from '~/client';
 import { getIcon } from '~/helpers/oauth';
 import { useTranslation } from '~/hooks/use_translation';
 import { capitalize } from '~/lib/string';
@@ -53,8 +54,7 @@ export function AuthProviders(props: AuthProviderProps) {
 				{providers.map((provider) => (
 					<Button
 						variant="social"
-						route="auth.social.redirect"
-						routeParams={{ provider: provider }}
+						href={urlFor('auth.social.redirect', { provider })}
 						key={`provider-${provider}`}
 						title={capitalize(provider)}
 						external

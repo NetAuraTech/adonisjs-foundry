@@ -1,13 +1,14 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Heading } from '@foundry/design-system/heading';
+import { Icon } from '@foundry/design-system/icon';
+import { Paragraph } from '@foundry/design-system/paragraph';
+import { SelectOption } from '@foundry/design-system/select';
+import { Separator } from '@foundry/design-system/separator';
 import { ReactElement } from 'react';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Heading } from '~/components/atoms/heading';
-import { Icon } from '~/components/atoms/icon';
-import { Paragraph } from '~/components/atoms/paragraph';
-import { SelectOption } from '~/components/atoms/select_option';
-import { Separator } from '~/components/atoms/separator';
+import { urlFor } from '~/client';
 import { Field } from '~/components/molecules/field';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
@@ -46,7 +47,7 @@ export default function PagesCreatePage(props: PagesCreatePageProps) {
 					header={
 						<div className="flex items-center justify-between gap-3">
 							<CanAccess permission="pages.view">
-								<Button variant="icon" route="admin.cms.pages.render" title={t('action')} fitContent>
+								<Button variant="icon" href={urlFor('admin.cms.pages.render')} title={t('action')} fitContent>
 									<Icon name="ArrowLeft" />
 								</Button>
 							</CanAccess>

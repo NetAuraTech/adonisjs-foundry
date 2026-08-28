@@ -1,14 +1,17 @@
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Avatar } from '@foundry/design-system/avatar';
+import { Card } from '@foundry/design-system/card';
+import { Heading } from '@foundry/design-system/heading';
+import { Icon } from '@foundry/design-system/icon';
+import { NavLink } from '@foundry/design-system/nav-link';
 import { usePage } from '@inertiajs/react';
-import { Avatar } from '~/components/atoms/avatar';
-import { Icon } from '~/components/atoms/icon';
+import { urlFor } from '~/client';
 import { ThemeToggle } from '~/components/molecules/theme_toggle';
 import { CanAccess } from '~/guards/can_access';
 import { useMenu } from '~/hooks/use_admin';
+import { useAuth } from '~/hooks/use_auth';
+import { useNavLinkActive } from '~/hooks/use_nav_link_active';
 import { Lang, useTranslation } from '~/hooks/use_translation';
-import { Card } from '../../atoms/card';
-import { Heading } from '../../atoms/heading';
-import { NavLink } from '../../atoms/nav_link';
 
 interface AdminSidebarProps {
 	/**
@@ -40,10 +43,29 @@ interface AdminSidebarProps {
  * <AdminHeader handleClick={() => setSidebarOpen((v) => !v)} />
  * <AdminSidebar sidebarOpen={sidebarOpen} />
  */
+interface AdminMenuEntryProps {
+	label: string;
+	route: string;
+	routeParams?: Record<string, any>;
+	icon?: string;
+}
+
+function AdminMenuEntry(props: AdminMenuEntryProps) {
+	const { label, route, routeParams, icon } = props;
+	const href = urlFor(route as any, routeParams as any);
+
+	return (
+		<NavLink href={href} isActive={useNavLinkActive(href)} label={label} variant="admin_nav">
+			{icon && <Icon name={icon} />}
+		</NavLink>
+	);
+}
+
 export function AdminSidebar(props: AdminSidebarProps) {
 	const { sidebarOpen } = props;
 	const pageProps = usePage<SharedProps>().props;
 	const { format } = useTranslation({});
+	const { user } = useAuth();
 
 	const { menu } = useMenu();
 
@@ -52,7 +74,7 @@ export function AdminSidebar(props: AdminSidebarProps) {
 			<Card>
 				<div className="grid gap-3">
 					<div className="flex items-center justify-between">
-						<Avatar showUsername />
+						{user && <Avatar username={user.username} showUsername />}
 						<ThemeToggle />
 					</div>
 					<span>{format(new Date(), 'long', pageProps.locale as Lang)}</span>
@@ -67,14 +89,12 @@ export function AdminSidebar(props: AdminSidebarProps) {
 								{group.entries.map((entry) => (
 									<li key={`admin-category-${group.category}-${entry.label}`}>
 										<CanAccess permission={entry.permission}>
-											<NavLink
+											<AdminMenuEntry
 												label={entry.label}
-												route={entry.route as any}
+												route={entry.route}
 												routeParams={entry.routeParams}
-												variant="admin_nav"
-											>
-												{entry.icon && <Icon name={entry.icon} />}
-											</NavLink>
+												icon={entry.icon}
+											/>
 										</CanAccess>
 									</li>
 								))}

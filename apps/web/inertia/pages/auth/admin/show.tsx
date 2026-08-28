@@ -1,16 +1,18 @@
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Button } from '@foundry/design-system/button';
+import { Card } from '@foundry/design-system/card';
+import { Heading } from '@foundry/design-system/heading';
+import { Icon } from '@foundry/design-system/icon';
+import { Separator } from '@foundry/design-system/separator';
+import { UserStatus } from '@foundry/design-system/user-status';
 import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement } from 'react';
-import { Button } from '~/components/atoms/button';
-import { Card } from '~/components/atoms/card';
-import { Heading } from '~/components/atoms/heading';
-import { Icon } from '~/components/atoms/icon';
-import { Separator } from '~/components/atoms/separator';
-import { StatusEnum, UserStatus } from '~/components/atoms/user_status';
+import { urlFor } from '~/client';
 import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
 import { getIcon } from '~/helpers/oauth';
+import { toUserStatusKind } from '~/helpers/user_status';
 import { useMenu } from '~/hooks/use_admin';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
@@ -47,7 +49,7 @@ export default function UsersShowPage(props: PageProps) {
 				header={
 					<div className="flex items-center justify-between gap-3">
 						<CanAccess permission="users.view">
-							<Button variant="icon" route="admin.identity.users.render" title={t('title')} fitContent>
+							<Button variant="icon" href={urlFor('admin.identity.users.render')} title={t('title')} fitContent>
 								<Icon name="ArrowLeft" />
 							</Button>
 						</CanAccess>
@@ -55,8 +57,7 @@ export default function UsersShowPage(props: PageProps) {
 							<CanAccess permission="users.update">
 								<Button
 									variant="icon_warning"
-									route="admin.identity.users_update.render"
-									routeParams={{ id: user.id }}
+									href={urlFor('admin.identity.users_update.render', { id: user.id })}
 									title={t('actions.edit', { username: user.username })}
 									fitContent
 								>
@@ -66,8 +67,7 @@ export default function UsersShowPage(props: PageProps) {
 							<CanAccess permission="users.delete">
 								<Button
 									variant="icon_danger"
-									route="admin.identity.users.destroy"
-									routeParams={{ id: user.id }}
+									href={urlFor('admin.identity.users.destroy', { id: user.id })}
 									title={t('actions.delete', { username: user.username })}
 									fitContent
 								>
@@ -87,7 +87,10 @@ export default function UsersShowPage(props: PageProps) {
 								<span className="font-bold">{t('info.email')}</span>
 								<span className="flex gap-2 items-center text-ink-muted">
 									{user.email}{' '}
-									<UserStatus user={user.id} status={user.status as StatusEnum} translations={translations} />
+									<UserStatus
+										status={toUserStatusKind(user.status)}
+										label={t(`status.${toUserStatusKind(user.status)}`)}
+									/>
 								</span>
 							</div>
 							<div className="grid">
