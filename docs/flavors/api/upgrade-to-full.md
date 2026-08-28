@@ -25,8 +25,9 @@ restoring whole directories over individual files.
 
 All artifact paths below are relative to the app workspace `apps/web/` — on the
 flavor branch, the complete application lives there; the repo root holds the
-workspaces manifest, the prune tooling, CI and docs. `node ace` commands run
-from `apps/web/`.
+workspaces manifest, the prune tooling, CI and docs. The one exception is the
+design-system package, which lives at the repo root (`packages/design-system`)
+and is flagged as such in step 1. `node ace` commands run from `apps/web/`.
 
 ## 1. Recover the frontend tree
 
@@ -47,6 +48,28 @@ npm install @adonisjs/inertia @adonisjs/vite @inertiajs/react react react-dom \
   @fontsource/jost @fontsource/playfair-display tailwindcss @tailwindcss/vite
 npm install -D @vitejs/plugin-react vite vitest @types/react @types/react-dom
 ```
+
+The design-system workspace package was pruned wholesale (it is the only
+package under `packages/`). Restore it from `main` — this path is relative to
+the **repo root**, not the app workspace:
+
+```bash
+git checkout main -- packages/design-system
+```
+
+The root `workspaces` glob already covers `packages/*` (the field is
+flavor-invariant, so the flavor's root `package.json` needs no edit). Re-add
+the app workspace's dependency on it — it is a private, source-only workspace
+package, so restore the entry in `apps/web/package.json` by hand (the manifest
+pruned it by name from the frozen rewrite):
+
+```jsonc
+// apps/web/package.json → "dependencies": add back
+"@foundry/design-system": "^1.4.0",
+```
+
+then run a bare `npm install` in the repo root so npm re-links the workspace
+package locally and re-syncs the lock file.
 
 ## 2. Recover the CMS module and Transmit
 
@@ -116,7 +139,8 @@ version of each:
   preloads, `indexPages`, the Vite `buildStarting` hook, and
   `withSharedProps: true`.
 - `apps/web/package.json` — restores the front scripts (`test:front`, the
-  Inertia typecheck reference) and the deps listed in steps 1 and 2.
+  Inertia typecheck reference) and the deps listed in steps 1 and 2, including
+  the `@foundry/design-system` workspace dependency.
 - `apps/web/tsconfig.json` — restores the `tsconfig.inertia.json` project
   reference and the `jsx` compiler option.
 - `README.md` — restore the `full` README (or keep the flavor one).

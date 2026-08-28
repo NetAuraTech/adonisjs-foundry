@@ -49,8 +49,11 @@
  *
  * Deliberate exclusions: CI workflow copies, bundler/vitest configs
  * (`vite.config.ts`, `vitest.config.ts`), repo-wide lint configs, the root
- * tsconfig, and anything inside the future design-system package — those stay
- * mechanically identical across flavors.
+ * tsconfig, and anything inside the design-system package — those stay
+ * mechanically identical across flavors: the `api` flavor prunes the whole
+ * package with a single directory delete, the `inertia` flavor keeps it
+ * verbatim. The root `workspaces` glob field is flavor-invariant for the same
+ * reason: a glob matching nothing is valid, so no flavor narrows it.
  */
 export const REWRITE_ALLOWLIST = [
 	'package.json',
