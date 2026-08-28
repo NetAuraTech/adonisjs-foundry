@@ -67,8 +67,11 @@ export default function PermissionsFormPage(props: PageProps) {
 				}
 			>
 				<Form
-					route={isEditing ? 'admin.identity.permissions_update.execute' : 'admin.identity.permissions_create.execute'}
-					routeParams={isEditing ? { id: permission.id } : {}}
+					action={
+						isEditing
+							? urlFor('admin.identity.permissions_update.execute', { id: permission.id })
+							: urlFor('admin.identity.permissions_create.execute')
+					}
 					className="grid gap-6"
 					onBefore={(visit) => {
 						const isValid = validation.validateAll(visit.data as Record<string, any>);

@@ -44,7 +44,7 @@ export default function EmailChangePage(props: PageProps) {
 					/>
 					<Card>
 						<Form
-							route="account.email_change.execute"
+							action={urlFor('account.email_change.execute')}
 							className="grid gap-6"
 							onBefore={(visit) => {
 								const isValid = validation.validateAll(visit.data as Record<string, any>);

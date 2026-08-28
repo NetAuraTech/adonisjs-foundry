@@ -73,8 +73,11 @@ export default function RolesFormPage(props: PageProps) {
 				}
 			>
 				<Form
-					route={isEditing ? 'admin.identity.roles_update.execute' : 'admin.identity.roles_create.execute'}
-					routeParams={isEditing ? { id: role.id } : {}}
+					action={
+						isEditing
+							? urlFor('admin.identity.roles_update.execute', { id: role.id })
+							: urlFor('admin.identity.roles_create.execute')
+					}
 					className="grid gap-6"
 					onBefore={(visit) => {
 						const isValid = validation.validateAll(visit.data as Record<string, any>);

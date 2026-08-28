@@ -46,7 +46,11 @@ export default function RolesIndexPage(props: PageProps) {
 		>
 			<Card
 				header={
-					<Form route="admin.identity.roles.render" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+					<Form
+						action={urlFor('admin.identity.roles.render')}
+						method="get"
+						className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end"
+					>
 						<Field
 							type="text"
 							name="search"
@@ -60,7 +64,13 @@ export default function RolesIndexPage(props: PageProps) {
 						</Button>
 					</Form>
 				}
-				footer={<Pagination route="admin.identity.roles.render" filters={filters} metadata={roles.metadata} />}
+				footer={
+					<Pagination
+						buildHref={(page) => urlFor('admin.identity.roles.render', undefined, { qs: { ...filters, page } })}
+						filters={filters}
+						metadata={roles.metadata}
+					/>
+				}
 			>
 				<Table>
 					<Table.Header>
@@ -126,6 +136,8 @@ export default function RolesIndexPage(props: PageProps) {
 													</CanAccess>
 													<CanAccess permission="roles.delete">
 														<Form
+															action={urlFor('admin.identity.roles.destroy', { id: role.id })}
+															method="delete"
 															onBefore={() => {
 																return window.confirm(
 																	t('delete.confirm', {
@@ -133,8 +145,6 @@ export default function RolesIndexPage(props: PageProps) {
 																	}),
 																);
 															}}
-															route="admin.identity.roles.destroy"
-															routeParams={{ id: role.id }}
 														>
 															<Button
 																variant="icon_danger"

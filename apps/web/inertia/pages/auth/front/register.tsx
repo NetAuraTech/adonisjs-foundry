@@ -68,7 +68,7 @@ export default function RegisterPage(props: RegisterPageProps) {
 						}
 					>
 						<Form
-							route="auth.register.execute"
+							action={urlFor('auth.register.execute')}
 							className="grid gap-6"
 							onBefore={(visit) => {
 								const isValid = validation.validateAll(visit.data as Record<string, any>);

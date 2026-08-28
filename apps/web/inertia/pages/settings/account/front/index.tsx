@@ -51,7 +51,7 @@ export default function AccountPage(props: PageProps) {
 			<SettingsLayout tab="account" translations={translations}>
 				<Card title={t('email.title')} subtitle={t('email.sub_title')}>
 					<Form
-						route="account.account.execute"
+						action={urlFor('account.account.execute')}
 						className="grid gap-6"
 						onBefore={(visit) => {
 							const isValid = validationEmailForm.validateAll(visit.data as Record<string, any>);
@@ -103,8 +103,7 @@ export default function AccountPage(props: PageProps) {
 
 									{isConnected ? (
 										<Form
-											route="auth.social.unlink"
-											routeParams={{ provider: provider }}
+											action={urlFor('auth.social.unlink', { provider: provider })}
 											onBefore={() => confirm(t('oauth.unlink.confirm', { provider: capitalize(provider) }))}
 										>
 											<button
@@ -131,7 +130,7 @@ export default function AccountPage(props: PageProps) {
 				</Card>
 				<Card title={t('password.title')} subtitle={t('password.sub_title')}>
 					<Form
-						route="account.account.execute"
+						action={urlFor('account.account.execute')}
 						className="grid gap-6"
 						onBefore={(visit) => {
 							const isValid = validationPasswordForm.validateAll(visit.data as Record<string, any>);
@@ -214,7 +213,8 @@ export default function AccountPage(props: PageProps) {
 						<div className="grid gap-4">
 							<Banner title={t('delete.confirm.title')} message={t('delete.confirm.sub_title')} type="danger" />
 							<Form
-								route="account.account.destroy"
+								action={urlFor('account.account.destroy')}
+								method="delete"
 								className="grid gap-6"
 								onBefore={(visit) => {
 									const isValid = validationDeleteForm.validateAll(visit.data as Record<string, any>);

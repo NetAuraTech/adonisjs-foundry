@@ -52,7 +52,11 @@ export default function UsersIndexPage(props: PageProps) {
 		>
 			<Card
 				header={
-					<Form route="admin.identity.users.render" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+					<Form
+						action={urlFor('admin.identity.users.render')}
+						method="get"
+						className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end"
+					>
 						<Field
 							type="text"
 							name="search"
@@ -79,7 +83,13 @@ export default function UsersIndexPage(props: PageProps) {
 						</Button>
 					</Form>
 				}
-				footer={<Pagination route="admin.identity.users.render" filters={filters} metadata={users.metadata} />}
+				footer={
+					<Pagination
+						buildHref={(page) => urlFor('admin.identity.users.render', undefined, { qs: { ...filters, page } })}
+						filters={filters}
+						metadata={users.metadata}
+					/>
+				}
 			>
 				<Table>
 					<Table.Header>
@@ -142,14 +152,15 @@ export default function UsersIndexPage(props: PageProps) {
 												</Button>
 											</CanAccess>
 											<CanAccess permission="users.delete">
-												<Button
-													variant="icon_danger"
-													href={urlFor('admin.identity.users.destroy', { id: user.id })}
-													title={t('actions.delete', { username: user.username })}
-													fitContent
-												>
-													<Icon name="Trash" size={18} />
-												</Button>
+												<Form action={urlFor('admin.identity.users.destroy', { id: user.id })} method="delete">
+													<Button
+														variant="icon_danger"
+														title={t('actions.delete', { username: user.username })}
+														fitContent
+													>
+														<Icon name="Trash" size={18} />
+													</Button>
+												</Form>
 											</CanAccess>
 										</div>
 									</Table.Cell>

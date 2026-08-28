@@ -105,8 +105,8 @@ function FolderNode(props: FolderNodeProps) {
 					<Icon name="Folder" size={16} />
 					{renaming ? (
 						<Form
-							route="admin.file.file_folders.update"
-							routeParams={{ id: folder.id }}
+							action={urlFor('admin.file.file_folders.update', { id: folder.id })}
+							method="put"
 							className="flex items-center gap-2 flex-1 min-w-0"
 							onSuccess={() => {
 								setRenaming(false);
@@ -159,11 +159,11 @@ function FolderNode(props: FolderNodeProps) {
 						</CanAccess>
 						<CanAccess permission="folders.delete">
 							<Form
+								action={urlFor('admin.file.file_folders.destroy', { id: folder.id })}
+								method="delete"
 								onBefore={() => {
 									return window.confirm(t('actions.delete.confirm'));
 								}}
-								route="admin.file.file_folders.destroy"
-								routeParams={{ id: folder.id }}
 							>
 								{({ processing }) => (
 									<>
@@ -222,7 +222,7 @@ function CreateFolderForm(props: CreateFolderFormProps) {
 	return (
 		<Card>
 			<Form
-				route="admin.file.file_folders.execute"
+				action={urlFor('admin.file.file_folders.execute')}
 				className="grid gap-2"
 				onSuccess={() => {
 					if (onSuccess) {

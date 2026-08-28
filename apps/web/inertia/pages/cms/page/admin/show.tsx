@@ -68,11 +68,11 @@ export default function PagesShowPage(props: Props) {
 								</CanAccess>
 								<CanAccess permission="pages.delete">
 									<Form
+										action={urlFor('admin.cms.pages.destroy', { id: page.id })}
+										method="delete"
 										onBefore={() => {
 											return window.confirm(t('actions.delete.confirm'));
 										}}
-										route="admin.cms.pages.destroy"
-										routeParams={{ id: page.id }}
 									>
 										<Button
 											variant="icon_danger"
@@ -225,11 +225,10 @@ function HomepageSection({ page, translations }: { page: Data.Cms.Page; translat
 				</div>
 				{!page.isHomepage && (
 					<Form
+						action={urlFor('admin.cms.pages.set_homepage', { id: page.id })}
 						onBefore={() => {
 							return window.confirm(t('homepage.confirm'));
 						}}
-						route="admin.cms.pages.set_homepage"
-						routeParams={{ id: page.id }}
 					>
 						<Button variant="secondary" fitContent>
 							{t('homepage.submit')}
