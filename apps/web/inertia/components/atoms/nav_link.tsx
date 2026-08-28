@@ -3,8 +3,8 @@ import { router, usePage } from '@inertiajs/react';
 import { ReactNode, MouseEvent, useState, useEffect } from 'react';
 import { urlFor } from '~/client';
 import { getFontSizeClass } from '~/utils/font';
-import type { FontSize } from '#types/font';
 import type { LinkProps, LinkParams } from '@adonisjs/inertia/react';
+import type { FontSize } from '@foundry/design-system/tokens';
 
 type NavLinkBaseProps = {
 	name?: string;

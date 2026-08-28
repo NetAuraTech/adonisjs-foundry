@@ -1,5 +1,4 @@
-import { type FontSize } from '#types/font';
-import { type ParagraphSpacing, type ParagraphVariants } from '#types/paragraph';
+import { type FontSize, type ParagraphSpacing, type ParagraphVariants } from '@foundry/design-system/tokens';
 import type { FileRef, ResolvedFile } from '#types/file';
 
 export type PageStatus = 'draft' | 'published' | 'archived';

@@ -1,8 +1,18 @@
+@import '@fontsource/cormorant-garamond/400.css';
+@import '@fontsource/cormorant-garamond/700.css';
+@import '@fontsource/cormorant-garamond/400-italic.css';
+@import '@fontsource/jost/400.css';
+@import '@fontsource/jost/700.css';
+@import '@fontsource/jost/400-italic.css';
+@import '@fontsource/playfair-display/400.css';
+@import '@fontsource/playfair-display/700.css';
+@import '@fontsource/playfair-display/400-italic.css';
 @import 'tailwindcss';
 @source "../pages";
 @source "../components";
 @source "../layouts";
 @source "./safelist";
+@source "../../../../../packages/design-system/src";
 
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant current (&[aria-current="page"]);

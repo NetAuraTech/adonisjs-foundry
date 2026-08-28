@@ -1,4 +1,12 @@
 /**
+ * Presentation tokens for the design system.
+ *
+ * These are the shared type surface for typography and paragraph presentation.
+ * They live in the design-system package so every consumer (and Storybook)
+ * shares a single definition, rather than each app keeping its own copy.
+ */
+
+/**
  * Base Tailwind font-size scale, mapping directly to the `text-*` utilities.
  */
 export type BaseFontSize =
@@ -44,3 +52,30 @@ export type SingleFontSize =
  * fs={['base', 'md:lg', 'xl:xl']}
  */
 export type FontSize = SingleFontSize | SingleFontSize[];
+
+/**
+ * Color variants accepted by paragraph components.
+ */
+export type ParagraphVariants =
+	| 'ink'
+	| 'ink-inverted'
+	| 'muted'
+	| 'subtle'
+	| 'error'
+	| 'primary'
+	| 'primary-deep'
+	| 'primary-soft'
+	| 'primary-light'
+	| 'secondary'
+	| 'secondary-deep'
+	| 'secondary-soft'
+	| 'secondary-light'
+	| 'tertiary'
+	| 'tertiary-deep'
+	| 'tertiary-soft'
+	| 'tertiary-light';
+
+/**
+ * Vertical spacing scale accepted by paragraph components.
+ */
+export type ParagraphSpacing = 'xs' | 'sm' | 'base' | 'xl';
