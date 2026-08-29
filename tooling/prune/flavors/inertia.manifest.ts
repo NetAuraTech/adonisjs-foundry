@@ -1337,7 +1337,7 @@ const inertiaManifest: FlavorManifest = {
 				'    "@poppinss/ts-exec": "^1.4.4",',
 				'    "@types/dompurify": "^3.2.0",',
 				'    "@types/jsdom": "^30.0.0",',
-				'    "@types/luxon": "^3.7.4",',
+				'    "@types/luxon": "^3.7.5",',
 				'    "@types/node": "~26.2.0",',
 				'    "@types/react": "^19.2.14",',
 				'    "@types/react-dom": "^19.2.3",',
