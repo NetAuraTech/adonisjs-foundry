@@ -78,7 +78,7 @@ test.group('Token Model — via TokenRepository', () => {
 		assert.isFalse(await repo.verify(`${selector}.invalid` as any, TOKEN_TYPES.EMAIL_VERIFICATION));
 	});
 
-	test('incrementAttempts() and checkAttempts() with MAX_ATTEMPTS', async ({ assert }) => {
+	test('checkAttempts() is the single increment path with MAX_ATTEMPTS', async ({ assert }) => {
 		const user = await User.create({ email: 'attempts@example.com', username: 'attempts' });
 		const { selector, validator, token: fullToken } = Token.generateSplit();
 
@@ -91,7 +91,7 @@ test.group('Token Model — via TokenRepository', () => {
 			attempts: 0,
 		});
 
-		await repo.incrementAttempts(fullToken as any);
+		await repo.checkAttempts(fullToken as any);
 		const afterFirst = await repo.findById((await repo.findOne({ selector }))!.id);
 		assert.equal(afterFirst!.attempts, 1);
 

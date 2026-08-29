@@ -26,10 +26,16 @@ import { type FindOptions } from '#types/core';
  *
  * **Conventions:**
  * - Low-level methods (`getUserFromToken`, `findBySelector`, `verify`) return
- *   `null` or `boolean` — they are internal utilities and do not throw.
+ *   `null` or `boolean` for ordinary failures — they are internal utilities.
+ *   A locked token is the one exception: {@link MaxAttemptsExceededException}
+ *   propagates from every verification path, so a brute-forced client always
+ *   sees the lockout (HTTP 429), never a plain "invalid token".
  * - High-level public methods (`getEmailVerificationUser`, `getPasswordResetUser`,
  *   `getEmailChangeUser`, `getUserInvitationToken`) throw {@link InvalidTokenException}
  *   so that callers never need to handle a `null` return.
+ * - Attempt accounting goes through {@link checkAttempts} — the single
+ *   increment path — exactly once per token presentation, so one request
+ *   consumes exactly one attempt (see the method's documented semantics).
  */
 @inject()
 export class TokenRepository extends BaseRepository {
@@ -177,7 +183,8 @@ export class TokenRepository extends BaseRepository {
 	 *
 	 * Checks attempt count before verifying the token so that a brute-forced
 	 * token returns {@link MaxAttemptsExceededException} rather than
-	 * {@link InvalidTokenException}.
+	 * {@link InvalidTokenException}. Every call consumes exactly one attempt
+	 * (see {@link checkAttempts}).
 	 *
 	 * @param token - The raw `selector.validator` token to verify.
 	 * @param type - The expected token type.
@@ -199,10 +206,23 @@ export class TokenRepository extends BaseRepository {
 	}
 
 	/**
-	 * Increments the attempt counter for a token.
+	 * The single code path for attempt accounting: records one verification
+	 * attempt for a token and enforces the lockout.
 	 *
-	 * Called every time a token is presented for verification, allowing the
-	 * system to detect brute-force attempts and lock out abusive clients.
+	 * Every token presentation — through {@link verify} or any of the
+	 * `getUser*` / `verify*` helpers — flows through here exactly once, so a
+	 * single request consumes exactly one attempt, regardless of outcome:
+	 *
+	 * - the counter is checked before incrementing: once it reaches
+	 *   `MAX_ATTEMPTS`, further presentations throw
+	 *   {@link MaxAttemptsExceededException} without incrementing;
+	 * - a failed verification (bad validator, wrong type, or expired token)
+	 *   still consumes one attempt against an existing record;
+	 * - an unknown selector or a malformed token consumes nothing — there is
+	 *   no record to increment;
+	 * - a successful password reset expires the token via
+	 *   {@link expirePasswordResetTokens}, after which the counter is
+	 *   irrelevant.
 	 *
 	 * @param token - The raw `selector.validator` token.
 	 * @throws {MaxAttemptsExceededException} If the attempt counter has reached
@@ -291,12 +311,16 @@ export class TokenRepository extends BaseRepository {
 	 *
 	 * Delegates verification to {@link verify} so that attempt tracking is
 	 * always applied before hash comparison. Loads the associated user with
-	 * role and permissions preloaded. Returns `null` if any step fails — it
-	 * does not throw.
+	 * role and permissions preloaded. Returns `null` on ordinary failure
+	 * (invalid validator, wrong type, expired token, unknown record) — but a
+	 * locked token propagates {@link MaxAttemptsExceededException}, matching
+	 * {@link getUserInvitationToken}.
 	 *
 	 * @param token - The raw `selector.validator` token.
 	 * @param type - The expected token type to filter by.
 	 * @returns The associated {@link User}, or `null`.
+	 * @throws {MaxAttemptsExceededException} If the attempt counter has reached
+	 *   or exceeded the maximum allowed attempts.
 	 */
 	async getUserFromToken(token: FullToken, type: TokenType): Promise<User | null> {
 		const parts = Token.split(token);
@@ -304,13 +328,10 @@ export class TokenRepository extends BaseRepository {
 		if (!parts) return null;
 
 		// Delegate to verify() so attempt tracking is always applied.
-		// catch swallows MaxAttemptsExceededException — we return null, not throw.
-		try {
-			const isValid = await this.verify(token, type);
-			if (!isValid) return null;
-		} catch {
-			return null;
-		}
+		// MaxAttemptsExceededException propagates — a locked token is a
+		// distinct, client-relevant state (429), not a plain invalid token.
+		const isValid = await this.verify(token, type);
+		if (!isValid) return null;
 
 		const data = await TokenModel.query(this.client())
 			.where('selector', parts.selector)
@@ -339,6 +360,8 @@ export class TokenRepository extends BaseRepository {
 	 * @param token - The raw `selector.validator` token from the verification link.
 	 * @returns The associated {@link User}.
 	 * @throws {InvalidTokenException} If the token is invalid, expired, or not found.
+	 * @throws {MaxAttemptsExceededException} If the attempt counter has reached
+	 *   or exceeded the maximum allowed attempts.
 	 *
 	 * @example
 	 * const user = await tokenRepository.getEmailVerificationUser(token)
@@ -363,6 +386,8 @@ export class TokenRepository extends BaseRepository {
 	 * @param token - The raw `selector.validator` token from the reset link.
 	 * @returns The associated {@link User}.
 	 * @throws {InvalidTokenException} If the token is invalid, expired, or not found.
+	 * @throws {MaxAttemptsExceededException} If the attempt counter has reached
+	 *   or exceeded the maximum allowed attempts.
 	 *
 	 * @example
 	 * const user = await tokenRepository.getPasswordResetUser(token)
@@ -371,7 +396,7 @@ export class TokenRepository extends BaseRepository {
 		const user = await this.getUserFromToken(token, TOKEN_TYPES.PASSWORD_RESET);
 
 		if (!user) {
-			this.logService.logAuth('Failed password reset - invalid token', {
+			this.logService.logAuth('password.reset.token.invalid', {
 				token: Token.mask(token),
 			});
 
@@ -390,6 +415,8 @@ export class TokenRepository extends BaseRepository {
 	 * @param token - The raw `selector.validator` token from the confirmation link.
 	 * @returns The associated {@link User}.
 	 * @throws {InvalidTokenException} If the token is invalid, expired, or not found.
+	 * @throws {MaxAttemptsExceededException} If the attempt counter has reached
+	 *   or exceeded the maximum allowed attempts.
 	 *
 	 * @example
 	 * const user = await tokenRepository.getEmailChangeUser(token)
@@ -482,8 +509,9 @@ export class TokenRepository extends BaseRepository {
 	 * token returns {@link MaxAttemptsExceededException} rather than
 	 * {@link InvalidTokenException}.
 	 *
-	 * Convenience wrapper around {@link checkAttempts} and {@link verify},
-	 * both scoped to the `PASSWORD_RESET` token type.
+	 * Convenience wrapper around {@link verify} scoped to the
+	 * `PASSWORD_RESET` token type. A single call consumes exactly one attempt
+	 * (see {@link checkAttempts}).
 	 *
 	 * @param token - The raw `selector.validator` token to verify.
 	 * @throws {MaxAttemptsExceededException} If the attempt counter has reached
@@ -497,14 +525,12 @@ export class TokenRepository extends BaseRepository {
 		const isValid = await this.verify(token, TOKEN_TYPES.PASSWORD_RESET);
 
 		if (!isValid) {
-			this.logService.logAuth('Invalid or expired password reset token', {
+			this.logService.logAuth('password.reset.token.invalid', {
 				token: Token.mask(token),
 			});
 
 			throw new InvalidTokenException();
 		}
-
-		await this.checkAttempts(token);
 	}
 
 	/**
@@ -587,23 +613,6 @@ export class TokenRepository extends BaseRepository {
 		await Promise.all(tokens.map((token) => token.delete()));
 
 		return tokens.length;
-	}
-
-	/**
-	 * Increments the attempt counter for a token.
-	 *
-	 * @param token - The raw `selector.validator` token.
-	 */
-	async incrementAttempts(token: FullToken): Promise<void> {
-		const parts = Token.split(token);
-		if (!parts) return;
-
-		const data = await TokenModel.query(this.client()).where('selector', parts.selector).first();
-		if (!data) return;
-
-		data.attempts = (data.attempts || 0) + 1;
-		await transactionContext.merge(data);
-		await data.save();
 	}
 
 	/**

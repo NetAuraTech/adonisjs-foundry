@@ -123,22 +123,39 @@ test.group('TokenRepository', () => {
 		assert.isNull(badUser);
 	});
 
-	test('incrementAttempts() and checkAttempts()', async ({ assert }) => {
+	test('checkAttempts() is the single increment path and enforces MAX_ATTEMPTS', async ({ assert }) => {
 		const u = await uniqueUser('attempts');
 		const { plainToken, tokenModel } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);
 
-		await repo.incrementAttempts(plainToken);
-		await repo.incrementAttempts(plainToken);
-		await repo.incrementAttempts(plainToken);
+		await repo.checkAttempts(plainToken);
+		await repo.checkAttempts(plainToken);
+		await repo.checkAttempts(plainToken);
 
 		const reloaded = await repo.findById(tokenModel.id);
 		assert.equal(reloaded!.attempts, 3);
 
-		// MAX_ATTEMPTS is 3 — after incrementing to 3, next checkAttempts throws
-		await repo.incrementAttempts(plainToken); // attempts = 4
-		await repo.incrementAttempts(plainToken); // attempts = 5
-		assert.equal((await repo.findById(tokenModel.id))!.attempts, 5);
+		// MAX_ATTEMPTS is 3 — once the counter reaches the cap, the next
+		// check throws and no further increment happens.
 		await assert.rejects(async () => repo.checkAttempts(plainToken), MaxAttemptsExceededException);
+		assert.equal((await repo.findById(tokenModel.id))!.attempts, 3);
+	});
+
+	test('verify() consumes exactly one attempt per call', async ({ assert }) => {
+		const u = await uniqueUser('verifycount');
+		const { plainToken, tokenModel } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);
+
+		assert.isTrue(await repo.verify(plainToken, TOKEN_TYPES.PASSWORD_RESET));
+		assert.equal((await repo.findById(tokenModel.id))!.attempts, 1);
+
+		// A failed verification consumes an attempt too.
+		const badValidatorToken = `${plainToken.split('.')[0]}.wrongval` as FullToken;
+		assert.isFalse(await repo.verify(badValidatorToken, TOKEN_TYPES.PASSWORD_RESET));
+		assert.equal((await repo.findById(tokenModel.id))!.attempts, 2);
+
+		// Unknown selector and malformed tokens consume nothing — no record to increment.
+		assert.isFalse(await repo.verify('unknownsel.val' as FullToken, TOKEN_TYPES.PASSWORD_RESET));
+		assert.isFalse(await repo.verify('malformed_token' as FullToken, TOKEN_TYPES.PASSWORD_RESET));
+		assert.equal((await repo.findById(tokenModel.id))!.attempts, 2);
 	});
 
 	test('expireTokensByType() and convenience helpers', async ({ assert }) => {
@@ -186,18 +203,18 @@ test.group('TokenRepository', () => {
 		assert.equal(inv.userId, u.id);
 	});
 
-	test('verifyPasswordResetToken() checks both validity and attempts', async ({ assert }) => {
+	test('verifyPasswordResetToken() consumes exactly one attempt per call', async ({ assert }) => {
 		const u = await uniqueUser('vpwd');
-		const { plainToken } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);
+		const { plainToken, tokenModel } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);
 
-		// Should pass
+		// A single call consumes exactly one attempt.
 		await assert.doesNotReject(() => repo.verifyPasswordResetToken(plainToken));
+		assert.equal((await repo.findById(tokenModel.id))!.attempts, 1);
 
-		// Max attempts
-		await repo.update((await repo.findBySelector(plainToken.split('.')[0], TOKEN_TYPES.PASSWORD_RESET))!.id, {
-			attempts: 5,
-		});
+		// A locked token throws without incrementing further.
+		await repo.update(tokenModel.id, { attempts: 5 });
 		await assert.rejects(() => repo.verifyPasswordResetToken(plainToken), MaxAttemptsExceededException);
+		assert.equal((await repo.findById(tokenModel.id))!.attempts, 5);
 
 		// Invalid token
 		await assert.rejects(() => repo.verifyPasswordResetToken('bad.token' as FullToken), InvalidTokenException);
