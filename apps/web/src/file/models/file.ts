@@ -79,11 +79,15 @@ export default class File extends FileSchema {
 		return FileDomain.fromModel({
 			id: this.id,
 			filename: this.filename,
+			originalName: this.originalName,
 			mimeType: this.mimeType,
 			extension: this.extension,
 			size: Number(this.size),
+			path: this.path,
+			disk: this.disk,
 			folderId: this.folderId,
 			alts: (this.alts ?? []) as { locale: string; key: string; value: string }[],
+			createdAt: this.createdAt?.toJSDate() ?? null,
 		});
 	}
 }

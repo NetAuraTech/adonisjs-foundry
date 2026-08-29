@@ -24,7 +24,7 @@ export default class AccountController {
 		const user = auth.user!;
 
 		return inertia.render('settings/account/front/index', {
-			user: UserTransformer.transform(user),
+			user: UserTransformer.transform(user.toDomain()),
 			providers: enabledProviders,
 			translations: buildAccountPayload(this.i18n),
 		});

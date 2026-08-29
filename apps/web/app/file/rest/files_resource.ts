@@ -14,7 +14,8 @@ import { GetFileDetailAction } from '#file/actions/file/get_file_detail_action';
 import { ListFilesAction } from '#file/actions/file/list_files_action';
 import { MoveFileAction } from '#file/actions/file/move_file_action';
 import { UpsertFileAltAction } from '#file/actions/file/upsert_file_alt_action';
-import type File from '#file/models/file';
+import type { File } from '#file/domain/file';
+import type FileModel from '#file/models/file';
 import type { Infer } from '@vinejs/vine/types';
 
 type FileListPagination = Awaited<ReturnType<ListFilesAction['execute']>>;
@@ -33,7 +34,7 @@ type FileDeleteAltPayload = Infer<typeof deleteAltValidator>;
 export interface FilesEndpoints {
 	index: RestEndpoint<undefined, FileListPayload, FileListPagination, FileListPagination>;
 	show: RestEndpoint<undefined, FileIdPayload, File, File>;
-	move: RestEndpoint<{ id: number }, FileMovePayload, FileMoveResult, File>;
+	move: RestEndpoint<{ id: number }, FileMovePayload, FileMoveResult, FileModel>;
 	destroy: RestEndpoint<undefined, FileIdPayload, FileDeleteResult, FileDeleteResult>;
 	upsertAlt: RestEndpoint<{ id: number }, FileUpsertAltPayload, void, File>;
 	deleteAlt: RestEndpoint<{ id: number }, FileDeleteAltPayload, void, File>;
@@ -86,7 +87,7 @@ export default class FilesResource {
 			validator: () => moveFileValidator,
 			execute: (_context, prepared, payload) =>
 				this.moveFileAction.execute({ id: prepared.id, folderId: payload.folder_id ?? null }),
-			transform: (entity) => FileTransformer.transform(entity),
+			transform: (entity) => FileTransformer.transform(entity.toDomain()),
 		},
 		destroy: {
 			status: 204,

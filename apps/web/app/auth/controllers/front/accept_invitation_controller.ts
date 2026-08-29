@@ -24,7 +24,7 @@ export default class AcceptInvitationController {
 
 		return inertia.render('auth/front/accept_invitation', {
 			token: payload.token,
-			user: UserTransformer.transform(user),
+			user: UserTransformer.transform(user.toDomain()),
 			translations: buildAcceptInvitationPayload(this.i18n, user.email),
 		});
 	}

@@ -40,6 +40,7 @@ export default class LogEntry extends LogEntrySchema {
 			requestId: this.requestId,
 			context: this.context,
 			error: this.error,
+			createdAt: this.createdAt?.toJSDate() ?? null,
 		});
 	}
 }

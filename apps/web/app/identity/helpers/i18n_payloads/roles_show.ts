@@ -2,8 +2,6 @@ import { nestTranslation, type TranslationNodes } from '#app/core/helpers/transl
 import { permissionCategoryKey } from '#app/identity/helpers/permission_category';
 import { createI18nEntry } from '#core/contracts/i18n_translator';
 import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_translator';
-import type Permission from '#identity/models/permission';
-import type Role from '#identity/models/role';
 
 /**
  * The flat i18n key mapping for the role detail page. The `roles` and
@@ -67,8 +65,8 @@ export type AdminRolesShowTranslations = BuildPayloadResult<typeof ROLES_SHOW_MA
  */
 export function buildRolesShowPayload(
 	i18n: I18nTranslator,
-	role: Role,
-	permissions: Permission[],
+	role: { slug: string; name: string; description: string | null },
+	permissions: ReadonlyArray<{ slug: string; name: string; description: string | null; category: string }>,
 ): AdminRolesShowTranslations {
 	const categories: TranslationNodes = {};
 	const items: TranslationNodes = {};

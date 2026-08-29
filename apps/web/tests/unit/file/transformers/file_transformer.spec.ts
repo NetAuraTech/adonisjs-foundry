@@ -1,8 +1,7 @@
 import { test } from '@japa/runner';
 import sinon from 'sinon';
 import FileTransformer from '#app/file/transformers/file_transformer';
-import CmsFile from '#file/models/file';
-import FileAlt from '#file/models/file_alt';
+import { File } from '#file/domain/file';
 import { ImageOptimizerService } from '#file/services/image_optimizer_service';
 import { StorageService } from '#file/services/storage_service';
 import type { ResolvedFile } from '#types/file';
@@ -13,29 +12,22 @@ import type { ResolvedFile } from '#types/file';
  * produced when a display intent is provided.
  */
 test.group('FileTransformer', (group) => {
-	function makeFile(alts: Partial<FileAlt>[] = []): CmsFile {
-		const file = new CmsFile();
-		file.id = 1;
-		file.filename = 'hero.jpg';
-		file.originalName = 'photo.jpg';
-		file.mimeType = 'image/jpeg';
-		file.extension = 'jpg';
-		file.size = 2048;
-		file.path = 'cms/files/hero.jpg';
-		file.disk = 'fs';
-
-		const altInstances = alts.map((a) => {
-			const alt = new FileAlt();
-			Object.assign(alt, a);
-			return alt;
+	function makeFile(alts: { locale: string; key: string; value: string }[] = []): File {
+		return File.fromModel({
+			id: 1,
+			filename: 'hero.jpg',
+			originalName: 'photo.jpg',
+			mimeType: 'image/jpeg',
+			extension: 'jpg',
+			size: 2048,
+			path: 'cms/files/hero.jpg',
+			disk: 'fs',
+			folderId: null,
+			alts,
 		});
-
-		file.$setRelated('alts', altInstances);
-
-		return file;
 	}
 
-	async function render(file: CmsFile, options?: { locale?: string; altKey?: string | null }) {
+	async function render(file: File, options?: { locale?: string; altKey?: string | null }) {
 		return (await new FileTransformer(file, options).toObject()) as unknown as ResolvedFile & {
 			originalName: string;
 			createdAt: unknown;

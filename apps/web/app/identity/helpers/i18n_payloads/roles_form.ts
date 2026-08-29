@@ -2,7 +2,6 @@ import { nestTranslation, type TranslationNodes } from '#app/core/helpers/transl
 import { permissionCategoryKey } from '#app/identity/helpers/permission_category';
 import { createI18nEntry } from '#core/contracts/i18n_translator';
 import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_translator';
-import type Permission from '#identity/models/permission';
 
 /**
  * The flat i18n key mapping for the role create/edit form. The dynamic part of
@@ -59,7 +58,10 @@ export type AdminRolesFormTranslations = BuildPayloadResult<typeof ROLES_FORM_MA
  * @param permissions - The permissions to build data-driven entries for.
  * @returns The role form `t` object with every UI string resolved.
  */
-export function buildRolesFormPayload(i18n: I18nTranslator, permissions: Permission[]): AdminRolesFormTranslations {
+export function buildRolesFormPayload(
+	i18n: I18nTranslator,
+	permissions: ReadonlyArray<{ slug: string; name: string; description: string | null; category: string }>,
+): AdminRolesFormTranslations {
 	const categories: TranslationNodes = {};
 	const items: TranslationNodes = {};
 

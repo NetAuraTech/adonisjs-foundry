@@ -8,9 +8,12 @@ const model = (
 ) => ({
 	id: overrides.id ?? 1,
 	filename: 'photo.png',
+	originalName: 'photo.png',
 	mimeType: 'image/png',
 	extension: 'png',
 	size: 1024,
+	path: 'files/photo.png',
+	disk: 'fs' as const,
 	folderId: null,
 	alts: overrides.alts ?? [],
 });
