@@ -1,14 +1,7 @@
 import { AllyUserContract } from '@adonisjs/ally/types';
 import { inject } from '@adonisjs/core';
-import { DateTime } from 'luxon';
-import { PreferencesRepository } from '#account/repositories/preferences_repository';
-import UnverifiedAccountException from '#auth/exceptions/unverified_account_exception';
+import { SocialUserService } from '#auth/services/social_user_service';
 import { type OAuthProvider } from '#auth/types/auth';
-import { withTransaction } from '#core/services/with_transaction';
-import { generateUniqueUsername } from '#identity/domain/user';
-import { RoleRepository } from '#identity/repositories/role_repository';
-import { UserRepository } from '#identity/repositories/user_repository';
-import { LogService } from '#log/services/log_service';
 import type User from '#identity/models/user';
 
 interface FindOrCreateSocialUserPayload {
@@ -19,17 +12,13 @@ interface FindOrCreateSocialUserPayload {
 /**
  * Find an existing user by OAuth provider or create a new social account.
  *
- * Handles three flows: existing provider link, email-based account linking,
- * and fresh registration. All operations run atomically within a transaction.
+ * Delegates to the auth-domain {@link SocialUserService}, which owns the
+ * find-or-create flow (existing provider link, email-based account linking,
+ * fresh registration).
  */
 @inject()
 export class FindOrCreateSocialUserAction {
-	constructor(
-		protected logService: LogService,
-		private userRepository: UserRepository,
-		private preferencesRepository: PreferencesRepository,
-		private roleRepository: RoleRepository,
-	) {}
+	constructor(protected socialUserService: SocialUserService) {}
 
 	/**
 	 * Execute social user lookup or creation.
@@ -42,50 +31,6 @@ export class FindOrCreateSocialUserAction {
 	 * const user = await findOrCreateSocialUserAction.execute({ allyUser, provider: 'github' })
 	 */
 	async execute(payload: FindOrCreateSocialUserPayload): Promise<User> {
-		return withTransaction(async () => {
-			let user = await this.userRepository.findByProviderId(payload.provider, payload.allyUser.id);
-
-			if (user) {
-				this.logService.logAuth('social.login', { userId: user.id, userEmail: user.email });
-				return user;
-			}
-
-			if (payload.allyUser.email) {
-				user = await this.userRepository.findByEmail(payload.allyUser.email);
-
-				if (user) {
-					if (!user.emailVerifiedAt) {
-						this.logService.logSecurity('social.unverified_account_link_attempt', {
-							userEmail: payload.allyUser.email,
-							provider: payload.provider,
-						});
-						throw new UnverifiedAccountException(payload.allyUser.email);
-					}
-
-					await this.userRepository.linkProvider(user, payload.provider, payload.allyUser.id);
-					await this.userRepository.markEmailAsVerified(user);
-
-					this.logService.logAuth('social.linked', { userId: user.id, userEmail: user.email });
-					return user;
-				}
-			}
-
-			const userRole = await this.roleRepository.getUserRole();
-			const base = payload.allyUser.nickName || payload.allyUser.name || `${payload.provider}_user`;
-			const username = await generateUniqueUsername(base, (u) => this.userRepository.exists({ username: u }));
-
-			user = await this.userRepository.create({
-				email: payload.allyUser.email || `${payload.provider}_${payload.allyUser.id}@noemail.local`,
-				username,
-				[`${payload.provider}Id`]: payload.allyUser.id,
-				emailVerifiedAt: DateTime.now(),
-				roleId: userRole?.id || null,
-			} as any);
-
-			await this.preferencesRepository.upsert(user, { theme: 'light' });
-
-			this.logService.logAuth('social.registered', { userId: user.id, userEmail: user.email });
-			return user;
-		});
+		return this.socialUserService.findOrCreate(payload.allyUser, payload.provider);
 	}
 }
