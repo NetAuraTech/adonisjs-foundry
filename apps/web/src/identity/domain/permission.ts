@@ -12,16 +12,24 @@ import { PermissionIdentifier } from '#identity/domain/identifiers';
 export class Permission extends Entity<{
 	id: PermissionIdentifier;
 	slug: string;
+	name: string;
+	description: string | null;
 	category: string;
 	isSystem: boolean;
+	createdAt: Date | null;
+	updatedAt: Date | null;
 }> {
 	private constructor(
 		readonly id: PermissionIdentifier,
 		readonly slug: string,
+		readonly name: string,
+		readonly description: string | null,
 		readonly category: string,
 		readonly isSystem: boolean,
+		readonly createdAt: Date | null,
+		readonly updatedAt: Date | null,
 	) {
-		super({ id, slug, category, isSystem });
+		super({ id, slug, name, description, category, isSystem, createdAt, updatedAt });
 	}
 
 	/**
@@ -29,8 +37,26 @@ export class Permission extends Entity<{
 	 *
 	 * @param model - The persisted permission.
 	 */
-	static fromModel(model: { id: number; slug: string; category: string; isSystem: boolean }): Permission {
-		return new Permission(PermissionIdentifier.of(model.id), model.slug, model.category, model.isSystem);
+	static fromModel(model: {
+		id: number;
+		slug: string;
+		name: string;
+		description: string | null;
+		category: string;
+		isSystem: boolean;
+		createdAt: Date | null;
+		updatedAt: Date | null;
+	}): Permission {
+		return new Permission(
+			PermissionIdentifier.of(model.id),
+			model.slug,
+			model.name,
+			model.description,
+			model.category,
+			model.isSystem,
+			model.createdAt,
+			model.updatedAt,
+		);
 	}
 
 	/** Whether this permission may be modified. System permissions are immutable. */

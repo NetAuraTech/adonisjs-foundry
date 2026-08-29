@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
 import { ListRootFoldersQuery } from '#file/queries/list_root_folders_query';
-import type FileFolder from '#file/models/file_folder';
+import type { FileFolder as FileFolderDomain } from '#file/domain/file_folder';
 
 /**
  * List the root folders of the file tree (folders with no parent).
@@ -12,12 +12,12 @@ export class ListRootFoldersAction {
 	/**
 	 * Execute root folders listing.
 	 *
-	 * @returns The root folders ordered by name.
+	 * @returns The root folders ordered by name, children nested.
 	 *
 	 * @example
 	 * const roots = await listRootFoldersAction.execute()
 	 */
-	async execute(): Promise<FileFolder[]> {
+	async execute(): Promise<FileFolderDomain[]> {
 		return this.listRootFoldersQuery.execute();
 	}
 }

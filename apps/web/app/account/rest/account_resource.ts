@@ -57,7 +57,7 @@ export default class AccountResource {
 			execute: (_context, prepared, payload) =>
 				this.updateUserAccountAction.execute({ user: prepared.user, email: payload.email }),
 			refetch: (_context, prepared) => refetchProfile(prepared.user),
-			transform: (entity) => UserTransformer.transform(entity),
+			transform: (entity) => UserTransformer.transform(entity.toDomain()),
 		},
 		updatePassword: {
 			prepare: async (context) => ({ user: context.auth.getUserOrFail() }),
@@ -69,7 +69,7 @@ export default class AccountResource {
 					password: payload.password,
 				}),
 			refetch: (_context, prepared) => refetchProfile(prepared.user),
-			transform: (entity) => UserTransformer.transform(entity),
+			transform: (entity) => UserTransformer.transform(entity.toDomain()),
 		},
 		destroy: {
 			status: 204,

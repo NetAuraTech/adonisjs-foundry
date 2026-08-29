@@ -153,7 +153,7 @@ export default function UsersShowPage(props: PageProps) {
 						<Separator />
 						<div className="grid">
 							<span className="font-bold">{t('roles.current')}</span>
-							<span className="text-ink-muted">{t(user.role.name as any)}</span>
+							<span className="text-ink-muted">{t(user.role?.name as any)}</span>
 						</div>
 						<span className="text-ink-muted">
 							{t('permissions.value', {

@@ -56,8 +56,14 @@ export default class Role extends RoleSchema {
 		return RoleEntity.fromModel({
 			id: this.id,
 			slug: this.slug,
+			name: this.name,
+			description: this.description,
 			isSystem: this.isSystem,
-			permissions: this.permissions ?? [],
+			permissions: this.permissions === undefined ? null : this.permissions.map((permission) => permission.toDomain()),
+			users: this.users === undefined ? null : this.users.map((user) => user.toDomain()),
+			usersCount: this.$extras.users_count !== undefined ? Number(this.$extras.users_count) : null,
+			createdAt: this.createdAt?.toJSDate() ?? null,
+			updatedAt: this.updatedAt?.toJSDate() ?? null,
 		});
 	}
 

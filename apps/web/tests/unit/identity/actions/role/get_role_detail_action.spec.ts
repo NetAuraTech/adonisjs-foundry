@@ -26,10 +26,12 @@ test.group('GetRoleDetailAction', () => {
 
 		const found = await action.execute({ id: role.id });
 
-		assert.equal(found.id, role.id);
-		assert.lengthOf(found.permissions, 1);
-		assert.equal(found.permissions[0].slug, 'spec_role_detail_perm');
-		assert.lengthOf(found.users, 1);
+		assert.equal(found.id.value, role.id);
+
+		const permissions = found.permissions ?? [];
+		assert.lengthOf(permissions, 1);
+		assert.equal(permissions[0].slug, 'spec_role_detail_perm');
+		assert.lengthOf(found.users ?? [], 1);
 	});
 
 	test('execute() throws RowNotFoundException when role does not exist', async ({ assert }) => {

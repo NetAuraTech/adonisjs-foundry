@@ -22,7 +22,7 @@ export default class UsersCreateController {
 		const roles = await this.listAllRolesAction.execute();
 
 		return inertia.render('auth/admin/form', {
-			roles: RoleTransformer.transform(roles),
+			roles: RoleTransformer.transform(roles.map((role) => role.toDomain())),
 			translations: buildUsersFormPayload(this.i18n, roles),
 		});
 	}

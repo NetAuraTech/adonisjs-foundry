@@ -37,8 +37,12 @@ export default class Permission extends PermissionSchema {
 		return PermissionEntity.fromModel({
 			id: this.id,
 			slug: this.slug,
+			name: this.name,
+			description: this.description,
 			category: this.category,
 			isSystem: this.isSystem,
+			createdAt: this.createdAt?.toJSDate() ?? null,
+			updatedAt: this.updatedAt?.toJSDate() ?? null,
 		});
 	}
 }

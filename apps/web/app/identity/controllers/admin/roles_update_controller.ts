@@ -29,7 +29,7 @@ export default class RolesUpdateController {
 
 		const role = await this.getRoleDetailAction.execute({ id: payload.id });
 
-		if (!role.canBeModified) {
+		if (!role.canBeModified()) {
 			throw new SystemRoleImmutableException(role.slug);
 		}
 
@@ -37,7 +37,7 @@ export default class RolesUpdateController {
 
 		return inertia.render('role/admin/form', {
 			role: RoleTransformer.transform(role),
-			permissions: PermissionTransformer.transform(permissions),
+			permissions: PermissionTransformer.transform(permissions.map((permission) => permission.toDomain())),
 			translations: buildRolesFormPayload(this.i18n, permissions),
 		});
 	}

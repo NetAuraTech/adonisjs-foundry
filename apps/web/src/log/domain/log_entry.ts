@@ -28,6 +28,7 @@ export class LogEntry extends Entity<{
 	requestId: string | null;
 	context: Record<string, any>;
 	error: { name: string; message: string; stack?: string } | null;
+	createdAt: Date | null;
 }> {
 	private constructor(
 		readonly id: LogEntryIdentifier | null,
@@ -41,8 +42,9 @@ export class LogEntry extends Entity<{
 		readonly requestId: string | null,
 		readonly context: Record<string, any>,
 		readonly error: { name: string; message: string; stack?: string } | null,
+		readonly createdAt: Date | null = null,
 	) {
-		super({ id, level, category, message, actorId, actorEmail, ip, userAgent, requestId, context, error });
+		super({ id, level, category, message, actorId, actorEmail, ip, userAgent, requestId, context, error, createdAt });
 	}
 
 	/**
@@ -103,6 +105,7 @@ export class LogEntry extends Entity<{
 		requestId: string | null;
 		context: Record<string, any> | null;
 		error: { name: string; message: string; stack?: string } | null;
+		createdAt?: Date | null;
 	}): LogEntry {
 		return new LogEntry(
 			LogEntryIdentifier.of(model.id),
@@ -116,6 +119,7 @@ export class LogEntry extends Entity<{
 			model.requestId,
 			model.context ?? {},
 			model.error,
+			model.createdAt ?? null,
 		);
 	}
 

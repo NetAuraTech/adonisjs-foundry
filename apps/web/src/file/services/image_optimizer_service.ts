@@ -1,7 +1,25 @@
 import app from '@adonisjs/core/services/app';
 import drive from '@adonisjs/drive/services/main';
 import sharp, { type Sharp } from 'sharp';
-import type File from '#file/models/file';
+import type { StorageDisk } from '#types/file';
+
+/**
+ * The storage-location surface of a file needed for image optimization.
+ *
+ * Both the Lucid `File` model and the domain {@link File} entity satisfy this
+ * shape structurally, so the service stays decoupled from the persistence
+ * layer.
+ */
+export interface OptimizableFile {
+	/** MIME type of the original image */
+	mimeType: string;
+	/** Storage disk the original image lives on */
+	disk: StorageDisk;
+	/** Full storage path of the original image */
+	path: string;
+	/** Stored filename of the original image */
+	filename: string;
+}
 
 /**
  * Result of the image optimization process.
@@ -34,11 +52,11 @@ export class ImageOptimizerService {
 	 * 4. If a variant is missing, generate it using Sharp with high-quality settings (Lanczos3, 90% quality).
 	 * 5. Return the metadata and public URLs for all variants.
 	 *
-	 * @param file - The File model instance representing the original image.
+	 * @param file - The storage-location surface of the original image.
 	 * @param widths - Array of target widths to generate. Defaults to [400, 800, 1200].
 	 * @returns A promise resolving to the optimization results (dimensions + variants).
 	 */
-	public async optimize(file: File, widths: number[] = [400, 800, 1200]): Promise<OptimizedImageResult> {
+	public async optimize(file: OptimizableFile, widths: number[] = [400, 800, 1200]): Promise<OptimizedImageResult> {
 		const result: OptimizedImageResult = {
 			variants: {},
 		};

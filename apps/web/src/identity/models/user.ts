@@ -107,6 +107,13 @@ export default class User extends compose(UserSchema, AuthFinder) {
 			email: this.email,
 			hasPendingInvite: this.hasPendingInvite,
 			isEmailVerified: this.isEmailVerified,
+			emailVerifiedAt: this.emailVerifiedAt?.toJSDate() ?? null,
+			githubId: this.githubId,
+			googleId: this.googleId,
+			facebookId: this.facebookId,
+			role: this.role ? this.role.toDomain() : null,
+			createdAt: this.createdAt?.toJSDate() ?? null,
+			updatedAt: this.updatedAt?.toJSDate() ?? null,
 		});
 	}
 

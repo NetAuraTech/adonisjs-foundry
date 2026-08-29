@@ -44,7 +44,7 @@ export default class AcceptInvitationController {
 
 		await preloadUserRoleWithPermissions(user);
 
-		const serialized = await serialize(UserTransformer.transform(user));
+		const serialized = await serialize(UserTransformer.transform(user.toDomain()));
 
 		return response.ok(serialized);
 	}
