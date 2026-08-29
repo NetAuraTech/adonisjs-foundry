@@ -1,4 +1,4 @@
-import { belongsTo, hasMany, scope } from '@adonisjs/lucid/orm';
+import { belongsTo, computed, hasMany, scope } from '@adonisjs/lucid/orm';
 import { FileFolderSchema } from '#database/schema';
 import { FileFolder as FileFolderDomain } from '#file/domain/file_folder';
 import File from '#file/models/file';
@@ -21,6 +21,7 @@ export default class FileFolder extends FileFolderSchema {
 	/**
 	 * Check if folder is a root (has no parent)
 	 */
+	@computed()
 	get isRoot(): boolean {
 		return this.toDomain().isRoot();
 	}

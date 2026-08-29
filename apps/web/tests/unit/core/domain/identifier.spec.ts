@@ -4,7 +4,7 @@ import { FileFolderIdentifier, FileIdentifier } from '#file/domain/identifiers';
 import { UserIdentifier } from '#identity/domain/identifiers';
 
 /**
- * Unit tests for the kernel {@link Identifier} base â€” the shared base of every
+ * Unit tests for the kernel {@link Identifier} base — the shared base of every
  * domain identifier, generic over the wrapped value type.
  */
 test.group('Identifier', () => {

@@ -1,6 +1,6 @@
 import { test } from '@japa/runner';
-import { Token } from '#auth/domain/token';
 import { TokenIdentifier } from '#auth/domain/identifiers';
+import { Token } from '#auth/domain/token';
 import { TOKEN_TYPES, type TokenType } from '#auth/enums/token_type';
 
 const model = (
@@ -22,11 +22,11 @@ const model = (
 });
 
 /**
- * Unit tests for the {@link Token} domain object â€” the token state and its
+ * Unit tests for the {@link Token} domain object — the token state and its
  * invariants, plus the shared selector/validator helpers.
  */
 test.group('Token', () => {
-	// â”€â”€â”€ fromModel() â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+	// ─── fromModel() ─────────────────────────────────────────────────────────
 
 	test('fromModel() hydrates the identity through a TokenIdentifier', ({ assert }) => {
 		const token = Token.fromModel(model({ id: 7 }));
@@ -45,7 +45,7 @@ test.group('Token', () => {
 		assert.isNull(token.expiresAt);
 	});
 
-	// â”€â”€â”€ isExpired() â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+	// ─── isExpired() ─────────────────────────────────────────────────────────
 
 	test('isExpired() is false while the token is within its validity window', ({ assert }) => {
 		const token = Token.fromModel(model({ expiresAt: new Date(Date.now() + 60_000) }));
@@ -71,7 +71,7 @@ test.group('Token', () => {
 		assert.isTrue(Token.fromModel(model({ expiresAt: null })).isExpired());
 	});
 
-	// â”€â”€â”€ hasExceededAttempts() â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+	// ─── hasExceededAttempts() ───────────────────────────────────────────────
 
 	test('hasExceededAttempts() is false below the maximum', ({ assert }) => {
 		assert.isFalse(Token.fromModel(model({ attempts: 2 })).hasExceededAttempts(3));
@@ -82,7 +82,7 @@ test.group('Token', () => {
 		assert.isTrue(Token.fromModel(model({ attempts: 4 })).hasExceededAttempts(3));
 	});
 
-	// â”€â”€â”€ equals() â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+	// ─── equals() ────────────────────────────────────────────────────────────
 
 	test('equals() compares identities, not fields', ({ assert }) => {
 		const a = Token.fromModel(model({ id: 1 }));
@@ -93,7 +93,7 @@ test.group('Token', () => {
 		assert.isFalse(a.equals(c));
 	});
 
-	// â”€â”€â”€ static helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+	// ─── static helpers ──────────────────────────────────────────────────────
 
 	test('generate() produces a hex string of the requested byte length', ({ assert }) => {
 		assert.lengthOf(Token.generate(16), 32);

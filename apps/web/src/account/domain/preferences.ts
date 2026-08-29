@@ -1,5 +1,5 @@
-import { ValueObject } from '#core/domain/value_object';
 import { DEFAULT_PREFERENCES, type Locale, type Theme, type UserPreferences } from '#account/types/preferences';
+import { ValueObject } from '#core/domain/value_object';
 
 /**
  * Pure domain object for a user's preferences.

@@ -21,7 +21,7 @@ class TestEntity extends Entity<{ id: TestIdentifier | null; name: string }> {
 }
 
 /**
- * Unit tests for the kernel {@link Entity} base â€” the shared base of every
+ * Unit tests for the kernel {@link Entity} base — the shared base of every
  * domain entity.
  */
 test.group('Entity', () => {

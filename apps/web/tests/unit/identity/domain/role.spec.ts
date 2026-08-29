@@ -1,8 +1,10 @@
 import { test } from '@japa/runner';
-import { Role } from '#identity/domain/role';
 import { RoleIdentifier } from '#identity/domain/identifiers';
+import { Role } from '#identity/domain/role';
 
-const model = (overrides: Partial<{ id: number; slug: string; isSystem: boolean; permissions: { slug: string }[] | null }> = {}) => ({
+const model = (
+	overrides: Partial<{ id: number; slug: string; isSystem: boolean; permissions: { slug: string }[] | null }> = {},
+) => ({
 	id: overrides.id ?? 1,
 	slug: overrides.slug ?? 'editor',
 	isSystem: overrides.isSystem ?? false,

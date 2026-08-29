@@ -3,7 +3,9 @@ import { File } from '#file/domain/file';
 import { FileAlt } from '#file/domain/file_alt';
 import { FileIdentifier } from '#file/domain/identifiers';
 
-const model = (overrides: Partial<{ id: number; alts: { locale: string; key: string; value: string }[] | null }> = {}) => ({
+const model = (
+	overrides: Partial<{ id: number; alts: { locale: string; key: string; value: string }[] | null }> = {},
+) => ({
 	id: overrides.id ?? 1,
 	filename: 'photo.png',
 	mimeType: 'image/png',
@@ -14,7 +16,7 @@ const model = (overrides: Partial<{ id: number; alts: { locale: string; key: str
 });
 
 /**
- * Unit tests for the {@link File} domain object â€” the single owner of the
+ * Unit tests for the {@link File} domain object — the single owner of the
  * alt-text resolution priority chain.
  */
 test.group('File', () => {

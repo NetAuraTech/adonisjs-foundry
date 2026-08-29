@@ -1,6 +1,6 @@
 import { test } from '@japa/runner';
-import { LogEntry } from '#log/domain/log_entry';
 import { LogEntryIdentifier } from '#log/domain/identifiers';
+import { LogEntry } from '#log/domain/log_entry';
 import { LogCategory, LogLevel } from '#log/types/logging';
 
 const model = (overrides: Partial<{ id: number; level: LogLevel; category: LogCategory; message: string }> = {}) => ({
@@ -18,7 +18,7 @@ const model = (overrides: Partial<{ id: number; level: LogLevel; category: LogCa
 });
 
 /**
- * Unit tests for the {@link LogEntry} domain object â€” the actor-identity
+ * Unit tests for the {@link LogEntry} domain object — the actor-identity
  * resolution and the persistence shape of a log entry.
  */
 test.group('LogEntry', () => {
@@ -128,7 +128,9 @@ test.group('LogEntry', () => {
 
 	test('equals() compares identities, and rejects null identities', ({ assert }) => {
 		const a = LogEntry.fromModel(model({ id: 1 }));
-		const b = LogEntry.fromModel(model({ id: 1, level: LogLevel.ERROR, category: LogCategory.BUSINESS, message: 'other' }));
+		const b = LogEntry.fromModel(
+			model({ id: 1, level: LogLevel.ERROR, category: LogCategory.BUSINESS, message: 'other' }),
+		);
 		const c = LogEntry.fromModel(model({ id: 2 }));
 		const unpersisted = LogEntry.fromRequest({ message: 'x', level: LogLevel.INFO, category: LogCategory.SYSTEM });
 

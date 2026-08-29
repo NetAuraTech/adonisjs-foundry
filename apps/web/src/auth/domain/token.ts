@@ -1,6 +1,6 @@
 import { randomBytes } from 'node:crypto';
-import { Entity } from '#core/domain/entity';
 import { TokenIdentifier } from '#auth/domain/identifiers';
+import { Entity } from '#core/domain/entity';
 import type { FullToken, TokenType } from '#auth/enums/token_type';
 
 /**

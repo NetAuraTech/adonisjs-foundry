@@ -1,7 +1,7 @@
-import { belongsTo } from '@adonisjs/lucid/orm';
-import { TokenSchema } from '#database/schema';
+import { belongsTo, computed } from '@adonisjs/lucid/orm';
 import { Token as TokenEntity } from '#auth/domain/token';
 import { type TokenType } from '#auth/enums/token_type';
+import { TokenSchema } from '#database/schema';
 import User from '#identity/models/user';
 import type { BelongsTo } from '@adonisjs/lucid/types/relations';
 
@@ -12,6 +12,7 @@ export default class Token extends TokenSchema {
 	/**
 	 * Check if token is expired
 	 */
+	@computed()
 	get isExpired(): boolean {
 		return this.toDomain().isExpired();
 	}

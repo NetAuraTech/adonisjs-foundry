@@ -1,5 +1,5 @@
-import { ValueObject } from '#core/domain/value_object';
 import backupConfig from '#config/backup';
+import { ValueObject } from '#core/domain/value_object';
 import type { BackupType } from '#backup/types/backup';
 
 /**

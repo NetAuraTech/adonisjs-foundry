@@ -1,6 +1,6 @@
 import { test } from '@japa/runner';
-import { Permission } from '#identity/domain/permission';
 import { PermissionIdentifier } from '#identity/domain/identifiers';
+import { Permission } from '#identity/domain/permission';
 
 /**
  * Unit tests for the {@link Permission} domain object.

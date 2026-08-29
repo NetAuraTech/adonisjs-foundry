@@ -1,6 +1,6 @@
 import { test } from '@japa/runner';
-import { User, UserStatus, extractNameFromEmail, generateUniqueUsername } from '#identity/domain/user';
 import { UserIdentifier } from '#identity/domain/identifiers';
+import { User, UserStatus, extractNameFromEmail, generateUniqueUsername } from '#identity/domain/user';
 
 /**
  * Unit tests for the {@link User} domain object and the username derivation
