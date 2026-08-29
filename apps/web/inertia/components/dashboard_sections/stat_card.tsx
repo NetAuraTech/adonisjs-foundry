@@ -1,10 +1,8 @@
-import { Link, type LinkProps } from '@adonisjs/inertia/react';
+import { Link } from '@adonisjs/inertia/react';
 import { Card } from '@foundry/design-system/card';
 import { Icon } from '@foundry/design-system/icon';
 import { Paragraph } from '@foundry/design-system/paragraph';
 import { ReactNode } from 'react';
-
-type Route = NonNullable<LinkProps['route']>;
 
 interface StatCardProps {
 	/** Lucide icon name rendered before the label. */
@@ -13,8 +11,11 @@ interface StatCardProps {
 	label: string;
 	/** Headline figure. */
 	value: number;
-	/** Admin route the whole card deep-links to. */
-	route: Route;
+	/**
+	 * Resolved URL the whole card deep-links to. The caller builds it (e.g.
+	 * with a typed `urlFor()`) — the component never resolves routes.
+	 */
+	href: string;
 	/** Optional extra content (breakdowns, links) rendered below the figure. */
 	children?: ReactNode;
 }
@@ -23,11 +24,11 @@ interface StatCardProps {
  * Clickable headline figure deep-linking to its management page.
  *
  * Shared by every admin dashboard section card; a section's card component
- * owns its label/route/figure and composes extra breakdown content here.
+ * owns its label/href/figure and composes extra breakdown content here.
  */
-export function StatCard({ icon, label, value, route, children }: StatCardProps) {
+export function StatCard({ icon, label, value, href, children }: StatCardProps) {
 	return (
-		<Link route={route} className="block group">
+		<Link href={href} className="block group">
 			<Card padding="p-6" className="h-full transition-colors group-hover:border-primary">
 				<div className="flex items-center gap-4">
 					<Icon name={icon} size={28} className="text-ink-muted shrink-0" />

@@ -1,5 +1,7 @@
+import { Entity } from '#core/domain/entity';
 import { FileAlt } from '#file/domain/file_alt';
 import { FileIdentifier } from '#file/domain/identifiers';
+import type { StorageDisk } from '#types/file';
 
 /**
  * Pure domain object for a file.
@@ -10,16 +12,34 @@ import { FileIdentifier } from '#file/domain/identifiers';
  * the two rendering paths. The Lucid `File` model is the persistence
  * representation; hydrate one from a model with {@link File.fromModel}.
  */
-export class File {
+export class File extends Entity<{
+	id: FileIdentifier;
+	filename: string;
+	originalName: string;
+	mimeType: string;
+	extension: string;
+	size: number;
+	path: string;
+	disk: StorageDisk;
+	folderId: number | null;
+	alts: readonly FileAlt[];
+	createdAt: Date | null;
+}> {
 	private constructor(
 		readonly id: FileIdentifier,
 		readonly filename: string,
+		readonly originalName: string,
 		readonly mimeType: string,
 		readonly extension: string,
 		readonly size: number,
+		readonly path: string,
+		readonly disk: StorageDisk,
 		readonly folderId: number | null,
 		private readonly alts: readonly FileAlt[],
-	) {}
+		readonly createdAt: Date | null,
+	) {
+		super({ id, filename, originalName, mimeType, extension, size, path, disk, folderId, alts, createdAt });
+	}
 
 	/**
 	 * Hydrate a domain file from its Lucid model representation.
@@ -29,20 +49,28 @@ export class File {
 	static fromModel(model: {
 		id: number;
 		filename: string;
+		originalName: string;
 		mimeType: string;
 		extension: string;
 		size: number;
+		path: string;
+		disk: StorageDisk;
 		folderId: number | null;
 		alts?: { locale: string; key: string; value: string }[] | null;
+		createdAt?: Date | null;
 	}): File {
 		return new File(
 			FileIdentifier.of(model.id),
 			model.filename,
+			model.originalName,
 			model.mimeType,
 			model.extension,
 			model.size,
+			model.path,
+			model.disk,
 			model.folderId,
 			(model.alts ?? []).map((alt) => FileAlt.fromModel(alt)),
+			model.createdAt ?? null,
 		);
 	}
 

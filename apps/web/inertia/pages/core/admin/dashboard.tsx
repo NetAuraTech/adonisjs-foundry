@@ -1,8 +1,8 @@
 import { SharedProps } from '@adonisjs/inertia/types';
+import { AdminMain } from '@foundry/design-system/admin-main';
 import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement } from 'react';
-import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
 import { getDashboardSectionBundle } from '~/lib/dashboard_sections';

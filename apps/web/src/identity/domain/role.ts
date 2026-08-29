@@ -1,4 +1,7 @@
+import { Entity } from '#core/domain/entity';
 import { RoleIdentifier } from '#identity/domain/identifiers';
+import type { Permission } from '#identity/domain/permission';
+import type { User } from '#identity/domain/user';
 
 /**
  * Pure domain object for an identity {@link Role}.
@@ -9,30 +12,63 @@ import { RoleIdentifier } from '#identity/domain/identifiers';
  * deleted, or grants a specific permission. Hydrate one from a model with
  * {@link Role.fromModel}.
  */
-export class Role {
+export class Role extends Entity<{
+	id: RoleIdentifier;
+	slug: string;
+	name: string;
+	description: string | null;
+	isSystem: boolean;
+	permissions: readonly Permission[] | null;
+	users: readonly User[] | null;
+	usersCount: number | null;
+	createdAt: Date | null;
+	updatedAt: Date | null;
+}> {
 	private constructor(
 		readonly id: RoleIdentifier,
 		readonly slug: string,
+		readonly name: string,
+		readonly description: string | null,
 		readonly isSystem: boolean,
-		private readonly permissionSlugs: ReadonlySet<string>,
-	) {}
+		readonly permissions: readonly Permission[] | null,
+		readonly users: readonly User[] | null,
+		readonly usersCount: number | null,
+		readonly createdAt: Date | null,
+		readonly updatedAt: Date | null,
+	) {
+		super({ id, slug, name, description, isSystem, permissions, users, usersCount, createdAt, updatedAt });
+	}
 
 	/**
 	 * Hydrate a domain role from its Lucid model representation.
 	 *
-	 * @param model - The persisted role, with its `permissions` relation loaded.
+	 * @param model - The persisted role. `permissions` and `users` are
+	 *   domain-hydrated relation arrays: `null` (or omitted) means the relation
+	 *   was not loaded, an empty array means it was loaded and is empty.
 	 */
 	static fromModel(model: {
 		id: number;
 		slug: string;
+		name: string;
+		description: string | null;
 		isSystem: boolean;
-		permissions: { slug: string }[] | null | undefined;
+		permissions?: readonly Permission[] | null;
+		users?: readonly User[] | null;
+		usersCount?: number | null;
+		createdAt: Date | null;
+		updatedAt: Date | null;
 	}): Role {
 		return new Role(
 			RoleIdentifier.of(model.id),
 			model.slug,
+			model.name,
+			model.description,
 			model.isSystem,
-			new Set((model.permissions ?? []).map((permission) => permission.slug)),
+			model.permissions ?? null,
+			model.users ?? null,
+			model.usersCount ?? null,
+			model.createdAt,
+			model.updatedAt,
 		);
 	}
 
@@ -59,6 +95,6 @@ export class Role {
 
 	/** Whether this role grants the given permission slug. */
 	hasPermission(permissionSlug: string): boolean {
-		return this.permissionSlugs.has(permissionSlug);
+		return (this.permissions ?? []).some((permission) => permission.slug === permissionSlug);
 	}
 }

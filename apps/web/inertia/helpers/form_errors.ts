@@ -24,7 +24,7 @@ export type LooseFormErrors = Record<string, ErrorValue | undefined>;
  * @returns The same object, typed as a {@link LooseFormErrors} map.
  *
  * @example
- * <Form route="auth.register.execute">
+ * <Form action={urlFor('auth.register.execute')}>
  *   {(({ errors: strict, processing }) => {
  *     const errors = toLooseErrors(strict)
  *     return (

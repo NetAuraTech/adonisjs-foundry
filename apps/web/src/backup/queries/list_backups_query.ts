@@ -1,6 +1,7 @@
 import drive from '@adonisjs/drive/services/main';
 import { BackupMetadata } from '#backup/domain/backup';
 import backupConfig from '#config/backup';
+import { BaseQuery } from '#core/queries/base_query';
 
 /**
  * Read-side query listing the backup artifacts stored on the configured disk,
@@ -9,7 +10,7 @@ import backupConfig from '#config/backup';
  * Storage failures are swallowed as an empty list so callers degrade to
  * "no backups" instead of erroring on an unavailable disk.
  */
-export class ListBackupsQuery {
+export class ListBackupsQuery extends BaseQuery {
 	/**
 	 * Execute the backup listing query.
 	 *

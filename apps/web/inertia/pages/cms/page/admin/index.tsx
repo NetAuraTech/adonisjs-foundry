@@ -1,17 +1,19 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { AdminMain } from '@foundry/design-system/admin-main';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Icon } from '@foundry/design-system/icon';
+import { Pagination } from '@foundry/design-system/pagination';
 import { SelectOption } from '@foundry/design-system/select';
 import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
+import { usePage } from '@inertiajs/react';
 import { ReactElement } from 'react';
 import { urlFor } from '~/client';
-import { Field } from '~/components/molecules/field';
-import { Pagination } from '~/components/molecules/pagination';
-import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
+import { sanitizeText } from '~/helpers/sanitization';
 import { useMenu } from '~/hooks/use_admin';
 import { locales, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
@@ -39,7 +41,9 @@ const statusesClass = {
 
 export default function PagesIndexPage(props: Props) {
 	const { pages, filters, translations } = props;
+	const pageProps = usePage<SharedProps>().props;
 	const { t } = useTranslation(translations);
+	const { t: commonT } = useTranslation(pageProps.common_translations);
 
 	const { getEntryIcon } = useMenu();
 
@@ -58,14 +62,18 @@ export default function PagesIndexPage(props: Props) {
 			>
 				<Card
 					header={
-						<Form route="admin.cms.pages.render" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+						<Form
+							action={urlFor('admin.cms.pages.render')}
+							method="get"
+							className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end"
+						>
 							<Field
 								type="text"
 								name="search"
 								label={t('search.value')}
 								placeholder={t('search.placeholder')}
 								defaultValue={filters.search}
-								sanitize
+								sanitizeValue={sanitizeText}
 							/>
 							<Field
 								type="select"
@@ -73,7 +81,7 @@ export default function PagesIndexPage(props: Props) {
 								name="locale"
 								placeholder={t(`locale.all`)}
 								defaultValue={filters.locale}
-								sanitize
+								sanitizeValue={sanitizeText}
 							>
 								{locales.map((l) => (
 									<SelectOption key={l} value={l} label={l.toUpperCase()} />
@@ -85,7 +93,7 @@ export default function PagesIndexPage(props: Props) {
 								name="status"
 								placeholder={t(`status.all`)}
 								defaultValue={filters.status}
-								sanitize
+								sanitizeValue={sanitizeText}
 							>
 								{PAGE_STATUSES.map((status) => (
 									<SelectOption key={`status-${status}`} value={status} label={t(`status.${status}`)} />
@@ -96,7 +104,16 @@ export default function PagesIndexPage(props: Props) {
 							</Button>
 						</Form>
 					}
-					footer={<Pagination route="admin.cms.pages.render" filters={filters} metadata={pages.metadata} />}
+					footer={
+						<Pagination
+							buildHref={(page) => urlFor('admin.cms.pages.render', undefined, { qs: { ...filters, page } })}
+							filters={filters}
+							metadata={pages.metadata}
+							summaryText={(start, end, total) => commonT('pagination.showing', { start, end, total })}
+							previousTitle={commonT('pagination.previous')}
+							nextTitle={commonT('pagination.next')}
+						/>
+					}
 				>
 					<Table>
 						<Table.Header>
@@ -172,11 +189,11 @@ export default function PagesIndexPage(props: Props) {
 													</CanAccess>
 													<CanAccess permission="pages.delete">
 														<Form
+															action={urlFor('admin.cms.pages.destroy', { id: page.id })}
+															method="delete"
 															onBefore={() => {
 																return window.confirm(t('actions.delete.confirm'));
 															}}
-															route="admin.cms.pages.destroy"
-															routeParams={{ id: page.id }}
 														>
 															<Button
 																variant="icon_danger"

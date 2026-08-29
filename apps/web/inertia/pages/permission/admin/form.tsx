@@ -1,14 +1,15 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { AdminMain } from '@foundry/design-system/admin-main';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Icon } from '@foundry/design-system/icon';
 import { Data } from '@generated/data';
 import { ReactElement } from 'react';
 import { urlFor } from '~/client';
-import { Field } from '~/components/molecules/field';
-import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
+import { sanitizeRichText, sanitizeText } from '~/helpers/sanitization';
 import { rules } from '~/helpers/validation_rules';
 import { useMenu } from '~/hooks/use_admin';
 import { useFormValidation } from '~/hooks/use_form_validation';
@@ -67,8 +68,11 @@ export default function PermissionsFormPage(props: PageProps) {
 				}
 			>
 				<Form
-					route={isEditing ? 'admin.identity.permissions_update.execute' : 'admin.identity.permissions_create.execute'}
-					routeParams={isEditing ? { id: permission.id } : {}}
+					action={
+						isEditing
+							? urlFor('admin.identity.permissions_update.execute', { id: permission.id })
+							: urlFor('admin.identity.permissions_create.execute')
+					}
 					className="grid gap-6"
 					onBefore={(visit) => {
 						const isValid = validation.validateAll(visit.data as Record<string, any>);
@@ -83,15 +87,10 @@ export default function PermissionsFormPage(props: PageProps) {
 								type="text"
 								defaultValue={permission?.name}
 								placeholder={t('name.placeholder')}
-								errorMessage={errors.name || validation.getValidationMessage('name')}
-								onChange={(event) => {
-									validation.handleChange('name', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('name', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
 								required
-								sanitize
+								sanitizeValue={sanitizeText}
 							/>
 							<Field
 								label={t('slug.value')}
@@ -99,15 +98,10 @@ export default function PermissionsFormPage(props: PageProps) {
 								type="text"
 								defaultValue={permission?.slug}
 								placeholder={t('slug.placeholder')}
-								errorMessage={errors.slug || validation.getValidationMessage('slug')}
-								onChange={(event) => {
-									validation.handleChange('slug', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('slug', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
 								required
-								sanitize
+								sanitizeValue={sanitizeText}
 							/>
 							<Field
 								label={t('category.value')}
@@ -115,15 +109,10 @@ export default function PermissionsFormPage(props: PageProps) {
 								type="text"
 								defaultValue={permission?.category}
 								placeholder={t('category.placeholder')}
-								errorMessage={errors.category || validation.getValidationMessage('category')}
-								onChange={(event) => {
-									validation.handleChange('category', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('category', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
 								required
-								sanitize
+								sanitizeValue={sanitizeText}
 							/>
 							<Field
 								label={t('description.value')}
@@ -131,13 +120,9 @@ export default function PermissionsFormPage(props: PageProps) {
 								type="textarea"
 								defaultValue={permission?.description ?? ''}
 								placeholder={t('description.placeholder')}
-								errorMessage={errors.description || validation.getValidationMessage('description')}
-								onChange={(event) => {
-									validation.handleChange('description', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('description', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
+								sanitizeValue={sanitizeRichText}
 							/>
 							<Button loading={processing} type={'submit'} fitContent>
 								{t('submit')}

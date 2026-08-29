@@ -25,8 +25,8 @@ test.group('GetUserDetailAction', () => {
 		});
 
 		const result = await action.execute({ id: user.id });
-		assert.equal(result.id, user.id);
+		assert.equal(result.id.value, user.id);
 		assert.isNotNull(result.role);
-		assert.equal(result.role.slug, 'detail_role_user');
+		assert.equal(result.role!.slug, 'detail_role_user');
 	});
 });

@@ -1,5 +1,6 @@
 import { Link } from '@adonisjs/inertia/react';
 import { Paragraph } from '@foundry/design-system/paragraph';
+import { urlFor } from '~/client';
 import { RecentCard } from '~/components/dashboard_sections/recent_card';
 import { StatCard } from '~/components/dashboard_sections/stat_card';
 import { CanAccess } from '~/guards/can_access';
@@ -29,7 +30,12 @@ function PageStatCard({ stats, translations }: DashboardSectionCardProps) {
 
 	return (
 		<CanAccess permission="pages.view">
-			<StatCard icon="PanelsTopLeft" label={t('cms.cards.pages')} value={page.pages} route="admin.cms.pages.render">
+			<StatCard
+				icon="PanelsTopLeft"
+				label={t('cms.cards.pages')}
+				value={page.pages}
+				href={urlFor('admin.cms.pages.render')}
+			>
 				<Paragraph variant="muted" spacing="sm">
 					{`${t('cms.cards.translations')}: ${page.pageTranslations.total}`}
 				</Paragraph>
@@ -63,7 +69,7 @@ function PageRecentCard({ stats, translations, formatDate }: DashboardSectionCar
 		<CanAccess permission="pages.view">
 			<RecentCard
 				title={t('cms.recent.published_pages')}
-				viewAllRoute="admin.cms.pages.render"
+				viewAllHref={urlFor('admin.cms.pages.render')}
 				viewAllLabel={t('view_all')}
 			>
 				{page.recentPublishedPages.length === 0 ? (
@@ -75,8 +81,7 @@ function PageRecentCard({ stats, translations, formatDate }: DashboardSectionCar
 						{page.recentPublishedPages.map((entry) => (
 							<li key={entry.id}>
 								<Link
-									route="admin.cms.pages_show.render"
-									routeParams={{ id: entry.pageId }}
+									href={urlFor('admin.cms.pages_show.render', { id: entry.pageId })}
 									className="flex items-center justify-between gap-2 px-6 py-3 hover:bg-sunken"
 								>
 									<span className="truncate">

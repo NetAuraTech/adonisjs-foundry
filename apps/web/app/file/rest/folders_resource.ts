@@ -83,7 +83,7 @@ export default class FoldersResource {
 					name: payload.name,
 					parentId: payload.parentId ?? null,
 				}),
-			transform: (entity) => FileFolderTransformer.transform(entity),
+			transform: (entity) => FileFolderTransformer.transform(entity.toDomain()),
 		},
 		update: {
 			input: (context) => ({
@@ -93,7 +93,7 @@ export default class FoldersResource {
 			validator: () => updateFolderValidator,
 			execute: (_context, _prepared, payload) =>
 				this.renameFolderAction.execute({ id: payload.id, name: payload.name }),
-			transform: (entity) => FileFolderTransformer.transform(entity),
+			transform: (entity) => FileFolderTransformer.transform(entity.toDomain()),
 		},
 		destroy: {
 			status: 204,

@@ -117,4 +117,15 @@ test.group('BackupMetadata', () => {
 	test('fromStorageObject() returns null for non-backup filenames', ({ assert }) => {
 		assert.isNull(BackupMetadata.fromStorageObject('readme.txt', { contentLength: 10 }, 'backup/readme.txt'));
 	});
+
+	// ─── equals() ────────────────────────────────────────────────────────────
+
+	test('equals() compares values, as a value object without identity', ({ assert }) => {
+		const meta = BackupMetadata.fromStorageObject('backup-full-2024-01-15-143022.sql', {}, 'key');
+		const same = BackupMetadata.fromStorageObject('backup-full-2024-01-15-143022.sql', {}, 'key');
+		const other = BackupMetadata.fromStorageObject('backup-full-2024-01-16-143022.sql', {}, 'key');
+
+		assert.isTrue(meta!.equals(same!));
+		assert.isFalse(meta!.equals(other!));
+	});
 });

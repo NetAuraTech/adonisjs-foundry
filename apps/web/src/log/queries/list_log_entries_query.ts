@@ -1,11 +1,13 @@
+import { BaseQuery, type PaginatedResult } from '#core/queries/base_query';
 import LogEntry from '#log/models/log_entry';
+import type { LogEntry as LogEntryDomain } from '#log/domain/log_entry';
 import type { LogEntryListFilters } from '#log/types/logging';
 
 /**
  * Read-side query for listing persisted log entries for the admin log viewer,
  * newest first, with optional filters.
  */
-export class ListLogEntriesQuery {
+export class ListLogEntriesQuery extends BaseQuery {
 	/**
 	 * Execute the log entry listing query.
 	 *
@@ -14,13 +16,13 @@ export class ListLogEntriesQuery {
 	 *
 	 * @param filters - Optional level, category, search, actor and date-range
 	 *   filters plus pagination parameters.
-	 * @returns A paginated result set of {@link LogEntry} records, newest first.
+	 * @returns A paginated result set of {@link LogEntryDomain} records, newest first.
 	 *
 	 * @example
 	 * const result = await listLogEntriesQuery.execute({ level: LogLevel.ERROR, page: 1 })
 	 */
-	async execute(filters: LogEntryListFilters = {}) {
-		const query = LogEntry.query().orderBy('created_at', 'desc');
+	async execute(filters: LogEntryListFilters = {}): Promise<PaginatedResult<LogEntryDomain>> {
+		const query = LogEntry.query(this.client()).orderBy('created_at', 'desc');
 
 		if (filters.level) {
 			query.where('level', filters.level);
@@ -46,6 +48,8 @@ export class ListLogEntriesQuery {
 			query.where('created_at', '<=', filters.to.toSQL()!);
 		}
 
-		return query.paginate(filters.page ?? 1, filters.perPage ?? 20);
+		const result = await query.paginate(filters.page ?? 1, filters.perPage ?? 20);
+
+		return this.toPaginated(result, (row) => row.toDomain());
 	}
 }

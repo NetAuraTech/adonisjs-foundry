@@ -1,18 +1,19 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { AdminMain } from '@foundry/design-system/admin-main';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
 import { Checkbox } from '@foundry/design-system/checkbox';
+import { Field } from '@foundry/design-system/field';
 import { Heading } from '@foundry/design-system/heading';
 import { Icon } from '@foundry/design-system/icon';
 import { Paragraph } from '@foundry/design-system/paragraph';
 import { Data } from '@generated/data';
 import { ReactElement } from 'react';
 import { urlFor } from '~/client';
-import { Field } from '~/components/molecules/field';
-import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
 import { permissionCategoryKey } from '~/helpers/permissions';
+import { sanitizeRichText, sanitizeText } from '~/helpers/sanitization';
 import { rules } from '~/helpers/validation_rules';
 import { useMenu } from '~/hooks/use_admin';
 import { useFormValidation } from '~/hooks/use_form_validation';
@@ -73,8 +74,11 @@ export default function RolesFormPage(props: PageProps) {
 				}
 			>
 				<Form
-					route={isEditing ? 'admin.identity.roles_update.execute' : 'admin.identity.roles_create.execute'}
-					routeParams={isEditing ? { id: role.id } : {}}
+					action={
+						isEditing
+							? urlFor('admin.identity.roles_update.execute', { id: role.id })
+							: urlFor('admin.identity.roles_create.execute')
+					}
 					className="grid gap-6"
 					onBefore={(visit) => {
 						const isValid = validation.validateAll(visit.data as Record<string, any>);
@@ -89,15 +93,10 @@ export default function RolesFormPage(props: PageProps) {
 								type="text"
 								defaultValue={role?.name}
 								placeholder={t('name.placeholder')}
-								errorMessage={errors.name || validation.getValidationMessage('name')}
-								onChange={(event) => {
-									validation.handleChange('name', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('name', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
 								required
-								sanitize
+								sanitizeValue={sanitizeText}
 							/>
 							<Field
 								label={t('slug.value')}
@@ -105,15 +104,10 @@ export default function RolesFormPage(props: PageProps) {
 								type="text"
 								defaultValue={role?.slug}
 								placeholder={t('slug.placeholder')}
-								errorMessage={errors.slug || validation.getValidationMessage('slug')}
-								onChange={(event) => {
-									validation.handleChange('slug', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('slug', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
 								required
-								sanitize
+								sanitizeValue={sanitizeText}
 							/>
 							<Field
 								label={t('description.value')}
@@ -121,13 +115,9 @@ export default function RolesFormPage(props: PageProps) {
 								type="textarea"
 								defaultValue={role?.description ?? ''}
 								placeholder={t('description.placeholder')}
-								errorMessage={errors.description || validation.getValidationMessage('description')}
-								onChange={(event) => {
-									validation.handleChange('description', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('description', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
+								sanitizeValue={sanitizeRichText}
 							/>
 							<div className="grid gap-3">
 								<Heading level={3}>{t('permissions.value')}</Heading>

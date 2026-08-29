@@ -1,4 +1,6 @@
+import { BaseQuery, type PaginatedResult } from '#core/queries/base_query';
 import CmsFile from '#file/models/file';
+import type { File as FileDomain } from '#file/domain/file';
 import type { PaginationFilters } from '#types/pagination';
 
 interface ListFilesCriteria {
@@ -13,15 +15,15 @@ interface ListFilesCriteria {
  * Read-side query for listing files with optional filters (folder, MIME type,
  * search, disk) and pagination, preloading the parent folder and alt entries.
  */
-export class ListFilesQuery {
+export class ListFilesQuery extends BaseQuery {
 	/**
 	 * Execute the file listing query.
 	 *
 	 * @param criteria - Optional filter and pagination parameters.
 	 * @returns A paginated result set of files with folder and alts preloaded.
 	 */
-	async execute(criteria: ListFilesCriteria) {
-		const query = CmsFile.query().preload('folder').preload('alts').orderBy('created_at', 'desc');
+	async execute(criteria: ListFilesCriteria): Promise<PaginatedResult<FileDomain>> {
+		const query = CmsFile.query(this.client()).preload('folder').preload('alts').orderBy('created_at', 'desc');
 
 		if (criteria.folderId !== undefined) {
 			if (criteria.folderId === null) {
@@ -43,6 +45,8 @@ export class ListFilesQuery {
 			query.where('disk', criteria.disk);
 		}
 
-		return query.paginate(criteria.pagination.page ?? 1, criteria.pagination.perPage ?? 20);
+		const result = await query.paginate(criteria.pagination.page ?? 1, criteria.pagination.perPage ?? 20);
+
+		return this.toPaginated(result, (row) => row.toDomain());
 	}
 }

@@ -1,10 +1,10 @@
-import { Heading } from '@foundry/design-system/heading';
-import { Icon } from '@foundry/design-system/icon';
-import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
-import { ReactNode } from 'react';
+import { Heading } from '../../atoms/heading/heading';
+import { Icon } from '../../atoms/icon/icon';
+import { Section } from '../../atoms/section/section';
+import type { ReactNode } from 'react';
 
-interface AdminMainBaseProps {
+interface AdminMainProps {
 	/** Page title shown in the `<Head>` tag and as the section heading. */
 	title: string;
 	/**
@@ -14,7 +14,7 @@ interface AdminMainBaseProps {
 	icon?: string;
 	/**
 	 * Optional node rendered to the right of the heading row (e.g. a primary
-	 * action `<Button>` or a `<NavLink>`).
+	 * action button or a navigation link).
 	 */
 	action?: ReactNode;
 	/** Page content — typically one or more `<Card>` components. */
@@ -32,21 +32,11 @@ interface AdminMainBaseProps {
  * spacing, and title handling are consistent across the admin section.
  *
  * @example
- * <AdminMain
- *   title="Manage users"
- *   icon="Users"
- *   action={
- *     <CanAccess permission="users.create">
- *       <Button href={urlFor('admin.identity.users_create.render')} variant="secondary" fitContent>
- *         Invite a user
- *       </Button>
- *     </CanAccess>
- *   }
- * >
- *   <Card>...</Card>
+ * <AdminMain title="Manage users" icon="Users" action={<Button variant="secondary">Invite a user</Button>}>
+ *   <Card>…</Card>
  * </AdminMain>
  */
-export function AdminMain(props: AdminMainBaseProps) {
+export function AdminMain(props: AdminMainProps) {
 	const { title, icon, action, children } = props;
 
 	return (
