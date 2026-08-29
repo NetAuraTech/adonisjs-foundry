@@ -10,8 +10,10 @@ import type User from '#identity/models/user';
 /**
  * Reset a user password using a verified reset token.
  *
- * Increments the attempt counter, validates the token, updates the password,
- * and expires all outstanding reset tokens atomically within a transaction.
+ * Resolves the user from the reset token — consuming exactly one attempt
+ * increment (see {@link TokenRepository.checkAttempts}) — then updates the
+ * password and expires all outstanding reset tokens atomically within a
+ * transaction.
  */
 @inject()
 export class ResetPasswordAction {
@@ -28,9 +30,6 @@ export class ResetPasswordAction {
 	 * @returns The updated {@link User} with the new password.
 	 */
 	async execute(payload: ResetPasswordPayload): Promise<User> {
-		await this.tokenRepository.incrementAttempts(payload.token);
-		await this.tokenRepository.checkAttempts(payload.token);
-
 		const user = await this.tokenRepository.getPasswordResetUser(payload.token);
 
 		await withTransaction(async () => {
