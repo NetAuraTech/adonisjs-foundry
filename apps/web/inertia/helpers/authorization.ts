@@ -12,7 +12,7 @@ import type { PermissionSlug, SystemRoleSlug } from '#start/permissions';
  * hasRole(user, 'admin') // true
  */
 export function hasRole(user: Data.Identity.User | undefined, roleSlug: SystemRoleSlug): boolean {
-	return user?.role.slug === roleSlug;
+	return user?.role?.slug === roleSlug;
 }
 
 /**
@@ -32,7 +32,7 @@ export function hasRole(user: Data.Identity.User | undefined, roleSlug: SystemRo
  * hasRawRole(user, 'billing_manager') // true
  */
 export function hasRawRole(user: Data.Identity.User | undefined, roleSlug: string): boolean {
-	return user?.role.slug === roleSlug;
+	return user?.role?.slug === roleSlug;
 }
 
 /**
@@ -46,7 +46,7 @@ export function hasRawRole(user: Data.Identity.User | undefined, roleSlug: strin
  * hasAnyRole(user, ['admin', 'user']) // true
  */
 export function hasAnyRole(user: Data.Identity.User | undefined, roleSlugs: SystemRoleSlug[]): boolean {
-	return !!user?.role && roleSlugs.some((slug) => slug === user.role.slug);
+	return !!user?.role && roleSlugs.some((slug) => slug === user.role?.slug);
 }
 
 /**
@@ -63,7 +63,7 @@ export function hasAnyRole(user: Data.Identity.User | undefined, roleSlugs: Syst
  * hasAllRoles(user, ['admin', 'user']) // false (user can only have one role)
  */
 export function hasAllRoles(user: Data.Identity.User | undefined, roleSlugs: SystemRoleSlug[]): boolean {
-	return !!user?.role && roleSlugs.every((slug) => slug === user.role.slug);
+	return !!user?.role && roleSlugs.every((slug) => slug === user.role?.slug);
 }
 
 /**
@@ -151,5 +151,5 @@ export function getPermissions(user: Data.Identity.User | undefined): string[] {
  * getRole(user) // 'admin'
  */
 export function getRole(user: Data.Identity.User | undefined): string | undefined {
-	return user?.role.slug ?? undefined;
+	return user?.role?.slug ?? undefined;
 }

@@ -26,7 +26,7 @@ export default class PermissionsResource {
 	readonly endpoints: PermissionsEndpoints = {
 		index: {
 			execute: () => this.listAllPermissionsAction.execute(),
-			transform: (entity) => PermissionTransformer.transform(entity),
+			transform: (entity) => PermissionTransformer.transform(entity.map((permission) => permission.toDomain())),
 		},
 	};
 }

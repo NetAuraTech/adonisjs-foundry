@@ -1,14 +1,16 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { AdminMain } from '@foundry/design-system/admin-main';
 import { Badge } from '@foundry/design-system/badge';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Heading } from '@foundry/design-system/heading';
 import { Label } from '@foundry/design-system/label';
 import { Paragraph } from '@foundry/design-system/paragraph';
 import { ReactElement } from 'react';
-import { Field } from '~/components/molecules/field';
-import { AdminMain } from '~/components/organisms/admin/admin_main';
+import { urlFor } from '~/client';
+import { sanitizeRichText } from '~/helpers/sanitization';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
@@ -95,7 +97,7 @@ export default function MaintenancePage(props: PageProps) {
 
 					{/* Toggle Form */}
 					<Form
-						route="admin.core.maintenance.update"
+						action={urlFor('admin.core.maintenance.update')}
 						className="grid gap-6"
 						onBefore={(visit) => {
 							const isValid = validation.validateAll(visit.data as Record<string, any>);
@@ -121,14 +123,9 @@ export default function MaintenancePage(props: PageProps) {
 									defaultValue={config.message}
 									placeholder={t('message.placeholder')}
 									rows={4}
-									errorMessage={validation.getValidationMessage('message')}
-									onChange={(event) => {
-										validation.handleChange('message', event.target.value);
-									}}
-									onBlur={(event) => {
-										validation.handleBlur('message', event!.target.value);
-									}}
+									validation={validation}
 									required
+									sanitizeValue={sanitizeRichText}
 								/>
 
 								<Field
@@ -138,6 +135,7 @@ export default function MaintenancePage(props: PageProps) {
 									defaultValue={config.allowedIps.join('\n')}
 									placeholder={t('allowed_ips.placeholder')}
 									rows={6}
+									sanitizeValue={sanitizeRichText}
 								/>
 								<Paragraph variant="muted" className="text-sm" spacing="xs">
 									{t('allowed_ips.help')}

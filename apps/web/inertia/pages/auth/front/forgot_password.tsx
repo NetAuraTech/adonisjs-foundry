@@ -1,11 +1,12 @@
 import { Form } from '@adonisjs/inertia/react';
+import { AuthIntro } from '@foundry/design-system/auth-intro';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
 import { urlFor } from '~/client';
-import { AuthIntro } from '~/components/molecules/auth/auth_intro';
-import { Field } from '~/components/molecules/field';
+import { sanitizeEmail } from '~/helpers/sanitization';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
@@ -42,7 +43,7 @@ export default function ForgotPasswordPage(props: ForgotPasswordPageProps) {
 					/>
 					<Card>
 						<Form
-							route="auth.forgot_password.execute"
+							action={urlFor('auth.forgot_password.execute')}
 							className="grid gap-6"
 							onBefore={(visit) => {
 								const isValid = validation.validateAll(visit.data as Record<string, any>);
@@ -56,15 +57,10 @@ export default function ForgotPasswordPage(props: ForgotPasswordPageProps) {
 										name="email"
 										type="email"
 										placeholder={t('email.placeholder')}
-										errorMessage={errors.email || validation.getValidationMessage('email')}
-										onChange={(event) => {
-											validation.handleChange('email', event.target.value);
-										}}
-										onBlur={(event) => {
-											validation.handleBlur('email', event!.target.value);
-										}}
+										validation={validation}
+										errors={errors}
 										required
-										sanitize
+										sanitizeValue={sanitizeEmail}
 									/>
 									<div className="flex gap-3">
 										<Button loading={processing} type={'submit'} fitContent>

@@ -1,5 +1,5 @@
 import { BaseTransformer } from '@adonisjs/core/transformers';
-import type FileFolder from '#file/models/file_folder';
+import type { FileFolder } from '#file/domain/file_folder';
 
 type FileFolderObject = {
 	id: number;
@@ -10,16 +10,14 @@ type FileFolderObject = {
 
 export default class FileFolderTransformer extends BaseTransformer<FileFolder> {
 	async toObject(): Promise<FileFolderObject> {
-		if (!this.resource.children) {
-			await this.resource.load('children');
-		}
-
 		const children = await Promise.all(
 			this.resource.children.map((child) => new FileFolderTransformer(child).toObject()),
 		);
 
 		return {
-			...this.pick(this.resource, ['id', 'name', 'parentId']),
+			id: this.resource.id.value,
+			name: this.resource.name,
+			parentId: this.resource.parentId,
 			children,
 		};
 	}

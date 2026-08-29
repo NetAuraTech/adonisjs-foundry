@@ -50,7 +50,7 @@ export default class ProfileResource {
 				return user;
 			},
 			execute: async (_context, prepared) => prepared,
-			transform: (entity) => UserTransformer.transform(entity),
+			transform: (entity) => UserTransformer.transform(entity.toDomain()),
 		},
 		update: {
 			prepare: async (context) => ({ user: context.auth.getUserOrFail() }),
@@ -61,7 +61,7 @@ export default class ProfileResource {
 					username: payload.username,
 				}),
 			refetch: (_context, prepared) => refetchProfile(prepared.user),
-			transform: (entity) => UserTransformer.transform(entity),
+			transform: (entity) => UserTransformer.transform(entity.toDomain()),
 		},
 	};
 }

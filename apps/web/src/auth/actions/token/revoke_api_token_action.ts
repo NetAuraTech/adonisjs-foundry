@@ -1,6 +1,5 @@
 import { inject } from '@adonisjs/core';
-import { UserRepository } from '#identity/repositories/user_repository';
-import { LogService } from '#log/services/log_service';
+import { ApiTokenService } from '#auth/services/api_token_service';
 import type User from '#identity/models/user';
 
 interface RevokeApiTokenPayload {
@@ -12,24 +11,19 @@ interface RevokeApiTokenPayload {
 /**
  * Revokes an opaque access token, typically the one presented on the
  * current request (`user.currentAccessToken.identifier`).
+ *
+ * Delegates to the auth-domain {@link ApiTokenService}, which owns the token
+ * lifecycle.
  */
 @inject()
 export class RevokeApiTokenAction {
-	constructor(
-		protected logService: LogService,
-		protected userRepository: UserRepository,
-	) {}
+	constructor(protected apiTokenService: ApiTokenService) {}
 
 	/**
 	 * @param payload - The token owner and the identifier of the token to delete.
 	 * @returns Nothing — revoking an already-gone token is not an error.
 	 */
 	async execute(payload: RevokeApiTokenPayload): Promise<void> {
-		await this.userRepository.deleteAccessToken(payload.user, payload.tokenIdentifier);
-
-		this.logService.logAuth('api_token.revoked', {
-			userId: payload.user.id,
-			userEmail: payload.user.email,
-		});
+		return this.apiTokenService.revoke(payload.user, payload.tokenIdentifier);
 	}
 }

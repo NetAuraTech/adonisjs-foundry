@@ -1,14 +1,14 @@
 import { Form } from '@adonisjs/inertia/react';
+import { Banner } from '@foundry/design-system/banner';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Data } from '@generated/data';
 import { useState } from 'react';
 import { urlFor } from '~/client';
-import { Banner } from '~/components/molecules/banner';
-import { Field } from '~/components/molecules/field';
 import { SettingsLayout } from '~/components/organisms/settings_layout';
-import { toLooseErrors } from '~/helpers/form_errors';
 import { getIcon } from '~/helpers/oauth';
+import { sanitizeEmail } from '~/helpers/sanitization';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
@@ -51,7 +51,7 @@ export default function AccountPage(props: PageProps) {
 			<SettingsLayout tab="account" translations={translations}>
 				<Card title={t('email.title')} subtitle={t('email.sub_title')}>
 					<Form
-						route="account.account.execute"
+						action={urlFor('account.account.execute')}
 						className="grid gap-6"
 						onBefore={(visit) => {
 							const isValid = validationEmailForm.validateAll(visit.data as Record<string, any>);
@@ -67,15 +67,10 @@ export default function AccountPage(props: PageProps) {
 									type="email"
 									defaultValue={user.email || ''}
 									placeholder={t('email.placeholder')}
-									errorMessage={toLooseErrors(errors).email || validationEmailForm.getValidationMessage('email')}
-									onChange={(event) => {
-										validationEmailForm.handleChange('email', event.target.value);
-									}}
-									onBlur={(event) => {
-										validationEmailForm.handleBlur('email', event!.target.value);
-									}}
+									validation={validationEmailForm}
+									errors={errors}
 									required
-									sanitize
+									sanitizeValue={sanitizeEmail}
 								/>
 								<Button loading={processing} type={'submit'} fitContent name="update_email_submit">
 									{t('email.submit')}
@@ -103,8 +98,7 @@ export default function AccountPage(props: PageProps) {
 
 									{isConnected ? (
 										<Form
-											route="auth.social.unlink"
-											routeParams={{ provider: provider }}
+											action={urlFor('auth.social.unlink', { provider: provider })}
 											onBefore={() => confirm(t('oauth.unlink.confirm', { provider: capitalize(provider) }))}
 										>
 											<button
@@ -131,7 +125,7 @@ export default function AccountPage(props: PageProps) {
 				</Card>
 				<Card title={t('password.title')} subtitle={t('password.sub_title')}>
 					<Form
-						route="account.account.execute"
+						action={urlFor('account.account.execute')}
 						className="grid gap-6"
 						onBefore={(visit) => {
 							const isValid = validationPasswordForm.validateAll(visit.data as Record<string, any>);
@@ -145,23 +139,16 @@ export default function AccountPage(props: PageProps) {
 									label={t('password.current.value')}
 									name="current_password"
 									type="password"
-									errorMessage={
-										errors.current_password || validationPasswordForm.getValidationMessage('current_password')
-									}
-									onChange={(event) => {
-										validationPasswordForm.handleChange('current_password', event.target.value);
-									}}
-									onBlur={(event) => {
-										validationPasswordForm.handleBlur('current_password', event!.target.value);
-									}}
+									validation={validationPasswordForm}
+									errors={errors}
 									required
-									sanitize
 								/>
 								<Field
 									label={t('password.new.value')}
 									name="password"
 									type="password"
-									errorMessage={errors.password || validationPasswordForm.getValidationMessage('password')}
+									validation={validationPasswordForm}
+									errors={errors}
 									onChange={(event) => {
 										setPassword(event.target.value);
 										validationPasswordForm.handleChange('password', event.target.value);
@@ -173,18 +160,14 @@ export default function AccountPage(props: PageProps) {
 										validationPasswordForm.handleBlur('password_confirmation', confirmPassword);
 									}}
 									required
-									sanitize={false}
 									helpText={t('password.new.help')}
-									helpClassName={validationPasswordForm.getHelpClassName('password')}
 								/>
 								<Field
 									label={t('password.confirm.value')}
 									name="password_confirmation"
 									type="password"
-									errorMessage={
-										toLooseErrors(errors).password_confirmation ||
-										validationPasswordForm.getValidationMessage('password_confirmation')
-									}
+									validation={validationPasswordForm}
+									errors={errors}
 									onChange={(event) => {
 										setConfirmPassword(event.target.value);
 										validationPasswordForm.handleChange('password_confirmation', event.target.value);
@@ -194,9 +177,7 @@ export default function AccountPage(props: PageProps) {
 										validationPasswordForm.handleBlur('password_confirmation', event!.target.value);
 									}}
 									required
-									sanitize={false}
 									helpText={t('password.confirm.help')}
-									helpClassName={validationPasswordForm.getHelpClassName('password_confirmation')}
 								/>
 								<Button loading={processing} type={'submit'} fitContent name="update_password_submit">
 									{t('password.submit')}
@@ -214,7 +195,8 @@ export default function AccountPage(props: PageProps) {
 						<div className="grid gap-4">
 							<Banner title={t('delete.confirm.title')} message={t('delete.confirm.sub_title')} type="danger" />
 							<Form
-								route="account.account.destroy"
+								action={urlFor('account.account.destroy')}
+								method="delete"
 								className="grid gap-6"
 								onBefore={(visit) => {
 									const isValid = validationDeleteForm.validateAll(visit.data as Record<string, any>);
@@ -227,16 +209,9 @@ export default function AccountPage(props: PageProps) {
 											label={t('delete.password')}
 											name="password"
 											type="password"
-											errorMessage={errors.password || validationDeleteForm.getValidationMessage('password')}
-											onChange={(event) => {
-												validationDeleteForm.handleChange('password', event.target.value);
-											}}
-											onBlur={(event) => {
-												validationDeleteForm.handleBlur('password', event!.target.value);
-											}}
+											validation={validationDeleteForm}
+											errors={errors}
 											required
-											sanitize={false}
-											helpClassName={validationDeleteForm.getHelpClassName('password')}
 										/>
 										<div className="flex gap-3">
 											<Button

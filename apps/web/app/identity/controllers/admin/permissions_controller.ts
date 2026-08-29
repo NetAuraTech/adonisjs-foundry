@@ -24,7 +24,7 @@ export default class PermissionsController {
 		const permissions = await this.listAllPermissionsAction.execute();
 
 		return inertia.render('permission/admin/index', {
-			permissions: PermissionTransformer.transform(permissions),
+			permissions: PermissionTransformer.transform(permissions.map((permission) => permission.toDomain())),
 			translations: buildPermissionsListPayload(this.i18n, permissions),
 		});
 	}

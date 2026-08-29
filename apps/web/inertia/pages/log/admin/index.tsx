@@ -1,15 +1,17 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { AdminMain } from '@foundry/design-system/admin-main';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
+import { Pagination } from '@foundry/design-system/pagination';
 import { SelectOption } from '@foundry/design-system/select';
 import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement } from 'react';
-import { Field } from '~/components/molecules/field';
-import { Pagination } from '~/components/molecules/pagination';
-import { AdminMain } from '~/components/organisms/admin/admin_main';
+import { urlFor } from '~/client';
+import { sanitizeText } from '~/helpers/sanitization';
 import { useMenu } from '~/hooks/use_admin';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
@@ -42,8 +44,9 @@ type PageProps = {
 
 export default function LogsIndexPage(props: PageProps) {
 	const { entries, filters, translations } = props;
-	const pageProps = usePage().props;
+	const pageProps = usePage<SharedProps>().props;
 	const { t, format } = useTranslation(translations);
+	const { t: commonT } = useTranslation(pageProps.common_translations);
 
 	const { getEntryIcon } = useMenu();
 
@@ -55,7 +58,8 @@ export default function LogsIndexPage(props: PageProps) {
 			<Card
 				header={
 					<Form
-						route="admin.log.logs.render"
+						action={urlFor('admin.log.logs.render')}
+						method="get"
 						className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-3 items-end"
 					>
 						<Field
@@ -64,7 +68,7 @@ export default function LogsIndexPage(props: PageProps) {
 							label={t('search.value')}
 							placeholder={t('search.placeholder')}
 							defaultValue={filters.search}
-							sanitize
+							sanitizeValue={sanitizeText}
 						/>
 						<Field
 							type="select"
@@ -72,7 +76,7 @@ export default function LogsIndexPage(props: PageProps) {
 							label={t('level.value')}
 							placeholder={t('level.placeholder')}
 							defaultValue={filters.level}
-							sanitize
+							sanitizeValue={sanitizeText}
 						>
 							{LEVELS.map((level) => (
 								<SelectOption key={`level-${level}`} label={t(`level.${level}`)} value={level} />
@@ -84,20 +88,41 @@ export default function LogsIndexPage(props: PageProps) {
 							label={t('category.value')}
 							placeholder={t('category.placeholder')}
 							defaultValue={filters.category}
-							sanitize
+							sanitizeValue={sanitizeText}
 						>
 							{CATEGORIES.map((category) => (
 								<SelectOption key={`category-${category}`} label={t(`category.${category}`)} value={category} />
 							))}
 						</Field>
-						<Field type="date" name="from" label={t('date.from')} defaultValue={filters.from?.slice(0, 10)} sanitize />
-						<Field type="date" name="to" label={t('date.to')} defaultValue={filters.to?.slice(0, 10)} sanitize />
+						<Field
+							type="date"
+							name="from"
+							label={t('date.from')}
+							defaultValue={filters.from?.slice(0, 10)}
+							sanitizeValue={sanitizeText}
+						/>
+						<Field
+							type="date"
+							name="to"
+							label={t('date.to')}
+							defaultValue={filters.to?.slice(0, 10)}
+							sanitizeValue={sanitizeText}
+						/>
 						<Button type="submit" name="logs-filter-submit" fitContent>
 							{t('search.filter')}
 						</Button>
 					</Form>
 				}
-				footer={<Pagination route="admin.log.logs.render" filters={filters} metadata={entries.metadata} />}
+				footer={
+					<Pagination
+						buildHref={(page) => urlFor('admin.log.logs.render', undefined, { qs: { ...filters, page } })}
+						filters={filters}
+						metadata={entries.metadata}
+						summaryText={(start, end, total) => commonT('pagination.showing', { start, end, total })}
+						previousTitle={commonT('pagination.previous')}
+						nextTitle={commonT('pagination.next')}
+					/>
+				}
 			>
 				<Table>
 					<Table.Header>

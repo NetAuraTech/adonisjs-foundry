@@ -25,7 +25,7 @@ export default class RolesCreateController {
 
 		return inertia.render('role/admin/form', {
 			role: null,
-			permissions: PermissionTransformer.transform(permissions),
+			permissions: PermissionTransformer.transform(permissions.map((permission) => permission.toDomain())),
 			translations: buildRolesFormPayload(this.i18n, permissions),
 		});
 	}
