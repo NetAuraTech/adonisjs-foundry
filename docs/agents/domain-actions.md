@@ -93,7 +93,8 @@ The `withTransaction()` utility starts a Lucid database transaction and binds it
 
 - **Actions depend on repositories** for data persistence.
 - **Actions may depend on infrastructure services** when needed (StorageService, CacheService, ImageOptimizerService).
-- **Actions never call other actions** — shared logic is inlined or extracted to repository/helper methods. Actions are leaf nodes.
+- **Actions may depend on domain services** — when a use case's logic is owned by a service (or shared by several entry points), the action stays a leaf and delegates its single `execute()` to the owning service.
+- **Actions never call other actions** — shared logic is inlined or extracted to repository/helper/service methods. Actions are leaf nodes.
 - **Actions import LogService** for audit logging of business events.
 
 ## Directory Structure

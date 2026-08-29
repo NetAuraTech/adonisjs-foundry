@@ -12,7 +12,7 @@ import { DeleteRoleAction } from '#identity/actions/role/delete_role_action';
 import { GetRoleDetailAction } from '#identity/actions/role/get_role_detail_action';
 import { ListRolesAction } from '#identity/actions/role/list_roles_action';
 import { UpdateRoleAction } from '#identity/actions/role/update_role_action';
-import type Role from '#identity/models/role';
+import type { Role } from '#identity/domain/role';
 import type { Infer } from '@vinejs/vine/types';
 
 type RoleListPagination = Awaited<ReturnType<ListRolesAction['execute']>>;

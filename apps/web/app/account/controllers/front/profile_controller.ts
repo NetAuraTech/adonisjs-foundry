@@ -19,7 +19,7 @@ export default class ProfileController {
 		const user = auth.user!;
 
 		return inertia.render('settings/profile/front/index', {
-			user: UserTransformer.transform(user),
+			user: UserTransformer.transform(user.toDomain()),
 			translations: buildProfilePayload(this.i18n),
 		});
 	}

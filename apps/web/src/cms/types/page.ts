@@ -321,14 +321,6 @@ export interface ContactFormField {
 	options?: string[];
 }
 
-export interface ContactFormProps {
-	title: string | null;
-	fields: ContactFormField[];
-	recipientEmail: string;
-	submitLabel: string;
-	successMessage: string;
-}
-
 /**
  * Maps each BlockType to its corresponding props interface.
  * Used to type-narrow block props in the renderer and the builder.

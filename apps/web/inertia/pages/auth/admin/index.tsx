@@ -1,8 +1,11 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { AdminMain } from '@foundry/design-system/admin-main';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Icon } from '@foundry/design-system/icon';
+import { Pagination } from '@foundry/design-system/pagination';
 import { SelectOption } from '@foundry/design-system/select';
 import Table from '@foundry/design-system/table';
 import { UserStatus } from '@foundry/design-system/user-status';
@@ -10,10 +13,8 @@ import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement } from 'react';
 import { urlFor } from '~/client';
-import { Field } from '~/components/molecules/field';
-import { Pagination } from '~/components/molecules/pagination';
-import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
+import { sanitizeText } from '~/helpers/sanitization';
 import { toUserStatusKind } from '~/helpers/user_status';
 import { useMenu } from '~/hooks/use_admin';
 import { Lang, useTranslation } from '~/hooks/use_translation';
@@ -33,8 +34,9 @@ type PageProps = {
 
 export default function UsersIndexPage(props: PageProps) {
 	const { users, roles, filters, translations } = props;
-	const pageProps = usePage().props;
+	const pageProps = usePage<SharedProps>().props;
 	const { t, format } = useTranslation(translations);
+	const { t: commonT } = useTranslation(pageProps.common_translations);
 
 	const { getEntryIcon } = useMenu();
 
@@ -52,14 +54,18 @@ export default function UsersIndexPage(props: PageProps) {
 		>
 			<Card
 				header={
-					<Form route="admin.identity.users.render" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+					<Form
+						action={urlFor('admin.identity.users.render')}
+						method="get"
+						className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end"
+					>
 						<Field
 							type="text"
 							name="search"
 							label={t('search.value')}
 							placeholder={t('search.placeholder')}
 							defaultValue={filters.search}
-							sanitize
+							sanitizeValue={sanitizeText}
 						/>
 						<Field
 							type="select"
@@ -67,7 +73,7 @@ export default function UsersIndexPage(props: PageProps) {
 							label={t('roles.value', { count: 1 })}
 							placeholder={t('roles.placeholder')}
 							defaultValue={filters.role}
-							sanitize
+							sanitizeValue={sanitizeText}
 						>
 							{roles &&
 								roles.map((role) => (
@@ -79,7 +85,16 @@ export default function UsersIndexPage(props: PageProps) {
 						</Button>
 					</Form>
 				}
-				footer={<Pagination route="admin.identity.users.render" filters={filters} metadata={users.metadata} />}
+				footer={
+					<Pagination
+						buildHref={(page) => urlFor('admin.identity.users.render', undefined, { qs: { ...filters, page } })}
+						filters={filters}
+						metadata={users.metadata}
+						summaryText={(start, end, total) => commonT('pagination.showing', { start, end, total })}
+						previousTitle={commonT('pagination.previous')}
+						nextTitle={commonT('pagination.next')}
+					/>
+				}
 			>
 				<Table>
 					<Table.Header>
@@ -142,14 +157,15 @@ export default function UsersIndexPage(props: PageProps) {
 												</Button>
 											</CanAccess>
 											<CanAccess permission="users.delete">
-												<Button
-													variant="icon_danger"
-													href={urlFor('admin.identity.users.destroy', { id: user.id })}
-													title={t('actions.delete', { username: user.username })}
-													fitContent
-												>
-													<Icon name="Trash" size={18} />
-												</Button>
+												<Form action={urlFor('admin.identity.users.destroy', { id: user.id })} method="delete">
+													<Button
+														variant="icon_danger"
+														title={t('actions.delete', { username: user.username })}
+														fitContent
+													>
+														<Icon name="Trash" size={18} />
+													</Button>
+												</Form>
 											</CanAccess>
 										</div>
 									</Table.Cell>

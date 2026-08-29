@@ -1,8 +1,9 @@
 import { BaseTransformer } from '@adonisjs/core/transformers';
+import i18nManager from '@adonisjs/i18n/services/main';
 import { resolveFileForRender } from '#file/services/file_resolver';
 import { classifyFileType } from '#file/services/file_type';
 import { StorageService } from '#file/services/storage_service';
-import type File from '#file/models/file';
+import type { File } from '#file/domain/file';
 
 /**
  * Options passed to the transformer when producing a render-ready prop.
@@ -29,17 +30,15 @@ export default class FileTransformer extends BaseTransformer<File> {
 		const hasIntent = Boolean(this.options.locale || this.options.altKey || this.options.altOverride);
 
 		const base = {
-			...this.pick(this.resource, [
-				'id',
-				'filename',
-				'originalName',
-				'mimeType',
-				'folderId',
-				'alts',
-				'extension',
-				'createdAt',
-			]),
-			size: this.resource.size as number,
+			id: this.resource.id.value,
+			filename: this.resource.filename,
+			originalName: this.resource.originalName,
+			mimeType: this.resource.mimeType,
+			folderId: this.resource.folderId,
+			alts: this.resource.getAlts().map((alt) => ({ locale: alt.locale, key: alt.key, value: alt.value })),
+			extension: this.resource.extension,
+			createdAt: this.resource.createdAt,
+			size: this.resource.size,
 			url: await this.storageService.url(this.resource.path, this.resource.disk),
 		};
 
@@ -48,7 +47,8 @@ export default class FileTransformer extends BaseTransformer<File> {
 		return {
 			...base,
 			type: resolved?.type ?? classifyFileType(this.resource.mimeType),
-			alt: resolved?.alt ?? this.resource.resolveAlt(this.options.locale ?? 'en', null, null),
+			alt:
+				resolved?.alt ?? this.resource.resolveAlt(this.options.locale ?? 'en', i18nManager.defaultLocale, null, null),
 			width: resolved?.width,
 			height: resolved?.height,
 			variants: resolved?.variants,

@@ -28,6 +28,6 @@ export class GetPreferencesAction {
 		if (!payload.user) return UserPreference.defaults().toPreferences();
 
 		const preference = await this.getUserPreferenceQuery.execute(payload.user.id);
-		return UserPreference.fromModel(preference).toPreferences();
+		return (preference ?? UserPreference.defaults()).toPreferences();
 	}
 }

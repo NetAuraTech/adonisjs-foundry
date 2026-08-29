@@ -45,6 +45,6 @@ export class FindFileAction {
 			throw new FileNotFoundException(payload.id);
 		}
 
-		return resolveFileForRender(file, payload, this.imageOptimizer);
+		return resolveFileForRender(file.toDomain(), payload, this.imageOptimizer);
 	}
 }

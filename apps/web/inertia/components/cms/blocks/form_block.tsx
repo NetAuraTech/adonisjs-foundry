@@ -1,5 +1,6 @@
 import { Form } from '@adonisjs/inertia/react';
 import { ReactNode } from 'react';
+import { urlFor } from '~/client';
 import type { ResolvedBlock } from '#cms/types/page';
 
 interface FormBlockProps {
@@ -15,19 +16,13 @@ export default function FormBlock(props: FormBlockProps) {
 	const { block, children } = props;
 	const { route, routeParams, className } = block.props;
 
-	const Component = route === null ? Div : Form;
+	if (!route) {
+		return <div>{children}</div>;
+	}
 
 	return (
-		<Component
-			className={['grid', 'gap-4', className].filter(Boolean).join(' ')}
-			route={route as any}
-			routeParams={routeParams}
-		>
+		<Form action={urlFor(route as any, routeParams)} className={['grid', 'gap-4', className].filter(Boolean).join(' ')}>
 			{children}
-		</Component>
+		</Form>
 	);
-}
-
-function Div({ children }: { children: ReactNode }) {
-	return <div>{children}</div>;
 }

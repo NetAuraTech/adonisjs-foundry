@@ -1,9 +1,12 @@
 import { SharedProps } from '@adonisjs/inertia/types';
+import { Footer } from '@foundry/design-system/footer';
+import { Header } from '@foundry/design-system/header';
+import { navLink } from '@foundry/design-system/nav-link';
+import { Paragraph } from '@foundry/design-system/paragraph';
 import { Head, usePage } from '@inertiajs/react';
 import { ReactElement, useEffect } from 'react';
 import { toast, Toaster } from 'sonner';
-import { Footer } from '~/components/organisms/footer';
-import { Header } from '~/components/organisms/header';
+import { urlFor } from '~/client';
 
 interface LayoutProps {
 	children: ReactElement<SharedProps>;
@@ -16,6 +19,30 @@ export default function Layout(props: LayoutProps) {
 	const { children } = props;
 	const { props: pageProps, url, flash } = usePage<SharedProps>();
 	const { app_name, app_url } = pageProps;
+
+	const homeHref = urlFor('core.home.render');
+
+	const footerDescription = (
+		<Paragraph variant="ink-inverted" className="text-sm font-light leading-relaxed max-w-md flex items-center gap-2">
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aut culpa cupiditate dignissimos distinctio,
+			doloribus et harum id impedit ipsa laboriosam laudantium modi numquam obcaecati omnis, quisquam quod sint ullam!
+		</Paragraph>
+	);
+
+	const footerCopyright = (
+		<Paragraph variant="ink-inverted" className="text-sm font-light leading-relaxed max-w-md flex items-center gap-2">
+			{`© 2026 ${app_name} — Tous droits réservés`}
+		</Paragraph>
+	);
+
+	const footerCredit = (
+		<Paragraph variant="ink-inverted" className="text-sm font-light leading-relaxed max-w-md flex items-center gap-2">
+			Fait avec ♥ par{' '}
+			<a href="https://www.netauratech.fr" className={navLink({ variant: 'external' })}>
+				NetAuraTech
+			</a>
+		</Paragraph>
+	);
 
 	useEffect(() => {
 		toast.dismiss();
@@ -58,10 +85,16 @@ export default function Layout(props: LayoutProps) {
 				<meta name="twitter:image:alt" content={`${app_name} - ${image_alt}`} />
 			</Head>
 			<>
-				<Header />
+				<Header appName={app_name} links={[{ label: 'Home', href: homeHref }]} />
 				<Toaster position="top-right" richColors />
 				{children}
-				<Footer />
+				<Footer
+					appName={app_name}
+					homeHref={homeHref}
+					description={footerDescription}
+					copyright={footerCopyright}
+					credit={footerCredit}
+				/>
 			</>
 		</>
 	);

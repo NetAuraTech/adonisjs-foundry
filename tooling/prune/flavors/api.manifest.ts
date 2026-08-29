@@ -22,6 +22,13 @@
  * events, nav, dashboard, sitemap, container, `config/shield.ts`,
  * `config/database.ts`).
  *
+ * The shared design-system workspace (`packages/design-system`) is pruned
+ * wholesale — the headless flavor ships no frontend to consume it — and the
+ * app workspace's dependency on it is dropped through the manifest's
+ * `dependencies` field. The root `workspaces` glob field stays
+ * flavor-invariant (identical to main's `apps/*` + `packages/*`): a glob
+ * matching nothing is valid, so the prune needs no root-manifest variation.
+ *
  * Per the "variation only in config/composition/docs files" rule, the
  * rewrite set is exactly the allowlisted composition files: the route module
  * index, feature flags, CORS, the view-layer asset middleware seam, the
@@ -1392,6 +1399,10 @@ const apiManifest: FlavorManifest = {
 		},
 
 		// ─── package.json (root) — monorepo scripts, single typecheck target ────
+		// The `workspaces` glob field is flavor-invariant: it stays identical to
+		// main's even though the design-system package is deleted wholesale,
+		// because a glob matching nothing is valid. Narrowing it would make the
+		// root rewrite diverge from main for no install benefit.
 		{
 			path: 'package.json',
 			content: [
@@ -1402,7 +1413,8 @@ const apiManifest: FlavorManifest = {
 				'  "license": "UNLICENSED",',
 				'  "type": "module",',
 				'  "workspaces": [',
-				'    "apps/*"',
+				'    "apps/*",',
+				'    "packages/*"',
 				'  ],',
 				'  "scripts": {',
 				'    "start": "npm run start --workspace @foundry/web",',

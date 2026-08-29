@@ -3,7 +3,7 @@
  * (`permissions.category.users`) while custom permissions store a plain
  * category name. Strips the system prefix so both forms share the same
  * grouping key, matching the payload built server-side by
- * `permissionCategoryKey` in `app/identity/helpers/i18n_payloads/permission_category.ts`.
+ * `permissionCategoryKey` in `app/identity/helpers/permission_category.ts`.
  */
 export function permissionCategoryKey(raw: string): string {
 	const prefix = 'permissions.category.';

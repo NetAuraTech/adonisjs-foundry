@@ -164,14 +164,3 @@ export interface Lock {
 
 /** Lock time-to-live in milliseconds. Reset on each new `LOCK_ACQUIRE`. */
 export const LOCK_TTL_MS = 5_000;
-
-/**
- * Key used to store a lock in the session service's inner Map.
- * Format: `"blockId:fieldKey"`
- */
-export type LockKey = `${string}:${string}`;
-
-/** Returns the canonical lock key for a given block field. */
-export function makeLockKey(blockId: string, fieldKey: string): LockKey {
-	return `${blockId}:${fieldKey}`;
-}

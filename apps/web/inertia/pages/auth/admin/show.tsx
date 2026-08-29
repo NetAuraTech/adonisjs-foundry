@@ -1,4 +1,5 @@
 import { SharedProps } from '@adonisjs/inertia/types';
+import { AdminMain } from '@foundry/design-system/admin-main';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
 import { Heading } from '@foundry/design-system/heading';
@@ -9,7 +10,6 @@ import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement } from 'react';
 import { urlFor } from '~/client';
-import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
 import { getIcon } from '~/helpers/oauth';
 import { toUserStatusKind } from '~/helpers/user_status';
@@ -153,7 +153,7 @@ export default function UsersShowPage(props: PageProps) {
 						<Separator />
 						<div className="grid">
 							<span className="font-bold">{t('roles.current')}</span>
-							<span className="text-ink-muted">{t(user.role.name as any)}</span>
+							<span className="text-ink-muted">{t(user.role?.name as any)}</span>
 						</div>
 						<span className="text-ink-muted">
 							{t('permissions.value', {

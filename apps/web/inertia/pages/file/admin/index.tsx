@@ -1,10 +1,13 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { AdminMain } from '@foundry/design-system/admin-main';
 import { Button, button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Icon } from '@foundry/design-system/icon';
 import { Modal } from '@foundry/design-system/modal';
 import { NavLink } from '@foundry/design-system/nav-link';
+import { Pagination } from '@foundry/design-system/pagination';
 import { SelectOption } from '@foundry/design-system/select';
 import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
@@ -12,11 +15,9 @@ import { usePage } from '@inertiajs/react';
 import { ReactElement, useState } from 'react';
 import { urlFor } from '~/client';
 import { FileUploadInput } from '~/components/atoms/file_upload_input';
-import { Field } from '~/components/molecules/field';
-import { Pagination } from '~/components/molecules/pagination';
-import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { FileAltEditor } from '~/components/organisms/files/file_alt_editor';
 import { CanAccess } from '~/guards/can_access';
+import { sanitizeText } from '~/helpers/sanitization';
 import { useMenu } from '~/hooks/use_admin';
 import { useNavLinkActive } from '~/hooks/use_nav_link_active';
 import { Lang, useTranslation } from '~/hooks/use_translation';
@@ -40,6 +41,7 @@ export default function FilesIndexPage(props: Props) {
 	const { files, filters, folders, translations } = props;
 	const pageProps = usePage<SharedProps>().props;
 	const { t, format } = useTranslation(translations);
+	const { t: commonT } = useTranslation(pageProps.common_translations);
 
 	const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 	const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -96,7 +98,11 @@ export default function FilesIndexPage(props: Props) {
 				<Card
 					header={
 						<div className="flex flex-wrap items-end justify-between gap-3">
-							<Form route="admin.file.files.render" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+							<Form
+								action={urlFor('admin.file.files.render')}
+								method="get"
+								className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end"
+							>
 								{filters.folder_id && (
 									<input type="hidden" name="folder_id" id="folder_id" defaultValue={filters.folder_id} />
 								)}
@@ -106,7 +112,7 @@ export default function FilesIndexPage(props: Props) {
 									label={t('search.value')}
 									placeholder="..."
 									defaultValue={filters.search}
-									sanitize
+									sanitizeValue={sanitizeText}
 								/>
 								<Field
 									type="select"
@@ -114,7 +120,7 @@ export default function FilesIndexPage(props: Props) {
 									label={t('search.type.value')}
 									placeholder={t('search.type.options.placeholder')}
 									defaultValue={filters.mime_type}
-									sanitize
+									sanitizeValue={sanitizeText}
 								>
 									<SelectOption label={t('search.type.options.image')} value="image" />
 									<SelectOption label={t('search.type.options.video')} value="video" />
@@ -132,7 +138,16 @@ export default function FilesIndexPage(props: Props) {
 							</div>
 						</div>
 					}
-					footer={<Pagination route="admin.file.files.render" filters={filters} metadata={files.metadata} />}
+					footer={
+						<Pagination
+							buildHref={(page) => urlFor('admin.file.files.render', undefined, { qs: { ...filters, page } })}
+							filters={filters}
+							metadata={files.metadata}
+							summaryText={(start, end, total) => commonT('pagination.showing', { start, end, total })}
+							previousTitle={commonT('pagination.previous')}
+							nextTitle={commonT('pagination.next')}
+						/>
+					}
 					className="md:flex-1"
 					padding="p-0"
 				>
@@ -204,8 +219,8 @@ export default function FilesIndexPage(props: Props) {
 																onBefore={() => {
 																	return window.confirm(t('actions.delete.confirm'));
 																}}
-																route="admin.file.files.destroy"
-																routeParams={{ id: file.id }}
+																action={urlFor('admin.file.files.destroy', { id: file.id })}
+																method="delete"
 															>
 																{({ processing }) => (
 																	<>
@@ -267,8 +282,8 @@ export default function FilesIndexPage(props: Props) {
 														onBefore={() => {
 															return window.confirm(t('actions.delete.confirm'));
 														}}
-														route="admin.file.files.destroy"
-														routeParams={{ id: selectedFile.id }}
+														action={urlFor('admin.file.files.destroy', { id: selectedFile.id })}
+														method="delete"
 													>
 														{({ processing }) => (
 															<>
@@ -377,7 +392,7 @@ const UploadFileForm = (props: UploadFileProps) => {
 
 	return (
 		<Form
-			route="admin.file.files.upload"
+			action={urlFor('admin.file.files.upload')}
 			className="grid gap-3"
 			onSuccess={() => {
 				if (callback) {

@@ -13,7 +13,12 @@ import type { FlavorManifest } from '../../../../../tooling/prune/types.js';
  * The fastest, cheapest CI check in the prune pipeline: every `delete` path in
  * every flavor manifest exists on `main`, every `rewrite` path is in the closed
  * allowlist, and no `package.json` rewrite (root or workspace) ever drifts from
- * the file main carries at the same path (version and dependency ranges).
+ * the file main carries at the same path (version and dependency ranges). The
+ * `workspaces` glob field is flavor-invariant — a glob matching nothing is
+ * valid, so no flavor ever narrows it — and a workspace package that a flavor
+ * deletes wholesale must be pruned from every rewritten manifest that still
+ * references it (the engine's workspace-level dependency pruning), or the
+ * flavor's `npm ci` breaks on a workspace package whose directory is gone.
  * Catches a renamed or deleted file — or a dependency bump
  * on main that desyncs the frozen rewrite from the lock file — before the
  * engine ever runs in a flavor job, so a stale manifest is reported at push
@@ -190,6 +195,142 @@ test.group('Manifest drift seam', () => {
 			[],
 			'every package.json rewrite must stay in sync with main — update the manifest when main bumps its version or dependency ranges:\n' +
 				drifted.map((d) => `  - [${d.flavor}] ${d.detail}`).join('\n'),
+		);
+	});
+
+	test('the workspaces glob field is flavor-invariant', async ({ assert }) => {
+		const manifests = await loadAllManifests();
+
+		if (manifests.length === 0) {
+			assert.isTrue(true, 'no flavor manifests yet — workspaces seam is a no-op until #5/#8');
+			return;
+		}
+
+		// The root workspaces manifest is the monorepo's composition surface: a
+		// flavor that deletes a whole package directory (e.g. the headless flavor
+		// deleting the design-system package) must keep main's globs verbatim,
+		// because a glob matching nothing is valid. Narrowing the globs per
+		// flavor would make the root rewrite diverge from main for no install
+		// benefit and would silently un-link future packages added to main.
+		const narrowed: { flavor: string; detail: string }[] = [];
+		for (const { flavor, manifest } of manifests) {
+			for (const rewrite of manifest.rewrites) {
+				if (rewrite.path !== 'package.json' && !rewrite.path.endsWith('/package.json')) {
+					continue;
+				}
+
+				const mainPkg = JSON.parse(readFileSync(join(REPO_ROOT, rewrite.path), 'utf8')) as {
+					workspaces?: string[];
+				};
+				if (!Array.isArray(mainPkg.workspaces)) {
+					continue;
+				}
+
+				const parsed = JSON.parse(rewrite.content) as { workspaces?: unknown };
+				if (JSON.stringify(parsed.workspaces ?? null) !== JSON.stringify(mainPkg.workspaces)) {
+					narrowed.push({
+						flavor,
+						detail:
+							`${rewrite.path}: workspaces is ` +
+							`${JSON.stringify(parsed.workspaces ?? null)} (main is ${JSON.stringify(mainPkg.workspaces)}) — ` +
+							"keep main's globs verbatim; a glob matching nothing is valid",
+					});
+				}
+			}
+		}
+
+		assert.deepEqual(
+			narrowed,
+			[],
+			"the workspaces glob field is flavor-invariant — restore main's globs in the rewrite:\n" +
+				narrowed.map((d) => `  - [${d.flavor}] ${d.detail}`).join('\n'),
+		);
+	});
+
+	test('a deleted workspace package is pruned from every rewritten manifest that references it', async ({ assert }) => {
+		const manifests = await loadAllManifests();
+
+		if (manifests.length === 0) {
+			assert.isTrue(true, 'no flavor manifests yet — package-removal seam is a no-op until #5/#8');
+			return;
+		}
+
+		// A flavor may delete a workspace package wholesale (a `delete` entry
+		// whose directory carries a `package.json` on main). The frozen
+		// rewrites are snapshots of main, so they still list the dependency —
+		// the engine removes it through the manifest's `dependencies` prune.
+		// Simulate that prune per rewritten manifest and fail if a deleted
+		// package survives in any dependency map: the flavor's `npm ci` would
+		// then try to resolve a workspace package whose directory is gone.
+		const depMaps = ['dependencies', 'devDependencies', 'optionalDependencies', 'peerDependencies'] as const;
+		const violations: { flavor: string; detail: string }[] = [];
+
+		for (const { flavor, manifest } of manifests) {
+			const removedPackages = new Map<string, string[]>();
+			for (const relPath of manifest.delete) {
+				const pkgFile = join(REPO_ROOT, relPath, 'package.json');
+				if (!existsSync(pkgFile)) {
+					continue;
+				}
+				const name = (JSON.parse(readFileSync(pkgFile, 'utf8')) as { name?: string }).name;
+				if (name) {
+					removedPackages.set(name, [...(removedPackages.get(name) ?? []), relPath]);
+				}
+			}
+			if (removedPackages.size === 0) {
+				continue;
+			}
+
+			for (const rewrite of manifest.rewrites) {
+				if (rewrite.path !== 'package.json' && !rewrite.path.endsWith('/package.json')) {
+					continue;
+				}
+
+				const frozen = JSON.parse(rewrite.content) as Record<string, Record<string, string> | undefined>;
+				const referenced = [...removedPackages.keys()].filter((name) =>
+					depMaps.some((map) => frozen[map]?.[name] !== undefined),
+				);
+				if (referenced.length === 0) {
+					continue;
+				}
+
+				// Apply the manifest's dependency prunes targeting this exact
+				// file, mirroring the engine's behavior (default file is the
+				// root manifest).
+				const pruned: Record<string, Record<string, string>> = {};
+				for (const map of depMaps) {
+					pruned[map] = { ...(frozen[map] ?? {}) };
+				}
+				for (const entry of manifest.dependencies ?? []) {
+					if ((entry.file ?? 'package.json') !== rewrite.path) {
+						continue;
+					}
+					for (const name of entry.packages) {
+						for (const map of depMaps) {
+							delete pruned[map][name];
+						}
+					}
+				}
+
+				for (const name of referenced) {
+					if (depMaps.some((map) => pruned[map][name] !== undefined)) {
+						violations.push({
+							flavor,
+							detail:
+								`${rewrite.path}: still references "${name}" after the dependency prune, ` +
+								`but the flavor deletes ${removedPackages.get(name)?.join(', ')} — ` +
+								"add the package to the manifest's `dependencies` entry for this file",
+						});
+					}
+				}
+			}
+		}
+
+		assert.deepEqual(
+			violations,
+			[],
+			'a flavor that deletes a workspace package must prune its dependency from every rewritten manifest that references it:\n' +
+				violations.map((v) => `  - [${v.flavor}] ${v.detail}`).join('\n'),
 		);
 	});
 });

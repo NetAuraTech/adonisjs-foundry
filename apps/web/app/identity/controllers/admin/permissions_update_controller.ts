@@ -31,7 +31,7 @@ export default class PermissionsUpdateController {
 		}
 
 		return inertia.render('permission/admin/form', {
-			permission: PermissionTransformer.transform(permission),
+			permission: PermissionTransformer.transform(permission.toDomain()),
 			translations: buildPermissionsFormPayload(this.i18n),
 		});
 	}

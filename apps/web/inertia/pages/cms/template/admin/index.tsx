@@ -1,7 +1,9 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { AdminMain } from '@foundry/design-system/admin-main';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Icon } from '@foundry/design-system/icon';
 import { Paragraph } from '@foundry/design-system/paragraph';
 import { SelectOption } from '@foundry/design-system/select';
@@ -10,9 +12,8 @@ import { router, usePage } from '@inertiajs/react';
 import { ReactElement, useState } from 'react';
 import { urlFor } from '~/client';
 import { captureTemplateThumbnail } from '~/components/cms/utils/template_thumbnail';
-import { Field } from '~/components/molecules/field';
-import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
+import { sanitizeText } from '~/helpers/sanitization';
 import { useMenu } from '~/hooks/use_admin';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
@@ -69,14 +70,18 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
 		>
 			<Card
 				header={
-					<Form route="admin.cms.templates.render" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+					<Form
+						action={urlFor('admin.cms.templates.render')}
+						method="get"
+						className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end"
+					>
 						<Field
 							type="text"
 							name="search"
 							label={t('search.value')}
 							placeholder={t('search.placeholder')}
 							defaultValue={filters.search}
-							sanitize
+							sanitizeValue={sanitizeText}
 						/>
 						<Field
 							type="select"
@@ -84,7 +89,7 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
 							label={t('search.type.value')}
 							placeholder={t('search.type.placeholder')}
 							defaultValue={filters.type}
-							sanitize
+							sanitizeValue={sanitizeText}
 						>
 							<SelectOption label={t('search.type.page')} value="page" />
 							<SelectOption label={t('search.type.block')} value="block" />
@@ -161,11 +166,11 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
 										</CanAccess>
 										<CanAccess permission="templates.delete">
 											<Form
+												action={urlFor('admin.cms.templates.destroy', { id: template.id })}
+												method="delete"
 												onBefore={() => {
 													return window.confirm(t('delete.confirm'));
 												}}
-												route="admin.cms.templates.destroy"
-												routeParams={{ id: template.id }}
 											>
 												<Button
 													variant="icon_danger"

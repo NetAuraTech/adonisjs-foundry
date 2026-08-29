@@ -1,8 +1,7 @@
-import { nestTranslation, type TranslationNodes } from '#app/core/helpers/i18n_payloads/nest';
-import { permissionCategoryKey } from '#app/identity/helpers/i18n_payloads/permission_category';
+import { nestTranslation, type TranslationNodes } from '#app/core/helpers/translation_tree';
+import { permissionCategoryKey } from '#app/identity/helpers/permission_category';
 import { createI18nEntry } from '#core/contracts/i18n_translator';
 import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_translator';
-import type Permission from '#identity/models/permission';
 
 /**
  * The flat i18n key mapping for the permissions listing page. The per-permission
@@ -57,7 +56,7 @@ export type AdminPermissionsIndexTranslations = BuildPayloadResult<typeof PERMIS
  */
 export function buildPermissionsListPayload(
 	i18n: I18nTranslator,
-	permissions: Permission[],
+	permissions: ReadonlyArray<{ slug: string; name: string; description: string | null; category: string }>,
 ): AdminPermissionsIndexTranslations {
 	const categories: TranslationNodes = {};
 	const items: TranslationNodes = {};
