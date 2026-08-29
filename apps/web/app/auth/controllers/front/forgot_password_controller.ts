@@ -3,13 +3,14 @@ import { buildForgotPasswordPayload } from '#app/auth/helpers/i18n_payloads/forg
 import { forgotPasswordValidator } from '#app/auth/validators/auth';
 import { I18nService } from '#app/core/helpers/i18n_service';
 import { SendPasswordResetAction } from '#auth/actions/password/send_password_reset_action';
-import User from '#identity/models/user';
+import { FindUserByEmailAction } from '#identity/actions/user/find_user_by_email_action';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()
 export default class ForgotPasswordController {
 	constructor(
 		protected i18n: I18nService,
+		protected findUserByEmailAction: FindUserByEmailAction,
 		protected sendPasswordResetAction: SendPasswordResetAction,
 	) {}
 
@@ -26,7 +27,7 @@ export default class ForgotPasswordController {
 
 		const payload = await forgotPasswordValidator.validate(request.all());
 
-		const user = await User.findBy('email', payload.email);
+		const user = await this.findUserByEmailAction.execute({ email: payload.email });
 
 		if (user) {
 			await this.sendPasswordResetAction.execute({ user });
