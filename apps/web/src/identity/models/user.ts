@@ -9,7 +9,7 @@ import UserPreference from '#account/models/user_preference';
 import { TOKEN_TYPES } from '#auth/enums/token_type';
 import Token from '#auth/models/token';
 import { UserSchema } from '#database/schema';
-import { UserStatus } from '#identity/domain/user';
+import { User as UserEntity } from '#identity/domain/user';
 import Role from '#identity/models/role';
 import env from '#start/env';
 import type { BelongsTo, HasMany, HasOne } from '@adonisjs/lucid/types/relations';
@@ -92,7 +92,22 @@ export default class User extends compose(UserSchema, AuthFinder) {
 
 	@computed()
 	get status(): string {
-		return UserStatus.derive(this.hasPendingInvite, this.isEmailVerified);
+		return this.toDomain().status();
+	}
+
+	/**
+	 * Project this model onto its pure domain representation. The derived
+	 * lifecycle status lives on the domain object; this getter is a thin
+	 * delegation.
+	 */
+	toDomain(): UserEntity {
+		return UserEntity.fromModel({
+			id: this.id,
+			username: this.username,
+			email: this.email,
+			hasPendingInvite: this.hasPendingInvite,
+			isEmailVerified: this.isEmailVerified,
+		});
 	}
 
 	get isEmailVerified(): boolean {

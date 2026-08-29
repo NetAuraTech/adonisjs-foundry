@@ -1,5 +1,7 @@
 import { randomBytes } from 'node:crypto';
-import type { FullToken } from '#auth/enums/token_type';
+import { TokenIdentifier } from '#auth/domain/identifiers';
+import { Entity } from '#core/domain/entity';
+import type { FullToken, TokenType } from '#auth/enums/token_type';
 
 /**
  * The two parts of a split token.
@@ -22,22 +24,68 @@ export interface GeneratedToken extends TokenParts {
 }
 
 /**
- * Pure domain rules for the selector/validator token.
+ * Pure domain object for an auth {@link Token}.
  *
- * Encapsulates token generation, parsing, and masking outside the
- * persistence layer, so the {@link TokenRepository} (persistence) and the
- * mail flows (presentation links) share one implementation.
+ * Carries the token's persisted state (identity, owner, type, selector,
+ * expiration, attempt counter) and the invariants over it — expiration and
+ * attempt-lockout — outside the persistence layer. The selector/validator
+ * generation, parsing, and masking rules live on the class as static
+ * helpers, shared by the {@link TokenRepository} (persistence) and the mail
+ * flows (presentation links). Hydrate one from a model with
+ * {@link Token.fromModel}.
  */
-export const Token = {
+export class Token extends Entity<{
+	id: TokenIdentifier;
+	userId: number | null;
+	type: TokenType;
+	selector: string | null;
+	expiresAt: Date | null;
+	attempts: number;
+}> {
+	private constructor(
+		readonly id: TokenIdentifier,
+		readonly userId: number | null,
+		readonly type: TokenType,
+		readonly selector: string | null,
+		readonly expiresAt: Date | null,
+		readonly attempts: number,
+	) {
+		super({ id, userId, type, selector, expiresAt, attempts });
+	}
+
+	/**
+	 * Hydrate a domain token from its Lucid model representation.
+	 *
+	 * @param model - The persisted token. The hashed validator column is
+	 *   deliberately not carried — hash verification is a persistence concern.
+	 */
+	static fromModel(model: {
+		id: number;
+		userId: number | null;
+		type: TokenType;
+		selector: string | null;
+		expiresAt: Date | null;
+		attempts: number;
+	}): Token {
+		return new Token(
+			TokenIdentifier.of(model.id),
+			model.userId,
+			model.type,
+			model.selector,
+			model.expiresAt,
+			model.attempts,
+		);
+	}
+
 	/**
 	 * Generates a random hex token string.
 	 *
 	 * @param length - Length of the token in bytes (default 32, 64 hex chars).
 	 * @returns The random hex string.
 	 */
-	generate(length: number = 32): string {
+	static generate(length: number = 32): string {
 		return randomBytes(length).toString('hex');
-	},
+	}
 
 	/**
 	 * Generates a selector/validator token pair.
@@ -52,13 +100,13 @@ export const Token = {
 	 * // validator: "def456..." (hashed before storage)
 	 * // token: "abc123....def456..." (sent to the user)
 	 */
-	generateSplit(selectorLength: number = 32, validatorLength: number = 32): GeneratedToken {
-		const selector = this.generate(selectorLength);
-		const validator = this.generate(validatorLength);
+	static generateSplit(selectorLength: number = 32, validatorLength: number = 32): GeneratedToken {
+		const selector = Token.generate(selectorLength);
+		const validator = Token.generate(validatorLength);
 		const token = `${selector}.${validator}` as FullToken;
 
 		return { selector, validator, token };
-	},
+	}
 
 	/**
 	 * Splits a full `selector.validator` string into its two components.
@@ -66,7 +114,7 @@ export const Token = {
 	 * @param token - The full token string.
 	 * @returns The parts, or `null` when the format is invalid.
 	 */
-	split(token: FullToken): TokenParts | null {
+	static split(token: FullToken): TokenParts | null {
 		const parts = token.split('.');
 
 		if (parts.length !== 2) {
@@ -80,7 +128,7 @@ export const Token = {
 		}
 
 		return { selector, validator };
-	},
+	}
 
 	/**
 	 * Masks a token for safe logging.
@@ -91,7 +139,7 @@ export const Token = {
 	 * @param token - The token (or selector) to mask.
 	 * @returns The masked representation.
 	 */
-	mask(token: string): string {
+	static mask(token: string): string {
 		if (token.length <= 12) {
 			return token;
 		}
@@ -101,5 +149,26 @@ export const Token = {
 		const masked = '*'.repeat(Math.min(token.length - 12, 20));
 
 		return `${start}${masked}${end}`;
-	},
-} as const;
+	}
+
+	/**
+	 * Whether this token is past its expiration.
+	 *
+	 * A token without an expiration stamp is invalid, not timeless.
+	 *
+	 * @param now - The reference time (defaults to the current time).
+	 */
+	isExpired(now: Date = new Date()): boolean {
+		return this.expiresAt === null || this.expiresAt.getTime() <= now.getTime();
+	}
+
+	/**
+	 * Whether the attempt counter has reached the allowed maximum, i.e. the
+	 * token is locked against brute-force verification.
+	 *
+	 * @param maxAttempts - The maximum number of verification attempts.
+	 */
+	hasExceededAttempts(maxAttempts: number): boolean {
+		return this.attempts >= maxAttempts;
+	}
+}

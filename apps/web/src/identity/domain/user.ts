@@ -1,3 +1,4 @@
+import { Entity } from '#core/domain/entity';
 import { UserIdentifier } from '#identity/domain/identifiers';
 
 /**
@@ -33,14 +34,22 @@ export const UserStatus = {
  * carries the derived lifecycle status and the username-derivation rules.
  * Hydrate one from a model with {@link User.fromModel}.
  */
-export class User {
+export class User extends Entity<{
+	id: UserIdentifier;
+	username: string;
+	email: string;
+	hasPendingInvite: boolean;
+	isEmailVerified: boolean;
+}> {
 	private constructor(
 		readonly id: UserIdentifier,
 		readonly username: string,
 		readonly email: string,
 		private readonly hasPendingInvite: boolean,
 		private readonly isEmailVerified: boolean,
-	) {}
+	) {
+		super({ id, username, email, hasPendingInvite, isEmailVerified });
+	}
 
 	/**
 	 * Hydrate a domain user from its Lucid model representation.

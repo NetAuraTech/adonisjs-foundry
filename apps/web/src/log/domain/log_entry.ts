@@ -1,3 +1,5 @@
+import { Entity } from '#core/domain/entity';
+import { LogEntryIdentifier } from '#log/domain/identifiers';
 import { LogCategory, LogLevel } from '#log/types/logging';
 import type { CreateLogEntryInput, LogContext } from '#log/types/logging';
 
@@ -9,11 +11,26 @@ import type { CreateLogEntryInput, LogContext } from '#log/types/logging';
  * precedence over the legacy `context` keys) and the error serialisation — so
  * the persistence pipeline never re-implements them. The Lucid `LogEntry`
  * model is the persistence representation; build one from a raw log request
- * with {@link LogEntry.fromRequest} and hand it to the repository with
- * {@link LogEntry.toRecord}.
+ * with {@link LogEntry.fromRequest}, hand it to the repository with
+ * {@link LogEntry.toRecord}, and hydrate a persisted one with
+ * {@link LogEntry.fromModel}. An entry not persisted yet carries a `null`
+ * id until the persistence layer assigns one.
  */
-export class LogEntry {
+export class LogEntry extends Entity<{
+	id: LogEntryIdentifier | null;
+	level: LogLevel;
+	category: LogCategory;
+	message: string;
+	actorId: number | null;
+	actorEmail: string | null;
+	ip: string | null;
+	userAgent: string | null;
+	requestId: string | null;
+	context: Record<string, any>;
+	error: { name: string; message: string; stack?: string } | null;
+}> {
 	private constructor(
+		readonly id: LogEntryIdentifier | null,
 		readonly level: LogLevel,
 		readonly category: LogCategory,
 		readonly message: string,
@@ -24,7 +41,9 @@ export class LogEntry {
 		readonly requestId: string | null,
 		readonly context: Record<string, any>,
 		readonly error: { name: string; message: string; stack?: string } | null,
-	) {}
+	) {
+		super({ id, level, category, message, actorId, actorEmail, ip, userAgent, requestId, context, error });
+	}
 
 	/**
 	 * Normalise a raw log request into a persistable entry.
@@ -32,7 +51,8 @@ export class LogEntry {
 	 * Explicit top-level identity fields take precedence over the legacy
 	 * `context` keys (`userId`, `userEmail`, `ip`, `userAgent`, `requestId`);
 	 * `metadata` is merged into `context`; the `Error` instance is serialised
-	 * into a plain block.
+	 * into a plain block. The entry is not persisted yet, so its id is
+	 * `null`.
 	 *
 	 * @param entry - The raw log request with resolved level and category.
 	 */
@@ -52,6 +72,7 @@ export class LogEntry {
 		const context = entry.context ?? {};
 
 		return new LogEntry(
+			null,
 			entry.level,
 			entry.category,
 			entry.message,
@@ -62,6 +83,39 @@ export class LogEntry {
 			entry.requestId ?? context.requestId ?? null,
 			{ ...context, ...(entry.metadata ?? {}) },
 			entry.error ? { name: entry.error.name, message: entry.error.message, stack: entry.error.stack } : null,
+		);
+	}
+
+	/**
+	 * Hydrate a domain log entry from its Lucid model representation.
+	 *
+	 * @param model - The persisted log entry row.
+	 */
+	static fromModel(model: {
+		id: number;
+		level: LogLevel;
+		category: LogCategory;
+		message: string;
+		actorId: number | null;
+		actorEmail: string | null;
+		ip: string | null;
+		userAgent: string | null;
+		requestId: string | null;
+		context: Record<string, any> | null;
+		error: { name: string; message: string; stack?: string } | null;
+	}): LogEntry {
+		return new LogEntry(
+			LogEntryIdentifier.of(model.id),
+			model.level,
+			model.category,
+			model.message,
+			model.actorId,
+			model.actorEmail,
+			model.ip,
+			model.userAgent,
+			model.requestId,
+			model.context ?? {},
+			model.error,
 		);
 	}
 
