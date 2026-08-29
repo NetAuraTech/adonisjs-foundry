@@ -352,6 +352,63 @@ export class TokenRepository extends BaseRepository {
 	}
 
 	/**
+	 * Re-acquires a token row with an exclusive lock and re-asserts that it is
+	 * still usable, making the read and the act atomic.
+	 *
+	 * Must be the **first query** inside the transaction that acts on the
+	 * token (see /docs/agents/toctou-protection.md): the exclusive
+	 * `SELECT ... FOR UPDATE` serializes concurrent presentations of the same
+	 * token, so by the time a second transaction reaches this query the first
+	 * has already committed — and a consumed token is expired, so the re-check
+	 * below rejects it.
+	 *
+	 * Attempt accounting stays outside the transaction: the presentation that
+	 * consumed the increment ({@link verify} → {@link checkAttempts}) already
+	 * happened, so a rolled-back act does not lose the attempt.
+	 *
+	 * A rejected presentation is audited with `logSecurity` before the
+	 * exception is thrown — a token consumed concurrently is a security
+	 * signal, not an ordinary invalid-token case.
+	 *
+	 * @param token - The raw `selector.validator` token.
+	 * @param type - The expected token type.
+	 * @returns The locked token record, still valid and not expired.
+	 * @throws {InvalidTokenException} If the token is malformed, missing, or
+	 *   no longer valid (e.g. consumed by a concurrent presentation).
+	 *
+	 * @example
+	 * await withTransaction(async () => {
+	 *   await tokenRepository.lockUsableToken(token, TOKEN_TYPES.PASSWORD_RESET)
+	 *   // safe to act on the token — no concurrent transaction can modify this row
+	 * })
+	 */
+	async lockUsableToken(token: FullToken, type: TokenType): Promise<TokenModel> {
+		const parts = Token.split(token);
+
+		if (!parts) {
+			throw new InvalidTokenException();
+		}
+
+		const record = await TokenModel.query(this.client())
+			.where('selector', parts.selector)
+			.where('type', type)
+			.forUpdate()
+			.first();
+
+		if (!record || record.isExpired) {
+			this.logService.logSecurity('core.token.double_use_rejected', {
+				userId: record?.userId ?? undefined,
+				type,
+				token: Token.mask(token),
+			});
+
+			throw new InvalidTokenException();
+		}
+
+		return record;
+	}
+
+	/**
 	 * Resolves an email verification token to its associated {@link User}.
 	 *
 	 * Convenience wrapper around {@link getUserFromToken} scoped to the

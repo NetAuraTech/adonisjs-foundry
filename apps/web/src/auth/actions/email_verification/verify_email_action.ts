@@ -1,9 +1,9 @@
 import { inject } from '@adonisjs/core';
+import { TOKEN_TYPES, type FullToken } from '#auth/enums/token_type';
 import { TokenRepository } from '#auth/repositories/token_repository';
 import { withTransaction } from '#core/services/with_transaction';
 import { UserRepository } from '#identity/repositories/user_repository';
 import { LogService } from '#log/services/log_service';
-import type { FullToken } from '#auth/enums/token_type';
 import type User from '#identity/models/user';
 
 interface VerifyEmailPayload {
@@ -13,8 +13,11 @@ interface VerifyEmailPayload {
 /**
  * Verify a user email address using a token from the verification link.
  *
- * Marks the email as verified and expires all outstanding verification tokens
- * atomically within a transaction.
+ * Marks the email as verified and expires all outstanding verification
+ * tokens atomically within a transaction. The token row is re-acquired with
+ * an exclusive lock as the first query of the transaction, so a concurrent
+ * double-use is serialized: the second presentation sees the expired token
+ * and is rejected (see /docs/agents/toctou-protection.md).
  */
 @inject()
 export class VerifyEmailAction {
@@ -34,6 +37,7 @@ export class VerifyEmailAction {
 		const user = await this.tokenRepository.getEmailVerificationUser(payload.token);
 
 		await withTransaction(async () => {
+			await this.tokenRepository.lockUsableToken(payload.token, TOKEN_TYPES.EMAIL_VERIFICATION);
 			await this.userRepository.markEmailAsVerified(user);
 			await this.tokenRepository.expireEmailVerificationTokens(user);
 		});

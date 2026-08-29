@@ -1,5 +1,6 @@
 import { inject } from '@adonisjs/core';
 import { Token } from '#auth/domain/token';
+import { TOKEN_TYPES } from '#auth/enums/token_type';
 import { TokenRepository } from '#auth/repositories/token_repository';
 import { type ResetPasswordPayload } from '#auth/types/auth';
 import { withTransaction } from '#core/services/with_transaction';
@@ -13,7 +14,10 @@ import type User from '#identity/models/user';
  * Resolves the user from the reset token — consuming exactly one attempt
  * increment (see {@link TokenRepository.checkAttempts}) — then updates the
  * password and expires all outstanding reset tokens atomically within a
- * transaction.
+ * transaction. The token row is re-acquired with an exclusive lock as the
+ * first query of the transaction, so a concurrent double-use is serialized:
+ * the second presentation sees the expired token and is rejected
+ * (see /docs/agents/toctou-protection.md).
  */
 @inject()
 export class ResetPasswordAction {
@@ -33,6 +37,7 @@ export class ResetPasswordAction {
 		const user = await this.tokenRepository.getPasswordResetUser(payload.token);
 
 		await withTransaction(async () => {
+			await this.tokenRepository.lockUsableToken(payload.token, TOKEN_TYPES.PASSWORD_RESET);
 			await this.userRepository.updatePassword(user, payload.password);
 			await this.tokenRepository.expirePasswordResetTokens(user);
 		});

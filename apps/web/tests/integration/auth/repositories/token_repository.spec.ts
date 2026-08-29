@@ -5,6 +5,7 @@ import { TOKEN_TYPES, type FullToken } from '#auth/enums/token_type';
 import InvalidTokenException from '#auth/exceptions/invalid_token_exception';
 import MaxAttemptsExceededException from '#auth/exceptions/max_attempts_exceeded_exception';
 import { TokenRepository } from '#auth/repositories/token_repository';
+import { withTransaction } from '#core/services/with_transaction';
 import { UserFactory } from '#factories/identity/user_factory';
 import { LogService } from '#log/services/log_service';
 import type Token from '#auth/models/token';
@@ -226,5 +227,42 @@ test.group('TokenRepository', () => {
 
 		await repo.deleteInvitationTokens(u.id);
 		assert.isFalse(await repo.exists({ userId: u.id, type: TOKEN_TYPES.PENDING_INVITE }));
+	});
+
+	test('lockUsableToken() returns the locked record for a valid token inside a transaction', async ({ assert }) => {
+		const u = await uniqueUser('lock');
+		const { plainToken, tokenModel } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);
+
+		const locked = await withTransaction(async () => {
+			return await repo.lockUsableToken(plainToken, TOKEN_TYPES.PASSWORD_RESET);
+		});
+
+		assert.equal(locked.id, tokenModel.id);
+	});
+
+	test('lockUsableToken() throws InvalidTokenException for expired, missing, or malformed tokens', async ({
+		assert,
+	}) => {
+		const u = await uniqueUser('lockbad');
+		const { plainToken } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET, -1);
+
+		// Expired token
+		await assert.rejects(
+			async () => withTransaction(() => repo.lockUsableToken(plainToken, TOKEN_TYPES.PASSWORD_RESET)),
+			InvalidTokenException,
+		);
+
+		// Missing selector
+		await assert.rejects(
+			async () => withTransaction(() => repo.lockUsableToken('nosuchsel.val' as FullToken, TOKEN_TYPES.PASSWORD_RESET)),
+			InvalidTokenException,
+		);
+
+		// Malformed token
+		await assert.rejects(
+			async () =>
+				withTransaction(() => repo.lockUsableToken('malformed_token' as FullToken, TOKEN_TYPES.PASSWORD_RESET)),
+			InvalidTokenException,
+		);
 	});
 });
