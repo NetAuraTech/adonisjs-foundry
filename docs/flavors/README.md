@@ -10,6 +10,8 @@ AdonisJS Foundry ships as three flavors, one per branch. `main`, the full flavor
 
 **Choosing a flavor** is about what you ship to the browser: `full` = want the CMS/visual builder; `inertia` = want auth + admin + hand-written pages; `api` = headless backend consumed by an external front.
 
+The shared design-system workspace (`packages/design-system`) ships with `full` and `inertia` only — the headless `api` flavor prunes it wholesale. The root `workspaces` glob field stays flavor-invariant across all branches: a glob matching nothing is valid, so the prune needs no root-manifest variation.
+
 ## Branches as artifacts
 
 - `main` (**full**) is the **only branch edited by humans**.

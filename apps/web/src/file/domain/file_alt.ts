@@ -1,3 +1,5 @@
+import { ValueObject } from '#core/domain/value_object';
+
 /**
  * Pure domain object for a localized alt-text entry of a file.
  *
@@ -6,12 +8,14 @@
  * Lucid `FileAlt` model is the persistence representation; hydrate one from a
  * model with {@link FileAlt.fromModel}.
  */
-export class FileAlt {
+export class FileAlt extends ValueObject<{ locale: string; key: string; value: string }> {
 	private constructor(
 		readonly locale: string,
 		readonly key: string,
 		readonly value: string,
-	) {}
+	) {
+		super({ locale, key, value });
+	}
 
 	/**
 	 * Hydrate a domain alt entry from its Lucid model representation.

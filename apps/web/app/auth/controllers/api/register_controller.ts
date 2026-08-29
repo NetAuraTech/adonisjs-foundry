@@ -36,7 +36,7 @@ export default class RegisterController {
 
 		await preloadUserRoleWithPermissions(user);
 
-		const serialized = await serialize(UserTransformer.transform(user));
+		const serialized = await serialize(UserTransformer.transform(user.toDomain()));
 
 		return response.created(serialized);
 	}

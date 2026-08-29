@@ -1,8 +1,6 @@
-import { nestTranslation, type TranslationNodes } from '#app/core/helpers/i18n_payloads/nest';
+import { nestTranslation, type TranslationNodes } from '#app/core/helpers/translation_tree';
 import { createI18nEntry } from '#core/contracts/i18n_translator';
 import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_translator';
-import type Permission from '#identity/models/permission';
-import type Role from '#identity/models/role';
 
 /**
  * The flat i18n key mapping for the user detail page. The `roles` and
@@ -65,20 +63,22 @@ type PermissionPayload = { category: Record<string, string> } & TranslationNodes
  * fetches.
  *
  * @param i18n - The request-scoped {@link I18nTranslator}.
- * @param role - The role assigned to the user.
+ * @param role - The role assigned to the user, or `null` when the user has none.
  * @param permissions - The permissions to build data-driven entries for.
  * @returns The user detail `t` object with every UI string resolved.
  */
 export function buildUsersShowPayload(
 	i18n: I18nTranslator,
-	role: Role,
-	permissions: Permission[],
+	role: { slug: string; name: string; description: string | null } | null,
+	permissions: ReadonlyArray<{ slug: string; name: string; description: string | null; category: string }>,
 ): AdminUsersShowTranslations {
 	const rolesEntries: TranslationNodes = {};
-	nestTranslation(rolesEntries, role.slug, {
-		value: `roles.${role.slug}.value`,
-		description: `roles.${role.slug}.description`,
-	});
+	if (role) {
+		nestTranslation(rolesEntries, role.slug, {
+			value: `roles.${role.slug}.value`,
+			description: `roles.${role.slug}.description`,
+		});
+	}
 
 	const permissionsPayload: PermissionPayload = { category: {} };
 

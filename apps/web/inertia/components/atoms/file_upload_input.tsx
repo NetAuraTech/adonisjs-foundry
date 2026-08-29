@@ -42,7 +42,7 @@ interface FileUploadInputProps {
  *
  * @example
  * // Inside an Inertia Form
- * <Form route="admin.file.files.upload">
+ * <Form action={urlFor('admin.file.files.upload')}>
  *   <FileUploadInput name="file" accept="image/*,.pdf" maxSize={10 * 1024 * 1024} required />
  *   <Button type="submit">Upload</Button>
  * </Form>

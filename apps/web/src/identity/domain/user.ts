@@ -1,4 +1,6 @@
+import { Entity } from '#core/domain/entity';
 import { UserIdentifier } from '#identity/domain/identifiers';
+import type { Role } from '#identity/domain/role';
 
 /**
  * The lifecycle status of a user, derived purely from whether they hold a
@@ -33,21 +35,58 @@ export const UserStatus = {
  * carries the derived lifecycle status and the username-derivation rules.
  * Hydrate one from a model with {@link User.fromModel}.
  */
-export class User {
+export class User extends Entity<{
+	id: UserIdentifier;
+	username: string;
+	email: string;
+	hasPendingInvite: boolean;
+	isEmailVerified: boolean;
+	emailVerifiedAt: Date | null;
+	hasGithubId: boolean;
+	hasGoogleId: boolean;
+	hasFacebookId: boolean;
+	role: Role | null;
+	createdAt: Date | null;
+	updatedAt: Date | null;
+}> {
 	private constructor(
 		readonly id: UserIdentifier,
 		readonly username: string,
 		readonly email: string,
 		private readonly hasPendingInvite: boolean,
 		private readonly isEmailVerified: boolean,
-	) {}
+		readonly emailVerifiedAt: Date | null,
+		readonly hasGithubId: boolean,
+		readonly hasGoogleId: boolean,
+		readonly hasFacebookId: boolean,
+		readonly role: Role | null,
+		readonly createdAt: Date | null,
+		readonly updatedAt: Date | null,
+	) {
+		super({
+			id,
+			username,
+			email,
+			hasPendingInvite,
+			isEmailVerified,
+			emailVerifiedAt,
+			hasGithubId,
+			hasGoogleId,
+			hasFacebookId,
+			role,
+			createdAt,
+			updatedAt,
+		});
+	}
 
 	/**
 	 * Hydrate a domain user from its Lucid model representation.
 	 *
 	 * @param model - The persisted user. `hasPendingInvite` is a runtime flag
 	 *   set by the model's post-fetch hook; `isEmailVerified` may be supplied
-	 *   directly or derived from `emailVerifiedAt`.
+	 *   directly or derived from `emailVerifiedAt`. `role` is a domain-hydrated
+	 *   relation: `null` means the user has no role or the relation was not
+	 *   loaded.
 	 */
 	static fromModel(model: {
 		id: number;
@@ -56,6 +95,12 @@ export class User {
 		hasPendingInvite?: boolean;
 		isEmailVerified?: boolean;
 		emailVerifiedAt?: Date | null;
+		githubId?: string | null;
+		googleId?: string | null;
+		facebookId?: string | null;
+		role?: Role | null;
+		createdAt?: Date | null;
+		updatedAt?: Date | null;
 	}): User {
 		const isEmailVerified =
 			model.isEmailVerified ?? (model.emailVerifiedAt !== null && model.emailVerifiedAt !== undefined);
@@ -65,6 +110,13 @@ export class User {
 			model.email,
 			!!model.hasPendingInvite,
 			isEmailVerified,
+			model.emailVerifiedAt ?? null,
+			!!model.githubId,
+			!!model.googleId,
+			!!model.facebookId,
+			model.role ?? null,
+			model.createdAt ?? null,
+			model.updatedAt ?? null,
 		);
 	}
 

@@ -20,8 +20,8 @@ import { DeleteUserAction } from '#identity/actions/user/delete_user_action';
 import { GetUserDetailAction } from '#identity/actions/user/get_user_detail_action';
 import { ListUsersAction } from '#identity/actions/user/list_users_action';
 import { UpdateUserAction } from '#identity/actions/user/update_user_action';
+import type { User } from '#identity/domain/user';
 import type Role from '#identity/models/role';
-import type User from '#identity/models/user';
 
 type UserListPagination = Awaited<ReturnType<ListUsersAction['execute']>>;
 type UserCreateResult = Awaited<ReturnType<CreateUserAction['execute']>>;
@@ -99,7 +99,7 @@ export default class UsersResource {
 				component: 'auth/admin/index',
 				render: async (_context, prepared, payload, result) => ({
 					users: UserTransformer.paginate(result.all(), result.getMeta()),
-					roles: RoleTransformer.transform(prepared.roles),
+					roles: RoleTransformer.transform(prepared.roles.map((role) => role.toDomain())),
 					filters: payload,
 					translations: buildUsersListPayload(this.i18n, prepared.roles),
 				}),
@@ -136,7 +136,7 @@ export default class UsersResource {
 				component: 'auth/admin/form',
 				render: async (_context, prepared, _payload, user) => ({
 					user: UserTransformer.transform(user),
-					roles: RoleTransformer.transform(prepared.roles),
+					roles: RoleTransformer.transform(prepared.roles.map((role) => role.toDomain())),
 					translations: buildUsersFormPayload(this.i18n, prepared.roles),
 				}),
 			},

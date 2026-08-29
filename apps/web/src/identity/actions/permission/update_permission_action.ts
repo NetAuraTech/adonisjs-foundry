@@ -46,7 +46,7 @@ export class UpdatePermissionAction {
 			throw new RowNotFoundException(Permission);
 		}
 
-		if (permission.isSystem) {
+		if (!permission.canBeModified) {
 			throw new SystemPermissionImmutableException(permission.slug);
 		}
 

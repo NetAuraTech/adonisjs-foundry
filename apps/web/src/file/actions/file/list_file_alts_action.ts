@@ -2,7 +2,7 @@ import { inject } from '@adonisjs/core';
 import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import CmsFile from '#file/models/file';
 import { ListFileAltsQuery } from '#file/queries/list_file_alts_query';
-import type FileAlt from '#file/models/file_alt';
+import type { FileAlt as FileAltDomain } from '#file/domain/file_alt';
 
 interface ListFileAltsPayload {
 	fileId: number;
@@ -25,7 +25,7 @@ export class ListFileAltsAction {
 	 * @example
 	 * const alts = await listFileAltsAction.execute({ fileId: 1 })
 	 */
-	async execute(payload: ListFileAltsPayload): Promise<FileAlt[]> {
+	async execute(payload: ListFileAltsPayload): Promise<FileAltDomain[]> {
 		const alts = await this.listFileAltsQuery.execute(payload.fileId);
 
 		if (alts === null) {

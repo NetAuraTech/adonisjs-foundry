@@ -21,13 +21,6 @@ export interface BackupResult {
 	error?: string;
 }
 
-export interface BackupManifest {
-	type: BackupType;
-	createdAt: string;
-	tables: string[];
-	fullBackupReference?: string;
-}
-
 /**
  * Context shared across the pipeline and helpers.
  * All external dependencies are passed in here to keep the pipeline

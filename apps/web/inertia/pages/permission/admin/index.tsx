@@ -1,5 +1,6 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { AdminMain } from '@foundry/design-system/admin-main';
 import { Badge } from '@foundry/design-system/badge';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
@@ -8,7 +9,6 @@ import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
 import { ReactElement } from 'react';
 import { urlFor } from '~/client';
-import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
 import { permissionCategoryKey } from '~/helpers/permissions';
 import { useMenu } from '~/hooks/use_admin';
@@ -102,6 +102,8 @@ export default function PermissionsIndexPage(props: PageProps) {
 															</CanAccess>
 															<CanAccess permission="permissions.delete">
 																<Form
+																	action={urlFor('admin.identity.permissions.destroy', { id: permission.id })}
+																	method="delete"
 																	onBefore={() => {
 																		return window.confirm(
 																			t('delete.confirm', {
@@ -109,8 +111,6 @@ export default function PermissionsIndexPage(props: PageProps) {
 																			}),
 																		);
 																	}}
-																	route="admin.identity.permissions.destroy"
-																	routeParams={{ id: permission.id }}
 																>
 																	<Button
 																		variant="icon_danger"

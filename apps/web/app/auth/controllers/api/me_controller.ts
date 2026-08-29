@@ -20,6 +20,6 @@ export default class MeController {
 
 		await preloadUserRoleWithPermissions(user);
 
-		return ctx.serialize(UserTransformer.transform(user));
+		return ctx.serialize(UserTransformer.transform(user.toDomain()));
 	}
 }

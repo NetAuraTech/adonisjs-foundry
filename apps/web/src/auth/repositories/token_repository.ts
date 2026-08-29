@@ -217,7 +217,7 @@ export class TokenRepository extends BaseRepository {
 
 		if (!record) return;
 
-		if (record.attempts >= this.MAX_ATTEMPTS) {
+		if (record.toDomain().hasExceededAttempts(this.MAX_ATTEMPTS)) {
 			throw new MaxAttemptsExceededException();
 		}
 

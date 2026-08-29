@@ -1,5 +1,6 @@
 import { SharedProps } from '@adonisjs/inertia/types';
 import { Button } from '@foundry/design-system/button';
+import { Field } from '@foundry/design-system/field';
 import { Heading } from '@foundry/design-system/heading';
 import { Icon } from '@foundry/design-system/icon';
 import { Input } from '@foundry/design-system/input';
@@ -15,8 +16,8 @@ import PresenceBar from '~/components/cms/builder/PresenceBar';
 import PreviewIframe from '~/components/cms/builder/PreviewIframe';
 import SavePageTemplateModal from '~/components/cms/builder/SavePageTemplateModal';
 import { useBuilderSync } from '~/components/cms/hooks/use_builder_sync';
-import { Field } from '~/components/molecules/field';
 import { CanAccess } from '~/guards/can_access';
+import { sanitizeRichText, sanitizeText } from '~/helpers/sanitization';
 import { useTranslation } from '~/hooks/use_translation';
 import type { PageEditorTranslations } from '#app/cms/helpers/i18n_payloads/page_editor';
 import type { BuilderOperation } from '#cms/types/builder';
@@ -312,6 +313,7 @@ export default function PagesEditPage({ page, translations }: Props) {
 										name="title"
 										defaultValue={title}
 										onChange={(e) => setTitle(e.target.value)}
+										sanitizeValue={sanitizeText}
 									/>
 									<Field
 										label={t('form.title.slug_placeholder')}
@@ -319,6 +321,7 @@ export default function PagesEditPage({ page, translations }: Props) {
 										name="slug"
 										defaultValue={slug}
 										onChange={(e) => setSlug(e.target.value)}
+										sanitizeValue={sanitizeText}
 									/>
 								</div>
 								<Separator />
@@ -331,6 +334,7 @@ export default function PagesEditPage({ page, translations }: Props) {
 										defaultValue={metaTitle}
 										onChange={(e) => setMetaTitle(e.target.value)}
 										placeholder={t('form.meta_title.placeholder')}
+										sanitizeValue={sanitizeText}
 									/>
 									<Field
 										label={t('form.meta_description.value')}
@@ -339,6 +343,7 @@ export default function PagesEditPage({ page, translations }: Props) {
 										defaultValue={metaDescription}
 										onChange={(e) => setMetaDescription(e.target.value)}
 										rows={3}
+										sanitizeValue={sanitizeRichText}
 									/>
 								</div>
 							</div>
