@@ -11,7 +11,7 @@ import Role from '#identity/models/role';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()
-export default class UsersShowsController {
+export default class UserShowController {
 	constructor(
 		protected i18n: I18nService,
 		protected getUserDetailAction: GetUserDetailAction,
