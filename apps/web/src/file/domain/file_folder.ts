@@ -1,3 +1,4 @@
+import { Entity } from '#core/domain/entity';
 import { FileFolderIdentifier } from '#file/domain/identifiers';
 
 /**
@@ -8,12 +9,18 @@ import { FileFolderIdentifier } from '#file/domain/identifiers';
  * model is the persistence representation; hydrate one from a model with
  * {@link FileFolder.fromModel}.
  */
-export class FileFolder {
+export class FileFolder extends Entity<{
+	id: FileFolderIdentifier;
+	name: string;
+	parentId: number | null;
+}> {
 	private constructor(
 		readonly id: FileFolderIdentifier,
 		readonly name: string,
 		readonly parentId: number | null,
-	) {}
+	) {
+		super({ id, name, parentId });
+	}
 
 	/**
 	 * Hydrate a domain folder from its Lucid model representation.

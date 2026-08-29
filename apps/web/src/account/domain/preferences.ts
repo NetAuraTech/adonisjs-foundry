@@ -1,3 +1,4 @@
+import { ValueObject } from '#core/domain/value_object';
 import { DEFAULT_PREFERENCES, type Locale, type Theme, type UserPreferences } from '#account/types/preferences';
 
 /**
@@ -10,11 +11,13 @@ import { DEFAULT_PREFERENCES, type Locale, type Theme, type UserPreferences } fr
  * Hydrate one from a model row (or a missing row) with
  * {@link UserPreference.fromModel}.
  */
-export class UserPreference {
+export class UserPreference extends ValueObject<{ theme: Theme; locale: Locale }> {
 	private constructor(
 		readonly theme: Theme,
 		readonly locale: Locale,
-	) {}
+	) {
+		super({ theme, locale });
+	}
 
 	/**
 	 * Hydrate a domain preference from its persisted row, applying the

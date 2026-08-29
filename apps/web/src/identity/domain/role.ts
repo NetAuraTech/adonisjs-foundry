@@ -1,3 +1,4 @@
+import { Entity } from '#core/domain/entity';
 import { RoleIdentifier } from '#identity/domain/identifiers';
 
 /**
@@ -9,13 +10,20 @@ import { RoleIdentifier } from '#identity/domain/identifiers';
  * deleted, or grants a specific permission. Hydrate one from a model with
  * {@link Role.fromModel}.
  */
-export class Role {
+export class Role extends Entity<{
+	id: RoleIdentifier;
+	slug: string;
+	isSystem: boolean;
+	permissionSlugs: ReadonlySet<string>;
+}> {
 	private constructor(
 		readonly id: RoleIdentifier,
 		readonly slug: string,
 		readonly isSystem: boolean,
 		private readonly permissionSlugs: ReadonlySet<string>,
-	) {}
+	) {
+		super({ id, slug, isSystem, permissionSlugs });
+	}
 
 	/**
 	 * Hydrate a domain role from its Lucid model representation.

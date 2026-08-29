@@ -1,3 +1,4 @@
+import { Entity } from '#core/domain/entity';
 import { FileAlt } from '#file/domain/file_alt';
 import { FileIdentifier } from '#file/domain/identifiers';
 
@@ -10,7 +11,15 @@ import { FileIdentifier } from '#file/domain/identifiers';
  * the two rendering paths. The Lucid `File` model is the persistence
  * representation; hydrate one from a model with {@link File.fromModel}.
  */
-export class File {
+export class File extends Entity<{
+	id: FileIdentifier;
+	filename: string;
+	mimeType: string;
+	extension: string;
+	size: number;
+	folderId: number | null;
+	alts: readonly FileAlt[];
+}> {
 	private constructor(
 		readonly id: FileIdentifier,
 		readonly filename: string,
@@ -19,7 +28,9 @@ export class File {
 		readonly size: number,
 		readonly folderId: number | null,
 		private readonly alts: readonly FileAlt[],
-	) {}
+	) {
+		super({ id, filename, mimeType, extension, size, folderId, alts });
+	}
 
 	/**
 	 * Hydrate a domain file from its Lucid model representation.

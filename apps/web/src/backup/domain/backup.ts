@@ -1,3 +1,4 @@
+import { ValueObject } from '#core/domain/value_object';
 import backupConfig from '#config/backup';
 import type { BackupType } from '#backup/types/backup';
 
@@ -10,7 +11,13 @@ import type { BackupType } from '#backup/types/backup';
  * directly on the Drive disk (no ORM persistence), so this value object is the
  * domain's only persistence-adjacent type.
  */
-export class BackupMetadata {
+export class BackupMetadata extends ValueObject<{
+	filename: string;
+	type: BackupType;
+	size: number;
+	createdAt: Date;
+	path: string;
+}> {
 	/**
 	 * The grammar of a backup artifact filename: a strategy type and a
 	 * `YYYY-MM-DD`/`HHmmss` timestamp, followed by the optional
@@ -24,7 +31,9 @@ export class BackupMetadata {
 		readonly size: number,
 		readonly createdAt: Date,
 		readonly path: string,
-	) {}
+	) {
+		super({ filename, type, size, createdAt, path });
+	}
 
 	/**
 	 * Generate the artifact filename for a strategy type:
