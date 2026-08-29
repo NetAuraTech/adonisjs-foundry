@@ -67,16 +67,27 @@ export default class File extends FileSchema {
 	 * @param override - Optional inline override, used only when no alt matches
 	 */
 	resolveAlt(locale: string, key: string | null, override?: string | null): string {
-		const fileDomain = FileDomain.fromModel({
+		return this.toDomain().resolveAlt(locale, i18nManager.defaultLocale, key, override ?? null);
+	}
+
+	/**
+	 * Project this model onto its pure domain representation. The alt-text
+	 * resolution priority chain lives on the domain object; `resolveAlt`
+	 * above is a thin delegation.
+	 */
+	toDomain(): FileDomain {
+		return FileDomain.fromModel({
 			id: this.id,
 			filename: this.filename,
+			originalName: this.originalName,
 			mimeType: this.mimeType,
 			extension: this.extension,
 			size: Number(this.size),
+			path: this.path,
+			disk: this.disk,
 			folderId: this.folderId,
 			alts: (this.alts ?? []) as { locale: string; key: string; value: string }[],
+			createdAt: this.createdAt?.toJSDate() ?? null,
 		});
-
-		return fileDomain.resolveAlt(locale, i18nManager.defaultLocale, key, override ?? null);
 	}
 }

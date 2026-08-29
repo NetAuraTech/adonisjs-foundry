@@ -1,10 +1,5 @@
 import { inject } from '@adonisjs/core';
-import { TokenMailService } from '#auth/services/token_mail_service';
-import EmailAlreadyExistsException from '#core/exceptions/email_already_exists_exception';
-import { withTransaction } from '#core/services/with_transaction';
-import { extractNameFromEmail } from '#identity/domain/user';
-import { UserRepository } from '#identity/repositories/user_repository';
-import { LogService } from '#log/services/log_service';
+import { InvitationService } from '#auth/services/invitation_service';
 import type User from '#identity/models/user';
 
 interface SendInvitationPayload {
@@ -15,16 +10,12 @@ interface SendInvitationPayload {
 /**
  * Create a pending user and send an invitation email.
  *
- * The invitation mail is sent directly through the auth-domain
- * {@link TokenMailService} — no event bus is involved.
+ * Delegates to the auth-domain {@link InvitationService}, which owns the
+ * "create pending user + send invitation mail" flow.
  */
 @inject()
 export class SendInvitationAction {
-	constructor(
-		protected logService: LogService,
-		protected userRepository: UserRepository,
-		protected tokenMailService: TokenMailService,
-	) {}
+	constructor(protected invitationService: InvitationService) {}
 
 	/**
 	 * Execute invitation sending.
@@ -34,31 +25,6 @@ export class SendInvitationAction {
 	 * @throws {EmailAlreadyExistsException} When the email is already registered.
 	 */
 	async execute(payload: SendInvitationPayload): Promise<User> {
-		const existingUser = await this.userRepository.findByEmail(payload.email);
-
-		if (existingUser) {
-			this.logService.logAuth('invitation.failed.email_exists', {
-				userEmail: payload.email,
-			});
-			throw new EmailAlreadyExistsException(payload.email);
-		}
-
-		const user = await withTransaction(async () => {
-			return this.userRepository.create({
-				email: payload.email,
-				username: extractNameFromEmail(payload.email),
-				password: null,
-				roleId: payload.roleId ?? null,
-			} as any);
-		});
-
-		await this.tokenMailService.sendInvitationEmail(user);
-
-		this.logService.logAuth('invitation.sent', {
-			userId: user.id,
-			userEmail: user.email,
-		});
-
-		return user;
+		return this.invitationService.sendInvitation(payload);
 	}
 }

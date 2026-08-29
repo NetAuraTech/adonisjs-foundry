@@ -1,3 +1,4 @@
+import { urlFor } from '~/client';
 import { StatCard } from '~/components/dashboard_sections/stat_card';
 import { CanAccess } from '~/guards/can_access';
 import { useTranslation } from '~/hooks/use_translation';
@@ -29,7 +30,7 @@ function TemplateStatCard({ stats, translations }: DashboardSectionCardProps) {
 				icon="LayoutTemplate"
 				label={t('cms.cards.templates')}
 				value={template.templates}
-				route="admin.cms.templates.render"
+				href={urlFor('admin.cms.templates.render')}
 			/>
 		</CanAccess>
 	);

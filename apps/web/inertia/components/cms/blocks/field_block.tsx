@@ -1,5 +1,6 @@
+import { Field } from '@foundry/design-system/field';
 import { SelectOption } from '@foundry/design-system/select';
-import { Field } from '~/components/molecules/field';
+import { getSanitizer } from '~/helpers/sanitization';
 import type { ResolvedBlock } from '#cms/types/page';
 
 interface FieldBlockProps {
@@ -16,6 +17,7 @@ export default function FieldBlock({ block }: FieldBlockProps) {
 			placeholder={p.placeholder}
 			required={p.required}
 			helpText={p.helpText}
+			sanitizeValue={(value) => getSanitizer(p.type, true)(value)}
 		>
 			{p.options &&
 				p.options.map((option) => <SelectOption key={option.value} value={option.value} label={option.label} />)}

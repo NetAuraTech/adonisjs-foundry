@@ -8,7 +8,7 @@ import { urlFor } from '~/client';
 import { CanAccess } from '~/guards/can_access';
 import { useNavLinkActive } from '~/hooks/use_nav_link_active';
 import { useTranslation } from '~/hooks/use_translation';
-import type { TranslationNodes } from '#app/core/helpers/i18n_payloads/nest';
+import type { TranslationNodes } from '#app/core/helpers/translation_tree';
 
 const tabs = [
 	{ id: 'profile', label: 'header.tabs.profile', route: 'account.profile.render' },

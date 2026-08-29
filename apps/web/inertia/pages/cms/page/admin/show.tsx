@@ -1,5 +1,6 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { AdminMain } from '@foundry/design-system/admin-main';
 import { Button, button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
 import { Heading } from '@foundry/design-system/heading';
@@ -9,7 +10,6 @@ import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement } from 'react';
 import { urlFor } from '~/client';
-import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
@@ -68,11 +68,11 @@ export default function PagesShowPage(props: Props) {
 								</CanAccess>
 								<CanAccess permission="pages.delete">
 									<Form
+										action={urlFor('admin.cms.pages.destroy', { id: page.id })}
+										method="delete"
 										onBefore={() => {
 											return window.confirm(t('actions.delete.confirm'));
 										}}
-										route="admin.cms.pages.destroy"
-										routeParams={{ id: page.id }}
 									>
 										<Button
 											variant="icon_danger"
@@ -225,11 +225,10 @@ function HomepageSection({ page, translations }: { page: Data.Cms.Page; translat
 				</div>
 				{!page.isHomepage && (
 					<Form
+						action={urlFor('admin.cms.pages.set_homepage', { id: page.id })}
 						onBefore={() => {
 							return window.confirm(t('homepage.confirm'));
 						}}
-						route="admin.cms.pages.set_homepage"
-						routeParams={{ id: page.id }}
 					>
 						<Button variant="secondary" fitContent>
 							{t('homepage.submit')}

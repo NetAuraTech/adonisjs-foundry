@@ -1,16 +1,16 @@
 import { Form } from '@adonisjs/inertia/react';
+import { AuthIntro } from '@foundry/design-system/auth-intro';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { NavLink } from '@foundry/design-system/nav-link';
 import { Paragraph } from '@foundry/design-system/paragraph';
 import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import { urlFor } from '~/client';
-import { AuthIntro } from '~/components/molecules/auth/auth_intro';
 import { AuthProviders } from '~/components/molecules/auth/auth_providers';
-import { Field } from '~/components/molecules/field';
-import { toLooseErrors } from '~/helpers/form_errors';
+import { sanitizeEmail } from '~/helpers/sanitization';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
@@ -68,7 +68,7 @@ export default function RegisterPage(props: RegisterPageProps) {
 						}
 					>
 						<Form
-							route="auth.register.execute"
+							action={urlFor('auth.register.execute')}
 							className="grid gap-6"
 							onBefore={(visit) => {
 								const isValid = validation.validateAll(visit.data as Record<string, any>);
@@ -82,21 +82,17 @@ export default function RegisterPage(props: RegisterPageProps) {
 										name="email"
 										type="email"
 										placeholder={t('email.placeholder')}
-										errorMessage={errors.email || validation.getValidationMessage('email')}
-										onChange={(event) => {
-											validation.handleChange('email', event.target.value);
-										}}
-										onBlur={(event) => {
-											validation.handleBlur('email', event!.target.value);
-										}}
+										validation={validation}
+										errors={errors}
 										required
-										sanitize
+										sanitizeValue={sanitizeEmail}
 									/>
 									<Field
 										label={t('password.value')}
 										name="password"
 										type="password"
-										errorMessage={errors.password || validation.getValidationMessage('password')}
+										validation={validation}
+										errors={errors}
 										onChange={(event) => {
 											setPassword(event.target.value);
 											validation.handleChange('password', event.target.value);
@@ -108,18 +104,14 @@ export default function RegisterPage(props: RegisterPageProps) {
 											validation.handleBlur('password_confirmation', confirmPassword);
 										}}
 										required
-										sanitize={false}
 										helpText={t('password.help')}
-										helpClassName={validation.getHelpClassName('password')}
 									/>
 									<Field
 										label={t('password.confirmation.value')}
 										name="password_confirmation"
 										type="password"
-										errorMessage={
-											toLooseErrors(errors).password_confirmation ||
-											validation.getValidationMessage('password_confirmation')
-										}
+										validation={validation}
+										errors={errors}
 										onChange={(event) => {
 											setConfirmPassword(event.target.value);
 											validation.handleChange('password_confirmation', event.target.value);
@@ -129,9 +121,7 @@ export default function RegisterPage(props: RegisterPageProps) {
 											validation.handleBlur('password_confirmation', event!.target.value);
 										}}
 										required
-										sanitize={false}
 										helpText={t('password.confirmation.help')}
-										helpClassName={validation.getHelpClassName('password_confirmation')}
 									/>
 									<Button loading={processing} type={'submit'} fitContent>
 										{t('submit')}

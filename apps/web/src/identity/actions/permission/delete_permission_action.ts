@@ -35,7 +35,7 @@ export class DeletePermissionAction {
 			throw new RowNotFoundException(Permission);
 		}
 
-		if (permission.isSystem) {
+		if (!permission.canBeDeleted) {
 			throw new SystemPermissionImmutableException(permission.slug);
 		}
 

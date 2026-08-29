@@ -1,4 +1,3 @@
-import { type LinkProps } from '@adonisjs/inertia/react';
 import { type SharedProps } from '@adonisjs/inertia/types';
 import { usePage } from '@inertiajs/react';
 import { useCallback, useMemo } from 'react';
@@ -40,7 +39,7 @@ export function useMenu() {
 	 * const icon = getEntryIcon('admin.core.dashboard.render')
 	 */
 	const getEntryIcon = useCallback(
-		(route: NonNullable<LinkProps['route']>): string | undefined => {
+		(route: string): string | undefined => {
 			return menu.flatMap((group) => group.entries).find((entry) => entry.route === route)?.icon;
 		},
 		[menu],

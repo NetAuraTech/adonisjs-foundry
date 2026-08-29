@@ -44,7 +44,7 @@ export default class FilesController {
 			uploadedBy: user.id,
 		});
 
-		const serialized = await serialize(FileTransformer.transform(result));
+		const serialized = await serialize(FileTransformer.transform(result.toDomain()));
 
 		return response.created({ file: serialized.data });
 	}

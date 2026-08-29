@@ -46,8 +46,8 @@ test.group('ListRolesAction', () => {
 		const fullRole1 = result.all().find((r) => r.slug === 'search_role_list_1');
 		assert.isDefined(fullRole1);
 		assert.isDefined(fullRole1!.permissions);
-		assert.lengthOf(fullRole1!.permissions, 1);
-		assert.equal(fullRole1!.$extras.users_count, 2);
+		assert.lengthOf(fullRole1!.permissions ?? [], 1);
+		assert.equal(fullRole1!.usersCount, 2);
 
 		result = await action.execute({
 			search: 'Unique Role List',

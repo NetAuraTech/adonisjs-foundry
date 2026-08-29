@@ -52,7 +52,7 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
 		 */
 		return {
 			errors: ctx.inertia.always(this.getValidationErrors(ctx)),
-			currentUser: ctx.inertia.always(user ? UserTransformer.transform(user) : undefined),
+			currentUser: ctx.inertia.always(user ? UserTransformer.transform(user.toDomain()) : undefined),
 			preferences,
 			csrfToken: ctx.request.csrfToken,
 			app_name: env.get('APP_NAME'),

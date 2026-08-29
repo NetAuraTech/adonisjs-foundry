@@ -1,7 +1,11 @@
+import { Field, type ImageFieldProps } from '@foundry/design-system/field';
+import { ImagePicker } from '@foundry/design-system/image-picker';
 import { ReactNode } from 'react';
 import LockedFieldWrapper from '~/components/cms/builder/LockedFieldWrapper';
 import { LockProps } from '~/components/cms/types/builder';
-import { Field } from '~/components/molecules/field';
+import { FileManager } from '~/components/organisms/file_manager';
+import { getSanitizer } from '~/helpers/sanitization';
+import { loadFileById } from '~/utils/file';
 
 type LFWProps = {
 	fieldKey: string;
@@ -41,6 +45,16 @@ export function LFW(props: LFWProps) {
 
 	const syncKey = !activeLock ? `${blockId}-${fieldKey}` : `${blockId}-${fieldKey}-${defaultValue}`;
 
+	const renderImage = (inputProps: ImageFieldProps) => (
+		<ImagePicker
+			{...inputProps}
+			loadFile={loadFileById}
+			renderFileManager={(onChoose, onClose) => (
+				<FileManager mime_type="image" handleClick={onChoose} handleClose={onClose} />
+			)}
+		/>
+	);
+
 	return (
 		<LockedFieldWrapper
 			blockId={blockId}
@@ -60,6 +74,8 @@ export function LFW(props: LFWProps) {
 				checked={checked}
 				rows={rows}
 				helpText={helpText}
+				sanitizeValue={(value) => getSanitizer(type, true)(value)}
+				renderImage={type === 'image' ? renderImage : undefined}
 				onChange={(e) => onChange(type === 'checkbox' ? (e.target as HTMLInputElement).checked : e.target.value)}
 				onBlur={onBlur}
 			>

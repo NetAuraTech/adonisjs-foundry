@@ -1,16 +1,16 @@
 import { Form } from '@adonisjs/inertia/react';
 import { SharedProps } from '@adonisjs/inertia/types';
+import { AdminMain } from '@foundry/design-system/admin-main';
 import { Button } from '@foundry/design-system/button';
 import { Card } from '@foundry/design-system/card';
+import { Field } from '@foundry/design-system/field';
 import { Icon } from '@foundry/design-system/icon';
 import { SelectOption } from '@foundry/design-system/select';
 import { Data } from '@generated/data';
 import { ReactElement } from 'react';
 import { urlFor } from '~/client';
-import { Field } from '~/components/molecules/field';
-import { AdminMain } from '~/components/organisms/admin/admin_main';
 import { CanAccess } from '~/guards/can_access';
-import { toLooseErrors } from '~/helpers/form_errors';
+import { sanitizeEmail, sanitizeText } from '~/helpers/sanitization';
 import { presets, rules } from '~/helpers/validation_rules';
 import { useMenu } from '~/hooks/use_admin';
 import { useFormValidation } from '~/hooks/use_form_validation';
@@ -55,8 +55,11 @@ export default function UsersFormPage(props: PageProps) {
 				}
 			>
 				<Form
-					route={isEditing ? 'admin.identity.users_update.execute' : 'admin.identity.users_create.execute'}
-					routeParams={isEditing ? { id: user!.id } : {}}
+					action={
+						isEditing
+							? urlFor('admin.identity.users_update.execute', { id: user!.id })
+							: urlFor('admin.identity.users_create.execute')
+					}
 					className="grid gap-6"
 					onBefore={(visit) => {
 						const isValid = validation.validateAll(visit.data as Record<string, any>);
@@ -71,15 +74,10 @@ export default function UsersFormPage(props: PageProps) {
 								type="email"
 								defaultValue={user?.email}
 								placeholder={t('email.placeholder')}
-								errorMessage={toLooseErrors(errors).email || validation.getValidationMessage('email')}
-								onChange={(event) => {
-									validation.handleChange('email', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('email', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
 								required
-								sanitize
+								sanitizeValue={sanitizeEmail}
 							/>
 							<Field
 								label={t('username.value')}
@@ -87,15 +85,10 @@ export default function UsersFormPage(props: PageProps) {
 								type="text"
 								defaultValue={user?.username}
 								placeholder={t('username.placeholder')}
-								errorMessage={toLooseErrors(errors).username || validation.getValidationMessage('username')}
-								onChange={(event) => {
-									validation.handleChange('username', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('username', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
 								required
-								sanitize
+								sanitizeValue={sanitizeText}
 							/>
 							<Field
 								label={t('roles.value')}
@@ -103,15 +96,10 @@ export default function UsersFormPage(props: PageProps) {
 								type="select"
 								defaultValue={user?.role?.id}
 								placeholder={t('roles.placeholder')}
-								errorMessage={toLooseErrors(errors).role_id || validation.getValidationMessage('role_id')}
-								onChange={(event) => {
-									validation.handleChange('role_id', event.target.value);
-								}}
-								onBlur={(event) => {
-									validation.handleBlur('role_id', event!.target.value);
-								}}
+								validation={validation}
+								errors={errors}
 								required
-								sanitize
+								sanitizeValue={sanitizeText}
 							>
 								{roles &&
 									roles.map((role) => (

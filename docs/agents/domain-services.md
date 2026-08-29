@@ -40,19 +40,19 @@ export class FooService {
 
 ## Variants
 
-| Variant                                         | Trait                                                                                                                                                                                |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Standard service**                            | DI of repo(s) + LogService, methods named per use case                                                                                                                               |
-| **Facade over contract**                        | No `@inject()`; dependency injected via manual container binding; adds key namespacing on top of a generic driver interface                                                          |
-| **Infra wrapper**                               | Single pass-through method to a framework-provided service, no repo                                                                                                                  |
-| **Plain injectable, no deps**                   | Empty constructor, auto-resolved by IoC, used as a dependency of other services                                                                                                      |
-| **Function module**                             | Exported function, not a class — no DI at all                                                                                                                                        |
-| **Read-only**                                   | Queries the model directly, no mutation repo, exposes listing/lookup only                                                                                                            |
-| **Direct infra access** (exception to layering) | Bypasses the repository layer entirely for OS-level operations (raw SQL, child processes, filesystem) — document why in the file header when used                                    |
-| **Stateful/cache-backed**                       | No DB repo; state lives in a cache service, namespaced per concern, often TTL-based                                                                                                  |
-| **Dashboard collector**                         | Read-only, single `collect(payload)` method; registered in `start/dashboard.ts` to contribute one optional section to the admin dashboard                                            |
-| **Nav entries module**                          | Static `{domain}_nav.ts` exporting `AdminNavEntry[]`; registered in `start/nav.ts` to contribute entries to the admin sidebar                                                        |
-| **Permission catalog module**                   | Static `{domain}_permissions.ts` exporting the domain's `category → actions` const (`as const`) from which the slug values and slug union derive; composed in `start/permissions.ts` |
+| Variant                                         | Trait                                                                                                                                                                                 |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Standard service**                            | DI of repo(s) + LogService, methods named per use case                                                                                                                                |
+| **Facade over contract**                        | No `@inject()`; dependency injected via manual container binding; adds key namespacing on top of a generic driver interface                                                           |
+| **Infra wrapper**                               | Single pass-through method to a framework-provided service, no repo                                                                                                                   |
+| **Plain injectable, no deps**                   | Empty constructor, auto-resolved by IoC, used as a dependency of other services                                                                                                       |
+| **Function module**                             | Exported function, not a class — no DI at all                                                                                                                                         |
+| **Read-only**                                   | Queries the model directly, no mutation repo, exposes listing/lookup only                                                                                                             |
+| **Direct infra access** (exception to layering) | Bypasses the repository layer entirely for OS-level operations (raw SQL, child processes, filesystem) — document why in the file header when used                                     |
+| **Stateful/cache-backed**                       | No DB repo; state lives in a cache service, namespaced per concern, often TTL-based                                                                                                   |
+| **Dashboard collector**                         | Read-only, single `collect(payload)` method; registered in `start/dashboard.ts` to contribute one optional section to the admin dashboard                                             |
+| **Nav entries module**                          | Static `{domain}_nav.ts` exporting `AdminNavEntry[]`; registered in `start/nav.ts` to contribute entries to the admin sidebar                                                         |
+| **Permission catalog module**                   | Static `{domain}_permissions.ts` exporting the domain's `category → actions` const (`as const`); composed in `start/permissions.ts`, from which the slug values and slug union derive |
 
 ## Dashboard collectors
 
