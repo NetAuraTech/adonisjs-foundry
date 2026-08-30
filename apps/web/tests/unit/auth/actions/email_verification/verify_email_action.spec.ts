@@ -50,4 +50,47 @@ test.group('VerifyEmailAction', () => {
 			await action.execute({ token: 'invalid.token' as any });
 		}, InvalidTokenException);
 	});
+
+	test('execute() called concurrently with the same token: exactly one presentation acts', async ({ assert }) => {
+		const action = await app.container.make(VerifyEmailAction);
+		const tokenRepo = await app.container.make(TokenRepository);
+
+		const user = await User.create({
+			email: 'verify_race@test.com',
+			username: 'verify_race',
+			password: 'pwd',
+		});
+
+		const { selector, validator, token: fullToken } = Token.generateSplit();
+		await tokenRepo.create({
+			userId: user.id,
+			type: TOKEN_TYPES.EMAIL_VERIFICATION,
+			selector,
+			token: await hash.make(validator),
+			expiresAt: DateTime.now().plus({ hours: 1 }),
+		});
+
+		// Two presentations of the same token racing: the token row is locked
+		// inside the transaction, so the second one must observe the token
+		// consumed by the first and be rejected.
+		const results = await Promise.allSettled([
+			action.execute({ token: fullToken as any }),
+			action.execute({ token: fullToken as any }),
+		]);
+
+		const statuses = results.map((r) => r.status).sort();
+		assert.deepEqual(statuses, ['fulfilled', 'rejected']);
+
+		const rejected = results.find((r) => r.status === 'rejected') as PromiseRejectedResult;
+		assert.instanceOf(rejected.reason, InvalidTokenException);
+
+		const reloaded = await User.findOrFail(user.id);
+		assert.isTrue(reloaded.isEmailVerified);
+
+		// The counter is under-counted under true concurrency: checkAttempts is
+		// a non-atomic read-modify-write (pre-existing), so both presentations
+		// can read 0 and write 1. Assert the bounded outcome, not the exact sum.
+		const attempts = (await tokenRepo.findOne({ selector }))!.attempts;
+		assert.isTrue(attempts >= 1 && attempts <= 2, `attempts=${attempts} not in [1,2]`);
+	});
 });

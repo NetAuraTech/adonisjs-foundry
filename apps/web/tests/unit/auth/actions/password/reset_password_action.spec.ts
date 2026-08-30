@@ -123,6 +123,47 @@ test.group('ResetPasswordAction', () => {
 		assert.equal((await tokenRepo.findOne({ selector }))!.attempts, 1);
 	});
 
+	test('execute() called concurrently with the same token: exactly one presentation acts', async ({ assert }) => {
+		const action = await app.container.make(ResetPasswordAction);
+		const tokenRepo = await app.container.make(TokenRepository);
+
+		const user = await User.create({
+			email: 'reset_race@test.com',
+			username: 'reset_race',
+			password: 'old_password',
+		});
+
+		const { selector, fullToken } = await createResetToken(tokenRepo, user.id);
+
+		// Two presentations of the same token racing: the token row is locked
+		// inside the transaction, so the second one must observe the token
+		// consumed by the first and be rejected.
+		const results = await Promise.allSettled([
+			action.execute({ token: fullToken as any, password: 'new_password123' }),
+			action.execute({ token: fullToken as any, password: 'other_password1' }),
+		]);
+
+		const statuses = results.map((r) => r.status).sort();
+		assert.deepEqual(statuses, ['fulfilled', 'rejected']);
+
+		const rejected = results.find((r) => r.status === 'rejected') as PromiseRejectedResult;
+		assert.instanceOf(rejected.reason, InvalidTokenException);
+
+		// The token is consumed: expired. The counter is under-counted under
+		// true concurrency (checkAttempts is a non-atomic read-modify-write
+		// outside the transaction, pre-existing), so assert the bounded outcome.
+		const record = await tokenRepo.findOne({ selector });
+		assert.isTrue(record!.attempts >= 1 && record!.attempts <= 2, `attempts=${record!.attempts} not in [1,2]`);
+		assert.isAtMost(record!.expiresAt!.toMillis(), DateTime.now().toMillis());
+
+		// Exactly one of the two passwords won — the other presentation did not act.
+		const reloaded = await User.findOrFail(user.id);
+		const matchesFirst = await hash.verify(reloaded.password!, 'new_password123');
+		const matchesSecond = await hash.verify(reloaded.password!, 'other_password1');
+		assert.isFalse(matchesFirst && matchesSecond);
+		assert.isTrue(matchesFirst || matchesSecond);
+	});
+
 	test('execute() throws without further increment on a locked token', async ({ assert }) => {
 		const action = await app.container.make(ResetPasswordAction);
 		const tokenRepo = await app.container.make(TokenRepository);
