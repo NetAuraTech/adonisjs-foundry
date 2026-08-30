@@ -1,7 +1,14 @@
 import { BaseTransformer } from '@adonisjs/core/transformers';
 import type { Permission } from '#identity/domain/permission';
 
+/**
+ * Maps an identity {@link Permission} domain object to the API/Inertia
+ * permission payload.
+ */
 export default class PermissionTransformer extends BaseTransformer<Permission> {
+	/**
+	 * Build the permission payload.
+	 */
 	toObject() {
 		return {
 			id: this.resource.id.value,

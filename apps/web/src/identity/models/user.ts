@@ -163,6 +163,11 @@ export default class User extends compose(UserSchema, AuthFinder) {
 		return slugs.some((slug) => role.permissions.some((p) => p.slug === slug));
 	}
 
+	/**
+	 * Check if the user's role slug is one of the given slugs.
+	 * Loads the role directly (without permissions) rather than reusing the
+	 * cached role from {@link can} / {@link checkAny}.
+	 */
 	async hasAnyRole(slugs: string[]): Promise<boolean> {
 		if (!this.roleId) {
 			return false;
