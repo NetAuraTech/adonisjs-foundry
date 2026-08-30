@@ -1,7 +1,16 @@
 import { BaseTransformer } from '@adonisjs/core/transformers';
 import type { LogEntry } from '#log/domain/log_entry';
 
+/**
+ * Maps a log {@link LogEntry} domain object to the API/Inertia audit-trail
+ * payload.
+ */
 export default class LogEntryTransformer extends BaseTransformer<LogEntry> {
+	/**
+	 * Build the log entry payload.
+	 *
+	 * `id` is `null` for entries that have not been persisted yet.
+	 */
 	toObject() {
 		return {
 			id: this.resource.id?.value ?? null,

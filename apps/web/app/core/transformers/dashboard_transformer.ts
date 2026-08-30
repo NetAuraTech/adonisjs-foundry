@@ -10,6 +10,9 @@ import type { DashboardStats } from '#core/types/dashboard';
  * to ISO strings in the JSON payload.
  */
 export default class DashboardTransformer extends BaseTransformer<DashboardStats> {
+	/**
+	 * Pass the stats snapshot through unchanged.
+	 */
 	async toObject() {
 		return { ...this.resource };
 	}

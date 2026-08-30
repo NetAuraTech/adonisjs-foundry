@@ -19,6 +19,13 @@ export interface FileTransformOptions {
 
 export default class FileTransformer extends BaseTransformer<File> {
 	protected storageService: StorageService;
+	/**
+	 * Create the transformer for a file domain object.
+	 *
+	 * @param file - The file to transform.
+	 * @param options - Display intent (locale, alt key, alt override); when
+	 * absent the transformer keeps the lean admin/API shape.
+	 */
 	constructor(
 		file: File,
 		protected options: FileTransformOptions = {},
@@ -26,6 +33,13 @@ export default class FileTransformer extends BaseTransformer<File> {
 		super(file);
 		this.storageService = new StorageService();
 	}
+	/**
+	 * Build the file payload.
+	 *
+	 * With a display intent the output carries the resolved alt, dimensions,
+	 * and responsive variants; without one it falls back to the locale-based
+	 * default alt and the MIME-based type classification.
+	 */
 	async toObject() {
 		const hasIntent = Boolean(this.options.locale || this.options.altKey || this.options.altOverride);
 
