@@ -1,11 +1,11 @@
 import { inject } from '@adonisjs/core';
-import { regenerateCsrfToken } from '#app/auth/helpers/crsf';
-import { buildSessionPayload } from '#app/auth/helpers/i18n_payloads/session';
-import { loginValidator } from '#app/auth/validators/auth';
-import { I18nService } from '#app/core/helpers/i18n_service';
 import { LoginAction } from '#auth/actions/session/login_action';
 import { LogoutAction } from '#auth/actions/session/logout_action';
 import { enabledProviders } from '#auth/oauth_providers';
+import { regenerateCsrfToken } from '#transport/auth/helpers/crsf';
+import { buildSessionPayload } from '#transport/auth/helpers/i18n_payloads/session';
+import { loginValidator } from '#transport/auth/validators/auth';
+import { I18nService } from '#transport/core/helpers/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

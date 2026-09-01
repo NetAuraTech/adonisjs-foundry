@@ -10,7 +10,7 @@ import { urlFor } from '~/client';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
-import type { ResetPasswordTranslations } from '#app/auth/helpers/i18n_payloads/reset_password';
+import type { ResetPasswordTranslations } from '#transport/auth/helpers/i18n_payloads/reset_password';
 
 interface ResetPasswordPageProps {
 	token: string;

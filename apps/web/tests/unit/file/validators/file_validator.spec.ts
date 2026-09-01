@@ -7,7 +7,7 @@ import {
 	deleteAltValidator,
 	createFolderValidator,
 	updateFolderValidator,
-} from '#app/file/validators/file';
+} from '#transport/file/validators/file';
 
 /**
  * Unit tests for file and folder validators.

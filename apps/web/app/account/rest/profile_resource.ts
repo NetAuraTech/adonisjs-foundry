@@ -1,9 +1,9 @@
 import { inject } from '@adonisjs/core';
 import { UpdateUserProfileAction } from '#account/actions/profile/update_user_profile_action';
-import { profileValidator } from '#app/account/validators/profile';
-import { type RestEndpoint } from '#app/core/rest/rest_adapter';
-import { preloadUserRoleWithPermissions } from '#app/identity/helpers/load_user_role';
-import UserTransformer from '#app/identity/transformers/user_transformer';
+import { profileValidator } from '#transport/account/validators/profile';
+import { type RestEndpoint } from '#transport/core/rest/rest_adapter';
+import { preloadUserRoleWithPermissions } from '#transport/identity/helpers/load_user_role';
+import UserTransformer from '#transport/identity/transformers/user_transformer';
 import type User from '#identity/models/user';
 import type { Infer } from '@vinejs/vine/types';
 
@@ -33,7 +33,7 @@ async function refetchProfile(user: User): Promise<User> {
  * Declarative profile REST resource.
  *
  * Owns the `/api/v1/profile` (self) endpoint declarations consumed by the
- * REST `handle` adapter (`#app/core/rest/rest_adapter`); the controllers reduce to
+ * REST `handle` adapter (`#transport/core/rest/rest_adapter`); the controllers reduce to
  * one-line dispatch over `endpoints`.
  */
 @inject()

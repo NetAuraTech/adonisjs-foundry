@@ -1,15 +1,4 @@
 import { inject } from '@adonisjs/core';
-import { buildTemplatesEditPayload } from '#app/cms/helpers/i18n_payloads/templates_edit';
-import { buildTemplatesIndexPayload } from '#app/cms/helpers/i18n_payloads/templates_index';
-import TemplateTransformer from '#app/cms/transformers/template_transformer';
-import {
-	listTemplateValidator,
-	createTemplateValidator,
-	updateTemplateValidator,
-	applyTemplateValidator,
-	showTemplateValidator,
-} from '#app/cms/validators/template';
-import { I18nService } from '#app/core/helpers/i18n_service';
 import { ApplyToPageAction } from '#cms/actions/template/apply_to_page_action';
 import { CreateTemplateAction } from '#cms/actions/template/create_template_action';
 import { DeleteTemplateAction } from '#cms/actions/template/delete_template_action';
@@ -17,6 +6,17 @@ import { GetTemplateDetailAction } from '#cms/actions/template/get_template_deta
 import { ListTemplatesAction } from '#cms/actions/template/list_templates_action';
 import { UpdateTemplateAction } from '#cms/actions/template/update_template_action';
 import { stripEmptyStrings } from '#shared/strip_empty_strings';
+import { buildTemplatesEditPayload } from '#transport/cms/helpers/i18n_payloads/templates_edit';
+import { buildTemplatesIndexPayload } from '#transport/cms/helpers/i18n_payloads/templates_index';
+import TemplateTransformer from '#transport/cms/transformers/template_transformer';
+import {
+	listTemplateValidator,
+	createTemplateValidator,
+	updateTemplateValidator,
+	applyTemplateValidator,
+	showTemplateValidator,
+} from '#transport/cms/validators/template';
+import { I18nService } from '#transport/core/helpers/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

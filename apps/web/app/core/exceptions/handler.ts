@@ -1,9 +1,9 @@
 import { type HttpContext, ExceptionHandler } from '@adonisjs/core/http';
 import app from '@adonisjs/core/services/app';
 import * as Sentry from '@sentry/node';
-import { buildMaintenanceIndexPayload } from '#app/core/helpers/i18n_payloads/maintenance_front';
-import { I18nService } from '#app/core/helpers/i18n_service';
 import MaintenanceException from '#core/exceptions/maintenance_exception';
+import { buildMaintenanceIndexPayload } from '#transport/core/helpers/i18n_payloads/maintenance_front';
+import { I18nService } from '#transport/core/helpers/i18n_service';
 import type { StatusPageRange, StatusPageRenderer } from '@adonisjs/core/types/http';
 
 /**

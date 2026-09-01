@@ -16,7 +16,7 @@ import { sanitizeText } from '~/helpers/sanitization';
 import { useNavLinkActive } from '~/hooks/use_nav_link_active';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminFileFoldersTranslations } from '#app/file/helpers/i18n_payloads/file_folders';
+import type { AdminFileFoldersTranslations } from '#transport/file/helpers/i18n_payloads/file_folders';
 
 interface PageProps {
 	roots: Data.File.FileFolder[];

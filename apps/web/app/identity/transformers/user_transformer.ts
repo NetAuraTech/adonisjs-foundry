@@ -1,5 +1,5 @@
 import { BaseTransformer } from '@adonisjs/core/transformers';
-import RoleTransformer from '#app/identity/transformers/role_transformer';
+import RoleTransformer from '#transport/identity/transformers/role_transformer';
 import type { User } from '#identity/domain/user';
 
 /**

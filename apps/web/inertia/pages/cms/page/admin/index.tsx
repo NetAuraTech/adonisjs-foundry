@@ -18,8 +18,8 @@ import { useMenu } from '~/hooks/use_admin';
 import { locales, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
 import { Paginated } from '~/types/paginated';
-import type { AdminPagesIndexTranslations } from '#app/cms/helpers/i18n_payloads/pages_index';
 import type { PageStatus } from '#cms/types/page';
+import type { AdminPagesIndexTranslations } from '#transport/cms/helpers/i18n_payloads/pages_index';
 
 interface Props {
 	pages: Paginated<Data.Cms.Page>;

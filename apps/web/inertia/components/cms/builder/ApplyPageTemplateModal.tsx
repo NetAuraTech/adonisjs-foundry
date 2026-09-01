@@ -8,7 +8,7 @@ import { urlFor } from '~/client';
 import { useTemplates } from '~/components/cms/hooks/use_templates';
 import { useTranslation } from '~/hooks/use_translation';
 import TemplateCard from './TemplateCard';
-import type { PageEditorTranslations } from '#app/cms/helpers/i18n_payloads/page_editor';
+import type { PageEditorTranslations } from '#transport/cms/helpers/i18n_payloads/page_editor';
 
 interface ApplyPageTemplateModalProps {
 	pageId: number;

@@ -8,7 +8,7 @@ import {
 	createFromPageValidator,
 	createBlockTemplateValidator,
 	templatePreviewValidator,
-} from '#app/cms/validators/template';
+} from '#transport/cms/validators/template';
 
 /**
  * Unit tests for template validators.

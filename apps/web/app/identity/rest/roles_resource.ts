@@ -1,17 +1,17 @@
 import { inject } from '@adonisjs/core';
-import { type RestEndpoint } from '#app/core/rest/rest_adapter';
-import RoleTransformer from '#app/identity/transformers/role_transformer';
-import {
-	listRolesValidator,
-	createRoleValidator,
-	updateRoleValidator,
-	restRoleIdValidator,
-} from '#app/identity/validators/role';
 import { CreateRoleAction } from '#identity/actions/role/create_role_action';
 import { DeleteRoleAction } from '#identity/actions/role/delete_role_action';
 import { GetRoleDetailAction } from '#identity/actions/role/get_role_detail_action';
 import { ListRolesAction } from '#identity/actions/role/list_roles_action';
 import { UpdateRoleAction } from '#identity/actions/role/update_role_action';
+import { type RestEndpoint } from '#transport/core/rest/rest_adapter';
+import RoleTransformer from '#transport/identity/transformers/role_transformer';
+import {
+	listRolesValidator,
+	createRoleValidator,
+	updateRoleValidator,
+	restRoleIdValidator,
+} from '#transport/identity/validators/role';
 import type { Role } from '#identity/domain/role';
 import type { Infer } from '@vinejs/vine/types';
 
@@ -39,7 +39,7 @@ export interface RolesEndpoints {
  * Declarative roles REST resource.
  *
  * Owns the five roles REST endpoint declarations consumed by the REST
- * `handle` adapter (`#app/core/rest/rest_adapter`); the `/api/v1/admin/roles`
+ * `handle` adapter (`#transport/core/rest/rest_adapter`); the `/api/v1/admin/roles`
  * controllers reduce to one-line dispatch over `endpoints`.
  */
 @inject()

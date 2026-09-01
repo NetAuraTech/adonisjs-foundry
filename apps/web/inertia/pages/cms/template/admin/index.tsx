@@ -17,7 +17,7 @@ import { sanitizeText } from '~/helpers/sanitization';
 import { useMenu } from '~/hooks/use_admin';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminTemplatesTranslations } from '#app/cms/helpers/i18n_payloads/templates_index';
+import type { AdminTemplatesTranslations } from '#transport/cms/helpers/i18n_payloads/templates_index';
 
 interface TemplatesIndexPageProps {
 	templates: Data.Cms.Template[];

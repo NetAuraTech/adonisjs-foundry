@@ -16,7 +16,7 @@ import { useMenu } from '~/hooks/use_admin';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminUsersFormTranslations } from '#app/identity/helpers/i18n_payloads/users_form';
+import type { AdminUsersFormTranslations } from '#transport/identity/helpers/i18n_payloads/users_form';
 
 type PageProps = {
 	user?: Data.Identity.User;

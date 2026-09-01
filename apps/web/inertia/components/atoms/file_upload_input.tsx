@@ -5,7 +5,7 @@ import { Paragraph } from '@foundry/design-system/paragraph';
 import { useRef, useState, useId, ChangeEvent, DragEvent } from 'react';
 import { useTranslation } from '~/hooks/use_translation';
 import { humanSize } from '~/utils/file';
-import type { AdminFilesTranslations } from '#app/file/helpers/i18n_payloads/files_index';
+import type { AdminFilesTranslations } from '#transport/file/helpers/i18n_payloads/files_index';
 
 interface FileUploadInputProps {
 	/** Input name attribute, used when inside a native <form> */

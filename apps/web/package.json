@@ -5,7 +5,7 @@
   "license": "UNLICENSED",
   "type": "module",
   "imports": {
-    "#app/*": "./app/*.js",
+    "#transport/*": "./app/*.js",
     "#generated/*": "./.adonisjs/server/*.js",
     "#types/*": "./types/*.js",
     "#providers/*": "./providers/*.js",

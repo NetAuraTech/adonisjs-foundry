@@ -2,7 +2,7 @@ import { Heading } from '@foundry/design-system/heading';
 import { Paragraph } from '@foundry/design-system/paragraph';
 import { Section } from '@foundry/design-system/section';
 import { useTranslation } from '~/hooks/use_translation';
-import type { HomeTranslations } from '#app/core/helpers/i18n_payloads/home';
+import type { HomeTranslations } from '#transport/core/helpers/i18n_payloads/home';
 
 interface Props {
 	translations: HomeTranslations;

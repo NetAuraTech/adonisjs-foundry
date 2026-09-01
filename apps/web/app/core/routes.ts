@@ -17,9 +17,9 @@
 |
 */
 
-import '#app/core/controllers/admin/routes';
-import '#app/core/controllers/api/routes';
-import '#app/core/controllers/front/routes';
+import '#transport/core/controllers/admin/routes';
+import '#transport/core/controllers/api/routes';
+import '#transport/core/controllers/front/routes';
 import router from '@adonisjs/core/services/router';
 import { controllers } from '#generated/controllers';
 

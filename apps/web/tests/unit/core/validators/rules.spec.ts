@@ -1,6 +1,6 @@
 import { test } from '@japa/runner';
 import vine from '@vinejs/vine';
-import { email, password } from '#app/core/validators/rules';
+import { email, password } from '#transport/core/validators/rules';
 
 test.group('Rules - Email', () => {
 	test('email rule accepts valid emails', async ({ assert }) => {

@@ -1,4 +1,4 @@
-import type { TranslationNodes } from '#app/core/helpers/translation_tree';
+import type { TranslationNodes } from '#transport/core/helpers/translation_tree';
 
 type Format = 'long' | 'full' | 'medium' | 'short';
 export type Lang = 'en' | 'fr';

@@ -6,7 +6,7 @@ import { Section } from '@foundry/design-system/section';
 import { ReactElement } from 'react';
 import { useInterval } from '~/hooks/use_interval';
 import { useTranslation } from '~/hooks/use_translation';
-import type { MaintenanceTranslations } from '#app/core/helpers/i18n_payloads/maintenance_front';
+import type { MaintenanceTranslations } from '#transport/core/helpers/i18n_payloads/maintenance_front';
 
 interface PageProps {
 	message: string;

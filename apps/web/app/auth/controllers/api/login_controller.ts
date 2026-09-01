@@ -1,8 +1,8 @@
 import { inject } from '@adonisjs/core';
 import { type HttpContext } from '@adonisjs/core/http';
-import { loginValidator } from '#app/auth/validators/auth';
 import { LoginAction } from '#auth/actions/session/login_action';
 import { CreateApiTokenAction } from '#auth/actions/token/create_api_token_action';
+import { loginValidator } from '#transport/auth/validators/auth';
 
 /**
  * Login endpoint of the REST API (`/api/v1/auth`), guarded by the `api`

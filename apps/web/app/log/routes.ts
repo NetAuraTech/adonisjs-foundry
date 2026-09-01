@@ -12,5 +12,5 @@
 |
 */
 
-import '#app/log/controllers/admin/routes';
-import '#app/log/controllers/api/routes';
+import '#transport/log/controllers/admin/routes';
+import '#transport/log/controllers/api/routes';

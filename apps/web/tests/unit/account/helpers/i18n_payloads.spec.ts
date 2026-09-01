@@ -1,11 +1,11 @@
 import { test } from '@japa/runner';
-import { buildAccountPayload } from '#app/account/helpers/i18n_payloads/account';
-import { buildEmailChangePayload } from '#app/account/helpers/i18n_payloads/email_change';
-import { buildPreferencesPayload } from '#app/account/helpers/i18n_payloads/preferences';
-import { buildProfilePayload } from '#app/account/helpers/i18n_payloads/profile';
-import { I18nService } from '#app/core/helpers/i18n_service';
 import { FakeI18n } from '#tests/helpers/fake_i18n';
 import { LOCALES, loadLang, emptyLeaves } from '#tests/helpers/i18n_lang_loader';
+import { buildAccountPayload } from '#transport/account/helpers/i18n_payloads/account';
+import { buildEmailChangePayload } from '#transport/account/helpers/i18n_payloads/email_change';
+import { buildPreferencesPayload } from '#transport/account/helpers/i18n_payloads/preferences';
+import { buildProfilePayload } from '#transport/account/helpers/i18n_payloads/profile';
+import { I18nService } from '#transport/core/helpers/i18n_service';
 import type { I18n } from '@adonisjs/i18n';
 
 const BUILDER_IDS = ['profile', 'preferences', 'account', 'email_change'] as const;

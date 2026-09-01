@@ -1,19 +1,19 @@
 import { inject } from '@adonisjs/core';
-import { type RestEndpoint } from '#app/core/rest/rest_adapter';
-import FileTransformer from '#app/file/transformers/file_transformer';
-import {
-	listFileValidator,
-	showFileValidator,
-	moveFileValidator,
-	upsertAltValidator,
-	deleteAltValidator,
-} from '#app/file/validators/file';
 import { DeleteFileAction } from '#file/actions/file/delete_file_action';
 import { DeleteFileAltAction } from '#file/actions/file/delete_file_alt_action';
 import { GetFileDetailAction } from '#file/actions/file/get_file_detail_action';
 import { ListFilesAction } from '#file/actions/file/list_files_action';
 import { MoveFileAction } from '#file/actions/file/move_file_action';
 import { UpsertFileAltAction } from '#file/actions/file/upsert_file_alt_action';
+import { type RestEndpoint } from '#transport/core/rest/rest_adapter';
+import FileTransformer from '#transport/file/transformers/file_transformer';
+import {
+	listFileValidator,
+	showFileValidator,
+	moveFileValidator,
+	upsertAltValidator,
+	deleteAltValidator,
+} from '#transport/file/validators/file';
 import type { File } from '#file/domain/file';
 import type FileModel from '#file/models/file';
 import type { Infer } from '@vinejs/vine/types';
@@ -44,7 +44,7 @@ export interface FilesEndpoints {
  * Declarative files REST resource.
  *
  * Owns the files endpoint declarations consumed by the REST `handle`
- * adapter (`#app/core/rest/rest_adapter`); the `/api/v1/admin/files` controllers
+ * adapter (`#transport/core/rest/rest_adapter`); the `/api/v1/admin/files` controllers
  * reduce to one-line dispatch over `endpoints`.
  */
 @inject()

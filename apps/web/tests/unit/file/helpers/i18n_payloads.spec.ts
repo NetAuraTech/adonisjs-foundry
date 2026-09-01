@@ -1,10 +1,10 @@
 import { test } from '@japa/runner';
-import { I18nService } from '#app/core/helpers/i18n_service';
-import { buildFileFoldersPayload } from '#app/file/helpers/i18n_payloads/file_folders';
-import { buildFilesIndexPayload } from '#app/file/helpers/i18n_payloads/files_index';
-import { buildFilesShowPayload } from '#app/file/helpers/i18n_payloads/files_show';
 import { FakeI18n } from '#tests/helpers/fake_i18n';
 import { LOCALES, loadLang, emptyLeaves } from '#tests/helpers/i18n_lang_loader';
+import { I18nService } from '#transport/core/helpers/i18n_service';
+import { buildFileFoldersPayload } from '#transport/file/helpers/i18n_payloads/file_folders';
+import { buildFilesIndexPayload } from '#transport/file/helpers/i18n_payloads/files_index';
+import { buildFilesShowPayload } from '#transport/file/helpers/i18n_payloads/files_show';
 import type { I18n } from '@adonisjs/i18n';
 
 const BUILDER_IDS = ['file_folders', 'files_index', 'files_show'] as const;

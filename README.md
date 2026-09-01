@@ -845,7 +845,7 @@ The project uses Node.js subpath imports for clean module resolution (paths rela
 
 | Alias          | Path                   |
 | -------------- | ---------------------- |
-| `#app/*`       | `app/*`                |
+| `#transport/*` | `app/*`                |
 | `#generated/*` | `.adonisjs/server/*`   |
 | `#types/*`     | `types/*`              |
 | `#providers/*` | `providers/*`          |

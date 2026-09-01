@@ -1,5 +1,5 @@
 import { BaseTransformer } from '@adonisjs/core/transformers';
-import PageTranslationTransformer from '#app/cms/transformers/page_translation_transformer';
+import PageTranslationTransformer from '#transport/cms/transformers/page_translation_transformer';
 import type Page from '#cms/models/page/page';
 
 /**

@@ -1,8 +1,8 @@
 import { inject } from '@adonisjs/core';
-import { type RestEndpoint } from '#app/core/rest/rest_adapter';
-import LogEntryTransformer from '#app/log/transformers/log_entry_transformer';
-import { listLogsValidator } from '#app/log/validators/log';
 import { ListLogEntriesAction } from '#log/actions/log/list_log_entries_action';
+import { type RestEndpoint } from '#transport/core/rest/rest_adapter';
+import LogEntryTransformer from '#transport/log/transformers/log_entry_transformer';
+import { listLogsValidator } from '#transport/log/validators/log';
 import type { Infer } from '@vinejs/vine/types';
 
 type LogListPagination = Awaited<ReturnType<ListLogEntriesAction['execute']>>;
@@ -19,7 +19,7 @@ export interface LogsEndpoints {
  * Declarative logs REST resource.
  *
  * Owns the read-only logs endpoint declarations consumed by the REST
- * `handle` adapter (`#app/core/rest/rest_adapter`); the `/api/v1/admin/logs`
+ * `handle` adapter (`#transport/core/rest/rest_adapter`); the `/api/v1/admin/logs`
  * controller reduces to a one-line dispatch over `endpoints`.
  */
 @inject()

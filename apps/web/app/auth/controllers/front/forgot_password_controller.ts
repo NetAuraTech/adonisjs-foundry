@@ -1,9 +1,9 @@
 import { inject } from '@adonisjs/core';
-import { buildForgotPasswordPayload } from '#app/auth/helpers/i18n_payloads/forgot_password';
-import { forgotPasswordValidator } from '#app/auth/validators/auth';
-import { I18nService } from '#app/core/helpers/i18n_service';
 import { SendPasswordResetAction } from '#auth/actions/password/send_password_reset_action';
 import { FindUserByEmailAction } from '#identity/actions/user/find_user_by_email_action';
+import { buildForgotPasswordPayload } from '#transport/auth/helpers/i18n_payloads/forgot_password';
+import { forgotPasswordValidator } from '#transport/auth/validators/auth';
+import { I18nService } from '#transport/core/helpers/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

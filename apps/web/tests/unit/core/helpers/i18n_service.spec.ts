@@ -1,6 +1,6 @@
 import { test } from '@japa/runner';
-import { I18nService } from '#app/core/helpers/i18n_service';
 import { FakeI18n } from '#tests/helpers/fake_i18n';
+import { I18nService } from '#transport/core/helpers/i18n_service';
 import type { I18n } from '@adonisjs/i18n';
 
 test.group('I18nService', () => {

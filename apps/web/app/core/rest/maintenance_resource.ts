@@ -1,8 +1,8 @@
 import { inject } from '@adonisjs/core';
-import { type RestEndpoint } from '#app/core/rest/rest_adapter';
-import { updateMaintenanceValidator, toggleMaintenanceValidator } from '#app/core/validators/maintenance';
 import { MaintenanceService } from '#core/services/maintenance_service';
 import { LogService } from '#log/services/log_service';
+import { type RestEndpoint } from '#transport/core/rest/rest_adapter';
+import { updateMaintenanceValidator, toggleMaintenanceValidator } from '#transport/core/validators/maintenance';
 import type { Infer } from '@vinejs/vine/types';
 
 type MaintenanceUpdatePayload = Infer<typeof updateMaintenanceValidator>;
@@ -24,7 +24,7 @@ export interface MaintenanceEndpoints {
  * Declarative maintenance REST resource.
  *
  * Owns the maintenance endpoint declarations consumed by the REST `handle`
- * adapter (`#app/core/rest/rest_adapter`); the `/api/v1/admin/maintenance` controller
+ * adapter (`#transport/core/rest/rest_adapter`); the `/api/v1/admin/maintenance` controller
  * reduces to one-line dispatch over `endpoints`.
  */
 @inject()

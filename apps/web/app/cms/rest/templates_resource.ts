@@ -1,18 +1,18 @@
 import { inject } from '@adonisjs/core';
-import TemplateTransformer from '#app/cms/transformers/template_transformer';
+import { CreateFromPageAction } from '#cms/actions/template/create_from_page_action';
+import { DeleteTemplateAction } from '#cms/actions/template/delete_template_action';
+import { ListTemplatesAction } from '#cms/actions/template/list_templates_action';
+import { SaveBlockTemplateAction } from '#cms/actions/template/save_block_template_action';
+import { UpdateTemplateAction } from '#cms/actions/template/update_template_action';
+import TemplateTransformer from '#transport/cms/transformers/template_transformer';
 import {
 	listTemplateValidator,
 	createBlockTemplateValidator,
 	createFromPageValidator,
 	updateTemplateValidator,
 	showTemplateValidator,
-} from '#app/cms/validators/template';
-import { type RestEndpoint } from '#app/core/rest/rest_adapter';
-import { CreateFromPageAction } from '#cms/actions/template/create_from_page_action';
-import { DeleteTemplateAction } from '#cms/actions/template/delete_template_action';
-import { ListTemplatesAction } from '#cms/actions/template/list_templates_action';
-import { SaveBlockTemplateAction } from '#cms/actions/template/save_block_template_action';
-import { UpdateTemplateAction } from '#cms/actions/template/update_template_action';
+} from '#transport/cms/validators/template';
+import { type RestEndpoint } from '#transport/core/rest/rest_adapter';
 import type Template from '#cms/models/template/template';
 import type { Infer } from '@vinejs/vine/types';
 
@@ -41,7 +41,7 @@ export interface TemplatesEndpoints {
  * Declarative templates REST resource.
  *
  * Owns the `/api/v1/admin/templates` endpoint declarations consumed by the
- * REST `handle` adapter (`#app/core/rest/rest_adapter`); the controller reduces to
+ * REST `handle` adapter (`#transport/core/rest/rest_adapter`); the controller reduces to
  * one-line dispatch over `endpoints`.
  */
 @inject()

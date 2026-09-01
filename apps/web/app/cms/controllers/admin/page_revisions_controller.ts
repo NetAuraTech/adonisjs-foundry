@@ -1,12 +1,12 @@
 import { inject } from '@adonisjs/core';
-import { buildPageRevisionsPayload } from '#app/cms/helpers/i18n_payloads/page_revisions';
-import PageRevisionTransformer from '#app/cms/transformers/page_revision_transformer';
-import { revisionValidator } from '#app/cms/validators/page';
-import { extractPagination } from '#app/core/helpers/extract_pagination';
-import { I18nService } from '#app/core/helpers/i18n_service';
 import { ListRevisionsAction } from '#cms/actions/page/list_revisions_action';
 import { RestoreRevisionAction } from '#cms/actions/page/restore_revision_action';
 import { ToggleRevisionKeepAction } from '#cms/actions/page/toggle_revision_keep_action';
+import { buildPageRevisionsPayload } from '#transport/cms/helpers/i18n_payloads/page_revisions';
+import PageRevisionTransformer from '#transport/cms/transformers/page_revision_transformer';
+import { revisionValidator } from '#transport/cms/validators/page';
+import { extractPagination } from '#transport/core/helpers/extract_pagination';
+import { I18nService } from '#transport/core/helpers/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

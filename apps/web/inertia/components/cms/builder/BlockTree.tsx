@@ -11,9 +11,9 @@ import { createBlock, getBlockDescriptor } from './block_types';
 import BlockPicker from './BlockPicker';
 import SaveBlockTemplateModal from './SaveBlockTemplateModal';
 import TemplatePicker from './TemplatePicker';
-import type { PageEditorTranslations } from '#app/cms/helpers/i18n_payloads/page_editor';
 import type { BuilderOperation } from '#cms/types/builder';
 import type { Block, BlockType, PageContent } from '#cms/types/page';
+import type { PageEditorTranslations } from '#transport/cms/helpers/i18n_payloads/page_editor';
 import type { Data } from '@generated/data';
 import type { LockState } from '~/components/cms/hooks/use_builder_sync';
 

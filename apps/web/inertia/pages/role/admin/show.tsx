@@ -16,7 +16,7 @@ import { permissionCategoryKey } from '~/helpers/permissions';
 import { useMenu } from '~/hooks/use_admin';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminRolesShowTranslations } from '#app/identity/helpers/i18n_payloads/roles_show';
+import type { AdminRolesShowTranslations } from '#transport/identity/helpers/i18n_payloads/roles_show';
 
 type PageProps = {
 	role: Data.Identity.Role;

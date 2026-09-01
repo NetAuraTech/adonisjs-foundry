@@ -1,13 +1,13 @@
 import { inject } from '@adonisjs/core';
-import { buildPagesIndexPayload } from '#app/cms/helpers/i18n_payloads/pages_index';
-import PageTransformer from '#app/cms/transformers/page_transformer';
-import { listPageValidator, showPageValidator } from '#app/cms/validators/page';
-import { extractPagination } from '#app/core/helpers/extract_pagination';
-import { I18nService } from '#app/core/helpers/i18n_service';
 import { DeletePageAction } from '#cms/actions/page/delete_page_action';
 import { ListPagesAction } from '#cms/actions/page/list_pages_action';
 import { SetHomepageAction } from '#cms/actions/page/set_homepage_action';
 import { stripEmptyStrings } from '#shared/strip_empty_strings';
+import { buildPagesIndexPayload } from '#transport/cms/helpers/i18n_payloads/pages_index';
+import PageTransformer from '#transport/cms/transformers/page_transformer';
+import { listPageValidator, showPageValidator } from '#transport/cms/validators/page';
+import { extractPagination } from '#transport/core/helpers/extract_pagination';
+import { I18nService } from '#transport/core/helpers/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

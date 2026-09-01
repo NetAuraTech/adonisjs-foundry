@@ -20,7 +20,7 @@ import { useMenu } from '~/hooks/use_admin';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
 import { Paginated } from '~/types/paginated';
-import type { AdminUsersIndexTranslations } from '#app/identity/helpers/i18n_payloads/users_list';
+import type { AdminUsersIndexTranslations } from '#transport/identity/helpers/i18n_payloads/users_list';
 
 type PageProps = {
 	users: Paginated<Data.Identity.User>;

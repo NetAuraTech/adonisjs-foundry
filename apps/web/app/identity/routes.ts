@@ -13,5 +13,5 @@
 |
 */
 
-import '#app/identity/controllers/admin/routes';
-import '#app/identity/controllers/api/routes';
+import '#transport/identity/controllers/admin/routes';
+import '#transport/identity/controllers/api/routes';

@@ -1,13 +1,13 @@
 import { inject } from '@adonisjs/core';
-import { type RestEndpoint } from '#app/core/rest/rest_adapter';
-import FileFolderTransformer from '#app/file/transformers/file_folder_transformer';
-import { showFileValidator, createFolderValidator, updateFolderValidator } from '#app/file/validators/file';
 import { CreateFolderAction } from '#file/actions/file_folder/create_folder_action';
 import { DeleteFolderAction } from '#file/actions/file_folder/delete_folder_action';
 import { GetFolderDetailAction } from '#file/actions/file_folder/get_folder_detail_action';
 import { ListFolderChildrenAction } from '#file/actions/file_folder/list_folder_children_action';
 import { ListRootFoldersAction } from '#file/actions/file_folder/list_root_folders_action';
 import { RenameFolderAction } from '#file/actions/file_folder/rename_folder_action';
+import { type RestEndpoint } from '#transport/core/rest/rest_adapter';
+import FileFolderTransformer from '#transport/file/transformers/file_folder_transformer';
+import { showFileValidator, createFolderValidator, updateFolderValidator } from '#transport/file/validators/file';
 import type { Infer } from '@vinejs/vine/types';
 
 type FolderListResult = Awaited<ReturnType<ListRootFoldersAction['execute']>>;
@@ -37,7 +37,7 @@ export interface FoldersEndpoints {
  * Declarative folders REST resource.
  *
  * Owns the folders endpoint declarations consumed by the REST `handle`
- * adapter (`#app/core/rest/rest_adapter`); the `/api/v1/admin/folders` controllers
+ * adapter (`#transport/core/rest/rest_adapter`); the `/api/v1/admin/folders` controllers
  * reduce to one-line dispatch over `endpoints`.
  */
 @inject()

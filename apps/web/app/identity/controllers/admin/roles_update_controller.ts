@@ -1,13 +1,13 @@
 import { inject } from '@adonisjs/core';
-import { I18nService } from '#app/core/helpers/i18n_service';
-import { buildRolesFormPayload } from '#app/identity/helpers/i18n_payloads/roles_form';
-import PermissionTransformer from '#app/identity/transformers/permission_transformer';
-import RoleTransformer from '#app/identity/transformers/role_transformer';
-import { editRoleValidator, updateRoleValidator } from '#app/identity/validators/role';
 import { ListAllPermissionsAction } from '#identity/actions/permission/list_all_permissions_action';
 import { GetRoleDetailAction } from '#identity/actions/role/get_role_detail_action';
 import { UpdateRoleAction } from '#identity/actions/role/update_role_action';
 import SystemRoleImmutableException from '#identity/exceptions/system_role_immutable_exception';
+import { I18nService } from '#transport/core/helpers/i18n_service';
+import { buildRolesFormPayload } from '#transport/identity/helpers/i18n_payloads/roles_form';
+import PermissionTransformer from '#transport/identity/transformers/permission_transformer';
+import RoleTransformer from '#transport/identity/transformers/role_transformer';
+import { editRoleValidator, updateRoleValidator } from '#transport/identity/validators/role';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

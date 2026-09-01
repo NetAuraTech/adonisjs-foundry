@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
-import { invalidTokenNotFound } from '#app/auth/helpers/error_response';
 import { VerifyEmailAction } from '#auth/actions/email_verification/verify_email_action';
 import InvalidTokenException from '#auth/exceptions/invalid_token_exception';
+import { invalidTokenNotFound } from '#transport/auth/helpers/error_response';
 import type { FullToken } from '#auth/enums/token_type';
 import type { HttpContext } from '@adonisjs/core/http';
 

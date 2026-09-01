@@ -1,5 +1,5 @@
 import vine from '@vinejs/vine';
-import { email } from '#app/core/validators/rules';
+import { email } from '#transport/core/validators/rules';
 import type Role from '#identity/models/role';
 import type User from '#identity/models/user';
 
@@ -54,4 +54,4 @@ export const deleteValidator = vine.create({
 	id: id(),
 });
 
-export { restIdValidator } from '#app/core/validators/rest';
+export { restIdValidator } from '#transport/core/validators/rest';

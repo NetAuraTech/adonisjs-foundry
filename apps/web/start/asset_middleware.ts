@@ -13,5 +13,5 @@
 
 export const assetMiddleware = [
 	() => import('@adonisjs/vite/vite_middleware'),
-	() => import('#app/core/middleware/inertia_middleware'),
+	() => import('#transport/core/middleware/inertia_middleware'),
 ];

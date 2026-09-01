@@ -19,8 +19,8 @@ import { useMenu } from '~/hooks/use_admin';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
 import { loadFileById } from '~/utils/file';
-import type { AdminTemplatesEditTranslations } from '#app/cms/helpers/i18n_payloads/templates_edit';
 import type { Block, PageContent } from '#cms/types/page';
+import type { AdminTemplatesEditTranslations } from '#transport/cms/helpers/i18n_payloads/templates_edit';
 
 interface PageProps {
 	template: Data.Cms.Template;

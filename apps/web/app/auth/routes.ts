@@ -13,5 +13,5 @@
 |
 */
 
-import '#app/auth/controllers/front/routes';
-import '#app/auth/controllers/api/routes';
+import '#transport/auth/controllers/front/routes';
+import '#transport/auth/controllers/api/routes';

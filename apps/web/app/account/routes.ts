@@ -14,5 +14,5 @@
 |
 */
 
-import '#app/account/controllers/front/routes';
-import '#app/account/controllers/api/routes';
+import '#transport/account/controllers/front/routes';
+import '#transport/account/controllers/api/routes';

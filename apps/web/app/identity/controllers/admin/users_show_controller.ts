@@ -1,12 +1,12 @@
 import { inject } from '@adonisjs/core';
-import { I18nService } from '#app/core/helpers/i18n_service';
-import { buildUsersShowPayload } from '#app/identity/helpers/i18n_payloads/users_show';
-import PermissionTransformer from '#app/identity/transformers/permission_transformer';
-import UserTransformer from '#app/identity/transformers/user_transformer';
-import { showValidator } from '#app/identity/validators/user';
 import { enabledProviders } from '#auth/oauth_providers';
 import { ListAllPermissionsAction } from '#identity/actions/permission/list_all_permissions_action';
 import { GetUserDetailAction } from '#identity/actions/user/get_user_detail_action';
+import { I18nService } from '#transport/core/helpers/i18n_service';
+import { buildUsersShowPayload } from '#transport/identity/helpers/i18n_payloads/users_show';
+import PermissionTransformer from '#transport/identity/transformers/permission_transformer';
+import UserTransformer from '#transport/identity/transformers/user_transformer';
+import { showValidator } from '#transport/identity/validators/user';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

@@ -1,5 +1,5 @@
 import { test } from '@japa/runner';
-import { updateValidator } from '#app/account/validators/preference';
+import { updateValidator } from '#transport/account/validators/preference';
 
 test.group('Preference Validator', () => {
 	test('validates valid preference payload', async ({ assert }) => {

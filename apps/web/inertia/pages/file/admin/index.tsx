@@ -24,7 +24,7 @@ import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
 import { Paginated } from '~/types/paginated';
 import { humanSize, isImage } from '~/utils/file';
-import type { AdminFilesTranslations } from '#app/file/helpers/i18n_payloads/files_index';
+import type { AdminFilesTranslations } from '#transport/file/helpers/i18n_payloads/files_index';
 
 interface Props {
 	files: Paginated<Data.File.File>;

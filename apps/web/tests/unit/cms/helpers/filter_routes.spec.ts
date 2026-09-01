@@ -1,5 +1,5 @@
 import { test } from '@japa/runner';
-import { filterRoutes } from '#app/cms/helpers/filter_routes';
+import { filterRoutes } from '#transport/cms/helpers/filter_routes';
 
 function makeRoute(
 	methods: string[],

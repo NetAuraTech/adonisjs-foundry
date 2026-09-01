@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 import { urlFor } from '~/client';
 import { sanitizeRichText, sanitizeText } from '~/helpers/sanitization';
 import { locales, useTranslation } from '~/hooks/use_translation';
-import type { AdminFilesTranslations } from '#app/file/helpers/i18n_payloads/files_index';
+import type { AdminFilesTranslations } from '#transport/file/helpers/i18n_payloads/files_index';
 import type { Data } from '@generated/data';
 
 interface FileAlt {

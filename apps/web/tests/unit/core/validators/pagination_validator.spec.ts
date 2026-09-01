@@ -1,5 +1,5 @@
 import { test } from '@japa/runner';
-import { paginationValidator } from '#app/core/validators/pagination';
+import { paginationValidator } from '#transport/core/validators/pagination';
 
 test.group('Pagination Validator', () => {
 	test('validates valid pagination payload', async ({ assert }) => {

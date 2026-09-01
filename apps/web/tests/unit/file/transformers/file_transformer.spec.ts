@@ -1,9 +1,9 @@
 import { test } from '@japa/runner';
 import sinon from 'sinon';
-import FileTransformer from '#app/file/transformers/file_transformer';
 import { File } from '#file/domain/file';
 import { ImageOptimizerService } from '#file/services/image_optimizer_service';
 import { StorageService } from '#file/services/storage_service';
+import FileTransformer from '#transport/file/transformers/file_transformer';
 import type { ResolvedFile } from '#types/file';
 
 /**

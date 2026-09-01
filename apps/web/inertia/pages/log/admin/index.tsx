@@ -16,7 +16,7 @@ import { useMenu } from '~/hooks/use_admin';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
 import { Paginated } from '~/types/paginated';
-import type { AdminLogsIndexTranslations } from '#app/log/helpers/i18n_payloads/logs_list';
+import type { AdminLogsIndexTranslations } from '#transport/log/helpers/i18n_payloads/logs_list';
 
 const LEVELS = ['debug', 'info', 'warn', 'error', 'fatal'] as const;
 const CATEGORIES = ['system', 'security', 'business', 'auth', 'api', 'database', 'performance'] as const;

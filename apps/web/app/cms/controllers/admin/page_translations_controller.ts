@@ -1,8 +1,8 @@
 import { inject } from '@adonisjs/core';
 import vine from '@vinejs/vine';
-import { showPageValidator } from '#app/cms/validators/page';
-import { I18nService } from '#app/core/helpers/i18n_service';
 import { CreateTranslationAction } from '#cms/actions/page/create_translation_action';
+import { showPageValidator } from '#transport/cms/validators/page';
+import { I18nService } from '#transport/core/helpers/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 const createTranslationValidator = vine.compile(

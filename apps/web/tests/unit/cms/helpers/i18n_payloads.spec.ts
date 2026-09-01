@@ -1,15 +1,15 @@
 import { test } from '@japa/runner';
-import { buildCmsDashboardPayload } from '#app/cms/helpers/i18n_payloads/dashboard_cms';
-import { buildPageEditorPayload } from '#app/cms/helpers/i18n_payloads/page_editor';
-import { buildPageRevisionsPayload } from '#app/cms/helpers/i18n_payloads/page_revisions';
-import { buildPagesCreatePayload } from '#app/cms/helpers/i18n_payloads/pages_create';
-import { buildPagesIndexPayload } from '#app/cms/helpers/i18n_payloads/pages_index';
-import { buildPagesShowPayload } from '#app/cms/helpers/i18n_payloads/pages_show';
-import { buildTemplatesEditPayload } from '#app/cms/helpers/i18n_payloads/templates_edit';
-import { buildTemplatesIndexPayload } from '#app/cms/helpers/i18n_payloads/templates_index';
-import { I18nService } from '#app/core/helpers/i18n_service';
 import { FakeI18n } from '#tests/helpers/fake_i18n';
 import { LOCALES, loadLang, emptyLeaves } from '#tests/helpers/i18n_lang_loader';
+import { buildCmsDashboardPayload } from '#transport/cms/helpers/i18n_payloads/dashboard_cms';
+import { buildPageEditorPayload } from '#transport/cms/helpers/i18n_payloads/page_editor';
+import { buildPageRevisionsPayload } from '#transport/cms/helpers/i18n_payloads/page_revisions';
+import { buildPagesCreatePayload } from '#transport/cms/helpers/i18n_payloads/pages_create';
+import { buildPagesIndexPayload } from '#transport/cms/helpers/i18n_payloads/pages_index';
+import { buildPagesShowPayload } from '#transport/cms/helpers/i18n_payloads/pages_show';
+import { buildTemplatesEditPayload } from '#transport/cms/helpers/i18n_payloads/templates_edit';
+import { buildTemplatesIndexPayload } from '#transport/cms/helpers/i18n_payloads/templates_index';
+import { I18nService } from '#transport/core/helpers/i18n_service';
 import type { I18n } from '@adonisjs/i18n';
 
 const BUILDER_IDS = [

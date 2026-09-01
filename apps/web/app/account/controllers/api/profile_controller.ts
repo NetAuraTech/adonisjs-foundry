@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { type HttpContext } from '@adonisjs/core/http';
-import ProfileResource from '#app/account/rest/profile_resource';
-import { handle } from '#app/core/rest/rest_adapter';
+import ProfileResource from '#transport/account/rest/profile_resource';
+import { handle } from '#transport/core/rest/rest_adapter';
 
 /**
  * GET /api/v1/profile — show the current user's profile (self).

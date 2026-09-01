@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { type HttpContext } from '@adonisjs/core/http';
-import { handle } from '#app/core/rest/rest_adapter';
-import PermissionsResource from '#app/identity/rest/permissions_resource';
+import { handle } from '#transport/core/rest/rest_adapter';
+import PermissionsResource from '#transport/identity/rest/permissions_resource';
 
 /**
  * GET /api/v1/admin/permissions — list all permissions from the admin REST API.

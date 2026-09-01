@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { type HttpContext } from '@adonisjs/core/http';
-import { handle } from '#app/core/rest/rest_adapter';
-import UsersResource from '#app/identity/rest/users_resource';
+import { handle } from '#transport/core/rest/rest_adapter';
+import UsersResource from '#transport/identity/rest/users_resource';
 
 /**
  * PUT /api/v1/admin/users/:id — update a user from the admin REST API.

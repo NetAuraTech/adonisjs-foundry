@@ -1,9 +1,9 @@
 import { inject } from '@adonisjs/core';
-import { I18nService } from '#app/core/helpers/i18n_service';
-import { handle } from '#app/core/rest/page_adapter';
-import UsersResource from '#app/identity/rest/users_resource';
-import { deleteValidator } from '#app/identity/validators/user';
 import { DeleteUserAction } from '#identity/actions/user/delete_user_action';
+import { I18nService } from '#transport/core/helpers/i18n_service';
+import { handle } from '#transport/core/rest/page_adapter';
+import UsersResource from '#transport/identity/rest/users_resource';
+import { deleteValidator } from '#transport/identity/validators/user';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

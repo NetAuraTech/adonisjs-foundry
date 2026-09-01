@@ -1,5 +1,5 @@
 import { type HttpContext } from '@adonisjs/core/http';
-import { paginationValidator } from '#app/core/validators/pagination';
+import { paginationValidator } from '#transport/core/validators/pagination';
 import { DEFAULT_PAGINATION, type PaginationFilters } from '#types/pagination';
 
 /**

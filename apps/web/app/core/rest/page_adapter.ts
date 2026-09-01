@@ -1,4 +1,4 @@
-import { resolveEndpoint, type AdapterHandler } from '#app/core/rest/rest_adapter';
+import { resolveEndpoint, type AdapterHandler } from '#transport/core/rest/rest_adapter';
 
 /**
  * Run a declarative endpoint as an admin page and send the page response.

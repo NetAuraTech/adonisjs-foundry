@@ -1,12 +1,12 @@
 import { test } from '@japa/runner';
+import User from '#identity/models/user';
 import {
 	registerValidator,
 	loginValidator,
 	forgotPasswordValidator,
 	resetPasswordValidator,
 	acceptInvitationValidator,
-} from '#app/auth/validators/auth';
-import User from '#identity/models/user';
+} from '#transport/auth/validators/auth';
 
 test.group('Auth Validators', () => {
 	test('registerValidator requires valid email and confirmed password', async ({ assert }) => {

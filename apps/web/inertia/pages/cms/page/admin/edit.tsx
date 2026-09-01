@@ -19,9 +19,9 @@ import { useBuilderSync } from '~/components/cms/hooks/use_builder_sync';
 import { CanAccess } from '~/guards/can_access';
 import { sanitizeRichText, sanitizeText } from '~/helpers/sanitization';
 import { useTranslation } from '~/hooks/use_translation';
-import type { PageEditorTranslations } from '#app/cms/helpers/i18n_payloads/page_editor';
 import type { BuilderOperation } from '#cms/types/builder';
 import type { PageContent } from '#cms/types/page';
+import type { PageEditorTranslations } from '#transport/cms/helpers/i18n_payloads/page_editor';
 
 interface Props {
 	page: Data.Cms.Page;

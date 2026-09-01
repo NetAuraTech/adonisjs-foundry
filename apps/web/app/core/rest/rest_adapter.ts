@@ -1,6 +1,6 @@
 import { type HttpContext } from '@adonisjs/core/http';
-import { extractPagination } from '#app/core/helpers/extract_pagination';
 import { stripEmptyStrings } from '#shared/strip_empty_strings';
+import { extractPagination } from '#transport/core/helpers/extract_pagination';
 import { type PaginationFilters } from '#types/pagination';
 
 /**

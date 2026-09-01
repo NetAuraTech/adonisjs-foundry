@@ -11,12 +11,12 @@
 */
 
 import app from '@adonisjs/core/services/app';
-import { buildCmsDashboardPayload } from '#app/cms/helpers/i18n_payloads/dashboard_cms';
 import { PageDashboardCollector } from '#cms/services/page/page_dashboard_collector';
 import { TemplateDashboardCollector } from '#cms/services/template/template_dashboard_collector';
 import { DashboardRegistry } from '#core/services/dashboard_registry';
 import { FileDashboardCollector } from '#file/services/dashboard_collector';
 import { IdentityDashboardCollector } from '#identity/services/dashboard_collector';
+import { buildCmsDashboardPayload } from '#transport/cms/helpers/i18n_payloads/dashboard_cms';
 
 app.container.singleton(DashboardRegistry, () => new DashboardRegistry());
 

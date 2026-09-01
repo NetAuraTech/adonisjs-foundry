@@ -19,7 +19,7 @@ The audience-facing shell context: controllers under `{domain}/front/`, Inertia 
 _Avoid_: Public (that is the exposure axis, below), website
 
 **Public**:
-The exposure axis: unauthenticated route modules and feature flags (the CMS public front registered by `#app/cms/routes`, the future `publicApi` flag) — anything reachable without a session. Orthogonal to Front: a Public route serves the Front audience, but a Front screen may still require a session. (Front flavors — the headless `api` flavor has no public site routes.)
+The exposure axis: unauthenticated route modules and feature flags (the CMS public front registered by `#transport/cms/routes`, the future `publicApi` flag) — anything reachable without a session. Orthogonal to Front: a Public route serves the Front audience, but a Front screen may still require a session. (Front flavors — the headless `api` flavor has no public site routes.)
 _Avoid_: front, anonymous, guest
 
 ### Content
