@@ -17,8 +17,8 @@ export interface PaginatedResult<T> {
 }
 
 /**
- * Base class for all read-side queries providing transaction-aware query
- * client resolution.
+ * Base class for database-backed read-side queries, providing
+ * transaction-aware query client resolution.
  *
  * Mirrors the repository base on the write side: every query inherits the
  * `client()` protected method so that Lucid queries automatically run inside

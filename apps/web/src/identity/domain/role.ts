@@ -97,6 +97,11 @@ export class Role extends Entity<{
 	hasPermission(permissionSlug: string): boolean {
 		return (this.permissions ?? []).some((permission) => permission.slug === permissionSlug);
 	}
+
+	/** The slugs of the permissions this role grants, empty when none are loaded. */
+	permissionSlugs(): string[] {
+		return (this.permissions ?? []).map((permission) => permission.slug);
+	}
 }
 
 /**

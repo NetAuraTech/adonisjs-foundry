@@ -1,16 +1,20 @@
 import drive from '@adonisjs/drive/services/main';
 import { BackupMetadata } from '#backup/domain/backup';
 import backupConfig from '#config/backup';
-import { BaseQuery } from '#core/queries/base_query';
 
 /**
  * Read-side query listing the backup artifacts stored on the configured disk,
  * newest first.
  *
+ * Reads the storage disk rather than the database, so it stays a plain
+ * collaborator instead of extending the DB query base: the transaction-aware
+ * client and pagination helpers are database concerns this listing does not
+ * use.
+ *
  * Storage failures are swallowed as an empty list so callers degrade to
  * "no backups" instead of erroring on an unavailable disk.
  */
-export class ListBackupsQuery extends BaseQuery {
+export class ListBackupsQuery {
 	/**
 	 * Execute the backup listing query.
 	 *
