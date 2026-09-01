@@ -843,32 +843,26 @@ start/
 
 The project uses Node.js subpath imports for clean module resolution (paths relative to `apps/web/`):
 
-| Alias                   | Path                   |
-| ----------------------- | ---------------------- |
-| `#transport/account/*`  | `app/account/*`        |
-| `#transport/auth/*`     | `app/auth/*`           |
-| `#transport/cms/*`      | `app/cms/*`            |
-| `#transport/core/*`     | `app/core/*`           |
-| `#transport/file/*`     | `app/file/*`           |
-| `#transport/identity/*` | `app/identity/*`       |
-| `#transport/log/*`      | `app/log/*`            |
-| `#generated/*`          | `.adonisjs/server/*`   |
-| `#types/*`              | `types/*`              |
-| `#providers/*`          | `providers/*`          |
-| `#database/*`           | `database/*`           |
-| `#factories/*`          | `database/factories/*` |
-| `#shared/*`             | `src/shared/*`         |
-| `#core/*`               | `src/core/*`           |
-| `#identity/*`           | `src/identity/*`       |
-| `#auth/*`               | `src/auth/*`           |
-| `#account/*`            | `src/account/*`        |
-| `#file/*`               | `src/file/*`           |
-| `#log/*`                | `src/log/*`            |
-| `#backup/*`             | `src/backup/*`         |
-| `#tests/*`              | `tests/*`              |
-| `#start/*`              | `start/*`              |
-| `#config/*`             | `config/*`             |
-| `#cms/*`                | `src/cms/*`            |
+| Alias          | Path                   |
+| -------------- | ---------------------- |
+| `#transport/*` | `app/*`                |
+| `#generated/*` | `.adonisjs/server/*`   |
+| `#types/*`     | `types/*`              |
+| `#providers/*` | `providers/*`          |
+| `#database/*`  | `database/*`           |
+| `#factories/*` | `database/factories/*` |
+| `#shared/*`    | `src/shared/*`         |
+| `#core/*`      | `src/core/*`           |
+| `#identity/*`  | `src/identity/*`       |
+| `#auth/*`      | `src/auth/*`           |
+| `#account/*`   | `src/account/*`        |
+| `#file/*`      | `src/file/*`           |
+| `#log/*`       | `src/log/*`            |
+| `#backup/*`    | `src/backup/*`         |
+| `#tests/*`     | `tests/*`              |
+| `#start/*`     | `start/*`              |
+| `#config/*`    | `config/*`             |
+| `#cms/*`       | `src/cms/*`            |
 
 ## Routes
 
