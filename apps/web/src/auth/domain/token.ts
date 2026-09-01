@@ -10,7 +10,7 @@ import type { FullToken, TokenType } from '#auth/enums/token_type';
  * efficient lookup, while the {@link TokenParts.validator} is hashed so that a
  * database leak does not expose usable tokens.
  */
-export interface TokenParts {
+interface TokenParts {
 	selector: string;
 	validator: string;
 }
@@ -19,7 +19,7 @@ export interface TokenParts {
  * A generated split token: the parts plus the full `selector.validator`
  * string that is handed to the user (mail link, response body).
  */
-export interface GeneratedToken extends TokenParts {
+interface GeneratedToken extends TokenParts {
 	token: FullToken;
 }
 

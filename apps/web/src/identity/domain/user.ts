@@ -6,7 +6,7 @@ import type { Role } from '#identity/domain/role';
  * The lifecycle status of a user, derived purely from whether they hold a
  * pending-invite token and whether their email is verified.
  */
-export type UserStatusValue = 'PENDING_INVITE' | 'VERIFIED' | 'UNVERIFIED';
+type UserStatusValue = 'PENDING_INVITE' | 'VERIFIED' | 'UNVERIFIED';
 
 /**
  * Derives a user's {@link UserStatusValue} from their pending-invite and
