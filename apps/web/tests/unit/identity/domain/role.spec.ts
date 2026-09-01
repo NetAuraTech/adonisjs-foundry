@@ -53,6 +53,18 @@ test.group('Role', () => {
 		assert.isFalse(Role.fromModel(model({ slug: 'editor' })).isAdmin());
 	});
 
+	test('permissionSlugs() lists the slugs of the granted permissions', ({ assert }) => {
+		const role = Role.fromModel(model({ permissions: [permission('pages.view'), permission('pages.edit')] }));
+
+		assert.deepEqual(role.permissionSlugs(), ['pages.view', 'pages.edit']);
+	});
+
+	test('permissionSlugs() degrades to an empty list when the relation was not loaded', ({ assert }) => {
+		const role = Role.fromModel(model({ permissions: null }));
+
+		assert.deepEqual(role.permissionSlugs(), []);
+	});
+
 	test('system roles are immutable and undeletable', ({ assert }) => {
 		const role = Role.fromModel(model({ isSystem: true }));
 

@@ -5,7 +5,6 @@ import { DeleteTemplateAction } from '#cms/actions/template/delete_template_acti
 import { GetTemplateDetailAction } from '#cms/actions/template/get_template_detail_action';
 import { ListTemplatesAction } from '#cms/actions/template/list_templates_action';
 import { UpdateTemplateAction } from '#cms/actions/template/update_template_action';
-import { stripEmptyStrings } from '#shared/strip_empty_strings';
 import { buildTemplatesEditPayload } from '#transport/cms/helpers/i18n_payloads/templates_edit';
 import { buildTemplatesIndexPayload } from '#transport/cms/helpers/i18n_payloads/templates_index';
 import TemplateTransformer from '#transport/cms/transformers/template_transformer';
@@ -17,6 +16,7 @@ import {
 	showTemplateValidator,
 } from '#transport/cms/validators/template';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { stripEmptyStrings } from '#transport/core/helpers/strip_empty_strings';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

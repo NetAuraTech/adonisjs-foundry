@@ -1,9 +1,10 @@
 /**
  * Removes entries with empty string values from a record.
  *
- * Useful for cleaning up form payloads before sending them to the server,
- * so that optional fields left blank are not interpreted as intentional
- * empty-string updates.
+ * Applied server-side to incoming request payloads (form data and REST
+ * input) before validation, so that optional fields left blank by the
+ * client are dropped rather than interpreted as intentional empty-string
+ * updates.
  *
  * @param data - The record to filter.
  * @returns A new record containing only entries whose value is not `''`.

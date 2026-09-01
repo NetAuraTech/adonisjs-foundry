@@ -29,7 +29,7 @@ export default class UserTransformer extends BaseTransformer<User> {
 				facebook: this.resource.hasFacebookId,
 			},
 			role: RoleTransformer.transform(this.resource.role),
-			permissions: this.resource.role?.permissions?.map((p) => p.slug) ?? [],
+			permissions: this.resource.role?.permissionSlugs() ?? [],
 		};
 	}
 }
