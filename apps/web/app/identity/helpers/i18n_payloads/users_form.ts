@@ -1,6 +1,8 @@
 import { createI18nEntry } from '#core/contracts/i18n_translator';
-import { nestTranslation, type TranslationNodes } from '#transport/core/helpers/translation_tree';
+import { buildRoleEntries } from '#transport/identity/helpers/i18n_payloads/role_entries';
 import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_translator';
+import type { RoleEntry } from '#identity/domain/role';
+import type { TranslationNodes } from '#transport/core/helpers/translation_tree';
 
 /**
  * The flat i18n key mapping for the user create/edit form. The `roles` node
@@ -50,19 +52,10 @@ export type AdminUsersFormTranslations = BuildPayloadResult<typeof USERS_FORM_MA
  */
 export function buildUsersFormPayload(
 	i18n: I18nTranslator,
-	roles: ReadonlyArray<{ slug: string; name: string; description: string | null }>,
+	roles: ReadonlyArray<RoleEntry>,
 ): AdminUsersFormTranslations {
-	const rolesEntries: TranslationNodes = {};
-
-	for (const role of roles) {
-		nestTranslation(rolesEntries, role.slug, {
-			value: `roles.${role.slug}.value`,
-			description: `roles.${role.slug}.description`,
-		});
-	}
-
 	return i18n.buildPayload({
 		...USERS_FORM_MAPPING,
-		roles: { ...USERS_FORM_MAPPING.roles, ...rolesEntries },
+		roles: { ...USERS_FORM_MAPPING.roles, ...buildRoleEntries(roles) },
 	});
 }

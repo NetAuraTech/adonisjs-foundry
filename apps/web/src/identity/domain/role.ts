@@ -98,3 +98,15 @@ export class Role extends Entity<{
 		return (this.permissions ?? []).some((permission) => permission.slug === permissionSlug);
 	}
 }
+
+/**
+ * The identity role-entry shape carried through the admin i18n payload
+ * builders: a lightweight projection of a {@link Role} holding only the slug
+ * plus the display name and description, without the persistence and permission
+ * machinery. Data-driven per-role translation nodes are keyed by this slug.
+ */
+export type RoleEntry = {
+	slug: string;
+	name: string;
+	description: string | null;
+};
