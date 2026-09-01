@@ -1,12 +1,12 @@
 import { inject } from '@adonisjs/core';
 import { type HttpContext } from '@adonisjs/core/http';
-import { extractPagination } from '#app/core/helpers/extract_pagination';
-import FileFolderTransformer from '#app/file/transformers/file_folder_transformer';
-import FileTransformer from '#app/file/transformers/file_transformer';
 import { GetFileDetailAction } from '#file/actions/file/get_file_detail_action';
 import { ListFilesAction } from '#file/actions/file/list_files_action';
 import { UploadFileAction } from '#file/actions/file/upload_file_action';
 import { ListRootFoldersAction } from '#file/actions/file_folder/list_root_folders_action';
+import { extractPagination } from '#transport/core/helpers/extract_pagination';
+import FileFolderTransformer from '#transport/file/transformers/file_folder_transformer';
+import FileTransformer from '#transport/file/transformers/file_transformer';
 
 @inject()
 export default class FilesController {

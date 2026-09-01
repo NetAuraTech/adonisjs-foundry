@@ -13,7 +13,7 @@ import { sanitizeText } from '~/helpers/sanitization';
 import { rules } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
-import type { SettingsPreferencesTranslations } from '#app/account/helpers/i18n_payloads/preferences';
+import type { SettingsPreferencesTranslations } from '#transport/account/helpers/i18n_payloads/preferences';
 
 interface PreferencesPageProps {
 	translations: SettingsPreferencesTranslations;

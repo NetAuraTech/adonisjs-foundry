@@ -1,5 +1,5 @@
 import { test } from '@japa/runner';
-import { permissionCategoryKey } from '#app/identity/helpers/permission_category';
+import { permissionCategoryKey } from '#transport/identity/helpers/permission_category';
 
 test.group('permission_category', () => {
 	test('permissionCategoryKey() strips the system i18n key prefix', ({ assert }) => {

@@ -19,7 +19,7 @@ import { useMenu } from '~/hooks/use_admin';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminRolesFormTranslations } from '#app/identity/helpers/i18n_payloads/roles_form';
+import type { AdminRolesFormTranslations } from '#transport/identity/helpers/i18n_payloads/roles_form';
 
 type PageProps = {
 	role: Data.Identity.Role | null;

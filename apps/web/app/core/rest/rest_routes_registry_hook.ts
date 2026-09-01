@@ -13,7 +13,7 @@ import {
 import type { ScannedController } from '@adonisjs/assembler/types';
 
 /**
- * Map a `#app/<domain>/rest/<name>` import specifier to the absolute path of
+ * Map a `#transport/<domain>/rest/<name>` import specifier to the absolute path of
  * the resource file. REST resources are co-located with their domain under
  * `app/<domain>/rest/`, and the domain is embedded in the specifier itself,
  * so the translation is mechanical — no TS import resolution is required.
@@ -21,10 +21,10 @@ import type { ScannedController } from '@adonisjs/assembler/types';
  * @param appRoot - Absolute path of the application root.
  * @param specifier - Import specifier as it appears in the controller's import.
  * @returns Absolute path of the resource file, or `undefined` when the
- *         specifier is not of the `#app/<domain>/rest/*` form.
+ *         specifier is not of the `#transport/<domain>/rest/*` form.
  */
 function resolveResourceFile(appRoot: string, specifier: string): string | undefined {
-	const match = specifier.match(/^#app\/([\w$]+)\/rest\/([\w$]+)$/);
+	const match = specifier.match(/^#transport\/([\w$]+)\/rest\/([\w$]+)$/);
 	if (!match) return undefined;
 	return resolve(appRoot, 'app', match[1], 'rest', `${match[2].replace(/\.(ts|js)$/u, '')}.ts`);
 }
@@ -56,7 +56,7 @@ function findMethodBody(sourceText: string, method: string): string | undefined 
 }
 
 /**
- * Find the `#app/<domain>/rest/<name>_resource` import specifier of a
+ * Find the `#transport/<domain>/rest/<name>_resource` import specifier of a
  * resource variable inside a controller source.
  *
  * The constructor property is lowerCamelCase (`usersResource`) while the
@@ -73,7 +73,7 @@ function findResourceSpecifier(sourceText: string, resourceVariable: string): st
 	const base = resourceVariable.replace(/Resource$/u, '');
 	if (!base || base === resourceVariable) return undefined;
 	for (const specifier of collectImportNames(sourceText).values()) {
-		const match = specifier.match(/^#app\/[\w$]+\/rest\/([\w$]+)$/u);
+		const match = specifier.match(/^#transport\/[\w$]+\/rest\/([\w$]+)$/u);
 		if (!match) continue;
 		const fileBase = match[1].replace(/_resource$/u, '');
 		if (fileBase === base) return specifier;
@@ -144,7 +144,7 @@ interface HookBus {
 /**
  * Init-hook parent we receive. The Assembler's `DevServer` exposes `cwdPath`
  * (absolute directory of the project root); that is all we need to resolve
- * the `#app/<domain>/rest/*` resource imports.
+ * the `#transport/<domain>/rest/*` resource imports.
  */
 interface InitHookParent {
 	cwdPath?: string;
@@ -171,7 +171,7 @@ interface InitHookParent {
  *
  * @example
  * // adonisrc.ts
- * import { restRoutesRegistryHook } from '#app/core/rest/rest_routes_registry_hook'
+ * import { restRoutesRegistryHook } from '#transport/core/rest/rest_routes_registry_hook'
  * export default defineConfig({
  *   hooks: {
  *     init: [

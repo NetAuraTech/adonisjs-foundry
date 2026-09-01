@@ -2,8 +2,8 @@ import { Button } from '@foundry/design-system/button';
 import { Icon } from '@foundry/design-system/icon';
 import React from 'react';
 import { getBlockCatalog } from './block_types';
-import type { PageEditorTranslations } from '#app/cms/helpers/i18n_payloads/page_editor';
 import type { BlockType } from '#cms/types/page';
+import type { PageEditorTranslations } from '#transport/cms/helpers/i18n_payloads/page_editor';
 
 // Feather-style icon paths (inline SVG)
 const ICONS: Record<string, React.ReactNode> = {

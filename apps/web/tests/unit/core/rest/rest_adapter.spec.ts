@@ -1,6 +1,6 @@
 import { type HttpContext } from '@adonisjs/core/http';
 import { test } from '@japa/runner';
-import { handle, type AnyRestEndpoint } from '#app/core/rest/rest_adapter';
+import { handle, type AnyRestEndpoint } from '#transport/core/rest/rest_adapter';
 
 interface RecordedCall {
 	method: string;

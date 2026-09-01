@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
-import { resetPasswordValidator } from '#app/auth/validators/auth';
 import { ResetPasswordAction } from '#auth/actions/password/reset_password_action';
+import { resetPasswordValidator } from '#transport/auth/validators/auth';
 import type { FullToken } from '#auth/enums/token_type';
 import type { HttpContext } from '@adonisjs/core/http';
 

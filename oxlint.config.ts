@@ -17,7 +17,7 @@ export default defineConfig({
 					{
 						patterns: [
 							{
-								regex: '^#app/',
+								regex: '^#transport/',
 								message: 'Business code under src must not depend on the app delivery layer.',
 							},
 							{
@@ -39,7 +39,7 @@ export default defineConfig({
 							{
 								regex: '^#(?:generated|providers|database|factories|shared|tests|config)/',
 								message:
-									'Frontend code must not import backend modules. Shared imports belong in the #app, #cms, #types and #start aliases and the domain business-layer aliases.',
+									'Frontend code must not import backend modules. Shared imports belong in the #transport, #cms, #types and #start aliases and the domain business-layer aliases.',
 							},
 							{
 								regex: '^\\.\\./(\\.\\./)*app(?:/|$)',

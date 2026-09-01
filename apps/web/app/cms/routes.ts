@@ -12,6 +12,6 @@
 |
 */
 
-import '#app/cms/controllers/admin/routes';
-import '#app/cms/controllers/api/routes';
-import '#app/cms/controllers/front/routes';
+import '#transport/cms/controllers/admin/routes';
+import '#transport/cms/controllers/api/routes';
+import '#transport/cms/controllers/front/routes';

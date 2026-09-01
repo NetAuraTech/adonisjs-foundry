@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { type HttpContext } from '@adonisjs/core/http';
-import AccountResource from '#app/account/rest/account_resource';
-import { handle } from '#app/core/rest/rest_adapter';
+import AccountResource from '#transport/account/rest/account_resource';
+import { handle } from '#transport/core/rest/rest_adapter';
 
 /**
  * PUT /api/v1/account — update the current user's email or password (self),

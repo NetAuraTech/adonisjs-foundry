@@ -13,7 +13,7 @@ import { sanitizeEmail, sanitizeText } from '~/helpers/sanitization';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
-import type { AcceptInvitationTranslations } from '#app/auth/helpers/i18n_payloads/accept_invitation';
+import type { AcceptInvitationTranslations } from '#transport/auth/helpers/i18n_payloads/accept_invitation';
 
 interface PageProps {
 	token: string;

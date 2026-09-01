@@ -15,8 +15,8 @@ import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminMaintenanceTranslations } from '#app/core/helpers/i18n_payloads/maintenance_index';
 import type { MaintenanceConfig } from '#core/types/maintenance';
+import type { AdminMaintenanceTranslations } from '#transport/core/helpers/i18n_payloads/maintenance_index';
 
 type MemoryConfigDto = {
 	enabled: boolean;

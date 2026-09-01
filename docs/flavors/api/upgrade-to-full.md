@@ -119,7 +119,7 @@ version of each:
 - `config/features.ts` — re-enables `auth`, `settings`, `admin` and `cms` (the
   `api` flavor keeps only `adminApi`).
 - `start/routes.ts` — restores the pure per-domain import list, which
-  re-registers the CMS domain entry (`#app/cms/routes`) alongside the other
+  re-registers the CMS domain entry (`#transport/cms/routes`) alongside the other
   domain entries.
 - `config/database.ts` — re-adds `database/migrations/cms` to the migration
   paths.

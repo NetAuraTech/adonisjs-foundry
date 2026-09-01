@@ -1,5 +1,5 @@
 import { test } from '@japa/runner';
-import { nestTranslation, type TranslationNodes } from '#app/core/helpers/translation_tree';
+import { nestTranslation, type TranslationNodes } from '#transport/core/helpers/translation_tree';
 
 test.group('translation_tree', () => {
 	test('nestTranslation() sets a top-level leaf for a single-segment key', ({ assert }) => {

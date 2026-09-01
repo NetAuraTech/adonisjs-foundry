@@ -1,25 +1,25 @@
 import { inject } from '@adonisjs/core';
 import { type Infer } from '@vinejs/vine/types';
-import { I18nService } from '#app/core/helpers/i18n_service';
-import { type RestEndpoint } from '#app/core/rest/rest_adapter';
-import { buildUsersFormPayload } from '#app/identity/helpers/i18n_payloads/users_form';
-import { buildUsersListPayload } from '#app/identity/helpers/i18n_payloads/users_list';
-import { roleIdsToAllowlist } from '#app/identity/helpers/load_user_role';
-import RoleTransformer from '#app/identity/transformers/role_transformer';
-import UserTransformer from '#app/identity/transformers/user_transformer';
-import {
-	listValidator,
-	editValidator,
-	createValidator,
-	updateValidator,
-	restIdValidator,
-} from '#app/identity/validators/user';
 import { ListAllRolesAction } from '#identity/actions/role/list_all_roles_action';
 import { CreateUserAction } from '#identity/actions/user/create_user_action';
 import { DeleteUserAction } from '#identity/actions/user/delete_user_action';
 import { GetUserDetailAction } from '#identity/actions/user/get_user_detail_action';
 import { ListUsersAction } from '#identity/actions/user/list_users_action';
 import { UpdateUserAction } from '#identity/actions/user/update_user_action';
+import { I18nService } from '#transport/core/helpers/i18n_service';
+import { type RestEndpoint } from '#transport/core/rest/rest_adapter';
+import { buildUsersFormPayload } from '#transport/identity/helpers/i18n_payloads/users_form';
+import { buildUsersListPayload } from '#transport/identity/helpers/i18n_payloads/users_list';
+import { roleIdsToAllowlist } from '#transport/identity/helpers/load_user_role';
+import RoleTransformer from '#transport/identity/transformers/role_transformer';
+import UserTransformer from '#transport/identity/transformers/user_transformer';
+import {
+	listValidator,
+	editValidator,
+	createValidator,
+	updateValidator,
+	restIdValidator,
+} from '#transport/identity/validators/user';
 import type { User } from '#identity/domain/user';
 import type Role from '#identity/models/role';
 
@@ -60,8 +60,8 @@ export interface UsersEndpoints {
  * Declarative users resource.
  *
  * Owns the users endpoint declarations consumed by the `handle` adapters:
- * the REST `handle` (`#app/core/rest/rest_adapter`) for the `/api/v1/admin/users`
- * routes and the page `handle` (`#app/core/rest/page_adapter`) for the
+ * the REST `handle` (`#transport/core/rest/rest_adapter`) for the `/api/v1/admin/users`
+ * routes and the page `handle` (`#transport/core/rest/page_adapter`) for the
  * session-rendered admin pages (list, edit form, update). The request
  * interpretation — roles allowlist, field coercions — exists exactly once,
  * in these declarations.

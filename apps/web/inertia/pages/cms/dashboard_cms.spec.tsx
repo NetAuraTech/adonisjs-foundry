@@ -3,8 +3,8 @@ import { createRoot, type Root } from 'react-dom/client';
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import DashboardPage from '~/pages/core/admin/dashboard';
-import type { CmsDashboardTranslations } from '#app/cms/helpers/i18n_payloads/dashboard_cms';
-import type { AdminDashboardTranslations } from '#app/core/helpers/i18n_payloads/dashboard';
+import type { CmsDashboardTranslations } from '#transport/cms/helpers/i18n_payloads/dashboard_cms';
+import type { AdminDashboardTranslations } from '#transport/core/helpers/i18n_payloads/dashboard';
 import type { Data } from '@generated/data';
 import type { ReactNode } from 'react';
 

@@ -2,7 +2,7 @@ import { indexEntities } from '@adonisjs/core';
 import { defineConfig } from '@adonisjs/core/app';
 import { indexPages } from '@adonisjs/inertia';
 import { generateRegistry } from '@tuyau/core/hooks';
-import { restRoutesRegistryHook } from '#app/core/rest/rest_routes_registry_hook';
+import { restRoutesRegistryHook } from '#transport/core/rest/rest_routes_registry_hook';
 
 export default defineConfig({
 	/*
@@ -152,15 +152,15 @@ export default defineConfig({
 				transformers: {
 					enabled: true,
 					withSharedProps: true,
-					inertiaMiddlewareImportPath: '#app/core/middleware/inertia_middleware',
+					inertiaMiddlewareImportPath: '#transport/core/middleware/inertia_middleware',
 					source: 'app',
-					importAlias: '#app',
+					importAlias: '#transport',
 					glob: ['**\/*transformer.ts'],
 				},
 				controllers: {
 					enabled: true,
 					source: 'app',
-					importAlias: '#app',
+					importAlias: '#transport',
 					glob: ['**\/*_controller.ts'],
 				},
 			}),

@@ -6,13 +6,13 @@ One service = one bounded context. Lives in `src/{domain}/services/{area}/{name}
 >
 > **Identity co-location:** identity services live under `src/identity/services/`, imported via `#identity/services/...` — co-located with the rest of the identity business module.
 >
-> **File co-location:** file services live under `src/file/services/`, imported via `#file/services/...`, and the permission catalog at `src/file/permissions.ts` — co-located with the rest of the file business module. The nav entries module is transport and lives at `app/file/nav.ts` (imported via `#app/file/nav`).
+> **File co-location:** file services live under `src/file/services/`, imported via `#file/services/...`, and the permission catalog at `src/file/permissions.ts` — co-located with the rest of the file business module. The nav entries module is transport and lives at `app/file/nav.ts` (imported via `#transport/file/nav`).
 >
-> **Log co-location:** log services live under `src/log/services/`, imported via `#log/services/...`, and the permission catalog at `src/log/permissions.ts` — co-located with the rest of the log business module. The nav entries module is transport and lives at `app/log/nav.ts` (imported via `#app/log/nav`).
+> **Log co-location:** log services live under `src/log/services/`, imported via `#log/services/...`, and the permission catalog at `src/log/permissions.ts` — co-located with the rest of the log business module. The nav entries module is transport and lives at `app/log/nav.ts` (imported via `#transport/log/nav`).
 >
 > **Backup co-location:** backup services live under `src/backup/services/`, imported via `#backup/services/...` — co-located with the rest of the backup business module.
 >
-> **Core co-location:** core services live under `src/core/services/`, imported via `#core/services/...`, and the permission catalog at `src/core/permissions.ts` — co-located with the rest of the core business module. The nav entries module is transport and lives at `app/core/nav.ts` (imported via `#app/core/nav`).
+> **Core co-location:** core services live under `src/core/services/`, imported via `#core/services/...`, and the permission catalog at `src/core/permissions.ts` — co-located with the rest of the core business module. The nav entries module is transport and lives at `app/core/nav.ts` (imported via `#transport/core/nav`).
 
 Method names describe the action, not a fixed CRUD contract. A service exposes
 whatever operations its bounded context needs. Don't force

@@ -1,12 +1,12 @@
 import { test } from '@japa/runner';
-import { buildCommonPayload } from '#app/core/helpers/i18n_payloads/common';
-import { buildDashboardPayload } from '#app/core/helpers/i18n_payloads/dashboard';
-import { buildHomePayload } from '#app/core/helpers/i18n_payloads/home';
-import { buildMaintenanceIndexPayload } from '#app/core/helpers/i18n_payloads/maintenance_front';
-import { buildAdminMaintenanceIndexPayload } from '#app/core/helpers/i18n_payloads/maintenance_index';
-import { I18nService } from '#app/core/helpers/i18n_service';
 import { FakeI18n } from '#tests/helpers/fake_i18n';
 import { LOCALES, loadLang, emptyLeaves } from '#tests/helpers/i18n_lang_loader';
+import { buildCommonPayload } from '#transport/core/helpers/i18n_payloads/common';
+import { buildDashboardPayload } from '#transport/core/helpers/i18n_payloads/dashboard';
+import { buildHomePayload } from '#transport/core/helpers/i18n_payloads/home';
+import { buildMaintenanceIndexPayload } from '#transport/core/helpers/i18n_payloads/maintenance_front';
+import { buildAdminMaintenanceIndexPayload } from '#transport/core/helpers/i18n_payloads/maintenance_index';
+import { I18nService } from '#transport/core/helpers/i18n_service';
 import type { I18n } from '@adonisjs/i18n';
 
 const BUILDER_IDS = ['home', 'dashboard', 'admin_maintenance_index', 'maintenance_index', 'common'] as const;

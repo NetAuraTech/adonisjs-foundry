@@ -18,7 +18,7 @@ import { useMenu } from '~/hooks/use_admin';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
 import { Paginated } from '~/types/paginated';
-import type { AdminRolesIndexTranslations } from '#app/identity/helpers/i18n_payloads/roles_list';
+import type { AdminRolesIndexTranslations } from '#transport/identity/helpers/i18n_payloads/roles_list';
 
 type PageProps = {
 	roles: Paginated<Data.Identity.Role>;

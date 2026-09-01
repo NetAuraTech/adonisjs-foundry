@@ -1,12 +1,12 @@
 import { inject } from '@adonisjs/core';
 import vine from '@vinejs/vine';
-import PageTranslationTransformer from '#app/cms/transformers/page_translation_transformer';
 import { GetPageDetailAction } from '#cms/actions/page/get_page_detail_action';
 import { PreviewTokenHelper } from '#cms/domain/preview_token';
 import { BuilderSessionService } from '#cms/services/page/builder_session_service';
 import { PageResolverService } from '#cms/services/page/page_resolver_service';
 import { PageContent } from '#cms/types/page';
 import env from '#start/env';
+import PageTranslationTransformer from '#transport/cms/transformers/page_translation_transformer';
 import type { HttpContext } from '@adonisjs/core/http';
 
 const previewParamsValidator = vine.create({

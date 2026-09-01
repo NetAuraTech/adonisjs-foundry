@@ -8,8 +8,8 @@ import { usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { captureTemplateThumbnail } from '~/components/cms/utils/template_thumbnail';
 import { useTranslation } from '~/hooks/use_translation';
-import type { PageEditorTranslations } from '#app/cms/helpers/i18n_payloads/page_editor';
 import type { PageContent } from '#cms/types/page';
+import type { PageEditorTranslations } from '#transport/cms/helpers/i18n_payloads/page_editor';
 
 interface SavePageTemplateModalProps {
 	pageId: number;

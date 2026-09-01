@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { type HttpContext } from '@adonisjs/core/http';
-import PagesResource from '#app/cms/rest/pages_resource';
-import { handle } from '#app/core/rest/rest_adapter';
+import PagesResource from '#transport/cms/rest/pages_resource';
+import { handle } from '#transport/core/rest/rest_adapter';
 
 /**
  * GET  /api/v1/admin/pages — list pages

@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { type HttpContext } from '@adonisjs/core/http';
-import { handle } from '#app/core/rest/rest_adapter';
-import FoldersResource from '#app/file/rest/folders_resource';
+import { handle } from '#transport/core/rest/rest_adapter';
+import FoldersResource from '#transport/file/rest/folders_resource';
 
 /**
  * GET /api/v1/admin/folders/:id — show a folder from the admin REST API.

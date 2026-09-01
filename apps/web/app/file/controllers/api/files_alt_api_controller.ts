@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { type HttpContext } from '@adonisjs/core/http';
-import { handle } from '#app/core/rest/rest_adapter';
-import FilesResource from '#app/file/rest/files_resource';
+import { handle } from '#transport/core/rest/rest_adapter';
+import FilesResource from '#transport/file/rest/files_resource';
 
 /**
  * PUT    /api/v1/admin/files/:id/alt — upsert an alt-text entry.

@@ -18,7 +18,7 @@ import { useMenu } from '~/hooks/use_admin';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { locales, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminPagesCreateTranslations } from '#app/cms/helpers/i18n_payloads/pages_create';
+import type { AdminPagesCreateTranslations } from '#transport/cms/helpers/i18n_payloads/pages_create';
 
 interface PagesCreatePageProps {
 	translations: AdminPagesCreateTranslations;

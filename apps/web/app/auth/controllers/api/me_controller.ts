@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { type HttpContext } from '@adonisjs/core/http';
-import { preloadUserRoleWithPermissions } from '#app/identity/helpers/load_user_role';
-import UserTransformer from '#app/identity/transformers/user_transformer';
+import { preloadUserRoleWithPermissions } from '#transport/identity/helpers/load_user_role';
+import UserTransformer from '#transport/identity/transformers/user_transformer';
 
 /**
  * Identity endpoint of the REST API (`/api/v1/auth`).

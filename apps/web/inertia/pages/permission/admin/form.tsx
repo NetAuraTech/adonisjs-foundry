@@ -15,7 +15,7 @@ import { useMenu } from '~/hooks/use_admin';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminPermissionsFormTranslations } from '#app/identity/helpers/i18n_payloads/permissions_form';
+import type { AdminPermissionsFormTranslations } from '#transport/identity/helpers/i18n_payloads/permissions_form';
 
 type PageProps = {
 	permission: Data.Identity.Permission | null;

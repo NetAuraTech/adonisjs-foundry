@@ -3,10 +3,14 @@ import { type HttpContext } from '@adonisjs/core/http';
 import { DeleteUserAccountAction } from '#account/actions/account/delete_user_account_action';
 import { UpdateUserAccountAction } from '#account/actions/account/update_user_account_action';
 import InvalidActionException from '#account/exceptions/invalid_action_exception';
-import { deleteAccountValidator, updateEmailValidator, updatePasswordValidator } from '#app/account/validators/account';
-import { type RestEndpoint, handle } from '#app/core/rest/rest_adapter';
-import { preloadUserRoleWithPermissions } from '#app/identity/helpers/load_user_role';
-import UserTransformer from '#app/identity/transformers/user_transformer';
+import {
+	deleteAccountValidator,
+	updateEmailValidator,
+	updatePasswordValidator,
+} from '#transport/account/validators/account';
+import { type RestEndpoint, handle } from '#transport/core/rest/rest_adapter';
+import { preloadUserRoleWithPermissions } from '#transport/identity/helpers/load_user_role';
+import UserTransformer from '#transport/identity/transformers/user_transformer';
 import type User from '#identity/models/user';
 import type { Infer } from '@vinejs/vine/types';
 
@@ -39,7 +43,7 @@ async function refetchProfile(user: User): Promise<User> {
  * Declarative account REST resource.
  *
  * Owns the `/api/v1/account` (self) endpoint declarations consumed by the
- * REST `handle` adapter (`#app/core/rest/rest_adapter`); the controllers reduce to
+ * REST `handle` adapter (`#transport/core/rest/rest_adapter`); the controllers reduce to
  * thin dispatchers over `endpoints`. The single `update` route is dispatched
  * on its `_action` body discriminator through {@link handleUpdate}.
  */

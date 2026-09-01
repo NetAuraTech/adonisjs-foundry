@@ -1,10 +1,10 @@
 import { inject } from '@adonisjs/core';
-import { regenerateCsrfToken } from '#app/auth/helpers/crsf';
-import { buildResetPasswordPayload } from '#app/auth/helpers/i18n_payloads/reset_password';
-import { resetPasswordValidator } from '#app/auth/validators/auth';
-import { I18nService } from '#app/core/helpers/i18n_service';
 import { ResetPasswordAction } from '#auth/actions/password/reset_password_action';
 import { ValidatePasswordTokenAction } from '#auth/actions/password/validate_password_token_action';
+import { regenerateCsrfToken } from '#transport/auth/helpers/crsf';
+import { buildResetPasswordPayload } from '#transport/auth/helpers/i18n_payloads/reset_password';
+import { resetPasswordValidator } from '#transport/auth/validators/auth';
+import { I18nService } from '#transport/core/helpers/i18n_service';
 import type { FullToken } from '#auth/enums/token_type';
 import type { HttpContext } from '@adonisjs/core/http';
 

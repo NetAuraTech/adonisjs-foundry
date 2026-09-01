@@ -1,6 +1,6 @@
 import { test } from '@japa/runner';
 import vine from '@vinejs/vine';
-import { addBlockSchema, builderOperationValidator, builderPresenceValidator } from '#app/cms/validators/builder';
+import { addBlockSchema, builderOperationValidator, builderPresenceValidator } from '#transport/cms/validators/builder';
 
 /**
  * Unit tests for builder validators.

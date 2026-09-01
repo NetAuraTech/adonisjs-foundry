@@ -17,8 +17,8 @@ import { useMenu } from '~/hooks/use_admin';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
 import { capitalize } from '~/lib/string';
-import type { AdminUsersShowTranslations } from '#app/identity/helpers/i18n_payloads/users_show';
 import type { OAuthProvider } from '#auth/types/auth';
+import type { AdminUsersShowTranslations } from '#transport/identity/helpers/i18n_payloads/users_show';
 
 type PageProps = {
 	user: Data.Identity.User;

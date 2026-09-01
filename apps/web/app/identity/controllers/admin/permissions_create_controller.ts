@@ -1,8 +1,8 @@
 import { inject } from '@adonisjs/core';
-import { I18nService } from '#app/core/helpers/i18n_service';
-import { buildPermissionsFormPayload } from '#app/identity/helpers/i18n_payloads/permissions_form';
-import { createPermissionValidator } from '#app/identity/validators/permission';
 import { CreatePermissionAction } from '#identity/actions/permission/create_permission_action';
+import { I18nService } from '#transport/core/helpers/i18n_service';
+import { buildPermissionsFormPayload } from '#transport/identity/helpers/i18n_payloads/permissions_form';
+import { createPermissionValidator } from '#transport/identity/validators/permission';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

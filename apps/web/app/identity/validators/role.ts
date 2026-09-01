@@ -82,4 +82,4 @@ export const updateRoleValidator = (roleId: Role['id']) =>
 		permission_ids: permissionIds(),
 	});
 
-export { restIdValidator as restRoleIdValidator } from '#app/core/validators/rest';
+export { restIdValidator as restRoleIdValidator } from '#transport/core/validators/rest';

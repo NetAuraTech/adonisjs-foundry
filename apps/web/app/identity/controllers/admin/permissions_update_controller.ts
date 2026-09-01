@@ -1,11 +1,11 @@
 import { inject } from '@adonisjs/core';
-import { I18nService } from '#app/core/helpers/i18n_service';
-import { buildPermissionsFormPayload } from '#app/identity/helpers/i18n_payloads/permissions_form';
-import PermissionTransformer from '#app/identity/transformers/permission_transformer';
-import { editPermissionValidator, updatePermissionValidator } from '#app/identity/validators/permission';
 import { GetPermissionDetailAction } from '#identity/actions/permission/get_permission_detail_action';
 import { UpdatePermissionAction } from '#identity/actions/permission/update_permission_action';
 import SystemPermissionImmutableException from '#identity/exceptions/system_permission_immutable_exception';
+import { I18nService } from '#transport/core/helpers/i18n_service';
+import { buildPermissionsFormPayload } from '#transport/identity/helpers/i18n_payloads/permissions_form';
+import PermissionTransformer from '#transport/identity/transformers/permission_transformer';
+import { editPermissionValidator, updatePermissionValidator } from '#transport/identity/validators/permission';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

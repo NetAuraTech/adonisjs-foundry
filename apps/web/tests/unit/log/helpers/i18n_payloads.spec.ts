@@ -1,8 +1,8 @@
 import { test } from '@japa/runner';
-import { I18nService } from '#app/core/helpers/i18n_service';
-import { buildLogsListPayload } from '#app/log/helpers/i18n_payloads/logs_list';
 import { FakeI18n } from '#tests/helpers/fake_i18n';
 import { LOCALES, loadLang, emptyLeaves } from '#tests/helpers/i18n_lang_loader';
+import { I18nService } from '#transport/core/helpers/i18n_service';
+import { buildLogsListPayload } from '#transport/log/helpers/i18n_payloads/logs_list';
 import type { I18n } from '@adonisjs/i18n';
 
 const BUILDER_IDS = ['logs_list'] as const;

@@ -14,7 +14,7 @@ import { permissionCategoryKey } from '~/helpers/permissions';
 import { useMenu } from '~/hooks/use_admin';
 import { useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminPermissionsIndexTranslations } from '#app/identity/helpers/i18n_payloads/permissions_list';
+import type { AdminPermissionsIndexTranslations } from '#transport/identity/helpers/i18n_payloads/permissions_list';
 
 type PageProps = {
 	permissions: Data.Identity.Permission[];

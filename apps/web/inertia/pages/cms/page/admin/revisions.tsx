@@ -14,7 +14,7 @@ import { CanAccess } from '~/guards/can_access';
 import { useMenu } from '~/hooks/use_admin';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminPagesRevisionTranslations } from '#app/cms/helpers/i18n_payloads/page_revisions';
+import type { AdminPagesRevisionTranslations } from '#transport/cms/helpers/i18n_payloads/page_revisions';
 
 interface PageProps {
 	revisions: Data.Cms.PageRevision[];

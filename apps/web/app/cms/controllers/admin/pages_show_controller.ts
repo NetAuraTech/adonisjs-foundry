@@ -1,9 +1,9 @@
 import { inject } from '@adonisjs/core';
-import { buildPagesShowPayload } from '#app/cms/helpers/i18n_payloads/pages_show';
-import PageTransformer from '#app/cms/transformers/page_transformer';
-import { showPageValidator } from '#app/cms/validators/page';
-import { I18nService } from '#app/core/helpers/i18n_service';
 import { GetPageDetailAction } from '#cms/actions/page/get_page_detail_action';
+import { buildPagesShowPayload } from '#transport/cms/helpers/i18n_payloads/pages_show';
+import PageTransformer from '#transport/cms/transformers/page_transformer';
+import { showPageValidator } from '#transport/cms/validators/page';
+import { I18nService } from '#transport/core/helpers/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

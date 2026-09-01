@@ -10,15 +10,15 @@ import {
 	findRestDelegation,
 	findValidatorInitializer,
 	resolveValidatorImport,
-} from '#app/core/rest/rest_registry_extractor';
-import { extractRestResourceValidators } from '#app/core/rest/rest_routes_registry_hook';
+} from '#transport/core/rest/rest_registry_extractor';
+import { extractRestResourceValidators } from '#transport/core/rest/rest_routes_registry_hook';
 import type { ScannedController } from '@adonisjs/assembler/types';
 
 const controllerSource = `
 import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
-import UsersResource from '#app/identity/rest/users_resource'
-import { handle } from '#app/core/rest/rest_adapter'
+import UsersResource from '#transport/identity/rest/users_resource'
+import { handle } from '#transport/core/rest/rest_adapter'
 
 @inject()
 export default class UsersShowApiController {
@@ -35,7 +35,7 @@ export default class UsersShowApiController {
 `;
 
 const resourceSource = `
-import { restIdValidator, updateValidator } from '#app/identity/validators/user'
+import { restIdValidator, updateValidator } from '#transport/identity/validators/user'
 
 export default class UsersResource {
   readonly endpoints = {
@@ -74,8 +74,8 @@ test.group('rest registry extractor', () => {
 
 	test('maps local import names to specifiers', ({ assert }) => {
 		const names = collectImportNames(controllerSource);
-		assert.equal(names.get('UsersResource'), '#app/identity/rest/users_resource');
-		assert.equal(names.get('handle'), '#app/core/rest/rest_adapter');
+		assert.equal(names.get('UsersResource'), '#transport/identity/rest/users_resource');
+		assert.equal(names.get('handle'), '#transport/core/rest/rest_adapter');
 		assert.equal(names.get('inject'), '@adonisjs/core');
 	});
 
@@ -112,7 +112,7 @@ test.group('rest registry extractor', () => {
 	test('resolves a validator identifier to its import record', ({ assert }) => {
 		assert.deepEqual(resolveValidatorImport(resourceSource, 'restIdValidator'), {
 			name: 'restIdValidator',
-			import: { specifier: '#app/identity/validators/user', type: 'named', value: 'restIdValidator' },
+			import: { specifier: '#transport/identity/validators/user', type: 'named', value: 'restIdValidator' },
 		});
 		assert.isUndefined(resolveValidatorImport(resourceSource, 'notImported'));
 	});
@@ -144,7 +144,7 @@ test.group('extractRestResourceValidators', () => {
 			assert.deepEqual(await extractRestResourceValidators(appRoot, controller), [
 				{
 					name: 'restIdValidator',
-					import: { specifier: '#app/identity/validators/user', type: 'named', value: 'restIdValidator' },
+					import: { specifier: '#transport/identity/validators/user', type: 'named', value: 'restIdValidator' },
 				},
 			]);
 		} finally {

@@ -3,8 +3,8 @@ import { urlFor } from '~/client';
 import { getIcon } from '~/helpers/oauth';
 import { useTranslation } from '~/hooks/use_translation';
 import { capitalize } from '~/lib/string';
-import type { TranslationNodes } from '#app/core/helpers/translation_tree';
 import type { OAuthProvider } from '#auth/types/auth';
+import type { TranslationNodes } from '#transport/core/helpers/translation_tree';
 
 interface AuthProviderProps {
 	/**

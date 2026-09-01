@@ -1,6 +1,6 @@
-import { nestTranslation, type TranslationNodes } from '#app/core/helpers/translation_tree';
-import { permissionCategoryKey } from '#app/identity/helpers/permission_category';
 import { createI18nEntry } from '#core/contracts/i18n_translator';
+import { nestTranslation, type TranslationNodes } from '#transport/core/helpers/translation_tree';
+import { permissionCategoryKey } from '#transport/identity/helpers/permission_category';
 import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_translator';
 
 /**

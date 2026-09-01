@@ -13,7 +13,7 @@ import { urlFor } from '~/client';
 import { CanAccess } from '~/guards/can_access';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
-import type { AdminPagesShowTranslations } from '#app/cms/helpers/i18n_payloads/pages_show';
+import type { AdminPagesShowTranslations } from '#transport/cms/helpers/i18n_payloads/pages_show';
 
 interface Props {
 	page: Data.Cms.Page;

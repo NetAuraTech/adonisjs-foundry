@@ -79,10 +79,10 @@ The flavor rewrites several startup/composition files to drop CMS
 registrations. Restore the `main` version of each:
 
 - `start/routes.ts` — restores the `full` domain-entry list, which re-registers the CMS
-  domain entry (`#app/cms/routes`) and drops the flavor's static home route
+  domain entry (`#transport/cms/routes`) and drops the flavor's static home route
   (`registerCoreHomeRoute`) — the CMS page home takes over the site root as
   `core.home.render`.
-- `start/nav.ts` — re-adds the **Pages** and **Templates** admin menu entries (`#app/cms/nav`).
+- `start/nav.ts` — re-adds the **Pages** and **Templates** admin menu entries (`#transport/cms/nav`).
 - `start/permissions.ts` — re-spreads the `cmsPermissionCatalog` (`#cms/permissions`).
 - `start/dashboard.ts` — re-registers the `page` and `template` dashboard collectors.
 - `start/sitemap.ts` — re-registers the page sitemap collector.

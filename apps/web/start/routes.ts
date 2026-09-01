@@ -13,15 +13,15 @@
 |
 */
 
-import '#app/account/routes';
-import '#app/auth/routes';
-import '#app/cms/routes';
-import '#app/core/routes';
-import '#app/file/routes';
-import '#app/identity/routes';
-import '#app/log/routes';
-import { registerCmsPageRoutes } from '#app/cms/controllers/front/routes';
-import { registerCoreHealthRoutes } from '#app/core/health.routes';
+import '#transport/account/routes';
+import '#transport/auth/routes';
+import '#transport/cms/routes';
+import '#transport/core/routes';
+import '#transport/file/routes';
+import '#transport/identity/routes';
+import '#transport/log/routes';
+import { registerCmsPageRoutes } from '#transport/cms/controllers/front/routes';
+import { registerCoreHealthRoutes } from '#transport/core/health.routes';
 
 // Health routes are outside maintenance middleware (liveness/readiness probes)
 registerCoreHealthRoutes();

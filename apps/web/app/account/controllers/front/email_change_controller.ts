@@ -1,10 +1,10 @@
 import { inject } from '@adonisjs/core';
 import { ConfirmEmailChangeAction } from '#account/actions/account/confirm_email_change_action';
-import { buildEmailChangePayload } from '#app/account/helpers/i18n_payloads/email_change';
-import { changeEmailValidator } from '#app/account/validators/account';
-import { regenerateCsrfToken } from '#app/auth/helpers/crsf';
-import { I18nService } from '#app/core/helpers/i18n_service';
 import { FullToken } from '#auth/enums/token_type';
+import { buildEmailChangePayload } from '#transport/account/helpers/i18n_payloads/email_change';
+import { changeEmailValidator } from '#transport/account/validators/account';
+import { regenerateCsrfToken } from '#transport/auth/helpers/crsf';
+import { I18nService } from '#transport/core/helpers/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

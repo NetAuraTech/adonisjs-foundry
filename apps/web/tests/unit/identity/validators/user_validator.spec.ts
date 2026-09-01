@@ -1,4 +1,6 @@
 import { test } from '@japa/runner';
+import Role from '#identity/models/role';
+import User from '#identity/models/user';
 import {
 	listValidator,
 	showValidator,
@@ -6,9 +8,7 @@ import {
 	createValidator,
 	updateValidator,
 	deleteValidator,
-} from '#app/identity/validators/user';
-import Role from '#identity/models/role';
-import User from '#identity/models/user';
+} from '#transport/identity/validators/user';
 
 test.group('User Validators', () => {
 	test('listValidator validates search and role', async ({ assert }) => {

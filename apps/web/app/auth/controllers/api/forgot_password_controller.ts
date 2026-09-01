@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
-import { forgotPasswordValidator } from '#app/auth/validators/auth';
 import { SendPasswordResetAction } from '#auth/actions/password/send_password_reset_action';
 import { FindUserByEmailAction } from '#identity/actions/user/find_user_by_email_action';
+import { forgotPasswordValidator } from '#transport/auth/validators/auth';
 import type { HttpContext } from '@adonisjs/core/http';
 
 /**

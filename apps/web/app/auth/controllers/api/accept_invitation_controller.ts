@@ -1,11 +1,11 @@
 import { inject } from '@adonisjs/core';
-import { invalidTokenNotFound } from '#app/auth/helpers/error_response';
-import { invitationValidator, acceptInvitationValidator } from '#app/auth/validators/auth';
-import { preloadUserRoleWithPermissions } from '#app/identity/helpers/load_user_role';
-import UserTransformer from '#app/identity/transformers/user_transformer';
 import { AcceptInvitationAction } from '#auth/actions/invitation/accept_invitation_action';
 import { GetInvitationAction } from '#auth/actions/invitation/get_invitation_action';
 import InvalidTokenException from '#auth/exceptions/invalid_token_exception';
+import { invalidTokenNotFound } from '#transport/auth/helpers/error_response';
+import { invitationValidator, acceptInvitationValidator } from '#transport/auth/validators/auth';
+import { preloadUserRoleWithPermissions } from '#transport/identity/helpers/load_user_role';
+import UserTransformer from '#transport/identity/transformers/user_transformer';
 import type { FullToken } from '#auth/enums/token_type';
 import type { HttpContext } from '@adonisjs/core/http';
 

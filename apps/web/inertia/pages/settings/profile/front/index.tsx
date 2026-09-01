@@ -11,7 +11,7 @@ import { sanitizeText } from '~/helpers/sanitization';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
-import type { SettingsProfileTranslations } from '#app/account/helpers/i18n_payloads/profile';
+import type { SettingsProfileTranslations } from '#transport/account/helpers/i18n_payloads/profile';
 
 interface PageProps {
 	user: Data.Identity.User;

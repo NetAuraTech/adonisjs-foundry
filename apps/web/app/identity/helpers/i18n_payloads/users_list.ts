@@ -1,5 +1,5 @@
-import { nestTranslation, type TranslationNodes } from '#app/core/helpers/translation_tree';
 import { createI18nEntry } from '#core/contracts/i18n_translator';
+import { nestTranslation, type TranslationNodes } from '#transport/core/helpers/translation_tree';
 import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_translator';
 
 /**

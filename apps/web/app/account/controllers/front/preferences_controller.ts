@@ -1,8 +1,8 @@
 import { inject } from '@adonisjs/core';
 import { UpdatePreferencesAction } from '#account/actions/preferences/update_preferences_action';
-import { buildPreferencesPayload } from '#app/account/helpers/i18n_payloads/preferences';
-import { updateValidator } from '#app/account/validators/preference';
-import { I18nService } from '#app/core/helpers/i18n_service';
+import { buildPreferencesPayload } from '#transport/account/helpers/i18n_payloads/preferences';
+import { updateValidator } from '#transport/account/validators/preference';
+import { I18nService } from '#transport/core/helpers/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

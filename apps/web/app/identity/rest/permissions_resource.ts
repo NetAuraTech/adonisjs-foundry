@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
-import { type RestEndpoint } from '#app/core/rest/rest_adapter';
-import PermissionTransformer from '#app/identity/transformers/permission_transformer';
 import { ListAllPermissionsAction } from '#identity/actions/permission/list_all_permissions_action';
+import { type RestEndpoint } from '#transport/core/rest/rest_adapter';
+import PermissionTransformer from '#transport/identity/transformers/permission_transformer';
 
 type PermissionListResult = Awaited<ReturnType<ListAllPermissionsAction['execute']>>;
 
@@ -16,7 +16,7 @@ export interface PermissionsEndpoints {
  * Declarative permissions REST resource.
  *
  * Owns the read-only permissions endpoint declarations consumed by the REST
- * `handle` adapter (`#app/core/rest/rest_adapter`); the `/api/v1/admin/permissions`
+ * `handle` adapter (`#transport/core/rest/rest_adapter`); the `/api/v1/admin/permissions`
  * controller reduces to a one-line dispatch over `endpoints`.
  */
 @inject()

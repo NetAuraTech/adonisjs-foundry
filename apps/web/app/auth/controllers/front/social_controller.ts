@@ -1,9 +1,4 @@
 import { inject } from '@adonisjs/core';
-import { regenerateCsrfToken } from '#app/auth/helpers/crsf';
-import { buildSocialDefinePasswordPayload } from '#app/auth/helpers/i18n_payloads/social_define_password';
-import { completeSocialApiCallback } from '#app/auth/helpers/social_api_callback';
-import { definePasswordValidator } from '#app/auth/validators/auth';
-import { I18nService } from '#app/core/helpers/i18n_service';
 import { DefineSocialPasswordAction } from '#auth/actions/social/define_social_password_action';
 import { FindOrCreateSocialUserAction } from '#auth/actions/social/find_or_create_social_user_action';
 import { LinkSocialProviderAction } from '#auth/actions/social/link_social_provider_action';
@@ -12,6 +7,11 @@ import { SocialApiLoginAction } from '#auth/actions/social/social_api_login_acti
 import { UnlinkSocialProviderAction } from '#auth/actions/social/unlink_social_provider_action';
 import { validateProvider } from '#auth/oauth_providers';
 import { OAuthProvider } from '#auth/types/auth';
+import { regenerateCsrfToken } from '#transport/auth/helpers/crsf';
+import { buildSocialDefinePasswordPayload } from '#transport/auth/helpers/i18n_payloads/social_define_password';
+import { completeSocialApiCallback } from '#transport/auth/helpers/social_api_callback';
+import { definePasswordValidator } from '#transport/auth/validators/auth';
+import { I18nService } from '#transport/core/helpers/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()
