@@ -12,7 +12,7 @@
 @source "../components";
 @source "../layouts";
 @source "./safelist";
-@source "../../../../../packages/design-system/src";
+@source "../../../../packages/design-system/src";
 
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant current (&[aria-current="page"]);
