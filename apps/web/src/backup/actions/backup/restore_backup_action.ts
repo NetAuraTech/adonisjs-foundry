@@ -23,7 +23,7 @@ interface RestoreBackupPayload {
 @inject()
 export class RestoreBackupAction {
 	private encryptionHelper = createEncryptionHelper(backupConfig.encryption.key.release());
-	private tempDir = 'storage/temp/backups';
+	private tempDir = backupConfig.tempDir;
 
 	constructor(protected logService: LogService) {}
 

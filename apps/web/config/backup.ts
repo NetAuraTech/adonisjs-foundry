@@ -36,6 +36,12 @@ const backupConfig = {
 	},
 
 	/**
+	 * Local temporary directory for intermediate backup artifacts (dumps,
+	 * decrypted and decompressed files) during backup runs and restores.
+	 */
+	tempDir: 'storage/temp/backups',
+
+	/**
 	 * Backup schedule configuration
 	 */
 	schedule: {
