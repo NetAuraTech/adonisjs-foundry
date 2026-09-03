@@ -7,6 +7,7 @@ import { Head, usePage } from '@inertiajs/react';
 import { ReactElement, useEffect } from 'react';
 import { toast, Toaster } from 'sonner';
 import { urlFor } from '~/client';
+import { useNavLinkActive } from '~/hooks/use_nav_link_active';
 
 interface LayoutProps {
 	children: ReactElement<SharedProps>;
@@ -21,6 +22,7 @@ export default function Layout(props: LayoutProps) {
 	const { app_name, app_url } = pageProps;
 
 	const homeHref = urlFor('core.home.render');
+	const homeActive = useNavLinkActive(homeHref);
 
 	const footerDescription = (
 		<Paragraph variant="ink-inverted" className="text-sm font-light leading-relaxed max-w-md flex items-center gap-2">
@@ -85,7 +87,7 @@ export default function Layout(props: LayoutProps) {
 				<meta name="twitter:image:alt" content={`${app_name} - ${image_alt}`} />
 			</Head>
 			<>
-				<Header appName={app_name} links={[{ label: 'Home', href: homeHref }]} />
+				<Header appName={app_name} links={[{ label: 'Home', href: homeHref, isActive: homeActive }]} />
 				<Toaster position="top-right" richColors />
 				{children}
 				<Footer

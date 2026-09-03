@@ -13,7 +13,7 @@ const menu = [
 	{
 		category: 'no_category',
 		label: null,
-		entries: [{ label: 'Dashboard', href: '/admin/dashboard', icon: 'LayoutDashboard' }],
+		entries: [{ label: 'Dashboard', href: '/admin/dashboard', icon: 'LayoutDashboard', isActive: true }],
 	},
 	{
 		category: 'content',

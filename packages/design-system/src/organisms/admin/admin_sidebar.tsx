@@ -4,7 +4,6 @@ import { Card } from '../../atoms/card/card';
 import { Heading } from '../../atoms/heading/heading';
 import { Icon } from '../../atoms/icon/icon';
 import { NavLink } from '../../atoms/nav_link/nav_link';
-import { useNavLinkActive } from '../../hooks/use_nav_link_active';
 import type { ReactNode } from 'react';
 
 /**
@@ -21,6 +20,12 @@ export interface AdminMenuEntry {
 	href: string;
 	/** Optional icon name resolved by the `Icon` atom. */
 	icon?: string;
+	/**
+	 * Whether the entry points at the current page, computed by the caller (the
+	 * sidebar never inspects the URL itself). Active entries get
+	 * `aria-current="page"` and the variant's `current:` styles.
+	 */
+	isActive?: boolean;
 }
 
 /**
@@ -51,8 +56,9 @@ interface AdminSidebarProps {
 	/** Pre-formatted current-date string (locale resolved by the caller). */
 	dateLabel: string;
 	/**
-	 * Navigation groups with resolved hrefs. The caller builds each href and
-	 * drops entries the user may not access before injecting them.
+	 * Navigation groups with resolved hrefs and active states. The caller
+	 * builds each href, computes each `isActive`, and drops entries the user
+	 * may not access before injecting them.
 	 */
 	menu: AdminMenuGroup[];
 	/**
@@ -65,15 +71,15 @@ interface AdminSidebarProps {
 }
 
 /**
- * Renders one navigation entry, computing its active state from the current
- * URL. Kept as a private child so `useNavLinkActive` is called once per entry
- * at the top level rather than inside a list callback.
+ * Renders one navigation entry. Kept as a private child so the `NavLink` is
+ * instantiated once per entry rather than inline in the list callback. The
+ * active state is injected through the `entry.isActive` prop.
  */
 function AdminMenuEntryItem(props: { entry: AdminMenuEntry }) {
 	const { entry } = props;
 
 	return (
-		<NavLink href={entry.href} isActive={useNavLinkActive(entry.href)} label={entry.label} variant="admin_nav">
+		<NavLink href={entry.href} isActive={entry.isActive} label={entry.label} variant="admin_nav">
 			{entry.icon && <Icon name={entry.icon} />}
 		</NavLink>
 	);

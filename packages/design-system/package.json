@@ -34,7 +34,6 @@
     "./separator": "./src/atoms/separator/separator.tsx",
     "./table": "./src/atoms/table/table.tsx",
     "./textarea": "./src/atoms/textarea/textarea.tsx",
-    "./use-nav-link-active": "./src/hooks/use_nav_link_active.ts",
     "./user-status": "./src/atoms/user_status/user_status.tsx"
   },
   "scripts": {
