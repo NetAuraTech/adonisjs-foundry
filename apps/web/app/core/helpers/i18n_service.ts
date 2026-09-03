@@ -32,7 +32,7 @@ import {
  *
  * @example With ICU replacements
  * ```ts
- * session.flash('success', this.i18n.translate('admin.users.deleted', { username }))
+ * session.flash('success', this.i18n.translate('identity.admin.users.deleted', { username }))
  * ```
  *
  * @example Build a nested Inertia translation payload from flat keys
@@ -47,8 +47,8 @@ import {
  * @example Mix plain keys and entry() markers (replacements resolved inside buildPayload)
  * ```ts
  * const translations = this.i18n.buildPayload({
- *   email: 'admin.users.form.email.value',
- *   title: this.i18n.entry('admin.users.edit.title', { username }),
+ *   email: 'identity.admin.users.form.email.value',
+ *   title: this.i18n.entry('identity.admin.users.edit.title', { username }),
  * })
  * ```
  */
@@ -83,8 +83,8 @@ export class I18nService implements I18nTranslator {
 	 * @example
 	 * ```ts
 	 * this.i18n.buildPayload({
-	 *   email: 'admin.users.form.email.value',
-	 *   title: this.i18n.entry('admin.users.edit.title', { username }),
+	 *   email: 'identity.admin.users.form.email.value',
+	 *   title: this.i18n.entry('identity.admin.users.edit.title', { username }),
 	 * })
 	 * ```
 	 */

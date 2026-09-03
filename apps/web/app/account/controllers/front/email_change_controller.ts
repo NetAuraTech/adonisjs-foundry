@@ -38,7 +38,7 @@ export default class EmailChangeController {
 
 		regenerateCsrfToken(ctx);
 
-		session.flash('success', this.i18n.translate('settings.email.change.success'));
+		session.flash('success', this.i18n.translate('account.email.change.success'));
 
 		return response.redirect().toRoute('account.account.render');
 	}

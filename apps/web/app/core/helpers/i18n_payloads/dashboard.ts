@@ -7,13 +7,13 @@ import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_tr
 export const DASHBOARD_MAPPING = {
 	title: 'admin.dashboard.title',
 	cards: {
-		users: 'admin.users.value',
-		files: 'admin.files.value',
-		folders: 'admin.dashboard.cards.folders',
-		no_role: 'admin.dashboard.cards.no_role',
+		users: 'identity.admin.users.value',
+		files: 'file.admin.files.value',
+		folders: 'file.admin.dashboard.cards.folders',
+		no_role: 'identity.admin.dashboard.cards.no_role',
 	},
 	recent: {
-		uploads: 'admin.dashboard.recent.uploads',
+		uploads: 'file.admin.dashboard.recent.uploads',
 		empty: 'admin.dashboard.recent.empty',
 	},
 	view_all: 'admin.dashboard.view_all',

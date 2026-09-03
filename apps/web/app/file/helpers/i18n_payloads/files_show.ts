@@ -5,41 +5,41 @@ import { createI18nEntry, type BuildPayloadResult, type I18nTranslator } from '#
  * alt-text editor.
  */
 export const FILES_SHOW_MAPPING = {
-	title: createI18nEntry('admin.files.show.title', { name: '{name}' }),
+	title: createI18nEntry('file.admin.files.show.title', { name: '{name}' }),
 	actions: {
-		back: 'admin.files.list.title',
+		back: 'file.admin.files.list.title',
 		delete: {
-			value: createI18nEntry('admin.files.delete.title', { name: '{name}' }),
-			confirm: 'admin.files.delete.confirm',
+			value: createI18nEntry('file.admin.files.delete.title', { name: '{name}' }),
+			confirm: 'file.admin.files.delete.confirm',
 		},
 	},
 	info: {
-		name: 'admin.files.show.info.name',
-		type: 'admin.files.show.info.type',
-		size: 'admin.files.show.info.size',
-		uploaded_at: 'admin.files.show.info.uploaded_at',
-		value: 'admin.files.show.info.value',
+		name: 'file.admin.files.show.info.name',
+		type: 'file.admin.files.show.info.type',
+		size: 'file.admin.files.show.info.size',
+		uploaded_at: 'file.admin.files.show.info.uploaded_at',
+		value: 'file.admin.files.show.info.value',
 	},
 	alts: {
-		value: 'admin.files.show.alts.value',
-		add: 'admin.files.show.alts.add',
+		value: 'file.admin.files.show.alts.value',
+		add: 'file.admin.files.show.alts.add',
 		delete: {
-			confirm: 'admin.files.show.alts.delete.confirm',
+			confirm: 'file.admin.files.show.alts.delete.confirm',
 		},
 		form: {
-			update: 'admin.files.show.alts.form.update',
-			submit: 'admin.files.show.alts.form.submit',
-			cancel: 'admin.files.show.alts.form.cancel',
+			update: 'file.admin.files.show.alts.form.update',
+			submit: 'file.admin.files.show.alts.form.submit',
+			cancel: 'file.admin.files.show.alts.form.cancel',
 			locale: {
-				value: 'admin.files.show.alts.form.locale.value',
+				value: 'file.admin.files.show.alts.form.locale.value',
 			},
 			key: {
-				value: 'admin.files.show.alts.form.key.value',
-				placeholder: 'admin.files.show.alts.form.key.placeholder',
+				value: 'file.admin.files.show.alts.form.key.value',
+				placeholder: 'file.admin.files.show.alts.form.key.placeholder',
 			},
 			alt_text: {
-				value: 'admin.files.show.alts.form.alt_text.value',
-				placeholder: 'admin.files.show.alts.form.alt_text.placeholder',
+				value: 'file.admin.files.show.alts.form.alt_text.value',
+				placeholder: 'file.admin.files.show.alts.form.alt_text.placeholder',
 			},
 		},
 	},

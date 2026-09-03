@@ -30,7 +30,7 @@ export default class PreferencesController {
 
 		await user.refresh();
 
-		session.flash('success', this.i18n.translate('settings.preferences.success'));
+		session.flash('success', this.i18n.translate('account.preferences.success'));
 
 		return response.redirect().toRoute('account.preferences.render');
 	}

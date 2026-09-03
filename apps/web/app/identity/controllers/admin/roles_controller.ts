@@ -51,7 +51,7 @@ export default class RolesController {
 
 		await this.deleteRoleAction.execute({ id: payload.id });
 
-		session.flash('success', this.i18n.translate('admin.roles.flash.deleted'));
+		session.flash('success', this.i18n.translate('identity.admin.roles.flash.deleted'));
 
 		return response.redirect().toRoute('admin.identity.roles.render');
 	}

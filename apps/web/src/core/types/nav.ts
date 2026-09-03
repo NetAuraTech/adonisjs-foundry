@@ -13,7 +13,7 @@
 import type { PermissionSlug } from '#start/permissions';
 
 export type AdminNavEntry = {
-	/** i18n key resolved per request (e.g. `admin.users.value`, `page.admin.value`). */
+	/** i18n key resolved per request (e.g. `identity.admin.users.value`, `page.admin.value`). */
 	label: string;
 	/** Icon name resolved by the `Icon` atom; entries without an icon render text-only. */
 	icon?: string;

@@ -5,28 +5,28 @@ import { createI18nEntry, type BuildPayloadResult, type I18nTranslator } from '#
  */
 export const PERMISSIONS_FORM_MAPPING = {
 	title: {
-		create: 'admin.permissions.create.title',
-		edit: createI18nEntry('admin.permissions.edit.title', { name: '{name}' }),
+		create: 'identity.admin.permissions.create.title',
+		edit: createI18nEntry('identity.admin.permissions.edit.title', { name: '{name}' }),
 	},
 	name: {
-		value: 'admin.permissions.form.name.value',
-		placeholder: 'admin.permissions.form.name.placeholder',
+		value: 'identity.admin.permissions.form.name.value',
+		placeholder: 'identity.admin.permissions.form.name.placeholder',
 	},
 	slug: {
-		value: 'admin.permissions.form.slug.value',
-		placeholder: 'admin.permissions.form.slug.placeholder',
+		value: 'identity.admin.permissions.form.slug.value',
+		placeholder: 'identity.admin.permissions.form.slug.placeholder',
 	},
 	category: {
-		value: 'admin.permissions.form.category.value',
-		placeholder: 'admin.permissions.form.category.placeholder',
+		value: 'identity.admin.permissions.form.category.value',
+		placeholder: 'identity.admin.permissions.form.category.placeholder',
 	},
 	description: {
-		value: 'admin.permissions.form.description.value',
-		placeholder: 'admin.permissions.form.description.placeholder',
+		value: 'identity.admin.permissions.form.description.value',
+		placeholder: 'identity.admin.permissions.form.description.placeholder',
 	},
-	submit: 'admin.permissions.form.submit',
+	submit: 'identity.admin.permissions.form.submit',
 	actions: {
-		list: 'admin.permissions.list.title',
+		list: 'identity.admin.permissions.list.title',
 	},
 };
 

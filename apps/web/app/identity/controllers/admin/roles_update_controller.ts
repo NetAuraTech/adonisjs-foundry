@@ -59,7 +59,7 @@ export default class RolesUpdateController {
 			permissionIds: payload.permission_ids,
 		});
 
-		session.flash('success', this.i18n.translate('admin.roles.flash.updated'));
+		session.flash('success', this.i18n.translate('identity.admin.roles.flash.updated'));
 
 		return response.redirect().toRoute('admin.identity.roles_show.render', { id });
 	}

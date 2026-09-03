@@ -10,38 +10,38 @@ import type { RoleEntry } from '#identity/domain/role';
  * slugs and sections.
  */
 export const USERS_SHOW_MAPPING = {
-	title: 'admin.users.list.title',
+	title: 'identity.admin.users.list.title',
 	info: {
-		email: 'admin.users.show.info.email',
-		username: 'admin.users.show.info.username',
-		value: 'admin.users.show.info.value',
+		email: 'identity.admin.users.show.info.email',
+		username: 'identity.admin.users.show.info.username',
+		value: 'identity.admin.users.show.info.value',
 	},
 	history: {
-		created_at: 'admin.users.show.history.created_at',
-		updated_at: 'admin.users.show.history.updated_at',
-		verified_at: 'admin.users.show.history.verified_at',
-		value: 'admin.users.show.history.value',
+		created_at: 'identity.admin.users.show.history.created_at',
+		updated_at: 'identity.admin.users.show.history.updated_at',
+		verified_at: 'identity.admin.users.show.history.verified_at',
+		value: 'identity.admin.users.show.history.value',
 	},
 	providers: {
-		connected: 'admin.users.show.providers.connected',
-		not_connected: 'admin.users.show.providers.not_connected',
-		value: 'admin.users.show.providers.value',
+		connected: 'identity.admin.users.show.providers.connected',
+		not_connected: 'identity.admin.users.show.providers.not_connected',
+		value: 'identity.admin.users.show.providers.value',
 	},
 	status: {
-		verified: 'admin.users.status.verified',
-		unverified: 'admin.users.status.unverified',
-		pending_invite: 'admin.users.status.pending_invite',
+		verified: 'identity.admin.users.status.verified',
+		unverified: 'identity.admin.users.status.unverified',
+		pending_invite: 'identity.admin.users.status.pending_invite',
 	},
 	actions: {
-		edit: createI18nEntry('admin.users.edit.title', { username: '{username}' }),
-		delete: createI18nEntry('admin.users.delete.title', { username: '{username}' }),
+		edit: createI18nEntry('identity.admin.users.edit.title', { username: '{username}' }),
+		delete: createI18nEntry('identity.admin.users.delete.title', { username: '{username}' }),
 	},
 	roles: {
-		value: 'admin.users.show.role.value',
-		current: 'admin.users.show.role.current',
+		value: 'identity.admin.users.show.role.value',
+		current: 'identity.admin.users.show.role.current',
 	},
 	permissions: {
-		value: createI18nEntry('admin.users.show.permission.value', { amount: '{amount}' }),
+		value: createI18nEntry('identity.admin.users.show.permission.value', { amount: '{amount}' }),
 	},
 };
 
@@ -83,12 +83,12 @@ export function buildUsersShowPayload(
 
 		if (section && action) {
 			if (!permissionsPayload.category[section]) {
-				permissionsPayload.category[section] = `admin.users.permissions.category.${section}`;
+				permissionsPayload.category[section] = `identity.admin.users.permissions.category.${section}`;
 			}
 
 			if (!permissionsPayload[section]) permissionsPayload[section] = {};
 			nestTranslation(permissionsPayload, `${section}.${action}`, {
-				value: `admin.users.permissions.${section}.${action}.value`,
+				value: `identity.admin.users.permissions.${section}.${action}.value`,
 			});
 		}
 	}

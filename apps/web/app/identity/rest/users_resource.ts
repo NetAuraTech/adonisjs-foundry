@@ -160,10 +160,10 @@ export default class UsersResource {
 			transform: (entity) => UserTransformer.transform(entity),
 			page: {
 				flash: (_context, _prepared, payload, result) => {
-					let message = this.i18n.translate('admin.users.updated');
+					let message = this.i18n.translate('identity.admin.users.updated');
 
 					if (result?.pendingEmail === payload.email) {
-						message = `${message} ${this.i18n.translate('admin.users.updated_email')}`;
+						message = `${message} ${this.i18n.translate('identity.admin.users.updated_email')}`;
 					}
 
 					return message;

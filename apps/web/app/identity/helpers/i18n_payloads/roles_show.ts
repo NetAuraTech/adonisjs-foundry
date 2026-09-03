@@ -10,34 +10,34 @@ import type { RoleEntry } from '#identity/domain/role';
  * data-driven slug.
  */
 export const ROLES_SHOW_MAPPING = {
-	title: createI18nEntry('admin.roles.show.title', { name: '{name}' }),
-	name: { value: 'admin.roles.form.name.value' },
-	slug: { value: 'admin.roles.form.slug.value' },
-	description: { value: 'admin.roles.form.description.value' },
+	title: createI18nEntry('identity.admin.roles.show.title', { name: '{name}' }),
+	name: { value: 'identity.admin.roles.form.name.value' },
+	slug: { value: 'identity.admin.roles.form.slug.value' },
+	description: { value: 'identity.admin.roles.form.description.value' },
 	system: {
-		value: 'admin.roles.system.value',
-		hint: 'admin.roles.system.hint',
+		value: 'identity.admin.roles.system.value',
+		hint: 'identity.admin.roles.system.hint',
 	},
 	users: {
-		value: 'admin.roles.users.value',
-		empty: 'admin.roles.users.empty',
+		value: 'identity.admin.roles.users.value',
+		empty: 'identity.admin.roles.users.empty',
 		table: {
-			username: 'admin.roles.users.table.username',
-			email: 'admin.roles.users.table.email',
+			username: 'identity.admin.roles.users.table.username',
+			email: 'identity.admin.roles.users.table.email',
 		},
-		actions: 'admin.roles.actions',
-		show: createI18nEntry('admin.users.show.title', { username: '{username}' }),
+		actions: 'identity.admin.roles.actions',
+		show: createI18nEntry('identity.admin.users.show.title', { username: '{username}' }),
 	},
 	permissions: {
-		value: 'admin.roles.form.permissions.value',
+		value: 'identity.admin.roles.form.permissions.value',
 	},
 	actions: {
-		list: 'admin.roles.list.title',
-		edit: createI18nEntry('admin.roles.edit.title', { name: '{name}' }),
-		delete: createI18nEntry('admin.roles.delete.title', { name: '{name}' }),
+		list: 'identity.admin.roles.list.title',
+		edit: createI18nEntry('identity.admin.roles.edit.title', { name: '{name}' }),
+		delete: createI18nEntry('identity.admin.roles.delete.title', { name: '{name}' }),
 	},
 	delete: {
-		confirm: createI18nEntry('admin.roles.delete.confirm', { name: '{name}' }),
+		confirm: createI18nEntry('identity.admin.roles.delete.confirm', { name: '{name}' }),
 	},
 };
 
