@@ -9,6 +9,7 @@ import { ThemeToggle } from '~/components/molecules/theme_toggle';
 import { useMenu } from '~/hooks/use_admin';
 import { useAuth } from '~/hooks/use_auth';
 import { useIsLarge } from '~/hooks/use_is_large';
+import { isNavLinkActive } from '~/hooks/use_nav_link_active';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 
 interface LayoutProps {
@@ -59,11 +60,15 @@ export default function Layout(props: LayoutProps) {
 			label: group.label,
 			entries: group.entries
 				.filter((entry) => (Array.isArray(entry.permission) ? canAny(entry.permission) : can(entry.permission)))
-				.map((entry) => ({
-					label: entry.label,
-					href: urlFor(entry.route as any, entry.routeParams as any),
-					icon: entry.icon,
-				})),
+				.map((entry) => {
+					const href = urlFor(entry.route as any, entry.routeParams as any);
+					return {
+						label: entry.label,
+						href,
+						icon: entry.icon,
+						isActive: isNavLinkActive(href),
+					};
+				}),
 		}))
 		.filter((group) => group.entries.length > 0);
 

@@ -12,7 +12,7 @@ type Story = StoryObj<typeof Header>;
 export const Default: Story = {
 	args: {
 		appName: 'Foundry',
-		links: [{ label: 'Home', href: '/' }],
+		links: [{ label: 'Home', href: '/', isActive: true }],
 	},
 };
 
@@ -20,7 +20,7 @@ export const MultipleLinks: Story = {
 	args: {
 		appName: 'Foundry',
 		links: [
-			{ label: 'Home', href: '/' },
+			{ label: 'Home', href: '/', isActive: true },
 			{ label: 'About', href: '/about' },
 			{ label: 'Contact', href: '/contact' },
 		],

@@ -780,7 +780,7 @@ inertia/
 ├── guards/                                 # authenticated.tsx, can_access.tsx, has_role.tsx
 ├── helpers/                                # authorization.ts, avatar.ts, oauth.tsx, sanitization.ts, validation_rules.ts
 ├── hooks/                                  # use_admin.ts, use_auth.ts, use_form_validation.ts, use_is_large.ts,
-│                                           # use_scroll_reveal.ts, use_theme.ts, use_translation.ts
+│                                           # use_nav_link_active.ts, use_scroll_reveal.ts, use_theme.ts, use_translation.ts
 │                                           # (CMS-private hooks live in components/cms/hooks/)
 ├── layouts/                                # default.tsx, admin.tsx
 ├── lib/                                    # string.ts

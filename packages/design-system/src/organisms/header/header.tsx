@@ -2,7 +2,6 @@ import { Link, router } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { cn, tv } from 'tailwind-variants';
 import { NavLink } from '../../atoms/nav_link/nav_link';
-import { useNavLinkActive } from '../../hooks/use_nav_link_active';
 
 /**
  * A single primary-navigation entry for the {@link Header}.
@@ -15,6 +14,12 @@ export interface HeaderLink {
 	label: string;
 	/** Resolved URL the link navigates to. */
 	href: string;
+	/**
+	 * Whether the link points at the current page, computed by the caller (the
+	 * header never inspects the URL itself). Active links get
+	 * `aria-current="page"` and the variant's `current:` styles.
+	 */
+	isActive?: boolean;
 }
 
 const header = tv({
@@ -25,9 +30,9 @@ interface HeaderProps {
 	/** The application name, rendered as the logo link. */
 	appName: string;
 	/**
-	 * Primary navigation links, rendered in order inside the nav. Hrefs are
-	 * built by the caller; active state is derived from the current URL. The
-	 * first entry also drives the logo's href — put the home link first.
+	 * Primary navigation links, rendered in order inside the nav. Hrefs and
+	 * active states are computed by the caller. The first entry also drives the
+	 * logo's href — put the home link first.
 	 */
 	links: HeaderLink[];
 	/** Additional Tailwind classes merged onto the `<header>`. */
@@ -35,22 +40,14 @@ interface HeaderProps {
 }
 
 /**
- * Renders one navigation entry, computing its active state from the current
- * URL. Kept as a private child so `useNavLinkActive` is called once per entry
- * at the top level rather than inside a list callback.
+ * Renders one navigation entry. Kept as a private child so the `NavLink` is
+ * instantiated once per entry rather than inline in the list callback. The
+ * active state is injected through the `link.isActive` prop.
  */
 function HeaderNavLink(props: { link: HeaderLink; onClick?: () => void }) {
 	const { link, onClick } = props;
 
-	return (
-		<NavLink
-			href={link.href}
-			label={link.label}
-			variant="nav"
-			isActive={useNavLinkActive(link.href)}
-			onClick={onClick}
-		/>
-	);
+	return <NavLink href={link.href} label={link.label} variant="nav" isActive={link.isActive} onClick={onClick} />;
 }
 
 /**

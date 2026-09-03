@@ -4,7 +4,8 @@ import { defineConfig } from 'vitest/config';
 /**
  * Minimal Vitest setup for frontend seams: deterministic, framework-free
  * helpers under `inertia/components/` (e.g. `cloneBlock`) and
- * `inertia/helpers/` (e.g. the authorization checks), plus Inertia page
+ * `inertia/helpers/` (e.g. the authorization checks), pure functions under
+ * `inertia/hooks/` (e.g. nav-link active-state matching), plus Inertia page
  * specs under `inertia/pages/` that pin conditional-rendering contracts.
  * Page specs opt into jsdom individually via a `// @vitest-environment
  * jsdom` docblock, so helper specs keep the fast node environment.
@@ -21,6 +22,11 @@ export default defineConfig({
 	},
 	test: {
 		environment: 'node',
-		include: ['inertia/components/**/*.spec.ts', 'inertia/helpers/**/*.spec.ts', 'inertia/pages/**/*.spec.tsx'],
+		include: [
+			'inertia/components/**/*.spec.ts',
+			'inertia/helpers/**/*.spec.ts',
+			'inertia/hooks/**/*.spec.ts',
+			'inertia/pages/**/*.spec.tsx',
+		],
 	},
 });
