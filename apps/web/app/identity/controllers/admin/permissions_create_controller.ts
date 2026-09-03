@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { CreatePermissionAction } from '#identity/actions/permission/create_permission_action';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import { buildPermissionsFormPayload } from '#transport/identity/helpers/i18n_payloads/permissions_form';
 import { createPermissionValidator } from '#transport/identity/validators/permission';
 import type { HttpContext } from '@adonisjs/core/http';
@@ -18,7 +19,7 @@ export default class PermissionsCreateController {
 	async render(ctx: HttpContext) {
 		const { inertia } = ctx;
 
-		return inertia.render('permission/admin/form', {
+		return renderInertiaPage(inertia, 'permission/admin/form', {
 			permission: null,
 			translations: buildPermissionsFormPayload(this.i18n),
 		});

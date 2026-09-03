@@ -4,6 +4,7 @@ import { GetRoleDetailAction } from '#identity/actions/role/get_role_detail_acti
 import { UpdateRoleAction } from '#identity/actions/role/update_role_action';
 import SystemRoleImmutableException from '#identity/exceptions/system_role_immutable_exception';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import { buildRolesFormPayload } from '#transport/identity/helpers/i18n_payloads/roles_form';
 import PermissionTransformer from '#transport/identity/transformers/permission_transformer';
 import RoleTransformer from '#transport/identity/transformers/role_transformer';
@@ -35,7 +36,7 @@ export default class RolesUpdateController {
 
 		const permissions = await this.listAllPermissionsAction.execute();
 
-		return inertia.render('role/admin/form', {
+		return renderInertiaPage(inertia, 'role/admin/form', {
 			role: RoleTransformer.transform(role),
 			permissions: PermissionTransformer.transform(permissions.map((permission) => permission.toDomain())),
 			translations: buildRolesFormPayload(this.i18n, permissions),

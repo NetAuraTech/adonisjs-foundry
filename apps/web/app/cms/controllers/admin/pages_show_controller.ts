@@ -4,6 +4,7 @@ import { buildPagesShowPayload } from '#transport/cms/helpers/i18n_payloads/page
 import PageTransformer from '#transport/cms/transformers/page_transformer';
 import { showPageValidator } from '#transport/cms/validators/page';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()
@@ -19,7 +20,7 @@ export default class PagesShowController {
 		const { id } = await showPageValidator.validate(params);
 		const page = await this.getPageDetailAction.execute({ id });
 
-		return inertia.render('cms/page/admin/show', {
+		return renderInertiaPage(inertia, 'cms/page/admin/show', {
 			page: PageTransformer.transform(page),
 			translations: buildPagesShowPayload(this.i18n),
 		});

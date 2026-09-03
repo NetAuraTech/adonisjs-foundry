@@ -3,6 +3,7 @@ import { UpdateUserProfileAction } from '#account/actions/profile/update_user_pr
 import { buildProfilePayload } from '#transport/account/helpers/i18n_payloads/profile';
 import { profileValidator } from '#transport/account/validators/profile';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import UserTransformer from '#transport/identity/transformers/user_transformer';
 import type { HttpContext } from '@adonisjs/core/http';
 
@@ -18,7 +19,7 @@ export default class ProfileController {
 
 		const user = auth.user!;
 
-		return inertia.render('settings/profile/front/index', {
+		return renderInertiaPage(inertia, 'settings/profile/front/index', {
 			user: UserTransformer.transform(user.toDomain()),
 			translations: buildProfilePayload(this.i18n),
 		});

@@ -3,6 +3,7 @@ import { MaintenanceService } from '#core/services/maintenance_service';
 import { LogService } from '#log/services/log_service';
 import { buildAdminMaintenanceIndexPayload } from '#transport/core/helpers/i18n_payloads/maintenance_index';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import type { MaintenanceConfig } from '#core/types/maintenance';
 import type { HttpContext } from '@adonisjs/core/http';
 
@@ -46,7 +47,7 @@ export default class MaintenanceController {
 			};
 		}
 
-		return inertia.render('maintenance/admin/index', {
+		return renderInertiaPage(inertia, 'maintenance/admin/index', {
 			config,
 			effectiveEnabled: effectiveConfig.enabled,
 			memoryConfig: memoryConfigDto,

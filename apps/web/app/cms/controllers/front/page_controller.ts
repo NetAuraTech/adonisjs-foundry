@@ -6,6 +6,7 @@ import { ResolvedPageContent } from '#cms/types/page';
 import { StorageService } from '#file/services/storage_service';
 import { CacheService } from '#shared/services/cache_service';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()
@@ -55,7 +56,7 @@ export default class PageController {
 			metaImageUrl = await this.storageService.url(page.metaImage.path, page.metaImage.disk);
 		}
 
-		return (inertia.render as any)('cms/page/front/show', {
+		return renderInertiaPage(inertia, 'cms/page/front/show', {
 			id: page.id,
 			locale,
 			title: translation.title,
@@ -105,7 +106,7 @@ export default class PageController {
 			metaImageUrl = await this.storageService.url(page.metaImage.path, page.metaImage.disk);
 		}
 
-		return (inertia.render as any)('cms/page/front/show', {
+		return renderInertiaPage(inertia, 'cms/page/front/show', {
 			id: page.id,
 			locale,
 			title: translation.title,

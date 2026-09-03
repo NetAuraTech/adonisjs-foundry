@@ -3,6 +3,7 @@ import { enabledProviders } from '#auth/oauth_providers';
 import { ListAllPermissionsAction } from '#identity/actions/permission/list_all_permissions_action';
 import { GetUserDetailAction } from '#identity/actions/user/get_user_detail_action';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import { buildUsersShowPayload } from '#transport/identity/helpers/i18n_payloads/users_show';
 import PermissionTransformer from '#transport/identity/transformers/permission_transformer';
 import UserTransformer from '#transport/identity/transformers/user_transformer';
@@ -26,7 +27,7 @@ export default class UserShowController {
 
 		const permissions = await this.listAllPermissionsAction.execute();
 
-		return inertia.render('auth/admin/show', {
+		return renderInertiaPage(inertia, 'auth/admin/show', {
 			user: UserTransformer.transform(user),
 			providers: enabledProviders,
 			permissions: PermissionTransformer.transform(permissions.map((permission) => permission.toDomain())),

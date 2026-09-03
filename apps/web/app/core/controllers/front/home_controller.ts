@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { buildHomePayload } from '#transport/core/helpers/i18n_payloads/home';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import type { HttpContext } from '@adonisjs/core/http';
 
 /**
@@ -22,7 +23,7 @@ export default class HomeController {
 	 * @returns The Inertia-rendered `core/front/home` page.
 	 */
 	async render({ inertia }: HttpContext) {
-		return inertia.render('core/front/home', {
+		return renderInertiaPage(inertia, 'core/front/home', {
 			translations: buildHomePayload(this.i18n),
 		});
 	}

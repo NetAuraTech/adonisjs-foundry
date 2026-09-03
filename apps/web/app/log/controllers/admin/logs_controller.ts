@@ -2,6 +2,7 @@ import { inject } from '@adonisjs/core';
 import { ListLogEntriesAction } from '#log/actions/log/list_log_entries_action';
 import { extractPagination } from '#transport/core/helpers/extract_pagination';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import { stripEmptyStrings } from '#transport/core/helpers/strip_empty_strings';
 import { buildLogsListPayload } from '#transport/log/helpers/i18n_payloads/logs_list';
 import LogEntryTransformer from '#transport/log/transformers/log_entry_transformer';
@@ -34,7 +35,7 @@ export default class LogsController {
 			...pagination,
 		});
 
-		return inertia.render('log/admin/index', {
+		return renderInertiaPage(inertia, 'log/admin/index', {
 			entries: LogEntryTransformer.paginate(entries.all(), entries.getMeta()),
 			filters: {
 				...payload,

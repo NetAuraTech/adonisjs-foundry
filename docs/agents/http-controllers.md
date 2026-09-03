@@ -13,13 +13,14 @@ One controller = one action. `render()` serves the Inertia page; `execute()` per
 ```typescript
 import { inject } from '@adonisjs/core';
 import type { HttpContext } from '@adonisjs/core/http';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 
 @inject()
 export default class ExampleController {
 	constructor(protected service: SomeService) {}
 
 	async render(ctx: HttpContext) {
-		return ctx.inertia.render('path/to/page', {
+		return renderInertiaPage(ctx.inertia, 'path/to/page', {
 			translations: {/* i18n */},
 		});
 	}
@@ -46,7 +47,7 @@ export default class ExampleController {
 - Validation: import from the domain's validators (`#transport/{domain}/validators/...`) or the shared core validators (`#transport/core/validators/...`, e.g. the pagination schema), validate before every service call.
 - Routes: domain route modules live in `start/routes/{name}.routes.ts` as `register*` functions wired from `start/routes.ts`. Migrated domains (identity, file, log, …) are the exception: they self-register from `app/{domain}/routes.ts` (co-located with their controllers), imported for side effect from `start/routes.ts` and gated by the `admin` / `adminApi` feature flags inside the module.
 - Codegen: `adonisrc.ts` scans `app/` for `**/*_controller.ts` / `**/*transformer.ts` (import alias `#transport`), so a controller at `app/{domain}/controllers/{context}/{name}_controller.ts` is referenced as `controllers.{domain}.{context}.{Name}`.
-- Inertia responses: always pass a `translations` payload with i18n keys.
+- Inertia responses: always pass a `translations` payload with i18n keys, and render through the shared helper `renderInertiaPage(ctx.inertia, page, props)` from `#transport/core/helpers/inertia_render` — never `ctx.inertia.render` directly, which drops per-page prop type safety for pages carrying rich, non-JSON prop types.
 - Auth: use `auth.getUserOrFail()` on authenticated routes.
 - **Manual front pages are always served by controllers** — never an inline `inertia.render` in route declarations. The controller is where server-side resolution happens (e.g. `FindFileAction` → `FileTransformer`), so every future server-side need stays uniform across manual fronts.
 

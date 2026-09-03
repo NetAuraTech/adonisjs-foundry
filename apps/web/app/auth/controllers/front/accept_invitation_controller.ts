@@ -4,6 +4,7 @@ import { GetInvitationAction } from '#auth/actions/invitation/get_invitation_act
 import { buildAcceptInvitationPayload } from '#transport/auth/helpers/i18n_payloads/accept_invitation';
 import { acceptInvitationValidator, invitationValidator } from '#transport/auth/validators/auth';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import UserTransformer from '#transport/identity/transformers/user_transformer';
 import type { FullToken } from '#auth/enums/token_type';
 import type { HttpContext } from '@adonisjs/core/http';
@@ -22,7 +23,7 @@ export default class AcceptInvitationController {
 		const payload = await invitationValidator.validate(params);
 		const user = await this.getInvitationAction.execute({ token: payload.token as FullToken });
 
-		return inertia.render('auth/front/accept_invitation', {
+		return renderInertiaPage(inertia, 'auth/front/accept_invitation', {
 			token: payload.token,
 			user: UserTransformer.transform(user.toDomain()),
 			translations: buildAcceptInvitationPayload(this.i18n, user.email),

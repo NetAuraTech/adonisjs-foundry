@@ -3,6 +3,7 @@ import { GetPermissionDetailAction } from '#identity/actions/permission/get_perm
 import { UpdatePermissionAction } from '#identity/actions/permission/update_permission_action';
 import SystemPermissionImmutableException from '#identity/exceptions/system_permission_immutable_exception';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import { buildPermissionsFormPayload } from '#transport/identity/helpers/i18n_payloads/permissions_form';
 import PermissionTransformer from '#transport/identity/transformers/permission_transformer';
 import { editPermissionValidator, updatePermissionValidator } from '#transport/identity/validators/permission';
@@ -30,7 +31,7 @@ export default class PermissionsUpdateController {
 			throw new SystemPermissionImmutableException(permission.slug);
 		}
 
-		return inertia.render('permission/admin/form', {
+		return renderInertiaPage(inertia, 'permission/admin/form', {
 			permission: PermissionTransformer.transform(permission.toDomain()),
 			translations: buildPermissionsFormPayload(this.i18n),
 		});

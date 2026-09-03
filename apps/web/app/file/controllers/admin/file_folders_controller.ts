@@ -4,6 +4,7 @@ import { DeleteFolderAction } from '#file/actions/file_folder/delete_folder_acti
 import { ListRootFoldersAction } from '#file/actions/file_folder/list_root_folders_action';
 import { RenameFolderAction } from '#file/actions/file_folder/rename_folder_action';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import { buildFileFoldersPayload } from '#transport/file/helpers/i18n_payloads/file_folders';
 import FileFolderTransformer from '#transport/file/transformers/file_folder_transformer';
 import { createFolderValidator, updateFolderValidator, showFileValidator } from '#transport/file/validators/file';
@@ -24,7 +25,7 @@ export default class FileFoldersController {
 
 		const roots = await this.listRootFoldersAction.execute();
 
-		return inertia.render('file/admin/folders', {
+		return renderInertiaPage(inertia, 'file/admin/folders', {
 			roots: FileFolderTransformer.transform(roots),
 			translations: buildFileFoldersPayload(this.i18n),
 		});

@@ -2,6 +2,7 @@ import { inject } from '@adonisjs/core';
 import { ListAllRolesAction } from '#identity/actions/role/list_all_roles_action';
 import { CreateUserAction } from '#identity/actions/user/create_user_action';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import { buildUsersFormPayload } from '#transport/identity/helpers/i18n_payloads/users_form';
 import { roleIdsToAllowlist } from '#transport/identity/helpers/load_user_role';
 import RoleTransformer from '#transport/identity/transformers/role_transformer';
@@ -21,7 +22,7 @@ export default class UsersCreateController {
 
 		const roles = await this.listAllRolesAction.execute();
 
-		return inertia.render('auth/admin/form', {
+		return renderInertiaPage(inertia, 'auth/admin/form', {
 			roles: RoleTransformer.transform(roles.map((role) => role.toDomain())),
 			translations: buildUsersFormPayload(this.i18n, roles),
 		});

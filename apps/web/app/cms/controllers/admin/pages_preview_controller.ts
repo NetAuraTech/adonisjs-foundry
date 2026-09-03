@@ -7,6 +7,7 @@ import { PageResolverService } from '#cms/services/page/page_resolver_service';
 import { PageContent } from '#cms/types/page';
 import env from '#start/env';
 import PageTranslationTransformer from '#transport/cms/transformers/page_translation_transformer';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import type { HttpContext } from '@adonisjs/core/http';
 
 const previewParamsValidator = vine.create({
@@ -91,7 +92,7 @@ export default class PagesPreviewController {
 
 		translation.resolved_content = await this.resolverService.resolve(contentToRender, payload.locale);
 
-		return inertia.render('cms/page/front/preview', {
+		return renderInertiaPage(inertia, 'cms/page/front/preview', {
 			page: PageTranslationTransformer.transform(translation),
 			editable: true,
 		});
