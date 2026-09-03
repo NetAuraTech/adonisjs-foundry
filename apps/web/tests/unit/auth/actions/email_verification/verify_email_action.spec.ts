@@ -6,6 +6,7 @@ import { VerifyEmailAction } from '#auth/actions/email_verification/verify_email
 import { Token } from '#auth/domain/token';
 import { TOKEN_TYPES } from '#auth/enums/token_type';
 import InvalidTokenException from '#auth/exceptions/invalid_token_exception';
+import TokenModel from '#auth/models/token';
 import { TokenRepository } from '#auth/repositories/token_repository';
 import User from '#identity/models/user';
 
@@ -90,7 +91,7 @@ test.group('VerifyEmailAction', () => {
 		// The counter is under-counted under true concurrency: checkAttempts is
 		// a non-atomic read-modify-write (pre-existing), so both presentations
 		// can read 0 and write 1. Assert the bounded outcome, not the exact sum.
-		const attempts = (await tokenRepo.findOne({ selector }))!.attempts;
+		const attempts = (await TokenModel.query().where('selector', selector).first())!.attempts;
 		assert.isTrue(attempts >= 1 && attempts <= 2, `attempts=${attempts} not in [1,2]`);
 	});
 });

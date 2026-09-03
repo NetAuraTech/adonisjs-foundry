@@ -7,6 +7,7 @@ import { Token } from '#auth/domain/token';
 import { TOKEN_TYPES } from '#auth/enums/token_type';
 import InvalidTokenException from '#auth/exceptions/invalid_token_exception';
 import MaxAttemptsExceededException from '#auth/exceptions/max_attempts_exceeded_exception';
+import TokenModel from '#auth/models/token';
 import { TokenRepository } from '#auth/repositories/token_repository';
 import User from '#identity/models/user';
 
@@ -80,7 +81,7 @@ test.group('ResetPasswordAction', () => {
 			password: 'new_password123',
 		});
 
-		const record = await tokenRepo.findOne({ selector });
+		const record = await TokenModel.query().where('selector', selector).first();
 		assert.equal(record!.attempts, 1);
 		assert.isAtMost(record!.expiresAt!.toMillis(), DateTime.now().toMillis());
 	});
@@ -101,7 +102,7 @@ test.group('ResetPasswordAction', () => {
 			await action.execute({ token: `${selector}.wrongvalidator` as any, password: 'new_password123' });
 		}, InvalidTokenException);
 
-		assert.equal((await tokenRepo.findOne({ selector }))!.attempts, 1);
+		assert.equal((await TokenModel.query().where('selector', selector).first())!.attempts, 1);
 	});
 
 	test('execute() consumes exactly one attempt on an expired token', async ({ assert }) => {
@@ -120,7 +121,7 @@ test.group('ResetPasswordAction', () => {
 			await action.execute({ token: fullToken as any, password: 'new_password123' });
 		}, InvalidTokenException);
 
-		assert.equal((await tokenRepo.findOne({ selector }))!.attempts, 1);
+		assert.equal((await TokenModel.query().where('selector', selector).first())!.attempts, 1);
 	});
 
 	test('execute() called concurrently with the same token: exactly one presentation acts', async ({ assert }) => {
@@ -152,7 +153,7 @@ test.group('ResetPasswordAction', () => {
 		// The token is consumed: expired. The counter is under-counted under
 		// true concurrency (checkAttempts is a non-atomic read-modify-write
 		// outside the transaction, pre-existing), so assert the bounded outcome.
-		const record = await tokenRepo.findOne({ selector });
+		const record = await TokenModel.query().where('selector', selector).first();
 		assert.isTrue(record!.attempts >= 1 && record!.attempts <= 2, `attempts=${record!.attempts} not in [1,2]`);
 		assert.isAtMost(record!.expiresAt!.toMillis(), DateTime.now().toMillis());
 
@@ -182,6 +183,6 @@ test.group('ResetPasswordAction', () => {
 			await action.execute({ token: fullToken as any, password: 'new_password123' });
 		}, MaxAttemptsExceededException);
 
-		assert.equal((await tokenRepo.findOne({ selector }))!.attempts, tokenRepo.MAX_ATTEMPTS);
+		assert.equal((await TokenModel.query().where('selector', selector).first())!.attempts, tokenRepo.MAX_ATTEMPTS);
 	});
 });

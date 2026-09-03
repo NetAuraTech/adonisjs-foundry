@@ -56,40 +56,12 @@ test.group('TokenRepository', () => {
 		assert.isNull(await repo.findById(tokenModel.id));
 	});
 
-	test('findAll(), findOne(), findMany()', async ({ assert }) => {
-		const u = await uniqueUser('find');
-		await createTestToken(u.id, TOKEN_TYPES.EMAIL_VERIFICATION);
-		await createTestToken(u.id, TOKEN_TYPES.EMAIL_VERIFICATION);
-
-		const all = await repo.findAll({ limit: 1 });
-		assert.lengthOf(all, 1);
-
-		const one = await repo.findOne({ userId: u.id, type: TOKEN_TYPES.EMAIL_VERIFICATION });
-		assert.isNotNull(one);
-
-		const many = await repo.findMany({ userId: u.id }, { limit: 2 });
-		assert.isAtLeast(many.length, 2);
-	});
-
-	test('update() and count() and exists()', async ({ assert }) => {
+	test('update()', async ({ assert }) => {
 		const u = await uniqueUser('update');
 		const { tokenModel } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);
 
 		const updated = await repo.update(tokenModel.id, { attempts: 5 });
 		assert.equal(updated!.attempts, 5);
-
-		assert.isAbove(await repo.count({ userId: u.id }), 0);
-		assert.isTrue(await repo.exists({ userId: u.id }));
-	});
-
-	test('deleteMany()', async ({ assert }) => {
-		const u = await uniqueUser('deleteMany');
-		await createTestToken(u.id, 'custom_type');
-		await createTestToken(u.id, 'custom_type');
-
-		const deletedCount = await repo.deleteMany({ userId: u.id, type: 'custom_type' });
-		assert.equal(deletedCount, 2);
-		assert.isFalse(await repo.exists({ userId: u.id, type: 'custom_type' }));
 	});
 
 	test('verify() works with valid and invalid tokens', async ({ assert }) => {
@@ -223,10 +195,10 @@ test.group('TokenRepository', () => {
 
 	test('deleteInvitationTokens()', async ({ assert }) => {
 		const u = await uniqueUser('delinv');
-		await createTestToken(u.id, TOKEN_TYPES.PENDING_INVITE);
+		const { tokenModel } = await createTestToken(u.id, TOKEN_TYPES.PENDING_INVITE);
 
 		await repo.deleteInvitationTokens(u.id);
-		assert.isFalse(await repo.exists({ userId: u.id, type: TOKEN_TYPES.PENDING_INVITE }));
+		assert.isNull(await repo.findById(tokenModel.id));
 	});
 
 	test('lockUsableToken() returns the locked record for a valid token inside a transaction', async ({ assert }) => {

@@ -5,6 +5,7 @@ import { DateTime } from 'luxon';
 import { EmailChangeMailService } from '#account/services/email_change_mail_service';
 import { Token } from '#auth/domain/token';
 import { TOKEN_TYPES } from '#auth/enums/token_type';
+import TokenModel from '#auth/models/token';
 import { TokenRepository } from '#auth/repositories/token_repository';
 import User from '#identity/models/user';
 import { restoreMailClient, swapMailClient } from '#tests/helpers/mail';
@@ -30,11 +31,7 @@ test.group('EmailChangeMailService', () => {
 		assert.equal(mail.sent[0].to, 'new_emailchange_svc@test.com');
 		assert.equal(mail.sent[1].to, 'emailchange_svc@test.com');
 
-		const tokenRepo = await app.container.make(TokenRepository);
-		const tokens = await tokenRepo.findMany({
-			userId: user.id,
-			type: TOKEN_TYPES.EMAIL_CHANGE,
-		});
+		const tokens = await TokenModel.query().where('user_id', user.id).where('type', TOKEN_TYPES.EMAIL_CHANGE);
 		assert.equal(tokens.length, 1);
 	});
 
@@ -67,7 +64,7 @@ test.group('EmailChangeMailService', () => {
 		restoreMailClient();
 
 		// The seeded token is expired and a fresh one was issued: two records total.
-		const records = await tokenRepo.findMany({ userId: user.id, type: TOKEN_TYPES.EMAIL_CHANGE });
+		const records = await TokenModel.query().where('user_id', user.id).where('type', TOKEN_TYPES.EMAIL_CHANGE);
 		assert.equal(records.length, 2);
 		assert.isNull(await tokenRepo.findBySelector(seedSelector, TOKEN_TYPES.EMAIL_CHANGE));
 	});

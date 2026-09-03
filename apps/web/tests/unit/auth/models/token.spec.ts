@@ -5,6 +5,7 @@ import { Token } from '#auth/domain/token';
 import { TOKEN_TYPES } from '#auth/enums/token_type';
 import InvalidTokenException from '#auth/exceptions/invalid_token_exception';
 import MaxAttemptsExceededException from '#auth/exceptions/max_attempts_exceeded_exception';
+import TokenModel from '#auth/models/token';
 import { TokenRepository } from '#auth/repositories/token_repository';
 import User from '#identity/models/user';
 import { LogService } from '#log/services/log_service';
@@ -92,7 +93,7 @@ test.group('Token Model — via TokenRepository', () => {
 		});
 
 		await repo.checkAttempts(fullToken as any);
-		const afterFirst = await repo.findById((await repo.findOne({ selector }))!.id);
+		const afterFirst = await TokenModel.query().where('selector', selector).first();
 		assert.equal(afterFirst!.attempts, 1);
 
 		// checkAttempts increments on each call; MAX_ATTEMPTS is 3

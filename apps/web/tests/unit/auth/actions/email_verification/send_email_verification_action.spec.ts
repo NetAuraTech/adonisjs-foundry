@@ -2,7 +2,7 @@ import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
 import { SendEmailVerificationAction } from '#auth/actions/email_verification/send_email_verification_action';
 import { TOKEN_TYPES } from '#auth/enums/token_type';
-import { TokenRepository } from '#auth/repositories/token_repository';
+import TokenModel from '#auth/models/token';
 import User from '#identity/models/user';
 import { restoreMailClient, swapMailClient } from '#tests/helpers/mail';
 
@@ -23,11 +23,7 @@ test.group('SendEmailVerificationAction', () => {
 		assert.equal(mail.sent.length, 1);
 		assert.equal(mail.sent[0].to, 'verify_send@test.com');
 
-		const tokenRepo = await app.container.make(TokenRepository);
-		const tokens = await tokenRepo.findMany({
-			userId: user.id,
-			type: TOKEN_TYPES.EMAIL_VERIFICATION,
-		});
+		const tokens = await TokenModel.query().where('user_id', user.id).where('type', TOKEN_TYPES.EMAIL_VERIFICATION);
 		assert.equal(tokens.length, 1);
 	});
 });
