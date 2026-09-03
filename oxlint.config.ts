@@ -5,6 +5,8 @@ export default defineConfig({
 	plugins: ['typescript', 'react'],
 	rules: {
 		'typescript/no-namespace': 'off',
+		'react/rules-of-hooks': 'error',
+		'react/jsx-no-target-blank': 'error',
 	},
 	overrides: [
 		{
