@@ -25,7 +25,7 @@ export default class UsersController {
 
 		await this.deleteUserAction.execute({ id: payload.id });
 
-		session.flash('success', this.i18n.translate('admin.users.deleted'));
+		session.flash('success', this.i18n.translate('identity.admin.users.deleted'));
 
 		return response.redirect().toRoute('admin.identity.users.render');
 	}

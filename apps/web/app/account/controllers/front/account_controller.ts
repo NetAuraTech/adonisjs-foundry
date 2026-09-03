@@ -50,7 +50,7 @@ export default class AccountController {
 				regenerateCsrfToken(ctx);
 
 				if (payload.email === updated.pendingEmail) {
-					session.flash('success', this.i18n.translate('settings.account.success'));
+					session.flash('success', this.i18n.translate('account.account.success'));
 				}
 
 				return response.redirect().toRoute('account.account.render');
@@ -66,7 +66,7 @@ export default class AccountController {
 
 				regenerateCsrfToken(ctx);
 
-				session.flash('success', this.i18n.translate('settings.account.password.success'));
+				session.flash('success', this.i18n.translate('account.account.password.success'));
 
 				return response.redirect().toRoute('account.account.render');
 			}
@@ -86,7 +86,7 @@ export default class AccountController {
 
 		await auth.use('web').logout();
 
-		session.flash('success', this.i18n.translate('settings.password.delete.success'));
+		session.flash('success', this.i18n.translate('account.password.delete.success'));
 
 		return response.redirect().toRoute('auth.session.render');
 	}

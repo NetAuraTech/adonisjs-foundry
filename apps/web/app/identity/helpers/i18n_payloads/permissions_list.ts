@@ -9,26 +9,26 @@ import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_tr
  * time, one entry per data-driven slug.
  */
 export const PERMISSIONS_LIST_MAPPING = {
-	title: 'admin.permissions.list.title',
-	create: { title: 'admin.permissions.create.title' },
+	title: 'identity.admin.permissions.list.title',
+	create: { title: 'identity.admin.permissions.create.title' },
 	table: {
-		name: 'admin.permissions.table.name',
-		slug: 'admin.permissions.table.slug',
-		description: 'admin.permissions.table.description',
+		name: 'identity.admin.permissions.table.name',
+		slug: 'identity.admin.permissions.table.slug',
+		description: 'identity.admin.permissions.table.description',
 	},
 	actions: {
-		value: 'admin.permissions.actions',
-		edit: createI18nEntry('admin.permissions.edit.title', { name: '{name}' }),
-		delete: createI18nEntry('admin.permissions.delete.title', { name: '{name}' }),
+		value: 'identity.admin.permissions.actions',
+		edit: createI18nEntry('identity.admin.permissions.edit.title', { name: '{name}' }),
+		delete: createI18nEntry('identity.admin.permissions.delete.title', { name: '{name}' }),
 	},
 	delete: {
-		confirm: createI18nEntry('admin.permissions.delete.confirm', { name: '{name}' }),
+		confirm: createI18nEntry('identity.admin.permissions.delete.confirm', { name: '{name}' }),
 	},
 	system: {
-		value: 'admin.permissions.system.value',
-		hint: 'admin.permissions.system.hint',
+		value: 'identity.admin.permissions.system.value',
+		hint: 'identity.admin.permissions.system.hint',
 	},
-	empty: 'admin.permissions.empty',
+	empty: 'identity.admin.permissions.empty',
 };
 
 /**

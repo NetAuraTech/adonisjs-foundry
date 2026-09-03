@@ -4,27 +4,27 @@ import { createI18nEntry, type BuildPayloadResult, type I18nTranslator } from '#
  * The flat i18n key mapping for the admin folders management page.
  */
 export const FILE_FOLDERS_MAPPING = {
-	title: 'admin.folders.list.title',
-	action: 'admin.files.list.title',
-	browse: 'admin.folders.list.browse',
-	help: 'admin.folders.form.help',
+	title: 'file.admin.folders.list.title',
+	action: 'file.admin.files.list.title',
+	browse: 'file.admin.folders.list.browse',
+	help: 'file.admin.folders.form.help',
 	name: {
-		root: 'admin.folders.form.name.root',
-		sub: 'admin.folders.form.name.sub',
+		root: 'file.admin.folders.form.name.root',
+		sub: 'file.admin.folders.form.name.sub',
 	},
 	empty: {
-		value: 'admin.folders.list.empty.value',
-		help: 'admin.folders.list.empty.help',
+		value: 'file.admin.folders.list.empty.value',
+		help: 'file.admin.folders.list.empty.help',
 	},
 	actions: {
-		add: 'admin.folders.list.add',
-		create: 'admin.folders.form.create',
-		update: 'admin.folders.form.update',
-		cancel: 'admin.folders.form.cancel',
-		rename: 'admin.folders.list.rename',
+		add: 'file.admin.folders.list.add',
+		create: 'file.admin.folders.form.create',
+		update: 'file.admin.folders.form.update',
+		cancel: 'file.admin.folders.form.cancel',
+		rename: 'file.admin.folders.list.rename',
 		delete: {
-			value: createI18nEntry('admin.folders.delete.title', { folder: '{folder}' }),
-			confirm: 'admin.folders.delete.confirm',
+			value: createI18nEntry('file.admin.folders.delete.title', { folder: '{folder}' }),
+			confirm: 'file.admin.folders.delete.confirm',
 		},
 	},
 };

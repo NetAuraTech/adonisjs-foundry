@@ -42,7 +42,7 @@ export default class UsersCreateController {
 
 		session.flash(
 			'success',
-			this.i18n.translate('admin.users.created', { email: user.email, username: user.username }),
+			this.i18n.translate('identity.admin.users.created', { email: user.email, username: user.username }),
 		);
 
 		return response.redirect().toRoute('admin.identity.users_show.render', { id: user.id });

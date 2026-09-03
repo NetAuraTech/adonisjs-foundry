@@ -9,32 +9,32 @@ import type { TranslationNodes } from '#transport/core/helpers/translation_tree'
  * built dynamically at build time, one entry per data-driven slug.
  */
 export const USERS_LIST_MAPPING = {
-	title: 'admin.users.list.title',
-	action: 'admin.users.list.action',
+	title: 'identity.admin.users.list.title',
+	action: 'identity.admin.users.list.action',
 	search: {
-		value: 'admin.users.search.value',
-		placeholder: 'admin.users.search.placeholder',
-		filter: 'admin.users.search.filter',
+		value: 'identity.admin.users.search.value',
+		placeholder: 'identity.admin.users.search.placeholder',
+		filter: 'identity.admin.users.search.filter',
 	},
 	roles: {
-		value: 'admin.users.roles.value',
-		placeholder: 'admin.users.roles.placeholder',
+		value: 'identity.admin.users.roles.value',
+		placeholder: 'identity.admin.users.roles.placeholder',
 	},
 	status: {
-		verified: 'admin.users.status.verified',
-		unverified: 'admin.users.status.unverified',
-		pending_invite: 'admin.users.status.pending_invite',
-		value: 'admin.users.status.value',
+		verified: 'identity.admin.users.status.verified',
+		unverified: 'identity.admin.users.status.unverified',
+		pending_invite: 'identity.admin.users.status.pending_invite',
+		value: 'identity.admin.users.status.value',
 	},
-	empty: 'admin.users.list.empty',
-	register_on: 'admin.users.list.register_on',
-	value: 'admin.users.value',
-	value_one: 'admin.users.value_one',
+	empty: 'identity.admin.users.list.empty',
+	register_on: 'identity.admin.users.list.register_on',
+	value: 'identity.admin.users.value',
+	value_one: 'identity.admin.users.value_one',
 	actions: {
-		value: 'admin.users.actions',
-		show: createI18nEntry('admin.users.show.title', { username: '{username}' }),
-		edit: createI18nEntry('admin.users.edit.title', { username: '{username}' }),
-		delete: createI18nEntry('admin.users.delete.title', { username: '{username}' }),
+		value: 'identity.admin.users.actions',
+		show: createI18nEntry('identity.admin.users.show.title', { username: '{username}' }),
+		edit: createI18nEntry('identity.admin.users.edit.title', { username: '{username}' }),
+		delete: createI18nEntry('identity.admin.users.delete.title', { username: '{username}' }),
 	},
 };
 

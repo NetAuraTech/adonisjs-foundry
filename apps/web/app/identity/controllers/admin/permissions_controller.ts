@@ -39,7 +39,7 @@ export default class PermissionsController {
 
 		await this.deletePermissionAction.execute({ id: payload.id });
 
-		session.flash('success', this.i18n.translate('admin.permissions.flash.deleted'));
+		session.flash('success', this.i18n.translate('identity.admin.permissions.flash.deleted'));
 
 		return response.redirect().toRoute('admin.identity.permissions.render');
 	}

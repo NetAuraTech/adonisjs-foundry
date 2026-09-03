@@ -10,24 +10,24 @@ import type { TranslationNodes } from '#transport/core/helpers/translation_tree'
  */
 export const USERS_FORM_MAPPING = {
 	title: {
-		create: 'admin.users.create.title',
-		edit: createI18nEntry('admin.users.edit.title', { username: '{username}' }),
+		create: 'identity.admin.users.create.title',
+		edit: createI18nEntry('identity.admin.users.edit.title', { username: '{username}' }),
 	},
 	email: {
-		value: 'admin.users.form.email.value',
-		placeholder: 'admin.users.form.email.placeholder',
+		value: 'identity.admin.users.form.email.value',
+		placeholder: 'identity.admin.users.form.email.placeholder',
 	},
 	username: {
-		value: 'admin.users.form.username.value',
-		placeholder: 'admin.users.form.username.placeholder',
+		value: 'identity.admin.users.form.username.value',
+		placeholder: 'identity.admin.users.form.username.placeholder',
 	},
 	roles: {
-		value: 'admin.users.form.role.value',
-		placeholder: 'admin.users.form.role.placeholder',
+		value: 'identity.admin.users.form.role.value',
+		placeholder: 'identity.admin.users.form.role.placeholder',
 	},
-	submit: 'admin.users.form.submit',
+	submit: 'identity.admin.users.form.submit',
 	actions: {
-		list: 'admin.users.list.title',
+		list: 'identity.admin.users.list.title',
 	},
 };
 

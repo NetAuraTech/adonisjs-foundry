@@ -21,8 +21,8 @@ export default class PreferencesController {
 
 		await user.refresh();
 
-		session.flash('success', this.i18n.translate('settings.preferences.success'));
+		session.flash('success', this.i18n.translate('account.preferences.success'));
 
-		return response.ok(this.i18n.translate('settings.preferences.theme.success'));
+		return response.ok(this.i18n.translate('account.preferences.theme.success'));
 	}
 }

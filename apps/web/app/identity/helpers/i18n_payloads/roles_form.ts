@@ -10,28 +10,28 @@ import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_tr
  */
 export const ROLES_FORM_MAPPING = {
 	title: {
-		create: 'admin.roles.create.title',
-		edit: createI18nEntry('admin.roles.edit.title', { name: '{name}' }),
+		create: 'identity.admin.roles.create.title',
+		edit: createI18nEntry('identity.admin.roles.edit.title', { name: '{name}' }),
 	},
 	name: {
-		value: 'admin.roles.form.name.value',
-		placeholder: 'admin.roles.form.name.placeholder',
+		value: 'identity.admin.roles.form.name.value',
+		placeholder: 'identity.admin.roles.form.name.placeholder',
 	},
 	slug: {
-		value: 'admin.roles.form.slug.value',
-		placeholder: 'admin.roles.form.slug.placeholder',
+		value: 'identity.admin.roles.form.slug.value',
+		placeholder: 'identity.admin.roles.form.slug.placeholder',
 	},
 	description: {
-		value: 'admin.roles.form.description.value',
-		placeholder: 'admin.roles.form.description.placeholder',
+		value: 'identity.admin.roles.form.description.value',
+		placeholder: 'identity.admin.roles.form.description.placeholder',
 	},
-	submit: 'admin.roles.form.submit',
+	submit: 'identity.admin.roles.form.submit',
 	actions: {
-		list: 'admin.roles.list.title',
+		list: 'identity.admin.roles.list.title',
 	},
 	permissions: {
-		value: 'admin.roles.form.permissions.value',
-		system_hint: 'admin.roles.form.permissions.system_hint',
+		value: 'identity.admin.roles.form.permissions.value',
+		system_hint: 'identity.admin.roles.form.permissions.system_hint',
 	},
 };
 

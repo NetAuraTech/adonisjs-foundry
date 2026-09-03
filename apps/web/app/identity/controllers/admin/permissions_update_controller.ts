@@ -53,7 +53,7 @@ export default class PermissionsUpdateController {
 			description: payload.description ?? null,
 		});
 
-		session.flash('success', this.i18n.translate('admin.permissions.flash.updated'));
+		session.flash('success', this.i18n.translate('identity.admin.permissions.flash.updated'));
 
 		return response.redirect().toRoute('admin.identity.permissions.render');
 	}

@@ -133,18 +133,18 @@ export class TokenMailService {
 
 		await this.send({
 			to: user.email,
-			subject: i18n.t('admin.users.mail.subject', { app }),
+			subject: i18n.t('identity.admin.users.mail.subject', { app }),
 			template: 'emails/admin_invite_email',
 			data: {
 				locale,
 				app_name: app ?? 'AdonisJS',
-				subject: i18n.t('admin.users.mail.subject', { app }),
-				greeting: i18n.t('admin.users.mail.greeting'),
-				intro: i18n.t('admin.users.mail.intro', { app }),
-				action: i18n.t('admin.users.mail.action'),
-				outro: i18n.t('admin.users.mail.outro'),
-				expiry: i18n.t('admin.users.mail.expiry', { days: 7 }),
-				footer: i18n.t('admin.users.mail.footer'),
+				subject: i18n.t('identity.admin.users.mail.subject', { app }),
+				greeting: i18n.t('identity.admin.users.mail.greeting'),
+				intro: i18n.t('identity.admin.users.mail.intro', { app }),
+				action: i18n.t('identity.admin.users.mail.action'),
+				outro: i18n.t('identity.admin.users.mail.outro'),
+				expiry: i18n.t('identity.admin.users.mail.expiry', { days: 7 }),
+				footer: i18n.t('identity.admin.users.mail.footer'),
 				accept_link: this.buildLink(['auth.accept_invitation.render', 'api.v1.auth.accept_invitation.store'], token),
 			} satisfies AuthMailData,
 		});

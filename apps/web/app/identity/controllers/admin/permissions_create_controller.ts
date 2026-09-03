@@ -39,7 +39,7 @@ export default class PermissionsCreateController {
 			description: payload.description ?? null,
 		});
 
-		session.flash('success', this.i18n.translate('admin.permissions.flash.created'));
+		session.flash('success', this.i18n.translate('identity.admin.permissions.flash.created'));
 
 		return response.redirect().toRoute('admin.identity.permissions.render');
 	}

@@ -45,7 +45,7 @@ export default class RolesCreateController {
 			permissionIds: payload.permission_ids,
 		});
 
-		session.flash('success', this.i18n.translate('admin.roles.flash.created'));
+		session.flash('success', this.i18n.translate('identity.admin.roles.flash.created'));
 
 		return response.redirect().toRoute('admin.identity.roles_show.render', { id: role.id });
 	}

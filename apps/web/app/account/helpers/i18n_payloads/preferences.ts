@@ -5,29 +5,29 @@ import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_tr
  */
 export const PREFERENCES_MAPPING = {
 	header: {
-		title: 'settings.title',
-		sub_title: 'settings.sub_title',
+		title: 'account.title',
+		sub_title: 'account.sub_title',
 		tabs: {
-			profile: 'settings.profile.value',
-			account: 'settings.account.value',
-			preferences: 'settings.preferences.value',
+			profile: 'account.profile.value',
+			account: 'account.account.value',
+			preferences: 'account.preferences.value',
 			admin: 'admin.value',
 			logout: 'auth.session.logout.value',
 		},
 	},
 	appearance: {
-		title: 'settings.preferences.appearance.title',
-		sub_title: 'settings.preferences.appearance.sub_title',
-		value: 'settings.preferences.appearance.value',
+		title: 'account.preferences.appearance.title',
+		sub_title: 'account.preferences.appearance.sub_title',
+		value: 'account.preferences.appearance.value',
 	},
 	interface: {
-		title: 'settings.preferences.interface.title',
-		sub_title: 'settings.preferences.interface.sub_title',
-		submit: 'settings.preferences.interface.submit',
+		title: 'account.preferences.interface.title',
+		sub_title: 'account.preferences.interface.sub_title',
+		submit: 'account.preferences.interface.submit',
 		locale: {
-			english: 'settings.preferences.interface.locale.english',
-			french: 'settings.preferences.interface.locale.french',
-			value: 'settings.preferences.interface.locale.value',
+			english: 'account.preferences.interface.locale.english',
+			french: 'account.preferences.interface.locale.french',
+			value: 'account.preferences.interface.locale.value',
 		},
 	},
 };

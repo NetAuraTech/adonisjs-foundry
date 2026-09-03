@@ -5,27 +5,27 @@ import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_tr
  */
 export const PROFILE_MAPPING = {
 	header: {
-		title: 'settings.title',
-		sub_title: 'settings.sub_title',
+		title: 'account.title',
+		sub_title: 'account.sub_title',
 		tabs: {
-			profile: 'settings.profile.value',
-			account: 'settings.account.value',
-			preferences: 'settings.preferences.value',
+			profile: 'account.profile.value',
+			account: 'account.account.value',
+			preferences: 'account.preferences.value',
 			admin: 'admin.value',
 			logout: 'auth.session.logout.value',
 		},
 	},
 	avatar: {
-		change: 'settings.profile.avatar.change',
-		value: 'settings.profile.avatar.value',
+		change: 'account.profile.avatar.change',
+		value: 'account.profile.avatar.value',
 	},
 	username: {
-		placeholder: 'settings.profile.username.placeholder',
-		value: 'settings.profile.username.value',
+		placeholder: 'account.profile.username.placeholder',
+		value: 'account.profile.username.value',
 	},
-	title: 'settings.profile.title',
-	sub_title: 'settings.profile.sub_title',
-	submit: 'settings.profile.submit',
+	title: 'account.profile.title',
+	sub_title: 'account.profile.sub_title',
+	submit: 'account.profile.submit',
 };
 
 /**

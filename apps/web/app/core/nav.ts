@@ -19,7 +19,7 @@ export const coreNavEntries: AdminNavEntry[] = [
 /** Admin navigation entries contributed by the core domain's maintenance surface. */
 export const maintenanceNavEntries: AdminNavEntry[] = [
 	{
-		label: 'admin.settings.maintenance.value',
+		label: 'maintenance.admin.value',
 		icon: 'Wrench',
 		route: 'admin.core.maintenance.render',
 		permission: permissions.settings.maintenance,

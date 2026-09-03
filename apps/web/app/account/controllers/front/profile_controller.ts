@@ -35,7 +35,7 @@ export default class ProfileController {
 
 		await user.refresh();
 
-		session.flash('success', this.i18n.translate('settings.profile.success'));
+		session.flash('success', this.i18n.translate('account.profile.success'));
 
 		return response.redirect().toRoute('account.profile.render');
 	}

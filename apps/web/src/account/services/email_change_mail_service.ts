@@ -74,37 +74,37 @@ export class EmailChangeMailService {
 
 		await this.send({
 			to: user.pendingEmail!,
-			subject: i18n.t('settings.email.change.mail.confirm.subject'),
+			subject: i18n.t('account.email.change.mail.confirm.subject'),
 			template: 'emails/account_email',
 			data: {
 				locale,
 				app_name: env.get('APP_NAME') ?? 'AdonisJS',
-				subject: i18n.t('settings.email.change.mail.confirm.subject'),
-				greeting: i18n.t('settings.email.change.mail.confirm.greeting'),
-				intro: i18n.t('settings.email.change.mail.confirm.intro', { email: user.pendingEmail }),
-				action: i18n.t('settings.email.change.mail.confirm.action'),
-				outro: i18n.t('settings.email.change.mail.confirm.outro'),
-				expiry: i18n.t('settings.email.change.mail.confirm.expiry', { hours: 24 }),
-				footer: i18n.t('settings.email.change.mail.confirm.footer'),
+				subject: i18n.t('account.email.change.mail.confirm.subject'),
+				greeting: i18n.t('account.email.change.mail.confirm.greeting'),
+				intro: i18n.t('account.email.change.mail.confirm.intro', { email: user.pendingEmail }),
+				action: i18n.t('account.email.change.mail.confirm.action'),
+				outro: i18n.t('account.email.change.mail.confirm.outro'),
+				expiry: i18n.t('account.email.change.mail.confirm.expiry', { hours: 24 }),
+				footer: i18n.t('account.email.change.mail.confirm.footer'),
 				confirmation_link: this.buildLink(['account.email_change.render'], token),
 			} satisfies EmailChangeMailData,
 		});
 
 		await this.send({
 			to: user.email,
-			subject: i18n.t('settings.email.change.mail.notification.subject'),
+			subject: i18n.t('account.email.change.mail.notification.subject'),
 			template: 'emails/account_email',
 			data: {
 				locale,
 				app_name: env.get('APP_NAME') ?? 'AdonisJS',
-				subject: i18n.t('settings.email.change.mail.notification.subject'),
-				greeting: i18n.t('settings.email.change.mail.notification.greeting'),
-				intro: i18n.t('settings.email.change.mail.notification.intro', {
+				subject: i18n.t('account.email.change.mail.notification.subject'),
+				greeting: i18n.t('account.email.change.mail.notification.greeting'),
+				intro: i18n.t('account.email.change.mail.notification.intro', {
 					old: user.email,
 					new: user.pendingEmail,
 				}),
-				warning: i18n.t('settings.email.change.mail.notification.warning'),
-				action: i18n.t('settings.email.change.mail.notification.action'),
+				warning: i18n.t('account.email.change.mail.notification.warning'),
+				action: i18n.t('account.email.change.mail.notification.action'),
 				support: env.get('MAIL_FROM_ADDRESS'),
 			} satisfies EmailChangeMailData,
 		});

@@ -8,33 +8,33 @@ import type { RoleEntry } from '#identity/domain/role';
  * built dynamically at build time, one entry per data-driven slug.
  */
 export const ROLES_LIST_MAPPING = {
-	title: 'admin.roles.list.title',
+	title: 'identity.admin.roles.list.title',
 	search: {
-		value: 'admin.roles.search.value',
-		placeholder: 'admin.roles.search.placeholder',
-		filter: 'admin.roles.search.filter',
+		value: 'identity.admin.roles.search.value',
+		placeholder: 'identity.admin.roles.search.placeholder',
+		filter: 'identity.admin.roles.search.filter',
 	},
-	create: { title: 'admin.roles.create.title' },
+	create: { title: 'identity.admin.roles.create.title' },
 	table: {
-		name: 'admin.roles.table.name',
-		slug: 'admin.roles.table.slug',
-		permissions: 'admin.roles.table.permissions',
-		users: 'admin.roles.table.users',
+		name: 'identity.admin.roles.table.name',
+		slug: 'identity.admin.roles.table.slug',
+		permissions: 'identity.admin.roles.table.permissions',
+		users: 'identity.admin.roles.table.users',
 	},
 	actions: {
-		value: 'admin.roles.actions',
-		show: createI18nEntry('admin.roles.show.title', { name: '{name}' }),
-		edit: createI18nEntry('admin.roles.edit.title', { name: '{name}' }),
-		delete: createI18nEntry('admin.roles.delete.title', { name: '{name}' }),
+		value: 'identity.admin.roles.actions',
+		show: createI18nEntry('identity.admin.roles.show.title', { name: '{name}' }),
+		edit: createI18nEntry('identity.admin.roles.edit.title', { name: '{name}' }),
+		delete: createI18nEntry('identity.admin.roles.delete.title', { name: '{name}' }),
 	},
 	delete: {
-		confirm: createI18nEntry('admin.roles.delete.confirm', { name: '{name}' }),
+		confirm: createI18nEntry('identity.admin.roles.delete.confirm', { name: '{name}' }),
 	},
 	system: {
-		value: 'admin.roles.system.value',
-		hint: 'admin.roles.system.hint',
+		value: 'identity.admin.roles.system.value',
+		hint: 'identity.admin.roles.system.hint',
 	},
-	empty: 'admin.roles.empty',
+	empty: 'identity.admin.roles.empty',
 };
 
 /**
