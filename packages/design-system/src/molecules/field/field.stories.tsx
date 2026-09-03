@@ -63,8 +63,7 @@ function ValidationSeamStory(props: Story['args']) {
 				setTouched(true);
 			}
 		},
-		getValidationMessage: (name: string) =>
-			name === 'email' && clientInvalid ? 'Invalid email address.' : undefined,
+		getValidationMessage: (name: string) => (name === 'email' && clientInvalid ? 'Invalid email address.' : undefined),
 		getHelpClassName: (name: string) =>
 			name === 'email' && touched ? (clientInvalid ? 'text-danger' : 'text-success') : '',
 	};
