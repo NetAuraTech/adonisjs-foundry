@@ -1,6 +1,6 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
-import RunBackupAction from '#backup/actions/backup/run_backup_action';
+import { RunBackupAction } from '#backup/actions/backup/run_backup_action';
 import { BackupEngine } from '#backup/services/backup_engine';
 import type { BackupResult } from '#backup/types/backup';
 

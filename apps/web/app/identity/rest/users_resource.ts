@@ -78,6 +78,13 @@ export default class UsersResource {
 		protected deleteUserAction: DeleteUserAction,
 	) {}
 
+	/**
+	 * Shared serialization shape for the paginated user list, consumed by
+	 * both the REST transform and the page render.
+	 */
+	private readonly paginateUsers = (users: UserListPagination) =>
+		UserTransformer.paginate(users.all(), users.getMeta());
+
 	readonly endpoints: UsersEndpoints = {
 		index: {
 			paginated: true,
@@ -94,11 +101,11 @@ export default class UsersResource {
 					role: payload.role,
 					pagination: context.pagination!,
 				}),
-			transform: (entity) => UserTransformer.paginate(entity.all(), entity.getMeta()),
+			transform: (entity) => this.paginateUsers(entity),
 			page: {
 				component: 'auth/admin/index',
 				render: async (_context, prepared, payload, result) => ({
-					users: UserTransformer.paginate(result.all(), result.getMeta()),
+					users: this.paginateUsers(result),
 					roles: RoleTransformer.transform(prepared.roles.map((role) => role.toDomain())),
 					filters: payload,
 					translations: buildUsersListPayload(this.i18n, prepared.roles),
