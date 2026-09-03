@@ -2,6 +2,7 @@ import { inject } from '@adonisjs/core';
 import { DeletePermissionAction } from '#identity/actions/permission/delete_permission_action';
 import { ListAllPermissionsAction } from '#identity/actions/permission/list_all_permissions_action';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import { buildPermissionsListPayload } from '#transport/identity/helpers/i18n_payloads/permissions_list';
 import PermissionTransformer from '#transport/identity/transformers/permission_transformer';
 import { deletePermissionValidator } from '#transport/identity/validators/permission';
@@ -23,7 +24,7 @@ export default class PermissionsController {
 
 		const permissions = await this.listAllPermissionsAction.execute();
 
-		return inertia.render('permission/admin/index', {
+		return renderInertiaPage(inertia, 'permission/admin/index', {
 			permissions: PermissionTransformer.transform(permissions.map((permission) => permission.toDomain())),
 			translations: buildPermissionsListPayload(this.i18n, permissions),
 		});

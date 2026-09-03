@@ -16,6 +16,7 @@ import {
 	showTemplateValidator,
 } from '#transport/cms/validators/template';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import { stripEmptyStrings } from '#transport/core/helpers/strip_empty_strings';
 import type { HttpContext } from '@adonisjs/core/http';
 
@@ -43,7 +44,7 @@ export default class TemplatesController {
 			search: payload.search,
 		});
 
-		return inertia.render('cms/template/admin/index', {
+		return renderInertiaPage(inertia, 'cms/template/admin/index', {
 			templates: TemplateTransformer.transform(templates),
 			filters: payload,
 			translations: buildTemplatesIndexPayload(this.i18n),
@@ -69,7 +70,7 @@ export default class TemplatesController {
 		const { id } = await showTemplateValidator.validate(params);
 		const template = await this.getTemplateDetailAction.execute({ id });
 
-		return inertia.render('cms/template/admin/edit', {
+		return renderInertiaPage(inertia, 'cms/template/admin/edit', {
 			template: TemplateTransformer.transform(template),
 			translations: buildTemplatesEditPayload(this.i18n),
 		});

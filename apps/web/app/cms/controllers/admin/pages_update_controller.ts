@@ -9,6 +9,7 @@ import { buildPageEditorPayload } from '#transport/cms/helpers/i18n_payloads/pag
 import PageTransformer from '#transport/cms/transformers/page_transformer';
 import { showPageValidator, updatePageValidator, publishPageValidator } from '#transport/cms/validators/page';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import type { HttpContext } from '@adonisjs/core/http';
 
 const SHARED_EXCLUSIONS = ['admin.', 'api.', 'auth.', 'pages.show', 'settings.'];
@@ -37,7 +38,7 @@ export default class PagesUpdateController {
 		const { id } = await showPageValidator.validate(params);
 		const page = await this.getPageDetailAction.execute({ id });
 
-		return inertia.render('cms/page/admin/edit', {
+		return renderInertiaPage(inertia, 'cms/page/admin/edit', {
 			page: PageTransformer.transform(page),
 			availableRoutes,
 			availablePages,

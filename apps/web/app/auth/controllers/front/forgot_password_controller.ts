@@ -4,6 +4,7 @@ import { FindUserByEmailAction } from '#identity/actions/user/find_user_by_email
 import { buildForgotPasswordPayload } from '#transport/auth/helpers/i18n_payloads/forgot_password';
 import { forgotPasswordValidator } from '#transport/auth/validators/auth';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()
@@ -17,7 +18,7 @@ export default class ForgotPasswordController {
 	render(ctx: HttpContext) {
 		const { inertia } = ctx;
 
-		return inertia.render('auth/front/forgot_password', {
+		return renderInertiaPage(inertia, 'auth/front/forgot_password', {
 			translations: buildForgotPasswordPayload(this.i18n),
 		});
 	}

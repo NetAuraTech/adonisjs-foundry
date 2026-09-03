@@ -5,6 +5,7 @@ import { buildEmailChangePayload } from '#transport/account/helpers/i18n_payload
 import { changeEmailValidator } from '#transport/account/validators/account';
 import { regenerateCsrfToken } from '#transport/auth/helpers/crsf';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()
@@ -17,7 +18,7 @@ export default class EmailChangeController {
 	async render(ctx: HttpContext) {
 		const { inertia, params } = ctx;
 
-		return inertia.render('settings/account/front/email_change', {
+		return renderInertiaPage(inertia, 'settings/account/front/email_change', {
 			token: params.token,
 			translations: buildEmailChangePayload(this.i18n),
 		});

@@ -3,6 +3,7 @@ import { CreatePageAction } from '#cms/actions/page/create_page_action';
 import { buildPagesCreatePayload } from '#transport/cms/helpers/i18n_payloads/pages_create';
 import { createPageValidator } from '#transport/cms/validators/page';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()
@@ -15,7 +16,7 @@ export default class PagesCreateController {
 	async render(ctx: HttpContext) {
 		const { inertia } = ctx;
 
-		return inertia.render('cms/page/admin/create', {
+		return renderInertiaPage(inertia, 'cms/page/admin/create', {
 			translations: buildPagesCreatePayload(this.i18n),
 		});
 	}

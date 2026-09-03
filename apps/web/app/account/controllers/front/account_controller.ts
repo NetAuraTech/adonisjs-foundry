@@ -11,6 +11,7 @@ import {
 } from '#transport/account/validators/account';
 import { regenerateCsrfToken } from '#transport/auth/helpers/crsf';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import UserTransformer from '#transport/identity/transformers/user_transformer';
 import type { HttpContext } from '@adonisjs/core/http';
 
@@ -27,7 +28,7 @@ export default class AccountController {
 
 		const user = auth.user!;
 
-		return inertia.render('settings/account/front/index', {
+		return renderInertiaPage(inertia, 'settings/account/front/index', {
 			user: UserTransformer.transform(user.toDomain()),
 			providers: enabledProviders,
 			translations: buildAccountPayload(this.i18n),

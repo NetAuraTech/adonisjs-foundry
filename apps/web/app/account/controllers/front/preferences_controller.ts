@@ -3,6 +3,7 @@ import { UpdatePreferencesAction } from '#account/actions/preferences/update_pre
 import { buildPreferencesPayload } from '#transport/account/helpers/i18n_payloads/preferences';
 import { updateValidator } from '#transport/account/validators/preference';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()
@@ -15,7 +16,7 @@ export default class PreferencesController {
 	async render(ctx: HttpContext) {
 		const { inertia } = ctx;
 
-		return inertia.render('settings/preferences/front/index', {
+		return renderInertiaPage(inertia, 'settings/preferences/front/index', {
 			translations: buildPreferencesPayload(this.i18n),
 		});
 	}

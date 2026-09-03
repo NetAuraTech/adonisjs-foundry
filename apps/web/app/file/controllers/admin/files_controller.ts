@@ -9,6 +9,7 @@ import { UpsertFileAltAction } from '#file/actions/file/upsert_file_alt_action';
 import { ListRootFoldersAction } from '#file/actions/file_folder/list_root_folders_action';
 import { extractPagination } from '#transport/core/helpers/extract_pagination';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import { stripEmptyStrings } from '#transport/core/helpers/strip_empty_strings';
 import { buildFilesIndexPayload } from '#transport/file/helpers/i18n_payloads/files_index';
 import { buildFilesShowPayload } from '#transport/file/helpers/i18n_payloads/files_show';
@@ -53,7 +54,7 @@ export default class FilesController {
 
 		const folders = await this.listRootFoldersAction.execute();
 
-		return inertia.render('file/admin/index', {
+		return renderInertiaPage(inertia, 'file/admin/index', {
 			files: FileTransformer.paginate(files.all(), files.getMeta()),
 			folders: FileFolderTransformer.transform(folders),
 			filters: payload,
@@ -67,7 +68,7 @@ export default class FilesController {
 		const { id } = await showFileValidator.validate(params);
 		const file = await this.getFileDetailAction.execute({ id });
 
-		return (inertia.render as any)('file/admin/show', {
+		return renderInertiaPage(inertia, 'file/admin/show', {
 			file: FileTransformer.transform(file),
 			translations: buildFilesShowPayload(this.i18n),
 		});

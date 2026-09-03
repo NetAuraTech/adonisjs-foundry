@@ -6,6 +6,7 @@ import { regenerateCsrfToken } from '#transport/auth/helpers/crsf';
 import { buildRegisterPayload } from '#transport/auth/helpers/i18n_payloads/register';
 import { registerValidator } from '#transport/auth/validators/auth';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()
@@ -19,7 +20,7 @@ export default class RegisterController {
 	render(ctx: HttpContext) {
 		const { inertia } = ctx;
 
-		return inertia.render('auth/front/register', {
+		return renderInertiaPage(inertia, 'auth/front/register', {
 			providers: enabledProviders,
 			translations: buildRegisterPayload(this.i18n),
 		});

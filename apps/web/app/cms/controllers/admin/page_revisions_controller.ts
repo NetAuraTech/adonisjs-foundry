@@ -7,6 +7,7 @@ import PageRevisionTransformer from '#transport/cms/transformers/page_revision_t
 import { revisionValidator } from '#transport/cms/validators/page';
 import { extractPagination } from '#transport/core/helpers/extract_pagination';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()
@@ -27,7 +28,7 @@ export default class PageRevisionsController {
 			pagination,
 		});
 
-		return inertia.render('cms/page/admin/revisions', {
+		return renderInertiaPage(inertia, 'cms/page/admin/revisions', {
 			revisions: PageRevisionTransformer.transform(revisions.all()),
 			translation_id: params.translationId,
 			page_id: params.id,

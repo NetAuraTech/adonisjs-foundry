@@ -1,3 +1,4 @@
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import { resolveEndpoint, type AdapterHandler } from '#transport/core/rest/rest_adapter';
 
 /**
@@ -44,8 +45,8 @@ export const handle: AdapterHandler = async (ctx, endpoint) => {
 		}
 
 		// The component name stays a plain `string` on the contract, so the
-		// dynamic render goes through the same cast the controllers use.
-		return (ctx.inertia.render as any)(component, await render(context, prepared, payload, result));
+		// dynamic render goes through the shared Inertia render helper.
+		return renderInertiaPage(ctx.inertia, component, await render(context, prepared, payload, result));
 	}
 
 	const { flash, redirect } = page;

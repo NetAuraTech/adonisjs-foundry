@@ -12,6 +12,7 @@ import { buildSocialDefinePasswordPayload } from '#transport/auth/helpers/i18n_p
 import { completeSocialApiCallback } from '#transport/auth/helpers/social_api_callback';
 import { definePasswordValidator } from '#transport/auth/validators/auth';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()
@@ -118,7 +119,7 @@ export default class SocialController {
 	async render(ctx: HttpContext) {
 		const { inertia } = ctx;
 
-		return inertia.render('auth/front/define_password', {
+		return renderInertiaPage(inertia, 'auth/front/define_password', {
 			translations: buildSocialDefinePasswordPayload(this.i18n),
 		});
 	}

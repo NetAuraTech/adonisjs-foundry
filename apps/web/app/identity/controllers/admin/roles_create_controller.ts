@@ -2,6 +2,7 @@ import { inject } from '@adonisjs/core';
 import { ListAllPermissionsAction } from '#identity/actions/permission/list_all_permissions_action';
 import { CreateRoleAction } from '#identity/actions/role/create_role_action';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import { buildRolesFormPayload } from '#transport/identity/helpers/i18n_payloads/roles_form';
 import PermissionTransformer from '#transport/identity/transformers/permission_transformer';
 import { createRoleValidator } from '#transport/identity/validators/role';
@@ -23,7 +24,7 @@ export default class RolesCreateController {
 
 		const permissions = await this.listAllPermissionsAction.execute();
 
-		return inertia.render('role/admin/form', {
+		return renderInertiaPage(inertia, 'role/admin/form', {
 			role: null,
 			permissions: PermissionTransformer.transform(permissions.map((permission) => permission.toDomain())),
 			translations: buildRolesFormPayload(this.i18n, permissions),

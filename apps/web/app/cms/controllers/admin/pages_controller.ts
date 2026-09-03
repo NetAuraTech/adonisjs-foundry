@@ -7,6 +7,7 @@ import PageTransformer from '#transport/cms/transformers/page_transformer';
 import { listPageValidator, showPageValidator } from '#transport/cms/validators/page';
 import { extractPagination } from '#transport/core/helpers/extract_pagination';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import { stripEmptyStrings } from '#transport/core/helpers/strip_empty_strings';
 import type { HttpContext } from '@adonisjs/core/http';
 
@@ -33,7 +34,7 @@ export default class PagesController {
 			pagination,
 		});
 
-		return inertia.render('cms/page/admin/index', {
+		return renderInertiaPage(inertia, 'cms/page/admin/index', {
 			pages: PageTransformer.paginate(pages.all(), pages.getMeta()),
 			filters: payload,
 			translations: buildPagesIndexPayload(this.i18n),

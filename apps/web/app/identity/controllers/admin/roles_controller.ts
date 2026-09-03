@@ -3,6 +3,7 @@ import { DeleteRoleAction } from '#identity/actions/role/delete_role_action';
 import { ListRolesAction } from '#identity/actions/role/list_roles_action';
 import { extractPagination } from '#transport/core/helpers/extract_pagination';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import { stripEmptyStrings } from '#transport/core/helpers/strip_empty_strings';
 import { buildRolesListPayload } from '#transport/identity/helpers/i18n_payloads/roles_list';
 import RoleTransformer from '#transport/identity/transformers/role_transformer';
@@ -34,7 +35,7 @@ export default class RolesController {
 			pagination,
 		});
 
-		return inertia.render('role/admin/index', {
+		return renderInertiaPage(inertia, 'role/admin/index', {
 			roles: RoleTransformer.paginate(roles.all(), roles.getMeta()),
 			filters: payload,
 			translations: buildRolesListPayload(this.i18n, roles.all()),

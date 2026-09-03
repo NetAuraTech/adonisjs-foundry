@@ -5,6 +5,7 @@ import { regenerateCsrfToken } from '#transport/auth/helpers/crsf';
 import { buildResetPasswordPayload } from '#transport/auth/helpers/i18n_payloads/reset_password';
 import { resetPasswordValidator } from '#transport/auth/validators/auth';
 import { I18nService } from '#transport/core/helpers/i18n_service';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import type { FullToken } from '#auth/enums/token_type';
 import type { HttpContext } from '@adonisjs/core/http';
 
@@ -21,7 +22,7 @@ export default class ResetPasswordController {
 
 		await this.validatePasswordTokenAction.execute({ token: params.token as FullToken });
 
-		return inertia.render('auth/front/reset_password', {
+		return renderInertiaPage(inertia, 'auth/front/reset_password', {
 			token: params.token,
 			translations: buildResetPasswordPayload(this.i18n),
 		});
