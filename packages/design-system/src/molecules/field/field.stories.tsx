@@ -42,48 +42,49 @@ export const WithHelpText: Story = {
 };
 
 export const ValidationSeam: Story = {
-	render: (args) => {
-		const [value, setValue] = useState('');
-		const [touched, setTouched] = useState(false);
-
-		const clientInvalid = touched && value !== '' && !value.includes('@');
-
-		// A stand-in for the app's useFormValidation bundle. All members are
-		// optional; here we provide the full set to exercise the seam.
-		const validation = {
-			handleChange: (name: string, next: string | boolean) => {
-				if (name === 'email') setValue(String(next));
-			},
-			handleBlur: (name: string, next: string | boolean) => {
-				if (name === 'email') {
-					setValue(String(next));
-					setTouched(true);
-				}
-			},
-			getValidationMessage: (name: string) =>
-				name === 'email' && clientInvalid ? 'Invalid email address.' : undefined,
-			getHelpClassName: (name: string) =>
-				name === 'email' && touched ? (clientInvalid ? 'text-danger' : 'text-success') : '',
-		};
-
-		// Server errors take precedence over the client validation message.
-		const errors: Record<string, string | undefined> =
-			value === 'taken@example.com' ? { email: 'This email is already taken.' } : {};
-
-		return (
-			<Field
-				{...args}
-				name="email"
-				type="email"
-				label="Email"
-				validation={validation}
-				errors={errors}
-				helpText="Server errors win; the help text color follows the bundle."
-				required
-			/>
-		);
-	},
+	render: (args) => <ValidationSeamStory {...args} />,
 };
+
+function ValidationSeamStory(props: Story['args']) {
+	const [value, setValue] = useState('');
+	const [touched, setTouched] = useState(false);
+
+	const clientInvalid = touched && value !== '' && !value.includes('@');
+
+	// A stand-in for the app's useFormValidation bundle. All members are
+	// optional; here we provide the full set to exercise the seam.
+	const validation = {
+		handleChange: (name: string, next: string | boolean) => {
+			if (name === 'email') setValue(String(next));
+		},
+		handleBlur: (name: string, next: string | boolean) => {
+			if (name === 'email') {
+				setValue(String(next));
+				setTouched(true);
+			}
+		},
+		getValidationMessage: (name: string) => (name === 'email' && clientInvalid ? 'Invalid email address.' : undefined),
+		getHelpClassName: (name: string) =>
+			name === 'email' && touched ? (clientInvalid ? 'text-danger' : 'text-success') : '',
+	};
+
+	// Server errors take precedence over the client validation message.
+	const errors: Record<string, string | undefined> =
+		value === 'taken@example.com' ? { email: 'This email is already taken.' } : {};
+
+	return (
+		<Field
+			{...props}
+			name="email"
+			type="email"
+			label="Email"
+			validation={validation}
+			errors={errors}
+			helpText="Server errors win; the help text color follows the bundle."
+			required
+		/>
+	);
+}
 
 export const Textarea: Story = {
 	args: {
