@@ -6,6 +6,7 @@ import { ValidatePasswordTokenAction } from '#auth/actions/password/validate_pas
 import { Token } from '#auth/domain/token';
 import { TOKEN_TYPES } from '#auth/enums/token_type';
 import InvalidTokenException from '#auth/exceptions/invalid_token_exception';
+import TokenModel from '#auth/models/token';
 import { TokenRepository } from '#auth/repositories/token_repository';
 import User from '#identity/models/user';
 
@@ -39,6 +40,6 @@ test.group('ValidatePasswordTokenAction', () => {
 
 		await action.execute({ token: fullToken as any });
 
-		assert.equal((await tokenRepo.findOne({ selector }))!.attempts, 1);
+		assert.equal((await TokenModel.query().where('selector', selector).first())!.attempts, 1);
 	});
 });

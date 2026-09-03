@@ -10,7 +10,6 @@ import { BaseRepository } from '#core/repositories/base_repository';
 import { transactionContext } from '#core/services/transaction_context';
 import User from '#identity/models/user';
 import { LogService } from '#log/services/log_service';
-import { type FindOptions } from '#types/core';
 
 /**
  * Handles all database operations for the {@link TokenModel} model.
@@ -59,89 +58,6 @@ export class TokenRepository extends BaseRepository {
 	 */
 	async findById(id: number): Promise<TokenModel | null> {
 		return await TokenModel.query(this.client()).where('id', id).first();
-	}
-
-	/**
-	 * Returns all tokens, with optional sorting and pagination.
-	 *
-	 * @param options - Optional {@link FindOptions} to control ordering and pagination.
-	 * @returns An array of token records.
-	 *
-	 * @example
-	 * const tokens = await tokenRepository.findAll({ orderBy: 'createdAt', limit: 50 })
-	 */
-	async findAll(options?: FindOptions): Promise<TokenModel[]> {
-		let query = TokenModel.query(this.client());
-
-		if (options?.orderBy) {
-			query = query.orderBy(options.orderBy, options.orderDirection || 'asc');
-		}
-
-		if (options?.limit) {
-			query = query.limit(options.limit);
-		}
-
-		if (options?.offset) {
-			query = query.offset(options.offset);
-		}
-
-		return await query;
-	}
-
-	/**
-	 * Finds the first token matching all provided criteria.
-	 *
-	 * Each key/value pair in `criteria` is applied as a `WHERE` clause.
-	 *
-	 * @param criteria - Map of column/value pairs to filter by.
-	 * @returns The first matching token record, or `null` if none found.
-	 *
-	 * @example
-	 * const token = await tokenRepository.findOne({ userId: 1, type: TOKEN_TYPES.PASSWORD_RESET })
-	 */
-	async findOne(criteria: Record<string, any>): Promise<TokenModel | null> {
-		let query = TokenModel.query(this.client());
-
-		Object.entries(criteria).forEach(([key, value]) => {
-			query = query.where(key, value);
-		});
-
-		return await query.first();
-	}
-
-	/**
-	 * Returns all tokens matching the provided criteria, with optional sorting
-	 * and pagination.
-	 *
-	 * Each key/value pair in `criteria` is applied as a `WHERE` clause.
-	 *
-	 * @param criteria - Map of column/value pairs to filter by.
-	 * @param options - Optional {@link FindOptions} to control ordering and pagination.
-	 * @returns An array of matching token records.
-	 *
-	 * @example
-	 * const tokens = await tokenRepository.findMany({ userId: 1 }, { orderBy: 'expiresAt' })
-	 */
-	async findMany(criteria: Record<string, any>, options?: FindOptions): Promise<TokenModel[]> {
-		let query = TokenModel.query(this.client());
-
-		Object.entries(criteria).forEach(([key, value]) => {
-			query = query.where(key, value);
-		});
-
-		if (options?.orderBy) {
-			query = query.orderBy(options.orderBy, options.orderDirection || 'asc');
-		}
-
-		if (options?.limit) {
-			query = query.limit(options.limit);
-		}
-
-		if (options?.offset) {
-			query = query.offset(options.offset);
-		}
-
-		return await query;
 	}
 
 	/**
@@ -244,26 +160,6 @@ export class TokenRepository extends BaseRepository {
 		record.attempts += 1;
 		await transactionContext.merge(record);
 		await record.save();
-	}
-
-	/**
-	 * Expires a token by setting its `expiresAt` to the current time.
-	 *
-	 * Use this instead of deleting when you want to keep an audit trail
-	 * that the token existed but is no longer valid.
-	 *
-	 * @param id - The primary key of the token to expire.
-	 *
-	 * @example
-	 * await tokenRepository.expire(token.id)
-	 */
-	async expire(id: number): Promise<void> {
-		const token = await this.findById(id);
-		if (!token) return;
-
-		token.expiresAt = DateTime.now();
-		await transactionContext.merge(token);
-		await token.save();
 	}
 
 	/**
@@ -621,55 +517,6 @@ export class TokenRepository extends BaseRepository {
 		await transactionContext.merge(token);
 		await token.save();
 		return token;
-	}
-
-	/**
-	 * Counts tokens matching the given criteria.
-	 *
-	 * @param criteria - Optional map of column/value pairs to filter by.
-	 * @returns The number of matching records.
-	 */
-	async count(criteria?: Record<string, any>): Promise<number> {
-		let query = TokenModel.query(this.client());
-
-		if (criteria) {
-			Object.entries(criteria).forEach(([key, value]) => {
-				query = query.where(key, value);
-			});
-		}
-
-		const result = await query.count('* as total');
-		return Number(result[0].$extras.total);
-	}
-
-	/**
-	 * Checks whether at least one token matches the given criteria.
-	 *
-	 * @param criteria - Map of column/value pairs to filter by.
-	 * @returns `true` if at least one matching record exists, `false` otherwise.
-	 */
-	async exists(criteria: Record<string, any>): Promise<boolean> {
-		const count = await this.count(criteria);
-		return count > 0;
-	}
-
-	/**
-	 * Deletes all tokens matching the provided criteria.
-	 *
-	 * @param criteria - Map of column/value pairs to filter by.
-	 * @returns The number of deleted records.
-	 */
-	async deleteMany(criteria: Record<string, any>): Promise<number> {
-		let query = TokenModel.query(this.client());
-
-		Object.entries(criteria).forEach(([key, value]) => {
-			query = query.where(key, value);
-		});
-
-		const tokens = await query;
-		await Promise.all(tokens.map((token) => token.delete()));
-
-		return tokens.length;
 	}
 
 	/**
