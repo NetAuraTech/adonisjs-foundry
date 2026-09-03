@@ -26,9 +26,21 @@ export class UpdateUserAccountAction {
 		protected emailChangeMailService: EmailChangeMailService,
 	) {}
 
+	/**
+	 * Execute the account update.
+	 *
+	 * Verifies the account is email-verified, then applies the requested
+	 * password change and/or pending email change, logging security events
+	 * on rejection and a business event on success.
+	 *
+	 * @param payload - The target user plus the credential fields to change.
+	 * @returns The updated {@link User}.
+	 * @throws {UnverifiedAccountException} If the account's email is not verified.
+	 * @throws {InvalidCurrentPasswordException} If the current password does not match.
+	 */
 	async execute(payload: UpdateUserAccountPayload): Promise<User> {
 		if (!payload.user.isEmailVerified) {
-			this.logService.logSecurity('Attempt to update account with unverified email', {
+			this.logService.logSecurity('account.update.denied_unverified_email', {
 				userId: payload.user.id,
 				userEmail: payload.user.email,
 			});
@@ -40,7 +52,7 @@ export class UpdateUserAccountAction {
 		if (payload.currentPassword && payload.password) {
 			const isPasswordValid = await hash.verify(payload.user.password!, payload.currentPassword);
 			if (!isPasswordValid) {
-				this.logService.logSecurity('Failed password change attempt - invalid current password', {
+				this.logService.logSecurity('account.update.failed_invalid_password', {
 					userId: payload.user.id,
 					userEmail: payload.user.email,
 				});
