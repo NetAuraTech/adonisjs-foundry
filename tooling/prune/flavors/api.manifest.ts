@@ -77,6 +77,13 @@ const apiManifest: FlavorManifest = {
 		// pipeline and its unit tests need the pruned Inertia binding.
 		'apps/web/app/core/rest/page_adapter.ts',
 
+		// ─── Inertia render helper — dead once every front/admin controller ──
+		// and the page adapter are pruned. Its only importers above are all
+		// deleted in this flavor, and it imports the pruned @adonisjs/inertia
+		// package, so it (and its spec) must go with the view layer.
+		'apps/web/app/core/helpers/inertia_render.ts',
+		'apps/web/tests/unit/core/helpers/inertia_render.spec.ts',
+
 		// ─── Session-rendered front controllers ──────────────────────────────
 		// front = guest/public pages (auth, self-service, home, sitemap, robots).
 		'apps/web/app/auth/controllers/front',
