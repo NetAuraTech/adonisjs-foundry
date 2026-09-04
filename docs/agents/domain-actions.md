@@ -9,7 +9,7 @@ import { inject } from '@adonisjs/core';
 import type File from '#file/models/file';
 import { FileRepository } from '#file/repositories/file_repository';
 import { LogService } from '#log/services/log_service';
-import { withTransaction } from '#shared/utils/with_transaction';
+import { withTransaction } from '#core/services/with_transaction';
 
 interface CreateSomethingPayload {
 	name: string;
@@ -70,7 +70,7 @@ export class CreateSomethingAction {
 Mutating actions that touch multiple repositories or perform multi-step operations should wrap their work in `withTransaction()`. Read-only actions never use transactions.
 
 ```typescript
-import { withTransaction } from '#shared/utils/with_transaction'
+import { withTransaction } from '#core/services/with_transaction'
 
 async execute(payload: CreatePagePayload): Promise<Page> {
   return withTransaction(async () => {

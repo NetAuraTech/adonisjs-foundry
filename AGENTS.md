@@ -61,6 +61,7 @@ How code is structured in this codebase — read the relevant file before writin
 - HTTP Controllers: see `docs/agents/http-controllers.md`
 - Domain Services: see `docs/agents/domain-services.md`
 - Domain Repositories: see `docs/agents/domain-repositories.md`
+- Domain Queries: see `docs/agents/domain-queries.md`
 - Models: see `docs/agents/models.md`
 - Exceptions: see `docs/agents/exceptions.md`
 - Validators: see `docs/agents/validators.md`
