@@ -113,6 +113,29 @@ test.group('TokenRepository', () => {
 		assert.equal((await repo.findById(tokenModel.id))!.attempts, 3);
 	});
 
+	test('checkAttempts() cannot be bypassed by concurrent presentations', async ({ assert }) => {
+		const u = await uniqueUser('concurrent');
+		const { plainToken, tokenModel } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);
+
+		// MAX_ATTEMPTS is 3: of 10 concurrent presentations, exactly 3 may
+		// pass the check and increment — the rest must observe the lockout.
+		// An unlocked check-then-act lets the concurrent readers all see the
+		// stale counter, bypass the cap, and clobber each other's increment.
+		const results = await Promise.allSettled(Array.from({ length: 10 }, () => repo.checkAttempts(plainToken)));
+
+		const accepted = results.filter((r) => r.status === 'fulfilled');
+		const rejected = results.filter((r) => r.status === 'rejected');
+
+		assert.equal(accepted.length, 3);
+		assert.equal(rejected.length, 7);
+
+		for (const r of rejected) {
+			assert.isTrue(r.reason instanceof MaxAttemptsExceededException);
+		}
+
+		assert.equal((await repo.findById(tokenModel.id))!.attempts, 3);
+	});
+
 	test('verify() consumes exactly one attempt per call', async ({ assert }) => {
 		const u = await uniqueUser('verifycount');
 		const { plainToken, tokenModel } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);

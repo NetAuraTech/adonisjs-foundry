@@ -8,6 +8,7 @@ import MaxAttemptsExceededException from '#auth/exceptions/max_attempts_exceeded
 import TokenModel from '#auth/models/token';
 import { BaseRepository } from '#core/repositories/base_repository';
 import { transactionContext } from '#core/services/transaction_context';
+import { withTransaction } from '#core/services/with_transaction';
 import User from '#identity/models/user';
 import { LogService } from '#log/services/log_service';
 
@@ -140,6 +141,12 @@ export class TokenRepository extends BaseRepository {
 	 *   {@link expirePasswordResetTokens}, after which the counter is
 	 *   irrelevant.
 	 *
+	 * The check and the increment are atomic: the row is acquired with an
+	 * exclusive `SELECT ... FOR UPDATE` inside a dedicated transaction (see
+	 * /docs/agents/toctou-protection.md), so concurrent presentations of the
+	 * same token are serialized — none of them can pass the cap check on a
+	 * stale counter or clobber another presentation's increment.
+	 *
 	 * @param token - The raw `selector.validator` token.
 	 * @throws {MaxAttemptsExceededException} If the attempt counter has reached
 	 *   or exceeded the maximum allowed attempts.
@@ -149,17 +156,19 @@ export class TokenRepository extends BaseRepository {
 
 		if (!parts) return;
 
-		const record = await TokenModel.query(this.client()).where('selector', parts.selector).first();
+		await withTransaction(async () => {
+			const record = await TokenModel.query(this.client()).where('selector', parts.selector).forUpdate().first();
 
-		if (!record) return;
+			if (!record) return;
 
-		if (record.toDomain().hasExceededAttempts(this.MAX_ATTEMPTS)) {
-			throw new MaxAttemptsExceededException();
-		}
+			if (record.toDomain().hasExceededAttempts(this.MAX_ATTEMPTS)) {
+				throw new MaxAttemptsExceededException();
+			}
 
-		record.attempts += 1;
-		await transactionContext.merge(record);
-		await record.save();
+			record.attempts += 1;
+			await transactionContext.merge(record);
+			await record.save();
+		});
 	}
 
 	/**
