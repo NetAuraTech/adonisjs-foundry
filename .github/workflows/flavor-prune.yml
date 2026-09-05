@@ -186,37 +186,9 @@ jobs:
         run: npm run format
 
       - name: Regenerate AdonisJS indexes (post-prune codegen)
-        working-directory: apps/web
-        run: |
-          # "node ace codegen" (warmup) is the entry point that regenerates
-          # every committed codegen file: the assembler init hooks rewrite the
-          # server indexes and pages.d.ts at startup, and the Tuyau client
-          # registry is written once the app commits its routes (routesScanned
-          # hook), which typecheck and test commands never trigger. It is
-          # watched on its own completion marker ("Codegen files generated"),
-          # same as ci.yml's codegen-drift job. ".env.test" boots the full app
-          # without external services.
-          cp .env.test .env
-          mkdir -p tmp
-          node ace codegen > tmp/codegen.log 2>&1 &
-          CODEGEN_PID=$!
-          for i in $(seq 1 90); do
-            if grep -q 'Codegen files generated' tmp/codegen.log; then
-              break
-            fi
-            if ! kill -0 "$CODEGEN_PID" 2>/dev/null; then
-              echo 'Codegen exited before the completion marker was logged:'
-              cat tmp/codegen.log
-              exit 1
-            fi
-            sleep 1
-          done
-          kill "$CODEGEN_PID" 2>/dev/null || true
-          if ! grep -q 'Codegen files generated' tmp/codegen.log; then
-            echo 'Timed out waiting for the codegen completion marker:'
-            cat tmp/codegen.log
-            exit 1
-          fi
+        uses: ./.github/actions/regenerate-codegen
+        with:
+          working-directory: apps/web
 
       - name: Run typecheck
         # The flavor package.json's typecheck script fans out to the surviving

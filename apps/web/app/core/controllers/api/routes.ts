@@ -17,6 +17,7 @@ import features from '#config/features';
 import { controllers } from '#generated/controllers';
 import { middleware } from '#start/kernel';
 import { permissions } from '#start/permissions';
+import { maintenanceMiddleware } from '#transport/core/maintenance';
 
 /**
  * The admin JSON surface is shared: the in-repo admin UI (session guard) and
@@ -25,12 +26,6 @@ import { permissions } from '#start/permissions';
  * `authenticateUsing`, hence the conditional list.
  */
 const apiGuards = enabledAuthGuards.api ? (['web', 'api'] as const) : (['web'] as const);
-
-/**
- * The surface self-registers on import, outside the `start/routes.ts`
- * maintenance wrapper — it wraps itself (when enabled) to keep parity.
- */
-const maintenanceMiddleware = features.maintenance ? [middleware.maintenance()] : [];
 
 if (features.adminApi) {
 	router

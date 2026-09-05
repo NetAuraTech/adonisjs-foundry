@@ -16,12 +16,7 @@ import features from '#config/features';
 import { controllers } from '#generated/controllers';
 import { middleware } from '#start/kernel';
 import { permissions } from '#start/permissions';
-
-/**
- * Feature routes are wrapped with the maintenance middleware (when enabled)
- * before their auth guard, mirroring the `start/routes.ts` wrapper.
- */
-const maintenanceMiddleware = features.maintenance ? [middleware.maintenance()] : [];
+import { maintenanceMiddleware } from '#transport/core/maintenance';
 
 if (features.admin) {
 	router

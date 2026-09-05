@@ -17,12 +17,7 @@ import { enabledAuthGuards } from '#config/auth';
 import features from '#config/features';
 import { controllers } from '#generated/controllers';
 import { middleware } from '#start/kernel';
-
-/**
- * Feature routes are wrapped with the maintenance middleware (when enabled),
- * mirroring the `start/routes.ts` wrapper.
- */
-const maintenanceMiddleware = features.maintenance ? [middleware.maintenance()] : [];
+import { maintenanceMiddleware } from '#transport/core/maintenance';
 
 /**
  * The admin JSON surface is shared: the in-repo admin UI (session guard) and

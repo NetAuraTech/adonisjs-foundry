@@ -18,6 +18,7 @@ import features from '#config/features';
 import { controllers } from '#generated/controllers';
 import { middleware } from '#start/kernel';
 import { permissions } from '#start/permissions';
+import { maintenanceMiddleware } from '#transport/core/maintenance';
 
 /**
  * Same shared guard list as the admin REST surface: the in-repo admin UI
@@ -26,12 +27,6 @@ import { permissions } from '#start/permissions';
  * `authenticateUsing`.
  */
 const apiGuards = enabledAuthGuards.api ? (['web', 'api'] as const) : (['web'] as const);
-
-/**
- * The surface self-registers on import, outside the `start/routes.ts`
- * maintenance wrapper — it wraps itself (when enabled) to keep parity.
- */
-const maintenanceMiddleware = features.maintenance ? [middleware.maintenance()] : [];
 
 if (features.adminApi && features.cms) {
 	router

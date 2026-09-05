@@ -2,7 +2,7 @@
 
 Lucid models live in `src/{domain}/models/{name}.ts` (area subdirectories for large domains) — co-located with the domain's actions, repositories and services, and imported through the domain alias (`#identity/models/...`, `#cms/models/...`). Each model extends a generated schema class from `database/schema.ts` that contains column definitions. The model file adds relations, hooks, scopes, and helpers on top of the schema.
 
-> The transport layer (controllers, routes, validators, transformers, REST resources) stays under `app/{domain}/`, co-located per domain; the business layer (models, actions, repositories, services, exceptions) stays under `src/{domain}/`.
+> The transport layer (controllers, routes, validators, transformers, REST resources) stays under `app/{domain}/`, co-located per domain; the business layer (models, actions, repositories, services, exceptions) stays under `src/{domain}/`. The BFF boundary between the two is enforced by the lint in `oxlint.config.ts`: `src/` must not import `#transport/*` or escape to `app/`; shared framework aliases (`#start`, `#config`, `#database`, `#generated`, `#types`) stay reachable from `src/` — the boundary guards against HTTP details, not framework plumbing.
 
 ## Structure
 

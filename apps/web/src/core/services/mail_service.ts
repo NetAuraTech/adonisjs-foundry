@@ -1,8 +1,8 @@
 import { inject } from '@adonisjs/core';
+import i18nManager from '@adonisjs/i18n/services/main';
 import { MailClientContract, type MailClientMessage } from '#core/contracts/mail_client';
 import { routePath } from '#core/services/route_path';
 import env from '#start/env';
-import type { FullToken } from '#auth/enums/token_type';
 
 /**
  * Options of a shared mail dispatch.
@@ -49,7 +49,7 @@ export class MailService<TPayload extends MailClientMessage = MailClientMessage>
 	 * const locale = mailService.resolveLocale(preferences.locale)
 	 */
 	resolveLocale(locale?: string): string {
-		return locale || 'en';
+		return locale || i18nManager.defaultLocale;
 	}
 
 	/**
@@ -82,7 +82,7 @@ export class MailService<TPayload extends MailClientMessage = MailClientMessage>
 	 * falls back to the token API endpoints. The first registered route wins.
 	 *
 	 * @param routeNames - Candidate route names, in priority order.
-	 * @param token - The token carried by the link.
+	 * @param token - The full `<selector>.<validator>` token carried by the link.
 	 * @returns The absolute URL, or an empty string when no candidate is
 	 *   registered.
 	 *
@@ -92,7 +92,7 @@ export class MailService<TPayload extends MailClientMessage = MailClientMessage>
 	 *   token,
 	 * )
 	 */
-	buildLink(routeNames: string[], token: FullToken): string {
+	buildLink(routeNames: string[], token: string): string {
 		for (const name of routeNames) {
 			const path = routePath(name, { token });
 			if (path) return `${env.get('APP_URL')}${path}`;
