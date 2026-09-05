@@ -70,6 +70,12 @@ Permissions follow the same composition pattern. Each domain owns a `{domain}_pe
 
 DB-backed with custom logic → Standard service. Wraps one external system → Infra wrapper. No state/deps → plain injectable. Pure transform, no I/O → function module. Read-only catalogue → Read-only. Needs OS-level tools (CLI, fs) → direct infra access, document why. Ephemeral/real-time state → cache-backed, no repository.
 
+## Kernel mail service
+
+All mail dispatch goes through a single kernel service: `MailService<TPayload>` in `src/core/services/mail_service.ts` (imported via `#core/services/mail_service`). It is generic over the mail payload type — which must at least carry the `MailClientMessage` envelope from `#core/contracts/mail_client` — and depends on `MailClientContract`, bound by the app in `start/container.ts` to a thin wrapper around `@adonisjs/mail`. The service owns the shared dispatch: locale normalisation (`resolveLocale`, falling back to the app's default locale), flavor-aware link building (`buildLink`, the first registered candidate route wins) and sending (`send`, which stamps the resolved locale into the template data before delegating to the client).
+
+Per-domain mail services (auth's `TokenMailService`, account's `EmailChangeMailService`) inject `MailService` typed with their domain's payload (e.g. `MailService<AuthMailPayload>`), keep building their domain-specific payload — i18n strings, token, template data — and resolve the recipient's locale from their own preferences action before dispatching. The kernel never imports a domain: locale _resolution_ (loading the preferences) stays domain-side, and only the resolved locale crosses into the dispatch. There is no events/listeners/mailables chain — every mail flow is a direct, traceable call.
+
 ## Conventions
 
 - Errors: typed exception class or `Object.assign(new Error(msg), { code: 'E_...' })` — both used, no strict preference enforced yet.

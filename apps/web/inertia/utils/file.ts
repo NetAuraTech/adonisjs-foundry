@@ -22,7 +22,8 @@ export async function loadFileById(id: number): Promise<Data.File.File | null> {
  * Formats a byte count as a compact human-readable size.
  *
  * @param bytes - The file size in bytes.
- * @returns The size in `B` below 1 KiB, otherwise `KB` or `MB` with one decimal.
+ * @returns The size in `B` for values below 1024 bytes, otherwise the value
+ *   divided by 1024 (or 1024²) and labelled `KB` or `MB` with one decimal.
  *
  * @example
  * humanSize(2048) // => '2.0 KB'

@@ -6,8 +6,8 @@ import { GetPreferencesAction } from '#account/actions/preferences/get_preferenc
 import { Token } from '#auth/domain/token';
 import { TOKEN_TYPES, type FullToken } from '#auth/enums/token_type';
 import { TokenRepository } from '#auth/repositories/token_repository';
-import { MailClientContract } from '#core/contracts/mail_client';
-import { buildMailLink, resolveMailLocale } from '#core/services/mail_dispatch';
+import { type MailClientMessage } from '#core/contracts/mail_client';
+import { MailService } from '#core/services/mail_service';
 import env from '#start/env';
 import type User from '#identity/models/user';
 
@@ -16,10 +16,11 @@ import type User from '#identity/models/user';
  *
  * Mirrors the view data the previous Mailable classes produced, so the edge
  * template keeps rendering identically. The confirmation and notification
- * mails share the template, each populating its own subset of fields.
+ * mails share the template, each populating its own subset of fields. The
+ * rendering locale is stamped into the data by the kernel {@link MailService},
+ * not carried here.
  */
 interface EmailChangeMailData {
-	locale: string;
 	app_name: string;
 	subject: string;
 	greeting: string;
@@ -39,6 +40,9 @@ interface EmailChangeMailData {
 	support?: string;
 }
 
+/** Account-domain mail payload: the kernel envelope carrying the account template data. */
+type EmailChangeMailPayload = MailClientMessage & { data: EmailChangeMailData };
+
 /**
  * Sends the mail pair of a pending email address change.
  *
@@ -51,63 +55,68 @@ interface EmailChangeMailData {
  *      the new, pending address
  *   4. Send the notification mail to the current address
  *
- * Delivery goes through the kernel {@link MailClientContract}.
+ * Delivery goes through the kernel {@link MailService}.
  */
 @inject()
 export class EmailChangeMailService {
 	constructor(
-		protected mailClient: MailClientContract,
+		protected mailService: MailService<EmailChangeMailPayload>,
 		protected getPreferencesAction: GetPreferencesAction,
 		protected tokenRepository: TokenRepository,
 	) {}
 
 	/**
 	 * Issues the email-change token and delivers both mails for the user's
-	 * pending email address change.
+	 * pending email change.
 	 *
 	 * @param user - The user whose `pendingEmail` was just set.
 	 */
 	async sendEmailChangeMails(user: User): Promise<void> {
-		const locale = await resolveMailLocale(this.getPreferencesAction, user);
+		const preferences = await this.getPreferencesAction.execute({ user });
+		const locale = this.mailService.resolveLocale(preferences.locale);
 		const token = await this.issueEmailChangeToken(user);
 		const i18n = i18nManager.locale(locale);
 
-		await this.mailClient.send({
-			to: user.pendingEmail!,
-			subject: i18n.t('account.email.change.mail.confirm.subject'),
-			template: 'emails/account_email',
-			data: {
-				locale,
-				app_name: env.get('APP_NAME') ?? 'AdonisJS',
+		await this.mailService.send(
+			{
+				to: user.pendingEmail!,
 				subject: i18n.t('account.email.change.mail.confirm.subject'),
-				greeting: i18n.t('account.email.change.mail.confirm.greeting'),
-				intro: i18n.t('account.email.change.mail.confirm.intro', { email: user.pendingEmail }),
-				action: i18n.t('account.email.change.mail.confirm.action'),
-				outro: i18n.t('account.email.change.mail.confirm.outro'),
-				expiry: i18n.t('account.email.change.mail.confirm.expiry', { hours: 24 }),
-				footer: i18n.t('account.email.change.mail.confirm.footer'),
-				confirmation_link: buildMailLink(['account.email_change.render'], token),
-			} satisfies EmailChangeMailData,
-		});
+				template: 'emails/account_email',
+				data: {
+					app_name: env.get('APP_NAME') ?? 'AdonisJS',
+					subject: i18n.t('account.email.change.mail.confirm.subject'),
+					greeting: i18n.t('account.email.change.mail.confirm.greeting'),
+					intro: i18n.t('account.email.change.mail.confirm.intro', { email: user.pendingEmail }),
+					action: i18n.t('account.email.change.mail.confirm.action'),
+					outro: i18n.t('account.email.change.mail.confirm.outro'),
+					expiry: i18n.t('account.email.change.mail.confirm.expiry', { hours: 24 }),
+					footer: i18n.t('account.email.change.mail.confirm.footer'),
+					confirmation_link: this.mailService.buildLink(['account.email_change.render'], token),
+				} satisfies EmailChangeMailData,
+			},
+			{ locale },
+		);
 
-		await this.mailClient.send({
-			to: user.email,
-			subject: i18n.t('account.email.change.mail.notification.subject'),
-			template: 'emails/account_email',
-			data: {
-				locale,
-				app_name: env.get('APP_NAME') ?? 'AdonisJS',
+		await this.mailService.send(
+			{
+				to: user.email,
 				subject: i18n.t('account.email.change.mail.notification.subject'),
-				greeting: i18n.t('account.email.change.mail.notification.greeting'),
-				intro: i18n.t('account.email.change.mail.notification.intro', {
-					old: user.email,
-					new: user.pendingEmail,
-				}),
-				warning: i18n.t('account.email.change.mail.notification.warning'),
-				action: i18n.t('account.email.change.mail.notification.action'),
-				support: env.get('MAIL_FROM_ADDRESS'),
-			} satisfies EmailChangeMailData,
-		});
+				template: 'emails/account_email',
+				data: {
+					app_name: env.get('APP_NAME') ?? 'AdonisJS',
+					subject: i18n.t('account.email.change.mail.notification.subject'),
+					greeting: i18n.t('account.email.change.mail.notification.greeting'),
+					intro: i18n.t('account.email.change.mail.notification.intro', {
+						old: user.email,
+						new: user.pendingEmail,
+					}),
+					warning: i18n.t('account.email.change.mail.notification.warning'),
+					action: i18n.t('account.email.change.mail.notification.action'),
+					support: env.get('MAIL_FROM_ADDRESS'),
+				} satisfies EmailChangeMailData,
+			},
+			{ locale },
+		);
 	}
 
 	/**

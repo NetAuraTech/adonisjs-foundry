@@ -1430,6 +1430,12 @@ const apiManifest: FlavorManifest = {
 		// main's even though the design-system package is deleted wholesale,
 		// because a glob matching nothing is valid. Narrowing it would make the
 		// root rewrite diverge from main for no install benefit.
+		// The `@adonisjs/ally` overrides block of main's root manifest is
+		// deliberately absent here: without it, a fresh `npm install` would
+		// auto-resolve the package's peer dependency on
+		// `@adonisjs/inertia@^4.2.0`. The drop is only safe because the flavor
+		// branch keeps main's superset lockfile and installs with `npm ci`
+		// (no re-resolution), so the peer stays resolved from the lockfile.
 		{
 			path: 'package.json',
 			content: [

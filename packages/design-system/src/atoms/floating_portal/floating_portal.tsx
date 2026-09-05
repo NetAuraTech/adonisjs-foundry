@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants';
 import type { ReactNode, RefObject } from 'react';
 
 const floatingPortal = tv({
-	base: 'absolute pointer-events-auto z-[9999]',
+	base: 'absolute pointer-events-auto z-[9999] top-0 left-0',
 });
 
 interface FloatingPortalProps {
@@ -65,7 +65,7 @@ export function FloatingPortal(props: FloatingPortalProps) {
 	};
 
 	return createPortal(
-		<div ref={position} className={floatingPortal()} style={{ top: 0, left: 0 }}>
+		<div ref={position} className={floatingPortal()}>
 			{children}
 		</div>,
 		document.body,
