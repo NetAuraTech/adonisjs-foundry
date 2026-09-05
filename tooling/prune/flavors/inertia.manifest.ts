@@ -1341,7 +1341,7 @@ const inertiaManifest: FlavorManifest = {
 				'    "react-markdown": "^10.1.0",',
 				'    "reflect-metadata": "^0.2.2",',
 				'    "rehype-raw": "^7.0.0",',
-				'    "sharp": "^0.35.3",',
+				'    "sharp": "^0.35.4",',
 				'    "sinon": "^22.1.0",',
 				'    "sonner": "^2.0.7",',
 				'    "tailwindcss": "^4.3.3",',
