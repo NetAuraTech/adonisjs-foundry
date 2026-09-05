@@ -24,6 +24,54 @@ export abstract class ValueObject<T extends Record<string, any>> {
 			return false;
 		}
 
-		return JSON.stringify(this.props) === JSON.stringify(vo.props);
+		return ValueObject.deepEqual(this.props, vo.props);
+	}
+
+	/**
+	 * Deep, key-order-insensitive structural comparison of two values.
+	 *
+	 * Primitives compare with `===`; arrays compare element by element;
+	 * plain objects compare their own enumerable keys (order irrelevant);
+	 * `Date` values compare their timestamps.
+	 *
+	 * @param a - The first value.
+	 * @param b - The second value.
+	 * @returns `true` when both values are structurally equal.
+	 */
+	protected static deepEqual(a: unknown, b: unknown): boolean {
+		if (a === b) {
+			return true;
+		}
+
+		if (a instanceof Date && b instanceof Date) {
+			return a.getTime() === b.getTime();
+		}
+
+		if (a instanceof Date || b instanceof Date) {
+			return false;
+		}
+
+		if (typeof a !== 'object' || typeof b !== 'object' || a === null || b === null) {
+			return false;
+		}
+
+		if (Array.isArray(a) !== Array.isArray(b)) {
+			return false;
+		}
+
+		if (Array.isArray(a) && Array.isArray(b)) {
+			return a.length === b.length && a.every((item, index) => ValueObject.deepEqual(item, b[index]));
+		}
+
+		const aRecord = a as Record<string, unknown>;
+		const bRecord = b as Record<string, unknown>;
+		const aKeys = Object.keys(aRecord);
+		const bKeys = Object.keys(bRecord);
+
+		if (aKeys.length !== bKeys.length) {
+			return false;
+		}
+
+		return aKeys.every((key) => Object.hasOwn(bRecord, key) && ValueObject.deepEqual(aRecord[key], bRecord[key]));
 	}
 }

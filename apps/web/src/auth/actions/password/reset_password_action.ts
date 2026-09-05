@@ -44,6 +44,7 @@ export class ResetPasswordAction {
 
 		this.logService.logAuth('password.reset.success', {
 			userId: user.id,
+			userEmail: user.email,
 			token: Token.mask(payload.token),
 		});
 

@@ -1,4 +1,12 @@
 import { Icon as IconifyIcon } from '@iconify/react';
+import { cn, tv } from 'tailwind-variants';
+
+// The icon carries no base styling of its own — it is a pure pass-through to
+// the Iconify element — but routes its `className` through `tv` so the
+// component keeps the package's standard class-merging behaviour.
+const icon = tv({
+	base: '',
+});
 
 interface IconProps {
 	/**
@@ -35,5 +43,7 @@ export function Icon(props: IconProps) {
 
 	const iconName = name.includes(':') ? name : `lucide:${toKebabCase(name)}`;
 
-	return <IconifyIcon icon={iconName} width={size} height={size} className={className} {...(iconProps as any)} />;
+	return (
+		<IconifyIcon icon={iconName} width={size} height={size} className={cn(icon(), className)} {...(iconProps as any)} />
+	);
 }

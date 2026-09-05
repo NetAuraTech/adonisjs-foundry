@@ -1,7 +1,7 @@
 import app from '@adonisjs/core/services/app';
 import { test } from '@japa/runner';
 import { UserFactory, RoleFactory } from '#factories/identity/user_factory';
-import { IdentityDashboardCollector } from '#identity/services/dashboard_collector';
+import { IdentityDashboardCollector } from '#identity/services/identity_dashboard_collector';
 
 /**
  * The test database is not truncated between tests, so count assertions are
