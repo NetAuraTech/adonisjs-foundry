@@ -4,6 +4,10 @@ import { contactValidator } from '#transport/cms/validators/contact';
 import { I18nService } from '#transport/core/helpers/i18n_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
+/**
+ * Front contact form endpoint: validates the submission and delivers the
+ * notification mail through the CMS {@link ContactMailService}.
+ */
 @inject()
 export default class ContactController {
 	constructor(

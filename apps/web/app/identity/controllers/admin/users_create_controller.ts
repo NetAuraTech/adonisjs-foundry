@@ -9,6 +9,10 @@ import RoleTransformer from '#transport/identity/transformers/role_transformer';
 import { createValidator } from '#transport/identity/validators/user';
 import type { HttpContext } from '@adonisjs/core/http';
 
+/**
+ * Admin user creation controller: renders the invite form and creates the
+ * pending user with its invitation mail.
+ */
 @inject()
 export default class UsersCreateController {
 	constructor(
@@ -17,6 +21,9 @@ export default class UsersCreateController {
 		protected listAllRolesAction: ListAllRolesAction,
 	) {}
 
+	/**
+	 * Renders the user creation form with the assignable roles.
+	 */
 	async render(ctx: HttpContext) {
 		const { inertia } = ctx;
 
@@ -28,6 +35,10 @@ export default class UsersCreateController {
 		});
 	}
 
+	/**
+	 * Validates the invitation payload, creates the pending user and its
+	 * invitation mail, then redirects to the new user's detail page.
+	 */
 	async execute(ctx: HttpContext) {
 		const { request, response, session } = ctx;
 

@@ -105,7 +105,7 @@ app.container.singleton(MaintenanceService, async () => {
 
 /**
  * Binds the kernel {@link MailClientContract} to the AdonisJS mail driver.
- * The kernel generic {@link MailService} resolves this through the container,
- * keeping it decoupled from the mail package.
+ * Every mail service resolves this through the container, keeping it
+ * decoupled from the mail package.
  */
 app.container.bind(MailClientContract, () => new AdonisMailClient());

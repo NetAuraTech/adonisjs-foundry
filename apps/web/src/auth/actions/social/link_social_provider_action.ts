@@ -61,6 +61,7 @@ export class LinkSocialProviderAction {
 
 		this.logService.logAuth('social.provider_linked', {
 			userId: payload.user.id,
+			userEmail: payload.user.email,
 			provider: payload.provider,
 		});
 

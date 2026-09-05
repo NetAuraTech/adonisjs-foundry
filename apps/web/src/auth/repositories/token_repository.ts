@@ -332,7 +332,7 @@ export class TokenRepository extends BaseRepository {
 		const user = await this.getUserFromToken(token, TOKEN_TYPES.EMAIL_VERIFICATION);
 
 		if (!user) {
-			this.logService.logAuth('core.token.invalid', {});
+			this.logService.logAuth('core.token.invalid', { token: Token.mask(token) });
 			throw new InvalidTokenException();
 		}
 
@@ -387,7 +387,11 @@ export class TokenRepository extends BaseRepository {
 		const user = await this.getUserFromToken(token, TOKEN_TYPES.EMAIL_CHANGE);
 
 		if (!user || !user.pendingEmail) {
-			this.logService.logAuth('core.token.invalid', {});
+			this.logService.logAuth('core.token.invalid', {
+				userId: user?.id,
+				userEmail: user?.email,
+				token: Token.mask(token),
+			});
 
 			throw new InvalidTokenException();
 		}

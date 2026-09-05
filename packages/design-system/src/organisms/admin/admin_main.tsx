@@ -1,8 +1,13 @@
 import { Head } from '@inertiajs/react';
+import { tv } from 'tailwind-variants';
 import { Heading } from '../../atoms/heading/heading';
 import { Icon } from '../../atoms/icon/icon';
 import { Section } from '../../atoms/section/section';
 import type { ReactNode } from 'react';
+
+const adminMainHeadingRow = tv({
+	base: 'flex gap-3 flex-col md:flex-row justify-between md:items-center w-full',
+});
 
 interface AdminMainProps {
 	/** Page title shown in the `<Head>` tag and as the section heading. */
@@ -42,7 +47,7 @@ export function AdminMain(props: AdminMainProps) {
 	return (
 		<Section className="py-8 grid gap-4">
 			<Head title={title} />
-			<div className="flex gap-3 flex-col md:flex-row justify-between md:items-center w-full">
+			<div className={adminMainHeadingRow()}>
 				<Heading level={2} flex>
 					{icon && <Icon name={icon} size={32} />}
 					{title}
