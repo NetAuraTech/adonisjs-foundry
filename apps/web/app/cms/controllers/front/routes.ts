@@ -27,13 +27,7 @@
 import router from '@adonisjs/core/services/router';
 import features from '#config/features';
 import { controllers } from '#generated/controllers';
-import { middleware } from '#start/kernel';
-
-/**
- * Feature routes are wrapped with the maintenance middleware (when enabled),
- * mirroring the previous `start/routes.ts` wrapper.
- */
-const maintenanceMiddleware = features.maintenance ? [middleware.maintenance()] : [];
+import { maintenanceMiddleware } from '#transport/core/maintenance';
 
 if (features.cms) {
 	router

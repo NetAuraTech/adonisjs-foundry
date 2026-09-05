@@ -11,6 +11,8 @@ The framework derives the app root from the `bin/` entrypoint file location — 
 
 `#*` imports resolve through this package's `imports` map (see `package.json`) plus Node's package imports. The prune tests (`tests/unit/prune/`) are the one boundary-escaping case: they exercise the repo-root tooling through a relative import (`../../../../../tooling/prune/*`) rather than a `#prune` alias, because Node forbids a package `imports` target from leaving the package. The root `tsconfig.json` typechecks them (both `tooling/` and the tests share its `rootDir`), so they are excluded from this workspace's tsconfig.
 
+Transport code is addressed through the single `#transport/*` alias with the domain as a path segment (`#transport/auth/validators/...`), not through per-domain aliases: Node's flat `imports` map already assigns `#{domain}/*` to the business layer (`src/{domain}/`), so a second per-domain alias per transport domain is not expressible. Imports still name the domain — the spec's per-domain alias decision (issue #161) is realized in the path segment.
+
 ## Repo-wide tooling
 
 Lint (`oxlint`), formatting (`oxfmt`), typecheck (`tsc` fan-out) and the lockfile live at the repo root — run them there, not from this workspace. This workspace owns no lockfile; the root lockfile is the single one under workspaces.

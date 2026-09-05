@@ -10,7 +10,11 @@ export default defineConfig({
 	},
 	overrides: [
 		{
-			// Business layer (src) never depends on the app delivery layer.
+			// Business layer (src) never depends on the app delivery layer
+			// (the `app/` transport tree): the BFF boundary guards against
+			// HTTP details, not framework plumbing, so the shared
+			// infrastructure aliases (#start, #config, #database, #generated,
+			// #types) stay reachable from src. See docs/agents/models.md.
 			// This path-scoped override is the reference mechanism.
 			files: ['apps/web/src/**/*.{ts,tsx}'],
 			rules: {
