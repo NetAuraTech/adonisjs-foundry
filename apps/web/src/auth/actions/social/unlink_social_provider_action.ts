@@ -33,6 +33,7 @@ export class UnlinkSocialProviderAction {
 
 		this.logService.logAuth('social.provider_unlinked', {
 			userId: payload.user.id,
+			userEmail: payload.user.email,
 			provider: payload.provider,
 		});
 

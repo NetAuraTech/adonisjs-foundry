@@ -1,6 +1,11 @@
+import { cn, tv } from 'tailwind-variants';
 import { Heading } from '../../atoms/heading/heading';
 import { Paragraph } from '../../atoms/paragraph/paragraph';
 import type { ReactNode } from 'react';
+
+const authIntro = tv({
+	base: 'text-center mb-8',
+});
 
 interface AuthIntroProps {
 	/** Main heading displayed below the icon. */
@@ -13,6 +18,8 @@ interface AuthIntroProps {
 	 * is provided by the component.
 	 */
 	icon: ReactNode;
+	/** Additional Tailwind classes merged onto the wrapper. */
+	className?: string;
 }
 
 /**
@@ -42,10 +49,10 @@ interface AuthIntroProps {
  * />
  */
 export function AuthIntro(props: AuthIntroProps) {
-	const { title, text, icon } = props;
+	const { title, text, icon, className } = props;
 
 	return (
-		<div className="text-center mb-8">
+		<div className={cn(authIntro(), className)}>
 			<div className="inline-flex items-center justify-center bg-primary-soft text-ink-inverted rounded-2xl p-4 mb-4">
 				<svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					{icon}

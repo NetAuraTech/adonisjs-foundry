@@ -1,4 +1,25 @@
+import { cn, tv } from 'tailwind-variants';
 import type { ElementType, ReactNode } from 'react';
+
+const heading = tv({
+	base: 'font-playfair leading-tight',
+	variants: {
+		level: {
+			1: 'text-[clamp(2.2rem,5vw,4.2rem)]',
+			2: 'text-[clamp(1.8rem,4vw,2.4rem)]',
+			3: 'text-[clamp(1.6rem,3vw,1.9rem)]',
+			4: 'text-base',
+		},
+		flex: {
+			true: 'flex gap-2 items-center',
+			false: '',
+		},
+	},
+	defaultVariants: {
+		level: 2,
+		flex: false,
+	},
+});
 
 interface HeadingProps {
 	/**
@@ -37,18 +58,5 @@ export function Heading(props: HeadingProps) {
 	const safeLevel = level ?? 2;
 	const Tag = `h${safeLevel}` as ElementType;
 
-	const levels = {
-		1: 'text-[clamp(2.2rem,5vw,4.2rem)]',
-		2: 'text-[clamp(1.8rem,4vw,2.4rem)]',
-		3: 'text-[clamp(1.6rem,3vw,1.9rem)]',
-		4: 'text-base',
-	};
-
-	return (
-		<Tag
-			className={`${levels[safeLevel]} font-playfair leading-tight ${color}${flex ? ' flex gap-2 items-center' : ''}`}
-		>
-			{children}
-		</Tag>
-	);
+	return <Tag className={cn(heading({ level: safeLevel, flex }), color)}>{children}</Tag>;
 }
