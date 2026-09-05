@@ -3,6 +3,7 @@ import { LogService } from '#log/services/log_service';
 
 interface LogoutPayload {
 	userId: number;
+	userEmail: string;
 }
 
 /**
@@ -13,10 +14,10 @@ export class LogoutAction {
 	constructor(protected logService: LogService) {}
 
 	/**
-	 * @param payload - The id of the user logging out.
+	 * @param payload - The id and email of the user logging out.
 	 * @returns Nothing; side-effect only (logging).
 	 */
 	async execute(payload: LogoutPayload): Promise<void> {
-		this.logService.logAuth('logout', { userId: payload.userId });
+		this.logService.logAuth('logout', { userId: payload.userId, userEmail: payload.userEmail });
 	}
 }

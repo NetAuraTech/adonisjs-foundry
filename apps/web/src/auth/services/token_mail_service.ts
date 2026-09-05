@@ -6,8 +6,8 @@ import { GetPreferencesAction } from '#account/actions/preferences/get_preferenc
 import { Token } from '#auth/domain/token';
 import { TOKEN_TYPES, type FullToken, type TokenType } from '#auth/enums/token_type';
 import { TokenRepository } from '#auth/repositories/token_repository';
-import { MailClientContract, type MailClientMessage } from '#core/contracts/mail_client';
-import { routePath } from '#core/services/route_path';
+import { MailClientContract } from '#core/contracts/mail_client';
+import { buildMailLink, resolveMailLocale } from '#core/services/mail_dispatch';
 import env from '#start/env';
 import type User from '#identity/models/user';
 
@@ -62,12 +62,12 @@ export class TokenMailService {
 	 * @param user - The user whose email should be verified.
 	 */
 	async sendVerificationEmail(user: User): Promise<void> {
-		const locale = await this.resolveLocale(user);
+		const locale = await resolveMailLocale(this.getPreferencesAction, user);
 		const token = await this.issueToken(user, TOKEN_TYPES.EMAIL_VERIFICATION, 24);
 
 		const i18n = i18nManager.locale(locale);
 
-		await this.send({
+		await this.mailClient.send({
 			to: user.email,
 			subject: i18n.t('auth.verify_email.mail.subject'),
 			template: 'emails/auth_email',
@@ -81,7 +81,7 @@ export class TokenMailService {
 				outro: i18n.t('auth.verify_email.mail.outro'),
 				expiry: i18n.t('auth.verify_email.mail.expiry', { hours: 24 }),
 				footer: i18n.t('auth.verify_email.mail.footer'),
-				verification_link: this.buildLink(
+				verification_link: buildMailLink(
 					['auth.email_verification.execute', 'api.v1.auth.email_verification.store'],
 					token,
 				),
@@ -95,12 +95,12 @@ export class TokenMailService {
 	 * @param user - The user requesting a password reset.
 	 */
 	async sendPasswordResetEmail(user: User): Promise<void> {
-		const locale = await this.resolveLocale(user);
+		const locale = await resolveMailLocale(this.getPreferencesAction, user);
 		const token = await this.issueToken(user, TOKEN_TYPES.PASSWORD_RESET, 1);
 
 		const i18n = i18nManager.locale(locale);
 
-		await this.send({
+		await this.mailClient.send({
 			to: user.email,
 			subject: i18n.t('auth.reset_password.mail.subject'),
 			template: 'emails/auth_email',
@@ -114,7 +114,7 @@ export class TokenMailService {
 				outro: i18n.t('auth.reset_password.mail.outro'),
 				expiry: i18n.t('auth.reset_password.mail.expiry', { hours: 1 }),
 				footer: i18n.t('auth.reset_password.mail.footer'),
-				reset_link: this.buildLink(['auth.reset_password.render', 'api.v1.auth.reset_password.store'], token),
+				reset_link: buildMailLink(['auth.reset_password.render', 'api.v1.auth.reset_password.store'], token),
 			} satisfies AuthMailData,
 		});
 	}
@@ -125,13 +125,13 @@ export class TokenMailService {
 	 * @param user - The pending user that was invited.
 	 */
 	async sendInvitationEmail(user: User): Promise<void> {
-		const locale = await this.resolveLocale(user);
+		const locale = await resolveMailLocale(this.getPreferencesAction, user);
 		const token = await this.issueToken(user, TOKEN_TYPES.PENDING_INVITE, 7 * 24);
 
 		const i18n = i18nManager.locale(locale);
 		const app = env.get('APP_NAME');
 
-		await this.send({
+		await this.mailClient.send({
 			to: user.email,
 			subject: i18n.t('identity.admin.users.mail.subject', { app }),
 			template: 'emails/admin_invite_email',
@@ -145,17 +145,9 @@ export class TokenMailService {
 				outro: i18n.t('identity.admin.users.mail.outro'),
 				expiry: i18n.t('identity.admin.users.mail.expiry', { days: 7 }),
 				footer: i18n.t('identity.admin.users.mail.footer'),
-				accept_link: this.buildLink(['auth.accept_invitation.render', 'api.v1.auth.accept_invitation.store'], token),
+				accept_link: buildMailLink(['auth.accept_invitation.render', 'api.v1.auth.accept_invitation.store'], token),
 			} satisfies AuthMailData,
 		});
-	}
-
-	/**
-	 * Resolves the user's locale from their preferences, falling back to `en`.
-	 */
-	protected async resolveLocale(user: User): Promise<string> {
-		const preferences = await this.getPreferencesAction.execute({ user });
-		return preferences.locale || 'en';
 	}
 
 	/**
@@ -183,28 +175,5 @@ export class TokenMailService {
 		});
 
 		return token;
-	}
-
-	/**
-	 * Builds the mail link for the current flavor.
-	 *
-	 * The full flavor links to the session pages; the headless `api` flavor
-	 * falls back to the token API endpoints. The first registered route wins.
-	 *
-	 * @param routeNames - Candidate route names, in priority order.
-	 * @param token - The token carried by the link.
-	 * @returns The absolute URL, or an empty string when no candidate is
-	 *   registered (defensive — at least one route is always registered).
-	 */
-	protected buildLink(routeNames: string[], token: FullToken): string {
-		for (const name of routeNames) {
-			const path = routePath(name, { token });
-			if (path) return `${env.get('APP_URL')}${path}`;
-		}
-		return '';
-	}
-
-	protected send(message: MailClientMessage): Promise<void> {
-		return this.mailClient.send(message);
 	}
 }

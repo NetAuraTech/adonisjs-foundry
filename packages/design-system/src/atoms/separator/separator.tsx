@@ -1,3 +1,9 @@
+import { tv } from 'tailwind-variants';
+
+const separator = tv({
+	base: 'border-b border-edge',
+});
+
 /**
  * Horizontal separator.
  *
@@ -12,5 +18,5 @@
  * </Section>
  */
 export function Separator() {
-	return <div className="border-b border-edge" />;
+	return <div className={separator()} />;
 }

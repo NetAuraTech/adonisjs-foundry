@@ -1,4 +1,9 @@
+import { cn, tv } from 'tailwind-variants';
 import type { ReactNode } from 'react';
+
+const section = tv({
+	base: 'py-8',
+});
 
 interface SectionProps {
 	children: ReactNode;
@@ -6,7 +11,8 @@ interface SectionProps {
 	id?: string;
 	/**
 	 * Tailwind classes applied to the `<section>` element.
-	 * Defaults to `'py-8'`.
+	 * Merged with the default padding (`py-8`), so passing e.g. `py-16`
+	 * overrides it.
 	 */
 	className?: string;
 }
@@ -35,10 +41,10 @@ interface SectionProps {
  * </Section>
  */
 export function Section(props: SectionProps) {
-	const { children, className = 'py-8', ...sectionProps } = props;
+	const { children, className, ...sectionProps } = props;
 
 	return (
-		<section {...sectionProps} className={className}>
+		<section {...sectionProps} className={cn(section(), className)}>
 			{children}
 		</section>
 	);

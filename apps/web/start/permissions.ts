@@ -54,6 +54,38 @@ const actionKey = (action: string): string =>
 	action.replace(/_([a-z])/g, (_separator, letter: string) => letter.toUpperCase());
 
 /**
+ * Builds the nested permission identity map from a composed permission
+ * catalog.
+ *
+ * The generic signature carries the {@link PermissionMap} type through the
+ * construction, so the map's shape is derived from the catalog's type
+ * instead of being imposed by an `as unknown as` cast at the composition.
+ * The single cast inside the loop is confined to the runtime key iteration —
+ * the group is typed exactly as its target and filled exhaustively, one
+ * entry per catalog action.
+ *
+ * @param catalog - The composed `category → actions` permission catalog.
+ * @returns The nested `category → camelCase action → slug` identity map.
+ */
+function buildPermissionMap<Catalog extends Record<string, readonly string[]>>(
+	catalog: Catalog,
+): PermissionMap<Catalog> {
+	const map = {} as PermissionMap<Catalog>;
+
+	for (const category of Object.keys(catalog) as Array<keyof Catalog & string>) {
+		const group = {} as PermissionMap<Catalog>[typeof category];
+
+		for (const action of catalog[category]) {
+			(group as Record<string, string>)[actionKey(action)] = `${category}.${action}`;
+		}
+
+		map[category] = group;
+	}
+
+	return map;
+}
+
+/**
  * The nested identity map of this flavor's permission slugs: one group per
  * catalog category (`permissions.users`, `permissions.pages`, ...) whose
  * keys are the camelCase form of the category's actions
@@ -62,19 +94,7 @@ const actionKey = (action: string): string =>
  * so renaming a slug in a domain catalog file renames its key here, and
  * every former `permissions.*` use site fails to compile until it is updated.
  */
-export const permissions = Object.fromEntries(
-	(Object.keys(permissionCatalog) as Array<keyof typeof permissionCatalog>).map(
-		(category): [string, Record<string, string>] => [
-			String(category),
-			Object.fromEntries(
-				(permissionCatalog[category] as readonly string[]).map((action): [string, string] => [
-					actionKey(action),
-					`${String(category)}.${action}`,
-				]),
-			),
-		],
-	),
-) as unknown as PermissionMap<typeof permissionCatalog>;
+export const permissions = buildPermissionMap(permissionCatalog);
 
 /**
  * The system role slugs of this flavor; the role seeder persists exactly

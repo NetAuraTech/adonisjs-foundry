@@ -8,6 +8,10 @@ import PermissionTransformer from '#transport/identity/transformers/permission_t
 import { deletePermissionValidator } from '#transport/identity/validators/permission';
 import type { HttpContext } from '@adonisjs/core/http';
 
+/**
+ * Admin permissions controller: renders the permission listing and deletes
+ * custom permissions.
+ */
 @inject()
 export default class PermissionsController {
 	constructor(
