@@ -45,7 +45,7 @@ export function AdminMain(props: AdminMainProps) {
 	const { title, icon, action, children } = props;
 
 	return (
-		<Section className="py-8 grid gap-4">
+		<Section className="grid gap-4">
 			<Head title={title} />
 			<div className={adminMainHeadingRow()}>
 				<Heading level={2} flex>
