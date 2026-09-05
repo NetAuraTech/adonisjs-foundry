@@ -4,7 +4,7 @@ A production-ready boilerplate and headless CMS for AdonisJS v7 with Inertia.js 
 
 ## Description
 
-AdonisJS Foundry is built on AdonisJS v7 and follows a domain-driven architecture with a clean separation between services, repositories, and controllers. It ships with a complete authentication system, OAuth providers, user settings, email workflows, a full admin panel (CMS) with a visual page builder, file management, template system, role-based access control, user preferences, structured logging, caching, image optimization, SEO tooling, and a React + Inertia frontend with SSR support — all wired up and ready to go.
+AdonisJS Foundry is built on AdonisJS v7 and follows a domain-driven architecture with a clean separation between a per-domain transport layer and a per-domain business layer (actions, repositories, services). It ships with a complete authentication system, OAuth providers, user settings, email workflows, a full admin panel (CMS) with a visual page builder, file management, template system, role-based access control, user preferences, structured logging, caching, image optimization, SEO tooling, and a React + Inertia frontend with SSR support — all wired up and ready to go.
 
 ## Key Features
 
@@ -14,21 +14,22 @@ AdonisJS Foundry is built on AdonisJS v7 and follows a domain-driven architectur
 - **User Settings** — Profile, account credentials, email change, account deletion
 - **User Preferences** — Theme (dark/light) with API-driven persistence
 - **Email Workflows** — Email change with dual confirmation (new + old address), password change notification, admin invitation, contact form notification
-- **Admin Panel (CMS)** — Dashboard, user management, page management, file management, template management with dedicated layout
+- **Admin Panel (CMS)** — Dashboard, user/role/permission management, page management, file management, template management, log viewer, maintenance settings — with a dedicated layout
 - **Visual Page Builder** — Block-based page editor with real-time collaborative editing (SSE via Transmit), optimistic field locking, presence tracking, live preview, and draft auto-save
-- **Block System** — 12 block types (section, grid, flex, title, paragraph, button, separator, icon, form, field, htmltext, image) with responsive props
+- **Block System** — 17 block types (section, grid, flex, title, paragraph, button, separator, icon, form, field, htmltext, image, video, carousel, list, quote, iframe) with responsive props
 - **Page Translations & Revisions** — Multi-locale pages with per-locale slugs, revision history with restore/pin, and content seeding between locales
 - **File Management** — Upload, folder organization, per-locale named alt text system, multi-disk storage (local, S3, R2)
 - **Image Optimization** — Server-side responsive variant generation (400w, 800w, 1200w WebP) via Sharp with CLS-preventing dimension extraction
 - **Template System** — Page and block templates, create from existing page, apply template to page
 - **Cache Service** — Redis-backed cache with namespace support, get-or-set pattern, pattern deletion
-- **Contact Form** — Dynamic contact form block with event-driven email notification
+- **Contact Form** — Dynamic contact form block with email notification
 - **SEO** — Dynamic sitemap.xml and robots.txt generation, per-page meta title/description/image, homepage designation
 - **Content Sanitization** — Server-side DOMPurify (via jsdom) for all rich-text content
-- **Role-Based Access Control** — Custom role/permission system with many-to-many pivot, permission checking, and frontend guards
+- **Role-Based Access Control** — Custom role/permission system with many-to-many pivot, permission checking, frontend guards, and admin management UI for users, roles, and permissions
 - **Security First** — Selector/validator tokens, attempt tracking, CSRF protection, unverified account protection
-- **Domain-Driven Architecture** — Clean separation of services, repositories, contracts, and controllers
-- **Structured Logging** — Categorized logs (AUTH, SECURITY, BUSINESS, API, DATABASE, PERFORMANCE) with Sentry integration
+- **Domain-Driven Architecture** — Clean separation per domain: actions, domain entities, repositories, services, and thin controllers
+- **Structured Logging** — Categorized logs (AUTH, SECURITY, BUSINESS, API, DATABASE, PERFORMANCE) with Sentry integration, database persistence (`log_entries`), an in-admin log viewer, and a retention command
+- **Maintenance Mode** — Runtime toggle (admin UI or `maintenance:on`/`maintenance:off`), custom message, IP allowlist, and a public maintenance page; health probes stay reachable
 - **i18n Ready** — Full internationalization support (EN, FR) on backend (AdonisJS i18n)
 - **Inertia + React** — Modern SPA experience with SSR support, no API boilerplate
 - **Real-Time Events** — AdonisJS Transmit (SSE) for live builder collaboration
@@ -38,30 +39,31 @@ AdonisJS Foundry is built on AdonisJS v7 and follows a domain-driven architectur
 - **Dark/Light Theme** — Client-side theme toggle with server-side preference persistence
 - **Frontend Guards** — Authenticated, role-based, and permission-based route guards
 - **Docker Ready** — Dockerfile and docker-compose for development and production environments
-- **Database Backup** — Full & differential backups with multi-storage (local, S3, Nextcloud), encryption, retention policy, and health checks
+- **Database Backup** — Full & differential backups with multi-storage (local, S3, R2), encryption, retention policy, and health checks
 
 ## Tech Stack
 
-| Category             | Technology                                                        |
-| -------------------- | ----------------------------------------------------------------- |
-| **Backend**          | AdonisJS v7, Lucid ORM, VineJS                                    |
-| **Frontend**         | React 19, Inertia.js, Tailwind CSS v4                             |
-| **Language**         | TypeScript 5.9                                                    |
-| **Database**         | PostgreSQL (primary), SQLite (dev alternative)                    |
-| **Cache / Session**  | Redis                                                             |
-| **Auth**             | Session-based (@adonisjs/auth), OAuth (@adonisjs/ally)            |
-| **Authorization**    | Custom role/permission system (models, services, frontend guards) |
-| **Email**            | @adonisjs/mail (SMTP) with Edge templates                         |
-| **File Storage**     | @adonisjs/drive (local FS, S3, Cloudflare R2)                     |
-| **Image Processing** | Sharp (responsive WebP variant generation)                        |
-| **Real-Time**        | @adonisjs/transmit (SSE)                                          |
-| **Sanitization**     | DOMPurify + jsdom (server-side HTML sanitization)                 |
-| **Routing**          | Tuyau (type-safe client)                                          |
-| **Icons**            | Iconify React                                                     |
-| **Notifications**    | Sonner (toast)                                                    |
-| **Monitoring**       | Sentry (@sentry/node)                                             |
-| **Build**            | Vite 7, @adonisjs/assembler                                       |
-| **Testing**          | Japa (unit, functional, browser)                                  |
+| Category             | Technology                                                                                    |
+| -------------------- | --------------------------------------------------------------------------------------------- |
+| **Backend**          | AdonisJS v7, Lucid ORM, VineJS                                                                |
+| **Frontend**         | React 19, Inertia.js, Tailwind CSS v4                                                         |
+| **Language**         | TypeScript 5.9                                                                                |
+| **Database**         | PostgreSQL (primary), SQLite (dev alternative)                                                |
+| **Cache / Session**  | Redis                                                                                         |
+| **Auth**             | Session-based (@adonisjs/auth), opt-in API tokens, OAuth (@adonisjs/ally)                     |
+| **Authorization**    | Custom role/permission system (models, services, frontend guards)                             |
+| **Email**            | @adonisjs/mail (SMTP) with Edge templates                                                     |
+| **File Storage**     | @adonisjs/drive (local FS, S3, Cloudflare R2)                                                 |
+| **Image Processing** | Sharp (responsive WebP variant generation)                                                    |
+| **Real-Time**        | @adonisjs/transmit (SSE)                                                                      |
+| **Sanitization**     | DOMPurify + jsdom (server-side HTML sanitization)                                             |
+| **Routing**          | Tuyau (type-safe client)                                                                      |
+| **Icons**            | Iconify React                                                                                 |
+| **Notifications**    | Sonner (toast)                                                                                |
+| **Monitoring**       | Sentry (@sentry/node)                                                                         |
+| **Build**            | Vite 8, @adonisjs/assembler                                                                   |
+| **Design System**    | `@foundry/design-system` (shared React workspace: atoms, molecules, organisms, design tokens) |
+| **Testing**          | Japa (backend: unit, functional), Vitest (frontend)                                           |
 
 ## Quick Start
 
@@ -216,6 +218,13 @@ APP_NAME=AdonisJS Foundry
 # Session
 SESSION_DRIVER=redis
 
+# Auth guards — session (`web`) always on; opt-in opaque-token guard (`api`)
+# exposes the token-only REST API under `/api/v1/*`
+AUTH_GUARD_WEB=true
+AUTH_GUARD_API=false
+AUTH_API_TOKEN_EXPIRY=30 days
+AUTH_API_CLIENT_URL=
+
 # Database
 PG_HOST=127.0.0.1
 PG_PORT=5432
@@ -267,6 +276,14 @@ MAX_UPLOAD_SIZE=10
 
 # Limiter
 LIMITER_STORE=redis
+
+# CMS content policies (page builder) — comma-separated
+CMS_IFRAME_ALLOWLIST=www.google.com,maps.google.com
+CMS_VIDEO_PROVIDERS=youtube,vimeo
+
+# Sitemap — comma-separated additions and exclusions
+SITEMAP_ADDITIONS=
+SITEMAP_EXCLUSIONS=
 ```
 
 ### OAuth Setup
@@ -340,9 +357,9 @@ Two guards are available in `config/auth.ts`, toggled by environment variable:
 | `api` | Opaque tokens   | `AUTH_GUARD_API` | disabled |
 
 - **`web`** — the browser/Inertia guard. Session cookie, CSRF protection.
-- **`api`** — opaque access tokens (`Authorization: Bearer`), designed for the REST API consumed by non-browser clients (mobile apps, scripts). Enabling it exposes the `/api/v1/auth/*` endpoints (login, logout, me). Token lifetime is configurable via `AUTH_API_TOKEN_EXPIRY` (default: `30d`).
+- **`api`** — opaque access tokens (`Authorization: Bearer`), designed for the REST API consumed by non-browser clients (mobile apps, scripts). Enabling it exposes the token-only `/api/v1/*` surface — the full auth flow (`/api/v1/auth/*`: login, register, forgot/reset password, verify email, accept invitation, logout, me) plus profile and account endpoints. Token lifetime is configurable via `AUTH_API_TOKEN_EXPIRY` (default: `30 days`).
 
-The JSON API under `/api/admin/*` and `/api/settings/*` accepts **both** guards when `AUTH_GUARD_API=true`: a browser keeps using its session cookie while scripts authenticate with a Bearer token — permissions resolve identically either way. Inertia pages remain session-only, and `/api/v1/*` remains token-only: the two guards never overlap by accident.
+The admin JSON surface under `/api/v1/admin/*` (users, roles, permissions, pages, templates, files, folders, builder, dashboard, logs, maintenance, theme) accepts **both** guards when `AUTH_GUARD_API=true`: a browser keeps using its session cookie while scripts authenticate with a Bearer token — permissions resolve identically either way. Inertia pages remain session-only, and the rest of `/api/v1/*` (auth, profile, account) remains token-only: the two guards never overlap by accident.
 
 For the `api` flavor (no session guard at all): set `AUTH_GUARD_WEB=false` and `AUTH_GUARD_API=true`.
 
@@ -354,23 +371,27 @@ Foundry includes a full admin panel accessible at `/admin`, protected by authent
 
 ### Features
 
-| Feature         | Description                                                                  |
-| --------------- | ---------------------------------------------------------------------------- |
-| Dashboard       | Overview page at `/admin`                                                    |
-| User Management | Paginated list, invite, show, edit, delete — with role and status management |
-| Page Management | Create, edit, publish/unpublish, delete pages with multi-locale translations |
-| Page Builder    | Visual block-based editor with real-time collaboration, locking, and preview |
-| Page Revisions  | Revision history per translation with restore and pin/unpin                  |
-| File Management | Upload, folder organization, per-locale alt text, move, and delete           |
-| Template System | Create, edit, delete templates — create from page and apply template to page |
+| Feature               | Description                                                                  |
+| --------------------- | ---------------------------------------------------------------------------- |
+| Dashboard             | Overview page at `/admin`                                                    |
+| User Management       | Paginated list, invite, show, edit, delete — with role and status management |
+| Role Management       | Create, show, edit, delete roles and assign permissions                      |
+| Permission Management | Manage the permission catalog (list, create, edit, delete)                   |
+| Page Management       | Create, edit, publish/unpublish, delete pages with multi-locale translations |
+| Page Builder          | Visual block-based editor with real-time collaboration, locking, and preview |
+| Page Revisions        | Revision history per translation with restore and pin/unpin                  |
+| File Management       | Upload, folder organization, per-locale alt text, move, and delete           |
+| Template System       | Create, edit, delete templates — create from page and apply template to page |
+| Log Viewer            | Browse persisted application logs at `/admin/logs`                           |
+| Maintenance Mode      | Toggle maintenance, set message, and manage the IP allowlist                 |
 
 ### Admin Layout
 
-The admin panel uses a dedicated layout (`inertia/layouts/admin.tsx`) with:
+The admin panel uses a dedicated layout (`inertia/layouts/admin.tsx`) composed from the shared `@foundry/design-system` workspace:
 
-- **Sidebar** — Navigation component (`admin_sidebar.tsx`) with content and access-control sections
-- **Header** — Admin-specific header (`admin_header.tsx`)
-- **Main content** — Adaptive content area (`admin_main.tsx`)
+- **Sidebar** — Navigation component (`admin-sidebar` export) with content and access-control sections
+- **Header** — Admin-specific header (`admin-header` export)
+- **Main content** — Adaptive content area (`admin-main` export)
 
 ## Page Builder
 
@@ -378,20 +399,25 @@ The page builder is a visual, block-based editor with real-time collaborative ed
 
 ### Block Types
 
-| Block       | Description                                                   | Container |
-| ----------- | ------------------------------------------------------------- | --------- |
-| `section`   | Full-width wrapper with background, padding, and anchor ID    | ✅        |
-| `grid`      | Responsive column grid with configurable gap and alignment    | ✅        |
-| `flex`      | Flexible container with direction, gap, align, justify, wrap  | ✅        |
-| `title`     | Heading (h1–h4) with color and highlight color                | —         |
-| `paragraph` | Text block with font-size, variant, and spacing               | —         |
-| `button`    | CTA button with page/route/external link, icon, and alignment | —         |
-| `separator` | Horizontal divider with spacing and color                     | —         |
-| `icon`      | Iconify icon with color, background, and size                 | —         |
-| `form`      | HTML form wrapper with route action                           | ✅        |
-| `field`     | Form field (text, email, textarea, tel, select) with label    | —         |
-| `htmltext`  | Raw HTML content (sanitized via DOMPurify)                    | —         |
-| `image`     | Image with named alt text resolution and responsive variants  | —         |
+| Block       | Description                                                                                      | Container |
+| ----------- | ------------------------------------------------------------------------------------------------ | --------- |
+| `section`   | Full-width wrapper with background, padding, and anchor ID                                       | ✅        |
+| `grid`      | Responsive column grid with configurable gap and alignment                                       | ✅        |
+| `flex`      | Flexible container with direction, gap, align, justify, wrap                                     | ✅        |
+| `title`     | Heading (h1–h4) with color and highlight color                                                   | —         |
+| `paragraph` | Text block with font-size, variant, and spacing                                                  | —         |
+| `button`    | CTA button with page/route/external link, icon, and alignment                                    | —         |
+| `separator` | Horizontal divider with spacing and color                                                        | —         |
+| `icon`      | Iconify icon with color, background, and size                                                    | —         |
+| `form`      | HTML form wrapper with route action                                                              | ✅        |
+| `field`     | Form field (text, email, textarea, tel, select) with label                                       | —         |
+| `htmltext`  | Raw HTML content (sanitized via DOMPurify)                                                       | —         |
+| `image`     | Image with named alt text resolution and responsive variants                                     | —         |
+| `video`     | Embedded video — YouTube/Vimeo URL (enabled providers) or direct media file                      | —         |
+| `carousel`  | Slide container (aspect, arrows, dots) whose children are the slides                             | ✅        |
+| `list`      | Ordered or unordered text list                                                                   | —         |
+| `quote`     | Quotation with attribution and variant (default, highlight, plain)                               | —         |
+| `iframe`    | Embedded `https` iframe restricted to the configured hostname allowlist (`CMS_IFRAME_ALLOWLIST`) | —         |
 
 All props support responsive values (`default`, `sm`, `md`, `lg`, `xl`) where applicable.
 
@@ -471,7 +497,7 @@ The `contact_form` block type renders a configurable contact form with:
 
 - Dynamic field list (text, email, textarea, tel, select)
 - Custom recipient email, submit label, and success message
-- Event-driven email notification (`ContactFormSubmitted` → `SendContactFormEmail`)
+- Email notification sent by `ContactMailService` on submit
 
 ## SEO
 
@@ -611,16 +637,28 @@ BACKUP_NOTIFY_HEALTH_CHECK=true
 BACKUP_EXCLUDED_TABLES=
 ```
 
+## Maintenance Mode
+
+Foundry ships a built-in maintenance mode, gated by the `maintenance` feature flag (`config/features.ts`):
+
+- **Toggle** — from the admin panel (`/admin/settings/maintenance`) or via `node ace maintenance:on` / `maintenance:off`
+- **Message** — custom message shown on the public maintenance page (`node ace maintenance:message`)
+- **IP allowlist** — exempt specific IPs from the maintenance page (`maintenance:allow-ip`, `maintenance:remove-ip`)
+- **Schedule** — programmatic on/off at a given time (`maintenance:schedule`)
+- **Probes stay up** — `/health` and `/health/ready` are registered outside the maintenance middleware so load balancers keep probing
+
 ## Architecture
 
 Foundry follows a **domain-driven architecture** with a strict layering convention.
 
-The application lives in the `apps/web` workspace (`@foundry/web`); the repo root holds the workspaces manifest, the single lockfile, repo-wide lint/format configs, the prune pipeline, CI, Docker and docs.
+The application lives in the `apps/web` workspace (`@foundry/web`); the repo root holds the workspaces manifest, the single lockfile, repo-wide lint/format configs, the prune pipeline, CI, Docker and docs. The shared React component library (atoms, molecules, organisms, design tokens) lives in the `packages/design-system` workspace (`@foundry/design-system`).
 
 ```
 adonisjs-foundry/
 ├── apps/
 │   └── web/                # The complete AdonisJS application (layout below)
+├── packages/
+│   └── design-system/      # Shared React design system (@foundry/design-system)
 ├── docs/                   # Agent docs, ADRs, flavor matrix
 ├── tooling/
 │   └── prune/              # Flavor prune pipeline (engine + declarative manifests)
@@ -630,214 +668,125 @@ adonisjs-foundry/
 └── Dockerfile              # Multi-stage production image
 ```
 
-The `apps/web` layout:
+The `apps/web` workspace is split in two trees, organized **per domain** (`account`, `auth`, `cms`, `core`, `file`, `identity`, `log`):
+
+**`app/` — the transport layer.** Each domain binds its own HTTP surfaces and nothing in this tree holds business logic:
 
 ```
-app/
-├── data/
-│   └── transformers/                       # user_transformer.ts, role_transformer.ts, permission_transformer.ts,
-│                                           # page_transformer.ts, page_translation_transformer.ts, page_revision_transformer.ts,
-│                                           # file_transformer.ts, file_folder_transformer.ts, template_transformer.ts
-├── domain/
-│   ├── contracts/
-│   │   └── cache/                          # cache_driver.ts
-│   ├── repositories/
-│   │   ├── auth/                           # user_repository.ts, role_repository.ts, permission_repository.ts
-│   │   ├── core/                           # token_repository.ts
-│   │   ├── file/                           # file_repository.ts, file_folder_repository.ts
-│   │   ├── page/                           # page_repository.ts, page_translation_repository.ts, page_revision_repository.ts
-│   │   ├── preferences/                    # preferences_repository.ts
-│   │   └── template/                       # template_repository.ts
-│   └── services/
-│       ├── account/                        # account_service.ts
-│       ├── auth/                           # auth_service.ts, social_service.ts, password_service.ts,
-│       │                                   # email_verification_service.ts, invitation_service.ts,
-│       │                                   # user_service.ts, role_service.ts, permission_service.ts
-│       ├── backup/                         # backup_service.ts
-│       ├── cache/                          # cache_service.ts
-│       │   └── drivers/                    # redis_cache_driver.ts
-│       ├── file/                           # file_service.ts, file_folder_service.ts, storage_service.ts,
-│       │                                   # image_optimizer_service.ts
-│       ├── logging/                        # log_service.ts
-│       ├── mails/                          # mail_service.ts
-│       ├── page/                           # page_service.ts, page_resolver_service.ts,
-│       │                                   # builder_session_service.ts, sanitize_content.ts
-│       ├── pagination/                     # pagination_service.ts
-│       ├── preferences/                    # preference_service.ts
-│       ├── profile/                        # profile_service.ts
-│       └── template/                       # template_service.ts
-├── events/
-│   ├── account/                            # initiate_email_change.ts
-│   ├── admin/                              # invite_user.ts
-│   ├── auth/                               # forgot_password.ts, user_registered.ts
-│   └── page/                               # contact_form_submitted.ts
-├── exceptions/
-│   ├── account/                            # email_already_exists_exception.ts
-│   ├── auth/                               # invalid_current_password_exception.ts, provider_already_linked_exception.ts,
-│   │                                       # provider_not_configured_exception.ts, unverified_account_exception.ts
-│   ├── core/                               # invalid_token_exception.ts, max_attempts_exceeded_exception.ts, row_not_found_exception.ts
-│   ├── file/                               # file_too_large_exception.ts, invalid_extension_exception.ts
-│   ├── page/                               # missing_translation_exception.ts
-│   └── handler.ts
-├── helpers/
-│   ├── auth/                               # crsf.ts, oauth.ts, username.ts
-│   ├── core/                               # crypto.ts, encryption.ts, strip_empty_strings.ts
-│   └── pagination/                         # extract_pagination.ts, get_pagination_params.ts
-├── http/
-│   ├── controllers/
-│   │   ├── account/front/                  # account_controller.ts, email_change_controller.ts
-│   │   ├── auth/
-│   │   │   ├── cms/                        # users_controller.ts, users_create_controller.ts,
-│   │   │   │                               # users_show_controller.ts, users_update_controller.ts
-│   │   │   └── front/                      # session_controller.ts, register_controller.ts, forgot_password_controller.ts,
-│   │   │                                   # reset_password_controller.ts, email_verification_controller.ts,
-│   │   │                                   # social_controller.ts, accept_invitation_controller.ts
-│   │   ├── core/cms/                       # dashboard_controller.ts
-│   │   ├── file/
-│   │   │   ├── api/                        # file_controller.ts
-│   │   │   └── cms/                        # files_controller.ts, file_folders_controller.ts
-│   │   ├── page/
-│   │   │   ├── api/                        # builder_operations_controller.ts
-│   │   │   ├── cms/                        # pages_controller.ts, pages_create_controller.ts, pages_show_controller.ts,
-│   │   │   │                               # pages_update_controller.ts, pages_preview_controller.ts,
-│   │   │   │                               # page_translations_controller.ts, page_revisions_controller.ts
-│   │   │   └── front/                      # page_controller.ts, contact_controller.ts
-│   │   ├── preferences/
-│   │   │   ├── api/                        # theme_controller.ts
-│   │   │   └── front/                      # preferences_controller.ts
-│   │   ├── profile/front/                  # profile_controller.ts
-│   │   └── template/cms/                   # templates_controller.ts
-│   └── middleware/
-│       ├── auth/                           # auth_middleware.ts, guest_middleware.ts, silent_auth_middleware.ts,
-│       │                                   # permission_middleware.ts, role_middleware.ts
-│       └── core/                           # container_bindings_middleware.ts, detect_user_locale_middleware.ts, inertia_middleware.ts
-├── listeners/
-│   ├── account/                            # send_change_email_confirmation_email.ts, send_change_email_notification_email.ts
-│   ├── auth/                               # send_forgot_password_email.ts, send_verification_email.ts
-│   └── page/                               # send_contact_form_email.ts
-├── mails/
-│   ├── account/                            # account_notification.ts
-│   ├── admin/                              # invite_notification.ts
-│   ├── auth/                               # auth_notification.ts
-│   └── page/                               # contact_form_notification.ts
-├── models/
-│   ├── auth/                               # user.ts, role.ts, permission.ts
-│   ├── core/                               # token.ts
-│   ├── file/                               # file.ts, file_alt.ts, file_folder.ts
-│   ├── page/                               # page.ts, page_translation.ts, page_revision.ts
-│   ├── preferences/                        # user_preference.ts
-│   └── template/                           # template.ts
-├── services/                               # (empty — runtime service layer, see domain/services/)
-├── types/                                  # auth.ts, builder.ts, core.ts, file.ts, font.ts, logging.ts,
-│                                           # mail.ts, page.ts, pagination.ts, paragraph.ts, preferences.ts,
-│                                           # template.ts, translations.ts
-└── validators/                             # auth.ts, account.ts, builder.ts, contact.ts, file.ts,
-                                            # page.ts, pagination.ts, preference.ts, profile.ts,
-                                            # template.ts, user.ts
+app/<domain>/
+├── controllers/            # Thin Inertia (admin / front) and JSON (api) controllers
+├── rest/                   # REST resource adapters for the /api/v1 JSON surface
+├── middleware/             # Domain middleware (auth, permission, role)
+├── transformers/           # Shape data for the frontend (Inertia shared props)
+├── validators/             # VineJS validators
+├── helpers/                # Transport-level helpers
+└── routes.ts               # Domain route surface, self-registering, feature-flag gated
+```
 
+Routing is self-registering: `start/routes.ts` is a pure per-domain import list — each `app/<domain>/routes.ts` imports its surfaces (admin, api, front) on import, gated by the feature flags in `config/features.ts`. The CMS page-render catch-alls (`/:slug`, `/:locale/:slug`) are registered last so they never shadow single-segment routes, and the health probes (`/health`, `/health/ready`) are registered outside the maintenance middleware.
+
+**`src/` — the business layer.** Each domain owns its use cases and data access:
+
+```
+src/<domain>/
+├── actions/                # Use cases — controllers enter a domain through its actions
+├── domain/                 # Domain entities, value objects and pure rules
+├── models/                 # Lucid models
+├── repositories/           # All database access, no business logic
+├── queries/                # Read-side queries
+├── services/               # Cross-cutting domain services
+├── exceptions/             # Typed domain exceptions
+└── types/                  # Shared domain types
+```
+
+`src/core/` is the kernel shared by every domain: base classes (`base_repository`, `base_query`, `base_http_exception`), value-object primitives (`entity`, `value_object`, `identifier`), transaction helpers, the cache driver contract, and the dashboard / nav / sitemap registries. `src/shared/services/` holds services reused across domains (cache service and its Redis driver). The `backup` domain lives entirely in `src/backup/` (no HTTP surface) and is driven by the ace commands in `commands/`.
+
+The remaining top-level entries of `apps/web`:
+
+```
 commands/
-└── backup/                                 # backup_run.ts, backup_list.ts, backup_restore.ts,
-                                            # backup_cleanup.ts, backup_health_check.ts
+├── backup/                 # backup_run, backup_list, backup_restore, backup_cleanup,
+│                           # backup_health_check
+├── maintenance/            # maintenance_on, maintenance_off, maintenance_status,
+│                           # maintenance_schedule, maintenance_allow_ip,
+│                           # maintenance_remove_ip, maintenance_message
+├── create_user.ts          # create:user
+├── logs_prune.ts           # logs:prune
+└── cms_normalize_migration_names.ts
 
 database/
-├── factories/                              # user_factory.ts, page_factory.ts, file_factory.ts,
-│                                           # file_folder_factory.ts, template_factory.ts
-├── migrations/                             # create_users_table, create_roles_table, create_permissions_table,
-│                                           # create_role_permissions_table, alter_users_table,
-│                                           # create_remember_me_tokens_table, create_tokens_table,
-│                                           # create_user_preferences_table, create_file_folders_table,
-│                                           # create_files_table, create_file_alts_table,
-│                                           # create_pages_table, create_page_translations_table,
-│                                           # create_page_revisions_table, create_templates_table,
-│                                           # alter_pages_table
-├── seeders/                                # role_seeder.ts, permission_seeder.ts,
-│                                           # cms/ (page_seeder.ts, template_seeder.ts)
+├── factories/              # Per-domain: cms/ (page, template), file/ (file, file_folder),
+│                           # identity/ (user), log/ (log_entry)
+├── migrations/             # users, roles, permissions, role_permissions, remember_me_tokens,
+│                           # tokens, user_preferences, file_folders, files, file_alts,
+│                           # log_entries, auth_access_tokens, pages, page_translations,
+│                           # page_revisions, templates, alter_pages
+├── seeders/                # role_seeder, permission_seeder, cms/ (page, template),
+│                           # mails/ (mail_service)
 ├── schema.ts
 └── schema_rules.ts
 
 inertia/
-├── app.tsx
-├── ssr.tsx
-├── client.ts
+├── app.tsx, client.ts, ssr.tsx    # Inertia entrypoints (SPA + SSR)
 ├── components/
-│   ├── atoms/                              # avatar.tsx, button.tsx, card.tsx, checkbox.tsx, file_upload_input.tsx,
-│   │                                       # floating_portal.tsx, heading.tsx, icon.tsx, input.tsx, label.tsx,
-│   │                                       # modal.tsx, nav_link.tsx, paragraph.tsx, section.tsx, select.tsx,
-│   │                                       # select_option.tsx, separator.tsx, textarea.tsx, user_status.tsx,
-│   │                                       # table/ (table.tsx, table_body.tsx, table_cell.tsx, table_header.tsx,
-│   │                                       #         table_header_cell.tsx, table_row.tsx)
-│   ├── molecules/                          # auth/ (auth_intro.tsx, auth_providers.tsx), banner.tsx, field.tsx,
-│   │                                       # image_picker.tsx, pagination.tsx, theme_toggle.tsx
-│   ├── organisms/                          # footer.tsx, header.tsx, settings_layout.tsx, file_manager.tsx,
-│   │                                       # admin/ (admin_header.tsx, admin_main.tsx, admin_sidebar.tsx),
-│   │                                       # files/ (file_alt_editor.tsx)
-│   └── cms/                                # CMS module subtree (prunable as a whole):
-│                                           #   blocks/ (12 static block renderers), renderer/ (page/block renderer),
-│                                           #   builder/ (BlockPicker.tsx, BlockTree.tsx, PresenceBar.tsx, ...),
-│                                           #   editor/ (BlockPropsEditor.tsx, blocks/{type}_editor.tsx, ...),
-│                                           #   hooks/, utils/, types/ (module-private)
-├── css/                                    # app.css, safelist.ts
-├── guards/                                 # authenticated.tsx, can_access.tsx, has_role.tsx
-├── helpers/                                # authorization.ts, avatar.ts, oauth.tsx, sanitization.ts, validation_rules.ts
-├── hooks/                                  # use_admin.ts, use_auth.ts, use_form_validation.ts, use_is_large.ts,
-│                                           # use_nav_link_active.ts, use_scroll_reveal.ts, use_theme.ts, use_translation.ts
-│                                           # (CMS-private hooks live in components/cms/hooks/)
-├── layouts/                                # default.tsx, admin.tsx
-├── lib/                                    # string.ts
-├── pages/
-│   ├── auth/
-│   │   ├── admin/                          # index.tsx, form.tsx, show.tsx
-│   │   └── front/                          # login.tsx, register.tsx, forgot_password.tsx, reset_password.tsx,
-│   │                                       # define_password.tsx, accept_invitation.tsx
-│   ├── cms/                                # CMS module pages (prunable as a whole):
-│   │   ├── page/
-│   │   │   ├── admin/                      # index.tsx, create.tsx, show.tsx, edit.tsx, revisions.tsx
-│   │   │   └── front/                      # show.tsx, preview.tsx
-│   │   └── template/                       # admin/ (index.tsx, edit.tsx), preview.tsx
-│   ├── core/admin/                         # dashboard.tsx
-│   ├── errors/                             # not_found.tsx, server_error.tsx
-│   ├── file/admin/                         # index.tsx, folders.tsx
-│   └── settings/
-│       ├── account/front/                  # index.tsx, email_change.tsx
-│       ├── preferences/front/              # index.tsx
-│       └── profile/front/                  # index.tsx
-├── types/                                  # paginated.d.ts (builder types live in components/cms/types/)
-└── utils/                                  # file.ts, font.ts (CMS-private utils live in components/cms/utils/)
+│   ├── cms/                        # CMS module subtree (prunable as a whole):
+│   │                               #   blocks/ (17 block renderers), renderer/ (page/block renderer),
+│   │                               #   builder/ (BlockPicker, BlockTree, PresenceBar, ...),
+│   │                               #   editor/ (BlockPropsEditor, per-type editors),
+│   │                               #   hooks/, utils/, types/ (module-private)
+│   ├── dashboard_sections/         # Dashboard widgets (stat cards, recent activity)
+│   └── atoms/ molecules/ organisms/ # App-specific components only — the shared library
+│                                   #   (button, card, table, admin layout, ...) is imported
+│                                   #   from @foundry/design-system
+├── css/                            # app.css, safelist.ts
+├── guards/                         # authenticated.tsx, can_access.tsx, has_role.tsx
+├── helpers/ hooks/ lib/ utils/ types/
+├── layouts/                        # default.tsx, admin.tsx
+└── pages/                          # auth/ (admin + front), cms/ (page, template), core/ (admin,
+                                    #   front), errors/, file/, log/, maintenance/, permission/,
+                                    #   role/, settings/ (account, preferences, profile)
 
 resources/
 ├── lang/
-│   ├── en/                                 # admin.json, auth.json, exceptions.json,
-│   │                                       # pagination.json, permissions.json, roles.json, settings.json,
-│   │                                       # validation.json, cms/ (page.json, template.json, builder.json)
-│   └── fr/                                 # same namespaces as en/
+│   ├── en/                         # account.json, admin.json, auth.json, exceptions.json,
+│   │                               # file.json, home.json, identity.json, log.json,
+│   │                               # maintenance.json, pagination.json, permissions.json,
+│   │                               # roles.json, validation.json,
+│   │                               # cms/ (builder.json, page.json, template.json)
+│   └── fr/                         # same namespaces as en/
 └── views/
-    ├── emails/                             # account_email.edge, admin_invite_email.edge, auth_email.edge,
-    │                                       # contact_form_email.edge
+    ├── emails/                     # account_email.edge, admin_invite_email.edge, auth_email.edge,
+    │                               # contact_form_email.edge
     └── inertia_layout.edge
 
 start/
-├── container.ts                            # IoC singleton bindings (CacheService, BuilderSessionService)
-├── env.ts                                  # Environment variable validation
-├── events.ts                               # Event/listener registration
-├── extensions.ts                           # Model extensions
-├── kernel.ts                               # HTTP kernel (middleware stack)
-├── limiter.ts                              # Rate limiter configuration
-├── routes.ts                               # All HTTP routes
-├── transmit.ts                             # SSE channel authorization and lifecycle hooks
-└── validator.ts                            # VineJS custom rules
+├── asset_middleware.ts             # View-layer asset middleware seam
+├── container.ts                    # IoC singleton bindings
+├── dashboard.ts, nav.ts, sitemap.ts, permissions.ts  # Registry/permission wiring
+├── env.ts                          # Environment variable validation
+├── events.ts                       # Application event bindings (currently empty)
+├── extensions.ts                   # Model extensions
+├── kernel.ts                       # HTTP kernel (middleware stack)
+├── limiter.ts                      # Rate limiter configuration
+├── routes.ts                       # Per-domain route index (self-registering surfaces)
+├── transmit.ts                     # SSE channel authorization and lifecycle hooks
+└── validator.ts                    # VineJS custom rules
 ```
 
 ### Conventions
 
-| Layer                  | Responsibility                                                   |
-| ---------------------- | ---------------------------------------------------------------- |
-| **Controllers**        | Thin, delegate to services, handle HTTP concerns only            |
-| **Services**           | Business logic, throw typed exceptions, log significant events   |
-| **Repositories**       | All database access, no business logic                           |
-| **Transformers**       | Shape data for the frontend (shared props)                       |
-| **Exceptions**         | Typed, carry HTTP status and i18n-ready error codes              |
-| **Events / Listeners** | Decouple side effects (emails, logging) from main flow           |
-| **Guards (frontend)**  | Permission / role checks via `useAuth` hook and guard components |
+| Layer                 | Responsibility                                                                                 |
+| --------------------- | ---------------------------------------------------------------------------------------------- |
+| **Controllers**       | Thin, delegate to actions and services, handle HTTP concerns only                              |
+| **Actions**           | Use cases: orchestrate a domain's operations, transactional boundaries, throw typed exceptions |
+| **Domain**            | Entities, value objects, pure business rules                                                   |
+| **Services**          | Cross-cutting domain services (mail, cache, resolvers), log significant events                 |
+| **Repositories**      | All database access, no business logic                                                         |
+| **Queries**           | Read-side data shaping for list/detail screens                                                 |
+| **Transformers**      | Shape data for the frontend (shared props)                                                     |
+| **REST resources**    | JSON adapters for the versioned `/api/v1/*` surface                                            |
+| **Exceptions**        | Typed, carry HTTP status and i18n-ready error codes                                            |
+| **Guards (frontend)** | Permission / role checks via `useAuth` hook and guard components                               |
 
 ### Path Aliases
 
@@ -866,6 +815,8 @@ The project uses Node.js subpath imports for clean module resolution (paths rela
 
 ## Routes
 
+Routes are self-registering per domain (`app/<domain>/routes.ts`), gated by the feature flags in `config/features.ts`. The tables below list the public URLs of the `full` flavor.
+
 ### Home & Public Pages
 
 | Method | Path             | Handler                           |
@@ -873,9 +824,18 @@ The project uses Node.js subpath imports for clean module resolution (paths rela
 | GET    | `/`              | PageController.home (homepage)    |
 | GET    | `/:slug`         | PageController.render             |
 | GET    | `/:locale/:slug` | PageController.render (localized) |
-| GET    | `/sitemap.xml`   | PageController.sitemap            |
-| GET    | `/robots.txt`    | PageController.robots             |
+| GET    | `/sitemap.xml`   | SitemapController.show            |
+| GET    | `/robots.txt`    | RobotsController.show             |
 | POST   | `/contact`       | ContactController.execute         |
+
+### Health Probes
+
+Registered outside the maintenance middleware so load balancers can probe during maintenance:
+
+| Method | Path            | Handler                    |
+| ------ | --------------- | -------------------------- |
+| GET    | `/health`       | HealthController.liveness  |
+| GET    | `/health/ready` | HealthController.readiness |
 
 ### Guest Routes
 
@@ -919,18 +879,39 @@ The project uses Node.js subpath imports for clean module resolution (paths rela
 | GET    | `/settings/preferences`                 | PreferencesController.render        |
 | POST   | `/settings/preferences`                 | PreferencesController.execute       |
 
-### Admin Routes — Users (CMS)
+### Admin Routes — Dashboard & Maintenance (core)
 
-| Method | Path                    | Handler                       | Permission     |
-| ------ | ----------------------- | ----------------------------- | -------------- |
-| GET    | `/admin`                | DashboardController.render    | `admin.access` |
-| GET    | `/admin/users`          | UsersController.render        | `users.view`   |
-| GET    | `/admin/users/create`   | UsersCreateController.render  | `users.create` |
-| POST   | `/admin/users/create`   | UsersCreateController.execute | `users.create` |
-| GET    | `/admin/users/:id`      | UsersShowController.render    | `users.view`   |
-| GET    | `/admin/users/:id/edit` | UsersUpdateController.render  | `users.update` |
-| POST   | `/admin/users/:id/edit` | UsersUpdateController.execute | `users.update` |
-| DELETE | `/admin/users/:id`      | UsersController.destroy       | `users.delete` |
+| Method | Path                                 | Handler                      | Permission             |
+| ------ | ------------------------------------ | ---------------------------- | ---------------------- |
+| GET    | `/admin`                             | DashboardController.render   | `admin.access`         |
+| GET    | `/admin/settings/maintenance`        | MaintenanceController.render | `settings.maintenance` |
+| POST   | `/admin/settings/maintenance`        | MaintenanceController.update | `settings.maintenance` |
+| POST   | `/admin/settings/maintenance/toggle` | MaintenanceController.toggle | `settings.maintenance` |
+
+### Admin Routes — Identity (users, roles, permissions)
+
+| Method | Path                          | Handler                             | Permission           |
+| ------ | ----------------------------- | ----------------------------------- | -------------------- |
+| GET    | `/admin/users`                | UsersController.render              | `users.view`         |
+| GET    | `/admin/users/create`         | UsersCreateController.render        | `users.create`       |
+| POST   | `/admin/users/create`         | UsersCreateController.execute       | `users.create`       |
+| GET    | `/admin/users/:id`            | UsersShowController.render          | `users.view`         |
+| GET    | `/admin/users/:id/edit`       | UsersUpdateController.render        | `users.update`       |
+| POST   | `/admin/users/:id/edit`       | UsersUpdateController.execute       | `users.update`       |
+| DELETE | `/admin/users/:id`            | UsersController.destroy             | `users.delete`       |
+| GET    | `/admin/roles`                | RolesController.render              | `roles.view`         |
+| GET    | `/admin/roles/create`         | RolesCreateController.render        | `roles.create`       |
+| POST   | `/admin/roles/create`         | RolesCreateController.execute       | `roles.create`       |
+| GET    | `/admin/roles/:id`            | RolesShowController.render          | `roles.view`         |
+| GET    | `/admin/roles/:id/edit`       | RolesUpdateController.render        | `roles.update`       |
+| POST   | `/admin/roles/:id/edit`       | RolesUpdateController.execute       | `roles.update`       |
+| DELETE | `/admin/roles/:id`            | RolesController.destroy             | `roles.delete`       |
+| GET    | `/admin/permissions`          | PermissionsController.render        | `permissions.view`   |
+| GET    | `/admin/permissions/create`   | PermissionsCreateController.render  | `permissions.create` |
+| POST   | `/admin/permissions/create`   | PermissionsCreateController.execute | `permissions.create` |
+| GET    | `/admin/permissions/:id/edit` | PermissionsUpdateController.render  | `permissions.update` |
+| POST   | `/admin/permissions/:id/edit` | PermissionsUpdateController.execute | `permissions.update` |
+| DELETE | `/admin/permissions/:id`      | PermissionsController.destroy       | `permissions.delete` |
 
 ### Admin Routes — Pages (CMS)
 
@@ -969,36 +950,70 @@ The project uses Node.js subpath imports for clean module resolution (paths rela
 
 ### Admin Routes — Templates (CMS)
 
-| Method | Path                         | Handler                            |
-| ------ | ---------------------------- | ---------------------------------- |
-| GET    | `/admin/templates`           | TemplatesController.render         |
-| POST   | `/admin/templates`           | TemplatesController.execute        |
-| POST   | `/admin/templates/from-page` | TemplatesController.createFromPage |
-| POST   | `/admin/templates/:id/apply` | TemplatesController.applyToPage    |
-| PUT    | `/admin/templates/:id`       | TemplatesController.update         |
-| DELETE | `/admin/templates/:id`       | TemplatesController.destroy        |
+| Method | Path                           | Handler                           |
+| ------ | ------------------------------ | --------------------------------- |
+| GET    | `/admin/templates`             | TemplatesController.render        |
+| POST   | `/admin/templates`             | TemplatesController.execute       |
+| GET    | `/admin/templates/preview/:id` | TemplatesPreviewController.render |
+| GET    | `/admin/templates/:id/edit`    | TemplatesController.edit          |
+| POST   | `/admin/templates/:id/apply`   | TemplatesController.applyToPage   |
+| POST   | `/admin/templates/:id`         | TemplatesController.update        |
+| DELETE | `/admin/templates/:id`         | TemplatesController.destroy       |
 
-### API Routes
+### Admin Routes — Logs
 
-| Method | Path                                         | Handler                               | Auth           |
-| ------ | -------------------------------------------- | ------------------------------------- | -------------- |
-| POST   | `/api/settings/preferences/theme`            | ThemeController.execute               | Required       |
-| POST   | `/api/admin/builder/operations`              | BuilderOperationsController.execute   | `pages.update` |
-| GET    | `/api/admin/builder/presence/:translationId` | BuilderOperationsController.presence  | `pages.update` |
-| POST   | `/api/admin/builder/draft/:translationId`    | BuilderOperationsController.saveDraft | `pages.update` |
-| GET    | `/api/admin/page/preview/token`              | PagesPreviewController.token          | `pages.update` |
-| GET    | `/api/admin/files`                           | FileController.list                   | Required       |
-| GET    | `/api/admin/files/:id`                       | FileController.find                   | Required       |
+| Method | Path          | Handler               | Permission  |
+| ------ | ------------- | --------------------- | ----------- |
+| GET    | `/admin/logs` | LogsController.render | `logs.view` |
 
-When the `api` guard is enabled (`AUTH_GUARD_API=true`), the token-guarded
-REST API is registered (see [Authentication Guards](#authentication-guards)).
-These routes accept a Bearer token only — session cookies are ignored:
+### API Routes — shared admin surface (`/api/v1/admin/*`)
 
-| Method | Path                  | Handler                 | Auth             |
-| ------ | --------------------- | ----------------------- | ---------------- |
-| POST   | `/api/v1/auth/login`  | TokenController.execute | Guest, throttled |
-| POST   | `/api/v1/auth/logout` | TokenController.destroy | Bearer token     |
-| GET    | `/api/v1/auth/me`     | MeController.show       | Bearer token     |
+The admin JSON surface is shared by the in-repo admin UI (session guard) and, when `AUTH_GUARD_API=true`, by external API clients (Bearer token). Standard REST CRUD applies to the `users`, `roles`, `pages`, `templates`, `files` and `folders` resources (`GET` index / `POST` store / `GET|PUT|DELETE` by `:id`), plus these extra endpoints:
+
+| Method | Path                                                                                | Notes                     |
+| ------ | ----------------------------------------------------------------------------------- | ------------------------- |
+| PUT    | `/api/v1/admin/pages/:id/publish`                                                   | publish a page            |
+| PUT    | `/api/v1/admin/pages/:id/unpublish`                                                 | unpublish a page          |
+| PUT    | `/api/v1/admin/pages/:id/homepage`                                                  | designate the homepage    |
+| POST   | `/api/v1/admin/pages/:id/translations`                                              | create a translation      |
+| GET    | `/api/v1/admin/pages/:id/translations/:translationId/revisions`                     | revision history          |
+| POST   | `/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/restore` | restore                   |
+| PUT    | `/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/pin`     | pin/unpin                 |
+| GET    | `/api/v1/admin/pages/preview/token`                                                 | live-preview token        |
+| POST   | `/api/v1/admin/templates/from-page`                                                 | create template from page |
+| GET    | `/api/v1/admin/templates/preview/token`                                             | template preview token    |
+| PUT    | `/api/v1/admin/files/:id/move`                                                      | move a file               |
+| PUT    | `/api/v1/admin/files/:id/alt`                                                       | upsert an alt text        |
+| DELETE | `/api/v1/admin/files/:id/alt`                                                       | delete an alt text        |
+| GET    | `/api/v1/admin/folders/:id/children`                                                | nested folder children    |
+| POST   | `/api/v1/admin/builder/operations`                                                  | page-builder operations   |
+| GET    | `/api/v1/admin/builder/presence/:translationId`                                     | builder presence          |
+| POST   | `/api/v1/admin/builder/draft/:translationId`                                        | save a builder draft      |
+| GET    | `/api/v1/admin/dashboard`                                                           | dashboard figures         |
+| GET    | `/api/v1/admin/logs`                                                                | log viewer data           |
+| GET    | `/api/v1/admin/maintenance`                                                         | maintenance config        |
+| PUT    | `/api/v1/admin/maintenance`                                                         | update maintenance config |
+| PUT    | `/api/v1/admin/maintenance/toggle`                                                  | toggle maintenance mode   |
+| POST   | `/api/v1/admin/preferences/theme`                                                   | persist theme preference  |
+
+### API Routes — token-only surface (`/api/v1/*`)
+
+When the `api` guard is enabled (`AUTH_GUARD_API=true`), these routes accept a Bearer token only — session cookies are ignored (see [Authentication Guards](#authentication-guards)):
+
+| Method | Path                               | Handler                           | Auth             |
+| ------ | ---------------------------------- | --------------------------------- | ---------------- |
+| POST   | `/api/v1/auth/login`               | LoginController.execute           | Guest, throttled |
+| POST   | `/api/v1/auth/register`            | RegisterController.store          | Guest, throttled |
+| POST   | `/api/v1/auth/forgot-password`     | ForgotPasswordController.store    | Guest, throttled |
+| POST   | `/api/v1/auth/reset-password`      | ResetPasswordController.store     | Guest            |
+| POST   | `/api/v1/auth/verify-email/:token` | EmailVerificationController.store | Guest            |
+| POST   | `/api/v1/auth/accept-invitation`   | AcceptInvitationController.store  | Guest            |
+| POST   | `/api/v1/auth/logout`              | LogoutController.destroy          | Bearer token     |
+| GET    | `/api/v1/auth/me`                  | MeController.show                 | Bearer token     |
+| GET    | `/api/v1/profile`                  | ProfileController.show            | Bearer token     |
+| PUT    | `/api/v1/profile`                  | ProfileController.update          | Bearer token     |
+| PUT    | `/api/v1/account`                  | AccountController.update          | Bearer token     |
+| DELETE | `/api/v1/account`                  | AccountController.destroy         | Bearer token     |
 
 ## Logging & Exception Handling
 
@@ -1023,6 +1038,8 @@ Foundry provides a centralised `LogService` (`src/log/services/log_service.ts`) 
 `DEBUG` · `INFO` · `WARN` · `ERROR` · `FATAL`
 
 All entries include a timestamp, category, and optional context / metadata / error block.
+
+Logs are also **persisted to the database** (`log_entries` table) and browsable in the admin panel at `/admin/logs` (data served by `GET /api/v1/admin/logs`). `node ace logs:prune` deletes entries older than the retention window and enforces the max-entries cap.
 
 ### Exception Handler
 
@@ -1146,6 +1163,33 @@ Move email change logic from controller to AccountService
 ```
 
 ## Changelog
+
+### Unreleased
+
+#### Architecture
+
+- Restructured `apps/web` into a per-domain transport layer (`app/<domain>/`: controllers, rest, middleware, transformers, validators) and a per-domain business layer (`src/<domain>/`: actions, domain, models, repositories, services, queries, exceptions, types)
+- New **actions** layer: controllers enter each domain through its use-case actions; event/listener pairs replaced by actions
+- Self-registering, feature-flag-gated route surfaces (`app/<domain>/routes.ts`, `config/features.ts`)
+- Extracted the shared React component library (atoms, molecules, organisms, design tokens) into the `@foundry/design-system` workspace (`packages/design-system`)
+
+#### Page Builder & CMS
+
+- 5 new block types: `video` (YouTube/Vimeo or direct media file), `carousel`, `list`, `quote`, `iframe` (hostname allowlist via `CMS_IFRAME_ALLOWLIST`) — the block system now totals 17 types
+- Versioned admin REST surface (`/api/v1/admin/*`) for pages, templates, builder, files, folders, dashboard, logs and maintenance
+
+#### Admin Panel
+
+- Role and permission management UI (`/admin/roles`, `/admin/permissions`)
+- Log viewer at `/admin/logs` backed by the new `log_entries` table (retention via `node ace logs:prune`)
+- Maintenance mode: admin settings page, public maintenance page, IP allowlist, scheduling, and `maintenance:*` ace commands
+- Dashboard with domain sections (recent activity, stat cards)
+
+#### Infrastructure
+
+- Health probes `/health` and `/health/ready` (registered outside the maintenance middleware)
+- Opaque API tokens (`auth_access_tokens` table) for the token-only `/api/v1/*` surface, with a full token auth flow (login, register, forgot/reset password, verify email, accept invitation)
+- Sitemap configuration via `SITEMAP_ADDITIONS` / `SITEMAP_EXCLUSIONS`
 
 ### v1.4.0
 
