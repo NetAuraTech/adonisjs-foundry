@@ -96,13 +96,32 @@ export class TokenMailService {
 	}
 
 	/**
-	 * Sends the password-reset mail for a user.
+	 * Issues the password-reset token for a user: expires outstanding
+	 * PASSWORD_RESET tokens, generates a new split token with the type-specific
+	 * TTL (1 hour), hashes the validator, and persists the record.
+	 *
+	 * Split from the mail dispatch so the token is created synchronously inside
+	 * the request while the mail itself is sent later by a queue worker.
 	 *
 	 * @param user - The user requesting a password reset.
+	 * @returns The raw `selector.validator` token to hand to the mail flow.
 	 */
-	async sendPasswordResetEmail(user: User): Promise<void> {
+	async issuePasswordResetToken(user: User): Promise<FullToken> {
+		return this.issueToken(user, TOKEN_TYPES.PASSWORD_RESET, 1);
+	}
+
+	/**
+	 * Sends the password-reset mail for an already-issued token.
+	 *
+	 * Runs in the queue worker (see {@link SendPasswordResetMailJob}), not in
+	 * the HTTP request: the caller resolves the locale, builds the mail payload
+	 * and dispatches it through the kernel {@link MailService}.
+	 *
+	 * @param user - The user requesting a password reset.
+	 * @param token - The `selector.validator` token issued for this request.
+	 */
+	async sendPasswordResetMail(user: User, token: FullToken): Promise<void> {
 		const locale = await this.resolveLocale(user);
-		const token = await this.issueToken(user, TOKEN_TYPES.PASSWORD_RESET, 1);
 
 		const i18n = i18nManager.locale(locale);
 
