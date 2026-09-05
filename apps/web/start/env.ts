@@ -75,6 +75,16 @@ export default await Env.create(new URL('../', import.meta.url), {
 	REDIS_SOCKET: Env.schema.string.optional(),
 
 	/*
+   |----------------------------------------------------------
+   | Variables for configuring the queue package
+   |----------------------------------------------------------
+   */
+	QUEUE_DRIVER: Env.schema.enum(['redis', 'sync'] as const),
+	QUEUE_CONNECTION: Env.schema.enum(['main', 'local'] as const),
+	QUEUE_CONCURRENCY: Env.schema.number.optional(),
+	QUEUE_MAX_RETRIES: Env.schema.number.optional(),
+
+	/*
   |----------------------------------------------------------
   | Variables for configuring the mail package
   |----------------------------------------------------------

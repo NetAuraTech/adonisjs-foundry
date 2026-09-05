@@ -238,6 +238,15 @@ REDIS_PORT=6379
 REDIS_PASSWORD=
 REDIS_SOCKET=
 
+# Queue — `redis` consumes jobs via a worker process (`node ace queue:work`);
+# `sync` runs them inline in the calling process (no worker, no Redis).
+QUEUE_DRIVER=redis
+# Redis connection used by the queue (see config/redis.ts).
+QUEUE_CONNECTION=local
+# Worker settings.
+QUEUE_CONCURRENCY=5
+QUEUE_MAX_RETRIES=3
+
 # Mail
 MAIL_MAILER=smtp
 MAIL_FROM_NAME=${APP_NAME}
@@ -308,11 +317,16 @@ The project includes Docker configurations for both development and production.
 docker compose up -d
 ```
 
-**Production** — Multi-stage build with Nginx reverse proxy and 3 app replicas:
+**Production** — Multi-stage build with Nginx reverse proxy, 3 app replicas, and a queue worker:
 
 ```bash
 docker compose -f docker-compose.prod.yml up -d
 ```
+
+The `worker` service runs `node ace queue:work` (see `config/queue.ts`) and
+consumes the job queue — currently the password-reset mail, sent asynchronously
+after the forgot-password response. With `QUEUE_DRIVER=redis` the app enqueues
+the job and the worker delivers it; if no worker is running, jobs wait in Redis.
 
 ## Authentication
 
@@ -1190,6 +1204,7 @@ Move email change logic from controller to AccountService
 - Health probes `/health` and `/health/ready` (registered outside the maintenance middleware)
 - Opaque API tokens (`auth_access_tokens` table) for the token-only `/api/v1/*` surface, with a full token auth flow (login, register, forgot/reset password, verify email, accept invitation)
 - Sitemap configuration via `SITEMAP_ADDITIONS` / `SITEMAP_EXCLUSIONS`
+- Redis job queue (`@adonisjs/queue`): password-reset mail is now dispatched as a job and sent by a worker after the HTTP response (`QUEUE_DRIVER=redis` + `QUEUE_CONNECTION`); a `sync` driver runs jobs inline for dev/tests; `docker-compose.prod.yml` adds a `worker` service
 
 ### v1.4.0
 
