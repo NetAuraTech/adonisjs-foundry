@@ -1461,7 +1461,7 @@ const apiManifest: FlavorManifest = {
 				'  },',
 				'  "devDependencies": {',
 				'    "oxfmt": "^0.65.0",',
-				'    "oxlint": "^1.80.0",',
+				'    "oxlint": "^1.81.0",',
 				'    "typescript": "~5.9.3"',
 				'  },',
 				'  "engines": {',
