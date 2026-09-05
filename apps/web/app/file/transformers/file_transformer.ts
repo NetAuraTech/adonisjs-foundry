@@ -17,6 +17,13 @@ export interface FileTransformOptions {
 	altOverride?: string | null;
 }
 
+/**
+ * Transforms a file domain object into its render-ready prop shape.
+ *
+ * With a display intent (locale / alt key / alt override) the output carries
+ * the resolved alt, dimensions and responsive variants; without one it keeps
+ * the lean admin/API shape.
+ */
 export default class FileTransformer extends BaseTransformer<File> {
 	protected storageService: StorageService;
 	/**

@@ -3,7 +3,7 @@ import { test } from '@japa/runner';
 import { DateTime } from 'luxon';
 import { FileFactory } from '#factories/file/file_factory';
 import { FileFolderFactory } from '#factories/file/file_folder_factory';
-import { FileDashboardCollector } from '#file/services/dashboard_collector';
+import { FileDashboardCollector } from '#file/services/file_dashboard_collector';
 
 /**
  * The test database is not truncated between tests, so count assertions are

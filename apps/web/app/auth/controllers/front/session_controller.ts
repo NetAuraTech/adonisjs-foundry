@@ -47,12 +47,12 @@ export default class SessionController {
 	async destroy(ctx: HttpContext) {
 		const { auth, response, session } = ctx;
 
-		const userId = auth.user?.id;
+		const user = auth.user;
 
 		await auth.use('web').logout();
 
-		if (userId) {
-			await this.logoutAction.execute({ userId });
+		if (user) {
+			await this.logoutAction.execute({ userId: user.id, userEmail: user.email });
 		}
 
 		session.flash('success', this.i18n.translate('auth.session.logout.success'));

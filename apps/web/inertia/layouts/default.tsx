@@ -3,8 +3,8 @@ import { Footer } from '@foundry/design-system/footer';
 import { Header } from '@foundry/design-system/header';
 import { navLink } from '@foundry/design-system/nav-link';
 import { Paragraph } from '@foundry/design-system/paragraph';
-import { Head, usePage } from '@inertiajs/react';
-import { ReactElement, useEffect } from 'react';
+import { Head, router, usePage } from '@inertiajs/react';
+import { ReactElement, useCallback, useEffect, useState } from 'react';
 import { toast, Toaster } from 'sonner';
 import { urlFor } from '~/client';
 import { useNavLinkActive } from '~/hooks/use_nav_link_active';
@@ -23,6 +23,25 @@ export default function Layout(props: LayoutProps) {
 
 	const homeHref = urlFor('core.home.render');
 	const homeActive = useNavLinkActive(homeHref);
+
+	// The header's mobile menu is a controlled presentational component — the
+	// layout owns its open/close state, including the close-on-navigation
+	// behaviour (the package never subscribes to the Inertia router itself).
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+	const closeMenu = useCallback(() => {
+		setIsMenuOpen(false);
+
+		if (document.activeElement instanceof HTMLElement) {
+			document.activeElement.blur();
+		}
+	}, []);
+
+	useEffect(() => {
+		const unregisterListener = router.on('success', closeMenu);
+
+		return () => unregisterListener();
+	}, [closeMenu]);
 
 	const footerDescription = (
 		<Paragraph variant="ink-inverted" className="text-sm font-light leading-relaxed max-w-md flex items-center gap-2">
@@ -87,7 +106,13 @@ export default function Layout(props: LayoutProps) {
 				<meta name="twitter:image:alt" content={`${app_name} - ${image_alt}`} />
 			</Head>
 			<>
-				<Header appName={app_name} links={[{ label: 'Home', href: homeHref, isActive: homeActive }]} />
+				<Header
+					appName={app_name}
+					links={[{ label: 'Home', href: homeHref, isActive: homeActive }]}
+					isMenuOpen={isMenuOpen}
+					onToggleMenu={() => setIsMenuOpen(!isMenuOpen)}
+					onMenuClose={closeMenu}
+				/>
 				<Toaster position="top-right" richColors />
 				{children}
 				<Footer

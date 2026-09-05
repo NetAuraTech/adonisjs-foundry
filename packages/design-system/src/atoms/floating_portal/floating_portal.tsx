@@ -1,5 +1,10 @@
 import { createPortal } from 'react-dom';
+import { tv } from 'tailwind-variants';
 import type { ReactNode, RefObject } from 'react';
+
+const floatingPortal = tv({
+	base: 'absolute pointer-events-auto z-[9999]',
+});
 
 interface FloatingPortalProps {
 	children: ReactNode;
@@ -60,7 +65,7 @@ export function FloatingPortal(props: FloatingPortalProps) {
 	};
 
 	return createPortal(
-		<div ref={position} style={{ position: 'absolute', top: 0, left: 0, zIndex: 9999, pointerEvents: 'auto' }}>
+		<div ref={position} className={floatingPortal()} style={{ top: 0, left: 0 }}>
 			{children}
 		</div>,
 		document.body,
