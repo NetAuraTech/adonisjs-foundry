@@ -1533,7 +1533,7 @@ const apiManifest: FlavorManifest = {
 				'    "@adonisjs/limiter": "^3.0.1",',
 				'    "@adonisjs/lucid": "^22.0.0",',
 				'    "@adonisjs/mail": "^10.0.0",',
-				'    "@adonisjs/redis": "^10.0.0",',
+				'    "@adonisjs/redis": "^10.0.1",',
 				'    "@adonisjs/session": "^8.0.0",',
 				'    "@adonisjs/shield": "^9.0.0",',
 				'    "@adonisjs/static": "^2.0.0",',
