@@ -1548,7 +1548,7 @@ const apiManifest: FlavorManifest = {
 				'    "@foundry/design-system": "^1.4.0",',
 				'    "@iconify/react": "^6.0.2",',
 				'    "@inertiajs/react": "^3.0.0",',
-				'    "@sentry/node": "^10.71.0",',
+				'    "@sentry/node": "^10.73.0",',
 				'    "@tailwindcss/vite": "^4.2.1",',
 				'    "@tuyau/core": "^1.0.0",',
 				'    "@vinejs/vine": "^4.3.0",',
