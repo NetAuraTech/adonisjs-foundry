@@ -1,3 +1,4 @@
+import { cn } from 'tailwind-variants';
 import { TableBody } from './table_body';
 import { TableCell } from './table_cell';
 import { TableHeader } from './table_header';
@@ -9,6 +10,8 @@ export { TableBody, TableCell, TableHeader, TableHeaderCell, TableRow };
 
 export interface TableProps {
 	children: ReactNode;
+	/** Additional Tailwind classes merged onto the `<table>`. */
+	className?: string;
 }
 
 /**
@@ -17,6 +20,12 @@ export interface TableProps {
  * for all table-related atoms (`TableHeader`, `TableBody`, `TableRow`, etc.),
  * also exposed as static members (`Table.Header`, `Table.Row`, …).
  *
+ * Documented `tailwind-variants` exception: the table's styling lives in the
+ * canonical CSS `@utility table` rather than a `tv()` base, because the
+ * utility styles descendant rows/cells with responsive `@variant` rules
+ * (`thead`, `th`, `td` at `lg:`) that a single `className` string cannot
+ * express. The wrapper keeps a plain `className` merge point for callers.
+ *
  * @example
  * <Table>
  *   <Table.Header>...</Table.Header>
@@ -24,9 +33,9 @@ export interface TableProps {
  * </Table>
  */
 const Table = (props: TableProps) => {
-	const { children } = props;
+	const { children, className } = props;
 
-	return <table className="table">{children}</table>;
+	return <table className={cn('table', className)}>{children}</table>;
 };
 
 Table.Header = TableHeader;

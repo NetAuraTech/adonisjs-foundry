@@ -1,5 +1,10 @@
 import { createPortal } from 'react-dom';
+import { cn, tv } from 'tailwind-variants';
 import type { ReactNode } from 'react';
+
+const modal = tv({
+	base: 'absolute flex inset-0 items-center justify-center',
+});
 
 interface ModalProps {
 	children: ReactNode;
@@ -8,6 +13,8 @@ interface ModalProps {
 	 * When omitted, the modal cannot be dismissed by these interactions.
 	 */
 	handleClose?: () => void;
+	/** Additional Tailwind classes merged onto the overlay root. */
+	className?: string;
 }
 
 /**
@@ -26,7 +33,7 @@ interface ModalProps {
  * )}
  */
 export function Modal(props: ModalProps) {
-	const { children, handleClose } = props;
+	const { children, handleClose, className } = props;
 
 	const onMount = (el: HTMLDivElement | null) => {
 		if (!el) {
@@ -47,7 +54,7 @@ export function Modal(props: ModalProps) {
 	};
 
 	return createPortal(
-		<div ref={onMount} className="absolute flex inset-0 items-center justify-center">
+		<div ref={onMount} className={cn(modal(), className)}>
 			<div className="absolute inset-0 bg-black/80 z-1000" onClick={handleClose} />
 			<div className="relative z-1001">{children}</div>
 		</div>,

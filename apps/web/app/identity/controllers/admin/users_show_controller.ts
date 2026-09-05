@@ -10,6 +10,10 @@ import UserTransformer from '#transport/identity/transformers/user_transformer';
 import { showValidator } from '#transport/identity/validators/user';
 import type { HttpContext } from '@adonisjs/core/http';
 
+/**
+ * Admin user detail controller: renders a single user's profile, providers
+ * and permissions.
+ */
 @inject()
 export default class UserShowController {
 	constructor(
@@ -18,6 +22,9 @@ export default class UserShowController {
 		protected listAllPermissionsAction: ListAllPermissionsAction,
 	) {}
 
+	/**
+	 * Renders the detail page of the user identified by the route param.
+	 */
 	async render(ctx: HttpContext) {
 		const { inertia, params } = ctx;
 

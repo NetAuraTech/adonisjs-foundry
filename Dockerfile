@@ -5,6 +5,7 @@ FROM base AS deps
 WORKDIR /app
 ADD package.json package-lock.json ./
 ADD apps/web/package.json apps/web/
+ADD packages/design-system/package.json packages/design-system/
 ADD patches ./patches
 RUN npm ci
 
@@ -13,6 +14,7 @@ FROM base AS production-deps
 WORKDIR /app
 ADD package.json package-lock.json ./
 ADD apps/web/package.json apps/web/
+ADD packages/design-system/package.json packages/design-system/
 ADD patches ./patches
 RUN npm ci --omit=dev
 

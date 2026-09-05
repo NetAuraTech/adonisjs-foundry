@@ -1,5 +1,4 @@
-import { Link, router } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { Link } from '@inertiajs/react';
 import { cn, tv } from 'tailwind-variants';
 import { NavLink } from '../../atoms/nav_link/nav_link';
 
@@ -35,6 +34,20 @@ interface HeaderProps {
 	 * logo's href — put the home link first.
 	 */
 	links: HeaderLink[];
+	/**
+	 * Whether the mobile navigation is open (small viewports). The open/close
+	 * state is owned by the caller — the header is a controlled presentational
+	 * component and owns no state of its own.
+	 */
+	isMenuOpen: boolean;
+	/** Invoked by the burger button to toggle the mobile navigation. */
+	onToggleMenu: () => void;
+	/**
+	 * Invoked by the logo and navigation-link clicks to close the mobile
+	 * navigation. The caller is responsible for any close-on-navigation
+	 * behaviour (e.g. subscribing to the Inertia `router` `success` event).
+	 */
+	onMenuClose: () => void;
 	/** Additional Tailwind classes merged onto the `<header>`. */
 	className?: string;
 }
@@ -55,41 +68,21 @@ function HeaderNavLink(props: { link: HeaderLink; onClick?: () => void }) {
  *
  * Shows the application name as a home link, the injected primary navigation,
  * and a burger toggle that opens the navigation on small viewports. All data —
- * the app name and the resolved link hrefs — is injected by the caller; the
- * header owns no app data and resolves no routes. Menu open/close state and the
- * "close on navigation" behaviour are internal presentation concerns.
+ * the app name, the resolved link hrefs and the menu open/close state — is
+ * injected by the caller; the header owns no app data, no state, and resolves
+ * no routes.
  *
  * @example
  * <Header
  *   appName="Foundry"
  *   links={[{ label: 'Home', href: urlFor('core.home.render') }]}
+ *   isMenuOpen={isMenuOpen}
+ *   onToggleMenu={() => setIsMenuOpen(!isMenuOpen)}
+ *   onMenuClose={closeMenu}
  * />
  */
 export function Header(props: HeaderProps) {
-	const { appName, links, className } = props;
-	const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-	const toggleMenu = () => {
-		setIsMenuOpen(!isMenuOpen);
-	};
-
-	const closeMenu = () => {
-		setIsMenuOpen(false);
-		if (document.activeElement instanceof HTMLElement) {
-			document.activeElement.blur();
-		}
-	};
-
-	useEffect(() => {
-		const unregisterListener = router.on('success', () => {
-			setIsMenuOpen(false);
-			if (document.activeElement instanceof HTMLElement) {
-				document.activeElement.blur();
-			}
-		});
-
-		return () => unregisterListener();
-	}, []);
+	const { appName, links, className, isMenuOpen, onToggleMenu, onMenuClose } = props;
 
 	const menuState = isMenuOpen ? 'opened' : 'closed';
 	const isExpanded = isMenuOpen ? 'true' : 'false';
@@ -100,14 +93,14 @@ export function Header(props: HeaderProps) {
 			<Link
 				href={homeHref}
 				className="header__logo font-semibold tracking-wide text-xl font-cormorant"
-				onClick={closeMenu}
+				onClick={onMenuClose}
 			>
 				{appName}
 			</Link>
 
 			<nav id="primary-navigation" className="header__nav" data-state={menuState} aria-expanded={isExpanded}>
 				{links.map((link) => (
-					<HeaderNavLink key={link.href} link={link} onClick={closeMenu} />
+					<HeaderNavLink key={link.href} link={link} onClick={onMenuClose} />
 				))}
 			</nav>
 			<button
@@ -116,7 +109,7 @@ export function Header(props: HeaderProps) {
 				aria-expanded={isExpanded}
 				data-state={menuState}
 				aria-label="Menu"
-				onClick={toggleMenu}
+				onClick={onToggleMenu}
 			>
 				<svg stroke="currentColor" fill="none" className="hamburger" viewBox="-10 -10 120 120" width="50">
 					<path

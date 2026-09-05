@@ -18,12 +18,30 @@ export async function loadFileById(id: number): Promise<Data.File.File | null> {
 	return data.data ?? null;
 }
 
+/**
+ * Formats a byte count as a compact human-readable size.
+ *
+ * @param bytes - The file size in bytes.
+ * @returns The size in `B` below 1 KiB, otherwise `KB` or `MB` with one decimal.
+ *
+ * @example
+ * humanSize(2048) // => '2.0 KB'
+ */
 export function humanSize(bytes: number): string {
 	if (bytes < 1024) return `${bytes} B`;
 	if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
 	return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
 
+/**
+ * Checks whether a MIME type denotes an image file.
+ *
+ * @param mimeType - The MIME type to inspect (e.g. `'image/png'`).
+ * @returns `true` when the type belongs to the `image/` family.
+ *
+ * @example
+ * isImage('image/svg+xml') // => true
+ */
 export function isImage(mimeType: string): boolean {
 	return mimeType.startsWith('image/');
 }

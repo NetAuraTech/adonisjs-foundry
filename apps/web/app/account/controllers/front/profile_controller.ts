@@ -7,6 +7,10 @@ import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import UserTransformer from '#transport/identity/transformers/user_transformer';
 import type { HttpContext } from '@adonisjs/core/http';
 
+/**
+ * Front profile page: renders the settings form and applies the user's
+ * profile update (username).
+ */
 @inject()
 export default class ProfileController {
 	constructor(
@@ -14,6 +18,9 @@ export default class ProfileController {
 		protected updateUserProfileAction: UpdateUserProfileAction,
 	) {}
 
+	/**
+	 * Renders the profile settings page for the authenticated user.
+	 */
 	async render(ctx: HttpContext) {
 		const { inertia, auth } = ctx;
 
@@ -25,6 +32,10 @@ export default class ProfileController {
 		});
 	}
 
+	/**
+	 * Validates the submitted profile, applies the update and redirects back
+	 * to the profile page with a success flash.
+	 */
 	async execute(ctx: HttpContext) {
 		const { auth, request, response, session } = ctx;
 

@@ -6,8 +6,8 @@ import { GetPreferencesAction } from '#account/actions/preferences/get_preferenc
 import { Token } from '#auth/domain/token';
 import { TOKEN_TYPES, type FullToken } from '#auth/enums/token_type';
 import { TokenRepository } from '#auth/repositories/token_repository';
-import { MailClientContract, type MailClientMessage } from '#core/contracts/mail_client';
-import { routePath } from '#core/services/route_path';
+import { MailClientContract } from '#core/contracts/mail_client';
+import { buildMailLink, resolveMailLocale } from '#core/services/mail_dispatch';
 import env from '#start/env';
 import type User from '#identity/models/user';
 
@@ -68,11 +68,11 @@ export class EmailChangeMailService {
 	 * @param user - The user whose `pendingEmail` was just set.
 	 */
 	async sendEmailChangeMails(user: User): Promise<void> {
-		const locale = await this.resolveLocale(user);
+		const locale = await resolveMailLocale(this.getPreferencesAction, user);
 		const token = await this.issueEmailChangeToken(user);
 		const i18n = i18nManager.locale(locale);
 
-		await this.send({
+		await this.mailClient.send({
 			to: user.pendingEmail!,
 			subject: i18n.t('account.email.change.mail.confirm.subject'),
 			template: 'emails/account_email',
@@ -86,11 +86,11 @@ export class EmailChangeMailService {
 				outro: i18n.t('account.email.change.mail.confirm.outro'),
 				expiry: i18n.t('account.email.change.mail.confirm.expiry', { hours: 24 }),
 				footer: i18n.t('account.email.change.mail.confirm.footer'),
-				confirmation_link: this.buildLink(['account.email_change.render'], token),
+				confirmation_link: buildMailLink(['account.email_change.render'], token),
 			} satisfies EmailChangeMailData,
 		});
 
-		await this.send({
+		await this.mailClient.send({
 			to: user.email,
 			subject: i18n.t('account.email.change.mail.notification.subject'),
 			template: 'emails/account_email',
@@ -108,14 +108,6 @@ export class EmailChangeMailService {
 				support: env.get('MAIL_FROM_ADDRESS'),
 			} satisfies EmailChangeMailData,
 		});
-	}
-
-	/**
-	 * Resolves the user's locale from their preferences, falling back to `en`.
-	 */
-	protected async resolveLocale(user: User): Promise<string> {
-		const preferences = await this.getPreferencesAction.execute({ user });
-		return preferences.locale || 'en';
 	}
 
 	/**
@@ -141,29 +133,5 @@ export class EmailChangeMailService {
 		});
 
 		return token;
-	}
-
-	/**
-	 * Builds the mail link for the current flavor.
-	 *
-	 * The full and `inertia` flavors link to the session page; the headless
-	 * `api` flavor has no front surface, in which case the link is empty and
-	 * the template omits the button. The first registered route wins.
-	 *
-	 * @param routeNames - Candidate route names, in priority order.
-	 * @param token - The token carried by the link.
-	 * @returns The absolute URL, or an empty string when no candidate is
-	 *   registered.
-	 */
-	protected buildLink(routeNames: string[], token: FullToken): string {
-		for (const name of routeNames) {
-			const path = routePath(name, { token });
-			if (path) return `${env.get('APP_URL')}${path}`;
-		}
-		return '';
-	}
-
-	protected send(message: MailClientMessage): Promise<void> {
-		return this.mailClient.send(message);
 	}
 }
