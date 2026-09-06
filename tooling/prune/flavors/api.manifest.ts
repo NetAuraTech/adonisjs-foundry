@@ -147,6 +147,7 @@ const apiManifest: FlavorManifest = {
 		'apps/web/tests/functional/auth/email_verification.spec.ts',
 		'apps/web/tests/functional/auth/forgot_password.spec.ts',
 		'apps/web/tests/functional/auth/oauth.spec.ts',
+		'apps/web/tests/functional/auth/password_reset_queue.spec.ts',
 		'apps/web/tests/functional/auth/register.spec.ts',
 		'apps/web/tests/functional/auth/reset_password.spec.ts',
 		'apps/web/tests/functional/auth/session.spec.ts',
