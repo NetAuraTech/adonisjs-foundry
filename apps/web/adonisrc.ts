@@ -92,6 +92,7 @@ export default defineConfig({
 		() => import('#start/nav'),
 		() => import('#start/extensions'),
 		() => import('#start/transmit'),
+		() => import('#start/scheduler'),
 	],
 
 	/*

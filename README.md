@@ -246,6 +246,13 @@ QUEUE_CONNECTION=local
 # Worker settings.
 QUEUE_CONCURRENCY=5
 QUEUE_MAX_RETRIES=3
+# Scheduled maintenance tasks (see config/maintenance.ts). Each value is a
+# duration string ("1d", "24h", "30m"); "0" disables the task. Unset values
+# fall back to a daily schedule.
+MAINTENANCE_LOG_PRUNE_SCHEDULE=
+MAINTENANCE_BACKUP_RETENTION_SCHEDULE=
+# Retention window in days for Log Entry pruning (default 180).
+LOG_RETENTION_DAYS=
 
 # Mail
 MAIL_MAILER=smtp
@@ -323,10 +330,13 @@ docker compose up -d
 docker compose -f docker-compose.prod.yml up -d
 ```
 
-The `worker` service runs `node ace queue:work` (see `config/queue.ts`) and
-consumes the job queue — currently the password-reset mail, sent asynchronously
-after the forgot-password response. With `QUEUE_DRIVER=redis` the app enqueues
-the job and the worker delivers it; if no worker is running, jobs wait in Redis.
+The `worker` service runs `node ace queue:work -q default,auth,maintenance`
+(see `config/queue.ts`) and consumes the job queues — currently the
+password-reset mail (sent asynchronously after the forgot-password response)
+and the scheduled maintenance tasks (Log Entry pruning and backup retention
+enforcement, registered at boot by `start/scheduler.ts`). With
+`QUEUE_DRIVER=redis` the app enqueues the job and the worker delivers it; if
+no worker is running, jobs wait in Redis.
 
 ## Authentication
 
@@ -619,6 +629,8 @@ Each backup goes through: **pg_dump → gzip compression → AES-256-CBC encrypt
 | Weekly  | 4 weeks (Sunday backups) |
 | Monthly | 3 months (1st of month)  |
 | Yearly  | 1 per year (1st January) |
+
+Retention is enforced automatically by a scheduled queue job (`EnforceBackupRetentionJob`, on the `maintenance` queue) that runs the same policy as `node ace backup:cleanup`. The interval is set with `MAINTENANCE_BACKUP_RETENTION_SCHEDULE` (default `1d`; `"0"` disables it).
 
 ### Backup Environment Variables
 
@@ -1053,7 +1065,7 @@ Foundry provides a centralised `LogService` (`src/log/services/log_service.ts`) 
 
 All entries include a timestamp, category, and optional context / metadata / error block.
 
-Logs are also **persisted to the database** (`log_entries` table) and browsable in the admin panel at `/admin/logs` (data served by `GET /api/v1/admin/logs`). `node ace logs:prune` deletes entries older than the retention window and enforces the max-entries cap.
+Logs are also **persisted to the database** (`log_entries` table) and browsable in the admin panel at `/admin/logs` (data served by `GET /api/v1/admin/logs`). `node ace logs:prune` deletes entries older than the retention window and enforces the max-entries cap. Pruning is also automated by a scheduled queue job (`PruneLogEntriesJob`, on the `maintenance` queue) that runs the same policy; the interval is set with `MAINTENANCE_LOG_PRUNE_SCHEDULE` (default `1d`; `"0"` disables it).
 
 ### Exception Handler
 
@@ -1205,6 +1217,7 @@ Move email change logic from controller to AccountService
 - Opaque API tokens (`auth_access_tokens` table) for the token-only `/api/v1/*` surface, with a full token auth flow (login, register, forgot/reset password, verify email, accept invitation)
 - Sitemap configuration via `SITEMAP_ADDITIONS` / `SITEMAP_EXCLUSIONS`
 - Redis job queue (`@adonisjs/queue`): password-reset mail is now dispatched as a job and sent by a worker after the HTTP response (`QUEUE_DRIVER=redis` + `QUEUE_CONNECTION`); a `sync` driver runs jobs inline for dev/tests; `docker-compose.prod.yml` adds a `worker` service
+- Scheduled maintenance jobs on the `maintenance` queue: `PruneLogEntriesJob` (log-entry retention) and `EnforceBackupRetentionJob` (backup retention) run on env-var-driven intervals (`MAINTENANCE_LOG_PRUNE_SCHEDULE`, `MAINTENANCE_BACKUP_RETENTION_SCHEDULE`); the worker consumes `default,auth,maintenance`
 
 ### v1.4.0
 

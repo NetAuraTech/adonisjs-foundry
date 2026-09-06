@@ -27,7 +27,7 @@ export default class LogsPrune extends BaseCommand {
 
 	@flags.number({
 		description: 'Retention window in days — entries older than this are deleted',
-		default: 180,
+		default: loggingConfig.persistence.retentionDays,
 	})
 	declare days: number;
 
