@@ -10,6 +10,7 @@ interface UpdateUserPayload {
 	email?: string;
 	username?: string;
 	roleId?: number | null;
+	apiRateLimit?: number | null;
 }
 
 /**

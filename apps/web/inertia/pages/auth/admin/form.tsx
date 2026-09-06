@@ -36,6 +36,16 @@ export default function UsersFormPage(props: PageProps) {
 		email: presets.email(t('email.value')),
 		username: presets.username(t('username.value')),
 		role_id: [...presets.selectWithOptions([...roles.map((r) => r.id)], 'role_id'), rules.required('role_id')],
+		api_rate_limit: [
+			rules.custom(
+				(value) =>
+					value === undefined ||
+					value === null ||
+					value === '' ||
+					(Number.isInteger(Number(value)) && Number(value) > 0),
+				'api_rate_limit.positive_integer',
+			),
+		],
 	});
 
 	return (
@@ -106,6 +116,17 @@ export default function UsersFormPage(props: PageProps) {
 										<SelectOption key={`role-${role.id}`} label={t(role.name as any)} value={role.id} />
 									))}
 							</Field>
+							{isEditing && (
+								<Field
+									label={t('api_rate_limit.value')}
+									name="api_rate_limit"
+									type="number"
+									defaultValue={user?.apiRateLimit ?? ''}
+									placeholder={t('api_rate_limit.placeholder')}
+									validation={validation}
+									errors={errors}
+								/>
+							)}
 							<Button loading={processing} type={'submit'} fitContent>
 								{t('submit')}
 							</Button>

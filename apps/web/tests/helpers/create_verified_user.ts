@@ -23,6 +23,7 @@ export async function createVerifiedUser(overrides: {
 	username?: string;
 	password?: string;
 	pendingEmail?: string;
+	apiRateLimit?: number | null;
 }) {
 	return User.create({
 		username: extractNameFromEmail(overrides.email),

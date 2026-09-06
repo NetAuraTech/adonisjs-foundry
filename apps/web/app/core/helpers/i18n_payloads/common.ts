@@ -32,6 +32,10 @@ export const COMMON_MAPPING = {
 		matches: createI18nEntry('validation.front.matches', { other: '{other}' }),
 		one_of: createI18nEntry('validation.front.one_of', { field: '{field}' }),
 		slug_format: createI18nEntry('validation.front.slug_format', { field: '{field}' }),
+		api_rate_limit: createI18nEntry('validation.front.api_rate_limit.positive_integer', { field: '{field}' }),
+		fields: {
+			api_rate_limit: 'validation.front.fields.api_rate_limit',
+		},
 	},
 };
 

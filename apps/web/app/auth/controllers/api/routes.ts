@@ -15,7 +15,7 @@ import { enabledAuthGuards } from '#config/auth';
 import features from '#config/features';
 import { controllers } from '#generated/controllers';
 import { middleware } from '#start/kernel';
-import { throttle } from '#start/limiter';
+import { apiClientThrottle, throttle } from '#start/limiter';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
 
 if (features.adminApi && enabledAuthGuards.api) {
@@ -37,7 +37,7 @@ if (features.adminApi && enabledAuthGuards.api) {
 							router.post('logout', [controllers.auth.api.Logout, 'destroy']);
 							router.get('me', [controllers.auth.api.Me, 'show']);
 						})
-						.use([middleware.auth({ guards: ['api'] })]);
+						.use([middleware.auth({ guards: ['api'] }), apiClientThrottle()]);
 				})
 				.prefix('auth')
 				.as('auth')
