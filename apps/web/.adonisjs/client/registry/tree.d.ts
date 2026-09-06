@@ -45,54 +45,6 @@ export interface ApiDefinition {
             execute: typeof routes['api.v1.admin.account.preferences.execute']
           }
         }
-        cms: {
-          pages: {
-            index: typeof routes['api.v1.admin.cms.pages.index']
-            store: typeof routes['api.v1.admin.cms.pages.store']
-            show: typeof routes['api.v1.admin.cms.pages.show']
-            update: typeof routes['api.v1.admin.cms.pages.update']
-            destroy: typeof routes['api.v1.admin.cms.pages.destroy']
-            publish: typeof routes['api.v1.admin.cms.pages.publish']
-            unpublish: typeof routes['api.v1.admin.cms.pages.unpublish']
-            setHomepage: typeof routes['api.v1.admin.cms.pages.set_homepage']
-          }
-          pageTranslations: {
-            store: typeof routes['api.v1.admin.cms.page_translations.store']
-          }
-          pageRevisions: {
-            index: typeof routes['api.v1.admin.cms.page_revisions.index']
-            restore: typeof routes['api.v1.admin.cms.page_revisions.restore']
-            toggle: typeof routes['api.v1.admin.cms.page_revisions.toggle']
-          }
-          pagesPreview: {
-            token: typeof routes['api.v1.admin.cms.pages_preview.token']
-          }
-          templates: {
-            index: typeof routes['api.v1.admin.cms.templates.index']
-            store: typeof routes['api.v1.admin.cms.templates.store']
-            update: typeof routes['api.v1.admin.cms.templates.update']
-            destroy: typeof routes['api.v1.admin.cms.templates.destroy']
-            createFromPage: typeof routes['api.v1.admin.cms.templates.create_from_page']
-          }
-          templatesPreview: {
-            token: typeof routes['api.v1.admin.cms.templates_preview.token']
-          }
-          builderOperations: {
-            execute: typeof routes['api.v1.admin.cms.builder_operations.execute']
-            presence: typeof routes['api.v1.admin.cms.builder_operations.presence']
-            saveDraft: typeof routes['api.v1.admin.cms.builder_operations.save_draft']
-          }
-        }
-        core: {
-          dashboard: {
-            index: typeof routes['api.v1.admin.core.dashboard.index']
-          }
-          maintenance: {
-            index: typeof routes['api.v1.admin.core.maintenance.index']
-            update: typeof routes['api.v1.admin.core.maintenance.update']
-            toggle: typeof routes['api.v1.admin.core.maintenance.toggle']
-          }
-        }
         file: {
           files: {
             index: typeof routes['api.v1.admin.file.files.index']
@@ -136,6 +88,16 @@ export interface ApiDefinition {
             index: typeof routes['api.v1.admin.log.logs.index']
           }
         }
+        core: {
+          dashboard: {
+            index: typeof routes['api.v1.admin.core.dashboard.index']
+          }
+          maintenance: {
+            index: typeof routes['api.v1.admin.core.maintenance.index']
+            update: typeof routes['api.v1.admin.core.maintenance.update']
+            toggle: typeof routes['api.v1.admin.core.maintenance.toggle']
+          }
+        }
       }
       auth: {
         login: {
@@ -166,58 +128,6 @@ export interface ApiDefinition {
     }
   }
   admin: {
-    cms: {
-      pages: {
-        render: typeof routes['admin.cms.pages.render']
-        setHomepage: typeof routes['admin.cms.pages.set_homepage']
-        destroy: typeof routes['admin.cms.pages.destroy']
-      }
-      pagesCreate: {
-        render: typeof routes['admin.cms.pages_create.render']
-        execute: typeof routes['admin.cms.pages_create.execute']
-      }
-      pagesShow: {
-        render: typeof routes['admin.cms.pages_show.render']
-      }
-      pagesUpdate: {
-        render: typeof routes['admin.cms.pages_update.render']
-        execute: typeof routes['admin.cms.pages_update.execute']
-        publish: typeof routes['admin.cms.pages_update.publish']
-        unpublish: typeof routes['admin.cms.pages_update.unpublish']
-      }
-      pageTranslations: {
-        execute: typeof routes['admin.cms.page_translations.execute']
-      }
-      pageRevisions: {
-        index: typeof routes['admin.cms.page_revisions.index']
-        restore: typeof routes['admin.cms.page_revisions.restore']
-        toggleKeep: typeof routes['admin.cms.page_revisions.toggle_keep']
-      }
-      pagesPreview: {
-        render: typeof routes['admin.cms.pages_preview.render']
-      }
-      templates: {
-        render: typeof routes['admin.cms.templates.render']
-        execute: typeof routes['admin.cms.templates.execute']
-        applyToPage: typeof routes['admin.cms.templates.apply_to_page']
-        update: typeof routes['admin.cms.templates.update']
-        destroy: typeof routes['admin.cms.templates.destroy']
-        edit: typeof routes['admin.cms.templates.edit']
-      }
-      templatesPreview: {
-        render: typeof routes['admin.cms.templates_preview.render']
-      }
-    }
-    core: {
-      dashboard: {
-        render: typeof routes['admin.core.dashboard.render']
-      }
-      maintenance: {
-        render: typeof routes['admin.core.maintenance.render']
-        update: typeof routes['admin.core.maintenance.update']
-        toggle: typeof routes['admin.core.maintenance.toggle']
-      }
-    }
     file: {
       files: {
         render: typeof routes['admin.file.files.render']
@@ -283,32 +193,28 @@ export interface ApiDefinition {
         render: typeof routes['admin.log.logs.render']
       }
     }
-  }
-  cms: {
-    contact: {
-      execute: typeof routes['cms.contact.execute']
-    }
-    page: {
-      localised: {
-        render: typeof routes['cms.page.localised.render']
+    core: {
+      dashboard: {
+        render: typeof routes['admin.core.dashboard.render']
       }
-      render: typeof routes['cms.page.render']
+      maintenance: {
+        render: typeof routes['admin.core.maintenance.render']
+        update: typeof routes['admin.core.maintenance.update']
+        toggle: typeof routes['admin.core.maintenance.toggle']
+      }
     }
   }
   core: {
-    home: {
-      render: typeof routes['core.home.render']
-    }
     sitemap: {
       show: typeof routes['core.sitemap.show']
     }
     robots: {
       show: typeof routes['core.robots.show']
     }
+    home: {
+      render: typeof routes['core.home.render']
+    }
   }
-  eventStream: typeof routes['event_stream']
-  subscribe: typeof routes['subscribe']
-  unsubscribe: typeof routes['unsubscribe']
   auth: {
     session: {
       render: typeof routes['auth.session.render']

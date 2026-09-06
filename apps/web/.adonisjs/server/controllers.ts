@@ -39,36 +39,6 @@ export const controllers = {
       Social: () => import('#transport/auth/controllers/front/social_controller'),
     },
   },
-  cms: {
-    admin: {
-      PageRevisions: () => import('#transport/cms/controllers/admin/page_revisions_controller'),
-      PageTranslations: () => import('#transport/cms/controllers/admin/page_translations_controller'),
-      Pages: () => import('#transport/cms/controllers/admin/pages_controller'),
-      PagesCreate: () => import('#transport/cms/controllers/admin/pages_create_controller'),
-      PagesPreview: () => import('#transport/cms/controllers/admin/pages_preview_controller'),
-      PagesShow: () => import('#transport/cms/controllers/admin/pages_show_controller'),
-      PagesUpdate: () => import('#transport/cms/controllers/admin/pages_update_controller'),
-      Templates: () => import('#transport/cms/controllers/admin/templates_controller'),
-      TemplatesPreview: () => import('#transport/cms/controllers/admin/templates_preview_controller'),
-    },
-    api: {
-      BuilderOperations: () => import('#transport/cms/controllers/api/builder_operations_controller'),
-      PageRevisionsApi: () => import('#transport/cms/controllers/api/page_revisions_api_controller'),
-      PageTranslationsApi: () => import('#transport/cms/controllers/api/page_translations_api_controller'),
-      PagesApi: () => import('#transport/cms/controllers/api/pages_api_controller'),
-      PagesCreateApi: () => import('#transport/cms/controllers/api/pages_create_api_controller'),
-      PagesDeleteApi: () => import('#transport/cms/controllers/api/pages_delete_api_controller'),
-      PagesPreviewToken: () => import('#transport/cms/controllers/api/pages_preview_token_controller'),
-      PagesShowApi: () => import('#transport/cms/controllers/api/pages_show_api_controller'),
-      PagesUpdateApi: () => import('#transport/cms/controllers/api/pages_update_api_controller'),
-      Templates: () => import('#transport/cms/controllers/api/templates_controller'),
-      TemplatesPreviewToken: () => import('#transport/cms/controllers/api/templates_preview_token_controller'),
-    },
-    front: {
-      Contact: () => import('#transport/cms/controllers/front/contact_controller'),
-      Page: () => import('#transport/cms/controllers/front/page_controller'),
-    },
-  },
   core: {
     admin: {
       Dashboard: () => import('#transport/core/controllers/admin/dashboard_controller'),

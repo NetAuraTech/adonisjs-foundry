@@ -6,10 +6,6 @@
 /// <reference path="./manifest.d.ts" />
 import type { InferData, InferVariants } from '@adonisjs/core/types/transformers'
 import type { InferSharedProps, InferFlashData } from '@adonisjs/inertia/types'
-import type CmsPageRevisionTransformer from '#transport/cms/transformers/page_revision_transformer'
-import type CmsPageTransformer from '#transport/cms/transformers/page_transformer'
-import type CmsPageTranslationTransformer from '#transport/cms/transformers/page_translation_transformer'
-import type CmsTemplateTransformer from '#transport/cms/transformers/template_transformer'
 import type CoreDashboardTransformer from '#transport/core/transformers/dashboard_transformer'
 import type FileFileFolderTransformer from '#transport/file/transformers/file_folder_transformer'
 import type FileFileTransformer from '#transport/file/transformers/file_transformer'
@@ -20,24 +16,6 @@ import type LogLogEntryTransformer from '#transport/log/transformers/log_entry_t
 import type InertiaMiddleware from '#transport/core/middleware/inertia_middleware'
 
 export namespace Data {
-  export namespace Cms {
-    export type PageRevision = InferData<CmsPageRevisionTransformer>
-    export namespace PageRevision {
-      export type Variants = InferVariants<CmsPageRevisionTransformer>
-    }
-    export type Page = InferData<CmsPageTransformer>
-    export namespace Page {
-      export type Variants = InferVariants<CmsPageTransformer>
-    }
-    export type PageTranslation = InferData<CmsPageTranslationTransformer>
-    export namespace PageTranslation {
-      export type Variants = InferVariants<CmsPageTranslationTransformer>
-    }
-    export type Template = InferData<CmsTemplateTransformer>
-    export namespace Template {
-      export type Variants = InferVariants<CmsTemplateTransformer>
-    }
-  }
   export namespace Core {
     export type Dashboard = InferData<CoreDashboardTransformer>
     export namespace Dashboard {

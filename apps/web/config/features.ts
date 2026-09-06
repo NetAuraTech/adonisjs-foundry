@@ -7,6 +7,9 @@
 | All features are enabled by default — change a boolean to
 | deactivate a module at runtime without touching routing code.
 |
+| The `inertia` flavor drops the CMS module (page/template/builder): the
+| `cms` flag is off and the CMS route registrations are absent from
+| `start/routes.ts`.
 */
 
 export default {
@@ -14,6 +17,6 @@ export default {
 	settings: true,
 	admin: true,
 	adminApi: true,
-	cms: true,
+	cms: false,
 	maintenance: true,
 } as const;
