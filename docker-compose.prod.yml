@@ -43,7 +43,7 @@ services:
 
   worker:
     build: .
-    command: node ace.js queue:work
+    command: node ace.js queue:work -q default,auth,maintenance
     environment:
       - NODE_ENV=production
       - APP_KEY=mLkmXGcKT_BHO7EX3HAuOU0iT6eixPXU

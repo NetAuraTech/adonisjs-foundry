@@ -7,6 +7,7 @@ import { MaintenanceService } from '#core/services/maintenance_service';
 import { LogService } from '#log/services/log_service';
 import { RedisCacheDriver } from '#shared/services/cache/drivers/redis_cache_driver';
 import { CacheService } from '#shared/services/cache_service';
+import { LockService } from '#shared/services/lock_service';
 
 /**
  * Application-side mail client: a thin wrapper around the AdonisJS mail driver
@@ -75,6 +76,19 @@ app.container.singleton(CacheService, () => {
 	const driver = new RedisCacheDriver();
 	return new CacheService(driver);
 });
+
+// ─── LockService (singleton) ────────────────────────────────────────────────
+
+/**
+ * Distributed lock service singleton.
+ * Shared across every request and job execution so a maintenance task never
+ * runs twice at once. Uses Redis with an in-memory fallback.
+ *
+ * @example
+ * const locks = await app.container.make(LockService)
+ * await locks.withLock('maintenance:log_prune', 1800, () => runPrune())
+ */
+app.container.singleton(LockService, () => new LockService());
 
 // ─── BuilderSessionService (singleton) ───────────────────────────────────────
 

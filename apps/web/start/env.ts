@@ -86,6 +86,20 @@ export default await Env.create(new URL('../', import.meta.url), {
 
 	/*
   |----------------------------------------------------------
+  | Variables for configuring scheduled maintenance tasks
+  |----------------------------------------------------------
+  |
+  | Each schedule is a duration string (e.g. "1d", "24h", "30m"); "0" disables
+  | the task. The retention windows themselves are resolved in
+  | config/maintenance.ts and config/logging.ts.
+  |----------------------------------------------------------
+  */
+	MAINTENANCE_LOG_PRUNE_SCHEDULE: Env.schema.string.optional(),
+	MAINTENANCE_BACKUP_RETENTION_SCHEDULE: Env.schema.string.optional(),
+	LOG_RETENTION_DAYS: Env.schema.number.optional(),
+
+	/*
+  |----------------------------------------------------------
   | Variables for configuring the mail package
   |----------------------------------------------------------
   */

@@ -1,4 +1,5 @@
 import { LogLevel } from '#log/types/logging';
+import env from '#start/env';
 
 /**
  * Configuration for the database persistence side of the logging pipeline.
@@ -36,6 +37,13 @@ const loggingConfig = {
 		 * touching code.
 		 */
 		maxEntries: 100_000,
+
+		/**
+		 * Retention window in days: entries older than this are pruned by the
+		 * `logs:prune` command and the scheduled log-prune job. Tunable via
+		 * `LOG_RETENTION_DAYS`.
+		 */
+		retentionDays: env.get('LOG_RETENTION_DAYS', 180),
 	},
 };
 
