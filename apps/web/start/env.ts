@@ -33,6 +33,18 @@ export default await Env.create(new URL('../', import.meta.url), {
 
 	/*
   |----------------------------------------------------------
+  | Variables for configuring CORS
+  |----------------------------------------------------------
+  |
+  | Comma-separated allowlist of external front origins the `api` flavor's
+  | REST API accepts cross-origin. Empty by default (no cross-origin
+  | browser access until configured).
+  |
+  */
+	CORS_ALLOWED_ORIGINS: Env.schema.string.optional(),
+
+	/*
+  |----------------------------------------------------------
   | Variables for configuring session
   |----------------------------------------------------------
   */
@@ -45,7 +57,8 @@ export default await Env.create(new URL('../', import.meta.url), {
   |
   | Which authentication mechanisms are active. full/inertia keep the
   | session guard and may opt into the token guard (REST API); the api
-  | flavor disables the session guard entirely.
+  | flavor disables the session guard entirely (`AUTH_GUARD_WEB=false`)
+  | and authenticates exclusively through API tokens.
   |
   */
 	AUTH_GUARD_WEB: Env.schema.boolean.optional(),
@@ -75,10 +88,10 @@ export default await Env.create(new URL('../', import.meta.url), {
 	REDIS_SOCKET: Env.schema.string.optional(),
 
 	/*
-   |----------------------------------------------------------
-   | Variables for configuring the queue package
-   |----------------------------------------------------------
-   */
+  |----------------------------------------------------------
+  | Variables for configuring the queue package
+  |----------------------------------------------------------
+  */
 	QUEUE_DRIVER: Env.schema.enum(['redis', 'sync'] as const),
 	QUEUE_CONNECTION: Env.schema.enum(['main', 'local'] as const),
 	QUEUE_CONCURRENCY: Env.schema.number.optional(),
@@ -117,6 +130,18 @@ export default await Env.create(new URL('../', import.meta.url), {
   |----------------------------------------------------------
   */
 	SENTRY_DSN: Env.schema.string(),
+
+	/*
+  |----------------------------------------------------------
+  | Variables for configuring the ally (OAuth) package
+  |----------------------------------------------------------
+  */
+	FACEBOOK_CLIENT_ID: Env.schema.string.optional(),
+	FACEBOOK_CLIENT_SECRET: Env.schema.string.optional(),
+	GITHUB_CLIENT_ID: Env.schema.string.optional(),
+	GITHUB_CLIENT_SECRET: Env.schema.string.optional(),
+	GOOGLE_CLIENT_ID: Env.schema.string.optional(),
+	GOOGLE_CLIENT_SECRET: Env.schema.string.optional(),
 
 	/*
   |----------------------------------------------------------
@@ -191,15 +216,6 @@ export default await Env.create(new URL('../', import.meta.url), {
   |----------------------------------------------------------
   */
 	LIMITER_STORE: Env.schema.enum(['redis', 'memory'] as const),
-
-	/*
-  |----------------------------------------------------------
-  | Variables for CMS content policies (page builder blocks).
-  | Comma-separated lists; both have safe defaults in config/cms.ts.
-  |----------------------------------------------------------
-  */
-	CMS_IFRAME_ALLOWLIST: Env.schema.string.optional(),
-	CMS_VIDEO_PROVIDERS: Env.schema.string.optional(),
 
 	/*
   |----------------------------------------------------------

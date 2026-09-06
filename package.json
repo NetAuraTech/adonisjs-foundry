@@ -3,20 +3,16 @@
   "version": "1.4.0",
   "private": true,
   "license": "UNLICENSED",
+  "type": "module",
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
-  "type": "module",
-  "imports": {
-    "#prune/*": "./tooling/prune/*.js"
-  },
   "scripts": {
     "start": "npm run start --workspace @foundry/web",
     "dev": "npm run dev --workspace @foundry/web",
     "build": "npm run build --workspace @foundry/web",
     "test": "npm run test --workspace @foundry/web",
-    "test:front": "npm run test:front --workspace @foundry/web",
     "docker:up": "docker compose up -d",
     "docker:stop": "docker compose stop -d",
     "lint": "oxlint",
@@ -25,18 +21,13 @@
     "format": "oxfmt --write .",
     "format:ci": "oxfmt --check .",
     "format:check": "oxfmt --check .",
-    "typecheck": "tsc --noEmit && tsc --noEmit -p apps/web/tsconfig.json && tsc --noEmit -p apps/web/inertia/tsconfig.json && npm run typecheck --workspace @foundry/design-system",
+    "typecheck": "tsc --noEmit -p apps/web/tsconfig.json",
     "postinstall": "patch-package"
   },
   "devDependencies": {
     "oxfmt": "^0.66.0",
     "oxlint": "^1.81.0",
     "typescript": "~5.9.3"
-  },
-  "overrides": {
-    "@adonisjs/ally": {
-      "@adonisjs/inertia": "^5.0.0"
-    }
   },
   "engines": {
     "node": ">=24.0.0"

@@ -10,12 +10,6 @@ export const controllers = {
       Preferences: () => import('#transport/account/controllers/api/preferences_controller'),
       Profile: () => import('#transport/account/controllers/api/profile_controller'),
     },
-    front: {
-      Account: () => import('#transport/account/controllers/front/account_controller'),
-      EmailChange: () => import('#transport/account/controllers/front/email_change_controller'),
-      Preferences: () => import('#transport/account/controllers/front/preferences_controller'),
-      Profile: () => import('#transport/account/controllers/front/profile_controller'),
-    },
   },
   auth: {
     api: {
@@ -29,67 +23,15 @@ export const controllers = {
       ResetPassword: () => import('#transport/auth/controllers/api/reset_password_controller'),
       SocialApi: () => import('#transport/auth/controllers/api/social_api_controller'),
     },
-    front: {
-      AcceptInvitation: () => import('#transport/auth/controllers/front/accept_invitation_controller'),
-      EmailVerification: () => import('#transport/auth/controllers/front/email_verification_controller'),
-      ForgotPassword: () => import('#transport/auth/controllers/front/forgot_password_controller'),
-      Register: () => import('#transport/auth/controllers/front/register_controller'),
-      ResetPassword: () => import('#transport/auth/controllers/front/reset_password_controller'),
-      Session: () => import('#transport/auth/controllers/front/session_controller'),
-      Social: () => import('#transport/auth/controllers/front/social_controller'),
-    },
-  },
-  cms: {
-    admin: {
-      PageRevisions: () => import('#transport/cms/controllers/admin/page_revisions_controller'),
-      PageTranslations: () => import('#transport/cms/controllers/admin/page_translations_controller'),
-      Pages: () => import('#transport/cms/controllers/admin/pages_controller'),
-      PagesCreate: () => import('#transport/cms/controllers/admin/pages_create_controller'),
-      PagesPreview: () => import('#transport/cms/controllers/admin/pages_preview_controller'),
-      PagesShow: () => import('#transport/cms/controllers/admin/pages_show_controller'),
-      PagesUpdate: () => import('#transport/cms/controllers/admin/pages_update_controller'),
-      Templates: () => import('#transport/cms/controllers/admin/templates_controller'),
-      TemplatesPreview: () => import('#transport/cms/controllers/admin/templates_preview_controller'),
-    },
-    api: {
-      BuilderOperations: () => import('#transport/cms/controllers/api/builder_operations_controller'),
-      PageRevisionsApi: () => import('#transport/cms/controllers/api/page_revisions_api_controller'),
-      PageTranslationsApi: () => import('#transport/cms/controllers/api/page_translations_api_controller'),
-      PagesApi: () => import('#transport/cms/controllers/api/pages_api_controller'),
-      PagesCreateApi: () => import('#transport/cms/controllers/api/pages_create_api_controller'),
-      PagesDeleteApi: () => import('#transport/cms/controllers/api/pages_delete_api_controller'),
-      PagesPreviewToken: () => import('#transport/cms/controllers/api/pages_preview_token_controller'),
-      PagesShowApi: () => import('#transport/cms/controllers/api/pages_show_api_controller'),
-      PagesUpdateApi: () => import('#transport/cms/controllers/api/pages_update_api_controller'),
-      Templates: () => import('#transport/cms/controllers/api/templates_controller'),
-      TemplatesPreviewToken: () => import('#transport/cms/controllers/api/templates_preview_token_controller'),
-    },
-    front: {
-      Contact: () => import('#transport/cms/controllers/front/contact_controller'),
-      Page: () => import('#transport/cms/controllers/front/page_controller'),
-    },
   },
   core: {
-    admin: {
-      Dashboard: () => import('#transport/core/controllers/admin/dashboard_controller'),
-      Maintenance: () => import('#transport/core/controllers/admin/maintenance_controller'),
-    },
     api: {
       DashboardApi: () => import('#transport/core/controllers/api/dashboard_api_controller'),
       MaintenanceApi: () => import('#transport/core/controllers/api/maintenance_api_controller'),
     },
-    front: {
-      Home: () => import('#transport/core/controllers/front/home_controller'),
-      Robots: () => import('#transport/core/controllers/front/robots_controller'),
-      Sitemap: () => import('#transport/core/controllers/front/sitemap_controller'),
-    },
     Health: () => import('#transport/core/controllers/health_controller'),
   },
   file: {
-    admin: {
-      FileFolders: () => import('#transport/file/controllers/admin/file_folders_controller'),
-      Files: () => import('#transport/file/controllers/admin/files_controller'),
-    },
     api: {
       File: () => import('#transport/file/controllers/api/file_controller'),
       FilesAltApi: () => import('#transport/file/controllers/api/files_alt_api_controller'),
@@ -104,19 +46,6 @@ export const controllers = {
     },
   },
   identity: {
-    admin: {
-      Permissions: () => import('#transport/identity/controllers/admin/permissions_controller'),
-      PermissionsCreate: () => import('#transport/identity/controllers/admin/permissions_create_controller'),
-      PermissionsUpdate: () => import('#transport/identity/controllers/admin/permissions_update_controller'),
-      Roles: () => import('#transport/identity/controllers/admin/roles_controller'),
-      RolesCreate: () => import('#transport/identity/controllers/admin/roles_create_controller'),
-      RolesShow: () => import('#transport/identity/controllers/admin/roles_show_controller'),
-      RolesUpdate: () => import('#transport/identity/controllers/admin/roles_update_controller'),
-      Users: () => import('#transport/identity/controllers/admin/users_controller'),
-      UsersCreate: () => import('#transport/identity/controllers/admin/users_create_controller'),
-      UsersShow: () => import('#transport/identity/controllers/admin/users_show_controller'),
-      UsersUpdate: () => import('#transport/identity/controllers/admin/users_update_controller'),
-    },
     api: {
       PermissionsApi: () => import('#transport/identity/controllers/api/permissions_api_controller'),
       RolesApi: () => import('#transport/identity/controllers/api/roles_api_controller'),
@@ -132,9 +61,6 @@ export const controllers = {
     },
   },
   log: {
-    admin: {
-      Logs: () => import('#transport/log/controllers/admin/logs_controller'),
-    },
     api: {
       LogsApi: () => import('#transport/log/controllers/api/logs_api_controller'),
     },

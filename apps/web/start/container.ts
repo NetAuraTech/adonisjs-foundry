@@ -1,8 +1,5 @@
 import app from '@adonisjs/core/services/app';
-import mail from '@adonisjs/mail/services/main';
 import { BackupEngine } from '#backup/services/backup_engine';
-import { BuilderSessionService } from '#cms/services/page/builder_session_service';
-import { MailClientContract, type MailClientMessage } from '#core/contracts/mail_client';
 import { MaintenanceService } from '#core/services/maintenance_service';
 import { LogService } from '#log/services/log_service';
 import { RedisCacheDriver } from '#shared/services/cache/drivers/redis_cache_driver';
@@ -10,27 +7,11 @@ import { CacheService } from '#shared/services/cache_service';
 import { LockService } from '#shared/services/lock_service';
 
 /**
- * Application-side mail client: a thin wrapper around the AdonisJS mail driver
- * so the kernel {@link MailClientContract} is satisfied without the kernel
- * importing the mail package.
- */
-class AdonisMailClient extends MailClientContract {
-	async send({ to, subject, template, data }: MailClientMessage): Promise<void> {
-		await mail.send((message) => {
-			message
-				.to(to)
-				.subject(subject)
-				.htmlView(template, data ?? {});
-		});
-	}
-}
-
-/**
  * IoC container bindings.
  *
  * Singleton services are instantiated exactly once per process and reused
- * across every request — which is what makes in-flight state (locks, sessions)
- * work correctly without serialising to a database on every call.
+ * across every request — which is what makes in-flight state (locks,
+ * sessions) work correctly without serialising to a database on every call.
  * Factory bindings are re-created on each resolution with runtime arguments
  * supplied via {@link app.container.make}.
  *
@@ -43,11 +24,11 @@ class AdonisMailClient extends MailClientContract {
  * ]
  */
 
-// ─── BackupEngine (factory) ──────────────────────────────────────────────────
+// ─── BackupEngine (factory) ────────────────────────────────────────────
 
 /**
  * Factory binding for {@link BackupEngine} so that callers can resolve it
- * through the container instead of using `new`.  Runtime arguments
+ * through the container instead of using `new`. Runtime arguments
  * (`strategyType`, `tempDir`) are supplied at resolution time which keeps
  * the strategy dynamic while still being mockable in tests via
  * {@link app.container.swap}.
@@ -61,7 +42,7 @@ app.container.bind(BackupEngine, async (resolver, runtimeValues) => {
 	return new BackupEngine(strategyType, tempDir, logService);
 });
 
-// ─── CacheService (singleton) ─────────────────────────────────────────────────
+// ─── CacheService (singleton) ──────────────────────────────────────────
 
 /**
  * The root `CacheService` backed by Redis.
@@ -70,14 +51,13 @@ app.container.bind(BackupEngine, async (resolver, runtimeValues) => {
  * @example
  * // In a service or controller
  * const cache = await app.container.make(CacheService)
- * const builderCache = cache.namespace('builder')
  */
 app.container.singleton(CacheService, () => {
 	const driver = new RedisCacheDriver();
 	return new CacheService(driver);
 });
 
-// ─── LockService (singleton) ────────────────────────────────────────────────
+// ─── LockService (singleton) ──────────────────────────────────────────────
 
 /**
  * Distributed lock service singleton.
@@ -90,19 +70,7 @@ app.container.singleton(CacheService, () => {
  */
 app.container.singleton(LockService, () => new LockService());
 
-// ─── BuilderSessionService (singleton) ───────────────────────────────────────
-
-/**
- * Wires `BuilderSessionService` with the root `CacheService`.
- * Resolved as a singleton so the same instance (and same Redis connection)
- * is reused across all requests.
- */
-app.container.singleton(BuilderSessionService, async () => {
-	const cache = await app.container.make(CacheService);
-	return new BuilderSessionService(cache);
-});
-
-// ─── MaintenanceService (singleton) ──────────────────────────────────────────
+// ─── MaintenanceService (singleton) ────────────────────────────────────
 
 /**
  * Maintenance service singleton.
@@ -114,12 +82,3 @@ app.container.singleton(MaintenanceService, async () => {
 	await service.initializeMemoryFallback();
 	return service;
 });
-
-// ─── MailClientContract (singleton) ──────────────────────────────────────────
-
-/**
- * Binds the kernel {@link MailClientContract} to the AdonisJS mail driver.
- * Every mail service resolves this through the container, keeping it
- * decoupled from the mail package.
- */
-app.container.bind(MailClientContract, () => new AdonisMailClient());
