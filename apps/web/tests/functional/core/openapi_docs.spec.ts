@@ -4,9 +4,9 @@ import { Validator } from '@seriousme/openapi-schema-validator';
 import { registerIdentityApiDocs } from '#transport/identity/api_docs';
 
 /**
- * OpenAPI surface — the generated spec (`/api/v1/openapi.json`) and the
- * interactive docs page (`/api/v1/docs`). Both are public and gated by the
- * `apiDocs` feature flag.
+ * OpenAPI surface — the generated spec (`/api/v1/openapi.json`, served by the
+ * core API) and the self-hosted interactive docs page (`/docs`, served by the
+ * front). Both are public and gated by the `apiDocs` feature flag.
  */
 test.group('OpenAPI surface', (group) => {
 	// The docs registry is a process-wide singleton populated at import time by
@@ -88,12 +88,15 @@ test.group('OpenAPI surface', (group) => {
 		}
 	});
 
-	test('serves the interactive docs page at /api/v1/docs', async ({ client, assert }) => {
-		const res = await client.get('/api/v1/docs');
+	test('serves the self-hosted docs page at /docs', async ({ client, assert }) => {
+		const res = await client.get('/docs');
 
 		res.assertStatus(200);
 		assert.include(res.header('content-type') ?? '', 'text/html');
-		assert.include(res.text(), '@scalar/api-reference');
-		assert.include(res.text(), '/api/v1/openapi.json');
+		// The page is a standalone shell: a mount point for the Scalar viewer
+		// and the Vite entry point that loads it (the viewer and the spec URL
+		// live in the bundled JS, not in the HTML).
+		assert.include(res.text(), 'id="scalar-app"');
+		assert.include(res.text(), '<script');
 	});
 });

@@ -74,10 +74,10 @@ export type ScannedRoutes = {
     'api.v1.admin.core.maintenance.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.core.maintenance.update': { paramsTuple?: []; params?: {} }
     'api.v1.admin.core.maintenance.toggle': { paramsTuple?: []; params?: {} }
-    'api.v1.core.openapi.spec': { paramsTuple?: []; params?: {} }
-    'api.v1.core.openapi.docs': { paramsTuple?: []; params?: {} }
+    'core.openapi.spec': { paramsTuple?: []; params?: {} }
     'core.sitemap.show': { paramsTuple?: []; params?: {} }
     'core.robots.show': { paramsTuple?: []; params?: {} }
+    'core.docs.show': { paramsTuple?: []; params?: {} }
     'admin.file.files.render': { paramsTuple?: []; params?: {} }
     'admin.file.files.upload': { paramsTuple?: []; params?: {} }
     'admin.file.files.move': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -196,10 +196,10 @@ export type ScannedRoutes = {
     'admin.core.maintenance.render': { paramsTuple?: []; params?: {} }
     'api.v1.admin.core.dashboard.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.core.maintenance.index': { paramsTuple?: []; params?: {} }
-    'api.v1.core.openapi.spec': { paramsTuple?: []; params?: {} }
-    'api.v1.core.openapi.docs': { paramsTuple?: []; params?: {} }
+    'core.openapi.spec': { paramsTuple?: []; params?: {} }
     'core.sitemap.show': { paramsTuple?: []; params?: {} }
     'core.robots.show': { paramsTuple?: []; params?: {} }
+    'core.docs.show': { paramsTuple?: []; params?: {} }
     'admin.file.files.render': { paramsTuple?: []; params?: {} }
     'admin.file.file_folders.render': { paramsTuple?: []; params?: {} }
     'api.v1.admin.file.files.index': { paramsTuple?: []; params?: {} }
@@ -270,10 +270,10 @@ export type ScannedRoutes = {
     'admin.core.maintenance.render': { paramsTuple?: []; params?: {} }
     'api.v1.admin.core.dashboard.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.core.maintenance.index': { paramsTuple?: []; params?: {} }
-    'api.v1.core.openapi.spec': { paramsTuple?: []; params?: {} }
-    'api.v1.core.openapi.docs': { paramsTuple?: []; params?: {} }
+    'core.openapi.spec': { paramsTuple?: []; params?: {} }
     'core.sitemap.show': { paramsTuple?: []; params?: {} }
     'core.robots.show': { paramsTuple?: []; params?: {} }
+    'core.docs.show': { paramsTuple?: []; params?: {} }
     'admin.file.files.render': { paramsTuple?: []; params?: {} }
     'admin.file.file_folders.render': { paramsTuple?: []; params?: {} }
     'api.v1.admin.file.files.index': { paramsTuple?: []; params?: {} }

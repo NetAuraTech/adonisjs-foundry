@@ -80,6 +80,7 @@ export const controllers = {
       Openapi: () => import('#transport/core/controllers/api/openapi_controller'),
     },
     front: {
+      Docs: () => import('#transport/core/controllers/front/docs_controller'),
       Home: () => import('#transport/core/controllers/front/home_controller'),
       Robots: () => import('#transport/core/controllers/front/robots_controller'),
       Sitemap: () => import('#transport/core/controllers/front/sitemap_controller'),

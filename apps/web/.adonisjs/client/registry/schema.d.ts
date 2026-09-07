@@ -847,7 +847,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/core/controllers/api/maintenance_api_controller').default['toggle']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
-  'api.v1.core.openapi.spec': {
+  'core.openapi.spec': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/openapi.json'
     types: {
@@ -857,18 +857,6 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#transport/core/controllers/api/openapi_controller').default['spec']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/core/controllers/api/openapi_controller').default['spec']>>>
-    }
-  }
-  'api.v1.core.openapi.docs': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/docs'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/core/controllers/api/openapi_controller').default['docs']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/core/controllers/api/openapi_controller').default['docs']>>>
     }
   }
   'core.sitemap.show': {
@@ -893,6 +881,18 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#transport/core/controllers/front/robots_controller').default['show']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/core/controllers/front/robots_controller').default['show']>>>
+    }
+  }
+  'core.docs.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/docs'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/core/controllers/front/docs_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/core/controllers/front/docs_controller').default['show']>>>
     }
   }
   'admin.file.files.render': {

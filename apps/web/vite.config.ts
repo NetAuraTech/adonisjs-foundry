@@ -7,7 +7,7 @@ export default defineConfig({
 	plugins: [
 		react(),
 		adonisjs({
-			entryPoints: ['inertia/app.tsx'],
+			entryPoints: ['inertia/app.tsx', 'inertia/docs.tsx'],
 			serverEntryPoints: ['inertia/ssr.tsx'],
 			reload: ['resources/views/**/*.edge'],
 		}),

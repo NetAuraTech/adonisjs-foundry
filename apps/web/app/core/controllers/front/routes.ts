@@ -16,6 +16,7 @@
 */
 
 import router from '@adonisjs/core/services/router';
+import features from '#config/features';
 import { controllers } from '#generated/controllers';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
 
@@ -25,3 +26,10 @@ router
 		router.get('/robots.txt', [controllers.core.front.Robots, 'show']).as('core.robots.show');
 	})
 	.use(maintenanceMiddleware);
+
+// The self-hosted API reference page is a public dev-tooling surface (no auth,
+// no maintenance mode) gated only by the `apiDocs` feature flag — it is the
+// human-facing companion to the `/api/v1/openapi.json` spec route.
+if (features.apiDocs) {
+	router.get('/docs', [controllers.core.front.Docs, 'show']).as('core.docs.show');
+}
