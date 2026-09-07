@@ -19,6 +19,7 @@ export default class UserTransformer extends BaseTransformer<User> {
 			id: this.resource.id.value,
 			username: this.resource.username,
 			email: this.resource.email,
+			apiRateLimit: this.resource.apiRateLimit,
 			status: this.resource.status(),
 			emailVerifiedAt: this.resource.emailVerifiedAt,
 			createdAt: this.resource.createdAt,

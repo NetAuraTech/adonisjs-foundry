@@ -27,8 +27,12 @@
 			"username": "Nom d'utilisateur",
 			"search": "Recherche",
 			"select": "Sélection",
-			"role": "Rôle"
+			"role": "Rôle",
+			"api_rate_limit": "Limite de requêtes API"
 		},
-		"slug_format": "{field} ne peut contenir que des lettres minuscules, des chiffres, des points, des tirets et des underscores"
+		"slug_format": "{field} ne peut contenir que des lettres minuscules, des chiffres, des points, des tirets et des underscores",
+		"api_rate_limit": {
+			"positive_integer": "{field} doit être un nombre entier positif"
+		}
 	}
 }

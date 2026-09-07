@@ -139,66 +139,6 @@ export interface Registry {
       errorResponse: unknown
     }
   }
-  'api.v1.account.profile.show': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/profile'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/account/controllers/api/profile_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/account/controllers/api/profile_controller').default['show']>>>
-    }
-  }
-  'api.v1.account.profile.update': {
-    methods: ["PUT"]
-    pattern: '/api/v1/profile'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/account/validators/profile').profileValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#transport/account/validators/profile').profileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/account/controllers/api/profile_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/account/controllers/api/profile_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.account.account.update': {
-    methods: ["PUT"]
-    pattern: '/api/v1/account'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/account/controllers/api/account_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/account/controllers/api/account_controller').default['update']>>>
-    }
-  }
-  'api.v1.account.account.destroy': {
-    methods: ["DELETE"]
-    pattern: '/api/v1/account'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/account/validators/account').deleteAccountValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#transport/account/validators/account').deleteAccountValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/account/controllers/api/account_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/account/controllers/api/account_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.account.preferences.execute': {
-    methods: ["POST"]
-    pattern: '/api/v1/admin/preferences/theme'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/account/validators/preference').updateValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#transport/account/validators/preference').updateValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/account/controllers/api/preferences_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/account/controllers/api/preferences_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
   'admin.cms.pages.render': {
     methods: ["GET","HEAD"]
     pattern: '/admin/pages'
@@ -463,270 +403,6 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/admin/templates_controller').default['edit']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
-  'api.v1.admin.cms.pages.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/pages'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: ExtractQueryForGet<InferInput<(typeof import('#transport/cms/validators/page').listPageValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_api_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_api_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.cms.pages.store': {
-    methods: ["POST"]
-    pattern: '/api/v1/admin/pages'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/page').createPageValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/page').createPageValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_create_api_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_create_api_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.cms.pages.show': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/pages/:id'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQueryForGet<InferInput<(typeof import('#transport/cms/validators/page').showPageValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_show_api_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_show_api_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.cms.pages.update': {
-    methods: ["PUT"]
-    pattern: '/api/v1/admin/pages/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/page').updatePageValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/page').updatePageValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_update_api_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_update_api_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.cms.pages.destroy': {
-    methods: ["DELETE"]
-    pattern: '/api/v1/admin/pages/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/page').showPageValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/page').showPageValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_delete_api_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_delete_api_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.cms.pages.publish': {
-    methods: ["PUT"]
-    pattern: '/api/v1/admin/pages/:id/publish'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/page').publishPageValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/page').publishPageValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_update_api_controller').default['publish']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_update_api_controller').default['publish']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.cms.pages.unpublish': {
-    methods: ["PUT"]
-    pattern: '/api/v1/admin/pages/:id/unpublish'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/page').publishPageValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/page').publishPageValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_update_api_controller').default['unpublish']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_update_api_controller').default['unpublish']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.cms.pages.set_homepage': {
-    methods: ["PUT"]
-    pattern: '/api/v1/admin/pages/:id/homepage'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_api_controller').default['setHomepage']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_api_controller').default['setHomepage']>>>
-    }
-  }
-  'api.v1.admin.cms.page_translations.store': {
-    methods: ["POST"]
-    pattern: '/api/v1/admin/pages/:id/translations'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/page').createTranslationValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/page').createTranslationValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/page_translations_api_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/page_translations_api_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.cms.page_revisions.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/pages/:id/translations/:translationId/revisions'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue, ParamValue]
-      params: { id: ParamValue; translationId: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/page_revisions_api_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/page_revisions_api_controller').default['index']>>>
-    }
-  }
-  'api.v1.admin.cms.page_revisions.restore': {
-    methods: ["POST"]
-    pattern: '/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/restore'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue, ParamValue, ParamValue]
-      params: { id: ParamValue; translationId: ParamValue; revisionId: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/page_revisions_api_controller').default['restore']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/page_revisions_api_controller').default['restore']>>>
-    }
-  }
-  'api.v1.admin.cms.page_revisions.toggle': {
-    methods: ["PUT"]
-    pattern: '/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/pin'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue, ParamValue, ParamValue]
-      params: { id: ParamValue; translationId: ParamValue; revisionId: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/page_revisions_api_controller').default['toggle']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/page_revisions_api_controller').default['toggle']>>>
-    }
-  }
-  'api.v1.admin.cms.pages_preview.token': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/pages/preview/token'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_preview_token_controller').default['token']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_preview_token_controller').default['token']>>>
-    }
-  }
-  'api.v1.admin.cms.templates.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/templates'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: ExtractQueryForGet<InferInput<(typeof import('#transport/cms/validators/template').listTemplateValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.cms.templates.store': {
-    methods: ["POST"]
-    pattern: '/api/v1/admin/templates'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/template').createBlockTemplateValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/template').createBlockTemplateValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.cms.templates.update': {
-    methods: ["PUT"]
-    pattern: '/api/v1/admin/templates/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/template').updateTemplateValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/template').updateTemplateValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.cms.templates.destroy': {
-    methods: ["DELETE"]
-    pattern: '/api/v1/admin/templates/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/template').showTemplateValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/template').showTemplateValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.cms.templates.create_from_page': {
-    methods: ["POST"]
-    pattern: '/api/v1/admin/templates/from-page'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/template').createFromPageValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/template').createFromPageValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['createFromPage']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['createFromPage']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.cms.templates_preview.token': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/templates/preview/token'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_preview_token_controller').default['token']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_preview_token_controller').default['token']>>>
-    }
-  }
-  'api.v1.admin.cms.builder_operations.execute': {
-    methods: ["POST"]
-    pattern: '/api/v1/admin/builder/operations'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/builder').builderOperationValidator)>|InferInput<(typeof import('@vinejs/vine').default)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/builder').builderOperationValidator)>|InferInput<(typeof import('@vinejs/vine').default)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/builder_operations_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/builder_operations_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.cms.builder_operations.presence': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/builder/presence/:translationId'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { translationId: ParamValue }
-      query: ExtractQueryForGet<InferInput<(typeof import('#transport/cms/validators/builder').builderPresenceValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/builder_operations_controller').default['presence']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/builder_operations_controller').default['presence']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.cms.builder_operations.save_draft': {
-    methods: ["POST"]
-    pattern: '/api/v1/admin/builder/draft/:translationId'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { translationId: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/builder_operations_controller').default['saveDraft']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/builder_operations_controller').default['saveDraft']>>>
-    }
-  }
   'cms.contact.execute': {
     methods: ["POST"]
     pattern: '/contact'
@@ -797,54 +473,6 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#transport/core/controllers/admin/maintenance_controller').default['toggle']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/core/controllers/admin/maintenance_controller').default['toggle']>>>
-    }
-  }
-  'api.v1.admin.core.dashboard.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/dashboard'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/core/controllers/api/dashboard_api_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/core/controllers/api/dashboard_api_controller').default['index']>>>
-    }
-  }
-  'api.v1.admin.core.maintenance.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/maintenance'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/core/controllers/api/maintenance_api_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/core/controllers/api/maintenance_api_controller').default['index']>>>
-    }
-  }
-  'api.v1.admin.core.maintenance.update': {
-    methods: ["PUT"]
-    pattern: '/api/v1/admin/maintenance'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/core/validators/maintenance').updateMaintenanceValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#transport/core/validators/maintenance').updateMaintenanceValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/core/controllers/api/maintenance_api_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/core/controllers/api/maintenance_api_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.core.maintenance.toggle': {
-    methods: ["PUT"]
-    pattern: '/api/v1/admin/maintenance/toggle'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/core/validators/maintenance').toggleMaintenanceValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#transport/core/validators/maintenance').toggleMaintenanceValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/core/controllers/api/maintenance_api_controller').default['toggle']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/core/controllers/api/maintenance_api_controller').default['toggle']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'core.sitemap.show': {
@@ -989,162 +617,6 @@ export interface Registry {
       query: ExtractQuery<InferInput<(typeof import('#transport/file/validators/file').showFileValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/admin/file_folders_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/admin/file_folders_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.file.files.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/files'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: ExtractQueryForGet<InferInput<(typeof import('#transport/file/validators/file').listFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_api_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_api_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.file.files.store': {
-    methods: ["POST"]
-    pattern: '/api/v1/admin/files'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_upload_api_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_upload_api_controller').default['store']>>>
-    }
-  }
-  'api.v1.admin.file.files.show': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/files/:id'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQueryForGet<InferInput<(typeof import('#transport/file/validators/file').showFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_show_api_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_show_api_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.file.files.move': {
-    methods: ["PUT"]
-    pattern: '/api/v1/admin/files/:id/move'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/file/validators/file').moveFileValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#transport/file/validators/file').moveFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_api_controller').default['move']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_api_controller').default['move']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.file.files.destroy': {
-    methods: ["DELETE"]
-    pattern: '/api/v1/admin/files/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/file/validators/file').showFileValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#transport/file/validators/file').showFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_delete_api_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_delete_api_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.file.files.upsert_alt': {
-    methods: ["PUT"]
-    pattern: '/api/v1/admin/files/:id/alt'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/file/validators/file').upsertAltValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#transport/file/validators/file').upsertAltValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_alt_api_controller').default['upsertAlt']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_alt_api_controller').default['upsertAlt']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.file.files.delete_alt': {
-    methods: ["DELETE"]
-    pattern: '/api/v1/admin/files/:id/alt'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/file/validators/file').deleteAltValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#transport/file/validators/file').deleteAltValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_alt_api_controller').default['deleteAlt']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_alt_api_controller').default['deleteAlt']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.file.folders.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/folders'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_api_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_api_controller').default['index']>>>
-    }
-  }
-  'api.v1.admin.file.folders.store': {
-    methods: ["POST"]
-    pattern: '/api/v1/admin/folders'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/file/validators/file').createFolderValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#transport/file/validators/file').createFolderValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_api_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_api_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.file.folders.show': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/folders/:id'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQueryForGet<InferInput<(typeof import('#transport/file/validators/file').showFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_show_api_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_show_api_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.file.folders.children': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/folders/:id/children'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_show_api_controller').default['children']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_show_api_controller').default['children']>>>
-    }
-  }
-  'api.v1.admin.file.folders.update': {
-    methods: ["PUT"]
-    pattern: '/api/v1/admin/folders/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/file/validators/file').updateFolderValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#transport/file/validators/file').updateFolderValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_update_api_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_update_api_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.file.folders.destroy': {
-    methods: ["DELETE"]
-    pattern: '/api/v1/admin/folders/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/file/validators/file').showFileValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#transport/file/validators/file').showFileValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_delete_api_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_delete_api_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.identity.users.render': {
@@ -1387,138 +859,6 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/admin/permissions_update_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
-  'api.v1.admin.identity.users.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/users'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: ExtractQueryForGet<InferInput<(typeof import('#transport/identity/validators/user').listValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_api_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_api_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.identity.users.store': {
-    methods: ["POST"]
-    pattern: '/api/v1/admin/users'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/identity/validators/user').createValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#transport/identity/validators/user').createValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_create_api_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_create_api_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.identity.users.show': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/users/:id'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQueryForGet<InferInput<(typeof import('#transport/identity/validators/user').restIdValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_show_api_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_show_api_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.identity.users.update': {
-    methods: ["PUT"]
-    pattern: '/api/v1/admin/users/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/identity/validators/user').updateValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#transport/identity/validators/user').updateValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_update_api_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_update_api_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.identity.users.destroy': {
-    methods: ["DELETE"]
-    pattern: '/api/v1/admin/users/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/identity/validators/user').restIdValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#transport/identity/validators/user').restIdValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_delete_api_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_delete_api_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.identity.roles.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/roles'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: ExtractQueryForGet<InferInput<(typeof import('#transport/identity/validators/role').listRolesValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_api_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_api_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.identity.roles.store': {
-    methods: ["POST"]
-    pattern: '/api/v1/admin/roles'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/identity/validators/role').createRoleValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#transport/identity/validators/role').createRoleValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_create_api_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_create_api_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.identity.roles.show': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/roles/:id'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQueryForGet<InferInput<(typeof import('#transport/identity/validators/role').restRoleIdValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_show_api_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_show_api_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.identity.roles.update': {
-    methods: ["PUT"]
-    pattern: '/api/v1/admin/roles/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/identity/validators/role').updateRoleValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#transport/identity/validators/role').updateRoleValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_update_api_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_update_api_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.identity.roles.destroy': {
-    methods: ["DELETE"]
-    pattern: '/api/v1/admin/roles/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/identity/validators/role').restRoleIdValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#transport/identity/validators/role').restRoleIdValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_delete_api_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_delete_api_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.identity.permissions.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/permissions'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/permissions_api_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/permissions_api_controller').default['index']>>>
-    }
-  }
   'admin.log.logs.render': {
     methods: ["GET","HEAD"]
     pattern: '/admin/logs'
@@ -1529,18 +869,6 @@ export interface Registry {
       query: ExtractQueryForGet<InferInput<(typeof import('#transport/log/validators/log').listLogsValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#transport/log/controllers/admin/logs_controller').default['render']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/log/controllers/admin/logs_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'api.v1.admin.log.logs.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/admin/logs'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: ExtractQueryForGet<InferInput<(typeof import('#transport/log/validators/log').listLogsValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#transport/log/controllers/api/logs_api_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/log/controllers/api/logs_api_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'event_stream': {
@@ -1577,6 +905,66 @@ export interface Registry {
       query: {}
       response: unknown
       errorResponse: unknown
+    }
+  }
+  'api.v1.account.profile.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/profile'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/account/controllers/api/profile_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/account/controllers/api/profile_controller').default['show']>>>
+    }
+  }
+  'api.v1.account.profile.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/profile'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/account/validators/profile').profileValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#transport/account/validators/profile').profileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/account/controllers/api/profile_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/account/controllers/api/profile_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.account.account.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/account'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/account/controllers/api/account_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/account/controllers/api/account_controller').default['update']>>>
+    }
+  }
+  'api.v1.account.account.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/account'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/account/validators/account').deleteAccountValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#transport/account/validators/account').deleteAccountValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/account/controllers/api/account_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/account/controllers/api/account_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.account.preferences.execute': {
+    methods: ["POST"]
+    pattern: '/api/v1/admin/preferences/theme'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/account/validators/preference').updateValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#transport/account/validators/preference').updateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/account/controllers/api/preferences_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/account/controllers/api/preferences_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'auth.session.render': {
@@ -1877,6 +1265,618 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#transport/auth/controllers/api/me_controller').default['show']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/auth/controllers/api/me_controller').default['show']>>>
+    }
+  }
+  'api.v1.admin.cms.pages.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/pages'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#transport/cms/validators/page').listPageValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_api_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_api_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.cms.pages.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/admin/pages'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/page').createPageValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/page').createPageValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_create_api_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_create_api_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.cms.pages.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/pages/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#transport/cms/validators/page').showPageValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_show_api_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_show_api_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.cms.pages.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/admin/pages/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/page').updatePageValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/page').updatePageValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_update_api_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_update_api_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.cms.pages.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/admin/pages/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/page').showPageValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/page').showPageValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_delete_api_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_delete_api_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.cms.pages.publish': {
+    methods: ["PUT"]
+    pattern: '/api/v1/admin/pages/:id/publish'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/page').publishPageValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/page').publishPageValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_update_api_controller').default['publish']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_update_api_controller').default['publish']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.cms.pages.unpublish': {
+    methods: ["PUT"]
+    pattern: '/api/v1/admin/pages/:id/unpublish'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/page').publishPageValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/page').publishPageValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_update_api_controller').default['unpublish']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_update_api_controller').default['unpublish']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.cms.pages.set_homepage': {
+    methods: ["PUT"]
+    pattern: '/api/v1/admin/pages/:id/homepage'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_api_controller').default['setHomepage']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_api_controller').default['setHomepage']>>>
+    }
+  }
+  'api.v1.admin.cms.page_translations.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/admin/pages/:id/translations'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/page').createTranslationValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/page').createTranslationValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/page_translations_api_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/page_translations_api_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.cms.page_revisions.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/pages/:id/translations/:translationId/revisions'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue, ParamValue]
+      params: { id: ParamValue; translationId: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/page_revisions_api_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/page_revisions_api_controller').default['index']>>>
+    }
+  }
+  'api.v1.admin.cms.page_revisions.restore': {
+    methods: ["POST"]
+    pattern: '/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/restore'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue, ParamValue, ParamValue]
+      params: { id: ParamValue; translationId: ParamValue; revisionId: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/page_revisions_api_controller').default['restore']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/page_revisions_api_controller').default['restore']>>>
+    }
+  }
+  'api.v1.admin.cms.page_revisions.toggle': {
+    methods: ["PUT"]
+    pattern: '/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/pin'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue, ParamValue, ParamValue]
+      params: { id: ParamValue; translationId: ParamValue; revisionId: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/page_revisions_api_controller').default['toggle']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/page_revisions_api_controller').default['toggle']>>>
+    }
+  }
+  'api.v1.admin.cms.pages_preview.token': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/pages/preview/token'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_preview_token_controller').default['token']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_preview_token_controller').default['token']>>>
+    }
+  }
+  'api.v1.admin.cms.templates.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/templates'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#transport/cms/validators/template').listTemplateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.cms.templates.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/admin/templates'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/template').createBlockTemplateValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/template').createBlockTemplateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.cms.templates.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/admin/templates/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/template').updateTemplateValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/template').updateTemplateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.cms.templates.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/admin/templates/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/template').showTemplateValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/template').showTemplateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.cms.templates.create_from_page': {
+    methods: ["POST"]
+    pattern: '/api/v1/admin/templates/from-page'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/template').createFromPageValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/template').createFromPageValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['createFromPage']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_controller').default['createFromPage']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.cms.templates_preview.token': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/templates/preview/token'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_preview_token_controller').default['token']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/templates_preview_token_controller').default['token']>>>
+    }
+  }
+  'api.v1.admin.cms.builder_operations.execute': {
+    methods: ["POST"]
+    pattern: '/api/v1/admin/builder/operations'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/cms/validators/builder').builderOperationValidator)>|InferInput<(typeof import('@vinejs/vine').default)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#transport/cms/validators/builder').builderOperationValidator)>|InferInput<(typeof import('@vinejs/vine').default)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/builder_operations_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/builder_operations_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.cms.builder_operations.presence': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/builder/presence/:translationId'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { translationId: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#transport/cms/validators/builder').builderPresenceValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/builder_operations_controller').default['presence']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/builder_operations_controller').default['presence']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.cms.builder_operations.save_draft': {
+    methods: ["POST"]
+    pattern: '/api/v1/admin/builder/draft/:translationId'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { translationId: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/builder_operations_controller').default['saveDraft']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/builder_operations_controller').default['saveDraft']>>>
+    }
+  }
+  'api.v1.admin.core.dashboard.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/dashboard'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/core/controllers/api/dashboard_api_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/core/controllers/api/dashboard_api_controller').default['index']>>>
+    }
+  }
+  'api.v1.admin.core.maintenance.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/maintenance'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/core/controllers/api/maintenance_api_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/core/controllers/api/maintenance_api_controller').default['index']>>>
+    }
+  }
+  'api.v1.admin.core.maintenance.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/admin/maintenance'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/core/validators/maintenance').updateMaintenanceValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#transport/core/validators/maintenance').updateMaintenanceValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/core/controllers/api/maintenance_api_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/core/controllers/api/maintenance_api_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.core.maintenance.toggle': {
+    methods: ["PUT"]
+    pattern: '/api/v1/admin/maintenance/toggle'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/core/validators/maintenance').toggleMaintenanceValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#transport/core/validators/maintenance').toggleMaintenanceValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/core/controllers/api/maintenance_api_controller').default['toggle']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/core/controllers/api/maintenance_api_controller').default['toggle']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.files.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/files'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#transport/file/validators/file').listFileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_api_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_api_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.files.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/admin/files'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_upload_api_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_upload_api_controller').default['store']>>>
+    }
+  }
+  'api.v1.admin.file.files.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/files/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#transport/file/validators/file').showFileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_show_api_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_show_api_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.files.move': {
+    methods: ["PUT"]
+    pattern: '/api/v1/admin/files/:id/move'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/file/validators/file').moveFileValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#transport/file/validators/file').moveFileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_api_controller').default['move']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_api_controller').default['move']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.files.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/admin/files/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/file/validators/file').showFileValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#transport/file/validators/file').showFileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_delete_api_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_delete_api_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.files.upsert_alt': {
+    methods: ["PUT"]
+    pattern: '/api/v1/admin/files/:id/alt'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/file/validators/file').upsertAltValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#transport/file/validators/file').upsertAltValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_alt_api_controller').default['upsertAlt']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_alt_api_controller').default['upsertAlt']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.files.delete_alt': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/admin/files/:id/alt'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/file/validators/file').deleteAltValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#transport/file/validators/file').deleteAltValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_alt_api_controller').default['deleteAlt']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/files_alt_api_controller').default['deleteAlt']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.folders.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/folders'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_api_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_api_controller').default['index']>>>
+    }
+  }
+  'api.v1.admin.file.folders.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/admin/folders'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/file/validators/file').createFolderValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#transport/file/validators/file').createFolderValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_api_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_api_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.folders.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/folders/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#transport/file/validators/file').showFileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_show_api_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_show_api_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.folders.children': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/folders/:id/children'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_show_api_controller').default['children']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_show_api_controller').default['children']>>>
+    }
+  }
+  'api.v1.admin.file.folders.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/admin/folders/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/file/validators/file').updateFolderValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#transport/file/validators/file').updateFolderValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_update_api_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_update_api_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.file.folders.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/admin/folders/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/file/validators/file').showFileValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#transport/file/validators/file').showFileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_delete_api_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/file/controllers/api/folders_delete_api_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.identity.users.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/users'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#transport/identity/validators/user').listValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_api_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_api_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.identity.users.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/admin/users'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/identity/validators/user').createValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#transport/identity/validators/user').createValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_create_api_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_create_api_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.identity.users.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/users/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#transport/identity/validators/user').restIdValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_show_api_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_show_api_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.identity.users.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/admin/users/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/identity/validators/user').updateValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#transport/identity/validators/user').updateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_update_api_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_update_api_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.identity.users.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/admin/users/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/identity/validators/user').restIdValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#transport/identity/validators/user').restIdValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_delete_api_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/users_delete_api_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.identity.roles.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/roles'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#transport/identity/validators/role').listRolesValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_api_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_api_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.identity.roles.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/admin/roles'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/identity/validators/role').createRoleValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#transport/identity/validators/role').createRoleValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_create_api_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_create_api_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.identity.roles.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/roles/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#transport/identity/validators/role').restRoleIdValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_show_api_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_show_api_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.identity.roles.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/admin/roles/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/identity/validators/role').updateRoleValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#transport/identity/validators/role').updateRoleValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_update_api_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_update_api_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.identity.roles.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/admin/roles/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/identity/validators/role').restRoleIdValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#transport/identity/validators/role').restRoleIdValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_delete_api_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/roles_delete_api_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.identity.permissions.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/permissions'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/permissions_api_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/identity/controllers/api/permissions_api_controller').default['index']>>>
+    }
+  }
+  'api.v1.admin.log.logs.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/logs'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#transport/log/validators/log').listLogsValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/log/controllers/api/logs_api_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/log/controllers/api/logs_api_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'health.liveness': {
