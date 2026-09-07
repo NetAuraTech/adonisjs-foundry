@@ -99,6 +99,7 @@ const inertiaManifest: FlavorManifest = {
 				'  settings: true,',
 				'  admin: true,',
 				'  adminApi: true,',
+				'  apiDocs: true,',
 				'  cms: false,',
 				'  maintenance: true,',
 				'} as const',

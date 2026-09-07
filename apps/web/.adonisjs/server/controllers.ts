@@ -77,6 +77,7 @@ export const controllers = {
     api: {
       DashboardApi: () => import('#transport/core/controllers/api/dashboard_api_controller'),
       MaintenanceApi: () => import('#transport/core/controllers/api/maintenance_api_controller'),
+      Openapi: () => import('#transport/core/controllers/api/openapi_controller'),
     },
     front: {
       Home: () => import('#transport/core/controllers/front/home_controller'),

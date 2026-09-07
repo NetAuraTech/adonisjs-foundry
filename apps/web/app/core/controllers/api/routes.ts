@@ -9,6 +9,10 @@
 | live under `/api/v1/admin/{dashboard,maintenance}`; route names carry the
 | `api.v1.admin.core` prefix.
 |
+| Also hosts the OpenAPI surface, gated by the `apiDocs` feature flag:
+| `GET /api/v1/openapi.json` (generated spec) and `GET /api/v1/docs`
+| (interactive reference), both public and named `api.v1.core.openapi.*`.
+|
 */
 
 import router from '@adonisjs/core/services/router';
@@ -60,6 +64,19 @@ if (features.adminApi) {
 				.prefix('admin')
 				.as('admin')
 				.use([...maintenanceMiddleware, middleware.auth({ guards: [...apiGuards] })]);
+		})
+		.prefix('api/v1')
+		.as('api.v1');
+}
+
+// The OpenAPI surface is public (no auth guard): the spec documents the
+// admin API but exposes no data, and the docs page must stay reachable for
+// humans exploring the contract.
+if (features.apiDocs) {
+	router
+		.group(() => {
+			router.get('openapi.json', [controllers.core.api.Openapi, 'spec']).as('core.openapi.spec');
+			router.get('docs', [controllers.core.api.Openapi, 'docs']).as('core.openapi.docs');
 		})
 		.prefix('api/v1')
 		.as('api.v1');

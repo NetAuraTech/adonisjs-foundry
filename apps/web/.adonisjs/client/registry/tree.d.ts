@@ -137,6 +137,12 @@ export interface ApiDefinition {
           }
         }
       }
+      core: {
+        openapi: {
+          spec: typeof routes['api.v1.core.openapi.spec']
+          docs: typeof routes['api.v1.core.openapi.docs']
+        }
+      }
       auth: {
         login: {
           execute: typeof routes['api.v1.auth.login.execute']

@@ -2,6 +2,13 @@ import app from '@adonisjs/core/services/app';
 import { defineConfig, stores } from '@adonisjs/session';
 import env from '#start/env';
 
+/**
+ * The session identifier cookie name, exported so transport code (e.g. the
+ * generated OpenAPI security schemes) can reference it without resolving
+ * the lazy session config at runtime.
+ */
+export const sessionCookieName = 'adonis-session';
+
 const sessionConfig = defineConfig({
 	/**
 	 * Enable or disable session support globally.
@@ -11,7 +18,7 @@ const sessionConfig = defineConfig({
 	/**
 	 * Cookie name storing the session identifier.
 	 */
-	cookieName: 'adonis-session',
+	cookieName: sessionCookieName,
 
 	/**
 	 * When set to true, the session id cookie will be deleted

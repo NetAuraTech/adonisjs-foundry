@@ -14,6 +14,7 @@ export default {
 	settings: true,
 	admin: true,
 	adminApi: true,
+	apiDocs: true,
 	cms: true,
 	maintenance: true,
 } as const;
