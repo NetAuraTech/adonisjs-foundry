@@ -6,7 +6,7 @@ import { Field } from '@foundry/design-system/field';
 import { Label } from '@foundry/design-system/label';
 import { SelectOption } from '@foundry/design-system/select';
 import { usePage } from '@inertiajs/react';
-import { urlFor } from '~/client';
+import { actionFor } from '~/client';
 import { ThemeToggle } from '~/components/molecules/theme_toggle';
 import { SettingsLayout } from '~/components/organisms/settings_layout';
 import { sanitizeText } from '~/helpers/sanitization';
@@ -38,7 +38,7 @@ export default function PreferencesPage(props: PreferencesPageProps) {
 			<SettingsLayout tab="preferences" translations={translations}>
 				<Card title={t('interface.title')} subtitle={t('interface.sub_title')}>
 					<Form
-						action={urlFor('account.preferences.execute')}
+						action={actionFor('account.preferences.execute')}
 						className="grid gap-6"
 						onBefore={(visit) => {
 							const isValid = validationLocale.validateAll(visit.data as Record<string, any>);

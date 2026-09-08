@@ -10,7 +10,7 @@ import { Label } from '@foundry/design-system/label';
 import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement, useState } from 'react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { captureTemplateThumbnail } from '~/components/cms/utils/template_thumbnail';
 import { FileManager } from '~/components/organisms/file_manager';
 import { CanAccess } from '~/guards/can_access';
@@ -71,7 +71,7 @@ export default function TemplatesEditPage({ template, translations }: PageProps)
 					</div>
 				}
 			>
-				<Form action={urlFor('admin.cms.templates.update', { id: template.id })}>
+				<Form action={actionFor('admin.cms.templates.update', { id: template.id })}>
 					{({ processing }) => (
 						<div className="grid gap-6">
 							<Field

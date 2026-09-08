@@ -13,7 +13,7 @@ import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement, useState } from 'react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { FileUploadInput } from '~/components/atoms/file_upload_input';
 import { FileAltEditor } from '~/components/organisms/files/file_alt_editor';
 import { CanAccess } from '~/guards/can_access';
@@ -99,8 +99,7 @@ export default function FilesIndexPage(props: Props) {
 					header={
 						<div className="flex flex-wrap items-end justify-between gap-3">
 							<Form
-								action={urlFor('admin.file.files.render')}
-								method="get"
+								action={actionFor('admin.file.files.render')}
 								className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end"
 							>
 								{filters.folder_id && (
@@ -219,8 +218,7 @@ export default function FilesIndexPage(props: Props) {
 																onBefore={() => {
 																	return window.confirm(t('actions.delete.confirm'));
 																}}
-																action={urlFor('admin.file.files.destroy', { id: file.id })}
-																method="delete"
+																action={actionFor('admin.file.files.destroy', { id: file.id })}
 															>
 																{({ processing }) => (
 																	<>
@@ -282,8 +280,7 @@ export default function FilesIndexPage(props: Props) {
 														onBefore={() => {
 															return window.confirm(t('actions.delete.confirm'));
 														}}
-														action={urlFor('admin.file.files.destroy', { id: selectedFile.id })}
-														method="delete"
+														action={actionFor('admin.file.files.destroy', { id: selectedFile.id })}
 													>
 														{({ processing }) => (
 															<>
@@ -392,7 +389,7 @@ const UploadFileForm = (props: UploadFileProps) => {
 
 	return (
 		<Form
-			action={urlFor('admin.file.files.upload')}
+			action={actionFor('admin.file.files.upload')}
 			className="grid gap-3"
 			onSuccess={() => {
 				if (callback) {

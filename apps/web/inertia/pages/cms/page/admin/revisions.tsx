@@ -9,7 +9,7 @@ import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement } from 'react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { CanAccess } from '~/guards/can_access';
 import { useMenu } from '~/hooks/use_admin';
 import { Lang, useTranslation } from '~/hooks/use_translation';
@@ -87,7 +87,7 @@ export default function PageRevisionsPage(props: PageProps) {
 												{index !== 0 ? (
 													<CanAccess permission="pages.update">
 														<Form
-															action={urlFor('admin.cms.page_revisions.restore', {
+															action={actionFor('admin.cms.page_revisions.restore', {
 																translationId: translation_id,
 																revisionId: revision.id,
 																id: page_id,
@@ -110,7 +110,7 @@ export default function PageRevisionsPage(props: PageProps) {
 												)}
 												<CanAccess permission="pages.update">
 													<Form
-														action={urlFor('admin.cms.page_revisions.toggle_keep', {
+														action={actionFor('admin.cms.page_revisions.toggle_keep', {
 															translationId: translation_id,
 															revisionId: revision.id,
 															id: page_id,

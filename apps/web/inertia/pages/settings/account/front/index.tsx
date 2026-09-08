@@ -5,7 +5,7 @@ import { Card } from '@foundry/design-system/card';
 import { Field } from '@foundry/design-system/field';
 import { Data } from '@generated/data';
 import { useState } from 'react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { SettingsLayout } from '~/components/organisms/settings_layout';
 import { getIcon } from '~/helpers/oauth';
 import { sanitizeEmail } from '~/helpers/sanitization';
@@ -51,7 +51,7 @@ export default function AccountPage(props: PageProps) {
 			<SettingsLayout tab="account" translations={translations}>
 				<Card title={t('email.title')} subtitle={t('email.sub_title')}>
 					<Form
-						action={urlFor('account.account.execute')}
+						action={actionFor('account.account.execute')}
 						className="grid gap-6"
 						onBefore={(visit) => {
 							const isValid = validationEmailForm.validateAll(visit.data as Record<string, any>);
@@ -98,7 +98,7 @@ export default function AccountPage(props: PageProps) {
 
 									{isConnected ? (
 										<Form
-											action={urlFor('auth.social.unlink', { provider: provider })}
+											action={actionFor('auth.social.unlink', { provider: provider })}
 											onBefore={() => confirm(t('oauth.unlink.confirm', { provider: capitalize(provider) }))}
 										>
 											<button
@@ -125,7 +125,7 @@ export default function AccountPage(props: PageProps) {
 				</Card>
 				<Card title={t('password.title')} subtitle={t('password.sub_title')}>
 					<Form
-						action={urlFor('account.account.execute')}
+						action={actionFor('account.account.execute')}
 						className="grid gap-6"
 						onBefore={(visit) => {
 							const isValid = validationPasswordForm.validateAll(visit.data as Record<string, any>);
@@ -195,8 +195,7 @@ export default function AccountPage(props: PageProps) {
 						<div className="grid gap-4">
 							<Banner title={t('delete.confirm.title')} message={t('delete.confirm.sub_title')} type="danger" />
 							<Form
-								action={urlFor('account.account.destroy')}
-								method="delete"
+								action={actionFor('account.account.destroy')}
 								className="grid gap-6"
 								onBefore={(visit) => {
 									const isValid = validationDeleteForm.validateAll(visit.data as Record<string, any>);

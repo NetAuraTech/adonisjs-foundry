@@ -7,7 +7,7 @@ import { NavLink } from '@foundry/design-system/nav-link';
 import { Paragraph } from '@foundry/design-system/paragraph';
 import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { AuthProviders } from '~/components/molecules/auth/auth_providers';
 import { sanitizeEmail } from '~/helpers/sanitization';
 import { presets } from '~/helpers/validation_rules';
@@ -60,7 +60,7 @@ export default function LoginPage(props: PageProps) {
 						}
 					>
 						<Form
-							action={urlFor('auth.session.execute')}
+							action={actionFor('auth.session.execute')}
 							className="grid gap-6"
 							onBefore={(visit) => {
 								const isValid = validation.validateAll(visit.data as Record<string, any>);

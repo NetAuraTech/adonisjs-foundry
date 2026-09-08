@@ -10,7 +10,7 @@ import { NavLink } from '@foundry/design-system/nav-link';
 import { Paragraph } from '@foundry/design-system/paragraph';
 import { Data } from '@generated/data';
 import { ReactElement, useState } from 'react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { CanAccess } from '~/guards/can_access';
 import { sanitizeText } from '~/helpers/sanitization';
 import { useNavLinkActive } from '~/hooks/use_nav_link_active';
@@ -106,8 +106,7 @@ function FolderNode(props: FolderNodeProps) {
 					<Icon name="Folder" size={16} />
 					{renaming ? (
 						<Form
-							action={urlFor('admin.file.file_folders.update', { id: folder.id })}
-							method="put"
+							action={actionFor('admin.file.file_folders.update', { id: folder.id })}
 							className="flex items-center gap-2 flex-1 min-w-0"
 							onSuccess={() => {
 								setRenaming(false);
@@ -160,8 +159,7 @@ function FolderNode(props: FolderNodeProps) {
 						</CanAccess>
 						<CanAccess permission="folders.delete">
 							<Form
-								action={urlFor('admin.file.file_folders.destroy', { id: folder.id })}
-								method="delete"
+								action={actionFor('admin.file.file_folders.destroy', { id: folder.id })}
 								onBefore={() => {
 									return window.confirm(t('actions.delete.confirm'));
 								}}
@@ -223,7 +221,7 @@ function CreateFolderForm(props: CreateFolderFormProps) {
 	return (
 		<Card>
 			<Form
-				action={urlFor('admin.file.file_folders.execute')}
+				action={actionFor('admin.file.file_folders.execute')}
 				className="grid gap-2"
 				onSuccess={() => {
 					if (onSuccess) {

@@ -6,7 +6,7 @@ import { Field } from '@foundry/design-system/field';
 import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
 import { useTranslation } from '~/hooks/use_translation';
@@ -48,7 +48,7 @@ export default function ResetPasswordPage(props: ResetPasswordPageProps) {
 					/>
 					<Card>
 						<Form
-							action={urlFor('auth.reset_password.execute')}
+							action={actionFor('auth.reset_password.execute')}
 							className="grid gap-6"
 							onBefore={(visit) => {
 								const isValid = validation.validateAll(visit.data as Record<string, any>);

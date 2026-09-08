@@ -5,7 +5,7 @@ import { Card } from '@foundry/design-system/card';
 import { Field } from '@foundry/design-system/field';
 import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { sanitizeEmail } from '~/helpers/sanitization';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
@@ -43,7 +43,7 @@ export default function ForgotPasswordPage(props: ForgotPasswordPageProps) {
 					/>
 					<Card>
 						<Form
-							action={urlFor('auth.forgot_password.execute')}
+							action={actionFor('auth.forgot_password.execute')}
 							className="grid gap-6"
 							onBefore={(visit) => {
 								const isValid = validation.validateAll(visit.data as Record<string, any>);

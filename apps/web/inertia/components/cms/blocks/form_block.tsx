@@ -1,6 +1,6 @@
 import { Form } from '@adonisjs/inertia/react';
 import { ReactNode } from 'react';
-import { urlFor } from '~/client';
+import { actionFor } from '~/client';
 import type { ResolvedBlock } from '#cms/types/page';
 
 interface FormBlockProps {
@@ -21,7 +21,10 @@ export default function FormBlock(props: FormBlockProps) {
 	}
 
 	return (
-		<Form action={urlFor(route as any, routeParams)} className={['grid', 'gap-4', className].filter(Boolean).join(' ')}>
+		<Form
+			action={actionFor(route as any, routeParams)}
+			className={['grid', 'gap-4', className].filter(Boolean).join(' ')}
+		>
 			{children}
 		</Form>
 	);

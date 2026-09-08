@@ -8,7 +8,7 @@ import { Icon } from '@foundry/design-system/icon';
 import { SelectOption } from '@foundry/design-system/select';
 import { Data } from '@generated/data';
 import { ReactElement } from 'react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { CanAccess } from '~/guards/can_access';
 import { sanitizeEmail, sanitizeText } from '~/helpers/sanitization';
 import { presets, rules } from '~/helpers/validation_rules';
@@ -57,8 +57,8 @@ export default function UsersFormPage(props: PageProps) {
 				<Form
 					action={
 						isEditing
-							? urlFor('admin.identity.users_update.execute', { id: user!.id })
-							: urlFor('admin.identity.users_create.execute')
+							? actionFor('admin.identity.users_update.execute', { id: user!.id })
+							: actionFor('admin.identity.users_create.execute')
 					}
 					className="grid gap-6"
 					onBefore={(visit) => {
