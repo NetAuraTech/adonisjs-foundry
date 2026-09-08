@@ -18,6 +18,7 @@ declare module '@adonisjs/inertia/types' {
     'auth/front/accept_invitation': ExtractProps<(typeof import('../../inertia/pages/auth/front/accept_invitation.tsx'))['default']>
     'auth/front/define_password': ExtractProps<(typeof import('../../inertia/pages/auth/front/define_password.tsx'))['default']>
     'auth/front/forgot_password': ExtractProps<(typeof import('../../inertia/pages/auth/front/forgot_password.tsx'))['default']>
+    'auth/front/login.spec': ExtractProps<(typeof import('../../inertia/pages/auth/front/login.spec.tsx'))['default']>
     'auth/front/login': ExtractProps<(typeof import('../../inertia/pages/auth/front/login.tsx'))['default']>
     'auth/front/register': ExtractProps<(typeof import('../../inertia/pages/auth/front/register.tsx'))['default']>
     'auth/front/reset_password': ExtractProps<(typeof import('../../inertia/pages/auth/front/reset_password.tsx'))['default']>
@@ -51,6 +52,5 @@ declare module '@adonisjs/inertia/types' {
     'settings/account/front/index': ExtractProps<(typeof import('../../inertia/pages/settings/account/front/index.tsx'))['default']>
     'settings/preferences/front/index': ExtractProps<(typeof import('../../inertia/pages/settings/preferences/front/index.tsx'))['default']>
     'settings/profile/front/index': ExtractProps<(typeof import('../../inertia/pages/settings/profile/front/index.tsx'))['default']>
-    'auth/front/login.spec': ExtractProps<(typeof import('../../inertia/pages/auth/front/login.spec.tsx'))['default']>
   }
 }
