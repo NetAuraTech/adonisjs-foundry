@@ -446,8 +446,8 @@ const routes = {
   },
   'core.docs.show': {
     methods: ["GET","HEAD"],
-    pattern: '/docs',
-    tokens: [{"old":"/docs","type":0,"val":"docs","end":""}],
+    pattern: '/api/docs',
+    tokens: [{"old":"/api/docs","type":0,"val":"api","end":""},{"old":"/api/docs","type":0,"val":"docs","end":""}],
     types: placeholder as Registry['core.docs.show']['types'],
   },
   'admin.file.files.render': {

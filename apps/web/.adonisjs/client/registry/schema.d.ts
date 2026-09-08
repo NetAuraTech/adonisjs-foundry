@@ -885,7 +885,7 @@ export interface Registry {
   }
   'core.docs.show': {
     methods: ["GET","HEAD"]
-    pattern: '/docs'
+    pattern: '/api/docs'
     types: {
       body: {}
       paramsTuple: []

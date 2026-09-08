@@ -10,9 +10,11 @@
 | `api.v1.admin.core` prefix.
 |
 | Also hosts the OpenAPI surface, gated by the `apiDocs` feature flag:
-| `GET /api/v1/openapi.json` (generated spec), public and named
-| `api.v1.core.openapi.spec`. The interactive reference UI lives on the front
-| (`GET /docs`) as a self-hosted Vite/Edge page, not in this API namespace.
+| `GET /api/v1/openapi.json` (generated spec), guarded and named
+| `api.v1.core.openapi.spec`. The spec is scoped to the authenticated user:
+| only the routes their permissions allow are documented. The interactive
+| reference UI lives on the front (`GET /api/docs`) as a self-hosted
+| Vite/Edge page, not in this API namespace.
 |
 */
 
@@ -70,10 +72,14 @@ if (features.adminApi) {
 		.as('api.v1');
 }
 
-// The OpenAPI surface is public (no auth guard): the spec documents the
-// admin API but exposes no data, so it stays reachable for humans and clients
-// exploring the contract. The interactive reference UI over it lives on the
-// front (`/docs`), not in this API namespace.
+// The OpenAPI surface is guarded like the admin API: the spec documents the
+// endpoints the authenticated user may call, so it carries the same guards
+// and is scoped to their permissions. The interactive reference UI over it
+// lives on the front (`/api/docs`), not in this API namespace.
 if (features.apiDocs) {
-	router.get('openapi.json', [controllers.core.api.Openapi, 'spec']).as('core.openapi.spec').prefix('api/v1');
+	router
+		.get('openapi.json', [controllers.core.api.Openapi, 'spec'])
+		.as('core.openapi.spec')
+		.prefix('api/v1')
+		.use(middleware.auth({ guards: [...apiGuards] }));
 }

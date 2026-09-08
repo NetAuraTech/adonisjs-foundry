@@ -1,12 +1,15 @@
 import testUtils from '@adonisjs/core/services/test_utils';
 import { test } from '@japa/runner';
 import { Validator } from '@seriousme/openapi-schema-validator';
+import { createAdminUser } from '#tests/helpers/create_admin_user';
+import { createVerifiedUser } from '#tests/helpers/create_verified_user';
 import { registerIdentityApiDocs } from '#transport/identity/api_docs';
 
 /**
  * OpenAPI surface — the generated spec (`/api/v1/openapi.json`, served by the
- * core API) and the self-hosted interactive docs page (`/docs`, served by the
- * front). Both are public and gated by the `apiDocs` feature flag.
+ * core API) and the self-hosted interactive docs page (`/api/docs`, served by
+ * the front). Both are gated by the `apiDocs` feature flag and require a
+ * logged-in session; the spec is scoped to the user's permissions.
  */
 test.group('OpenAPI surface', (group) => {
 	// The docs registry is a process-wide singleton populated at import time by
@@ -16,8 +19,36 @@ test.group('OpenAPI surface', (group) => {
 	group.each.setup(() => testUtils.db().truncate());
 	group.each.setup(() => registerIdentityApiDocs());
 
+	test('rejects the spec and the docs page for anonymous visitors', async ({ client }) => {
+		// The spec shares the admin API guards (web + api), so an anonymous
+		// request surfaces as a JSON 401, like every other admin endpoint.
+		const spec = await client.get('/api/v1/openapi.json').accept('json');
+		spec.assertStatus(401);
+
+		// The docs page is a browser surface guarded by the web guard only, so
+		// an anonymous visitor is redirected to the login page.
+		const page = await client.get('/api/docs').redirects(0);
+		page.assertStatus(302);
+		page.assertHeader('location', '/login');
+	});
+
 	test('serves a valid OpenAPI 3.0 document at /api/v1/openapi.json', async ({ client, assert }) => {
-		const res = await client.get('/api/v1/openapi.json').accept('json');
+		const admin = await createAdminUser({
+			email: 'spec-admin@example.com',
+			permissionSlugs: [
+				'settings.maintenance',
+				'users.view',
+				'users.create',
+				'users.update',
+				'users.delete',
+				'roles.view',
+				'roles.create',
+				'roles.update',
+				'roles.delete',
+			],
+		});
+
+		const res = await client.get('/api/v1/openapi.json').accept('json').loginAs(admin);
 
 		res.assertStatus(200);
 		const spec = res.body();
@@ -33,7 +64,12 @@ test.group('OpenAPI surface', (group) => {
 	});
 
 	test('documents the identity surface end to end', async ({ client, assert }) => {
-		const res = await client.get('/api/v1/openapi.json').accept('json');
+		const admin = await createAdminUser({
+			email: 'spec-identity@example.com',
+			permissionSlugs: ['users.view', 'users.create', 'roles.view'],
+		});
+
+		const res = await client.get('/api/v1/openapi.json').accept('json').loginAs(admin);
 		const spec = res.body();
 
 		const listUsers = spec.paths['/api/v1/admin/users'].get;
@@ -59,14 +95,52 @@ test.group('OpenAPI surface', (group) => {
 		assert.equal(showUser.parameters[0].schema.type, 'number');
 
 		assert.exists(spec.paths['/api/v1/admin/roles'].get);
-		assert.exists(spec.paths['/api/v1/admin/roles'].post);
-		assert.exists(spec.paths['/api/v1/admin/roles/{id}'].put);
 		assert.exists(spec.paths['/api/v1/admin/permissions'].get);
 		assert.deepEqual(spec.tags, [{ name: 'Permissions' }, { name: 'Roles' }, { name: 'Users' }]);
 	});
 
+	test('scopes the spec to the permissions of the requesting user', async ({ client, assert }) => {
+		const viewer = await createAdminUser({
+			email: 'spec-viewer@example.com',
+			permissionSlugs: ['users.view'],
+		});
+
+		const res = await client.get('/api/v1/openapi.json').accept('json').loginAs(viewer);
+		const spec = res.body();
+
+		// users.view grants the read endpoints…
+		assert.exists(spec.paths['/api/v1/admin/users'].get);
+		assert.exists(spec.paths['/api/v1/admin/users/{id}'].get);
+		// …but not the write ones nor the other admin surfaces.
+		assert.isUndefined(spec.paths['/api/v1/admin/users'].post);
+		assert.isUndefined(spec.paths['/api/v1/admin/users/{id}'].put);
+		assert.isUndefined(spec.paths['/api/v1/admin/roles']);
+		assert.isUndefined(spec.paths['/api/v1/admin/permissions']);
+		// admin.access (granted by default on the admin role) keeps the
+		// dashboard documented.
+		assert.exists(spec.paths['/api/v1/admin/dashboard'].get);
+	});
+
+	test('keeps only the routes a user without permissions can call', async ({ client, assert }) => {
+		const user = await createVerifiedUser({ email: 'spec-noperm@example.com' });
+
+		const res = await client.get('/api/v1/openapi.json').accept('json').loginAs(user);
+		const spec = res.body();
+
+		assert.isUndefined(spec.paths['/api/v1/admin/users']);
+		assert.isUndefined(spec.paths['/api/v1/admin/roles']);
+		assert.isUndefined(spec.paths['/api/v1/admin/dashboard']);
+		// Auth-only endpoints (no permission middleware) stay documented.
+		assert.exists(spec.paths['/api/v1/profile'].get);
+	});
+
 	test('applies the default security to admin routes only', async ({ client, assert }) => {
-		const res = await client.get('/api/v1/openapi.json').accept('json');
+		const admin = await createAdminUser({
+			email: 'spec-security@example.com',
+			permissionSlugs: ['users.view'],
+		});
+
+		const res = await client.get('/api/v1/openapi.json').accept('json').loginAs(admin);
 		const spec = res.body();
 
 		assert.deepEqual(spec.paths['/api/v1/admin/users'].get.security, [{ apiToken: [] }, { session: [] }]);
@@ -80,7 +154,12 @@ test.group('OpenAPI surface', (group) => {
 	});
 
 	test('only documents routes under /api/v1', async ({ client, assert }) => {
-		const res = await client.get('/api/v1/openapi.json').accept('json');
+		const admin = await createAdminUser({
+			email: 'spec-paths@example.com',
+			permissionSlugs: ['users.view', 'roles.view'],
+		});
+
+		const res = await client.get('/api/v1/openapi.json').accept('json').loginAs(admin);
 		const spec = res.body();
 
 		for (const path of Object.keys(spec.paths)) {
@@ -88,8 +167,10 @@ test.group('OpenAPI surface', (group) => {
 		}
 	});
 
-	test('serves the self-hosted docs page at /docs', async ({ client, assert }) => {
-		const res = await client.get('/docs');
+	test('serves the self-hosted docs page at /api/docs', async ({ client, assert }) => {
+		const admin = await createAdminUser({ email: 'spec-page@example.com' });
+
+		const res = await client.get('/api/docs').loginAs(admin);
 
 		res.assertStatus(200);
 		assert.include(res.header('content-type') ?? '', 'text/html');
