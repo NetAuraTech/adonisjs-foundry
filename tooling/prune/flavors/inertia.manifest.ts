@@ -1416,6 +1416,7 @@ const inertiaManifest: FlavorManifest = {
 				'    "@japa/plugin-adonisjs": "^5.1.0",',
 				'    "@japa/runner": "^5.3.0",',
 				'    "@poppinss/ts-exec": "^1.4.4",',
+				'    "@seriousme/openapi-schema-validator": "^2.9.1",',
 				'    "@types/dompurify": "^3.2.0",',
 				'    "@types/jsdom": "^30.0.0",',
 				'    "@types/luxon": "^3.7.5",',
