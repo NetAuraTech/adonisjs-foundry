@@ -5,9 +5,9 @@ import { PageResolverService } from '#cms/services/page/page_resolver_service';
 import { ResolvedPageContent } from '#cms/types/page';
 import { StorageService } from '#file/services/storage_service';
 import { CacheService } from '#shared/services/cache_service';
+import { renderNotFound } from '#transport/cms/helpers/not_found';
 import { I18nService } from '#transport/core/helpers/i18n_service';
 import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
-import { renderNotFound } from '#transport/core/helpers/not_found';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()

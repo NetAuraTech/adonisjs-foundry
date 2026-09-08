@@ -1,4 +1,4 @@
-import { renderInertiaPage } from './inertia_render.js';
+import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
 import type { HttpContext } from '@adonisjs/core/http';
 import type { Inertia } from '@adonisjs/inertia';
 import type { InertiaPages } from '@adonisjs/inertia/types';
@@ -6,9 +6,9 @@ import type { InertiaPages } from '@adonisjs/inertia/types';
 /**
  * Minimal shape of the Inertia view context the `@adonisjs/inertia`
  * middleware injects into `HttpContext`. Declared locally (rather than
- * relying on the package's type augmentation) so this helper still
- * type-checks in flavors where the whole Inertia stack is pruned — the
- * presence of `ctx.inertia` is detected at runtime instead.
+ * relying on the package's type augmentation) so the helper reads
+ * `ctx.inertia` without the global augmentation in scope — its presence is
+ * detected at runtime instead.
  */
 interface InertiaViewContext {
 	inertia?: Inertia<InertiaPages>;
