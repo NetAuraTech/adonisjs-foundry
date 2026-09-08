@@ -7,6 +7,7 @@ import { StorageService } from '#file/services/storage_service';
 import { CacheService } from '#shared/services/cache_service';
 import { I18nService } from '#transport/core/helpers/i18n_service';
 import { renderInertiaPage } from '#transport/core/helpers/inertia_render';
+import { renderNotFound } from '#transport/core/helpers/not_found';
 import type { HttpContext } from '@adonisjs/core/http';
 
 @inject()
@@ -25,20 +26,20 @@ export default class PageController {
 	 * Called by `GET /`.
 	 */
 	async home(ctx: HttpContext) {
-		const { inertia, request, response } = ctx;
+		const { inertia, request } = ctx;
 
 		const locale: string = request.input('locale', this.i18n.getLocale());
 
 		const page = await this.findHomepageAction.execute();
 
 		if (!page) {
-			return response.notFound();
+			return renderNotFound(ctx);
 		}
 
 		const translation = page.translationFor(locale) ?? page.translationFor(page.defaultLocale);
 
 		if (!translation || translation.status !== 'published') {
-			return response.notFound();
+			return renderNotFound(ctx);
 		}
 
 		const cacheKey = `page_render:home:${page.id}:${translation.locale}:${translation.updatedAt!.toMillis()}`;
@@ -75,19 +76,19 @@ export default class PageController {
 	 * is not in `published` status.
 	 */
 	async render(ctx: HttpContext) {
-		const { inertia, params, request, response } = ctx;
+		const { inertia, params, request } = ctx;
 
 		const page = await this.findPageBySlugAction.execute({ slug: params.slug });
 
 		if (!page) {
-			return response.notFound();
+			return renderNotFound(ctx);
 		}
 
 		const locale: string = params.locale ?? (request as any).locale ?? page.defaultLocale;
 		const translation = page.translationFor(locale);
 
 		if (!translation || translation.status !== 'published') {
-			return response.notFound();
+			return renderNotFound(ctx);
 		}
 
 		const cacheKey = `page_render:${page.id}:${locale}:${translation.updatedAt!.toMillis()}`;
