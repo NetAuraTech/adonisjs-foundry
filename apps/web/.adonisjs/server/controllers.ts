@@ -77,8 +77,10 @@ export const controllers = {
     api: {
       DashboardApi: () => import('#transport/core/controllers/api/dashboard_api_controller'),
       MaintenanceApi: () => import('#transport/core/controllers/api/maintenance_api_controller'),
+      Openapi: () => import('#transport/core/controllers/api/openapi_controller'),
     },
     front: {
+      Docs: () => import('#transport/core/controllers/front/docs_controller'),
       Home: () => import('#transport/core/controllers/front/home_controller'),
       Robots: () => import('#transport/core/controllers/front/robots_controller'),
       Sitemap: () => import('#transport/core/controllers/front/sitemap_controller'),

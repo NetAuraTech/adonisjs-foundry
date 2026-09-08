@@ -426,6 +426,12 @@ const routes = {
     tokens: [{"old":"/api/v1/admin/maintenance/toggle","type":0,"val":"api","end":""},{"old":"/api/v1/admin/maintenance/toggle","type":0,"val":"v1","end":""},{"old":"/api/v1/admin/maintenance/toggle","type":0,"val":"admin","end":""},{"old":"/api/v1/admin/maintenance/toggle","type":0,"val":"maintenance","end":""},{"old":"/api/v1/admin/maintenance/toggle","type":0,"val":"toggle","end":""}],
     types: placeholder as Registry['api.v1.admin.core.maintenance.toggle']['types'],
   },
+  'core.openapi.spec': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/openapi.json',
+    tokens: [{"old":"/api/v1/openapi.json","type":0,"val":"api","end":""},{"old":"/api/v1/openapi.json","type":0,"val":"v1","end":""},{"old":"/api/v1/openapi.json","type":0,"val":"openapi.json","end":""}],
+    types: placeholder as Registry['core.openapi.spec']['types'],
+  },
   'core.sitemap.show': {
     methods: ["GET","HEAD"],
     pattern: '/sitemap.xml',
@@ -437,6 +443,12 @@ const routes = {
     pattern: '/robots.txt',
     tokens: [{"old":"/robots.txt","type":0,"val":"robots.txt","end":""}],
     types: placeholder as Registry['core.robots.show']['types'],
+  },
+  'core.docs.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/docs',
+    tokens: [{"old":"/api/docs","type":0,"val":"api","end":""},{"old":"/api/docs","type":0,"val":"docs","end":""}],
+    types: placeholder as Registry['core.docs.show']['types'],
   },
   'admin.file.files.render': {
     methods: ["GET","HEAD"],

@@ -6,7 +6,13 @@ import type { Role } from '#identity/domain/role';
  * The lifecycle status of a user, derived purely from whether they hold a
  * pending-invite token and whether their email is verified.
  */
-type UserStatusValue = 'PENDING_INVITE' | 'VERIFIED' | 'UNVERIFIED';
+export type UserStatusValue = 'PENDING_INVITE' | 'VERIFIED' | 'UNVERIFIED';
+
+/**
+ * The set of {@link UserStatusValue}s a user can be in. Serves as the
+ * single source of truth for the status enum (consumed by the OpenAPI docs).
+ */
+export const USER_STATUSES: readonly UserStatusValue[] = ['PENDING_INVITE', 'VERIFIED', 'UNVERIFIED'];
 
 /**
  * Derives a user's {@link UserStatusValue} from their pending-invite and

@@ -299,11 +299,17 @@ export interface ApiDefinition {
     home: {
       render: typeof routes['core.home.render']
     }
+    openapi: {
+      spec: typeof routes['core.openapi.spec']
+    }
     sitemap: {
       show: typeof routes['core.sitemap.show']
     }
     robots: {
       show: typeof routes['core.robots.show']
+    }
+    docs: {
+      show: typeof routes['core.docs.show']
     }
   }
   eventStream: typeof routes['event_stream']
