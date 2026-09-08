@@ -10,7 +10,7 @@ import { SelectOption } from '@foundry/design-system/select';
 import { Data } from '@generated/data';
 import { router, usePage } from '@inertiajs/react';
 import { ReactElement, useState } from 'react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { captureTemplateThumbnail } from '~/components/cms/utils/template_thumbnail';
 import { CanAccess } from '~/guards/can_access';
 import { sanitizeText } from '~/helpers/sanitization';
@@ -71,8 +71,7 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
 			<Card
 				header={
 					<Form
-						action={urlFor('admin.cms.templates.render')}
-						method="get"
+						action={actionFor('admin.cms.templates.render')}
 						className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end"
 					>
 						<Field
@@ -166,8 +165,7 @@ export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
 										</CanAccess>
 										<CanAccess permission="templates.delete">
 											<Form
-												action={urlFor('admin.cms.templates.destroy', { id: template.id })}
-												method="delete"
+												action={actionFor('admin.cms.templates.destroy', { id: template.id })}
 												onBefore={() => {
 													return window.confirm(t('delete.confirm'));
 												}}

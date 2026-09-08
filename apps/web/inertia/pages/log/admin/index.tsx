@@ -10,7 +10,7 @@ import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement } from 'react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { sanitizeText } from '~/helpers/sanitization';
 import { useMenu } from '~/hooks/use_admin';
 import { Lang, useTranslation } from '~/hooks/use_translation';
@@ -58,8 +58,7 @@ export default function LogsIndexPage(props: PageProps) {
 			<Card
 				header={
 					<Form
-						action={urlFor('admin.log.logs.render')}
-						method="get"
+						action={actionFor('admin.log.logs.render')}
 						className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-3 items-end"
 					>
 						<Field

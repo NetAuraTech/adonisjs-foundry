@@ -12,7 +12,7 @@ import { UserStatus } from '@foundry/design-system/user-status';
 import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement } from 'react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { CanAccess } from '~/guards/can_access';
 import { sanitizeText } from '~/helpers/sanitization';
 import { toUserStatusKind } from '~/helpers/user_status';
@@ -55,8 +55,7 @@ export default function UsersIndexPage(props: PageProps) {
 			<Card
 				header={
 					<Form
-						action={urlFor('admin.identity.users.render')}
-						method="get"
+						action={actionFor('admin.identity.users.render')}
 						className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end"
 					>
 						<Field
@@ -157,7 +156,7 @@ export default function UsersIndexPage(props: PageProps) {
 												</Button>
 											</CanAccess>
 											<CanAccess permission="users.delete">
-												<Form action={urlFor('admin.identity.users.destroy', { id: user.id })} method="delete">
+												<Form action={actionFor('admin.identity.users.destroy', { id: user.id })}>
 													<Button
 														variant="icon_danger"
 														title={t('actions.delete', { username: user.username })}

@@ -10,7 +10,7 @@ import { Paragraph } from '@foundry/design-system/paragraph';
 import { SelectOption } from '@foundry/design-system/select';
 import { Separator } from '@foundry/design-system/separator';
 import { ReactElement } from 'react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { CanAccess } from '~/guards/can_access';
 import { sanitizeRichText, sanitizeText } from '~/helpers/sanitization';
 import { presets, rules } from '~/helpers/validation_rules';
@@ -56,7 +56,7 @@ export default function PagesCreatePage(props: PagesCreatePageProps) {
 					}
 				>
 					<Form
-						action={urlFor('admin.cms.pages_create.execute')}
+						action={actionFor('admin.cms.pages_create.execute')}
 						className="grid gap-3"
 						onBefore={(visit) => {
 							const isValid = validation.validateAll(visit.data as Record<string, any>);

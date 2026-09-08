@@ -10,7 +10,7 @@ import { Icon } from '@foundry/design-system/icon';
 import { Paragraph } from '@foundry/design-system/paragraph';
 import { Data } from '@generated/data';
 import { ReactElement } from 'react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { CanAccess } from '~/guards/can_access';
 import { permissionCategoryKey } from '~/helpers/permissions';
 import { sanitizeRichText, sanitizeText } from '~/helpers/sanitization';
@@ -76,8 +76,8 @@ export default function RolesFormPage(props: PageProps) {
 				<Form
 					action={
 						isEditing
-							? urlFor('admin.identity.roles_update.execute', { id: role.id })
-							: urlFor('admin.identity.roles_create.execute')
+							? actionFor('admin.identity.roles_update.execute', { id: role.id })
+							: actionFor('admin.identity.roles_create.execute')
 					}
 					className="grid gap-6"
 					onBefore={(visit) => {

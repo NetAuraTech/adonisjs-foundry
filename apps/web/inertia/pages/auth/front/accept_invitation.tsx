@@ -8,7 +8,7 @@ import { Section } from '@foundry/design-system/section';
 import { Data } from '@generated/data';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
-import { urlFor } from '~/client';
+import { actionFor } from '~/client';
 import { sanitizeEmail, sanitizeText } from '~/helpers/sanitization';
 import { presets } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
@@ -56,7 +56,7 @@ export default function AcceptInvitationPage(props: PageProps) {
 					<Card>
 						<Banner title={t('banner.title')} message={t('banner.message')} type="info" />
 						<Form
-							action={urlFor('auth.accept_invitation.execute')}
+							action={actionFor('auth.accept_invitation.execute')}
 							className="grid gap-6 mt-6"
 							onBefore={(visit) => {
 								const isValid = validation.validateAll(visit.data as Record<string, any>);

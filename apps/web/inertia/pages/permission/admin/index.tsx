@@ -8,7 +8,7 @@ import { Icon } from '@foundry/design-system/icon';
 import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
 import { ReactElement } from 'react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { CanAccess } from '~/guards/can_access';
 import { permissionCategoryKey } from '~/helpers/permissions';
 import { useMenu } from '~/hooks/use_admin';
@@ -102,8 +102,7 @@ export default function PermissionsIndexPage(props: PageProps) {
 															</CanAccess>
 															<CanAccess permission="permissions.delete">
 																<Form
-																	action={urlFor('admin.identity.permissions.destroy', { id: permission.id })}
-																	method="delete"
+																	action={actionFor('admin.identity.permissions.destroy', { id: permission.id })}
 																	onBefore={() => {
 																		return window.confirm(
 																			t('delete.confirm', {

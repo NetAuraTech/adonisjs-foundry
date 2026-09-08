@@ -11,7 +11,7 @@ import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement } from 'react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { CanAccess } from '~/guards/can_access';
 import { sanitizeText } from '~/helpers/sanitization';
 import { useMenu } from '~/hooks/use_admin';
@@ -51,8 +51,7 @@ export default function RolesIndexPage(props: PageProps) {
 			<Card
 				header={
 					<Form
-						action={urlFor('admin.identity.roles.render')}
-						method="get"
+						action={actionFor('admin.identity.roles.render')}
 						className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end"
 					>
 						<Field
@@ -143,8 +142,7 @@ export default function RolesIndexPage(props: PageProps) {
 													</CanAccess>
 													<CanAccess permission="roles.delete">
 														<Form
-															action={urlFor('admin.identity.roles.destroy', { id: role.id })}
-															method="delete"
+															action={actionFor('admin.identity.roles.destroy', { id: role.id })}
 															onBefore={() => {
 																return window.confirm(
 																	t('delete.confirm', {
