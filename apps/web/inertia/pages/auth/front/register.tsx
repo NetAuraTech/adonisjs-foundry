@@ -8,7 +8,7 @@ import { Paragraph } from '@foundry/design-system/paragraph';
 import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { AuthProviders } from '~/components/molecules/auth/auth_providers';
 import { sanitizeEmail } from '~/helpers/sanitization';
 import { presets } from '~/helpers/validation_rules';
@@ -68,7 +68,7 @@ export default function RegisterPage(props: RegisterPageProps) {
 						}
 					>
 						<Form
-							action={urlFor('auth.register.execute')}
+							action={actionFor('auth.register.execute')}
 							className="grid gap-6"
 							onBefore={(visit) => {
 								const isValid = validation.validateAll(visit.data as Record<string, any>);

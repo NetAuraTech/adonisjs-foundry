@@ -10,7 +10,7 @@ import { Separator } from '@foundry/design-system/separator';
 import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
 import { ReactElement } from 'react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { CanAccess } from '~/guards/can_access';
 import { permissionCategoryKey } from '~/helpers/permissions';
 import { useMenu } from '~/hooks/use_admin';
@@ -67,8 +67,7 @@ export default function RolesShowPage(props: PageProps) {
 								</CanAccess>
 								<CanAccess permission="roles.delete">
 									<Form
-										action={urlFor('admin.identity.roles.destroy', { id: role.id })}
-										method="delete"
+										action={actionFor('admin.identity.roles.destroy', { id: role.id })}
 										onBefore={() => {
 											return window.confirm(t('delete.confirm', { name: roleName }));
 										}}

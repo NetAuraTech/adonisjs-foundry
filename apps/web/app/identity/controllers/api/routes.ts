@@ -9,6 +9,9 @@
 | `/api/v1/admin/{users,roles,permissions}`; route names carry the
 | `api.v1.admin.identity` prefix.
 |
+| Also registers the OpenAPI docs for this surface (see
+| `#transport/identity/api_docs`), consumed by the generated spec.
+|
 */
 
 import router from '@adonisjs/core/services/router';
@@ -19,6 +22,7 @@ import { middleware } from '#start/kernel';
 import { apiClientThrottle } from '#start/limiter';
 import { permissions } from '#start/permissions';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
+import { registerIdentityApiDocs } from '#transport/identity/api_docs';
 
 /**
  * The admin JSON surface is shared: the in-repo admin UI (session guard) and
@@ -29,6 +33,10 @@ import { maintenanceMiddleware } from '#transport/core/maintenance';
 const apiGuards = enabledAuthGuards.api ? (['web', 'api'] as const) : (['web'] as const);
 
 if (features.adminApi) {
+	// Document the identity surface alongside the routes, so the OpenAPI spec
+	// and the registry above stay in lockstep.
+	registerIdentityApiDocs();
+
 	router
 		.group(() => {
 			router

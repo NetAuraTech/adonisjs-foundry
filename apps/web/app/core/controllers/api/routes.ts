@@ -9,6 +9,13 @@
 | live under `/api/v1/admin/{dashboard,maintenance}`; route names carry the
 | `api.v1.admin.core` prefix.
 |
+| Also hosts the OpenAPI surface, gated by the `apiDocs` feature flag:
+| `GET /api/v1/openapi.json` (generated spec), guarded and named
+| `api.v1.core.openapi.spec`. The spec is scoped to the authenticated user:
+| only the routes their permissions allow are documented. The interactive
+| reference UI lives on the front (`GET /api/docs`) as a self-hosted
+| Vite/Edge page, not in this API namespace.
+|
 */
 
 import router from '@adonisjs/core/services/router';
@@ -64,4 +71,16 @@ if (features.adminApi) {
 		})
 		.prefix('api/v1')
 		.as('api.v1');
+}
+
+// The OpenAPI surface is guarded like the admin API: the spec documents the
+// endpoints the authenticated user may call, so it carries the same guards
+// and is scoped to their permissions. The interactive reference UI over it
+// lives on the front (`/api/docs`), not in this API namespace.
+if (features.apiDocs) {
+	router
+		.get('openapi.json', [controllers.core.api.Openapi, 'spec'])
+		.as('core.openapi.spec')
+		.prefix('api/v1')
+		.use(middleware.auth({ guards: [...apiGuards] }));
 }

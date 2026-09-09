@@ -9,7 +9,7 @@ import { NavLink } from '@foundry/design-system/nav-link';
 import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
 import { ReactElement } from 'react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { CanAccess } from '~/guards/can_access';
 import { Lang, useTranslation } from '~/hooks/use_translation';
 import Layout from '~/layouts/admin';
@@ -68,8 +68,7 @@ export default function PagesShowPage(props: Props) {
 								</CanAccess>
 								<CanAccess permission="pages.delete">
 									<Form
-										action={urlFor('admin.cms.pages.destroy', { id: page.id })}
-										method="delete"
+										action={actionFor('admin.cms.pages.destroy', { id: page.id })}
 										onBefore={() => {
 											return window.confirm(t('actions.delete.confirm'));
 										}}
@@ -225,7 +224,7 @@ function HomepageSection({ page, translations }: { page: Data.Cms.Page; translat
 				</div>
 				{!page.isHomepage && (
 					<Form
-						action={urlFor('admin.cms.pages.set_homepage', { id: page.id })}
+						action={actionFor('admin.cms.pages.set_homepage', { id: page.id })}
 						onBefore={() => {
 							return window.confirm(t('homepage.confirm'));
 						}}

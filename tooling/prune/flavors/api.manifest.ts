@@ -194,6 +194,7 @@ const apiManifest: FlavorManifest = {
 				'  settings: false,',
 				'  admin: false,',
 				'  adminApi: true,',
+				'  apiDocs: true,',
 				'  cms: false,',
 				'  maintenance: true,',
 				'} as const',

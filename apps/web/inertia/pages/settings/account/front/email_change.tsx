@@ -6,7 +6,7 @@ import { Card } from '@foundry/design-system/card';
 import { Field } from '@foundry/design-system/field';
 import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { sanitizeText } from '~/helpers/sanitization';
 import { rules } from '~/helpers/validation_rules';
 import { useFormValidation } from '~/hooks/use_form_validation';
@@ -45,7 +45,7 @@ export default function EmailChangePage(props: PageProps) {
 					/>
 					<Card>
 						<Form
-							action={urlFor('account.email_change.execute')}
+							action={actionFor('account.email_change.execute')}
 							className="grid gap-6"
 							onBefore={(visit) => {
 								const isValid = validation.validateAll(visit.data as Record<string, any>);

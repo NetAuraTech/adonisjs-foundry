@@ -7,7 +7,7 @@ import { Field } from '@foundry/design-system/field';
 import { Icon } from '@foundry/design-system/icon';
 import { Data } from '@generated/data';
 import { ReactElement } from 'react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { CanAccess } from '~/guards/can_access';
 import { sanitizeRichText, sanitizeText } from '~/helpers/sanitization';
 import { rules } from '~/helpers/validation_rules';
@@ -70,8 +70,8 @@ export default function PermissionsFormPage(props: PageProps) {
 				<Form
 					action={
 						isEditing
-							? urlFor('admin.identity.permissions_update.execute', { id: permission.id })
-							: urlFor('admin.identity.permissions_create.execute')
+							? actionFor('admin.identity.permissions_update.execute', { id: permission.id })
+							: actionFor('admin.identity.permissions_create.execute')
 					}
 					className="grid gap-6"
 					onBefore={(visit) => {
