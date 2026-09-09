@@ -344,8 +344,12 @@ function requestSchemaFor(doc: ApiOperationDoc | undefined, location: ApiRequest
  * Strip the empty `enum` and `required` arrays that Vine emits for dynamic or
  * fully-optional validators, so the spec stays clean.
  *
+ * Also rewrites Vine's draft-7 nullability — a `type` array such as
+ * `['integer', 'null']` — into the OpenAPI 3.0 shape: a single `type` plus a
+ * `nullable: true` flag.
+ *
  * @param schema - The JSON Schema to clean.
- * @returns A copy with empty arrays removed.
+ * @returns A copy with empty arrays removed and nullable fields rewritten.
  */
 function normalizeSchema(schema: JsonSchema): JsonSchema {
 	const normalized: JsonSchema = {};
@@ -361,5 +365,12 @@ function normalizeSchema(schema: JsonSchema): JsonSchema {
 			normalized[key] = value;
 		}
 	}
+
+	const type = normalized.type;
+	if (Array.isArray(type) && type.includes('null')) {
+		normalized.type = type.filter((item) => item !== 'null')[0];
+		normalized.nullable = true;
+	}
+
 	return normalized;
 }

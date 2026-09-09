@@ -126,6 +126,39 @@ test.group('OpenAPI generator', () => {
 		assert.isUndefined(operation.requestBody!.content['application/json'].schema.required);
 	});
 
+	test('rewrites Vine nullable fields to the OpenAPI nullable flag', ({ assert }) => {
+		const docs = new Map<string, ApiOperationDoc>([
+			[
+				'api.v1.admin.identity.users.update',
+				{
+					summary: 'Update a user',
+					request: [
+						{
+							validator: vine.create({
+								email: vine.string().email(),
+								api_rate_limit: vine.number().positive().withoutDecimals().optional().nullable(),
+							}),
+							in: 'body',
+						},
+					],
+				},
+			],
+		]);
+
+		const spec = build(
+			[{ name: 'api.v1.admin.identity.users.update', pattern: '/api/v1/admin/users/:id', method: 'PUT' }],
+			docs,
+		);
+
+		const operation = spec.paths['/api/v1/admin/users/{id}'].put;
+		const bodyProperties = operation.requestBody!.content['application/json'].schema.properties as Record<
+			string,
+			Record<string, unknown>
+		>;
+		assert.equal(bodyProperties.api_rate_limit.type, 'integer');
+		assert.isTrue(bodyProperties.api_rate_limit.nullable);
+	});
+
 	test('adds the shared pagination query parameters when the endpoint paginates', ({ assert }) => {
 		const docs = new Map<string, ApiOperationDoc>([
 			['api.v1.admin.identity.users.index', { summary: 'List users', paginated: true }],
