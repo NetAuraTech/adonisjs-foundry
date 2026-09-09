@@ -82,5 +82,7 @@ if (features.apiDocs) {
 		.get('openapi.json', [controllers.core.api.Openapi, 'spec'])
 		.as('core.openapi.spec')
 		.prefix('api/v1')
-		.use(middleware.auth({ guards: [...apiGuards] }));
+		// Spec generation is comparatively heavy: authenticated clients
+		// share the per-client budget like the rest of the API surface.
+		.use([middleware.auth({ guards: [...apiGuards] }), apiClientThrottle()]);
 }

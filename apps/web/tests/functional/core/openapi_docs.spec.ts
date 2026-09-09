@@ -1,6 +1,8 @@
 import testUtils from '@adonisjs/core/services/test_utils';
+import limiter from '@adonisjs/limiter/services/main';
 import { test } from '@japa/runner';
 import { Validator } from '@seriousme/openapi-schema-validator';
+import User from '#identity/models/user';
 import { createAdminUser } from '#tests/helpers/create_admin_user';
 import { createVerifiedUser } from '#tests/helpers/create_verified_user';
 import { registerIdentityApiDocs } from '#transport/identity/api_docs';
@@ -18,6 +20,8 @@ test.group('OpenAPI surface', (group) => {
 	// not depend on test execution order.
 	group.each.setup(() => testUtils.db().truncate());
 	group.each.setup(() => registerIdentityApiDocs());
+	group.each.setup(() => limiter.clear());
+	group.each.teardown(() => limiter.clear());
 
 	test('rejects the spec and the docs page for anonymous visitors', async ({ client }) => {
 		// The spec shares the admin API guards (web + api), so an anonymous
@@ -179,5 +183,21 @@ test.group('OpenAPI surface', (group) => {
 		// live in the bundled JS, not in the HTML).
 		assert.include(res.text(), 'id="scalar-app"');
 		assert.include(res.text(), '<script');
+	});
+
+	test('throttles the spec per client', async ({ client, assert }) => {
+		// Spec generation is comparatively heavy, so the endpoint shares the
+		// per-client budget like the rest of the API surface: a user with a
+		// budget of 1 gets the spec once, then a 429.
+		const user = await createVerifiedUser({ email: 'spec-rate@example.com', apiRateLimit: 1 });
+		const token = await User.accessTokens.create(user);
+		const release = () => token.value!.release();
+
+		const first = await client.get('/api/v1/openapi.json').accept('json').bearerToken(release());
+		first.assertStatus(200);
+
+		const second = await client.get('/api/v1/openapi.json').accept('json').bearerToken(release());
+		second.assertStatus(429);
+		assert.equal(second.body().error.code, 'E_TOO_MANY_REQUESTS');
 	});
 });

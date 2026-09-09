@@ -15,6 +15,7 @@ import router from '@adonisjs/core/services/router';
 import features from '#config/features';
 import { controllers } from '#generated/controllers';
 import { middleware } from '#start/kernel';
+import { throttle } from '#start/limiter';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
 
 if (features.settings) {
@@ -41,7 +42,9 @@ if (features.settings) {
 					router
 						.group(() => {
 							router.get('/:token', [controllers.account.front.EmailChange, 'render']);
-							router.post('/', [controllers.account.front.EmailChange, 'execute']);
+							// Consumes an emailed token (account-takeover vector):
+							// same budget as the reset-password endpoint.
+							router.post('/', [controllers.account.front.EmailChange, 'execute']).use([throttle(3, 900)]);
 						})
 						.prefix('email_change');
 				})
