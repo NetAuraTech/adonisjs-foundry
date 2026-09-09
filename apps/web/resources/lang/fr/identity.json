@@ -68,6 +68,10 @@
 					"placeholder": "Choisir un rôle...",
 					"value": "Rôle"
 				},
+				"api_rate_limit": {
+					"placeholder": "ex. 60",
+					"value": "Limite de requêtes API (par minute)"
+				},
 				"submit": "Envoyer"
 			},
 			"status": {

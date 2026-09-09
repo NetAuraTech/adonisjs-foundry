@@ -162,6 +162,7 @@ export default class UsersResource {
 					email: payload.email,
 					username: payload.username,
 					roleId: payload.role_id ? Number(payload.role_id) : undefined,
+					apiRateLimit: payload.api_rate_limit,
 				}),
 			refetch: (_context, prepared) => this.getUserDetailAction.execute({ id: prepared.id }),
 			transform: (entity) => UserTransformer.transform(entity),

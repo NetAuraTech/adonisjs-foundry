@@ -405,6 +405,7 @@ export class UserPreferenceSchema extends BaseModel {
 
 export class UserSchema extends BaseModel {
 	static $columns = [
+		'apiRateLimit',
 		'createdAt',
 		'email',
 		'emailVerifiedAt',
@@ -419,6 +420,8 @@ export class UserSchema extends BaseModel {
 		'username',
 	] as const;
 	$columns = UserSchema.$columns;
+	@column()
+	declare apiRateLimit: number | null;
 	@column.dateTime({ autoCreate: true })
 	declare createdAt: DateTime;
 	@column()

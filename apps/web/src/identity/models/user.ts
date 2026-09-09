@@ -105,6 +105,7 @@ export default class User extends compose(UserSchema, AuthFinder) {
 			id: this.id,
 			username: this.username,
 			email: this.email,
+			apiRateLimit: this.apiRateLimit,
 			hasPendingInvite: this.hasPendingInvite,
 			isEmailVerified: this.isEmailVerified,
 			emailVerifiedAt: this.emailVerifiedAt?.toJSDate() ?? null,

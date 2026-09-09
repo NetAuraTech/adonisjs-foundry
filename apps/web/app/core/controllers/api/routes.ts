@@ -23,6 +23,7 @@ import { enabledAuthGuards } from '#config/auth';
 import features from '#config/features';
 import { controllers } from '#generated/controllers';
 import { middleware } from '#start/kernel';
+import { apiClientThrottle } from '#start/limiter';
 import { permissions } from '#start/permissions';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
 
@@ -66,7 +67,7 @@ if (features.adminApi) {
 				})
 				.prefix('admin')
 				.as('admin')
-				.use([...maintenanceMiddleware, middleware.auth({ guards: [...apiGuards] })]);
+				.use([...maintenanceMiddleware, middleware.auth({ guards: [...apiGuards] }), apiClientThrottle()]);
 		})
 		.prefix('api/v1')
 		.as('api.v1');
@@ -81,5 +82,7 @@ if (features.apiDocs) {
 		.get('openapi.json', [controllers.core.api.Openapi, 'spec'])
 		.as('core.openapi.spec')
 		.prefix('api/v1')
-		.use(middleware.auth({ guards: [...apiGuards] }));
+		// Spec generation is comparatively heavy: authenticated clients
+		// share the per-client budget like the rest of the API surface.
+		.use([middleware.auth({ guards: [...apiGuards] }), apiClientThrottle()]);
 }

@@ -17,6 +17,7 @@ import { enabledAuthGuards } from '#config/auth';
 import features from '#config/features';
 import { controllers } from '#generated/controllers';
 import { middleware } from '#start/kernel';
+import { apiClientThrottle } from '#start/limiter';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
 
 /**
@@ -46,7 +47,7 @@ if (features.adminApi && enabledAuthGuards.api) {
 		})
 		.prefix('api/v1')
 		.as('api.v1')
-		.use([...maintenanceMiddleware, middleware.auth({ guards: ['api'] })]);
+		.use([...maintenanceMiddleware, middleware.auth({ guards: ['api'] }), apiClientThrottle()]);
 }
 
 if (features.adminApi) {
@@ -58,5 +59,5 @@ if (features.adminApi) {
 		})
 		.prefix('api/v1/admin')
 		.as('api.v1.admin')
-		.use([...maintenanceMiddleware, middleware.auth({ guards: [...apiGuards] })]);
+		.use([...maintenanceMiddleware, middleware.auth({ guards: [...apiGuards] }), apiClientThrottle()]);
 }

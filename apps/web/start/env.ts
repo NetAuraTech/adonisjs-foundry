@@ -191,6 +191,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   |----------------------------------------------------------
   */
 	LIMITER_STORE: Env.schema.enum(['redis', 'memory'] as const),
+	API_RATE_LIMIT_DEFAULT: Env.schema.number.optional(),
 
 	/*
   |----------------------------------------------------------

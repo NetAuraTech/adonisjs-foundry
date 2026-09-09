@@ -27,8 +27,12 @@
 			"username": "Username",
 			"search": "Search",
 			"select": "Selection",
-			"role": "Role"
+			"role": "Role",
+			"api_rate_limit": "API rate limit"
 		},
-		"slug_format": "{field} may only contain lowercase letters, numbers, dots, dashes and underscores"
+		"slug_format": "{field} may only contain lowercase letters, numbers, dots, dashes and underscores",
+		"api_rate_limit": {
+			"positive_integer": "{field} must be a positive whole number"
+		}
 	}
 }

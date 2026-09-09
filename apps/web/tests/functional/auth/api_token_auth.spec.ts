@@ -88,6 +88,57 @@ test.group('API token authentication', (group) => {
 		res.assertStatus(429);
 	});
 
+	test('reset-password is rate limited', async ({ client, assert }) => {
+		// Consumes an emailed token: 3 attempts per 15 minutes, the same
+		// budget as the front endpoint. Each attempt uses a distinct token so
+		// the per-token lockout (also 3) cannot mask the IP budget; invalid
+		// tokens are 400, the 4th attempt is 429.
+		const statuses: number[] = [];
+		for (let i = 0; i < 4; i++) {
+			const res = await client
+				.post('/api/v1/auth/reset-password')
+				.accept('json')
+				.json({
+					token: `reset-throttle-${i}`,
+					password: 'TestPassword123!',
+					password_confirmation: 'TestPassword123!',
+				});
+			statuses.push(res.status());
+			if (i < 3) assert.equal(res.body().error.code, 'E_INVALID_TOKEN');
+		}
+
+		assert.deepEqual(statuses, [400, 400, 400, 429]);
+	});
+
+	test('verify-email is rate limited', async ({ client, assert }) => {
+		// The token lives in the path; distinct tokens per attempt keep the
+		// per-token lockout out of the way. Invalid tokens are 404, the 4th
+		// attempt is 429.
+		const statuses: number[] = [];
+		for (let i = 0; i < 4; i++) {
+			const res = await client.post(`/api/v1/auth/verify-email/verify-throttle-${i}`).accept('json').send();
+			statuses.push(res.status());
+		}
+
+		assert.deepEqual(statuses, [404, 404, 404, 429]);
+	});
+
+	test('accept-invitation is rate limited', async ({ client, assert }) => {
+		// Consumes an invitation token: 3 attempts per 15 minutes, the same
+		// budget as the front endpoint. Invalid tokens are 404, the 4th
+		// attempt is 429.
+		const statuses: number[] = [];
+		for (let i = 0; i < 4; i++) {
+			const res = await client
+				.post('/api/v1/auth/accept-invitation')
+				.accept('json')
+				.json({ token: `invitation-throttle-${i}` });
+			statuses.push(res.status());
+		}
+
+		assert.deepEqual(statuses, [404, 404, 404, 429]);
+	});
+
 	test('me returns the authenticated user', async ({ client, assert }) => {
 		const user = await createVerifiedUser({ email: 'api-me@example.com' });
 		const token = await User.accessTokens.create(user);

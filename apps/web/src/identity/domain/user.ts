@@ -45,6 +45,7 @@ export class User extends Entity<{
 	id: UserIdentifier;
 	username: string;
 	email: string;
+	apiRateLimit: number | null;
 	hasPendingInvite: boolean;
 	isEmailVerified: boolean;
 	emailVerifiedAt: Date | null;
@@ -59,6 +60,7 @@ export class User extends Entity<{
 		readonly id: UserIdentifier,
 		readonly username: string,
 		readonly email: string,
+		readonly apiRateLimit: number | null,
 		private readonly hasPendingInvite: boolean,
 		private readonly isEmailVerified: boolean,
 		readonly emailVerifiedAt: Date | null,
@@ -73,6 +75,7 @@ export class User extends Entity<{
 			id,
 			username,
 			email,
+			apiRateLimit,
 			hasPendingInvite,
 			isEmailVerified,
 			emailVerifiedAt,
@@ -98,6 +101,7 @@ export class User extends Entity<{
 		id: number;
 		username: string;
 		email: string;
+		apiRateLimit?: number | null;
 		hasPendingInvite?: boolean;
 		isEmailVerified?: boolean;
 		emailVerifiedAt?: Date | null;
@@ -114,6 +118,7 @@ export class User extends Entity<{
 			UserIdentifier.of(model.id),
 			model.username,
 			model.email,
+			model.apiRateLimit ?? null,
 			!!model.hasPendingInvite,
 			isEmailVerified,
 			model.emailVerifiedAt ?? null,

@@ -15,7 +15,7 @@ import { enabledAuthGuards } from '#config/auth';
 import features from '#config/features';
 import { controllers } from '#generated/controllers';
 import { middleware } from '#start/kernel';
-import { throttle } from '#start/limiter';
+import { apiClientThrottle, throttle } from '#start/limiter';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
 
 if (features.adminApi && enabledAuthGuards.api) {
@@ -28,16 +28,19 @@ if (features.adminApi && enabledAuthGuards.api) {
 
 					router.post('register', [controllers.auth.api.Register, 'store']).use([throttle(3, 3600)]);
 					router.post('forgot-password', [controllers.auth.api.ForgotPassword, 'store']).use([throttle(3, 3600)]);
-					router.post('reset-password', [controllers.auth.api.ResetPassword, 'store']);
-					router.post('verify-email/:token', [controllers.auth.api.EmailVerification, 'store']);
-					router.post('accept-invitation', [controllers.auth.api.AcceptInvitation, 'store']);
+					// Token-consumption endpoints: same budgets as their front
+					// (browser) counterparts, so a client cannot replay or
+					// brute-force tokens faster through the API than the web.
+					router.post('reset-password', [controllers.auth.api.ResetPassword, 'store']).use([throttle(3, 900)]);
+					router.post('verify-email/:token', [controllers.auth.api.EmailVerification, 'store']).use([throttle(3, 900)]);
+					router.post('accept-invitation', [controllers.auth.api.AcceptInvitation, 'store']).use([throttle(3, 900)]);
 
 					router
 						.group(() => {
 							router.post('logout', [controllers.auth.api.Logout, 'destroy']);
 							router.get('me', [controllers.auth.api.Me, 'show']);
 						})
-						.use([middleware.auth({ guards: ['api'] })]);
+						.use([middleware.auth({ guards: ['api'] }), apiClientThrottle()]);
 				})
 				.prefix('auth')
 				.as('auth')

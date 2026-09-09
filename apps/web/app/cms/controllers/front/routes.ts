@@ -27,12 +27,18 @@
 import router from '@adonisjs/core/services/router';
 import features from '#config/features';
 import { controllers } from '#generated/controllers';
+import { throttle } from '#start/limiter';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
 
 if (features.cms) {
 	router
 		.group(() => {
-			router.post('/contact', [controllers.cms.front.Contact, 'execute']).as('cms.contact.execute');
+			// The contact form sends a mail per submission: cap it per IP
+			// (5/hour) to keep it from becoming a spam relay.
+			router
+				.post('/contact', [controllers.cms.front.Contact, 'execute'])
+				.as('cms.contact.execute')
+				.use([throttle(5, 3600)]);
 
 			router.get('/', [controllers.cms.front.Page, 'home']).as('core.home.render');
 		})

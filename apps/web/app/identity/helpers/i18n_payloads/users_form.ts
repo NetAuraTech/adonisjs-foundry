@@ -25,6 +25,10 @@ export const USERS_FORM_MAPPING = {
 		value: 'identity.admin.users.form.role.value',
 		placeholder: 'identity.admin.users.form.role.placeholder',
 	},
+	api_rate_limit: {
+		value: 'identity.admin.users.form.api_rate_limit.value',
+		placeholder: 'identity.admin.users.form.api_rate_limit.placeholder',
+	},
 	submit: 'identity.admin.users.form.submit',
 	actions: {
 		list: 'identity.admin.users.list.title',

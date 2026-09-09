@@ -48,6 +48,7 @@ export const updateValidator = (user_id: User['id'], role_ids: Role['slug'][]) =
 			return !user;
 		}),
 		role_id: vine.string().trim().in(role_ids),
+		api_rate_limit: vine.number().positive().withoutDecimals().optional().nullable(),
 	});
 
 export const deleteValidator = vine.create({
