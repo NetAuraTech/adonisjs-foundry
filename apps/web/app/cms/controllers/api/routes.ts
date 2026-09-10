@@ -46,6 +46,10 @@ if (features.adminApi && features.cms) {
 								.as('cms.pages.store')
 								.use([middleware.permission({ permissions: [permissions.pages.create] })]);
 							router
+								.get('/search', [controllers.cms.api.PagesApi, 'search'])
+								.as('cms.pages.search')
+								.use([middleware.permission({ permissions: [permissions.pages.view] })]);
+							router
 								.get('/:id', [controllers.cms.api.PagesShowApi, 'show'])
 								.as('cms.pages.show')
 								.use([middleware.permission({ permissions: [permissions.pages.view] })]);

@@ -188,6 +188,7 @@ export interface ApiDefinition {
           pages: {
             index: typeof routes['api.v1.admin.cms.pages.index']
             store: typeof routes['api.v1.admin.cms.pages.store']
+            search: typeof routes['api.v1.admin.cms.pages.search']
             show: typeof routes['api.v1.admin.cms.pages.show']
             update: typeof routes['api.v1.admin.cms.pages.update']
             destroy: typeof routes['api.v1.admin.cms.pages.destroy']

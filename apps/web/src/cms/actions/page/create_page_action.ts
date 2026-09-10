@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { PageRepository } from '#cms/repositories/page/page_repository';
 import { PageTranslationRepository } from '#cms/repositories/page/page_translation_repository';
+import { PageSearchService } from '#cms/services/page/page_search_service';
 import { sanitizePageContent } from '#cms/services/page/sanitize_content';
 import SlugExistsException from '#core/exceptions/slug_exists_exception';
 import { withTransaction } from '#core/services/with_transaction';
@@ -33,6 +34,7 @@ export class CreatePageAction {
 		protected pageRepository: PageRepository,
 		protected translationRepository: PageTranslationRepository,
 		protected logService: LogService,
+		protected searchService: PageSearchService,
 	) {}
 
 	/**
@@ -46,7 +48,7 @@ export class CreatePageAction {
 	 * const page = await createPageAction.execute({ defaultLocale: 'en', translation: {...}, userId: 1 })
 	 */
 	async execute(payload: CreatePagePayload): Promise<Page> {
-		return withTransaction(async () => {
+		const createdPage = await withTransaction(async () => {
 			const slugExists = await this.translationRepository.slugExists(payload.translation.slug);
 			if (slugExists) throw new SlugExistsException(payload.translation.slug);
 
@@ -76,5 +78,10 @@ export class CreatePageAction {
 			);
 			return this.pageRepository.findByIdOrFail(page.id);
 		});
+
+		// Index after the transaction commits — a failed index write must
+		// not roll back the page creation.
+		await this.searchService.indexPage(createdPage);
+		return createdPage;
 	}
 }

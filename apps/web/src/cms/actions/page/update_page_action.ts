@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core';
 import MissingTranslationException from '#cms/exceptions/page/missing_translation_exception';
 import { PageTranslationRepository } from '#cms/repositories/page/page_translation_repository';
+import { PageSearchService } from '#cms/services/page/page_search_service';
 import { sanitizePageContent } from '#cms/services/page/sanitize_content';
 import SlugExistsException from '#core/exceptions/slug_exists_exception';
 import { withTransaction } from '#core/services/with_transaction';
@@ -30,6 +31,7 @@ export class UpdatePageAction {
 	constructor(
 		protected translationRepository: PageTranslationRepository,
 		protected logService: LogService,
+		protected searchService: PageSearchService,
 	) {}
 
 	/**
@@ -44,7 +46,7 @@ export class UpdatePageAction {
 	 * const updated = await updatePageAction.execute({ pageId: 1, locale: 'en', title: 'New Title', userId: 1 })
 	 */
 	async execute(payload: UpdatePagePayload): Promise<PageTranslation> {
-		return withTransaction(async () => {
+		const updated = await withTransaction(async () => {
 			const translation = await this.translationRepository.findByPageAndLocale(payload.pageId, payload.locale);
 			if (!translation) throw new MissingTranslationException(payload.locale, payload.pageId);
 
@@ -61,14 +63,19 @@ export class UpdatePageAction {
 			if (payload.metaDescription !== undefined) data.metaDescription = payload.metaDescription;
 
 			await translation.saveRevision(payload.userId);
-			const updated = await this.translationRepository.update(translation, data);
+			const saved = await this.translationRepository.update(translation, data);
 
 			this.logService.logBusiness(
 				'page.updated',
 				{ userId: payload.userId },
 				{ pageId: payload.pageId, locale: payload.locale },
 			);
-			return updated;
+			return saved;
 		});
+
+		// Re-index after the transaction commits — a failed index write must
+		// not roll back the page update.
+		await this.searchService.indexTranslation(updated);
+		return updated;
 	}
 }

@@ -10,6 +10,8 @@ export const PAGES_INDEX_MAPPING = {
 		value: 'cms.page.admin.search.value',
 		placeholder: 'cms.page.admin.search.placeholder',
 		filter: 'cms.page.admin.search.filter',
+		loading: 'cms.page.admin.search.loading',
+		empty: 'cms.page.admin.search.empty',
 	},
 	status: {
 		all: 'cms.page.admin.status.all',

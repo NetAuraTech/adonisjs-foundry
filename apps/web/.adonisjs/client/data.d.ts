@@ -7,6 +7,7 @@
 import type { InferData, InferVariants } from '@adonisjs/core/types/transformers'
 import type { InferSharedProps, InferFlashData } from '@adonisjs/inertia/types'
 import type CmsPageRevisionTransformer from '#transport/cms/transformers/page_revision_transformer'
+import type CmsPageSearchResultTransformer from '#transport/cms/transformers/page_search_result_transformer'
 import type CmsPageTransformer from '#transport/cms/transformers/page_transformer'
 import type CmsPageTranslationTransformer from '#transport/cms/transformers/page_translation_transformer'
 import type CmsTemplateTransformer from '#transport/cms/transformers/template_transformer'
@@ -24,6 +25,10 @@ export namespace Data {
     export type PageRevision = InferData<CmsPageRevisionTransformer>
     export namespace PageRevision {
       export type Variants = InferVariants<CmsPageRevisionTransformer>
+    }
+    export type PageSearchResult = InferData<CmsPageSearchResultTransformer>
+    export namespace PageSearchResult {
+      export type Variants = InferVariants<CmsPageSearchResultTransformer>
     }
     export type Page = InferData<CmsPageTransformer>
     export namespace Page {

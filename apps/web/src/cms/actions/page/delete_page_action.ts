@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core';
 import Page from '#cms/models/page/page';
 import { PageRepository } from '#cms/repositories/page/page_repository';
+import { PageSearchService } from '#cms/services/page/page_search_service';
 import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import { withTransaction } from '#core/services/with_transaction';
 import { LogService } from '#log/services/log_service';
@@ -17,6 +18,7 @@ export class DeletePageAction {
 	constructor(
 		protected pageRepository: PageRepository,
 		protected logService: LogService,
+		protected searchService: PageSearchService,
 	) {}
 
 	/**
@@ -36,5 +38,8 @@ export class DeletePageAction {
 
 		// Log only after the deletion actually succeeded.
 		this.logService.logBusiness('page.deleted', {}, { pageId: payload.id });
+
+		// Drop the page from search after the deletion committed.
+		await this.searchService.removePage(payload.id);
 	}
 }

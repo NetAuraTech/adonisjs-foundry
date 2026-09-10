@@ -1,7 +1,9 @@
 import app from '@adonisjs/core/services/app';
 import mail from '@adonisjs/mail/services/main';
 import { BackupEngine } from '#backup/services/backup_engine';
+import { PageSearchDriver } from '#cms/contracts/page_search_driver';
 import { BuilderSessionService } from '#cms/services/page/builder_session_service';
+import { TypesensePageSearchDriver } from '#cms/services/page/typesense_search_driver';
 import { MailClientContract, type MailClientMessage } from '#core/contracts/mail_client';
 import { MaintenanceService } from '#core/services/maintenance_service';
 import { LogService } from '#log/services/log_service';
@@ -123,3 +125,12 @@ app.container.singleton(MaintenanceService, async () => {
  * decoupled from the mail package.
  */
 app.container.bind(MailClientContract, () => new AdonisMailClient());
+
+// ─── PageSearchDriver (singleton) ────────────────────────────────────────────
+
+/**
+ * Binds the {@link PageSearchDriver} kernel contract to the Typesense-backed
+ * driver. Singleton so the driver's "collection created" latch and connection
+ * settings are shared across every request; tests swap the token for a fake.
+ */
+app.container.singleton(PageSearchDriver, () => new TypesensePageSearchDriver());

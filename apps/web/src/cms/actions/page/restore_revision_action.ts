@@ -2,6 +2,7 @@ import { inject } from '@adonisjs/core';
 import MissingRevisionException from '#cms/exceptions/page/missing_revision_exception';
 import { PageRevisionRepository } from '#cms/repositories/page/page_revision_repository';
 import { PageTranslationRepository } from '#cms/repositories/page/page_translation_repository';
+import { PageSearchService } from '#cms/services/page/page_search_service';
 import RowNotFoundException from '#core/exceptions/row_not_found_exception';
 import { withTransaction } from '#core/services/with_transaction';
 import { LogService } from '#log/services/log_service';
@@ -22,6 +23,7 @@ export class RestoreRevisionAction {
 		protected revisionRepository: PageRevisionRepository,
 		protected translationRepository: PageTranslationRepository,
 		protected logService: LogService,
+		protected searchService: PageSearchService,
 	) {}
 
 	/**
@@ -46,9 +48,15 @@ export class RestoreRevisionAction {
 			{ translationId: payload.translationId, revisionId: payload.revisionId },
 		);
 
-		return withTransaction(async () => {
+		const updated = await withTransaction(async () => {
 			await (translation as any).saveRevision(payload.userId);
 			return this.translationRepository.update(translation, { content: revisionData });
 		});
+
+		// Re-index after the transaction commits so search reflects the
+		// restored content.
+		await this.searchService.indexTranslation(updated);
+
+		return updated;
 	}
 }

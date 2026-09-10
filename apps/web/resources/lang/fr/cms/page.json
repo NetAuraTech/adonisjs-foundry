@@ -94,7 +94,9 @@
 		"search": {
 			"filter": "Filtrer",
 			"placeholder": "Accueil, ...",
-			"value": "Rechercher"
+			"value": "Rechercher",
+			"loading": "Recherche…",
+			"empty": "Aucune page ne correspond à votre recherche."
 		},
 		"form": {
 			"title": {

@@ -6,6 +6,13 @@ import Page from '#cms/models/page/page';
 import PageTranslation from '#cms/models/page/page_translation';
 import User from '#identity/models/user';
 import { createAdminUser } from '#tests/helpers/create_admin_user';
+import {
+	restorePageSearchDriver,
+	restoreSearchEnabled,
+	setSearchEnabled,
+	swapPageSearchDriver,
+	type FakePageSearchDriver,
+} from '#tests/helpers/page_search';
 import { resetSharedState } from '#tests/helpers/shared_state';
 
 /**
@@ -697,5 +704,164 @@ test.group('Admin REST API v1 — Pages', (group) => {
 			.bearerToken(token.value!.release());
 
 		res.assertStatus(404);
+	});
+});
+
+/**
+ * Admin REST API v1 — Pages search endpoint (`/api/v1/admin/pages/search`).
+ *
+ * Exercises the Typesense-backed full-text search with an in-memory fake driver:
+ * ranking + locale context on success, and graceful degradation when search is
+ * disabled or the backend is unreachable.
+ */
+// The in-memory driver swapped in for the duration of the search group.
+let activeFake: FakePageSearchDriver;
+
+test.group('Admin REST API v1 — Pages search', (group) => {
+	group.each.setup(() => testUtils.db().truncate());
+	group.each.setup(resetSharedState);
+	group.each.setup(() => limiter.clear());
+	group.each.setup(() => {
+		activeFake = swapPageSearchDriver();
+		return () => {
+			restorePageSearchDriver();
+			restoreSearchEnabled();
+		};
+	});
+	group.each.teardown(() => limiter.clear());
+
+	test('returns ranked pages with locale context', async ({ client, assert }) => {
+		const admin = await createAdminUser({
+			email: 'admin-pages-search-rank@example.com',
+			permissionSlugs: ['pages.view'],
+		});
+		const token = await User.accessTokens.create(admin);
+
+		const { page: pageA } = await createPageWithTranslation({ slug: 'zebra-a-en', title: 'Zebra A', locale: 'en' });
+		const translationAEn = await PageTranslation.create({
+			pageId: pageA.id,
+			locale: 'fr',
+			slug: 'zebra-a-fr',
+			title: 'Zèbre A',
+			content: { blocks: [] },
+			status: 'draft' as any,
+		});
+		const { page: pageB } = await createPageWithTranslation({ slug: 'zebra-b-en', title: 'Zebra B', locale: 'en' });
+
+		activeFake.searchImpl = async () => [
+			{ translationId: 1, pageId: pageA.id, locale: 'en', score: 10 },
+			{ translationId: translationAEn.id, pageId: pageA.id, locale: 'fr', score: 5 },
+			{ translationId: 2, pageId: pageB.id, locale: 'en', score: 1 },
+		];
+		setSearchEnabled(true);
+
+		const res = await client
+			.get('/api/v1/admin/pages/search?search=zebra')
+			.accept('json')
+			.bearerToken(token.value!.release());
+
+		res.assertStatus(200);
+		const data = res.body().data;
+		assert.isTrue(data.available);
+		assert.isArray(data.results);
+		assert.equal(data.results.length, 2);
+
+		// Page A ranks first (best hit score) and matched in two locales.
+		assert.equal(data.results[0].page.id, pageA.id);
+		assert.include(data.results[0].matchedLocales, 'en');
+		assert.include(data.results[0].matchedLocales, 'fr');
+
+		// Page B ranks second and matched in one locale.
+		assert.equal(data.results[1].page.id, pageB.id);
+		assert.deepEqual(data.results[1].matchedLocales, ['en']);
+	});
+
+	test('returns no matches as an empty result set', async ({ client, assert }) => {
+		const admin = await createAdminUser({
+			email: 'admin-pages-search-none@example.com',
+			permissionSlugs: ['pages.view'],
+		});
+		const token = await User.accessTokens.create(admin);
+		activeFake.searchImpl = async () => [];
+		setSearchEnabled(true);
+
+		const res = await client
+			.get('/api/v1/admin/pages/search?search=nomatch')
+			.accept('json')
+			.bearerToken(token.value!.release());
+
+		res.assertStatus(200);
+		const data = res.body().data;
+		assert.isTrue(data.available);
+		assert.deepEqual(data.results, []);
+	});
+
+	test('degrades to available:false when search is disabled', async ({ client, assert }) => {
+		const admin = await createAdminUser({
+			email: 'admin-pages-search-disabled@example.com',
+			permissionSlugs: ['pages.view'],
+		});
+		const token = await User.accessTokens.create(admin);
+		setSearchEnabled(false);
+
+		const res = await client
+			.get('/api/v1/admin/pages/search?search=zebra')
+			.accept('json')
+			.bearerToken(token.value!.release());
+
+		res.assertStatus(200);
+		const data = res.body().data;
+		assert.isFalse(data.available);
+		assert.deepEqual(data.results, []);
+	});
+
+	test('degrades to available:false when the backend is unreachable', async ({ client, assert }) => {
+		const admin = await createAdminUser({
+			email: 'admin-pages-search-down@example.com',
+			permissionSlugs: ['pages.view'],
+		});
+		const token = await User.accessTokens.create(admin);
+		activeFake.fail = true;
+		setSearchEnabled(true);
+
+		const res = await client
+			.get('/api/v1/admin/pages/search?search=zebra')
+			.accept('json')
+			.bearerToken(token.value!.release());
+
+		res.assertStatus(200);
+		const data = res.body().data;
+		assert.isFalse(data.available);
+		assert.deepEqual(data.results, []);
+	});
+
+	test('search requires a token', async ({ client }) => {
+		const res = await client.get('/api/v1/admin/pages/search?search=zebra').accept('json');
+		res.assertStatus(401);
+	});
+
+	test('search requires the pages.view permission', async ({ client }) => {
+		const admin = await createAdminUser({
+			email: 'noperm-pages-search@example.com',
+			permissionSlugs: [],
+		});
+		const token = await User.accessTokens.create(admin);
+
+		const res = await client
+			.get('/api/v1/admin/pages/search?search=zebra')
+			.accept('json')
+			.bearerToken(token.value!.release());
+		res.assertStatus(403);
+	});
+
+	test('search returns 422 without a search term', async ({ client }) => {
+		const admin = await createAdminUser({
+			email: 'admin-pages-search-422@example.com',
+			permissionSlugs: ['pages.view'],
+		});
+		const token = await User.accessTokens.create(admin);
+
+		const res = await client.get('/api/v1/admin/pages/search').accept('json').bearerToken(token.value!.release());
+		res.assertStatus(422);
 	});
 });

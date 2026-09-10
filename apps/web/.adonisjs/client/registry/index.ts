@@ -654,6 +654,12 @@ const routes = {
     tokens: [{"old":"/api/v1/admin/pages","type":0,"val":"api","end":""},{"old":"/api/v1/admin/pages","type":0,"val":"v1","end":""},{"old":"/api/v1/admin/pages","type":0,"val":"admin","end":""},{"old":"/api/v1/admin/pages","type":0,"val":"pages","end":""}],
     types: placeholder as Registry['api.v1.admin.cms.pages.store']['types'],
   },
+  'api.v1.admin.cms.pages.search': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/admin/pages/search',
+    tokens: [{"old":"/api/v1/admin/pages/search","type":0,"val":"api","end":""},{"old":"/api/v1/admin/pages/search","type":0,"val":"v1","end":""},{"old":"/api/v1/admin/pages/search","type":0,"val":"admin","end":""},{"old":"/api/v1/admin/pages/search","type":0,"val":"pages","end":""},{"old":"/api/v1/admin/pages/search","type":0,"val":"search","end":""}],
+    types: placeholder as Registry['api.v1.admin.cms.pages.search']['types'],
+  },
   'api.v1.admin.cms.pages.show': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/admin/pages/:id',
