@@ -60,6 +60,22 @@
 			"connected": "Connecté",
 			"not_connected": "Non connecté"
 		},
+		"two_factor": {
+			"success": "La double authentification a été activée sur votre compte.",
+			"title": "Double authentification",
+			"sub_title": "Ajoutez une couche de sécurité en exigeant un code de votre application d'authentification à la connexion.",
+			"enable": "Activer la double authentification",
+			"enabled": "Activée",
+			"enabled_sub": "La double authentification est active sur ce compte.",
+			"scan": "Scannez ce QR code avec votre application d'authentification, puis saisissez le code à 6 chiffres pour confirmer.",
+			"manual": "Ou saisissez manuellement cette clé de configuration",
+			"code": {
+				"value": "Code d'authentification",
+				"placeholder": "123456"
+			},
+			"confirm": "Confirmer et activer",
+			"cancel": "Annuler"
+		},
 		"value": "Compte"
 	},
 	"profile": {

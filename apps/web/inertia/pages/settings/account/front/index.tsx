@@ -5,6 +5,7 @@ import { Card } from '@foundry/design-system/card';
 import { Field } from '@foundry/design-system/field';
 import { Data } from '@generated/data';
 import { useState } from 'react';
+import QRCode from 'react-qr-code';
 import { actionFor, urlFor } from '~/client';
 import { SettingsLayout } from '~/components/organisms/settings_layout';
 import { getIcon } from '~/helpers/oauth';
@@ -19,16 +20,22 @@ import type { SettingsAccountTranslations } from '#transport/account/helpers/i18
 interface PageProps {
 	user: Data.Identity.User;
 	providers: OAuthProvider[];
+	twoFactorEnabled: boolean;
+	twoFactorPending: { secret: string; otpauthUri: string } | null;
 	translations: SettingsAccountTranslations;
 }
 
 export default function AccountPage(props: PageProps) {
-	const { user, providers, translations } = props;
+	const { user, providers, twoFactorEnabled, twoFactorPending, translations } = props;
 
 	const { t } = useTranslation(translations);
 
 	const validationEmailForm = useFormValidation({
 		email: presets.email(t('email.value')),
+	});
+
+	const validationTwoFactorForm = useFormValidation({
+		code: presets.requiredString(t('two_factor.code.value')),
 	});
 
 	const [password, setPassword] = useState('');
@@ -185,6 +192,72 @@ export default function AccountPage(props: PageProps) {
 							</>
 						)}
 					</Form>
+				</Card>
+				<Card title={t('two_factor.title')} subtitle={t('two_factor.sub_title')}>
+					{twoFactorPending ? (
+						<div className="grid gap-6">
+							<div className="flex flex-col items-start gap-4 md:flex-row">
+								<div className="rounded-lg border border-edge bg-white p-3">
+									<QRCode value={twoFactorPending.otpauthUri} size={176} />
+								</div>
+								<div className="grid gap-2">
+									<p className="text-sm text-ink-muted">{t('two_factor.scan')}</p>
+									<p className="text-xs text-ink-muted">{t('two_factor.manual')}</p>
+									<code className="break-all rounded bg-sunken px-2 py-1 text-xs text-ink">
+										{twoFactorPending.secret}
+									</code>
+								</div>
+							</div>
+							<div className="grid gap-4 md:grid-cols-2">
+								<Form
+									action={actionFor('account.account.execute')}
+									className="grid gap-6"
+									onBefore={(visit) => {
+										const isValid = validationTwoFactorForm.validateAll(visit.data as Record<string, any>);
+										if (!isValid) return false;
+									}}
+								>
+									{({ errors, processing }) => (
+										<>
+											<input type="hidden" name="_action" value="confirm_2fa" />
+											<Field
+												label={t('two_factor.code.value')}
+												name="code"
+												type="text"
+												placeholder={t('two_factor.code.placeholder')}
+												validation={validationTwoFactorForm}
+												errors={errors}
+												required
+											/>
+											<Button loading={processing} type={'submit'} fitContent name="confirm_2fa_submit">
+												{t('two_factor.confirm')}
+											</Button>
+										</>
+									)}
+								</Form>
+								<Form action={actionFor('account.account.execute')}>
+									<input type="hidden" name="_action" value="cancel_2fa" />
+									<Button type={'submit'} fitContent variant="outline" name="cancel_2fa">
+										{t('two_factor.cancel')}
+									</Button>
+								</Form>
+							</div>
+						</div>
+					) : twoFactorEnabled ? (
+						<div className="flex flex-wrap items-center gap-3">
+							<span className="rounded-full bg-success-soft px-3 py-1 text-sm font-medium text-success">
+								{t('two_factor.enabled')}
+							</span>
+							<p className="text-sm text-ink-muted">{t('two_factor.enabled_sub')}</p>
+						</div>
+					) : (
+						<Form action={actionFor('account.account.execute')}>
+							<input type="hidden" name="_action" value="begin_2fa" />
+							<Button type={'submit'} fitContent name="begin_2fa">
+								{t('two_factor.enable')}
+							</Button>
+						</Form>
+					)}
 				</Card>
 				<Card title={t('delete.title')} subtitle={t('delete.sub_title')} border="danger">
 					{!showDeleteConfirm ? (

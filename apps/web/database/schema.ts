@@ -416,6 +416,8 @@ export class UserSchema extends BaseModel {
 		'password',
 		'pendingEmail',
 		'roleId',
+		'twoFactorEnabled',
+		'twoFactorSecret',
 		'updatedAt',
 		'username',
 	] as const;
@@ -442,6 +444,10 @@ export class UserSchema extends BaseModel {
 	declare pendingEmail: string | null;
 	@column()
 	declare roleId: number | null;
+	@column()
+	declare twoFactorEnabled: boolean;
+	@column()
+	declare twoFactorSecret: string | null;
 	@column.dateTime({ autoCreate: true, autoUpdate: true })
 	declare updatedAt: DateTime | null;
 	@column()

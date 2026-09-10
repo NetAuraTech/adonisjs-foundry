@@ -22,6 +22,7 @@ declare module '@adonisjs/inertia/types' {
     'auth/front/login': ExtractProps<(typeof import('../../inertia/pages/auth/front/login.tsx'))['default']>
     'auth/front/register': ExtractProps<(typeof import('../../inertia/pages/auth/front/register.tsx'))['default']>
     'auth/front/reset_password': ExtractProps<(typeof import('../../inertia/pages/auth/front/reset_password.tsx'))['default']>
+    'auth/front/two_factor': ExtractProps<(typeof import('../../inertia/pages/auth/front/two_factor.tsx'))['default']>
     'cms/dashboard_cms.spec': ExtractProps<(typeof import('../../inertia/pages/cms/dashboard_cms.spec.tsx'))['default']>
     'cms/page/admin/create': ExtractProps<(typeof import('../../inertia/pages/cms/page/admin/create.tsx'))['default']>
     'cms/page/admin/edit': ExtractProps<(typeof import('../../inertia/pages/cms/page/admin/edit.tsx'))['default']>

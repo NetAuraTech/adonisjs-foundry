@@ -37,6 +37,7 @@ export const controllers = {
       ResetPassword: () => import('#transport/auth/controllers/front/reset_password_controller'),
       Session: () => import('#transport/auth/controllers/front/session_controller'),
       Social: () => import('#transport/auth/controllers/front/social_controller'),
+      TwoFactor: () => import('#transport/auth/controllers/front/two_factor_controller'),
     },
   },
   cms: {

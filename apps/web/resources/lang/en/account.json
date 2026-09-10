@@ -61,6 +61,22 @@
 			"connected": "Connected",
 			"not_connected": "Not connected"
 		},
+		"two_factor": {
+			"success": "Two-factor authentication has been enabled for your account.",
+			"title": "Two-factor authentication",
+			"sub_title": "Add an extra layer of security by requiring a code from your authenticator app at login.",
+			"enable": "Enable two-factor authentication",
+			"enabled": "Enabled",
+			"enabled_sub": "Two-factor authentication is active on this account.",
+			"scan": "Scan this QR code with your authenticator app, then enter the 6-digit code to confirm.",
+			"manual": "Or enter this setup key manually",
+			"code": {
+				"value": "Authentication code",
+				"placeholder": "123456"
+			},
+			"confirm": "Confirm and enable",
+			"cancel": "Cancel"
+		},
 		"value": "Account"
 	},
 	"profile": {

@@ -73,6 +73,21 @@ export const ACCOUNT_MAPPING = {
 			}),
 		},
 	},
+	two_factor: {
+		title: 'account.account.two_factor.title',
+		sub_title: 'account.account.two_factor.sub_title',
+		enable: 'account.account.two_factor.enable',
+		enabled: 'account.account.two_factor.enabled',
+		enabled_sub: 'account.account.two_factor.enabled_sub',
+		scan: 'account.account.two_factor.scan',
+		manual: 'account.account.two_factor.manual',
+		code: {
+			value: 'account.account.two_factor.code.value',
+			placeholder: 'account.account.two_factor.code.placeholder',
+		},
+		confirm: 'account.account.two_factor.confirm',
+		cancel: 'account.account.two_factor.cancel',
+	},
 };
 
 /**

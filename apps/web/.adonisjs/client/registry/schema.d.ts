@@ -815,10 +815,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/settings/account'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/account/validators/account').updatePasswordValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#transport/account/validators/account').updatePasswordValidator)>|InferInput<(typeof import('#transport/auth/validators/auth').twoFactorCodeValidator)>>
       paramsTuple: []
       params: {}
-      query: ExtractQuery<InferInput<(typeof import('#transport/account/validators/account').updatePasswordValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#transport/account/validators/account').updatePasswordValidator)>|InferInput<(typeof import('#transport/auth/validators/auth').twoFactorCodeValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#transport/account/controllers/front/account_controller').default['execute']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/account/controllers/front/account_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
@@ -977,6 +977,30 @@ export interface Registry {
       query: ExtractQuery<InferInput<(typeof import('#transport/auth/validators/auth').loginValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#transport/auth/controllers/front/session_controller').default['execute']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/auth/controllers/front/session_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'auth.two_factor.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/two-factor'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/auth/controllers/front/two_factor_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/auth/controllers/front/two_factor_controller').default['render']>>>
+    }
+  }
+  'auth.two_factor.verify': {
+    methods: ["POST"]
+    pattern: '/two-factor'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#transport/auth/validators/auth').twoFactorCodeValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#transport/auth/validators/auth').twoFactorCodeValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/auth/controllers/front/two_factor_controller').default['verify']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/auth/controllers/front/two_factor_controller').default['verify']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'auth.register.render': {

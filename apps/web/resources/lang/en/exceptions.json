@@ -13,6 +13,7 @@
 	"E_FILE_NOT_FOUND": "The file with id \"{id}\" cannot be found.",
 	"E_INVALID_EXTENSION": "Extension \".${ext}\" is not allowed.",
 	"E_INVALID_CREDENTIALS": "Authentication failed. Please try again.",
+	"E_INVALID_TWO_FACTOR_CODE": "The authentication code is invalid or has expired.",
 	"E_TOO_MANY_REQUESTS": "Too many attempts. Limit of {limit} requests reached. Please try again in {availableIn} minutes.",
 	"E_UNAUTHORIZED": "You must be logged in to access this resource.",
 	"E_FORBIDDEN": "You do not have permission to access this resource.",

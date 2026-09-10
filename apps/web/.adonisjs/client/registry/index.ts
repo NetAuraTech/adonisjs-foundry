@@ -492,6 +492,18 @@ const routes = {
     tokens: [{"old":"/login","type":0,"val":"login","end":""}],
     types: placeholder as Registry['auth.session.execute']['types'],
   },
+  'auth.two_factor.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/two-factor',
+    tokens: [{"old":"/two-factor","type":0,"val":"two-factor","end":""}],
+    types: placeholder as Registry['auth.two_factor.render']['types'],
+  },
+  'auth.two_factor.verify': {
+    methods: ["POST"],
+    pattern: '/two-factor',
+    tokens: [{"old":"/two-factor","type":0,"val":"two-factor","end":""}],
+    types: placeholder as Registry['auth.two_factor.verify']['types'],
+  },
   'auth.register.render': {
     methods: ["GET","HEAD"],
     pattern: '/register',
