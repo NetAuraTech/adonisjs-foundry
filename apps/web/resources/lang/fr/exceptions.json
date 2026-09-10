@@ -13,6 +13,7 @@
 	"E_FILE_NOT_FOUND": "Le fichier avec l'id \"{id}\" est introuvable.",
 	"E_INVALID_EXTENSION": "L'extension \".${ext}\" n'est pas autorisée.",
 	"E_INVALID_CREDENTIALS": "Échec de l'authentification. Veuillez réessayer.",
+	"E_INVALID_TWO_FACTOR_CODE": "Le code d'authentification est invalide ou a expiré.",
 	"E_TOO_MANY_REQUESTS": "Trop de tentatives. Limite de {limit} requêtes atteinte. Veuillez réessayer dans {availableIn} minutes.",
 	"E_UNAUTHORIZED": "Vous devez être connecté pour accéder à cette ressource.",
 	"E_FORBIDDEN": "Vous n'avez pas l'autorisation d'accéder à cette ressource.",

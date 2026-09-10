@@ -310,6 +310,10 @@ export interface ApiDefinition {
       execute: typeof routes['auth.session.execute']
       destroy: typeof routes['auth.session.destroy']
     }
+    twoFactor: {
+      render: typeof routes['auth.two_factor.render']
+      verify: typeof routes['auth.two_factor.verify']
+    }
     register: {
       render: typeof routes['auth.register.render']
       execute: typeof routes['auth.register.execute']

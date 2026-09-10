@@ -85,6 +85,8 @@ export type ScannedRoutes = {
     'api.v1.admin.account.preferences.execute': { paramsTuple?: []; params?: {} }
     'auth.session.render': { paramsTuple?: []; params?: {} }
     'auth.session.execute': { paramsTuple?: []; params?: {} }
+    'auth.two_factor.render': { paramsTuple?: []; params?: {} }
+    'auth.two_factor.verify': { paramsTuple?: []; params?: {} }
     'auth.register.render': { paramsTuple?: []; params?: {} }
     'auth.register.execute': { paramsTuple?: []; params?: {} }
     'auth.forgot_password.render': { paramsTuple?: []; params?: {} }
@@ -205,6 +207,7 @@ export type ScannedRoutes = {
     'account.index': { paramsTuple?: []; params?: {} }
     'api.v1.account.profile.show': { paramsTuple?: []; params?: {} }
     'auth.session.render': { paramsTuple?: []; params?: {} }
+    'auth.two_factor.render': { paramsTuple?: []; params?: {} }
     'auth.register.render': { paramsTuple?: []; params?: {} }
     'auth.forgot_password.render': { paramsTuple?: []; params?: {} }
     'auth.reset_password.render': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
@@ -279,6 +282,7 @@ export type ScannedRoutes = {
     'account.index': { paramsTuple?: []; params?: {} }
     'api.v1.account.profile.show': { paramsTuple?: []; params?: {} }
     'auth.session.render': { paramsTuple?: []; params?: {} }
+    'auth.two_factor.render': { paramsTuple?: []; params?: {} }
     'auth.register.render': { paramsTuple?: []; params?: {} }
     'auth.forgot_password.render': { paramsTuple?: []; params?: {} }
     'auth.reset_password.render': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
@@ -347,6 +351,7 @@ export type ScannedRoutes = {
     'account.preferences.execute': { paramsTuple?: []; params?: {} }
     'api.v1.admin.account.preferences.execute': { paramsTuple?: []; params?: {} }
     'auth.session.execute': { paramsTuple?: []; params?: {} }
+    'auth.two_factor.verify': { paramsTuple?: []; params?: {} }
     'auth.register.execute': { paramsTuple?: []; params?: {} }
     'auth.forgot_password.execute': { paramsTuple?: []; params?: {} }
     'auth.reset_password.execute': { paramsTuple?: []; params?: {} }

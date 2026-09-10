@@ -31,6 +31,16 @@ if (features.auth) {
 						})
 						.prefix('login');
 
+					// Login-time TOTP challenge: reached after a successful
+					// password check for a user with 2FA enabled, before any
+					// session exists (hence still behind the guest guard).
+					router
+						.group(() => {
+							router.get('/', [controllers.auth.front.TwoFactor, 'render']);
+							router.post('/', [controllers.auth.front.TwoFactor, 'verify']).use([throttle(5, 900)]);
+						})
+						.prefix('two-factor');
+
 					router
 						.group(() => {
 							router.get('/', [controllers.auth.front.Register, 'render']);

@@ -22,6 +22,13 @@ export const forgotPasswordValidator = vine.create({
 	email: email(),
 });
 
+export const twoFactorCodeValidator = vine.create({
+	code: vine
+		.string()
+		.trim()
+		.regex(/^\d{6}$/),
+});
+
 export const resetPasswordValidator = vine.create({
 	token: vine.string(),
 	password: password().confirmed({

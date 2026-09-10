@@ -2,6 +2,7 @@ import { inject } from '@adonisjs/core';
 import { LoginAction } from '#auth/actions/session/login_action';
 import { LogoutAction } from '#auth/actions/session/logout_action';
 import { enabledProviders } from '#auth/oauth_providers';
+import { LogService } from '#log/services/log_service';
 import { regenerateCsrfToken } from '#transport/auth/helpers/crsf';
 import { buildSessionPayload } from '#transport/auth/helpers/i18n_payloads/session';
 import { loginValidator } from '#transport/auth/validators/auth';
@@ -15,6 +16,7 @@ export default class SessionController {
 		protected i18n: I18nService,
 		protected loginAction: LoginAction,
 		protected logoutAction: LogoutAction,
+		protected logService: LogService,
 	) {}
 
 	render(ctx: HttpContext) {
@@ -35,6 +37,21 @@ export default class SessionController {
 			email: payload.email,
 			password: payload.password,
 		});
+
+		// When 2FA is enabled the password is only the first factor: park the
+		// pending user in the session and hand the visitor the TOTP challenge
+		// without establishing a session yet.
+		if (user.twoFactorEnabled) {
+			session.put('twoFactorUserId', user.id);
+			session.put('twoFactorRemember', !!payload.remember_me);
+
+			this.logService.logAuth('login.two_factor_required', {
+				userId: user.id,
+				userEmail: user.email,
+			});
+
+			return response.redirect().toRoute('auth.two_factor.render');
+		}
 
 		await auth.use('web').login(user, payload.remember_me);
 		regenerateCsrfToken(ctx);
