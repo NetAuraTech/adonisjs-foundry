@@ -70,6 +70,7 @@
 			"enabled_sub": "Two-factor authentication is active on this account.",
 			"scan": "Scan this QR code with your authenticator app, then enter the 6-digit code to confirm.",
 			"manual": "Or enter this setup key manually",
+			"apps": "Works with most authenticator apps, such as Google Authenticator, Microsoft Authenticator, Authy, 1Password, Aegis, or FreeOTP.",
 			"code": {
 				"value": "Authentication code",
 				"placeholder": "123456"

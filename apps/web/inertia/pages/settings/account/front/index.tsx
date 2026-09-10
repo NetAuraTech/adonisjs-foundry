@@ -202,6 +202,7 @@ export default function AccountPage(props: PageProps) {
 								</div>
 								<div className="grid gap-2">
 									<p className="text-sm text-ink-muted">{t('two_factor.scan')}</p>
+									<p className="text-xs text-ink-muted">{t('two_factor.apps')}</p>
 									<p className="text-xs text-ink-muted">{t('two_factor.manual')}</p>
 									<code className="break-all rounded bg-sunken px-2 py-1 text-xs text-ink">
 										{twoFactorPending.secret}

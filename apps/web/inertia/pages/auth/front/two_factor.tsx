@@ -71,6 +71,9 @@ export default function TwoFactorPage(props: PageProps) {
 										errors={errors}
 										required
 									/>
+									<Paragraph variant="muted" spacing="xs" fs="sm">
+										{t('apps')}
+									</Paragraph>
 									<Button loading={processing} type={'submit'} fitContent>
 										{t('submit')}
 									</Button>

@@ -10,6 +10,7 @@ export const TWO_FACTOR_MAPPING = {
 		value: 'auth.session.two_factor.code.value',
 		placeholder: 'auth.session.two_factor.code.placeholder',
 	},
+	apps: 'auth.session.two_factor.apps',
 	submit: 'auth.session.two_factor.submit',
 	back_to_login: 'auth.session.two_factor.back_to_login',
 };

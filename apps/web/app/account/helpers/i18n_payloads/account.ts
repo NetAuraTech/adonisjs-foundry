@@ -81,6 +81,7 @@ export const ACCOUNT_MAPPING = {
 		enabled_sub: 'account.account.two_factor.enabled_sub',
 		scan: 'account.account.two_factor.scan',
 		manual: 'account.account.two_factor.manual',
+		apps: 'account.account.two_factor.apps',
 		code: {
 			value: 'account.account.two_factor.code.value',
 			placeholder: 'account.account.two_factor.code.placeholder',

@@ -69,6 +69,7 @@
 			"enabled_sub": "La double authentification est active sur ce compte.",
 			"scan": "Scannez ce QR code avec votre application d'authentification, puis saisissez le code à 6 chiffres pour confirmer.",
 			"manual": "Ou saisissez manuellement cette clé de configuration",
+			"apps": "Compatible avec la plupart des applications d'authentification, comme Google Authenticator, Microsoft Authenticator, Authy, 1Password, Aegis, ou FreeOTP.",
 			"code": {
 				"value": "Code d'authentification",
 				"placeholder": "123456"
