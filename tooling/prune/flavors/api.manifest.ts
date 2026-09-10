@@ -152,6 +152,7 @@ const apiManifest: FlavorManifest = {
 		'apps/web/tests/functional/auth/reset_password.spec.ts',
 		'apps/web/tests/functional/auth/session.spec.ts',
 		'apps/web/tests/functional/auth/two_factor.spec.ts',
+		'apps/web/tests/functional/account/email_change.spec.ts',
 		'apps/web/tests/integration/routes_structure.spec.ts',
 		'apps/web/tests/unit/core/rest/page_adapter.spec.ts',
 
