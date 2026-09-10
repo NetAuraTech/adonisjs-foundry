@@ -2,6 +2,7 @@ import { inject } from '@adonisjs/core';
 import { DateTime } from 'luxon';
 import MissingTranslationException from '#cms/exceptions/page/missing_translation_exception';
 import { PageTranslationRepository } from '#cms/repositories/page/page_translation_repository';
+import { PageSearchService } from '#cms/services/page/page_search_service';
 import { withTransaction } from '#core/services/with_transaction';
 import { LogService } from '#log/services/log_service';
 import type PageTranslation from '#cms/models/page/page_translation';
@@ -26,6 +27,7 @@ export class ChangePageStatusAction {
 	constructor(
 		protected translationRepository: PageTranslationRepository,
 		protected logService: LogService,
+		protected searchService: PageSearchService,
 	) {}
 
 	/**
@@ -51,6 +53,10 @@ export class ChangePageStatusAction {
 			{ userId: payload.userId },
 			{ pageId: payload.pageId, locale: payload.locale, status: payload.status },
 		);
+
+		// Re-index after the transaction commits so search reflects the new
+		// status / publication date.
+		await this.searchService.indexTranslation(updated);
 
 		return updated;
 	}

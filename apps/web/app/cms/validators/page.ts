@@ -23,6 +23,12 @@ export const showPageValidator = vine.create({
 	id: vine.number().positive(),
 });
 
+export const searchPagesValidator = vine.create({
+	search: vine.string().trim().maxLength(255),
+	locale: locale().optional(),
+	status: vine.enum(['draft', 'published', 'archived']).optional(),
+});
+
 export const createPageValidator = vine.create({
 	locale: locale(),
 	metaImageId: vine.number().positive().nullable().optional(),

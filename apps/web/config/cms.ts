@@ -34,6 +34,25 @@ const cmsConfig = {
 		.split(',')
 		.map((provider) => provider.trim().toLowerCase())
 		.filter((provider) => provider.length > 0) as VideoProvider[],
+
+	/**
+	 * Full-text search over CMS pages, backed by a Typesense instance.
+	 *
+	 * `enabled` is the feature flag: when `false`, indexing is a no-op and
+	 * the admin search endpoint degrades (the page list falls back to its
+	 * standard filtered query). When `true` but the Typesense node is
+	 * unreachable, every operation degrades gracefully as well — a search
+	 * outage never breaks the CMS.
+	 */
+	search: {
+		enabled: env.get('SEARCH_ENABLED', false),
+		host: env.get('TYPESENSE_HOST', 'localhost'),
+		port: env.get('TYPESENSE_PORT', 8108),
+		apiKey: env.get('TYPESENSE_API_KEY', ''),
+		collection: env.get('TYPESENSE_COLLECTION', 'cms_page_translations'),
+		/** Maximum number of hits returned by the admin search endpoint. */
+		maxResults: env.get('TYPESENSE_SEARCH_LIMIT', 20),
+	},
 };
 
 export default cmsConfig;

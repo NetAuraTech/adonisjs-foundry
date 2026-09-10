@@ -1303,6 +1303,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_create_api_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'api.v1.admin.cms.pages.search': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/pages/search'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#transport/cms/validators/page').searchPagesValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_api_controller').default['search']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/cms/controllers/api/pages_api_controller').default['search']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'api.v1.admin.cms.pages.show': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/admin/pages/:id'

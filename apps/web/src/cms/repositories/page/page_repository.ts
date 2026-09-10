@@ -46,6 +46,21 @@ export class PageRepository extends BaseRepository {
 	}
 
 	/**
+	 * Finds several pages by their primary keys, preloading translations.
+	 * Preserves no ordering; callers re-sort when order matters.
+	 *
+	 * @param ids - The page primary keys to look up.
+	 * @returns The matching {@link Page} records (a subset of `ids`).
+	 *
+	 * @example
+	 * const pages = await pageRepository.findByIds([1, 2, 3])
+	 */
+	async findByIds(ids: number[]): Promise<Page[]> {
+		if (ids.length === 0) return [];
+		return Page.query(this.client()).whereIn('id', ids).preload('translations');
+	}
+
+	/**
 	 * Finds a published page by its slug across all locales.
 	 * The locale is derived from the matching translation's locale field.
 	 *

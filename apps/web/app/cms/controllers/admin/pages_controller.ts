@@ -2,6 +2,7 @@ import { inject } from '@adonisjs/core';
 import { DeletePageAction } from '#cms/actions/page/delete_page_action';
 import { ListPagesAction } from '#cms/actions/page/list_pages_action';
 import { SetHomepageAction } from '#cms/actions/page/set_homepage_action';
+import cmsConfig from '#config/cms';
 import { buildPagesIndexPayload } from '#transport/cms/helpers/i18n_payloads/pages_index';
 import PageTransformer from '#transport/cms/transformers/page_transformer';
 import { listPageValidator, showPageValidator } from '#transport/cms/validators/page';
@@ -37,6 +38,7 @@ export default class PagesController {
 		return renderInertiaPage(inertia, 'cms/page/admin/index', {
 			pages: PageTransformer.paginate(pages.all(), pages.getMeta()),
 			filters: payload,
+			searchAvailable: cmsConfig.search.enabled,
 			translations: buildPagesIndexPayload(this.i18n),
 		});
 	}

@@ -10,7 +10,7 @@ import { SelectOption } from '@foundry/design-system/select';
 import Table from '@foundry/design-system/table';
 import { Data } from '@generated/data';
 import { usePage } from '@inertiajs/react';
-import { ReactElement } from 'react';
+import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { actionFor, urlFor } from '~/client';
 import { CanAccess } from '~/guards/can_access';
 import { sanitizeText } from '~/helpers/sanitization';
@@ -28,10 +28,13 @@ interface Props {
 		locale?: string;
 		search?: string;
 	};
+	searchAvailable: boolean;
 	translations: AdminPagesIndexTranslations;
 }
 
 const PAGE_STATUSES: PageStatus[] = ['draft', 'published', 'archived'];
+
+const SEARCH_DEBOUNCE_MS = 300;
 
 const statusesClass = {
 	published: 'text-success border-success bg-success-soft',
@@ -39,13 +42,80 @@ const statusesClass = {
 	archived: 'text-warning border-warning bg-warning-soft',
 } as const;
 
+interface PageSearchResponse {
+	available: boolean;
+	results: { page: Data.Cms.Page; matchedLocales: string[] }[];
+}
+
+/**
+ * One rendered row: the page plus (in live-search mode) the locales whose
+ * translation matched the query. `matchedLocales` is `null` outside live mode.
+ */
+interface PageRow {
+	page: Data.Cms.Page;
+	matchedLocales: string[] | null;
+}
+
+async function fetchPageSearch(search: string, locale?: string, status?: string): Promise<PageSearchResponse | null> {
+	const params = new URLSearchParams({ search });
+	if (locale) params.set('locale', locale);
+	if (status) params.set('status', status);
+
+	const res = await fetch(`/api/v1/admin/pages/search?${params.toString()}`, {
+		headers: { Accept: 'application/json' },
+	});
+
+	if (!res.ok) return null;
+
+	const body = (await res.json()) as { data?: PageSearchResponse };
+	return body.data ?? null;
+}
+
 export default function PagesIndexPage(props: Props) {
-	const { pages, filters, translations } = props;
+	const { pages, filters, searchAvailable, translations } = props;
 	const pageProps = usePage<SharedProps>().props;
 	const { t } = useTranslation(translations);
 	const { t: commonT } = useTranslation(pageProps.common_translations);
 
 	const { getEntryIcon } = useMenu();
+
+	const [query, setQuery] = useState(filters.search ?? '');
+	const [localeFilter, setLocaleFilter] = useState(filters.locale ?? '');
+	const [statusFilter, setStatusFilter] = useState(filters.status ?? '');
+	const [live, setLive] = useState<PageSearchResponse | null>(null);
+	const [searching, setSearching] = useState(false);
+
+	// Live full-text search: debounce the query and hit the Typesense-backed
+	// endpoint. A `null`/unavailable result falls back to the server-rendered
+	// list, so a search outage never hides pages.
+	useEffect(() => {
+		if (!searchAvailable) return;
+
+		const term = query.trim();
+		if (!term) {
+			setLive(null);
+			setSearching(false);
+			return;
+		}
+
+		setSearching(true);
+		const handle = setTimeout(async () => {
+			const result = await fetchPageSearch(term, localeFilter || undefined, statusFilter || undefined);
+			setLive(result);
+			setSearching(false);
+		}, SEARCH_DEBOUNCE_MS);
+
+		return () => clearTimeout(handle);
+	}, [query, localeFilter, statusFilter, searchAvailable]);
+
+	const rows: PageRow[] = useMemo(() => {
+		if (searchAvailable && live && live.available) {
+			return live.results.map((result) => ({ page: result.page, matchedLocales: result.matchedLocales }));
+		}
+		return pages.data.map((page) => ({ page, matchedLocales: null }));
+	}, [searchAvailable, live, pages.data]);
+
+	const inLiveMode = Boolean(searchAvailable && live && live.available);
 
 	return (
 		<>
@@ -72,7 +142,9 @@ export default function PagesIndexPage(props: Props) {
 								label={t('search.value')}
 								placeholder={t('search.placeholder')}
 								defaultValue={filters.search}
+								onChange={(event) => setQuery(event.target.value)}
 								sanitizeValue={sanitizeText}
+								helpText={searchAvailable && searching ? t('search.loading') : undefined}
 							/>
 							<Field
 								type="select"
@@ -80,7 +152,7 @@ export default function PagesIndexPage(props: Props) {
 								name="locale"
 								placeholder={t(`locale.all`)}
 								defaultValue={filters.locale}
-								sanitizeValue={sanitizeText}
+								onChange={(event) => setLocaleFilter(event.target.value)}
 							>
 								{locales.map((l) => (
 									<SelectOption key={l} value={l} label={l.toUpperCase()} />
@@ -92,7 +164,7 @@ export default function PagesIndexPage(props: Props) {
 								name="status"
 								placeholder={t(`status.all`)}
 								defaultValue={filters.status}
-								sanitizeValue={sanitizeText}
+								onChange={(event) => setStatusFilter(event.target.value)}
 							>
 								{PAGE_STATUSES.map((status) => (
 									<SelectOption key={`status-${status}`} value={status} label={t(`status.${status}`)} />
@@ -105,8 +177,17 @@ export default function PagesIndexPage(props: Props) {
 					}
 					footer={
 						<Pagination
-							buildHref={(page) => urlFor('admin.cms.pages.render', undefined, { qs: { ...filters, page } })}
-							filters={filters}
+							buildHref={(page) =>
+								urlFor('admin.cms.pages.render', undefined, {
+									qs: {
+										search: query || undefined,
+										locale: localeFilter || undefined,
+										status: statusFilter || undefined,
+										page,
+									},
+								})
+							}
+							filters={{ search: query, locale: localeFilter, status: statusFilter }}
 							metadata={pages.metadata}
 							summaryText={(start, end, total) => commonT('pagination.showing', { start, end, total })}
 							previousTitle={commonT('pagination.previous')}
@@ -125,16 +206,22 @@ export default function PagesIndexPage(props: Props) {
 							</Table.Row>
 						</Table.Header>
 						<Table.Body>
-							{pages.data.length === 0 ? (
+							{inLiveMode && searching ? (
 								<Table.Row>
 									<Table.Cell colSpan={5} className="text-center! p-12!">
-										{t('empty')}
+										{t('search.loading')}
+									</Table.Cell>
+								</Table.Row>
+							) : rows.length === 0 ? (
+								<Table.Row>
+									<Table.Cell colSpan={5} className="text-center! p-12!">
+										{inLiveMode ? t('search.empty') : t('empty')}
 									</Table.Cell>
 								</Table.Row>
 							) : (
-								pages.data.map((page) => {
+								rows.map(({ page, matchedLocales }) => {
 									const primary =
-										page.translations.find((t) => t.locale === page.defaultLocale) ?? page.translations[0];
+										page.translations.find((tr) => tr.locale === page.defaultLocale) ?? page.translations[0];
 
 									return (
 										<Table.Row key={`page-${page.id}`}>
@@ -151,17 +238,22 @@ export default function PagesIndexPage(props: Props) {
 											</Table.Cell>
 											<Table.Cell data-label={t(`locale.value`)}>
 												<div className="flex gap-1 flex-wrap">
-													{page.translations.map((t) => (
-														<span
-															key={t.locale}
-															className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium bg-sunken text-ink-muted border border-edge uppercase"
-														>
-															{t.locale}
+													{page.translations.map((tr) => {
+														const matched = matchedLocales?.includes(tr.locale);
+														return (
 															<span
-																className={`w-1.5 h-1.5 rounded-full ${t.status === 'published' ? 'bg-success' : 'bg-edge-strong'}`}
-															/>
-														</span>
-													))}
+																key={tr.locale}
+																className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium bg-sunken text-ink-muted border uppercase ${
+																	matched ? 'border-success text-success' : 'border-edge'
+																}`}
+															>
+																{tr.locale}
+																<span
+																	className={`w-1.5 h-1.5 rounded-full ${tr.status === 'published' ? 'bg-success' : 'bg-edge-strong'}`}
+																/>
+															</span>
+														);
+													})}
 												</div>
 											</Table.Cell>
 											<Table.Cell data-label={t('actions.value')}>

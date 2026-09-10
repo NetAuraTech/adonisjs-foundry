@@ -1,5 +1,6 @@
 import { inject } from '@adonisjs/core';
 import { PageTranslationRepository } from '#cms/repositories/page/page_translation_repository';
+import { PageSearchService } from '#cms/services/page/page_search_service';
 import { sanitizePageContent } from '#cms/services/page/sanitize_content';
 import SlugExistsException from '#core/exceptions/slug_exists_exception';
 import { withTransaction } from '#core/services/with_transaction';
@@ -21,7 +22,10 @@ interface CreateTranslationPayload {
  */
 @inject()
 export class CreateTranslationAction {
-	constructor(protected translationRepository: PageTranslationRepository) {}
+	constructor(
+		protected translationRepository: PageTranslationRepository,
+		protected searchService: PageSearchService,
+	) {}
 
 	/**
 	 * Execute translation creation.
@@ -39,7 +43,7 @@ export class CreateTranslationAction {
 			if (source) content = sanitizePageContent(JSON.parse(JSON.stringify(source.content)));
 		}
 
-		return withTransaction(async () => {
+		const created = await withTransaction(async () => {
 			return this.translationRepository.create({
 				pageId: payload.pageId,
 				locale: payload.locale,
@@ -51,5 +55,10 @@ export class CreateTranslationAction {
 				status: 'draft',
 			});
 		});
+
+		// Index after the transaction commits — a failed index write must not
+		// roll back the translation creation.
+		await this.searchService.indexTranslation(created);
+		return created;
 	}
 }

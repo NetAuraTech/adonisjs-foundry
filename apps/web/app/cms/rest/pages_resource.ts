@@ -7,10 +7,12 @@ import { GetPageDetailAction } from '#cms/actions/page/get_page_detail_action';
 import { ListPagesAction } from '#cms/actions/page/list_pages_action';
 import { ListRevisionsAction } from '#cms/actions/page/list_revisions_action';
 import { RestoreRevisionAction } from '#cms/actions/page/restore_revision_action';
+import { SearchPagesAction, type PageSearchResult } from '#cms/actions/page/search_pages_action';
 import { SetHomepageAction } from '#cms/actions/page/set_homepage_action';
 import { ToggleRevisionKeepAction } from '#cms/actions/page/toggle_revision_keep_action';
 import { UpdatePageAction } from '#cms/actions/page/update_page_action';
 import PageRevisionTransformer from '#transport/cms/transformers/page_revision_transformer';
+import PageSearchResultTransformer from '#transport/cms/transformers/page_search_result_transformer';
 import PageTransformer from '#transport/cms/transformers/page_transformer';
 import {
 	listPageValidator,
@@ -19,6 +21,7 @@ import {
 	updatePageValidator,
 	publishPageValidator,
 	createTranslationValidator,
+	searchPagesValidator,
 } from '#transport/cms/validators/page';
 import { type RestEndpoint } from '#transport/core/rest/rest_adapter';
 import type Page from '#cms/models/page/page';
@@ -35,12 +38,14 @@ type PageCreatePayload = Infer<typeof createPageValidator>;
 type PageUpdatePayload = Infer<typeof updatePageValidator>;
 type PagePublishPayload = Infer<typeof publishPageValidator>;
 type PageTranslationPayload = Infer<typeof createTranslationValidator>;
+type PageSearchPayload = Infer<typeof searchPagesValidator>;
 
 /**
  * Endpoint declarations for the pages REST resource.
  */
 export interface PagesEndpoints {
 	index: RestEndpoint<undefined, PageListPayload, PageListPagination, PageListPagination>;
+	search: RestEndpoint<undefined, PageSearchPayload, PageSearchResult[] | null, PageSearchResult[] | null>;
 	show: RestEndpoint<undefined, PageIdPayload, Page, Page>;
 	store: RestEndpoint<undefined, PageCreatePayload, Page, Page>;
 	update: RestEndpoint<{ id: number }, PageUpdatePayload, PageTranslation, Page>;
@@ -71,6 +76,7 @@ export interface PagesEndpoints {
 export default class PagesResource {
 	constructor(
 		protected listPagesAction: ListPagesAction,
+		protected searchPagesAction: SearchPagesAction,
 		protected getPageDetailAction: GetPageDetailAction,
 		protected createPageAction: CreatePageAction,
 		protected updatePageAction: UpdatePageAction,
@@ -96,6 +102,20 @@ export default class PagesResource {
 					pagination: _context.pagination!,
 				}),
 			transform: (entity) => PageTransformer.paginate(entity.all(), entity.getMeta()),
+		},
+		search: {
+			strip: true,
+			validator: () => searchPagesValidator,
+			execute: (_context, _prepared, payload) =>
+				this.searchPagesAction.execute({
+					search: payload.search,
+					locale: payload.locale,
+					status: payload.status,
+				}),
+			transform: (entity) => ({
+				available: entity !== null,
+				results: PageSearchResultTransformer.transform(entity ?? []),
+			}),
 		},
 		show: {
 			input: (context) => context.params,
