@@ -1403,6 +1403,7 @@ const inertiaManifest: FlavorManifest = {
 				'    "react": "^19.2.4",',
 				'    "react-dom": "^19.2.4",',
 				'    "react-markdown": "^10.1.0",',
+				'    "react-qr-code": "^2.2.0",',
 				'    "reflect-metadata": "^0.2.2",',
 				'    "rehype-raw": "^7.0.0",',
 				'    "sharp": "^0.35.4",',
