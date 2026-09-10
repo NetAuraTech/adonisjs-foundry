@@ -36,7 +36,9 @@
   "overrides": {
     "@adonisjs/ally": {
       "@adonisjs/inertia": "^5.0.0"
-    }
+    },
+    "@ai-sdk/provider": "^3.0.12",
+    "@ai-sdk/provider-utils": "^4.0.33"
   },
   "engines": {
     "node": ">=24.0.0"
