@@ -64,7 +64,7 @@ const acceptInvitationBodyValidator = vine.create({
  * execute, keeping the documented shape in lockstep with the enforced one.
  */
 export function registerAuthApiDocs(): void {
-	registerApiDoc('api.v1.auth.login', {
+	registerApiDoc('api.v1.auth.login.execute', {
 		summary: 'Log in',
 		description: 'Verifies email/password credentials and issues an opaque API access token.',
 		tags: ['Auth'],
@@ -85,7 +85,7 @@ export function registerAuthApiDocs(): void {
 		},
 	});
 
-	registerApiDoc('api.v1.auth.register', {
+	registerApiDoc('api.v1.auth.register.store', {
 		summary: 'Register a new account',
 		description: 'Creates the user and dispatches the email-verification flow.',
 		tags: ['Auth'],
@@ -96,7 +96,7 @@ export function registerAuthApiDocs(): void {
 		},
 	});
 
-	registerApiDoc('api.v1.auth.forgot_password', {
+	registerApiDoc('api.v1.auth.forgot_password.store', {
 		summary: 'Request a password-reset email',
 		description: 'Always succeeds (even for unknown emails) to avoid account enumeration.',
 		tags: ['Auth'],
@@ -107,7 +107,7 @@ export function registerAuthApiDocs(): void {
 		},
 	});
 
-	registerApiDoc('api.v1.auth.reset_password', {
+	registerApiDoc('api.v1.auth.reset_password.store', {
 		summary: 'Reset the password with a token',
 		tags: ['Auth'],
 		request: [{ validator: resetPasswordValidator, in: 'body' }],
@@ -118,7 +118,7 @@ export function registerAuthApiDocs(): void {
 		},
 	});
 
-	registerApiDoc('api.v1.auth.verify_email', {
+	registerApiDoc('api.v1.auth.email_verification.store', {
 		summary: 'Verify the email address with a token',
 		tags: ['Auth'],
 		request: [{ validator: vine.create({ token: vine.string() }), in: 'path' }],
@@ -128,7 +128,7 @@ export function registerAuthApiDocs(): void {
 		},
 	});
 
-	registerApiDoc('api.v1.auth.accept_invitation', {
+	registerApiDoc('api.v1.auth.accept_invitation.store', {
 		summary: 'Accept an invitation and set a password',
 		tags: ['Auth'],
 		request: [{ validator: acceptInvitationBodyValidator, in: 'body' }],
@@ -139,7 +139,7 @@ export function registerAuthApiDocs(): void {
 		},
 	});
 
-	registerApiDoc('api.v1.auth.logout', {
+	registerApiDoc('api.v1.auth.logout.destroy', {
 		summary: 'Log out',
 		description: 'Revokes the access token presented on the request; other tokens keep working.',
 		tags: ['Auth'],
@@ -149,7 +149,7 @@ export function registerAuthApiDocs(): void {
 		},
 	});
 
-	registerApiDoc('api.v1.auth.me', {
+	registerApiDoc('api.v1.auth.me.show', {
 		summary: 'Show the authenticated user',
 		tags: ['Auth'],
 		responses: {
