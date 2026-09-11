@@ -160,6 +160,7 @@ const apiManifest: FlavorManifest = {
 		'apps/web/tests/unit/cms',
 		'apps/web/tests/integration/cms',
 		'apps/web/tests/functional/cms',
+		'apps/web/tests/helpers/page_search.ts',
 
 		// ─── Prune pipeline (main-only infrastructure) ────────────────────────
 		'tooling/prune',
