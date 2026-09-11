@@ -266,7 +266,7 @@ test.group('OpenAPI generator', () => {
 	test('applies the default security requirements to admin routes only', ({ assert }) => {
 		const spec = build([
 			{ name: 'api.v1.admin.identity.users.index', pattern: '/api/v1/admin/users', method: 'GET' },
-			{ name: 'api.v1.auth.login', pattern: '/api/v1/auth/login', method: 'POST' },
+			{ name: 'api.v1.auth.login.execute', pattern: '/api/v1/auth/login', method: 'POST' },
 		]);
 
 		assert.deepEqual(spec.paths['/api/v1/admin/users'].get.security, [{ apiToken: [] }, { session: [] }]);
@@ -304,7 +304,7 @@ test.group('OpenAPI generator', () => {
 	});
 
 	test('leaves operations without docs at a minimal shape', ({ assert }) => {
-		const spec = build([{ name: 'api.v1.auth.login', pattern: '/api/v1/auth/login', method: 'POST' }]);
+		const spec = build([{ name: 'api.v1.auth.login.execute', pattern: '/api/v1/auth/login', method: 'POST' }]);
 
 		const operation = spec.paths['/api/v1/auth/login'].post;
 		assert.exists(operation.operationId);

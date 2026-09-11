@@ -19,6 +19,7 @@ import { controllers } from '#generated/controllers';
 import { middleware } from '#start/kernel';
 import { apiClientThrottle } from '#start/limiter';
 import { permissions } from '#start/permissions';
+import { registerCmsApiDocs } from '#transport/cms/api_docs';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
 
 /**
@@ -30,6 +31,10 @@ import { maintenanceMiddleware } from '#transport/core/maintenance';
 const apiGuards = enabledAuthGuards.api ? (['web', 'api'] as const) : (['web'] as const);
 
 if (features.adminApi && features.cms) {
+	// Document the CMS surface alongside the routes, so the OpenAPI spec
+	// and the registry above stay in lockstep.
+	registerCmsApiDocs();
+
 	router
 		.group(() => {
 			router

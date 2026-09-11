@@ -251,22 +251,25 @@ function buildParameters(
 
 	if (doc?.paginated) {
 		const properties = (paginationSchema?.properties ?? {}) as Record<string, JsonSchema>;
-		parameters.push(
-			{
+		const declared = new Set(parameters.map((parameter) => parameter.name));
+		if (!declared.has('page')) {
+			parameters.push({
 				name: 'page',
 				in: 'query',
 				required: false,
 				description: 'Page number.',
 				schema: properties.page ?? { type: 'integer' },
-			},
-			{
+			});
+		}
+		if (!declared.has('perPage')) {
+			parameters.push({
 				name: 'perPage',
 				in: 'query',
 				required: false,
 				description: 'Items per page.',
 				schema: properties.perPage ?? { type: 'integer' },
-			},
-		);
+			});
+		}
 	}
 
 	return parameters;
@@ -278,13 +281,14 @@ function buildParameters(
  * @returns The body definition, or `undefined` when the operation has no body.
  */
 function buildRequestBody(doc: ApiOperationDoc | undefined): OpenApiRequestBody | undefined {
+	const clause = doc?.request?.find((request) => request.in === 'body');
 	const schema = requestSchemaFor(doc, 'body');
-	if (!schema) return undefined;
+	if (!clause || !schema) return undefined;
 
 	const requiredFields = Array.isArray(schema.required) ? (schema.required as string[]) : [];
 	return {
 		required: requiredFields.length > 0,
-		content: { 'application/json': { schema } },
+		content: { [clause.contentType ?? 'application/json']: { schema } },
 	};
 }
 

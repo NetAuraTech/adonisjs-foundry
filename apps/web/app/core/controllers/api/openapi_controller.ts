@@ -36,7 +36,8 @@ const securitySchemes: Record<string, SecurityScheme> = {
 const info = {
 	title: 'AdonisJS Foundry API',
 	version: 'v1',
-	description: 'Versioned REST API of the Foundry admin surface (users, roles, permissions, dashboard, maintenance).',
+	description:
+		'Versioned REST API of the Foundry surface: auth, account, identity (users, roles, permissions), dashboard, maintenance, files, folders, logs, and the CMS (pages, templates, builder).',
 };
 
 /**

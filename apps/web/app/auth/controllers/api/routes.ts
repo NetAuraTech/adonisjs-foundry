@@ -16,9 +16,14 @@ import features from '#config/features';
 import { controllers } from '#generated/controllers';
 import { middleware } from '#start/kernel';
 import { apiClientThrottle, throttle } from '#start/limiter';
+import { registerAuthApiDocs } from '#transport/auth/api_docs';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
 
 if (features.adminApi && enabledAuthGuards.api) {
+	// Document the auth surface alongside the routes, so the OpenAPI spec
+	// and the registry above stay in lockstep.
+	registerAuthApiDocs();
+
 	router
 		.group(() => {
 			router
