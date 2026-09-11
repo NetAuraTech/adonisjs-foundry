@@ -5,7 +5,13 @@ import { Validator } from '@seriousme/openapi-schema-validator';
 import User from '#identity/models/user';
 import { createAdminUser } from '#tests/helpers/create_admin_user';
 import { createVerifiedUser } from '#tests/helpers/create_verified_user';
+import { registerAccountApiDocs } from '#transport/account/api_docs';
+import { registerAuthApiDocs } from '#transport/auth/api_docs';
+import { registerCmsApiDocs } from '#transport/cms/api_docs';
+import { registerCoreApiDocs } from '#transport/core/api_docs';
+import { registerFileApiDocs } from '#transport/file/api_docs';
 import { registerIdentityApiDocs } from '#transport/identity/api_docs';
+import { registerLogApiDocs } from '#transport/log/api_docs';
 
 /**
  * OpenAPI surface — the generated spec (`/api/v1/openapi.json`, served by the
@@ -16,10 +22,18 @@ import { registerIdentityApiDocs } from '#transport/identity/api_docs';
 test.group('OpenAPI surface', (group) => {
 	// The docs registry is a process-wide singleton populated at import time by
 	// the route modules, and a unit test in this same Japa process clears it;
-	// re-register the identity surface before each test so these assertions do
-	// not depend on test execution order.
+	// re-register the whole documented surface before each test so these
+	// assertions do not depend on test execution order.
 	group.each.setup(() => testUtils.db().truncate());
-	group.each.setup(() => registerIdentityApiDocs());
+	group.each.setup(() => {
+		registerAccountApiDocs();
+		registerAuthApiDocs();
+		registerCmsApiDocs();
+		registerCoreApiDocs();
+		registerFileApiDocs();
+		registerIdentityApiDocs();
+		registerLogApiDocs();
+	});
 	group.each.setup(() => limiter.clear());
 	group.each.teardown(() => limiter.clear());
 
@@ -100,7 +114,18 @@ test.group('OpenAPI surface', (group) => {
 
 		assert.exists(spec.paths['/api/v1/admin/roles'].get);
 		assert.exists(spec.paths['/api/v1/admin/permissions'].get);
-		assert.deepEqual(spec.tags, [{ name: 'Permissions' }, { name: 'Roles' }, { name: 'Users' }]);
+		// Every route without a permission requirement is visible to any
+		// authenticated user, so the tag list spans all documented domains,
+		// not just the admin surfaces this user can reach.
+		assert.deepEqual(spec.tags, [
+			{ name: 'Account' },
+			{ name: 'Auth' },
+			{ name: 'Dashboard' },
+			{ name: 'OpenAPI' },
+			{ name: 'Permissions' },
+			{ name: 'Roles' },
+			{ name: 'Users' },
+		]);
 	});
 
 	test('scopes the spec to the permissions of the requesting user', async ({ client, assert }) => {
@@ -154,7 +179,9 @@ test.group('OpenAPI surface', (group) => {
 			name: 'adonis-session',
 			description: 'Session cookie (adonis-session), set after login (web guard).',
 		});
-		assert.isUndefined(spec.paths['/api/v1/profile'].get.security);
+		// Non-admin routes carry no default security; the token-only profile
+		// route documents its `api` guard explicitly instead.
+		assert.deepEqual(spec.paths['/api/v1/profile'].get.security, [{ apiToken: [] }]);
 	});
 
 	test('only documents routes under /api/v1', async ({ client, assert }) => {

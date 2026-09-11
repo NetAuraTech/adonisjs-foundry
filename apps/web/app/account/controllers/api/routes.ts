@@ -18,6 +18,7 @@ import features from '#config/features';
 import { controllers } from '#generated/controllers';
 import { middleware } from '#start/kernel';
 import { apiClientThrottle } from '#start/limiter';
+import { registerAccountApiDocs } from '#transport/account/api_docs';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
 
 /**
@@ -51,6 +52,10 @@ if (features.adminApi && enabledAuthGuards.api) {
 }
 
 if (features.adminApi) {
+	// Document the account surface alongside the routes, so the OpenAPI spec
+	// and the registry above stay in lockstep.
+	registerAccountApiDocs();
+
 	router
 		.group(() => {
 			router

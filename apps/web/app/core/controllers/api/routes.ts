@@ -25,6 +25,7 @@ import { controllers } from '#generated/controllers';
 import { middleware } from '#start/kernel';
 import { apiClientThrottle } from '#start/limiter';
 import { permissions } from '#start/permissions';
+import { registerCoreApiDocs } from '#transport/core/api_docs';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
 
 /**
@@ -36,6 +37,10 @@ import { maintenanceMiddleware } from '#transport/core/maintenance';
 const apiGuards = enabledAuthGuards.api ? (['web', 'api'] as const) : (['web'] as const);
 
 if (features.adminApi) {
+	// Document the core surface alongside the routes, so the OpenAPI spec
+	// and the registry above stay in lockstep.
+	registerCoreApiDocs();
+
 	router
 		.group(() => {
 			router

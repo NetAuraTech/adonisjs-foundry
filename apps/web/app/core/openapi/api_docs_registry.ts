@@ -63,6 +63,12 @@ export interface ApiOperationDoc {
 	request?: readonly {
 		validator: ApiRequestValidator;
 		in: ApiRequestLocation;
+		/**
+		 * MIME type of the request entry, for `body` locations only. Defaults
+		 * to `application/json`; multipart uploads declare
+		 * `multipart/form-data`.
+		 */
+		contentType?: string;
 	}[];
 	/** The endpoint paginates — the shared `page` / `perPage` parameters are added. */
 	paginated?: boolean;

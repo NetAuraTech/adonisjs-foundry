@@ -18,6 +18,7 @@ import { middleware } from '#start/kernel';
 import { apiClientThrottle } from '#start/limiter';
 import { permissions } from '#start/permissions';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
+import { registerLogApiDocs } from '#transport/log/api_docs';
 
 /**
  * The admin JSON surface is shared: the in-repo admin UI (session guard) and
@@ -28,6 +29,10 @@ import { maintenanceMiddleware } from '#transport/core/maintenance';
 const apiGuards = enabledAuthGuards.api ? (['web', 'api'] as const) : (['web'] as const);
 
 if (features.adminApi) {
+	// Document the log surface alongside the routes, so the OpenAPI spec
+	// and the registry above stay in lockstep.
+	registerLogApiDocs();
+
 	router
 		.group(() => {
 			router
