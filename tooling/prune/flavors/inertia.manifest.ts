@@ -55,6 +55,7 @@ const inertiaManifest: FlavorManifest = {
 		'apps/web/tests/unit/cms',
 		'apps/web/tests/integration/cms',
 		'apps/web/tests/functional/cms',
+		'apps/web/tests/helpers/page_search.ts',
 
 		// ─── CMS ace command ────────────────────────────────────────────────────
 		'apps/web/commands/cms_normalize_migration_names.ts',
