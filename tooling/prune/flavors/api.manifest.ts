@@ -1647,7 +1647,7 @@ const apiManifest: FlavorManifest = {
 				'    "uuid": "^14.0.1"',
 				'  },',
 				'  "devDependencies": {',
-				'    "@adonisjs/assembler": "^8.0.0",',
+				'    "@adonisjs/assembler": "^8.5.1",',
 				'    "@adonisjs/tsconfig": "^2.0.0",',
 				'    "@japa/api-client": "^3.2.1",',
 				'    "@japa/assert": "^4.2.0",',
