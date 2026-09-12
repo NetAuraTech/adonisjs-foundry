@@ -1659,7 +1659,7 @@ const apiManifest: FlavorManifest = {
 				'    "@types/luxon": "^3.7.5",',
 				'    "@types/node": "~26.4.1",',
 				'    "@types/react": "^19.2.14",',
-				'    "@types/react-dom": "^19.2.5",',
+				'    "@types/react-dom": "^19.2.7",',
 				'    "@types/sinon": "^22.0.0",',
 				'    "@vitejs/plugin-react": "^6.1.1",',
 				'    "hot-hook": "^1.0.0",',
