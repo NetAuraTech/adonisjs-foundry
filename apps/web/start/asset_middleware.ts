@@ -3,15 +3,10 @@
 | View-layer asset middleware composition
 |--------------------------------------------------------------------------
 |
-| The server middleware for the browser asset pipeline (Vite + Inertia).
-| This file is part of the composition set that flavor manifests may
-| rewrite: the `api` flavor drops the whole Inertia/Vite stack and replaces
-| this array with `[]`, so `start/kernel.ts` can keep a single unconditional
-| reference without pulling the pruned packages into the type graph.
+| The `api` flavor drops the entire Inertia/Vite stack, so no asset
+| middleware is registered. `start/kernel.ts` keeps its single
+| unconditional reference and this array is simply empty.
 |
 */
 
-export const assetMiddleware = [
-	() => import('@adonisjs/vite/vite_middleware'),
-	() => import('#transport/core/middleware/inertia_middleware'),
-];
+export const assetMiddleware = [];
