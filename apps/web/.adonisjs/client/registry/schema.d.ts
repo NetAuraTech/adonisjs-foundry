@@ -815,10 +815,10 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/settings/account'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#transport/account/validators/account').updatePasswordValidator)>|InferInput<(typeof import('#transport/auth/validators/auth').twoFactorCodeValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#transport/account/validators/account').updatePasswordValidator)>|InferInput<(typeof import('#transport/auth/validators/auth').twoFactorCodeValidator)>|InferInput<(typeof import('#transport/account/validators/account').disableTwoFactorValidator)>>
       paramsTuple: []
       params: {}
-      query: ExtractQuery<InferInput<(typeof import('#transport/account/validators/account').updatePasswordValidator)>|InferInput<(typeof import('#transport/auth/validators/auth').twoFactorCodeValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#transport/account/validators/account').updatePasswordValidator)>|InferInput<(typeof import('#transport/auth/validators/auth').twoFactorCodeValidator)>|InferInput<(typeof import('#transport/account/validators/account').disableTwoFactorValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#transport/account/controllers/front/account_controller').default['execute']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/account/controllers/front/account_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
