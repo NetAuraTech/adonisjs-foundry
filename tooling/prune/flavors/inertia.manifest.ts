@@ -1305,7 +1305,7 @@ const inertiaManifest: FlavorManifest = {
 				'    "postinstall": "patch-package"',
 				'  },',
 				'  "devDependencies": {',
-				'    "oxfmt": "^0.66.0",',
+				'    "oxfmt": "^0.67.0",',
 				'    "oxlint": "^1.81.0",',
 				'    "typescript": "~5.9.3"',
 				'  },',
