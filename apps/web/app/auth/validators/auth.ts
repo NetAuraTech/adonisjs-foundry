@@ -22,11 +22,15 @@ export const forgotPasswordValidator = vine.create({
 	email: email(),
 });
 
+/**
+ * Shared two-factor code validator. The login-time challenge accepts either a
+ * 6-digit TOTP code or an unused recovery code, so the field is only required
+ * to be present — the {@link TwoFactorService} decides which kind it is and
+ * rejects anything that is neither (a wrong code throws, it is not a
+ * validation error).
+ */
 export const twoFactorCodeValidator = vine.create({
-	code: vine
-		.string()
-		.trim()
-		.regex(/^\d{6}$/),
+	code: vine.string().trim().minLength(1),
 });
 
 export const resetPasswordValidator = vine.create({

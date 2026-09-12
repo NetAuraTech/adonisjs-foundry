@@ -25,3 +25,9 @@ export const deleteAccountValidator = vine.create({
 export const changeEmailValidator = vine.create({
 	token: vine.string().trim().toLowerCase(),
 });
+
+export const disableTwoFactorValidator = vine.create({
+	current_password: password(),
+	// Either a 6-digit TOTP code or an unused recovery code (e.g. `ABCDE-FGHJ2`).
+	code: vine.string().trim().minLength(1),
+});
