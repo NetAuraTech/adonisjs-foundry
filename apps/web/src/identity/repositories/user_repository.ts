@@ -27,6 +27,23 @@ export class UserRepository extends BaseRepository {
 	}
 
 	/**
+	 * Finds a user by their primary key, taking an exclusive row lock
+	 * (`SELECT ... FOR UPDATE`) for the duration of the surrounding
+	 * transaction.
+	 *
+	 * Used for check-then-act operations that must be atomic against
+	 * concurrent requests on the same row (see
+	 * /docs/agents/toctou-protection.md). Must be called inside a
+	 * {@link withTransaction} — the lock is released on commit or rollback.
+	 *
+	 * @param id - The user's primary key.
+	 * @returns The matching {@link User} (locked), or `null` if not found.
+	 */
+	async findByIdForUpdate(id: number): Promise<User | null> {
+		return await User.query(this.client()).where('id', id).forUpdate().first();
+	}
+
+	/**
 	 * Returns all users, with optional sorting and pagination.
 	 *
 	 * @param options - Optional {@link FindOptions} to control ordering and pagination.

@@ -20,7 +20,7 @@ const GROUPS = 2;
  *
  * @example
  * const codes = RecoveryCodes.generate(10)
- * RecoveryCodes.normalize(' ab12c-de34f ') // 'AB12C-DE34F'
+ * RecoveryCodes.normalize(' ab12c-de34f ') // 'AB12CDE34F'
  */
 export const RecoveryCodes = {
 	/**

@@ -5,10 +5,12 @@ import { Totp } from '#auth/domain/totp';
 import { createTwoFactorCipher } from '#auth/domain/two_factor_cipher';
 import InvalidCurrentPasswordException from '#auth/exceptions/invalid_current_password_exception';
 import InvalidTwoFactorCodeException from '#auth/exceptions/invalid_two_factor_code_exception';
+import RowNotFoundException from '#core/exceptions/row_not_found_exception';
+import { withTransaction } from '#core/services/with_transaction';
+import User from '#identity/models/user';
 import { UserRepository } from '#identity/repositories/user_repository';
 import { LogService } from '#log/services/log_service';
 import env from '#start/env';
-import type User from '#identity/models/user';
 
 /**
  * Business logic for TOTP-based two-factor authentication.
@@ -173,27 +175,38 @@ export class TwoFactorService {
 			throw new InvalidCurrentPasswordException();
 		}
 
-		const isValidCode = (await this.checkTotp(user, code)) || this.findRecoveryCodeIndex(user, code) !== -1;
-		if (!isValidCode) {
-			this.logService.logSecurity('two_factor.disable.failed_invalid_code', {
-				userId: user.id,
-				userEmail: user.email,
+		// The second-factor check and the 2FA teardown must be atomic against a
+		// concurrent disable or recovery-code login: the row is locked with
+		// SELECT ... FOR UPDATE so the code is validated and cleared in one
+		// step (see /docs/agents/toctou-protection.md).
+		return withTransaction(async () => {
+			const locked = await this.userRepository.findByIdForUpdate(user.id);
+			if (!locked) {
+				throw new RowNotFoundException(User);
+			}
+
+			const isValidCode = (await this.checkTotp(locked, code)) || this.findRecoveryCodeIndex(locked, code) !== -1;
+			if (!isValidCode) {
+				this.logService.logSecurity('two_factor.disable.failed_invalid_code', {
+					userId: user.id,
+					userEmail: user.email,
+				});
+				throw new InvalidTwoFactorCodeException();
+			}
+
+			const updated = await this.userRepository.update(locked, {
+				twoFactorEnabled: false,
+				twoFactorSecret: null,
+				twoFactorRecoveryCodes: null,
 			});
-			throw new InvalidTwoFactorCodeException();
-		}
 
-		const updated = await this.userRepository.update(user, {
-			twoFactorEnabled: false,
-			twoFactorSecret: null,
-			twoFactorRecoveryCodes: null,
+			this.logService.logAuth('two_factor.disabled', {
+				userId: updated.id,
+				userEmail: updated.email,
+			});
+
+			return updated;
 		});
-
-		this.logService.logAuth('two_factor.disabled', {
-			userId: updated.id,
-			userEmail: updated.email,
-		});
-
-		return updated;
 	}
 
 	/**
@@ -224,21 +237,34 @@ export class TwoFactorService {
 	 * Consumes a recovery code: if an unused code matches the (normalised)
 	 * input it is removed from the stored set and the new set persisted.
 	 *
+	 * The "still unused" check and the removal are atomic: the row is locked
+	 * with `SELECT ... FOR UPDATE` inside a transaction, so two concurrent
+	 * logins presenting the same code are serialised and only one can consume
+	 * it — the single-use guarantee holds under contention (see
+	 * /docs/agents/toctou-protection.md).
+	 *
 	 * @returns `true` when a matching unused code was found and removed.
 	 */
 	private async consumeRecoveryCode(user: User, code: string): Promise<boolean> {
-		const index = this.findRecoveryCodeIndex(user, code);
-		if (index === -1) {
-			return false;
-		}
+		return withTransaction(async () => {
+			const locked = await this.userRepository.findByIdForUpdate(user.id);
+			if (!locked) {
+				return false;
+			}
 
-		const codes = this.readRecoveryCodes(user);
-		codes.splice(index, 1);
+			const index = this.findRecoveryCodeIndex(locked, code);
+			if (index === -1) {
+				return false;
+			}
 
-		await this.userRepository.update(user, {
-			twoFactorRecoveryCodes: codes.length ? this.cipher.encrypt(JSON.stringify(codes)) : null,
+			const codes = this.readRecoveryCodes(locked);
+			codes.splice(index, 1);
+
+			await this.userRepository.update(locked, {
+				twoFactorRecoveryCodes: codes.length ? this.cipher.encrypt(JSON.stringify(codes)) : null,
+			});
+			return true;
 		});
-		return true;
 	}
 
 	/**
