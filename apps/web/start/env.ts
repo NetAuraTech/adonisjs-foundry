@@ -75,10 +75,10 @@ export default await Env.create(new URL('../', import.meta.url), {
 	REDIS_SOCKET: Env.schema.string.optional(),
 
 	/*
-   |----------------------------------------------------------
-   | Variables for configuring the queue package
-   |----------------------------------------------------------
-   */
+  |----------------------------------------------------------
+  | Variables for configuring the queue package
+  |----------------------------------------------------------
+  */
 	QUEUE_DRIVER: Env.schema.enum(['redis', 'sync'] as const),
 	QUEUE_CONNECTION: Env.schema.enum(['main', 'local'] as const),
 	QUEUE_CONCURRENCY: Env.schema.number.optional(),
@@ -195,30 +195,7 @@ export default await Env.create(new URL('../', import.meta.url), {
 
 	/*
   |----------------------------------------------------------
-  | Variables for CMS content policies (page builder blocks).
-  | Comma-separated lists; both have safe defaults in config/cms.ts.
-  |----------------------------------------------------------
-  */
-	CMS_IFRAME_ALLOWLIST: Env.schema.string.optional(),
-	CMS_VIDEO_PROVIDERS: Env.schema.string.optional(),
-
-	/*
-   |----------------------------------------------------------
-   | Variables for CMS page search (Typesense backend).
-   | All optional — search degrades gracefully when unset (see
-   | config/cms.ts). The dev service is provided by docker-compose.
-   |----------------------------------------------------------
-   */
-	SEARCH_ENABLED: Env.schema.boolean.optional(),
-	TYPESENSE_HOST: Env.schema.string.optional(),
-	TYPESENSE_PORT: Env.schema.number.optional(),
-	TYPESENSE_API_KEY: Env.schema.string.optional(),
-	TYPESENSE_COLLECTION: Env.schema.string.optional(),
-	TYPESENSE_SEARCH_LIMIT: Env.schema.number.optional(),
-
-	/*
-   |----------------------------------------------------------
-   | Variables for sitemap.xml generation.
+  | Variables for sitemap.xml generation.
   | Comma-separated lists; both have safe defaults in config/sitemap.ts.
   |----------------------------------------------------------
   */

@@ -3,30 +3,36 @@
 | Routes file
 |--------------------------------------------------------------------------
 |
-| Route module index — a pure per-domain import list in stable order. Each
-| domain registers its own routes on import (see its `app/<domain>/routes.ts`),
-| feature-gated inside the module and wrapped with the maintenance
-| middleware (when enabled) before its auth guards.
+| Route module index — each domain registers its own routes.
+| Feature flags in config/features.ts gate each module at runtime.
 |
-| Explicit `register*` calls run last: the router matches in registration
-| order, so the CMS page-render catch-alls must come after every other route.
-|
+| The `inertia` flavor ships a hand-written front: the core home route is
+| registered here (it is dead on `main`, where the CMS page home serves
+| the site root), alongside the self-registering core surfaces (SEO,
+| admin, API) and the admin back-office.
 */
 
+// Auth, identity, account, file, log and core routes self-register on import (feature-gated inside the modules).
 import '#transport/account/routes';
 import '#transport/auth/routes';
-import '#transport/cms/routes';
-import '#transport/core/routes';
 import '#transport/file/routes';
 import '#transport/identity/routes';
 import '#transport/log/routes';
-import { registerCmsPageRoutes } from '#transport/cms/controllers/front/routes';
+import router from '@adonisjs/core/services/router';
+import features from '#config/features';
+import { middleware } from '#start/kernel';
 import { registerCoreHealthRoutes } from '#transport/core/health.routes';
+import { registerCoreHomeRoute } from '#transport/core/routes';
 
 // Health routes are outside maintenance middleware (liveness/readiness probes)
 registerCoreHealthRoutes();
 
-// The CMS page-render catch-alls (`/:locale/:slug`, `/:slug`) must register
-// last so they never shadow `/admin`, `/login`, `/register`, `/health` or any
-// other single-segment route.
-registerCmsPageRoutes();
+// Wrap all feature routes with maintenance middleware
+// Health routes are registered separately above (outside this wrapper)
+
+router
+	.group(() => {
+		// Hand-written front (home + error pages) — replaces the CMS public front.
+		registerCoreHomeRoute();
+	})
+	.use(features.maintenance ? middleware.maintenance() : []);

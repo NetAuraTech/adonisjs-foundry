@@ -1,15 +1,13 @@
 import app from '@adonisjs/core/services/app';
 import { defineConfig } from '@adonisjs/shield';
-import { getEmbedFrameSources } from '#cms/services/page/embed_policy';
-import cmsConfig from '#config/cms';
 
 /**
- * `frame-src` hosts for the CMS `iframe` block: each allowlisted hostname
- * (exact + subdomains) becomes a host-source. Kept in sync with
- * `CMS_IFRAME_ALLOWLIST`.
+ * CSP configuration for the `inertia` flavor.
+ *
+ * The CMS `iframe` block (and its `frame-src` host allowlist) is pruned in
+ * this flavor, so the CMS-specific imports are gone and the `frame-src`
+ * directive falls back to the default origin-only policy.
  */
-const iframeFrameSources = cmsConfig.iframeAllowlist.flatMap((host) => [`https://${host}`, `https://*.${host}`]);
-
 const shieldConfig = defineConfig({
 	/**
 	 * Configure CSP policies for your app. Refer documentation
@@ -56,8 +54,8 @@ const shieldConfig = defineConfig({
 				'https://*.sentry.io', // Sentry error reporting
 			],
 
-			// Frames this page may embed (video block players, allowlisted iframes)
-			frameSrc: ["'self'", ...getEmbedFrameSources(), ...iframeFrameSources],
+			// Frames: default to same-origin only — the CMS iframe block is pruned.
+			frameSrc: ["'self'"],
 
 			// Frames: deny (xFrame also set to SAMEORIGIN)
 			frameAncestors: ["'none'"],

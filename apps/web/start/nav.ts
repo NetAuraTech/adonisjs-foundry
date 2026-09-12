@@ -12,7 +12,6 @@
 
 import app from '@adonisjs/core/services/app';
 import { NavRegistry } from '#core/services/nav_registry';
-import { cmsNavEntries } from '#transport/cms/nav';
 import { coreNavEntries, maintenanceNavEntries } from '#transport/core/nav';
 import { fileNavEntries } from '#transport/file/nav';
 import { identityNavEntries } from '#transport/identity/nav';
@@ -23,7 +22,6 @@ app.container.singleton(NavRegistry, () => new NavRegistry());
 const registry = await app.container.make(NavRegistry);
 
 registry.register('core', coreNavEntries);
-registry.register('cms', cmsNavEntries);
 registry.register('file', fileNavEntries);
 registry.register('identity', identityNavEntries);
 registry.register('maintenance', maintenanceNavEntries);
