@@ -57,6 +57,10 @@ const inertiaManifest: FlavorManifest = {
 		'apps/web/tests/functional/cms',
 		'apps/web/tests/helpers/page_search.ts',
 
+		// ─── Cross-domain OpenAPI functional tests (import the pruned CMS api_docs) ──
+		'apps/web/tests/functional/core/openapi_docs.spec.ts',
+		'apps/web/tests/functional/core/openapi_rollout.spec.ts',
+
 		// ─── CMS ace command ────────────────────────────────────────────────────
 		'apps/web/commands/cms_normalize_migration_names.ts',
 
