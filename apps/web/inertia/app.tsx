@@ -5,8 +5,12 @@ import { Data } from '@generated/data';
 import { createInertiaApp, type ResolvedComponent } from '@inertiajs/react';
 import { ReactElement } from 'react';
 import { createRoot } from 'react-dom/client';
+import { ErrorBoundary } from '~/components/atoms/error_boundary';
 import Layout from '~/layouts/default';
+import { initSentry } from '~/lib/sentry';
 import { client } from './client';
+
+initSentry();
 
 let appName = '';
 
@@ -24,7 +28,9 @@ createInertiaApp({
 
 		createRoot(el).render(
 			<TuyauProvider client={client}>
-				<App {...props} />
+				<ErrorBoundary>
+					<App {...props} />
+				</ErrorBoundary>
 			</TuyauProvider>,
 		);
 	},
