@@ -1393,7 +1393,7 @@ const inertiaManifest: FlavorManifest = {
 				'    "@tuyau/core": "^1.0.0",',
 				'    "@vinejs/vine": "^4.3.0",',
 				'    "better-sqlite3": "^13.0.3",',
-				'    "dompurify": "^3.4.13",',
+				'    "dompurify": "^3.4.15",',
 				'    "edge.js": "^6.5.1",',
 				'    "html-to-image": "^1.11.13",',
 				'    "ipaddr.js": "^2.4.0",',
