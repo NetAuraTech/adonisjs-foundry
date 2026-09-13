@@ -7,6 +7,7 @@ import { TwoFactorService } from '#auth/services/two_factor_service';
 import { buildAccountPayload } from '#transport/account/helpers/i18n_payloads/account';
 import {
 	deleteAccountValidator,
+	disableTwoFactorValidator,
 	updateEmailValidator,
 	updatePasswordValidator,
 } from '#transport/account/validators/account';
@@ -37,6 +38,7 @@ export default class AccountController {
 			user: UserTransformer.transform(user.toDomain()),
 			providers: enabledProviders,
 			twoFactorEnabled: !!user.twoFactorEnabled,
+			twoFactorRecoveryCodes: user.twoFactorEnabled ? this.twoFactorService.getRecoveryCodes(user) : [],
 			twoFactorPending: pendingSecret
 				? { secret: pendingSecret, otpauthUri: session.get('twoFactorPendingOtpauthUri') }
 				: null,
@@ -111,6 +113,17 @@ export default class AccountController {
 			case 'cancel_2fa': {
 				session.forget('twoFactorPendingSecret');
 				session.forget('twoFactorPendingOtpauthUri');
+
+				return response.redirect().toRoute('account.account.render');
+			}
+			case 'disable_2fa': {
+				const payload = await disableTwoFactorValidator.validate(request.all());
+
+				await this.twoFactorService.disableTwoFactor(user, payload.current_password, payload.code);
+
+				regenerateCsrfToken(ctx);
+
+				session.flash('success', this.i18n.translate('account.account.two_factor.disable.success'));
 
 				return response.redirect().toRoute('account.account.render');
 			}

@@ -417,6 +417,7 @@ export class UserSchema extends BaseModel {
 		'pendingEmail',
 		'roleId',
 		'twoFactorEnabled',
+		'twoFactorRecoveryCodes',
 		'twoFactorSecret',
 		'updatedAt',
 		'username',
@@ -446,6 +447,8 @@ export class UserSchema extends BaseModel {
 	declare roleId: number | null;
 	@column()
 	declare twoFactorEnabled: boolean;
+	@column()
+	declare twoFactorRecoveryCodes: string | null;
 	@column()
 	declare twoFactorSecret: string | null;
 	@column.dateTime({ autoCreate: true, autoUpdate: true })

@@ -76,7 +76,22 @@
 				"placeholder": "123456"
 			},
 			"confirm": "Confirm and enable",
-			"cancel": "Cancel"
+			"cancel": "Cancel",
+			"recovery": {
+				"title": "Recovery codes",
+				"sub_title": "If you lose access to your authenticator, use one of these one-time codes to log in.",
+				"info": "Each code can only be used once. Copy or download them and store them somewhere safe.",
+				"copy": "Copy all",
+				"download": "Download"
+			},
+			"disable": {
+				"sub_title": "Enter your password and a current code to turn off two-factor authentication.",
+				"warning": "After disabling, you will no longer be asked for a code at login and your recovery codes are deleted.",
+				"password": "Current password",
+				"code": "Authentication code or recovery code",
+				"confirm": "Disable two-factor authentication",
+				"success": "Two-factor authentication has been disabled for your account."
+			}
 		},
 		"value": "Account"
 	},

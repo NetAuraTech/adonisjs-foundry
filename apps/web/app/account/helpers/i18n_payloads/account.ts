@@ -88,6 +88,20 @@ export const ACCOUNT_MAPPING = {
 		},
 		confirm: 'account.account.two_factor.confirm',
 		cancel: 'account.account.two_factor.cancel',
+		recovery: {
+			title: 'account.account.two_factor.recovery.title',
+			sub_title: 'account.account.two_factor.recovery.sub_title',
+			info: 'account.account.two_factor.recovery.info',
+			copy: 'account.account.two_factor.recovery.copy',
+			download: 'account.account.two_factor.recovery.download',
+		},
+		disable: {
+			sub_title: 'account.account.two_factor.disable.sub_title',
+			warning: 'account.account.two_factor.disable.warning',
+			password: 'account.account.two_factor.disable.password',
+			code: 'account.account.two_factor.disable.code',
+			confirm: 'account.account.two_factor.disable.confirm',
+		},
 	},
 };
 

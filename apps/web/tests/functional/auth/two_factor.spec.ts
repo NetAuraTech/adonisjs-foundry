@@ -16,7 +16,7 @@ const cipher = createTwoFactorCipher(env.get('APP_KEY').release());
  * The secret is encrypted at rest with the same application key the
  * {@link TwoFactorService} uses, so a valid code for it is accepted at login.
  */
-async function createTwoFactorUser(email: string, secret: string) {
+async function createTwoFactorUser(email: string, secret: string, recoveryCodes: string[] = []) {
 	return User.create({
 		username: email.split('@')[0],
 		email,
@@ -24,6 +24,7 @@ async function createTwoFactorUser(email: string, secret: string) {
 		emailVerifiedAt: DateTime.now(),
 		twoFactorEnabled: true,
 		twoFactorSecret: cipher.encrypt(secret),
+		twoFactorRecoveryCodes: recoveryCodes.length ? cipher.encrypt(JSON.stringify(recoveryCodes)) : null,
 	});
 }
 
@@ -141,5 +142,123 @@ test.group('Two-factor (TOTP) authentication', (group) => {
 			.send();
 
 		res.assertStatus(400);
+	});
+
+	test('login: a pending 2FA user with a recovery code is authenticated', async ({ client, assert }) => {
+		const secret = Totp.generateSecret();
+		const codes = ['ABCDEFG-HJKLM2'];
+		const user = await createTwoFactorUser('2fa-recovery@example.com', secret, codes);
+
+		const res = await client
+			.post('/two-factor')
+			.redirects(0)
+			.withSession({ twoFactorUserId: user.id })
+			.withCsrfToken()
+			.form({ code: codes[0] })
+			.send();
+
+		res.assertStatus(302);
+		res.assertHeader('location', '/settings/profile');
+
+		const guarded = await client.get('/settings/profile');
+		guarded.assertStatus(200);
+
+		// The recovery code was consumed.
+		const fresh = await User.find(user.id);
+		assert.notInclude(
+			fresh!.twoFactorRecoveryCodes ? JSON.parse(cipher.decrypt(fresh!.twoFactorRecoveryCodes!)) : [],
+			codes[0],
+		);
+	});
+
+	test('login: a recovery code is single-use and rejected on replay', async ({ client, assert }) => {
+		const secret = Totp.generateSecret();
+		const codes = ['ABCDEFG-HJKLM2'];
+		const user = await createTwoFactorUser('2fa-replay@example.com', secret, codes);
+
+		// First use succeeds.
+		const first = await client
+			.post('/two-factor')
+			.redirects(0)
+			.withSession({ twoFactorUserId: user.id })
+			.withCsrfToken()
+			.form({ code: codes[0] })
+			.send();
+		first.assertStatus(302);
+
+		// Replay the same code: it has been consumed, so it is rejected.
+		const replay = await client
+			.post('/two-factor')
+			.redirects(0)
+			.withSession({ twoFactorUserId: user.id })
+			.withCsrfToken()
+			.accept('json')
+			.form({ code: codes[0] })
+			.send();
+		replay.assertStatus(401);
+		assert.equal(replay.body().error.code, 'E_INVALID_TWO_FACTOR_CODE');
+	});
+
+	test('disable_2fa: a valid password and TOTP code disable 2FA', async ({ client, assert }) => {
+		const secret = Totp.generateSecret();
+		const user = await createTwoFactorUser('2fa-disable@example.com', secret, ['ABCDEFG-HJKLM2']);
+
+		const res = await client
+			.post('/settings/account')
+			.redirects(0)
+			.withCsrfToken()
+			.loginAs(user)
+			.form({ _action: 'disable_2fa', current_password: 'TestPassword123!', code: Totp.code(secret) })
+			.send();
+
+		res.assertStatus(302);
+		res.assertHeader('location', '/settings/account');
+
+		const fresh = await User.find(user.id);
+		assert.isFalse(!!fresh!.twoFactorEnabled);
+		assert.isNull(fresh!.twoFactorSecret);
+		assert.isNull(fresh!.twoFactorRecoveryCodes);
+	});
+
+	test('disable_2fa: a wrong password is rejected and 2FA stays enabled', async ({ client, assert }) => {
+		const secret = Totp.generateSecret();
+		const user = await createTwoFactorUser('2fa-disable-badpass@example.com', secret);
+
+		const res = await client
+			.post('/settings/account')
+			.redirects(0)
+			.withCsrfToken()
+			.loginAs(user)
+			.accept('json')
+			.form({ _action: 'disable_2fa', current_password: 'WrongPassword123!', code: Totp.code(secret) })
+			.send();
+
+		// An incorrect current password is a bad request (same status as the
+		// password-change flow), not an authentication failure.
+		res.assertStatus(400);
+		assert.equal(res.body().error.code, 'E_INVALID_CURRENT_PASSWORD');
+
+		const fresh = await User.find(user.id);
+		assert.isTrue(!!fresh!.twoFactorEnabled);
+	});
+
+	test('disable_2fa: a wrong second factor is rejected and 2FA stays enabled', async ({ client, assert }) => {
+		const secret = Totp.generateSecret();
+		const user = await createTwoFactorUser('2fa-disable-badcode@example.com', secret);
+
+		const wrong = String((Number(Totp.code(secret)) + 1) % 1_000_000).padStart(6, '0');
+		const res = await client
+			.post('/settings/account')
+			.redirects(0)
+			.withCsrfToken()
+			.loginAs(user)
+			.accept('json')
+			.form({ _action: 'disable_2fa', current_password: 'TestPassword123!', code: wrong })
+			.send();
+
+		res.assertStatus(401);
+
+		const fresh = await User.find(user.id);
+		assert.isTrue(!!fresh!.twoFactorEnabled);
 	});
 });

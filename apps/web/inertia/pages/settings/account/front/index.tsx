@@ -21,12 +21,13 @@ interface PageProps {
 	user: Data.Identity.User;
 	providers: OAuthProvider[];
 	twoFactorEnabled: boolean;
+	twoFactorRecoveryCodes: string[];
 	twoFactorPending: { secret: string; otpauthUri: string } | null;
 	translations: SettingsAccountTranslations;
 }
 
 export default function AccountPage(props: PageProps) {
-	const { user, providers, twoFactorEnabled, twoFactorPending, translations } = props;
+	const { user, providers, twoFactorEnabled, twoFactorRecoveryCodes, twoFactorPending, translations } = props;
 
 	const { t } = useTranslation(translations);
 
@@ -37,6 +38,25 @@ export default function AccountPage(props: PageProps) {
 	const validationTwoFactorForm = useFormValidation({
 		code: presets.requiredString(t('two_factor.code.value')),
 	});
+
+	const validationDisableForm = useFormValidation({
+		current_password: presets.password(t('two_factor.disable.password')),
+		code: presets.requiredString(t('two_factor.disable.code')),
+	});
+
+	const copyRecoveryCodes = () => {
+		void navigator.clipboard.writeText(twoFactorRecoveryCodes.join('\n'));
+	};
+
+	const downloadRecoveryCodes = () => {
+		const blob = new Blob([twoFactorRecoveryCodes.join('\n')], { type: 'text/plain' });
+		const url = URL.createObjectURL(blob);
+		const link = document.createElement('a');
+		link.href = url;
+		link.download = 'recovery-codes.txt';
+		link.click();
+		URL.revokeObjectURL(url);
+	};
 
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
@@ -245,11 +265,95 @@ export default function AccountPage(props: PageProps) {
 							</div>
 						</div>
 					) : twoFactorEnabled ? (
-						<div className="flex flex-wrap items-center gap-3">
-							<span className="rounded-full bg-success-soft px-3 py-1 text-sm font-medium text-success">
-								{t('two_factor.enabled')}
-							</span>
-							<p className="text-sm text-ink-muted">{t('two_factor.enabled_sub')}</p>
+						<div className="grid gap-8">
+							<div className="flex flex-wrap items-center gap-3">
+								<span className="rounded-full bg-success-soft px-3 py-1 text-sm font-medium text-success">
+									{t('two_factor.enabled')}
+								</span>
+								<p className="text-sm text-ink-muted">{t('two_factor.enabled_sub')}</p>
+							</div>
+
+							{twoFactorRecoveryCodes.length > 0 && (
+								<div className="grid gap-3">
+									<div className="grid gap-1">
+										<p className="text-sm font-medium text-ink">{t('two_factor.recovery.title')}</p>
+										<p className="text-sm text-ink-muted">{t('two_factor.recovery.sub_title')}</p>
+										<p className="text-xs text-ink-muted">{t('two_factor.recovery.info')}</p>
+									</div>
+									<ul className="grid gap-1 rounded-lg border border-edge bg-sunken p-3 font-mono text-sm text-ink">
+										{twoFactorRecoveryCodes.map((code) => (
+											<li key={code}>{code}</li>
+										))}
+									</ul>
+									<div className="flex flex-wrap gap-3">
+										<Button
+											type="button"
+											fitContent
+											variant="outline"
+											onClick={copyRecoveryCodes}
+											name="copy_recovery_codes"
+										>
+											{t('two_factor.recovery.copy')}
+										</Button>
+										<Button
+											type="button"
+											fitContent
+											variant="outline"
+											onClick={downloadRecoveryCodes}
+											name="download_recovery_codes"
+										>
+											{t('two_factor.recovery.download')}
+										</Button>
+									</div>
+								</div>
+							)}
+
+							<div className="grid gap-4">
+								<div className="grid gap-1">
+									<p className="text-sm font-medium text-ink">{t('two_factor.disable.sub_title')}</p>
+									<p className="text-xs text-ink-muted">{t('two_factor.disable.warning')}</p>
+								</div>
+								<Form
+									action={actionFor('account.account.execute')}
+									className="grid gap-6"
+									onBefore={(visit) => {
+										const isValid = validationDisableForm.validateAll(visit.data as Record<string, any>);
+										if (!isValid) return false;
+									}}
+								>
+									{({ errors, processing }) => (
+										<>
+											<input type="hidden" name="_action" value="disable_2fa" />
+											<Field
+												label={t('two_factor.disable.password')}
+												name="current_password"
+												type="password"
+												validation={validationDisableForm}
+												errors={errors}
+												required
+											/>
+											<Field
+												label={t('two_factor.disable.code')}
+												name="code"
+												type="text"
+												placeholder={t('two_factor.code.placeholder')}
+												validation={validationDisableForm}
+												errors={errors}
+												required
+											/>
+											<Button
+												loading={processing}
+												type={'submit'}
+												fitContent
+												variant="danger"
+												name="disable_2fa_submit"
+											>
+												{t('two_factor.disable.confirm')}
+											</Button>
+										</>
+									)}
+								</Form>
+							</div>
 						</div>
 					) : (
 						<Form action={actionFor('account.account.execute')}>

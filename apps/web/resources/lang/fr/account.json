@@ -75,7 +75,22 @@
 				"placeholder": "123456"
 			},
 			"confirm": "Confirmer et activer",
-			"cancel": "Annuler"
+			"cancel": "Annuler",
+			"recovery": {
+				"title": "Codes de récupération",
+				"sub_title": "Si vous perdez l'accès à votre authentificateur, utilisez l'un de ces codes à usage unique pour vous connecter.",
+				"info": "Chaque code ne peut être utilisé qu'une seule fois. Copiez-les ou téléchargez-les et conservez-les en lieu sûr.",
+				"copy": "Tout copier",
+				"download": "Télécharger"
+			},
+			"disable": {
+				"sub_title": "Saisissez votre mot de passe et un code actuel pour désactiver la double authentification.",
+				"warning": "Après désactivation, aucun code ne vous sera plus demandé à la connexion et vos codes de récupération seront supprimés.",
+				"password": "Mot de passe actuel",
+				"code": "Code d'authentification ou code de récupération",
+				"confirm": "Désactiver la double authentification",
+				"success": "La double authentification a été désactivée sur votre compte."
+			}
 		},
 		"value": "Compte"
 	},
