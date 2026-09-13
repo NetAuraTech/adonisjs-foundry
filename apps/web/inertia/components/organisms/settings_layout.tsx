@@ -4,7 +4,7 @@ import { Paragraph } from '@foundry/design-system/paragraph';
 import { Section } from '@foundry/design-system/section';
 import { Head } from '@inertiajs/react';
 import { ReactNode } from 'react';
-import { urlFor } from '~/client';
+import { actionFor, urlFor } from '~/client';
 import { CanAccess } from '~/guards/can_access';
 import { useNavLinkActive } from '~/hooks/use_nav_link_active';
 import { useTranslation } from '~/hooks/use_translation';
@@ -64,8 +64,11 @@ export function SettingsLayout(props: PageProps) {
 
 	const adminHref = urlFor('admin.core.dashboard.render');
 	const adminActive = useNavLinkActive(adminHref);
-	const logoutHref = urlFor('auth.session.destroy');
-	const logoutActive = useNavLinkActive(logoutHref);
+	// Resolve the route's own HTTP method from the registry: logout is a
+	// state-changing POST, so the tab must submit a POST visit rather than a
+	// GET navigation (a bare `urlFor()` string would default to GET).
+	const logoutAction = actionFor('auth.session.destroy');
+	const logoutActive = useNavLinkActive(logoutAction.url);
 
 	return (
 		<>
@@ -89,7 +92,8 @@ export function SettingsLayout(props: PageProps) {
 								<NavLink href={adminHref} isActive={adminActive} label={t('header.tabs.admin')} variant="setting_nav" />
 							</CanAccess>
 							<NavLink
-								href={logoutHref}
+								href={logoutAction.url}
+								method={logoutAction.method}
 								isActive={logoutActive}
 								label={t('header.tabs.logout')}
 								variant="setting_nav"
