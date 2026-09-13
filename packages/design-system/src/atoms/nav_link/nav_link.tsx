@@ -49,6 +49,15 @@ interface NavLinkProps {
 	 */
 	isActive?: boolean;
 	/**
+	 * HTTP method used when the link is activated.
+	 *
+	 * Defaults to `'get'`, which renders a plain anchor and performs client-side
+	 * navigation. Any other value renders a button that issues an Inertia visit
+	 * with that method instead — use it for state-changing actions (e.g. logout)
+	 * whose endpoint does not accept a GET.
+	 */
+	method?: 'get' | 'post' | 'put' | 'patch' | 'delete';
+	/**
 	 * Visual variant.
 	 *
 	 * - `'link'` — secondary underline-style link, default.
@@ -98,6 +107,7 @@ export function NavLink(props: NavLinkProps) {
 		label,
 		href,
 		isActive = false,
+		method,
 		variant = 'link',
 		disabled = false,
 		title,
@@ -113,6 +123,7 @@ export function NavLink(props: NavLinkProps) {
 	return (
 		<Link
 			href={href}
+			method={method}
 			aria-current={isActive ? 'page' : undefined}
 			onClick={onClick}
 			className={classNames}
