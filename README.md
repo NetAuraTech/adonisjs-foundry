@@ -4,11 +4,12 @@ A production-ready boilerplate and headless CMS for AdonisJS v7 with Inertia.js 
 
 ## Description
 
-AdonisJS Foundry is built on AdonisJS v7 and follows a domain-driven architecture with a clean separation between a per-domain transport layer and a per-domain business layer (actions, repositories, services). It ships with a complete authentication system, OAuth providers, user settings, email workflows, a full admin panel (CMS) with a visual page builder, file management, template system, role-based access control, user preferences, structured logging, caching, image optimization, SEO tooling, and a React + Inertia frontend with SSR support — all wired up and ready to go.
+AdonisJS Foundry is built on AdonisJS v7 and follows a domain-driven architecture with a clean separation between a per-domain transport layer and a per-domain business layer (actions, repositories, services). It ships with a complete authentication system (including TOTP two-factor authentication), OAuth providers, user settings, email workflows, a full admin panel (CMS) with a visual page builder, file management, template system, role-based access control, user preferences, structured logging, caching, image optimization, SEO tooling, per-client API rate limiting, a self-hosted OpenAPI reference, background jobs with scheduled maintenance, and inbound webhooks — plus a React + Inertia frontend with SSR support, all wired up and ready to go.
 
 ## Key Features
 
 - **Complete Authentication** — Registration, login, logout, email verification, password reset
+- **Two-Factor Authentication** — TOTP enrollment from Settings with one-time recovery codes, code-gated disable flow, and a TOTP challenge at login
 - **OAuth Providers** — GitHub, Google, Facebook with account linking and unlinking
 - **User Invitation** — Admin-driven invitation flow with token-based acceptance
 - **User Settings** — Profile, account credentials, email change, account deletion
@@ -27,6 +28,12 @@ AdonisJS Foundry is built on AdonisJS v7 and follows a domain-driven architectur
 - **Content Sanitization** — Server-side DOMPurify (via jsdom) for all rich-text content
 - **Role-Based Access Control** — Custom role/permission system with many-to-many pivot, permission checking, frontend guards, and admin management UI for users, roles, and permissions
 - **Security First** — Selector/validator tokens, attempt tracking, CSRF protection, unverified account protection
+- **Per-Client Rate Limiting** — Per-user request budget on the `/api/v1/*` surface, on top of the per-route throttles
+- **OpenAPI Documentation** — Runtime-generated OpenAPI 3 spec (`/api/v1/openapi.json`) scoped to the caller's permissions, with a self-hosted interactive reference at `/api/docs`
+- **Background Jobs** — Redis job queue (`@adonisjs/queue`) with a worker process and scheduled maintenance jobs (log pruning, backup retention)
+- **Incoming Webhooks (full flavor)** — HMAC-signed, replay-protected inbound deliveries with idempotent recording, queued processing, and a delivery log (admin UI + REST)
+- **Full-Text Search (full flavor)** — Optional Typesense-backed search across CMS page translations, with graceful fallback to the standard listing
+- **Monitoring** — Sentry on both sides: `@sentry/node` for the runtime, `@sentry/react` inlined into the browser bundle
 - **Domain-Driven Architecture** — Clean separation per domain: actions, domain entities, repositories, services, and thin controllers
 - **Structured Logging** — Categorized logs (AUTH, SECURITY, BUSINESS, API, DATABASE, PERFORMANCE) with Sentry integration, database persistence (`log_entries`), an in-admin log viewer, and a retention command
 - **Maintenance Mode** — Runtime toggle (admin UI or `maintenance:on`/`maintenance:off`), custom message, IP allowlist, and a public maintenance page; health probes stay reachable
@@ -56,11 +63,15 @@ AdonisJS Foundry is built on AdonisJS v7 and follows a domain-driven architectur
 | **File Storage**     | @adonisjs/drive (local FS, S3, Cloudflare R2)                                                 |
 | **Image Processing** | Sharp (responsive WebP variant generation)                                                    |
 | **Real-Time**        | @adonisjs/transmit (SSE)                                                                      |
+| **Queue**            | @adonisjs/queue (Redis-backed jobs, worker, scheduled maintenance)                            |
+| **Rate Limiting**    | @adonisjs/limiter (per-route throttles + per-client API budget)                               |
+| **API Docs**         | OpenAPI 3 (runtime-generated spec + self-hosted reference UI)                                 |
+| **Search**           | Typesense (optional, CMS page full-text search)                                               |
 | **Sanitization**     | DOMPurify + jsdom (server-side HTML sanitization)                                             |
 | **Routing**          | Tuyau (type-safe client)                                                                      |
 | **Icons**            | Iconify React                                                                                 |
 | **Notifications**    | Sonner (toast)                                                                                |
-| **Monitoring**       | Sentry (@sentry/node)                                                                         |
+| **Monitoring**       | Sentry (@sentry/node + @sentry/react)                                                         |
 | **Build**            | Vite 8, @adonisjs/assembler                                                                   |
 | **Design System**    | `@foundry/design-system` (shared React workspace: atoms, molecules, organisms, design tokens) |
 | **Testing**          | Japa (backend: unit, functional), Vitest (frontend)                                           |
@@ -265,7 +276,10 @@ SMTP_PORT=1025
 SMTP_USERNAME=username
 SMTP_PASSWORD=password
 
-# Sentry
+# Sentry — the same DSN feeds the Node runtime (config/sentry.ts) and the
+# browser bundle (inlined at build time). Leave unset to disable error
+# reporting on both sides. Optional SENTRY_RELEASE overrides the frontend
+# release tag (defaults to the app version).
 SENTRY_DSN=<your_dsn_url>
 
 # OAuth
@@ -292,10 +306,26 @@ MAX_UPLOAD_SIZE=10
 
 # Limiter
 LIMITER_STORE=redis
+# Default per-client API rate limit (requests/minute) when a user has no custom limit
+API_RATE_LIMIT_DEFAULT=60
 
 # CMS content policies (page builder) — comma-separated
 CMS_IFRAME_ALLOWLIST=www.google.com,maps.google.com
 CMS_VIDEO_PROVIDERS=youtube,vimeo
+
+# Inbound webhooks — shared HMAC-SHA256 signing secret; leave empty to disable
+# the webhook surface. WEBHOOK_REPLAY_WINDOW bounds accepted clock skew (seconds).
+WEBHOOK_SECRET=
+WEBHOOK_REPLAY_WINDOW=300
+
+# CMS page search (Typesense) — disabled by default; the admin page list falls
+# back to its standard filtered query.
+SEARCH_ENABLED=false
+TYPESENSE_HOST=127.0.0.1
+TYPESENSE_PORT=8108
+TYPESENSE_API_KEY=
+TYPESENSE_COLLECTION=cms_page_translations
+TYPESENSE_SEARCH_LIMIT=20
 
 # Sitemap — comma-separated additions and exclusions
 SITEMAP_ADDITIONS=
@@ -344,17 +374,27 @@ Foundry ships with a complete authentication system covering every standard flow
 
 ### Flows
 
-| Flow               | Description                                                        |
-| ------------------ | ------------------------------------------------------------------ |
-| Registration       | Email + password, with automatic email verification                |
-| Login              | Email + password (session-based)                                   |
-| Logout             | Session invalidation + CSRF rotation                               |
-| Password Reset     | Selector/validator token, 1 hour expiry, attempt tracking          |
-| Email Verification | Token-based, sent on registration                                  |
-| OAuth Login        | GitHub, Google, Facebook                                           |
-| OAuth Linking      | Link/unlink providers from settings                                |
-| Define Password    | Prompted after OAuth-only registration                             |
-| Invitation         | Admin sends invite → user accepts via token link and sets password |
+| Flow               | Description                                                         |
+| ------------------ | ------------------------------------------------------------------- |
+| Registration       | Email + password, with automatic email verification                 |
+| Login              | Email + password (session-based)                                    |
+| Logout             | Session invalidation + CSRF rotation                                |
+| Password Reset     | Selector/validator token, 1 hour expiry, attempt tracking           |
+| Two-Factor (TOTP)  | TOTP challenge after a correct password; recovery codes as fallback |
+| Email Verification | Token-based, sent on registration                                   |
+| OAuth Login        | GitHub, Google, Facebook                                            |
+| OAuth Linking      | Link/unlink providers from settings                                 |
+| Define Password    | Prompted after OAuth-only registration                              |
+| Invitation         | Admin sends invite → user accepts via token link and sets password  |
+
+### Two-Factor Authentication
+
+Foundry ships TOTP two-factor authentication, managed from **Settings → Account**:
+
+- **Enrollment** — begin from the account page (generates a TOTP secret and an `otpauth://` URI for an authenticator app), then confirm with a valid 6-digit code. On success, one-time **recovery codes** are generated and displayed exactly once.
+- **Login** — after a correct password, a user with 2FA enabled is challenged for a 6-digit TOTP code **or** an unused recovery code before any session is created (`/two-factor`, throttled to 5 attempts / 15 min).
+- **Recovery codes** — one-time use; entering one consumes it.
+- **Disable** — requires the current password plus a valid TOTP code or recovery code.
 
 ### Token Security
 
@@ -388,6 +428,10 @@ The admin JSON surface under `/api/v1/admin/*` (users, roles, permissions, pages
 For the `api` flavor (no session guard at all): set `AUTH_GUARD_WEB=false` and `AUTH_GUARD_API=true`.
 
 **OAuth and mobile clients**: the OAuth flow relies on the browser session (state/nonce + flash messages) and always redirects back to the web app after a provider callback. A mobile client completes OAuth inside a system browser (the web app creates its session as usual), then obtains an API token via `POST /api/v1/auth/login` — OAuth-only users set a password first through the existing "define password" flow. No token is ever placed in a redirect URL.
+
+### Per-Client Rate Limiting
+
+On top of the per-route throttles, every authenticated `/api/v1/*` route group carries a **per-client budget** (`apiClientThrottle` in `start/limiter.ts`): keyed by the authenticated user id (never the raw IP), it allows `user.apiRateLimit ?? API_RATE_LIMIT_DEFAULT` requests per minute across the whole API surface. Exceeding it returns `429` with the standard JSON error envelope and rate-limit headers.
 
 ## Admin Panel (CMS)
 
@@ -545,6 +589,7 @@ Settings are split into domains, each backed by a dedicated service, repository,
 
 - Email change (confirmation link to new address + security notification to old address)
 - Password change (requires current password verification)
+- Two-factor authentication (TOTP enrollment, recovery codes, disable flow)
 - OAuth provider linking/unlinking
 - Account deletion (requires password confirmation)
 
@@ -673,6 +718,23 @@ Foundry ships a built-in maintenance mode, gated by the `maintenance` feature fl
 - **Schedule** — programmatic on/off at a given time (`maintenance:schedule`)
 - **Probes stay up** — `/health` and `/health/ready` are registered outside the maintenance middleware so load balancers keep probing
 
+## Incoming Webhooks (full flavor)
+
+Foundry ships an inbound-webhook facility: a public receiver, signature verification, and a delivery log.
+
+- **Receiver** — `POST /webhooks/:receiver`, registered outside the maintenance/auth middleware (like the health routes) so external senders reach it directly. Each receiver is a named route; the receiver name flows into the delivery log and the security audit trail. Adding a receiver is a one-line route.
+- **Signature** — senders sign each delivery with the shared `WEBHOOK_SECRET`: `X-Signature` is the hex HMAC-SHA256 of `${X-Timestamp}.${rawBody}`, with `X-Timestamp` in unix seconds. Deliveries whose timestamp falls outside the replay window (`WEBHOOK_REPLAY_WINDOW`, default 300 s) are rejected as replays. An empty `WEBHOOK_SECRET` disables the whole surface.
+- **Idempotency** — the `X-Delivery-Id` header deduplicates retries; without it, a stable digest of the payload is used. A verified delivery always answers `202 Accepted` — the 202 acknowledges receipt, not completion.
+- **Processing** — the delivery is recorded as `pending` and a job on the `webhook` queue advances it to `processed`; once retries are exhausted the delivery is marked `failed` and a security log entry is written.
+- **Delivery log** — the `webhook_deliveries` table, browsable at `/admin/webhooks/deliveries` (`webhooks.view` permission) and via `GET /api/v1/admin/webhooks/deliveries`.
+
+```
+sender:  sig = HMAC_SHA256(secret, `${ts}.${rawBody}`)   (hex)
+         POST /webhooks/:receiver
+         X-Timestamp: ts        X-Signature: sig
+         [X-Delivery-Id: evt_123]
+```
+
 ## Architecture
 
 Foundry follows a **domain-driven architecture** with a strict layering convention.
@@ -694,7 +756,7 @@ adonisjs-foundry/
 └── Dockerfile              # Multi-stage production image
 ```
 
-The `apps/web` workspace is split in two trees, organized **per domain** (`account`, `auth`, `cms`, `core`, `file`, `identity`, `log`):
+The `apps/web` workspace is split in two trees, organized **per domain** (`account`, `auth`, `cms`, `core`, `file`, `identity`, `log`, `webhook`):
 
 **`app/` — the transport layer.** Each domain binds its own HTTP surfaces and nothing in this tree holds business logic:
 
@@ -737,6 +799,7 @@ commands/
 │                           # maintenance_schedule, maintenance_allow_ip,
 │                           # maintenance_remove_ip, maintenance_message
 ├── create_user.ts          # create:user
+├── make_domain.ts          # make:domain (scaffold a complete DDD domain)
 ├── logs_prune.ts           # logs:prune
 └── cms_normalize_migration_names.ts
 
@@ -746,7 +809,8 @@ database/
 ├── migrations/             # users, roles, permissions, role_permissions, remember_me_tokens,
 │                           # tokens, user_preferences, file_folders, files, file_alts,
 │                           # log_entries, auth_access_tokens, pages, page_translations,
-│                           # page_revisions, templates, alter_pages
+│                           # page_revisions, templates, alter_pages, two_factor (users
+│                           # columns), webhook_deliveries
 ├── seeders/                # role_seeder, permission_seeder, cms/ (page, template),
 │                           # mails/ (mail_service)
 ├── schema.ts
@@ -768,16 +832,18 @@ inertia/
 ├── guards/                         # authenticated.tsx, can_access.tsx, has_role.tsx
 ├── helpers/ hooks/ lib/ utils/ types/
 ├── layouts/                        # default.tsx, admin.tsx
-└── pages/                          # auth/ (admin + front), cms/ (page, template), core/ (admin,
-                                    #   front), errors/, file/, log/, maintenance/, permission/,
-                                    #   role/, settings/ (account, preferences, profile)
+└── pages/                          # auth/ (admin + front, incl. the two-factor challenge),
+                                    #   cms/ (page, template), core/ (admin, front), errors/,
+                                    #   file/, log/, maintenance/, permission/, role/,
+                                    #   settings/ (account, preferences, profile),
+                                    #   webhook/ (admin delivery log)
 
 resources/
 ├── lang/
 │   ├── en/                         # account.json, admin.json, auth.json, exceptions.json,
 │   │                               # file.json, home.json, identity.json, log.json,
 │   │                               # maintenance.json, pagination.json, permissions.json,
-│   │                               # roles.json, validation.json,
+│   │                               # roles.json, validation.json, webhook.json,
 │   │                               # cms/ (builder.json, page.json, template.json)
 │   └── fr/                         # same namespaces as en/
 └── views/
@@ -793,8 +859,9 @@ start/
 ├── events.ts                       # Application event bindings (currently empty)
 ├── extensions.ts                   # Model extensions
 ├── kernel.ts                       # HTTP kernel (middleware stack)
-├── limiter.ts                      # Rate limiter configuration
+├── limiter.ts                      # Rate limiter configuration (throttles + per-client budget)
 ├── routes.ts                       # Per-domain route index (self-registering surfaces)
+├── scheduler.ts                    # Scheduled maintenance jobs (registered at boot)
 ├── transmit.ts                     # SSE channel authorization and lifecycle hooks
 └── validator.ts                    # VineJS custom rules
 ```
@@ -869,6 +936,8 @@ Registered outside the maintenance middleware so load balancers can probe during
 | ------ | --------------------------- | ---------------------------------- | ----------- |
 | GET    | `/login`                    | SessionController.render           | —           |
 | POST   | `/login`                    | SessionController.execute          | 5 req / 15m |
+| GET    | `/two-factor`               | TwoFactorController.render         | —           |
+| POST   | `/two-factor`               | TwoFactorController.verify         | 5 req / 15m |
 | GET    | `/register`                 | RegisterController.render          | —           |
 | POST   | `/register`                 | RegisterController.execute         | 3 req / 1h  |
 | GET    | `/forgot-password`          | ForgotPasswordController.render    | —           |
@@ -992,35 +1061,42 @@ Registered outside the maintenance middleware so load balancers can probe during
 | ------ | ------------- | --------------------- | ----------- |
 | GET    | `/admin/logs` | LogsController.render | `logs.view` |
 
+### Admin Routes — Webhooks (full flavor)
+
+| Method | Path                         | Handler                     | Permission      |
+| ------ | ---------------------------- | --------------------------- | --------------- |
+| GET    | `/admin/webhooks/deliveries` | DeliveriesController.render | `webhooks.view` |
+
 ### API Routes — shared admin surface (`/api/v1/admin/*`)
 
 The admin JSON surface is shared by the in-repo admin UI (session guard) and, when `AUTH_GUARD_API=true`, by external API clients (Bearer token). Standard REST CRUD applies to the `users`, `roles`, `pages`, `templates`, `files` and `folders` resources (`GET` index / `POST` store / `GET|PUT|DELETE` by `:id`), plus these extra endpoints:
 
-| Method | Path                                                                                | Notes                     |
-| ------ | ----------------------------------------------------------------------------------- | ------------------------- |
-| PUT    | `/api/v1/admin/pages/:id/publish`                                                   | publish a page            |
-| PUT    | `/api/v1/admin/pages/:id/unpublish`                                                 | unpublish a page          |
-| PUT    | `/api/v1/admin/pages/:id/homepage`                                                  | designate the homepage    |
-| POST   | `/api/v1/admin/pages/:id/translations`                                              | create a translation      |
-| GET    | `/api/v1/admin/pages/:id/translations/:translationId/revisions`                     | revision history          |
-| POST   | `/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/restore` | restore                   |
-| PUT    | `/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/pin`     | pin/unpin                 |
-| GET    | `/api/v1/admin/pages/preview/token`                                                 | live-preview token        |
-| POST   | `/api/v1/admin/templates/from-page`                                                 | create template from page |
-| GET    | `/api/v1/admin/templates/preview/token`                                             | template preview token    |
-| PUT    | `/api/v1/admin/files/:id/move`                                                      | move a file               |
-| PUT    | `/api/v1/admin/files/:id/alt`                                                       | upsert an alt text        |
-| DELETE | `/api/v1/admin/files/:id/alt`                                                       | delete an alt text        |
-| GET    | `/api/v1/admin/folders/:id/children`                                                | nested folder children    |
-| POST   | `/api/v1/admin/builder/operations`                                                  | page-builder operations   |
-| GET    | `/api/v1/admin/builder/presence/:translationId`                                     | builder presence          |
-| POST   | `/api/v1/admin/builder/draft/:translationId`                                        | save a builder draft      |
-| GET    | `/api/v1/admin/dashboard`                                                           | dashboard figures         |
-| GET    | `/api/v1/admin/logs`                                                                | log viewer data           |
-| GET    | `/api/v1/admin/maintenance`                                                         | maintenance config        |
-| PUT    | `/api/v1/admin/maintenance`                                                         | update maintenance config |
-| PUT    | `/api/v1/admin/maintenance/toggle`                                                  | toggle maintenance mode   |
-| POST   | `/api/v1/admin/preferences/theme`                                                   | persist theme preference  |
+| Method | Path                                                                                | Notes                              |
+| ------ | ----------------------------------------------------------------------------------- | ---------------------------------- |
+| PUT    | `/api/v1/admin/pages/:id/publish`                                                   | publish a page                     |
+| PUT    | `/api/v1/admin/pages/:id/unpublish`                                                 | unpublish a page                   |
+| PUT    | `/api/v1/admin/pages/:id/homepage`                                                  | designate the homepage             |
+| POST   | `/api/v1/admin/pages/:id/translations`                                              | create a translation               |
+| GET    | `/api/v1/admin/pages/:id/translations/:translationId/revisions`                     | revision history                   |
+| POST   | `/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/restore` | restore                            |
+| PUT    | `/api/v1/admin/pages/:id/translations/:translationId/revisions/:revisionId/pin`     | pin/unpin                          |
+| GET    | `/api/v1/admin/pages/preview/token`                                                 | live-preview token                 |
+| POST   | `/api/v1/admin/templates/from-page`                                                 | create template from page          |
+| GET    | `/api/v1/admin/templates/preview/token`                                             | template preview token             |
+| PUT    | `/api/v1/admin/files/:id/move`                                                      | move a file                        |
+| PUT    | `/api/v1/admin/files/:id/alt`                                                       | upsert an alt text                 |
+| DELETE | `/api/v1/admin/files/:id/alt`                                                       | delete an alt text                 |
+| GET    | `/api/v1/admin/folders/:id/children`                                                | nested folder children             |
+| POST   | `/api/v1/admin/builder/operations`                                                  | page-builder operations            |
+| GET    | `/api/v1/admin/builder/presence/:translationId`                                     | builder presence                   |
+| POST   | `/api/v1/admin/builder/draft/:translationId`                                        | save a builder draft               |
+| GET    | `/api/v1/admin/dashboard`                                                           | dashboard figures                  |
+| GET    | `/api/v1/admin/logs`                                                                | log viewer data                    |
+| GET    | `/api/v1/admin/maintenance`                                                         | maintenance config                 |
+| PUT    | `/api/v1/admin/maintenance`                                                         | update maintenance config          |
+| PUT    | `/api/v1/admin/maintenance/toggle`                                                  | toggle maintenance mode            |
+| POST   | `/api/v1/admin/preferences/theme`                                                   | persist theme preference           |
+| GET    | `/api/v1/admin/webhooks/deliveries`                                                 | webhook delivery log (full flavor) |
 
 ### API Routes — token-only surface (`/api/v1/*`)
 
@@ -1040,6 +1116,17 @@ When the `api` guard is enabled (`AUTH_GUARD_API=true`), these routes accept a B
 | PUT    | `/api/v1/profile`                  | ProfileController.update          | Bearer token     |
 | PUT    | `/api/v1/account`                  | AccountController.update          | Bearer token     |
 | DELETE | `/api/v1/account`                  | AccountController.destroy         | Bearer token     |
+
+### API Documentation (OpenAPI)
+
+Gated by the `apiDocs` feature flag (`config/features.ts`). The spec is generated at runtime from the route registry (`app/core/openapi/`) and scoped to the authenticated user — only the routes their permissions allow are documented:
+
+| Method | Path                   | Handler                | Auth                  |
+| ------ | ---------------------- | ---------------------- | --------------------- |
+| GET    | `/api/docs`            | DocsController.show    | Session (`web` guard) |
+| GET    | `/api/v1/openapi.json` | OpenApiController.spec | `web` / `api` guards  |
+
+`/api/docs` is a self-hosted interactive reference page over the spec. Spec drift is guarded by the test suite (schema validation + route-registry lockstep).
 
 ## Logging & Exception Handling
 
@@ -1210,6 +1297,33 @@ Move email change logic from controller to AccountService
 - Log viewer at `/admin/logs` backed by the new `log_entries` table (retention via `node ace logs:prune`)
 - Maintenance mode: admin settings page, public maintenance page, IP allowlist, scheduling, and `maintenance:*` ace commands
 - Dashboard with domain sections (recent activity, stat cards)
+
+#### Authentication
+
+- TOTP two-factor authentication: enrollment from Settings → Account (TOTP secret + `otpauth://` URI, one-time recovery codes shown once), TOTP challenge at login (`/two-factor`, throttled 5/15 min) with recovery-code fallback, and a code-gated disable flow (current password + valid code)
+- `two_factor` columns on the `users` table (cipher-stored secret, recovery codes)
+
+#### API & Documentation
+
+- Per-client API rate limiting: a per-user budget keyed on the authenticated user id across the whole `/api/v1/*` surface (`user.apiRateLimit` per-user override, `API_RATE_LIMIT_DEFAULT` env fallback)
+- OpenAPI 3 spec generated at runtime from the route registry (`GET /api/v1/openapi.json`), scoped to the caller's permissions, with a self-hosted interactive reference at `GET /api/docs` (both gated by the `apiDocs` feature flag); spec drift guarded by the test suite
+- Throttling hardening: contact form capped at 5 submissions/hour, email-change token exchange at 3/hour
+
+#### CMS
+
+- Optional Typesense-backed full-text search for CMS pages (`SEARCH_ENABLED`, `TYPESENSE_*` env): page lifecycle actions index/remove translations, the admin page listing searches ranked hits, and the whole surface degrades gracefully to the standard query when search is disabled or the backend is unreachable
+
+#### Incoming Webhooks (full flavor)
+
+- Inbound webhook facility: `POST /webhooks/:receiver` with HMAC-SHA256 signature verification (`WEBHOOK_SECRET`) and replay protection (`WEBHOOK_REPLAY_WINDOW`), idempotent recording (`X-Delivery-Id` or payload digest, `webhook_deliveries` table), queued processing on the `webhook` queue, and a delivery log (admin UI at `/admin/webhooks/deliveries` + `GET /api/v1/admin/webhooks/deliveries`)
+
+#### Frontend
+
+- `@sentry/react` wired into the Inertia bundle: browser errors report to the same Sentry DSN as the Node runtime, with the release tag taken from `SENTRY_RELEASE` (default: app version)
+
+#### Developer Experience
+
+- `node ace make:domain` scaffolds a complete DDD domain end to end (business layer, transport layer, Inertia page, i18n, migration, factory, unit + functional specs) with idempotent registration edits
 
 #### Infrastructure
 
