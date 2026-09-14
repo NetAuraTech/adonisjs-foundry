@@ -739,6 +739,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/log/controllers/admin/logs_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'admin.webhook.deliveries.render': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/webhooks/deliveries'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#transport/webhook/validators/webhook').listWebhookDeliveriesValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/webhook/controllers/admin/deliveries_controller').default['render']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/webhook/controllers/admin/deliveries_controller').default['render']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'event_stream': {
     methods: ["GET","HEAD"]
     pattern: '/__transmit/events'
@@ -1937,6 +1949,30 @@ export interface Registry {
       query: ExtractQueryForGet<InferInput<(typeof import('#transport/log/validators/log').listLogsValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#transport/log/controllers/api/logs_api_controller').default['index']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/log/controllers/api/logs_api_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api.v1.admin.webhook.deliveries.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/admin/deliveries'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#transport/webhook/validators/webhook').listWebhookDeliveriesValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/webhook/controllers/api/deliveries_api_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/webhook/controllers/api/deliveries_api_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'webhook.receivers.receive': {
+    methods: ["POST"]
+    pattern: '/webhooks/:receiver'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { receiver: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#transport/webhook/controllers/webhook_receiver_controller').default['receive']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#transport/webhook/controllers/webhook_receiver_controller').default['receive']>>>
     }
   }
   'health.liveness': {

@@ -19,6 +19,7 @@
     "#file/*": "./src/file/*.js",
     "#log/*": "./src/log/*.js",
     "#backup/*": "./src/backup/*.js",
+    "#webhook/*": "./src/webhook/*.js",
     "#tests/*": "./tests/*.js",
     "#start/*": "./start/*.js",
     "#config/*": "./config/*.js",

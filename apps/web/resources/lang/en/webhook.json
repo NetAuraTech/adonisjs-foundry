@@ -1,0 +1,36 @@
+{
+	"admin": {
+		"value": "Webhooks",
+		"list": {
+			"title": "Webhook deliveries",
+			"empty": "No webhook deliveries found."
+		},
+		"search": {
+			"value": "Search",
+			"placeholder": "Search delivery IDs…",
+			"filter": "Filter"
+		},
+		"receiver": {
+			"value": "Receiver",
+			"placeholder": "All receivers"
+		},
+		"status": {
+			"value": "Status",
+			"placeholder": "All statuses",
+			"received": "Received",
+			"processed": "Processed",
+			"failed": "Failed"
+		},
+		"columns": {
+			"receiver": "Receiver",
+			"deliveryId": "Delivery ID",
+			"status": "Status",
+			"ip": "IP",
+			"receivedOn": "Received on",
+			"processedOn": "Processed on"
+		},
+		"digest": {
+			"view": "View digest"
+		}
+	}
+}

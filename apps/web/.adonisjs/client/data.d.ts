@@ -18,6 +18,7 @@ import type IdentityPermissionTransformer from '#transport/identity/transformers
 import type IdentityRoleTransformer from '#transport/identity/transformers/role_transformer'
 import type IdentityUserTransformer from '#transport/identity/transformers/user_transformer'
 import type LogLogEntryTransformer from '#transport/log/transformers/log_entry_transformer'
+import type WebhookWebhookDeliveryTransformer from '#transport/webhook/transformers/webhook_delivery_transformer'
 import type InertiaMiddleware from '#transport/core/middleware/inertia_middleware'
 
 export namespace Data {
@@ -77,6 +78,12 @@ export namespace Data {
     export type LogEntry = InferData<LogLogEntryTransformer>
     export namespace LogEntry {
       export type Variants = InferVariants<LogLogEntryTransformer>
+    }
+  }
+  export namespace Webhook {
+    export type WebhookDelivery = InferData<WebhookWebhookDeliveryTransformer>
+    export namespace WebhookDelivery {
+      export type Variants = InferVariants<WebhookWebhookDeliveryTransformer>
     }
   }
   export type SharedProps = InferSharedProps<InertiaMiddleware>

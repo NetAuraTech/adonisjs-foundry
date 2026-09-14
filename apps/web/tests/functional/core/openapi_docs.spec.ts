@@ -12,6 +12,7 @@ import { registerCoreApiDocs } from '#transport/core/api_docs';
 import { registerFileApiDocs } from '#transport/file/api_docs';
 import { registerIdentityApiDocs } from '#transport/identity/api_docs';
 import { registerLogApiDocs } from '#transport/log/api_docs';
+import { registerWebhookApiDocs } from '#transport/webhook/api_docs';
 
 /**
  * OpenAPI surface — the generated spec (`/api/v1/openapi.json`, served by the
@@ -33,6 +34,7 @@ test.group('OpenAPI surface', (group) => {
 		registerFileApiDocs();
 		registerIdentityApiDocs();
 		registerLogApiDocs();
+		registerWebhookApiDocs();
 	});
 	group.each.setup(() => limiter.clear());
 	group.each.teardown(() => limiter.clear());

@@ -125,6 +125,11 @@ export interface ApiDefinition {
         render: typeof routes['admin.log.logs.render']
       }
     }
+    webhook: {
+      deliveries: {
+        render: typeof routes['admin.webhook.deliveries.render']
+      }
+    }
   }
   core: {
     sitemap: {
@@ -276,6 +281,11 @@ export interface ApiDefinition {
             index: typeof routes['api.v1.admin.log.logs.index']
           }
         }
+        webhook: {
+          deliveries: {
+            index: typeof routes['api.v1.admin.webhook.deliveries.index']
+          }
+        }
       }
       auth: {
         login: {
@@ -351,6 +361,11 @@ export interface ApiDefinition {
         render: typeof routes['cms.page.localised.render']
       }
       render: typeof routes['cms.page.render']
+    }
+  }
+  webhook: {
+    receivers: {
+      receive: typeof routes['webhook.receivers.receive']
     }
   }
   health: {

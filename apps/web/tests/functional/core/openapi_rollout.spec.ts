@@ -11,6 +11,7 @@ import { paginationValidator } from '#transport/core/validators/pagination';
 import { registerFileApiDocs } from '#transport/file/api_docs';
 import { registerIdentityApiDocs } from '#transport/identity/api_docs';
 import { registerLogApiDocs } from '#transport/log/api_docs';
+import { registerWebhookApiDocs } from '#transport/webhook/api_docs';
 
 /** HTTP methods that carry JSON payloads and are documented (mirrors the generator). */
 const JSON_METHODS: readonly string[] = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
@@ -78,6 +79,7 @@ test.group('OpenAPI rollout', (group) => {
 		registerFileApiDocs();
 		registerLogApiDocs();
 		registerCmsApiDocs();
+		registerWebhookApiDocs();
 	});
 
 	test('documents every registered API route (drift guard)', ({ assert }) => {
