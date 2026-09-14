@@ -85,6 +85,20 @@ export default await Env.create(new URL('../', import.meta.url), {
 	QUEUE_MAX_RETRIES: Env.schema.number.optional(),
 
 	/*
+   |----------------------------------------------------------
+   | Variables for configuring inbound webhooks
+   |----------------------------------------------------------
+   |
+   | WEBHOOK_SECRET is the shared HMAC-SHA256 signing secret senders use to
+   | sign deliveries; WEBHOOK_REPLAY_WINDOW bounds the accepted clock skew in
+   | seconds. Both are optional — an empty secret disables the webhook surface.
+   | Resolved in config/webhooks.ts.
+   |----------------------------------------------------------
+   */
+	WEBHOOK_SECRET: Env.schema.string.optional(),
+	WEBHOOK_REPLAY_WINDOW: Env.schema.number.optional(),
+
+	/*
   |----------------------------------------------------------
   | Variables for configuring scheduled maintenance tasks
   |----------------------------------------------------------

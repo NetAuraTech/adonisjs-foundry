@@ -42,7 +42,12 @@ const queueConfig = defineConfig({
 	 * business code and live in the owning domain module. Every listed
 	 * directory is scanned, so the worker resolves scheduled jobs by name.
 	 */
-	locations: ['./src/auth/jobs/**/*.{ts,js}', './src/log/jobs/**/*.{ts,js}', './src/backup/jobs/**/*.{ts,js}'],
+	locations: [
+		'./src/auth/jobs/**/*.{ts,js}',
+		'./src/log/jobs/**/*.{ts,js}',
+		'./src/backup/jobs/**/*.{ts,js}',
+		'./src/webhook/jobs/**/*.{ts,js}',
+	],
 });
 
 export default queueConfig;

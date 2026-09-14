@@ -17,6 +17,7 @@ import { coreNavEntries, maintenanceNavEntries } from '#transport/core/nav';
 import { fileNavEntries } from '#transport/file/nav';
 import { identityNavEntries } from '#transport/identity/nav';
 import { loggingNavEntries } from '#transport/log/nav';
+import { webhookNavEntries } from '#transport/webhook/nav';
 
 app.container.singleton(NavRegistry, () => new NavRegistry());
 
@@ -28,3 +29,4 @@ registry.register('file', fileNavEntries);
 registry.register('identity', identityNavEntries);
 registry.register('maintenance', maintenanceNavEntries);
 registry.register('logging', loggingNavEntries);
+registry.register('webhook', webhookNavEntries);

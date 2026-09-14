@@ -65,6 +65,7 @@ export type ScannedRoutes = {
     'admin.identity.permissions_update.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.identity.permissions_update.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.log.logs.render': { paramsTuple?: []; params?: {} }
+    'admin.webhook.deliveries.render': { paramsTuple?: []; params?: {} }
     'event_stream': { paramsTuple?: []; params?: {} }
     'subscribe': { paramsTuple?: []; params?: {} }
     'unsubscribe': { paramsTuple?: []; params?: {} }
@@ -165,6 +166,8 @@ export type ScannedRoutes = {
     'api.v1.admin.identity.roles.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.identity.permissions.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.log.logs.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.webhook.deliveries.index': { paramsTuple?: []; params?: {} }
+    'webhook.receivers.receive': { paramsTuple: [ParamValue]; params: {'receiver': ParamValue} }
     'health.liveness': { paramsTuple?: []; params?: {} }
     'health.readiness': { paramsTuple?: []; params?: {} }
     'cms.page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
@@ -200,6 +203,7 @@ export type ScannedRoutes = {
     'admin.identity.permissions_create.render': { paramsTuple?: []; params?: {} }
     'admin.identity.permissions_update.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.log.logs.render': { paramsTuple?: []; params?: {} }
+    'admin.webhook.deliveries.render': { paramsTuple?: []; params?: {} }
     'event_stream': { paramsTuple?: []; params?: {} }
     'account.profile.render': { paramsTuple?: []; params?: {} }
     'account.account.render': { paramsTuple?: []; params?: {} }
@@ -241,6 +245,7 @@ export type ScannedRoutes = {
     'api.v1.admin.identity.roles.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.identity.permissions.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.log.logs.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.webhook.deliveries.index': { paramsTuple?: []; params?: {} }
     'health.liveness': { paramsTuple?: []; params?: {} }
     'health.readiness': { paramsTuple?: []; params?: {} }
     'cms.page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
@@ -276,6 +281,7 @@ export type ScannedRoutes = {
     'admin.identity.permissions_create.render': { paramsTuple?: []; params?: {} }
     'admin.identity.permissions_update.render': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.log.logs.render': { paramsTuple?: []; params?: {} }
+    'admin.webhook.deliveries.render': { paramsTuple?: []; params?: {} }
     'event_stream': { paramsTuple?: []; params?: {} }
     'account.profile.render': { paramsTuple?: []; params?: {} }
     'account.account.render': { paramsTuple?: []; params?: {} }
@@ -317,6 +323,7 @@ export type ScannedRoutes = {
     'api.v1.admin.identity.roles.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'api.v1.admin.identity.permissions.index': { paramsTuple?: []; params?: {} }
     'api.v1.admin.log.logs.index': { paramsTuple?: []; params?: {} }
+    'api.v1.admin.webhook.deliveries.index': { paramsTuple?: []; params?: {} }
     'health.liveness': { paramsTuple?: []; params?: {} }
     'health.readiness': { paramsTuple?: []; params?: {} }
     'cms.page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
@@ -381,6 +388,7 @@ export type ScannedRoutes = {
     'api.v1.admin.file.folders.store': { paramsTuple?: []; params?: {} }
     'api.v1.admin.identity.users.store': { paramsTuple?: []; params?: {} }
     'api.v1.admin.identity.roles.store': { paramsTuple?: []; params?: {} }
+    'webhook.receivers.receive': { paramsTuple: [ParamValue]; params: {'receiver': ParamValue} }
   }
   DELETE: {
     'admin.cms.pages.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

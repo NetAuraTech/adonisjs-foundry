@@ -100,8 +100,15 @@ const shieldConfig = defineConfig({
 		 * `/api/v1/*` is the token-guarded REST API: Bearer-token requests carry
 		 * no cookies, so they are not exposed to CSRF. Session-authenticated API
 		 * routes (`/api/admin/*`, `/api/settings/*`) keep full CSRF protection.
+		 * `/webhooks/*` are signed inbound webhooks from external senders: they
+		 * carry no session cookies and are authenticated by their HMAC signature
+		 * (see `config/webhooks.ts`), so they are excluded from CSRF too.
 		 */
-		exceptRoutes: (ctx) => ctx.route !== undefined && ctx.route.pattern.replace(/^\//, '').startsWith('api/v1/'),
+		exceptRoutes: (ctx) => {
+			if (ctx.route === undefined) return false;
+			const pattern = ctx.route.pattern.replace(/^\//, '');
+			return pattern.startsWith('api/v1/') || pattern.startsWith('webhooks');
+		},
 
 		/**
 		 * Expose an encrypted XSRF-TOKEN cookie for frontend HTTP clients.

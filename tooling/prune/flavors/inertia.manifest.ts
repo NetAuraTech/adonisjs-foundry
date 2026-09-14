@@ -69,6 +69,19 @@ const inertiaManifest: FlavorManifest = {
 		'apps/web/config/transmit.ts',
 		'apps/web/config/cms.ts',
 
+		// ─── Inbound webhook module (main-only) ─────────────────────────────────
+		'apps/web/src/webhook',
+		'apps/web/app/webhook',
+		'apps/web/config/webhooks.ts',
+		'apps/web/database/migrations/webhook',
+		'apps/web/database/factories/webhook',
+		'apps/web/inertia/pages/webhook',
+		'apps/web/resources/lang/en/webhook.json',
+		'apps/web/resources/lang/fr/webhook.json',
+		'apps/web/tests/unit/webhook',
+		'apps/web/tests/integration/webhook',
+		'apps/web/tests/functional/webhook',
+
 		// ─── Prune pipeline (main-only infrastructure) ──────────────────────────
 		'tooling/prune',
 		'apps/web/tests/unit/prune',
@@ -1351,6 +1364,7 @@ const inertiaManifest: FlavorManifest = {
 				'    "#file/*": "./src/file/*.js",',
 				'    "#log/*": "./src/log/*.js",',
 				'    "#backup/*": "./src/backup/*.js",',
+				'    "#webhook/*": "./src/webhook/*.js",',
 				'    "#tests/*": "./tests/*.js",',
 				'    "#start/*": "./start/*.js",',
 				'    "#config/*": "./config/*.js",',

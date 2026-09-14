@@ -372,6 +372,12 @@ const routes = {
     tokens: [{"old":"/admin/logs","type":0,"val":"admin","end":""},{"old":"/admin/logs","type":0,"val":"logs","end":""}],
     types: placeholder as Registry['admin.log.logs.render']['types'],
   },
+  'admin.webhook.deliveries.render': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/webhooks/deliveries',
+    tokens: [{"old":"/admin/webhooks/deliveries","type":0,"val":"admin","end":""},{"old":"/admin/webhooks/deliveries","type":0,"val":"webhooks","end":""},{"old":"/admin/webhooks/deliveries","type":0,"val":"deliveries","end":""}],
+    types: placeholder as Registry['admin.webhook.deliveries.render']['types'],
+  },
   'event_stream': {
     methods: ["GET","HEAD"],
     pattern: '/__transmit/events',
@@ -971,6 +977,18 @@ const routes = {
     pattern: '/api/v1/admin/logs',
     tokens: [{"old":"/api/v1/admin/logs","type":0,"val":"api","end":""},{"old":"/api/v1/admin/logs","type":0,"val":"v1","end":""},{"old":"/api/v1/admin/logs","type":0,"val":"admin","end":""},{"old":"/api/v1/admin/logs","type":0,"val":"logs","end":""}],
     types: placeholder as Registry['api.v1.admin.log.logs.index']['types'],
+  },
+  'api.v1.admin.webhook.deliveries.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/admin/deliveries',
+    tokens: [{"old":"/api/v1/admin/deliveries","type":0,"val":"api","end":""},{"old":"/api/v1/admin/deliveries","type":0,"val":"v1","end":""},{"old":"/api/v1/admin/deliveries","type":0,"val":"admin","end":""},{"old":"/api/v1/admin/deliveries","type":0,"val":"deliveries","end":""}],
+    types: placeholder as Registry['api.v1.admin.webhook.deliveries.index']['types'],
+  },
+  'webhook.receivers.receive': {
+    methods: ["POST"],
+    pattern: '/webhooks/:receiver',
+    tokens: [{"old":"/webhooks/:receiver","type":0,"val":"webhooks","end":""},{"old":"/webhooks/:receiver","type":1,"val":"receiver","end":""}],
+    types: placeholder as Registry['webhook.receivers.receive']['types'],
   },
   'health.liveness': {
     methods: ["GET","HEAD"],

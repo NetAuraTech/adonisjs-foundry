@@ -142,4 +142,13 @@ export const controllers = {
       LogsApi: () => import('#transport/log/controllers/api/logs_api_controller'),
     },
   },
+  webhook: {
+    admin: {
+      Deliveries: () => import('#transport/webhook/controllers/admin/deliveries_controller'),
+    },
+    api: {
+      DeliveriesApi: () => import('#transport/webhook/controllers/api/deliveries_api_controller'),
+    },
+    WebhookReceiver: () => import('#transport/webhook/controllers/webhook_receiver_controller'),
+  },
 }

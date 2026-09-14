@@ -456,3 +456,42 @@ export class UserSchema extends BaseModel {
 	@column()
 	declare username: string;
 }
+
+export class WebhookDeliverySchema extends BaseModel {
+	static $columns = [
+		'contentType',
+		'createdAt',
+		'deliveryId',
+		'error',
+		'id',
+		'ip',
+		'payloadDigest',
+		'processedAt',
+		'receiver',
+		'status',
+		'userAgent',
+	] as const;
+	$columns = WebhookDeliverySchema.$columns;
+	@column()
+	declare contentType: string | null;
+	@column.dateTime({ autoCreate: true })
+	declare createdAt: DateTime;
+	@column()
+	declare deliveryId: string;
+	@column()
+	declare error: string | null;
+	@column({ isPrimary: true })
+	declare id: number;
+	@column()
+	declare ip: string | null;
+	@column()
+	declare payloadDigest: string;
+	@column.dateTime()
+	declare processedAt: DateTime | null;
+	@column()
+	declare receiver: string;
+	@column()
+	declare status: string;
+	@column()
+	declare userAgent: string | null;
+}

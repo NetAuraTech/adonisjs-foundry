@@ -20,6 +20,7 @@ import '#transport/core/routes';
 import '#transport/file/routes';
 import '#transport/identity/routes';
 import '#transport/log/routes';
+import '#transport/webhook/routes';
 import { registerCmsPageRoutes } from '#transport/cms/controllers/front/routes';
 import { registerCoreHealthRoutes } from '#transport/core/health.routes';
 

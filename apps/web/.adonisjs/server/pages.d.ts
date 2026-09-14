@@ -53,5 +53,6 @@ declare module '@adonisjs/inertia/types' {
     'settings/account/front/index': ExtractProps<(typeof import('../../inertia/pages/settings/account/front/index.tsx'))['default']>
     'settings/preferences/front/index': ExtractProps<(typeof import('../../inertia/pages/settings/preferences/front/index.tsx'))['default']>
     'settings/profile/front/index': ExtractProps<(typeof import('../../inertia/pages/settings/profile/front/index.tsx'))['default']>
+    'webhook/admin/index': ExtractProps<(typeof import('../../inertia/pages/webhook/admin/index.tsx'))['default']>
   }
 }

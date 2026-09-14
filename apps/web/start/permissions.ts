@@ -26,13 +26,14 @@ import { corePermissionCatalog, coreRoleSlugs, maintenancePermissionCatalog } fr
 import { filePermissionCatalog } from '#file/permissions';
 import { identityPermissionCatalog } from '#identity/permissions';
 import { loggingPermissionCatalog } from '#log/permissions';
+import { webhookPermissionCatalog } from '#webhook/permissions';
 import type { PermissionSlugs, PermissionMap } from '#types/permissions';
 
 /**
  * The composed system permission catalog of this flavor: `category →
  * actions` matrix ordered by domain (core, identity, cms, file,
- * maintenance, logging). The permission seeder persists exactly this
- * matrix, so it is the single source of the persisted slugs.
+ * maintenance, logging, webhook). The permission seeder persists exactly
+ * this matrix, so it is the single source of the persisted slugs.
  */
 export const permissionCatalog = {
 	...corePermissionCatalog,
@@ -41,6 +42,7 @@ export const permissionCatalog = {
 	...filePermissionCatalog,
 	...maintenancePermissionCatalog,
 	...loggingPermissionCatalog,
+	...webhookPermissionCatalog,
 };
 
 /** Union of every system permission slug in this flavor. */

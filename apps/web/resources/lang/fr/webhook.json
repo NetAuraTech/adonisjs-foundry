@@ -1,0 +1,36 @@
+{
+	"admin": {
+		"value": "Webhooks",
+		"list": {
+			"title": "Livraisons webhook",
+			"empty": "Aucune livraison webhook trouvée."
+		},
+		"search": {
+			"value": "Recherche",
+			"placeholder": "Rechercher des identifiants de livraison…",
+			"filter": "Filtrer"
+		},
+		"receiver": {
+			"value": "Récepteur",
+			"placeholder": "Tous les récepteurs"
+		},
+		"status": {
+			"value": "Statut",
+			"placeholder": "Tous les statuts",
+			"received": "Reçue",
+			"processed": "Traitée",
+			"failed": "Échouée"
+		},
+		"columns": {
+			"receiver": "Récepteur",
+			"deliveryId": "ID de livraison",
+			"status": "Statut",
+			"ip": "IP",
+			"receivedOn": "Reçue le",
+			"processedOn": "Traitée le"
+		},
+		"digest": {
+			"view": "Voir le digest"
+		}
+	}
+}
