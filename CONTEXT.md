@@ -100,11 +100,31 @@ _Avoid_: Code, OTP, link token
 The admin-driven flow of creating a passwordless User and sending them a PENDING*INVITE Token to set their own password and activate the account.
 \_Avoid*: Onboarding, signup link
 
+**Two-Factor (2FA)**:
+The optional TOTP second factor on a User. Enrollment (from Settings → Account) stores a cipher-protected TOTP secret; once enabled, login requires a 6-digit TOTP code or an unused Recovery Code after the password check, before any session exists. Disabling requires the current password plus a valid code.
+_Avoid_: MFA (the system implements exactly one second-factor type), OTP (a code is an instance, not the feature)
+
+**Recovery Code**:
+A one-time credential, generated in a batch when 2FA is enabled and shown exactly once, usable in place of a TOTP code at login. Entering one consumes it permanently.
+_Avoid_: Backup token, reset token (those are selector/validator Tokens)
+
+### Webhooks (full flavor)
+
+> The terms below belong to the inbound-webhook module — pruned from the `inertia` and `api` flavor branches.
+
+**Webhook Delivery**:
+A single inbound, HMAC-signed `POST /webhooks/:receiver`. Verified by `X-Signature` (hex HMAC-SHA256 of `${X-Timestamp}.${rawBody}`) against the shared secret, bounded by a replay window, and recorded idempotently in `webhook_deliveries` (deduplicated by `X-Delivery-Id` or a payload digest). A worker job then advances it `pending → processed/failed`. The `202` response acknowledges receipt, not processing.
+_Avoid_: Event (that is the Log Entry event slug), notification, inbound payload
+
 ### Operations
 
 **Backup**:
 A point-in-time database export (full or differential), stored on a Drive disk under the `backup/` prefix — entirely separate from CMS file storage and from PageRevisions.
 _Avoid_: Snapshot, dump (when referring to the feature as a whole; "dump" is fine for the literal `pg_dump` step)
+
+**Rate Limit (API)**:
+The per-client budget applied to every authenticated `/api/v1/*` route: keyed by the authenticated user id, allowing `user.apiRateLimit` requests per minute with `API_RATE_LIMIT_DEFAULT` as the fallback. Distinct from per-route throttles, which key on the IP for guest surfaces.
+_Avoid_: Throttle (the per-route limiter), quota
 
 ### Logging & Audit
 
