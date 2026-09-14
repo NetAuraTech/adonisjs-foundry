@@ -9,6 +9,7 @@ import InvalidTokenException from '#auth/exceptions/invalid_token_exception';
 import MaxAttemptsExceededException from '#auth/exceptions/max_attempts_exceeded_exception';
 import TokenModel from '#auth/models/token';
 import { TokenRepository } from '#auth/repositories/token_repository';
+import { TokenService } from '#auth/services/token_service';
 import User from '#identity/models/user';
 
 test.group('ResetPasswordAction', () => {
@@ -34,6 +35,7 @@ test.group('ResetPasswordAction', () => {
 	test('execute() updates password and expires tokens', async ({ assert }) => {
 		const action = await app.container.make(ResetPasswordAction);
 		const tokenRepo = await app.container.make(TokenRepository);
+		const tokenService = await app.container.make(TokenService);
 
 		const user = await User.create({
 			email: 'reset@test.com',
@@ -52,7 +54,7 @@ test.group('ResetPasswordAction', () => {
 		assert.isTrue(await hash.verify(updatedUser.password!, 'new_password123'));
 
 		await assert.rejects(async () => {
-			await tokenRepo.getPasswordResetUser(fullToken as any);
+			await tokenService.resolveUser(fullToken as any, TOKEN_TYPES.PASSWORD_RESET);
 		}, InvalidTokenException);
 	});
 
@@ -168,6 +170,7 @@ test.group('ResetPasswordAction', () => {
 	test('execute() throws without further increment on a locked token', async ({ assert }) => {
 		const action = await app.container.make(ResetPasswordAction);
 		const tokenRepo = await app.container.make(TokenRepository);
+		const tokenService = await app.container.make(TokenService);
 
 		const user = await User.create({
 			email: 'reset_locked@test.com',
@@ -176,13 +179,13 @@ test.group('ResetPasswordAction', () => {
 		});
 
 		const { selector, fullToken } = await createResetToken(tokenRepo, user.id, {
-			attempts: tokenRepo.MAX_ATTEMPTS,
+			attempts: tokenService.MAX_ATTEMPTS,
 		});
 
 		await assert.rejects(async () => {
 			await action.execute({ token: fullToken as any, password: 'new_password123' });
 		}, MaxAttemptsExceededException);
 
-		assert.equal((await TokenModel.query().where('selector', selector).first())!.attempts, tokenRepo.MAX_ATTEMPTS);
+		assert.equal((await TokenModel.query().where('selector', selector).first())!.attempts, tokenService.MAX_ATTEMPTS);
 	});
 });

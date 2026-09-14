@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
-import { TokenRepository } from '#auth/repositories/token_repository';
-import type { FullToken } from '#auth/enums/token_type';
+import { TOKEN_TYPES, type FullToken } from '#auth/enums/token_type';
+import { TokenService } from '#auth/services/token_service';
 import type User from '#identity/models/user';
 
 interface GetInvitationPayload {
@@ -12,14 +12,15 @@ interface GetInvitationPayload {
  */
 @inject()
 export class GetInvitationAction {
-	constructor(protected tokenRepository: TokenRepository) {}
+	constructor(protected tokenService: TokenService) {}
 
 	/**
 	 * @param payload - The full invitation token string
-	 * @returns The invited User or null if invalid or expired
+	 * @returns The invited {@link User}.
+	 * @throws {InvalidTokenException} When the token is invalid or expired.
+	 * @throws {MaxAttemptsExceededException} When the token is locked.
 	 */
 	async execute(payload: GetInvitationPayload): Promise<User> {
-		const data = await this.tokenRepository.getUserInvitationToken(payload.token);
-		return data.user;
+		return this.tokenService.resolveUser(payload.token, TOKEN_TYPES.PENDING_INVITE);
 	}
 }

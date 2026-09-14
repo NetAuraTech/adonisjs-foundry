@@ -1,11 +1,8 @@
 import { inject } from '@adonisjs/core';
-import hash from '@adonisjs/core/services/hash';
 import i18nManager from '@adonisjs/i18n/services/main';
-import { DateTime } from 'luxon';
 import { GetPreferencesAction } from '#account/actions/preferences/get_preferences_action';
-import { Token } from '#auth/domain/token';
-import { TOKEN_TYPES, type FullToken } from '#auth/enums/token_type';
-import { TokenRepository } from '#auth/repositories/token_repository';
+import { TOKEN_TYPES } from '#auth/enums/token_type';
+import { TokenService } from '#auth/services/token_service';
 import { type MailClientMessage } from '#core/contracts/mail_client';
 import { MailService } from '#core/services/mail_service';
 import env from '#start/env';
@@ -49,8 +46,8 @@ type EmailChangeMailPayload = MailClientMessage & { data: EmailChangeMailData };
  * Replaces the previous `InitiateEmailChange` event → listeners → Mailables
  * chain with one direct, traceable call per flow. The flow:
  *   1. Resolve the user's locale from their preferences
- *   2. Expire existing email-change tokens, then generate and persist a new
- *      split token (`selector`, `validator`) with a 24-hour TTL
+ *   2. Issue the email-change token (24-hour TTL) through the auth-domain
+ *      {@link TokenService} — the single issuance choreography
  *   3. Send the confirmation mail (with the flavored confirmation link) to
  *      the new, pending address
  *   4. Send the notification mail to the current address
@@ -62,7 +59,7 @@ export class EmailChangeMailService {
 	constructor(
 		protected mailService: MailService<EmailChangeMailPayload>,
 		protected getPreferencesAction: GetPreferencesAction,
-		protected tokenRepository: TokenRepository,
+		protected tokenService: TokenService,
 	) {}
 
 	/**
@@ -74,7 +71,7 @@ export class EmailChangeMailService {
 	async sendEmailChangeMails(user: User): Promise<void> {
 		const preferences = await this.getPreferencesAction.execute({ user });
 		const locale = this.mailService.resolveLocale(preferences.locale);
-		const token = await this.issueEmailChangeToken(user);
+		const token = await this.tokenService.issue(user, TOKEN_TYPES.EMAIL_CHANGE, 24);
 		const i18n = i18nManager.locale(locale);
 
 		await this.mailService.send(
@@ -117,30 +114,5 @@ export class EmailChangeMailService {
 			},
 			{ locale },
 		);
-	}
-
-	/**
-	 * Expires outstanding email-change tokens, generates a new split token,
-	 * hashes the validator, and persists the record.
-	 *
-	 * @param user - The token owner.
-	 * @returns The raw `selector.validator` token to hand to the user.
-	 */
-	protected async issueEmailChangeToken(user: User): Promise<FullToken> {
-		await this.tokenRepository.expireTokensByType(user, TOKEN_TYPES.EMAIL_CHANGE);
-
-		const { selector, validator, token } = Token.generateSplit();
-		const hashedValidator = await hash.make(validator);
-
-		await this.tokenRepository.create({
-			userId: user.id,
-			type: TOKEN_TYPES.EMAIL_CHANGE,
-			selector,
-			token: hashedValidator,
-			attempts: 0,
-			expiresAt: DateTime.now().plus({ hours: 24 }),
-		});
-
-		return token;
 	}
 }

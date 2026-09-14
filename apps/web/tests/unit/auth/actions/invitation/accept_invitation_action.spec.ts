@@ -7,12 +7,14 @@ import { Token } from '#auth/domain/token';
 import { TOKEN_TYPES } from '#auth/enums/token_type';
 import InvalidTokenException from '#auth/exceptions/invalid_token_exception';
 import { TokenRepository } from '#auth/repositories/token_repository';
+import { TokenService } from '#auth/services/token_service';
 import User from '#identity/models/user';
 
 test.group('AcceptInvitationAction', () => {
 	test('execute() updates password, sets emailVerifiedAt and expires tokens', async ({ assert }) => {
 		const action = await app.container.make(AcceptInvitationAction);
 		const tokenRepo = await app.container.make(TokenRepository);
+		const tokenService = await app.container.make(TokenService);
 
 		const user = await User.create({
 			email: 'invite_accept@test.com',
@@ -43,7 +45,7 @@ test.group('AcceptInvitationAction', () => {
 		assert.isTrue(updatedUser.isEmailVerified);
 
 		await assert.rejects(async () => {
-			await tokenRepo.getUserInvitationToken(fullToken as any);
+			await tokenService.resolveUser(fullToken as any, TOKEN_TYPES.PENDING_INVITE);
 		}, InvalidTokenException);
 	});
 });

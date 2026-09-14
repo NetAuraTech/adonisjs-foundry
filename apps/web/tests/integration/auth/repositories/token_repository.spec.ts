@@ -2,17 +2,18 @@ import hash from '@adonisjs/core/services/hash';
 import { test } from '@japa/runner';
 import { DateTime } from 'luxon';
 import { TOKEN_TYPES, type FullToken } from '#auth/enums/token_type';
-import InvalidTokenException from '#auth/exceptions/invalid_token_exception';
-import MaxAttemptsExceededException from '#auth/exceptions/max_attempts_exceeded_exception';
 import { TokenRepository } from '#auth/repositories/token_repository';
 import { withTransaction } from '#core/services/with_transaction';
 import { UserFactory } from '#factories/identity/user_factory';
-import { LogService } from '#log/services/log_service';
 import type Token from '#auth/models/token';
 
+/**
+ * Integration tests for the pure-query surface of the {@link TokenRepository}.
+ * Lifecycle policy (issuance, verification, lockout) is covered at the
+ * TokenService seam — see `tests/unit/auth/services/token_service.spec.ts`.
+ */
 test.group('TokenRepository', () => {
-	const logService = new LogService();
-	const repo = new TokenRepository(logService);
+	const repo = new TokenRepository();
 
 	const uniqueUser = async (prefix: string) => {
 		const timestamp = Date.now() + Math.floor(Math.random() * 100000);
@@ -25,7 +26,7 @@ test.group('TokenRepository', () => {
 	const createTestToken = async (
 		userId: number,
 		type: string,
-		expiresInHours = 1,
+		options: { expiresInHours?: number; attempts?: number } = {},
 	): Promise<{ tokenModel: Token; plainToken: FullToken }> => {
 		const selector = Math.random().toString(36).substring(2, 10);
 		const validator = Math.random().toString(36).substring(2, 10);
@@ -37,7 +38,8 @@ test.group('TokenRepository', () => {
 			type: type as any,
 			selector,
 			token: hashedValidator,
-			expiresAt: DateTime.now().plus({ hours: expiresInHours }),
+			expiresAt: DateTime.now().plus({ hours: options.expiresInHours ?? 1 }),
+			attempts: options.attempts ?? 0,
 		});
 
 		return { tokenModel, plainToken };
@@ -64,200 +66,98 @@ test.group('TokenRepository', () => {
 		assert.equal(updated!.attempts, 5);
 	});
 
-	test('verify() works with valid and invalid tokens', async ({ assert }) => {
-		const u = await uniqueUser('verify');
-		const { plainToken } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);
+	test('findBySelector() returns the record only when the type matches and the token is live', async ({ assert }) => {
+		const u = await uniqueUser('findsel');
+		const { tokenModel } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);
+		const selector = tokenModel.selector!;
 
-		assert.isTrue(await repo.verify(plainToken, TOKEN_TYPES.PASSWORD_RESET));
+		assert.equal((await repo.findBySelector(selector, TOKEN_TYPES.PASSWORD_RESET))!.id, tokenModel.id);
 
 		// Wrong type
-		assert.isFalse(await repo.verify(plainToken, TOKEN_TYPES.EMAIL_VERIFICATION));
+		assert.isNull(await repo.findBySelector(selector, TOKEN_TYPES.EMAIL_VERIFICATION));
 
-		// Bad validator
-		const badValidatorToken = `${plainToken.split('.')[0]}.wrongval` as FullToken;
-		assert.isFalse(await repo.verify(badValidatorToken, TOKEN_TYPES.PASSWORD_RESET));
+		// Unknown selector
+		assert.isNull(await repo.findBySelector('nosuchselector', TOKEN_TYPES.PASSWORD_RESET));
 
-		// Bad selector
-		assert.isFalse(await repo.verify('wrongsel.val' as FullToken, TOKEN_TYPES.PASSWORD_RESET));
-
-		// Malformed
-		assert.isFalse(await repo.verify('malformed_token' as FullToken, TOKEN_TYPES.PASSWORD_RESET));
+		// Expired token
+		const { tokenModel: expiredModel } = await createTestToken(u.id, TOKEN_TYPES.EMAIL_VERIFICATION, {
+			expiresInHours: -1,
+		});
+		assert.isNull(await repo.findBySelector(expiredModel.selector!, TOKEN_TYPES.EMAIL_VERIFICATION));
 	});
 
-	test('getUserFromToken() returns the user if valid', async ({ assert }) => {
-		const u = await uniqueUser('getuser');
-		const { plainToken } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);
-
-		const resolvedUser = await repo.getUserFromToken(plainToken, TOKEN_TYPES.PASSWORD_RESET);
-		assert.isNotNull(resolvedUser);
-		assert.equal(resolvedUser!.id, u.id);
-
-		const badUser = await repo.getUserFromToken('bad.token' as FullToken, TOKEN_TYPES.PASSWORD_RESET);
-		assert.isNull(badUser);
-	});
-
-	test('checkAttempts() is the single increment path and enforces MAX_ATTEMPTS', async ({ assert }) => {
-		const u = await uniqueUser('attempts');
-		const { plainToken, tokenModel } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);
-
-		await repo.checkAttempts(plainToken);
-		await repo.checkAttempts(plainToken);
-		await repo.checkAttempts(plainToken);
-
-		const reloaded = await repo.findById(tokenModel.id);
-		assert.equal(reloaded!.attempts, 3);
-
-		// MAX_ATTEMPTS is 3 — once the counter reaches the cap, the next
-		// check throws and no further increment happens.
-		await assert.rejects(async () => repo.checkAttempts(plainToken), MaxAttemptsExceededException);
-		assert.equal((await repo.findById(tokenModel.id))!.attempts, 3);
-	});
-
-	test('checkAttempts() cannot be bypassed by concurrent presentations', async ({ assert }) => {
-		const u = await uniqueUser('concurrent');
-		const { plainToken, tokenModel } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);
-
-		// MAX_ATTEMPTS is 3: of 10 concurrent presentations, exactly 3 may
-		// pass the check and increment — the rest must observe the lockout.
-		// An unlocked check-then-act lets the concurrent readers all see the
-		// stale counter, bypass the cap, and clobber each other's increment.
-		const results = await Promise.allSettled(Array.from({ length: 10 }, () => repo.checkAttempts(plainToken)));
-
-		const accepted = results.filter((r) => r.status === 'fulfilled');
-		const rejected = results.filter((r) => r.status === 'rejected');
-
-		assert.equal(accepted.length, 3);
-		assert.equal(rejected.length, 7);
-
-		for (const r of rejected) {
-			assert.isTrue(r.reason instanceof MaxAttemptsExceededException);
-		}
-
-		assert.equal((await repo.findById(tokenModel.id))!.attempts, 3);
-	});
-
-	test('verify() consumes exactly one attempt per call', async ({ assert }) => {
-		const u = await uniqueUser('verifycount');
-		const { plainToken, tokenModel } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);
-
-		assert.isTrue(await repo.verify(plainToken, TOKEN_TYPES.PASSWORD_RESET));
-		assert.equal((await repo.findById(tokenModel.id))!.attempts, 1);
-
-		// A failed verification consumes an attempt too.
-		const badValidatorToken = `${plainToken.split('.')[0]}.wrongval` as FullToken;
-		assert.isFalse(await repo.verify(badValidatorToken, TOKEN_TYPES.PASSWORD_RESET));
-		assert.equal((await repo.findById(tokenModel.id))!.attempts, 2);
-
-		// Unknown selector and malformed tokens consume nothing — no record to increment.
-		assert.isFalse(await repo.verify('unknownsel.val' as FullToken, TOKEN_TYPES.PASSWORD_RESET));
-		assert.isFalse(await repo.verify('malformed_token' as FullToken, TOKEN_TYPES.PASSWORD_RESET));
-		assert.equal((await repo.findById(tokenModel.id))!.attempts, 2);
-	});
-
-	test('expireTokensByType() and convenience helpers', async ({ assert }) => {
+	test('expireTokensByType() expires every token of the type and leaves other types alone', async ({ assert }) => {
 		const u = await uniqueUser('expire');
-		const { plainToken } = await createTestToken(u.id, TOKEN_TYPES.EMAIL_VERIFICATION);
-
-		await repo.expireEmailVerificationTokens(u);
-
-		// Verify should fail because it's expired
-		assert.isFalse(await repo.verify(plainToken, TOKEN_TYPES.EMAIL_VERIFICATION));
-
-		// Other helpers
-		await repo.expirePasswordResetTokens(u);
-		await repo.expireEmailChangeTokens(u);
-		await repo.expireInviteTokens(u);
-	});
-
-	test('High-level GetUser methods throw InvalidTokenException on bad tokens', async ({ assert }) => {
-		await assert.rejects(() => repo.getEmailVerificationUser('bad.token' as FullToken), InvalidTokenException);
-		await assert.rejects(() => repo.getPasswordResetUser('bad.token' as FullToken), InvalidTokenException);
-		await assert.rejects(() => repo.getEmailChangeUser('bad.token' as FullToken), InvalidTokenException);
-		await assert.rejects(() => repo.getUserInvitationToken('bad.token' as FullToken), InvalidTokenException);
-	});
-
-	test('High-level GetUser methods return users for valid tokens', async ({ assert }) => {
-		const u = await uniqueUser('highlevel');
-		u.pendingEmail = 'pending@example.com';
-		await u.save();
-
 		const { plainToken: evToken } = await createTestToken(u.id, TOKEN_TYPES.EMAIL_VERIFICATION);
-		const { plainToken: prToken } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);
-		const { plainToken: ecToken } = await createTestToken(u.id, TOKEN_TYPES.EMAIL_CHANGE);
-		const { plainToken: invToken } = await createTestToken(u.id, TOKEN_TYPES.PENDING_INVITE);
+		const { tokenModel: prModel } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);
 
-		const evUser = await repo.getEmailVerificationUser(evToken);
-		assert.equal(evUser.id, u.id);
+		await repo.expireTokensByType(u, TOKEN_TYPES.EMAIL_VERIFICATION);
 
-		const prUser = await repo.getPasswordResetUser(prToken);
-		assert.equal(prUser.id, u.id);
+		// The verification token is expired — a usable lookup no longer finds it.
+		assert.isNull(await repo.findBySelector(evToken.split('.')[0], TOKEN_TYPES.EMAIL_VERIFICATION));
 
-		const ecUser = await repo.getEmailChangeUser(ecToken);
-		assert.equal(ecUser.id, u.id);
-
-		const inv = await repo.getUserInvitationToken(invToken);
-		assert.equal(inv.userId, u.id);
+		// A token of another type is untouched.
+		assert.isAbove(prModel.expiresAt!.toMillis(), DateTime.now().toMillis());
 	});
 
-	test('verifyPasswordResetToken() consumes exactly one attempt per call', async ({ assert }) => {
-		const u = await uniqueUser('vpwd');
-		const { plainToken, tokenModel } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);
-
-		// A single call consumes exactly one attempt.
-		await assert.doesNotReject(() => repo.verifyPasswordResetToken(plainToken));
-		assert.equal((await repo.findById(tokenModel.id))!.attempts, 1);
-
-		// A locked token throws without incrementing further.
-		await repo.update(tokenModel.id, { attempts: 5 });
-		await assert.rejects(() => repo.verifyPasswordResetToken(plainToken), MaxAttemptsExceededException);
-		assert.equal((await repo.findById(tokenModel.id))!.attempts, 5);
-
-		// Invalid token
-		await assert.rejects(() => repo.verifyPasswordResetToken('bad.token' as FullToken), InvalidTokenException);
-	});
-
-	test('deleteInvitationTokens()', async ({ assert }) => {
-		const u = await uniqueUser('delinv');
-		const { tokenModel } = await createTestToken(u.id, TOKEN_TYPES.PENDING_INVITE);
-
-		await repo.deleteInvitationTokens(u.id);
-		assert.isNull(await repo.findById(tokenModel.id));
-	});
-
-	test('lockUsableToken() returns the locked record for a valid token inside a transaction', async ({ assert }) => {
+	test('lockBySelector() returns the locked record inside a transaction', async ({ assert }) => {
 		const u = await uniqueUser('lock');
 		const { plainToken, tokenModel } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);
 
 		const locked = await withTransaction(async () => {
-			return await repo.lockUsableToken(plainToken, TOKEN_TYPES.PASSWORD_RESET);
+			return await repo.lockBySelector(plainToken.split('.')[0], TOKEN_TYPES.PASSWORD_RESET);
 		});
 
-		assert.equal(locked.id, tokenModel.id);
+		assert.equal(locked!.id, tokenModel.id);
 	});
 
-	test('lockUsableToken() throws InvalidTokenException for expired, missing, or malformed tokens', async ({
-		assert,
-	}) => {
-		const u = await uniqueUser('lockbad');
-		const { plainToken } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET, -1);
+	test('lockBySelector() returns null for a missing record', async ({ assert }) => {
+		await assert.isNull(await repo.lockBySelector('nosuchsel', TOKEN_TYPES.PASSWORD_RESET));
+	});
 
-		// Expired token
-		await assert.rejects(
-			async () => withTransaction(() => repo.lockUsableToken(plainToken, TOKEN_TYPES.PASSWORD_RESET)),
-			InvalidTokenException,
-		);
+	test('checkAndIncrementAttempt() increments exactly once per call', async ({ assert }) => {
+		const u = await uniqueUser('attempts');
+		const { plainToken, tokenModel } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);
+		const selector = plainToken.split('.')[0];
 
-		// Missing selector
-		await assert.rejects(
-			async () => withTransaction(() => repo.lockUsableToken('nosuchsel.val' as FullToken, TOKEN_TYPES.PASSWORD_RESET)),
-			InvalidTokenException,
-		);
+		for (let i = 1; i <= 3; i++) {
+			const outcome = await repo.checkAndIncrementAttempt(selector, 3);
+			assert.isFalse(outcome!.lockedOut);
+			assert.equal((await repo.findById(tokenModel.id))!.attempts, i);
+		}
+	});
 
-		// Malformed token
-		await assert.rejects(
-			async () =>
-				withTransaction(() => repo.lockUsableToken('malformed_token' as FullToken, TOKEN_TYPES.PASSWORD_RESET)),
-			InvalidTokenException,
-		);
+	test('checkAndIncrementAttempt() reports lockout without incrementing at the cap', async ({ assert }) => {
+		const u = await uniqueUser('locked');
+		const { plainToken, tokenModel } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET, { attempts: 3 });
+		const selector = plainToken.split('.')[0];
+
+		const outcome = await repo.checkAndIncrementAttempt(selector, 3);
+		assert.isTrue(outcome!.lockedOut);
+		assert.equal((await repo.findById(tokenModel.id))!.attempts, 3);
+	});
+
+	test('checkAndIncrementAttempt() returns null for an unknown selector', async ({ assert }) => {
+		assert.isNull(await repo.checkAndIncrementAttempt('unknownselector', 3));
+	});
+
+	test('checkAndIncrementAttempt() cannot be bypassed by concurrent callers', async ({ assert }) => {
+		const u = await uniqueUser('concurrent');
+		const { plainToken, tokenModel } = await createTestToken(u.id, TOKEN_TYPES.PASSWORD_RESET);
+		const selector = plainToken.split('.')[0];
+
+		// Cap of 3: of 10 concurrent callers, exactly 3 may increment — the
+		// rest must observe the lockout. An unlocked check-then-act lets the
+		// concurrent readers all see the stale counter, bypass the cap, and
+		// clobber each other's increment.
+		const outcomes = await Promise.all(Array.from({ length: 10 }, () => repo.checkAndIncrementAttempt(selector, 3)));
+
+		const accepted = outcomes.filter((o) => o && !o.lockedOut);
+		const lockedOut = outcomes.filter((o) => o?.lockedOut);
+
+		assert.equal(accepted.length, 3);
+		assert.equal(lockedOut.length, 7);
+
+		assert.equal((await repo.findById(tokenModel.id))!.attempts, 3);
 	});
 });
