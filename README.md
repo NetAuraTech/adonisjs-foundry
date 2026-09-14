@@ -360,11 +360,12 @@ docker compose up -d
 docker compose -f docker-compose.prod.yml up -d
 ```
 
-The `worker` service runs `node ace queue:work -q default,auth,maintenance`
+The `worker` service runs `node ace queue:work -q default,auth,maintenance,webhook`
 (see `config/queue.ts`) and consumes the job queues — currently the
-password-reset mail (sent asynchronously after the forgot-password response)
-and the scheduled maintenance tasks (Log Entry pruning and backup retention
-enforcement, registered at boot by `start/scheduler.ts`). With
+password-reset mail (sent asynchronously after the forgot-password response),
+the scheduled maintenance tasks (Log Entry pruning and backup retention
+enforcement, registered at boot by `start/scheduler.ts`), and the inbound
+webhook deliveries (full flavor). With
 `QUEUE_DRIVER=redis` the app enqueues the job and the worker delivers it; if
 no worker is running, jobs wait in Redis.
 
@@ -1331,7 +1332,7 @@ Move email change logic from controller to AccountService
 - Opaque API tokens (`auth_access_tokens` table) for the token-only `/api/v1/*` surface, with a full token auth flow (login, register, forgot/reset password, verify email, accept invitation)
 - Sitemap configuration via `SITEMAP_ADDITIONS` / `SITEMAP_EXCLUSIONS`
 - Redis job queue (`@adonisjs/queue`): password-reset mail is now dispatched as a job and sent by a worker after the HTTP response (`QUEUE_DRIVER=redis` + `QUEUE_CONNECTION`); a `sync` driver runs jobs inline for dev/tests; `docker-compose.prod.yml` adds a `worker` service
-- Scheduled maintenance jobs on the `maintenance` queue: `PruneLogEntriesJob` (log-entry retention) and `EnforceBackupRetentionJob` (backup retention) run on env-var-driven intervals (`MAINTENANCE_LOG_PRUNE_SCHEDULE`, `MAINTENANCE_BACKUP_RETENTION_SCHEDULE`); the worker consumes `default,auth,maintenance`
+- Scheduled maintenance jobs on the `maintenance` queue: `PruneLogEntriesJob` (log-entry retention) and `EnforceBackupRetentionJob` (backup retention) run on env-var-driven intervals (`MAINTENANCE_LOG_PRUNE_SCHEDULE`, `MAINTENANCE_BACKUP_RETENTION_SCHEDULE`); the worker consumes `default,auth,maintenance,webhook`
 
 ### v1.4.0
 
