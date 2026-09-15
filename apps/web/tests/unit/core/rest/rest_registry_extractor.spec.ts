@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { test } from '@japa/runner';
 import {
 	collectImportNames,
+	extractRestResourceValidators,
 	extractValidatorIdentifier,
 	findEndpointInitializer,
 	findEndpointsLiteral,
@@ -11,7 +12,6 @@ import {
 	findValidatorInitializer,
 	resolveValidatorImport,
 } from '#transport/core/rest/rest_registry_extractor';
-import { extractRestResourceValidators } from '#transport/core/rest/rest_routes_registry_hook';
 import type { ScannedController } from '@adonisjs/assembler/types';
 
 const controllerSource = `
