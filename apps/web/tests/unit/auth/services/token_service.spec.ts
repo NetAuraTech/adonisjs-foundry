@@ -9,8 +9,8 @@ import MaxAttemptsExceededException from '#auth/exceptions/max_attempts_exceeded
 import TokenModel from '#auth/models/token';
 import { TokenRepository } from '#auth/repositories/token_repository';
 import { TokenService } from '#auth/services/token_service';
-import { withTransaction } from '#core/services/with_transaction';
 import User from '#identity/models/user';
+import LogEntry from '#log/models/log_entry';
 
 /**
  * Module-seam tests for the {@link TokenService}: the single home of the
@@ -215,37 +215,88 @@ test.group('TokenService', () => {
 		);
 	});
 
-	test('lockUsableToken() returns the locked record for a valid token inside a transaction', async ({ assert }) => {
-		const service = await app.container.make(TokenService);
-		const user = await makeUser('lock_ok');
-		const { plainToken, selector } = await createTestToken(user.id, TOKEN_TYPES.PASSWORD_RESET);
-
-		const locked = await withTransaction(async () => {
-			return await service.lockUsableToken(plainToken, TOKEN_TYPES.PASSWORD_RESET);
-		});
-
-		assert.equal(locked.selector, selector);
-	});
-
-	test('lockUsableToken() throws InvalidTokenException for expired, missing, or malformed tokens', async ({
+	test("consume() runs act under the lock, expires the token of the type, and returns act's value", async ({
 		assert,
 	}) => {
 		const service = await app.container.make(TokenService);
-		const user = await makeUser('lock_bad');
+		const user = await makeUser('consume_ok');
+		const { plainToken } = await createTestToken(user.id, TOKEN_TYPES.PASSWORD_RESET);
+		const { plainToken: otherTypeToken } = await createTestToken(user.id, TOKEN_TYPES.EMAIL_VERIFICATION);
+
+		let actedFor: number | null = null;
+		const result = await service.consume(plainToken, TOKEN_TYPES.PASSWORD_RESET, async (u) => {
+			actedFor = u.id;
+			return 'acted';
+		});
+
+		assert.equal(result, 'acted');
+		assert.equal(actedFor, user.id);
+
+		const record = await TokenModel.query().where('selector', plainToken.split('.')[0]).first();
+		assert.isAtMost(record!.expiresAt!.toMillis(), Date.now());
+
+		// A token of another type is untouched.
+		const untouched = await TokenModel.query().where('selector', otherTypeToken.split('.')[0]).first();
+		assert.isAbove(untouched!.expiresAt!.toMillis(), Date.now());
+	});
+
+	test('consume() concurrent double presentation: exactly one acts, the other is rejected', async ({ assert }) => {
+		const service = await app.container.make(TokenService);
+		const user = await makeUser('consume_race');
+		const { plainToken } = await createTestToken(user.id, TOKEN_TYPES.PASSWORD_RESET);
+
+		let applications = 0;
+		const act = async () => {
+			applications += 1;
+			return applications;
+		};
+
+		// Two presentations of the same token racing: the token row is locked
+		// as the first query of the consuming transaction, so the second one
+		// must observe the token consumed by the first and be rejected.
+		const results = await Promise.allSettled([
+			service.consume(plainToken, TOKEN_TYPES.PASSWORD_RESET, act),
+			service.consume(plainToken, TOKEN_TYPES.PASSWORD_RESET, act),
+		]);
+
+		const statuses = results.map((r) => r.status).sort();
+		assert.deepEqual(statuses, ['fulfilled', 'rejected']);
+
+		const rejected = results.find((r) => r.status === 'rejected') as PromiseRejectedResult;
+		assert.instanceOf(rejected.reason, InvalidTokenException);
+		assert.equal(applications, 1);
+
+		const record = await TokenModel.query().where('selector', plainToken.split('.')[0]).first();
+		assert.isAtMost(record!.expiresAt!.toMillis(), Date.now());
+
+		// The rejected presentation is audited as a security event. The
+		// log write-through is fire-and-forget, so poll briefly for the
+		// persisted entry.
+		let audit: any = null;
+		for (let i = 0; i < 40 && !audit; i++) {
+			audit = await LogEntry.query().where('message', 'core.token.double_use_rejected').first();
+			if (!audit) {
+				await new Promise((resolve) => setTimeout(resolve, 50));
+			}
+		}
+		assert.exists(audit);
+	});
+
+	test('consume() throws InvalidTokenException for expired, missing, or malformed tokens', async ({ assert }) => {
+		const service = await app.container.make(TokenService);
+		const user = await makeUser('consume_bad');
 		const { plainToken } = await createTestToken(user.id, TOKEN_TYPES.PASSWORD_RESET, { expiresInHours: -1 });
 
 		await assert.rejects(
-			async () => withTransaction(() => service.lockUsableToken(plainToken, TOKEN_TYPES.PASSWORD_RESET)),
+			() => service.consume(plainToken, TOKEN_TYPES.PASSWORD_RESET, async () => 'never'),
 			InvalidTokenException,
 		);
 		await assert.rejects(
-			async () =>
-				withTransaction(() => service.lockUsableToken('nosuchsel.validator' as FullToken, TOKEN_TYPES.PASSWORD_RESET)),
+			() => service.consume('nosuchsel.validator' as FullToken, TOKEN_TYPES.PASSWORD_RESET, async () => 'never'),
 			InvalidTokenException,
 		);
 		await assert.rejects(
-			async () =>
-				withTransaction(() => service.lockUsableToken('malformed_token' as FullToken, TOKEN_TYPES.PASSWORD_RESET)),
+			() => service.consume('malformed_token' as FullToken, TOKEN_TYPES.PASSWORD_RESET, async () => 'never'),
 			InvalidTokenException,
 		);
 	});

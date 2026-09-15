@@ -5,8 +5,8 @@ import { Token } from '#auth/domain/token';
 import { type FullToken, type TokenType } from '#auth/enums/token_type';
 import InvalidTokenException from '#auth/exceptions/invalid_token_exception';
 import MaxAttemptsExceededException from '#auth/exceptions/max_attempts_exceeded_exception';
-import TokenModel from '#auth/models/token';
 import { TokenRepository } from '#auth/repositories/token_repository';
+import { withTransaction } from '#core/services/with_transaction';
 import { LogService } from '#log/services/log_service';
 import type User from '#identity/models/user';
 
@@ -17,10 +17,11 @@ import type User from '#identity/models/user';
  * policy: the issuance choreography (expire outstanding tokens → generate
  * the split token → hash the validator → persist), full verification with
  * attempt accounting and brute-force lockout, token → user resolution, and
- * the exclusive row lock that makes consuming flows atomic. Every token flow
- * — email verification, password reset, email change, pending invites —
- * issues, verifies, and resolves tokens exclusively through this module, so
- * each token invariant is enforced exactly once.
+ * the atomic consume choreography (lock → re-check → act → expire) that
+ * makes every consuming flow single-use. Every token flow — email
+ * verification, password reset, email change, pending invites — issues,
+ * verifies, and resolves tokens exclusively through this module, so each
+ * token invariant is enforced exactly once.
  *
  * Failure semantics: every operation throws the typed token exceptions —
  * {@link InvalidTokenException} for a malformed, unknown, expired, or
@@ -98,12 +99,7 @@ export class TokenService {
 	 * await tokenService.verify(token, TOKEN_TYPES.PASSWORD_RESET)
 	 */
 	async verify(token: FullToken, type: TokenType): Promise<void> {
-		const parts = Token.split(token);
-
-		if (!parts) {
-			this.logInvalid(token, type);
-			throw new InvalidTokenException();
-		}
+		const parts = this.splitOrThrow(token, type);
 
 		const outcome = await this.tokenRepository.checkAndIncrementAttempt(parts.selector, this.MAX_ATTEMPTS);
 
@@ -138,12 +134,7 @@ export class TokenService {
 	 * const user = await tokenService.resolveUser(token, TOKEN_TYPES.PASSWORD_RESET)
 	 */
 	async resolveUser(token: FullToken, type: TokenType): Promise<User> {
-		const parts = Token.split(token);
-
-		if (!parts) {
-			this.logInvalid(token, type);
-			throw new InvalidTokenException();
-		}
+		const parts = this.splitOrThrow(token, type);
 
 		await this.verify(token, type);
 
@@ -158,52 +149,85 @@ export class TokenService {
 	}
 
 	/**
-	 * Re-acquires a token row with an exclusive lock and re-asserts that it is
-	 * still usable, making the read and the act atomic.
+	 * Consumes a token: resolves the user, then runs the consuming flow's
+	 * `act` atomically inside one transaction — lock the token row
+	 * exclusively (first query of the transaction), re-check that it is still
+	 * usable, run `act`, then expire the outstanding tokens of the type.
 	 *
-	 * Must be the **first query** inside the transaction that acts on the
-	 * token (see /docs/agents/toctou-protection.md): the exclusive
-	 * `SELECT ... FOR UPDATE` serializes concurrent presentations of the same
-	 * token, so by the time a second transaction reaches this query the first
-	 * has already committed — and a consumed token is expired, so the re-check
-	 * below rejects it.
+	 * The single consuming entry point for every token flow (email
+	 * verification, password reset, email-change confirmation, invitation
+	 * acceptance): the lock / re-check / act / expire choreography exists
+	 * exactly once, here, so a caller cannot skip the lock
+	 * (see /docs/agents/toctou-protection.md). {@link resolveUser} runs
+	 * before the transaction — consuming exactly one attempt — and the
+	 * exclusive `SELECT ... FOR UPDATE` then serializes concurrent
+	 * presentations of the same token: by the time a second transaction
+	 * reaches the lock the first has already committed and expired the
+	 * token, so the re-check below rejects it.
 	 *
 	 * A rejected presentation is audited with `logSecurity` before the
 	 * exception is thrown — a token consumed concurrently is a security
-	 * signal, not an ordinary invalid-token case.
+	 * signal, not an ordinary invalid-token case. When `act` throws, the
+	 * transaction rolls back and the token stays unconsumed.
 	 *
+	 * @typeParam T - The type of the value `act` returns.
 	 * @param token - The raw `selector.validator` token.
 	 * @param type - The expected token type.
-	 * @returns The locked token record, still valid and not expired.
-	 * @throws {InvalidTokenException} If the token is malformed, missing, or
-	 *   no longer valid (e.g. consumed by a concurrent presentation).
+	 * @param act - The consuming flow's work, run while the token row is
+	 *   locked; it receives the token's {@link User}.
+	 * @returns The value returned by `act`.
+	 * @throws {InvalidTokenException} When the token is malformed, unknown,
+	 *   expired, invalid, or already consumed by a concurrent presentation.
+	 * @throws {MaxAttemptsExceededException} When the attempt counter has
+	 *   reached or exceeded the maximum allowed attempts.
 	 *
 	 * @example
-	 * await withTransaction(async () => {
-	 *   await tokenService.lockUsableToken(token, TOKEN_TYPES.PASSWORD_RESET)
-	 *   // safe to act on the token — no concurrent transaction can modify this row
+	 * const user = await tokenService.consume(token, TOKEN_TYPES.PASSWORD_RESET, async (u) => {
+	 *   return u
 	 * })
 	 */
-	async lockUsableToken(token: FullToken, type: TokenType): Promise<TokenModel> {
+	async consume<T>(token: FullToken, type: TokenType, act: (user: User) => Promise<T>): Promise<T> {
+		const parts = this.splitOrThrow(token, type);
+
+		const user = await this.resolveUser(token, type);
+
+		return withTransaction(async () => {
+			const record = await this.tokenRepository.lockBySelector(parts.selector, type);
+
+			if (!record || record.isExpired) {
+				this.logService.logSecurity('core.token.double_use_rejected', {
+					userId: record?.userId ?? undefined,
+					type,
+					token: Token.mask(token),
+				});
+
+				throw new InvalidTokenException();
+			}
+
+			const result = await act(user);
+			await this.tokenRepository.expireTokensByType(user, type);
+			return result;
+		});
+	}
+
+	/**
+	 * Splits a full token into its selector/validator parts, auditing and
+	 * throwing the invalid-token state for a malformed presentation.
+	 *
+	 * @param token - The raw `selector.validator` token.
+	 * @param type - The token type the presentation was made against.
+	 * @returns The token parts.
+	 * @throws {InvalidTokenException} When the token format is invalid.
+	 */
+	private splitOrThrow(token: FullToken, type: TokenType) {
 		const parts = Token.split(token);
 
 		if (!parts) {
+			this.logInvalid(token, type);
 			throw new InvalidTokenException();
 		}
 
-		const record = await this.tokenRepository.lockBySelector(parts.selector, type);
-
-		if (!record || record.isExpired) {
-			this.logService.logSecurity('core.token.double_use_rejected', {
-				userId: record?.userId ?? undefined,
-				type,
-				token: Token.mask(token),
-			});
-
-			throw new InvalidTokenException();
-		}
-
-		return record;
+		return parts;
 	}
 
 	/**
