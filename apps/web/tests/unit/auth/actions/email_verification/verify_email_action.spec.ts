@@ -8,12 +8,14 @@ import { TOKEN_TYPES } from '#auth/enums/token_type';
 import InvalidTokenException from '#auth/exceptions/invalid_token_exception';
 import TokenModel from '#auth/models/token';
 import { TokenRepository } from '#auth/repositories/token_repository';
+import { TokenService } from '#auth/services/token_service';
 import User from '#identity/models/user';
 
 test.group('VerifyEmailAction', () => {
 	test('execute() updates user email verified status and expires tokens', async ({ assert }) => {
 		const action = await app.container.make(VerifyEmailAction);
 		const tokenRepo = await app.container.make(TokenRepository);
+		const tokenService = await app.container.make(TokenService);
 
 		const user = await User.create({
 			email: 'verify_me@test.com',
@@ -40,7 +42,7 @@ test.group('VerifyEmailAction', () => {
 		assert.isTrue(verifiedUser!.isEmailVerified);
 
 		await assert.rejects(async () => {
-			await tokenRepo.getEmailVerificationUser(fullToken as any);
+			await tokenService.resolveUser(fullToken as any, TOKEN_TYPES.EMAIL_VERIFICATION);
 		}, InvalidTokenException);
 	});
 

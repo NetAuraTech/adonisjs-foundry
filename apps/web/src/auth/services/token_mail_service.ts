@@ -1,11 +1,8 @@
 import { inject } from '@adonisjs/core';
-import hash from '@adonisjs/core/services/hash';
 import i18nManager from '@adonisjs/i18n/services/main';
-import { DateTime } from 'luxon';
 import { GetPreferencesAction } from '#account/actions/preferences/get_preferences_action';
-import { Token } from '#auth/domain/token';
-import { TOKEN_TYPES, type FullToken, type TokenType } from '#auth/enums/token_type';
-import { TokenRepository } from '#auth/repositories/token_repository';
+import { TOKEN_TYPES, type FullToken } from '#auth/enums/token_type';
+import { TokenService } from '#auth/services/token_service';
 import { type MailClientMessage } from '#core/contracts/mail_client';
 import { MailService } from '#core/services/mail_service';
 import env from '#start/env';
@@ -44,20 +41,19 @@ type AuthMailPayload = MailClientMessage & { data: AuthMailData };
  * Replaces the previous events → listeners → Mailables chain with one direct,
  * traceable call per flow. Every flow shares the same orchestration:
  *   1. Resolve the user's locale from their preferences
- *   2. Expire existing tokens of the same type
- *   3. Generate a split token (`selector`, `validator`) with a type-specific TTL
- *   4. Hash the validator portion
- *   5. Persist the token record
- *   6. Build the domain-specific mail payload with i18n-translated strings
+ *   2. Issue the token through the auth-domain {@link TokenService} — the
+ *      single issuance choreography (expire outstanding tokens of the type,
+ *      generate the split token, hash the validator, persist the record)
+ *   3. Build the domain-specific mail payload with i18n-translated strings
  *      and the flavor-aware link
- *   7. Dispatch it through the kernel {@link MailService}
+ *   4. Dispatch it through the kernel {@link MailService}
  */
 @inject()
 export class TokenMailService {
 	constructor(
 		protected mailService: MailService<AuthMailPayload>,
 		protected getPreferencesAction: GetPreferencesAction,
-		protected tokenRepository: TokenRepository,
+		protected tokenService: TokenService,
 	) {}
 
 	/**
@@ -67,7 +63,7 @@ export class TokenMailService {
 	 */
 	async sendVerificationEmail(user: User): Promise<void> {
 		const locale = await this.resolveLocale(user);
-		const token = await this.issueToken(user, TOKEN_TYPES.EMAIL_VERIFICATION, 24);
+		const token = await this.tokenService.issue(user, TOKEN_TYPES.EMAIL_VERIFICATION, 24);
 
 		const i18n = i18nManager.locale(locale);
 
@@ -96,9 +92,8 @@ export class TokenMailService {
 	}
 
 	/**
-	 * Issues the password-reset token for a user: expires outstanding
-	 * PASSWORD_RESET tokens, generates a new split token with the type-specific
-	 * TTL (1 hour), hashes the validator, and persists the record.
+	 * Issues the password-reset token for a user through the
+	 * {@link TokenService} (1-hour TTL).
 	 *
 	 * Split from the mail dispatch so the token is created synchronously inside
 	 * the request while the mail itself is sent later by a queue worker.
@@ -107,7 +102,7 @@ export class TokenMailService {
 	 * @returns The raw `selector.validator` token to hand to the mail flow.
 	 */
 	async issuePasswordResetToken(user: User): Promise<FullToken> {
-		return this.issueToken(user, TOKEN_TYPES.PASSWORD_RESET, 1);
+		return this.tokenService.issue(user, TOKEN_TYPES.PASSWORD_RESET, 1);
 	}
 
 	/**
@@ -156,7 +151,7 @@ export class TokenMailService {
 	 */
 	async sendInvitationEmail(user: User): Promise<void> {
 		const locale = await this.resolveLocale(user);
-		const token = await this.issueToken(user, TOKEN_TYPES.PENDING_INVITE, 7 * 24);
+		const token = await this.tokenService.issue(user, TOKEN_TYPES.PENDING_INVITE, 7 * 24);
 
 		const i18n = i18nManager.locale(locale);
 		const app = env.get('APP_NAME');
@@ -195,32 +190,5 @@ export class TokenMailService {
 	protected async resolveLocale(user: User): Promise<string> {
 		const preferences = await this.getPreferencesAction.execute({ user });
 		return this.mailService.resolveLocale(preferences.locale);
-	}
-
-	/**
-	 * Expires outstanding tokens of the same type, generates a new split token,
-	 * hashes the validator, and persists the record.
-	 *
-	 * @param user - The token owner.
-	 * @param type - The token type to issue.
-	 * @param expiresInHours - Token lifetime in hours.
-	 * @returns The raw `selector.validator` token to hand to the user.
-	 */
-	protected async issueToken(user: User, type: TokenType, expiresInHours: number): Promise<FullToken> {
-		await this.tokenRepository.expireTokensByType(user, type);
-
-		const { selector, validator, token } = Token.generateSplit();
-		const hashedValidator = await hash.make(validator);
-
-		await this.tokenRepository.create({
-			userId: user.id,
-			type,
-			selector,
-			token: hashedValidator,
-			attempts: 0,
-			expiresAt: DateTime.now().plus({ hours: expiresInHours }),
-		});
-
-		return token;
 	}
 }
