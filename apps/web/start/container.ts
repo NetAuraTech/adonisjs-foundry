@@ -7,6 +7,7 @@ import { TypesensePageSearchDriver } from '#cms/services/page/typesense_search_d
 import { MailClientContract, type MailClientMessage } from '#core/contracts/mail_client';
 import { MaintenanceService } from '#core/services/maintenance_service';
 import { LogService } from '#log/services/log_service';
+import { InMemoryCacheDriver } from '#shared/services/cache/drivers/in_memory_cache_driver';
 import { RedisCacheDriver } from '#shared/services/cache/drivers/redis_cache_driver';
 import { CacheService } from '#shared/services/cache_service';
 import { LockService } from '#shared/services/lock_service';
@@ -78,6 +79,20 @@ app.container.singleton(CacheService, () => {
 	const driver = new RedisCacheDriver();
 	return new CacheService(driver);
 });
+
+// ─── InMemoryCacheDriver (singleton) ──────────────────────────────────────────
+
+/**
+ * In-memory {@link CacheDriver} implementation singleton, for tests and
+ * single-process environments. The production {@link CacheService} binding
+ * above stays on Redis; resolve or swap this driver through the container
+ * wherever the contract is needed.
+ *
+ * @example
+ * const driver = await app.container.make(InMemoryCacheDriver)
+ * const cache = new CacheService(driver).namespace('builder')
+ */
+app.container.singleton(InMemoryCacheDriver, () => new InMemoryCacheDriver());
 
 // ─── LockService (singleton) ────────────────────────────────────────────────
 
