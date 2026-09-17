@@ -1,7 +1,74 @@
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { type HttpContext } from '@adonisjs/core/http';
 import { test } from '@japa/runner';
 import { handle } from '#transport/core/rest/page_adapter';
 import { type AnyRestEndpoint } from '#transport/core/rest/rest_adapter';
+import { RestEndpointManifest } from '#transport/core/rest/rest_endpoint_manifest';
+import type { ScannedController } from '@adonisjs/assembler/types';
+
+const APP_ROOT = fileURLToPath(new URL('../../../../', import.meta.url));
+
+const pageResourceSource = `
+import { inject } from '@adonisjs/core'
+import { restIdValidator } from '#transport/identity/validators/user'
+
+@inject()
+export default class PageResource {
+  readonly endpoints = {
+    show: {
+      validator: () => restIdValidator,
+      execute: (_context, _prepared, payload) => payload,
+    },
+  }
+}
+`;
+
+const pageControllerSource = `
+import { inject } from '@adonisjs/core'
+import { type HttpContext } from '@adonisjs/core/http'
+import PageResource from '../../rest/page_resource.js'
+import { handle as pageHandle } from '#transport/core/rest/page_adapter'
+
+@inject()
+export default class PageApiController {
+  constructor(protected pageResource: PageResource) {}
+
+  async render(ctx: HttpContext): Promise<unknown> {
+    return pageHandle(ctx, this.pageResource.endpoints.show)
+  }
+}
+`;
+
+/**
+ * Build a throw-away app root inside the workspace `tmp/` directory (git-
+ * ignored) so the fixture module's `#transport/*` imports resolve against the
+ * real application.
+ */
+async function createPageFixtureAppRoot(): Promise<string> {
+	await mkdir(join(APP_ROOT, 'tmp'), { recursive: true });
+	const root = await mkdtemp(join(APP_ROOT, 'tmp', 'page-adapter-'));
+	await mkdir(join(root, 'app/pagedom/controllers/api'), { recursive: true });
+	await mkdir(join(root, 'app/pagedom/rest'), { recursive: true });
+	await writeFile(join(root, 'app/pagedom/rest/page_resource.ts'), pageResourceSource);
+	await writeFile(join(root, 'app/pagedom/controllers/api/page_api_controller.ts'), pageControllerSource);
+	return root;
+}
+
+function makePageController(appRoot: string): ScannedController {
+	const path = join(appRoot, 'app', 'pagedom', 'controllers', 'api', 'page_api_controller.ts');
+	return {
+		name: 'page_api_controller',
+		path,
+		method: 'render',
+		import: {
+			type: 'default',
+			specifier: pathToFileURL(path).href,
+			value: 'Controller',
+		},
+	};
+}
 
 interface RecordedCall {
 	method: string;
@@ -225,5 +292,23 @@ test.group('handle', () => {
 		};
 
 		await assert.rejects(() => handle(ctx, endpoint), /flash and redirect declarations/);
+	});
+});
+
+test.group('RestEndpointManifest', () => {
+	let appRoot: string;
+
+	test('resolves page-adapter delegations through the same trace', async ({ assert }) => {
+		appRoot = await createPageFixtureAppRoot();
+		try {
+			assert.deepEqual(await new RestEndpointManifest(appRoot).resolve(makePageController(appRoot)), [
+				{
+					name: 'restIdValidator',
+					import: { specifier: '#transport/identity/validators/user', type: 'named', value: 'restIdValidator' },
+				},
+			]);
+		} finally {
+			await rm(appRoot, { recursive: true, force: true });
+		}
 	});
 });

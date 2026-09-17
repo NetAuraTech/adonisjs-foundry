@@ -44,7 +44,6 @@ import { inject } from '@adonisjs/core'
 import { type HttpContext } from '@adonisjs/core/http'
 import WidgetResource from '../../rest/widget_resource.js'
 import { handle } from '#transport/core/rest/rest_adapter'
-import { handle as pageHandle } from '#transport/core/rest/page_adapter'
 
 appendFileSync(${JSON.stringify(importMarker)}, 'import\\n')
 
@@ -64,10 +63,6 @@ export default class WidgetApiController {
 
   async update(ctx: HttpContext): Promise<void> {
     await handle(ctx, this.widgetResource.endpoints.update)
-  }
-
-  async render(ctx: HttpContext): Promise<unknown> {
-    return pageHandle(ctx, this.widgetResource.endpoints.show)
   }
 
   async orphan(ctx: HttpContext): Promise<void> {
@@ -250,23 +245,6 @@ test.group('rest endpoint manifest', () => {
 					{
 						name: 'updateValidator',
 						import: { specifier: '#transport/identity/validators/user', type: 'named', value: 'updateValidator' },
-					},
-				],
-			);
-		} finally {
-			await rm(appRoot, { recursive: true, force: true });
-		}
-	});
-
-	test('resolves page-adapter delegations through the same trace', async ({ assert }) => {
-		appRoot = await createFixtureAppRoot();
-		try {
-			assert.deepEqual(
-				await new RestEndpointManifest(appRoot).resolve(makeController(appRoot, 'fixturedom', 'render')),
-				[
-					{
-						name: 'restIdValidator',
-						import: { specifier: '#transport/identity/validators/user', type: 'named', value: 'restIdValidator' },
 					},
 				],
 			);
