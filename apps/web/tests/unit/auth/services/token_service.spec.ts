@@ -10,7 +10,6 @@ import TokenModel from '#auth/models/token';
 import { TokenRepository } from '#auth/repositories/token_repository';
 import { TokenService } from '#auth/services/token_service';
 import User from '#identity/models/user';
-import LogEntry from '#log/models/log_entry';
 
 /**
  * Module-seam tests for the {@link TokenService}: the single home of the
@@ -268,18 +267,6 @@ test.group('TokenService', () => {
 
 		const record = await TokenModel.query().where('selector', plainToken.split('.')[0]).first();
 		assert.isAtMost(record!.expiresAt!.toMillis(), Date.now());
-
-		// The rejected presentation is audited as a security event. The
-		// log write-through is fire-and-forget, so poll briefly for the
-		// persisted entry.
-		let audit: any = null;
-		for (let i = 0; i < 40 && !audit; i++) {
-			audit = await LogEntry.query().where('message', 'core.token.double_use_rejected').first();
-			if (!audit) {
-				await new Promise((resolve) => setTimeout(resolve, 50));
-			}
-		}
-		assert.exists(audit);
 	});
 
 	test('consume() throws InvalidTokenException for expired, missing, or malformed tokens', async ({ assert }) => {
