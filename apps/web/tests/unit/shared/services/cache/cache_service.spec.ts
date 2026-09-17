@@ -37,6 +37,22 @@ class FakeCacheDriver implements CacheDriver {
 		this.calls.push({ method: 'keys', args: [pattern] });
 		return [];
 	}
+	async list<T>(pattern: string): Promise<Record<string, T>> {
+		this.calls.push({ method: 'list', args: [pattern] });
+		return { [pattern]: 'value' } as Record<string, T>;
+	}
+	async setIfAbsent<T>(key: string, value: T, ttl?: number): Promise<boolean> {
+		this.calls.push({ method: 'setIfAbsent', args: [key, value, ttl] });
+		return true;
+	}
+	async compareAndSet<T>(key: string, expected: T, value: T, ttl?: number): Promise<boolean> {
+		this.calls.push({ method: 'compareAndSet', args: [key, expected, value, ttl] });
+		return true;
+	}
+	async compareAndDelete<T>(key: string, expected: T): Promise<boolean> {
+		this.calls.push({ method: 'compareAndDelete', args: [key, expected] });
+		return true;
+	}
 }
 
 test.group('CacheService', (group) => {
@@ -69,6 +85,34 @@ test.group('CacheService', (group) => {
 		const ns = cache.namespace('user');
 		await ns.keys('*');
 		assert.deepEqual(driver.calls[0], { method: 'keys', args: ['user:*'] });
+	});
+
+	test('list() applies prefix to pattern and strips it from the returned keys', async ({ assert }) => {
+		const ns = cache.namespace('user');
+		const result = await ns.list('sub:*');
+		assert.deepEqual(driver.calls[0], { method: 'list', args: ['user:sub:*'] });
+		assert.deepEqual(result, { 'sub:*': 'value' });
+	});
+
+	test('setIfAbsent() applies prefix and delegates', async ({ assert }) => {
+		const ns = cache.namespace('user');
+		const stored = await ns.setIfAbsent('lock:1', { owner: 1 }, 5);
+		assert.isTrue(stored);
+		assert.deepEqual(driver.calls[0], { method: 'setIfAbsent', args: ['user:lock:1', { owner: 1 }, 5] });
+	});
+
+	test('compareAndSet() applies prefix and delegates', async ({ assert }) => {
+		const ns = cache.namespace('user');
+		const swapped = await ns.compareAndSet('lock:1', 'expected', 'value', 5);
+		assert.isTrue(swapped);
+		assert.deepEqual(driver.calls[0], { method: 'compareAndSet', args: ['user:lock:1', 'expected', 'value', 5] });
+	});
+
+	test('compareAndDelete() applies prefix and delegates', async ({ assert }) => {
+		const ns = cache.namespace('user');
+		const deleted = await ns.compareAndDelete('lock:1', 'expected');
+		assert.isTrue(deleted);
+		assert.deepEqual(driver.calls[0], { method: 'compareAndDelete', args: ['user:lock:1', 'expected'] });
 	});
 
 	test('deletePattern() applies prefix to pattern', async ({ assert }) => {

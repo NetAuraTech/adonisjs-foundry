@@ -124,26 +124,18 @@ export class BuilderSessionService {
 	 * Returns all active sessions for a translation, sorted by `joinedAt`.
 	 */
 	async getPresence(translationId: number): Promise<UserSession[]> {
-		const keys = await this.sessions.keys(`${translationId}:*`);
+		const entries = await this.sessions.list<UserSession>(`${translationId}:*`);
 
-		const prefix = this.buildPrefix(this.sessions);
-		const sessions = await Promise.all(
-			keys.map((fullKey) => {
-				const tail = prefix ? fullKey.slice(prefix.length + 1) : fullKey;
-				return this.sessions.get<UserSession>(tail);
-			}),
-		);
-
-		return sessions
-			.filter((s): s is UserSession => s !== null)
-			.sort((a, b) => new Date(a.joinedAt).getTime() - new Date(b.joinedAt).getTime());
+		return Object.values(entries).sort((a, b) => new Date(a.joinedAt).getTime() - new Date(b.joinedAt).getTime());
 	}
 
 	/**
 	 * Attempts to acquire an optimistic lock on `(translationId, blockId, fieldKey)`.
 	 *
-	 * - Free field → lock granted, stored in Redis with `LOCK_TTL_S` seconds TTL.
-	 * - Same user re-acquires → TTL renewed (heartbeat), granted.
+	 * - Free field → lock granted via an atomic set-if-absent, so two
+	 *   concurrent claims of the same free field yield exactly one winner.
+	 * - Same user re-acquires → TTL renewed (heartbeat) via an atomic
+	 *   compare-and-set, so only the owning user can renew.
 	 * - Another user holds it → denied, returns existing lock info.
 	 */
 	async acquireLock(
@@ -169,13 +161,62 @@ export class BuilderSessionService {
 			expiresAt: new Date(Date.now() + LOCK_TTL_S * 1000),
 		};
 
-		await this.locks.set(key, lock, LOCK_TTL_S);
-		return { acquired: true, lock: lock as Lock };
+		if (existing) {
+			// Heartbeat: renew only if the lock is still the one we observed.
+			if (await this.locks.compareAndSet(key, existing, lock, LOCK_TTL_S)) {
+				return { acquired: true, lock: lock as Lock };
+			}
+			return this.resolveContendedClaim(key, userId, lock);
+		}
+
+		if (await this.locks.setIfAbsent(key, lock, LOCK_TTL_S)) {
+			return { acquired: true, lock: lock as Lock };
+		}
+		return this.resolveContendedClaim(key, userId, lock);
+	}
+
+	/**
+	 * Resolves a claim that lost its atomic race: re-reads the current holder
+	 * and either renews it (when we ourselves now hold it, e.g. two parallel
+	 * heartbeats), claims it (when it expired in the gap) or denies with the
+	 * holder's lock info. Bounded retries cover fan-out of parallel claims
+	 * from the same user.
+	 */
+	private async resolveContendedClaim(
+		key: string,
+		userId: number,
+		claim: Omit<Lock, 'timer'>,
+	): Promise<{ acquired: boolean; lock: Lock }> {
+		for (let attempt = 0; attempt < 3; attempt++) {
+			const current = await this.locks.get<Lock>(key);
+
+			if (current === null) {
+				// Free again — the competing lock expired in the gap.
+				if (await this.locks.setIfAbsent(key, claim, LOCK_TTL_S)) {
+					return { acquired: true, lock: claim as Lock };
+				}
+				continue;
+			}
+
+			if (current.userId !== userId) {
+				return { acquired: false, lock: current as Lock };
+			}
+
+			if (await this.locks.compareAndSet(key, current, claim, LOCK_TTL_S)) {
+				return { acquired: true, lock: claim as Lock };
+			}
+			// Lost the renewal race to a concurrent heartbeat — retry with a fresh read.
+		}
+
+		const current = await this.locks.get<Lock>(key);
+		return { acquired: false, lock: (current ?? claim) as Lock };
 	}
 
 	/**
 	 * Explicitly releases a lock before its TTL expires.
-	 * No-op if the lock doesn't exist or belongs to a different user.
+	 * No-op if the lock doesn't exist or belongs to a different user. The
+	 * delete is compare-and-checked against the observed lock, so a lock that
+	 * expired and was re-acquired in the gap is never released.
 	 */
 	async releaseLock(translationId: number, blockId: string, fieldKey: string, userId: number): Promise<Lock | null> {
 		const key = `${translationId}:${blockId}:${fieldKey}`;
@@ -183,8 +224,8 @@ export class BuilderSessionService {
 
 		if (!existing || existing.userId !== userId) return null;
 
-		await this.locks.delete(key);
-		return existing as Lock;
+		const released = await this.locks.compareAndDelete(key, existing);
+		return released ? (existing as Lock) : null;
 	}
 
 	/**
@@ -192,16 +233,13 @@ export class BuilderSessionService {
 	 * Called from `start/transmit.ts` when an SSE connection drops.
 	 */
 	async releaseAllLocks(translationId: number, userId: number): Promise<Lock[]> {
-		const keys = await this.locks.keys(`${translationId}:*`);
-		const prefix = this.buildPrefix(this.locks);
+		const entries = await this.locks.list<Lock>(`${translationId}:*`);
 		const released: Lock[] = [];
 
 		await Promise.all(
-			keys.map(async (fullKey) => {
-				const tail = prefix ? fullKey.slice(prefix.length + 1) : fullKey;
-				const existing = await this.locks.get<Lock>(tail);
-				if (existing && existing.userId === userId) {
-					await this.locks.delete(tail);
+			Object.entries(entries).map(async ([key, existing]) => {
+				if (existing.userId !== userId) return;
+				if (await this.locks.compareAndDelete(key, existing)) {
 					released.push(existing as Lock);
 				}
 			}),
@@ -214,17 +252,8 @@ export class BuilderSessionService {
 	 * Returns all active locks for a translation.
 	 */
 	async getLocks(translationId: number): Promise<Lock[]> {
-		const keys = await this.locks.keys(`${translationId}:*`);
-		const prefix = this.buildPrefix(this.locks);
-
-		const results = await Promise.all(
-			keys.map((fullKey) => {
-				const tail = prefix ? fullKey.slice(prefix.length + 1) : fullKey;
-				return this.locks.get<Lock>(tail);
-			}),
-		);
-
-		return results.filter((l): l is Lock => l !== null);
+		const entries = await this.locks.list<Lock>(`${translationId}:*`);
+		return Object.values(entries) as Lock[];
 	}
 
 	/**
@@ -275,14 +304,5 @@ export class BuilderSessionService {
 
 		await this.colors.set(`${translationId}:${userId}`, color, SESSION_TTL_S);
 		return color;
-	}
-
-	/**
-	 * Reads the current prefix from a `CacheService` instance.
-	 * Used to strip the prefix from keys returned by `keys()` before
-	 * passing them back to `get()` (which re-adds the prefix).
-	 */
-	private buildPrefix(service: CacheService): string {
-		return (service as any).prefix ?? '';
 	}
 }

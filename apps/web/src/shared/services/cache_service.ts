@@ -103,6 +103,9 @@ export class CacheService {
 	/**
 	 * Returns all keys matching a glob pattern (namespaced automatically).
 	 *
+	 * **Note:** returns *absolute* keys (with the namespace prefix), unlike
+	 * {@link list} which returns values under the namespaced key dialect.
+	 *
 	 * @example
 	 * const lock = cache.namespace('builder').namespace('lock')
 	 * const keys = await lock.keys('42:*')
@@ -110,6 +113,64 @@ export class CacheService {
 	 */
 	keys(pattern: string): Promise<string[]> {
 		return this.driver.keys(this.k(pattern));
+	}
+
+	/**
+	 * Returns the decoded values of all keys matching a glob pattern within
+	 * this namespace (namespaced automatically), as a map of key → value.
+	 *
+	 * Unlike {@link keys} — which returns absolute keys — the returned map
+	 * uses the same key dialect as `get()`/`set()`, so entries can be re-read,
+	 * updated or deleted with the returned keys directly, with no prefix
+	 * bookkeeping.
+	 *
+	 * @example
+	 * const lock = cache.namespace('builder').namespace('lock')
+	 * const locks = await lock.list<Lock>('42:*')
+	 * // { '42:block-1:title': { blockId: 'block-1', ... }, ... }
+	 */
+	list<T>(pattern: string): Promise<Record<string, T>> {
+		return this.driver.list<T>(this.k(pattern)).then((entries) => {
+			const values: Record<string, T> = {};
+			for (const [key, value] of Object.entries(entries)) {
+				values[this.prefix ? key.slice(this.prefix.length + 1) : key] = value;
+			}
+			return values;
+		});
+	}
+
+	/**
+	 * Atomically stores `value` under `key` only if no live value is present
+	 * (namespaced automatically).
+	 *
+	 * @returns `true` when the value was stored, `false` when the key already
+	 *   existed and was left untouched.
+	 */
+	setIfAbsent<T>(key: string, value: T, ttl?: number): Promise<boolean> {
+		return this.driver.setIfAbsent<T>(this.k(key), value, ttl);
+	}
+
+	/**
+	 * Atomically replaces the value at `key` with `value` (and refreshes its
+	 * TTL) only if the stored value still equals `expected`
+	 * (namespaced automatically).
+	 *
+	 * @returns `true` when the swap happened, `false` when the stored value
+	 *   had changed (or the key was missing) and was left untouched.
+	 */
+	compareAndSet<T>(key: string, expected: T, value: T, ttl?: number): Promise<boolean> {
+		return this.driver.compareAndSet<T>(this.k(key), expected, value, ttl);
+	}
+
+	/**
+	 * Atomically deletes `key` only if the stored value still equals
+	 * `expected` (namespaced automatically).
+	 *
+	 * @returns `true` when the key was deleted, `false` when the stored value
+	 *   had changed (or the key was missing) and was left untouched.
+	 */
+	compareAndDelete<T>(key: string, expected: T): Promise<boolean> {
+		return this.driver.compareAndDelete<T>(this.k(key), expected);
 	}
 
 	// ─── Namespace factory ────────────────────────────────────────────────────

@@ -2,6 +2,7 @@ import { setTimeout as sleep } from 'node:timers/promises';
 import { test } from '@japa/runner';
 import { BuilderSessionService } from '#cms/services/page/builder_session_service';
 import { LOCK_TTL_MS } from '#cms/types/builder';
+import { InMemoryCacheDriver } from '#shared/services/cache/drivers/in_memory_cache_driver';
 import { RedisCacheDriver } from '#shared/services/cache/drivers/redis_cache_driver';
 import { CacheService } from '#shared/services/cache_service';
 
@@ -236,6 +237,88 @@ test.group('BuilderSessionService — locks', (group) => {
 	test('getLock() returns null for an unlocked field', async ({ assert }) => {
 		assert.isNull(await service.getLock(T, BLOCK, FIELD));
 	});
+});
+
+test.group('BuilderSessionService — atomic lock claims', (group) => {
+	let service: BuilderSessionService;
+
+	group.each.setup(() => {
+		// In-memory driver: contention is exercised hermetically, no Redis required.
+		service = new BuilderSessionService(new CacheService(new InMemoryCacheDriver()));
+	});
+
+	const T = 1;
+	const BLOCK = 'block-1';
+	const FIELD = 'title';
+	const USER_A = { userId: 10, userName: 'alice', userEmail: 'alice@example.com' };
+	const USER_B = { userId: 20, userName: 'bob', userEmail: 'bob@example.com' };
+
+	test('two concurrent claims of a free field yield exactly one winner', async ({ assert }) => {
+		await service.join(T, USER_A);
+		await service.join(T, USER_B);
+
+		const [a, b] = await Promise.all([
+			service.acquireLock(T, BLOCK, FIELD, USER_A.userId),
+			service.acquireLock(T, BLOCK, FIELD, USER_B.userId),
+		]);
+
+		assert.notEqual(a.acquired, b.acquired);
+		const winner = a.acquired ? a : b;
+		const loser = a.acquired ? b : a;
+		assert.isTrue(winner.acquired);
+		assert.isFalse(loser.acquired);
+		assert.equal(loser.lock.userId, winner.lock.userId);
+
+		const locks = await service.getLocks(T);
+		assert.lengthOf(locks, 1);
+		assert.equal(locks[0].userId, winner.lock.userId);
+	});
+
+	test('parallel claims by the same user both succeed (renewal, not denial)', async ({ assert }) => {
+		await service.join(T, USER_A);
+
+		const [a, b] = await Promise.all([
+			service.acquireLock(T, BLOCK, FIELD, USER_A.userId),
+			service.acquireLock(T, BLOCK, FIELD, USER_A.userId),
+		]);
+
+		assert.isTrue(a.acquired);
+		assert.isTrue(b.acquired);
+		assert.lengthOf(await service.getLocks(T), 1);
+	});
+
+	test('heartbeat renewal leaves a foreign lock untouched', async ({ assert }) => {
+		await service.join(T, USER_A);
+		await service.join(T, USER_B);
+		const { lock: held } = await service.acquireLock(T, BLOCK, FIELD, USER_A.userId);
+
+		const result = await service.acquireLock(T, BLOCK, FIELD, USER_B.userId);
+
+		assert.isFalse(result.acquired);
+		const stored = await service.getLock(T, BLOCK, FIELD);
+		assert.isNotNull(stored);
+		assert.equal(stored!.userId, USER_A.userId);
+		assert.equal(String(stored!.expiresAt), held.expiresAt.toISOString());
+	});
+
+	test('an expired lock is claimable by another user', async ({ assert }) => {
+		await service.join(T, USER_A);
+		await service.join(T, USER_B);
+		const { acquired } = await service.acquireLock(T, BLOCK, FIELD, USER_A.userId);
+		assert.isTrue(acquired);
+
+		// The service hard-codes a 5s lock TTL — wait it out.
+		await sleep(5300);
+		assert.isNull(await service.getLock(T, BLOCK, FIELD));
+
+		const { acquired: second, lock: renewed } = await service.acquireLock(T, BLOCK, FIELD, USER_B.userId);
+		assert.isTrue(second);
+		assert.equal(renewed.userId, USER_B.userId);
+
+		const locks = await service.getLocks(T);
+		assert.lengthOf(locks, 1);
+		assert.equal(locks[0].userId, USER_B.userId);
+	}).timeout(10000);
 });
 
 test.group('BuilderSessionService — isolation between translations', (group) => {
