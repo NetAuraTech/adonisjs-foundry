@@ -126,6 +126,62 @@ export class InMemoryCacheDriver implements CacheDriver {
 	}
 
 	/**
+	 * Returns the decoded values of all live keys matching a glob pattern,
+	 * as a map of key → value, sorted for determinism.
+	 */
+	async list<T>(pattern: string): Promise<Record<string, T>> {
+		const matcher = globToRegExp(pattern);
+		const values: Record<string, T> = {};
+
+		for (const key of this.aliveKeys().sort()) {
+			if (!matcher.test(key)) continue;
+			const raw = this.entries.get(key)?.value;
+			if (raw === undefined) continue;
+			try {
+				values[key] = JSON.parse(raw) as T;
+			} catch {
+				// Skip keys written by external clients holding non-JSON payloads
+			}
+		}
+
+		return values;
+	}
+
+	/**
+	 * Stores `value` under `key` only if no live value is present.
+	 *
+	 * The check and the write happen in a single synchronous block, which is
+	 * atomic within a process — the single-process equivalent of Redis
+	 * `SET ... NX`.
+	 */
+	async setIfAbsent<T>(key: string, value: T, ttl?: number): Promise<boolean> {
+		if (this.alive(key)) return false;
+		await this.set(key, value, ttl);
+		return true;
+	}
+
+	/**
+	 * Replaces the value at `key` with `value` (and refreshes its TTL) only if
+	 * the stored value still equals `expected`.
+	 */
+	async compareAndSet<T>(key: string, expected: T, value: T, ttl?: number): Promise<boolean> {
+		const entry = this.alive(key);
+		if (!entry || entry.value !== JSON.stringify(expected)) return false;
+		await this.set(key, value, ttl);
+		return true;
+	}
+
+	/**
+	 * Deletes `key` only if the stored value still equals `expected`.
+	 */
+	async compareAndDelete<T>(key: string, expected: T): Promise<boolean> {
+		const entry = this.alive(key);
+		if (!entry || entry.value !== JSON.stringify(expected)) return false;
+		this.entries.delete(key);
+		return true;
+	}
+
+	/**
 	 * Returns the entry for `key` if present and not expired, evicting the
 	 * entry when its TTL has passed.
 	 */

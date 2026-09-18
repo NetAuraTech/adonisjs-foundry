@@ -90,6 +90,62 @@ export function cacheDriverContractTests(name: string, createDriver: () => Cache
 			await ns.delete('never-existed');
 		});
 
+		test('setIfAbsent() stores when the key is absent and loses when it exists', async ({ assert }) => {
+			assert.isTrue(await ns.setIfAbsent('lock', 'first', 60));
+			assert.equal(await ns.get('lock'), 'first');
+
+			assert.isFalse(await ns.setIfAbsent('lock', 'second', 60));
+			assert.equal(await ns.get('lock'), 'first');
+		});
+
+		test('setIfAbsent() succeeds for an expired key', async ({ assert }) => {
+			assert.isTrue(await ns.setIfAbsent('lock', 'stale', 1));
+			await new Promise((resolve) => setTimeout(resolve, 1100));
+
+			assert.isTrue(await ns.setIfAbsent('lock', 'fresh', 60));
+			assert.equal(await ns.get('lock'), 'fresh');
+		}).timeout(3000);
+
+		test('compareAndSet() replaces only when the stored value matches', async ({ assert }) => {
+			await ns.set('lock', 'v1');
+
+			assert.isFalse(await ns.compareAndSet('lock', 'v2', 'v3'));
+			assert.equal(await ns.get('lock'), 'v1');
+
+			assert.isTrue(await ns.compareAndSet('lock', 'v1', 'v3', 60));
+			assert.equal(await ns.get('lock'), 'v3');
+		});
+
+		test('compareAndSet() fails for a missing key', async ({ assert }) => {
+			assert.isFalse(await ns.compareAndSet('missing', 'v1', 'v2'));
+			assert.isNull(await ns.get('missing'));
+		});
+
+		test('compareAndSet() refreshes the TTL when the swap happens', async ({ assert }) => {
+			await ns.set('lock', 'v1', 1);
+			await new Promise((resolve) => setTimeout(resolve, 700));
+
+			assert.isTrue(await ns.compareAndSet('lock', 'v1', 'v2', 2));
+
+			await new Promise((resolve) => setTimeout(resolve, 700));
+			assert.isTrue(await ns.has('lock')); // still alive — TTL was refreshed
+			assert.equal(await ns.get('lock'), 'v2');
+		}).timeout(3000);
+
+		test('compareAndDelete() deletes only when the stored value matches', async ({ assert }) => {
+			await ns.set('lock', 'v1');
+
+			assert.isFalse(await ns.compareAndDelete('lock', 'v2'));
+			assert.isTrue(await ns.has('lock'));
+
+			assert.isTrue(await ns.compareAndDelete('lock', 'v1'));
+			assert.isFalse(await ns.has('lock'));
+		});
+
+		test('compareAndDelete() is a no-op for a missing key', async ({ assert }) => {
+			assert.isFalse(await ns.compareAndDelete('missing', 'v1'));
+		});
+
 		test('remember() returns the cached value without calling the factory on a hit', async ({ assert }) => {
 			await ns.set('remembered', 'cached-value');
 
@@ -138,6 +194,38 @@ export function cacheDriverContractTests(name: string, createDriver: () => Cache
 			const keys = await ns.keys('sub:*');
 			assert.lengthOf(keys, 2);
 			assert.includeMembers(keys, [`${nsName}:sub:1`, `${nsName}:sub:2`]);
+		});
+
+		test('list() returns values under the namespaced key dialect', async ({ assert }) => {
+			await ns.set('sub:1', 'a');
+			await ns.set('sub:2', 'b');
+			await ns.set('other:3', 'c');
+
+			const values = await ns.list<string>('sub:*');
+			assert.deepEqual(values, { 'sub:1': 'a', 'sub:2': 'b' });
+		});
+
+		test('list() returns an empty map when nothing matches', async ({ assert }) => {
+			await ns.set('sub:1', 'a');
+
+			assert.deepEqual(await ns.list('missing:*'), {});
+		});
+
+		test('list() includes increment counters, decoded as numbers', async ({ assert }) => {
+			await ns.set('data', 'json-value');
+			await ns.increment('counter', 5);
+
+			const values = await ns.list('*');
+			assert.equal(values['counter'], 5);
+			assert.equal(values['data'], 'json-value');
+		});
+
+		test('list() entries stay readable through the same key dialect', async ({ assert }) => {
+			const payload = { id: 7, nested: { ok: true } };
+			await ns.set('sub:1', payload);
+
+			const values = await ns.list<typeof payload>('sub:*');
+			assert.deepEqual(await ns.get('sub:1'), values['sub:1']);
 		});
 
 		test('deletePattern() removes matching keys only', async ({ assert }) => {
