@@ -1,57 +1,31 @@
 import { inject } from '@adonisjs/core';
-import i18nManager from '@adonisjs/i18n/services/main';
 import { GetPreferencesAction } from '#account/actions/preferences/get_preferences_action';
 import { TOKEN_TYPES, type FullToken } from '#auth/enums/token_type';
 import { TokenService } from '#auth/services/token_service';
-import { type MailClientMessage } from '#core/contracts/mail_client';
 import { MailService } from '#core/services/mail_service';
-import env from '#start/env';
+import { TOKEN_MAIL_SPECS } from '#core/token_mail_specs';
+import type { TokenMailMessage } from '#core/types/token_mail';
 import type User from '#identity/models/user';
-
-/**
- * Data passed to the auth mail templates when rendering the HTML body.
- *
- * Mirrors the view data the previous Mailable classes produced, so the edge
- * templates keep rendering identically. The rendering locale is stamped into
- * the data by the kernel {@link MailService}, not carried here.
- */
-interface AuthMailData {
-	app_name: string;
-	subject: string;
-	greeting?: string;
-	intro?: string;
-	action?: string;
-	outro?: string;
-	expiry?: string;
-	footer?: string;
-	/** Verification link (email verification flow). */
-	verification_link?: string;
-	/** Password-reset link (password reset flow). */
-	reset_link?: string;
-	/** Invitation acceptance link (invitation flow). */
-	accept_link?: string;
-}
-
-/** Auth-domain mail payload: the kernel envelope carrying the auth template data. */
-type AuthMailPayload = MailClientMessage & { data: AuthMailData };
 
 /**
  * Issues auth-domain tokens and sends their mail directly.
  *
  * Replaces the previous events → listeners → Mailables chain with one direct,
- * traceable call per flow. Every flow shares the same orchestration:
+ * traceable call per flow. Every flow is described by a row of
+ * {@link TOKEN_MAIL_SPECS} and shares the same orchestration:
  *   1. Resolve the user's locale from their preferences
- *   2. Issue the token through the auth-domain {@link TokenService} — the
- *      single issuance choreography (expire outstanding tokens of the type,
- *      generate the split token, hash the validator, persist the record)
- *   3. Build the domain-specific mail payload with i18n-translated strings
- *      and the flavor-aware link
+ *   2. Issue the token through the auth-domain {@link TokenService} with the
+ *      row's TTL — the single issuance choreography (expire outstanding
+ *      tokens of the type, generate the split token, hash the validator,
+ *      persist the record)
+ *   3. Build the mail payload from the row through the shared
+ *      {@link MailService.buildTokenMail} assembly
  *   4. Dispatch it through the kernel {@link MailService}
  */
 @inject()
 export class TokenMailService {
 	constructor(
-		protected mailService: MailService<AuthMailPayload>,
+		protected mailService: MailService<TokenMailMessage>,
 		protected getPreferencesAction: GetPreferencesAction,
 		protected tokenService: TokenService,
 	) {}
@@ -62,38 +36,16 @@ export class TokenMailService {
 	 * @param user - The user whose email should be verified.
 	 */
 	async sendVerificationEmail(user: User): Promise<void> {
+		const spec = TOKEN_MAIL_SPECS.emailVerification;
 		const locale = await this.resolveLocale(user);
-		const token = await this.tokenService.issue(user, TOKEN_TYPES.EMAIL_VERIFICATION, 24);
+		const token = await this.tokenService.issue(user, TOKEN_TYPES.EMAIL_VERIFICATION, spec.ttlHours!);
 
-		const i18n = i18nManager.locale(locale);
-
-		await this.mailService.send(
-			{
-				to: user.email,
-				subject: i18n.t('auth.verify_email.mail.subject'),
-				template: 'emails/auth_email',
-				data: {
-					app_name: env.get('APP_NAME') ?? 'AdonisJS',
-					subject: i18n.t('auth.verify_email.mail.subject'),
-					greeting: i18n.t('auth.verify_email.mail.greeting'),
-					intro: i18n.t('auth.verify_email.mail.intro'),
-					action: i18n.t('auth.verify_email.mail.action'),
-					outro: i18n.t('auth.verify_email.mail.outro'),
-					expiry: i18n.t('auth.verify_email.mail.expiry', { hours: 24 }),
-					footer: i18n.t('auth.verify_email.mail.footer'),
-					verification_link: this.mailService.buildLink(
-						['auth.email_verification.execute', 'api.v1.auth.email_verification.store'],
-						token,
-					),
-				} satisfies AuthMailData,
-			},
-			{ locale },
-		);
+		await this.mailService.send(this.mailService.buildTokenMail(spec, { to: user.email, locale, token }), { locale });
 	}
 
 	/**
 	 * Issues the password-reset token for a user through the
-	 * {@link TokenService} (1-hour TTL).
+	 * {@link TokenService} (1-hour TTL, from the flow's spec row).
 	 *
 	 * Split from the mail dispatch so the token is created synchronously inside
 	 * the request while the mail itself is sent later by a queue worker.
@@ -102,7 +54,7 @@ export class TokenMailService {
 	 * @returns The raw `selector.validator` token to hand to the mail flow.
 	 */
 	async issuePasswordResetToken(user: User): Promise<FullToken> {
-		return this.tokenService.issue(user, TOKEN_TYPES.PASSWORD_RESET, 1);
+		return this.tokenService.issue(user, TOKEN_TYPES.PASSWORD_RESET, TOKEN_MAIL_SPECS.passwordReset.ttlHours!);
 	}
 
 	/**
@@ -116,32 +68,10 @@ export class TokenMailService {
 	 * @param token - The `selector.validator` token issued for this request.
 	 */
 	async sendPasswordResetMail(user: User, token: FullToken): Promise<void> {
+		const spec = TOKEN_MAIL_SPECS.passwordReset;
 		const locale = await this.resolveLocale(user);
 
-		const i18n = i18nManager.locale(locale);
-
-		await this.mailService.send(
-			{
-				to: user.email,
-				subject: i18n.t('auth.reset_password.mail.subject'),
-				template: 'emails/auth_email',
-				data: {
-					app_name: env.get('APP_NAME') ?? 'AdonisJS',
-					subject: i18n.t('auth.reset_password.mail.subject'),
-					greeting: i18n.t('auth.reset_password.mail.greeting'),
-					intro: i18n.t('auth.reset_password.mail.intro'),
-					action: i18n.t('auth.reset_password.mail.action'),
-					outro: i18n.t('auth.reset_password.mail.outro'),
-					expiry: i18n.t('auth.reset_password.mail.expiry', { hours: 1 }),
-					footer: i18n.t('auth.reset_password.mail.footer'),
-					reset_link: this.mailService.buildLink(
-						['auth.reset_password.render', 'api.v1.auth.reset_password.store'],
-						token,
-					),
-				} satisfies AuthMailData,
-			},
-			{ locale },
-		);
+		await this.mailService.send(this.mailService.buildTokenMail(spec, { to: user.email, locale, token }), { locale });
 	}
 
 	/**
@@ -150,34 +80,11 @@ export class TokenMailService {
 	 * @param user - The pending user that was invited.
 	 */
 	async sendInvitationEmail(user: User): Promise<void> {
+		const spec = TOKEN_MAIL_SPECS.invitation;
 		const locale = await this.resolveLocale(user);
-		const token = await this.tokenService.issue(user, TOKEN_TYPES.PENDING_INVITE, 7 * 24);
+		const token = await this.tokenService.issue(user, TOKEN_TYPES.PENDING_INVITE, spec.ttlHours!);
 
-		const i18n = i18nManager.locale(locale);
-		const app = env.get('APP_NAME');
-
-		await this.mailService.send(
-			{
-				to: user.email,
-				subject: i18n.t('identity.admin.users.mail.subject', { app }),
-				template: 'emails/admin_invite_email',
-				data: {
-					app_name: app ?? 'AdonisJS',
-					subject: i18n.t('identity.admin.users.mail.subject', { app }),
-					greeting: i18n.t('identity.admin.users.mail.greeting'),
-					intro: i18n.t('identity.admin.users.mail.intro', { app }),
-					action: i18n.t('identity.admin.users.mail.action'),
-					outro: i18n.t('identity.admin.users.mail.outro'),
-					expiry: i18n.t('identity.admin.users.mail.expiry', { days: 7 }),
-					footer: i18n.t('identity.admin.users.mail.footer'),
-					accept_link: this.mailService.buildLink(
-						['auth.accept_invitation.render', 'api.v1.auth.accept_invitation.store'],
-						token,
-					),
-				} satisfies AuthMailData,
-			},
-			{ locale },
-		);
+		await this.mailService.send(this.mailService.buildTokenMail(spec, { to: user.email, locale, token }), { locale });
 	}
 
 	/**
