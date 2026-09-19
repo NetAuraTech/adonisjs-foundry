@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import type { ResolvedBlock } from '#cms/types/page';
@@ -19,7 +18,7 @@ export default function HtmlTextBlock({ block }: HtmlTextBlockProps) {
 			components={{
 				em: ({ node, ...props }) => <em className="text-secondary" {...props} />,
 				strong: ({ node, ...props }) => <strong {...props} />,
-				p: Fragment,
+				p: ({ children }) => <>{children}</>,
 			}}
 		>
 			{content}

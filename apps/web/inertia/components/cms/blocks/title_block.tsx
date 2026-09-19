@@ -1,5 +1,4 @@
 import { Heading } from '@foundry/design-system/heading';
-import { Fragment } from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import { sanitizeHtml } from '~/components/cms/utils/purify';
@@ -44,7 +43,7 @@ export default function TitleBlock({ block }: TitleBlockProps) {
 				components={{
 					em: ({ node, ...props }) => <em className={colorMap[highlightColor]} {...props} />,
 					strong: ({ node, ...props }) => <strong className={colorMap[highlightColor]} {...props} />,
-					p: Fragment,
+					p: ({ children }) => <>{children}</>,
 				}}
 			>
 				{safeText}
