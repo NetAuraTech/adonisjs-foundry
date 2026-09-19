@@ -1686,7 +1686,7 @@ const apiManifest: FlavorManifest = {
 				'    "@types/dompurify": "^3.2.0",',
 				'    "@types/jsdom": "^30.0.0",',
 				'    "@types/luxon": "^3.7.5",',
-				'    "@types/node": "~26.4.1",',
+				'    "@types/node": "~26.5.1",',
 				'    "@types/react": "^19.2.14",',
 				'    "@types/react-dom": "^19.2.7",',
 				'    "@types/sinon": "^22.0.0",',
