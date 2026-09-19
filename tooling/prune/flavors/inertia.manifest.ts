@@ -1418,7 +1418,7 @@ const inertiaManifest: FlavorManifest = {
 				'    "@fontsource/playfair-display": "^5.3.0",',
 				'    "@foundry/design-system": "^1.4.0",',
 				'    "@iconify/react": "^6.0.2",',
-				'    "@inertiajs/react": "^3.0.0",',
+				'    "@inertiajs/react": "^3.7.1",',
 				'    "@lukeed/ms": "^2.0.2",',
 				'    "@scalar/api-reference": "^1.68.0",',
 				'    "@sentry/node": "^10.73.0",',
