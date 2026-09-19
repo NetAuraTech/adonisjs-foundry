@@ -1338,7 +1338,7 @@ const inertiaManifest: FlavorManifest = {
 				'  },',
 				'  "devDependencies": {',
 				'    "oxfmt": "^0.67.0",',
-				'    "oxlint": "^1.81.0",',
+				'    "oxlint": "^1.83.0",',
 				'    "typescript": "~5.9.3"',
 				'  },',
 				'  "overrides": {',
