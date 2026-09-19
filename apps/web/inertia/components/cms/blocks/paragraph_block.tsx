@@ -1,5 +1,4 @@
 import { Paragraph } from '@foundry/design-system/paragraph';
-import { Fragment } from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import { sanitizeHtml } from '~/components/cms/utils/purify';
@@ -25,7 +24,7 @@ export default function ParagraphBlock({ block }: ParagraphBlockProps) {
 				components={{
 					em: ({ node, ...props }) => <em className="text-secondary" {...props} />,
 					strong: ({ node, ...props }) => <strong {...props} />,
-					p: Fragment,
+					p: ({ children }) => <>{children}</>,
 				}}
 			>
 				{safeText}
