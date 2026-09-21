@@ -55,7 +55,25 @@ cd apps/web
 npm install @adonisjs/transmit @adonisjs/transmit-client
 ```
 
-## 3. Run migrations
+## 3. Recover the inbound webhook module
+
+The webhook module is `main`-only (the flavor prunes it entirely). Restore it
+from the `full` tree:
+
+| Artifact                                                                                           | From (`main`)                         |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| Webhook business layer (actions, models, queries, services, jobs, permissions)                     | `src/webhook`                         |
+| Webhook transport layer (receiver, delivery-log admin + REST controllers, routes, nav, validators) | `app/webhook`                         |
+| Webhook admin pages (delivery log)                                                                 | `inertia/pages/webhook`               |
+| Webhook configuration                                                                              | `config/webhooks.ts`                  |
+| Webhook migration (`webhook_deliveries`)                                                           | `database/migrations/webhook`         |
+| Webhook factories                                                                                  | `database/factories/webhook`          |
+| Webhook i18n                                                                                       | `resources/lang/{en,fr}/webhook.json` |
+
+No package install is needed — the module rides on the already-kept
+`@adonisjs/queue`. The receiver stays disabled until `WEBHOOK_SECRET` is set.
+
+## 4. Run migrations
 
 The flavor only ever created tables for the kept domains. Once the CMS
 migrations are restored, create the page/template tables:
@@ -66,14 +84,16 @@ node ace migration:run
 ```
 
 This runs `database/migrations/cms/*` (pages, page_translations,
-page_revisions, templates, and the `cms` folder's other tables).
+page_revisions, templates, and the `cms` folder's other tables) and, if the
+webhook module was restored, `database/migrations/webhook/*` (the
+`webhook_deliveries` table).
 
-## 4. Flip the feature flag
+## 5. Flip the feature flag
 
 The flavor rewrites `config/features.ts` with `cms: false`. Restore the `full`
 version (or set `cms: true`) to re-enable the CMS route module.
 
-## 5. Restore the composition rewrites
+## 6. Restore the composition rewrites
 
 The flavor rewrites several startup/composition files to drop CMS
 registrations. Restore the `main` version of each:
@@ -82,27 +102,26 @@ registrations. Restore the `main` version of each:
   domain entry (`#transport/cms/routes`) and drops the flavor's static home route
   (`registerCoreHomeRoute`) — the CMS page home takes over the site root as
   `core.home.render`.
-- `start/nav.ts` — re-adds the **Pages** and **Templates** admin menu entries (`#transport/cms/nav`).
-- `start/permissions.ts` — re-spreads the `cmsPermissionCatalog` (`#cms/permissions`).
+- `start/nav.ts` — re-adds the **Pages** and **Templates** admin menu entries (`#transport/cms/nav`) and the **Webhooks** delivery-log entry (`#transport/webhook/nav`).
+- `start/permissions.ts` — re-spreads the `cmsPermissionCatalog` (`#cms/permissions`) and the `webhookPermissionCatalog` (`#webhook/permissions`).
 - `start/dashboard.ts` — re-registers the `page` and `template` dashboard collectors.
 - `start/sitemap.ts` — re-registers the page sitemap collector.
 - `start/container.ts` — re-binds the builder session service.
 - `config/database.ts` — re-adds `database/migrations/cms` to the migration paths.
 - `config/shield.ts` — restores the CMS iframe `frame-src` hosts.
-- `start/env.ts` — restores `CMS_IFRAME_ALLOWLIST` and `CMS_VIDEO_PROVIDERS`.
-- `.env.example` — restores the CMS content-policy variables.
+- `start/env.ts` — restores `CMS_IFRAME_ALLOWLIST`, `CMS_VIDEO_PROVIDERS` and the `WEBHOOK_SECRET` / `WEBHOOK_REPLAY_WINDOW` variables.
+- `.env.example` — restores the CMS content-policy and webhook variables.
 - `adonisrc.ts` — restores the Transmit provider and preload.
 - `README.md` — restore the `full` README (or keep the flavor one).
 
-## 6. Restore the CMS tests
+## 7. Restore the pruned tests
 
-The flavor deletes the CMS test suites. Recover from `main`:
+The flavor deletes the CMS and webhook test suites. Recover from `main`:
 
-- `tests/unit/cms`
-- `tests/integration/cms`
-- `tests/functional/cms`
+- `tests/unit/cms`, `tests/integration/cms`, `tests/functional/cms`
+- `tests/unit/webhook`, `tests/integration/webhook`, `tests/functional/webhook`
 
-## 7. Regenerate the codegen
+## 8. Regenerate the codegen
 
 The flavor deletes `.adonisjs` (generated indexes). Regenerate it against the
 now-full source tree:
@@ -123,3 +142,5 @@ npm run test -- unit integration functional
 
 The dashboard shows the page/template cards again, `/admin/pages` and
 `/admin/templates` are reachable, and the sitemap includes the page routes.
+With `WEBHOOK_SECRET` set, `POST /webhooks/:receiver` answers and the delivery
+log is browsable at `/admin/webhooks/deliveries`.

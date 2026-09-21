@@ -93,7 +93,7 @@ An organism may contain private child components inside its folder. Export only 
 
 ### Special case: cms/blocks vs cms/editor/blocks
 
-The 12 page-builder block types each have **two** components, deliberately separate:
+The 17 page-builder block types each have **two** components, deliberately separate:
 
 - `cms/blocks/{type}_block.tsx` — static, read-only render of the block (used on the public page and in the live builder preview).
 - `cms/editor/blocks/{type}_editor.tsx` — the editing UI for that block's props, used only inside the builder sidebar.

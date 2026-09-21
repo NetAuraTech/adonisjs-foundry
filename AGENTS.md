@@ -59,6 +59,7 @@ Types: `feat`, `fix`, `refactor`, `docs`, `chore`, `test`, `perf`. Prefer scopes
 How code is structured in this codebase — read the relevant file before writing or modifying code in that layer.
 
 - HTTP Controllers: see `docs/agents/http-controllers.md`
+- Domain Actions: see `docs/agents/domain-actions.md`
 - Domain Services: see `docs/agents/domain-services.md`
 - Domain Repositories: see `docs/agents/domain-repositories.md`
 - Domain Queries: see `docs/agents/domain-queries.md`
@@ -70,6 +71,7 @@ How code is structured in this codebase — read the relevant file before writin
 - Language: see `docs/agents/language.md`
 - TOCTOU Protection: see `docs/agents/toctou-protection.md`
 - CLI Commands (Ace): see `docs/agents/cli-commands.md`
+- Design System: see `docs/agents/design-system.md`
 
 ### Issue tracker
 

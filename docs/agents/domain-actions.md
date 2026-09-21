@@ -59,11 +59,11 @@ export class CreateSomethingAction {
 
 ## Action Variants
 
-| Variant                      | Trait                                    | Example                                                  |
-| ---------------------------- | ---------------------------------------- | -------------------------------------------------------- |
-| **Standard action**          | Mutates state, orchestrates repos        | `CreateUserAction`, `UploadFileAction`                   |
-| **Read-only action**         | Queries only, no mutation                | `ListUsersAction`, `FindPageBySlugAction`                |
-| **Event-dispatching action** | Triggers emails/notifications via events | `SendEmailVerificationAction`, `SendPasswordResetAction` |
+| Variant                 | Trait                                                                                | Example                                                  |
+| ----------------------- | ------------------------------------------------------------------------------------ | -------------------------------------------------------- |
+| **Standard action**     | Mutates state, orchestrates repos                                                    | `CreateUserAction`, `UploadFileAction`                   |
+| **Read-only action**    | Queries only, no mutation                                                            | `ListUsersAction`, `FindPageBySlugAction`                |
+| **Mail-sending action** | Sends mail directly through the mail client (spec-driven token mails — no event bus) | `SendEmailVerificationAction`, `SendPasswordResetAction` |
 
 ## Transactions
 

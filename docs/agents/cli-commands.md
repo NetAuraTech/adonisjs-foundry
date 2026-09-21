@@ -24,8 +24,8 @@ node ace <command>
 | `node ace make:exception <Name>`  | Exception class     | Use manually in `src/{domain}/exceptions/`                                |
 | `node ace make:validator <Name>`  | Validator file      | Use manually in `app/{domain}/validators/`                                |
 | `node ace make:middleware <Name>` | Middleware class    | Use manually in `app/{domain}/middleware/` (core: `app/core/middleware/`) |
-| `node ace make:event <Name>`      | Event class         | `app/events/`                                                             |
-| `node ace make:listener <Name>`   | Listener class      | `app/listeners/`                                                          |
+
+> The application has **no event/listener chain** (`start/events.ts` registers nothing, `app/events/` and `app/listeners/` do not exist) — mail flows go through the mail client directly, so `make:event` / `make:listener` have no use here.
 
 ### Domain scaffolding
 
