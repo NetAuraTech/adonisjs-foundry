@@ -94,7 +94,28 @@ cd apps/web
 npm install @adonisjs/transmit @adonisjs/transmit-client
 ```
 
-## 3. Recover the session auth, admin UI and public site
+## 3. Recover the inbound webhook module
+
+The webhook module is `main`-only (the headless flavor prunes it entirely).
+Restore it from the `full` tree:
+
+| Artifact                                                                                           | From (`main`)                         |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| Webhook business layer (actions, models, queries, services, jobs, permissions)                     | `src/webhook`                         |
+| Webhook transport layer (receiver, delivery-log admin + REST controllers, routes, nav, validators) | `app/webhook`                         |
+| Webhook configuration                                                                              | `config/webhooks.ts`                  |
+| Webhook migration (`webhook_deliveries`)                                                           | `database/migrations/webhook`         |
+| Webhook factories                                                                                  | `database/factories/webhook`          |
+| Webhook i18n                                                                                       | `resources/lang/{en,fr}/webhook.json` |
+
+No package install is needed — the module rides on the already-kept
+`@adonisjs/queue`. After restoring the files, run
+`node ace migration:run` so the `webhook_deliveries` table is created, and
+point the production worker at the `webhook` queue (it is already listed in
+the `docker-compose.prod.yml` queue set). The receiver stays disabled until
+`WEBHOOK_SECRET` is set.
+
+## 4. Recover the session auth, admin UI and public site
 
 | Artifact                                | From (`main`)                                         |
 | --------------------------------------- | ----------------------------------------------------- |
@@ -111,7 +132,7 @@ pieces (`app/identity/routes.ts`, `app/file/routes.ts`, `app/log/routes.ts`,
 the `app/*/controllers/admin` trees) are the only things to restore from
 `main`.
 
-## 4. Restore the composition rewrites
+## 5. Restore the composition rewrites
 
 The flavor rewrites several allowlisted composition files. Restore the `main`
 version of each:
@@ -119,22 +140,29 @@ version of each:
 - `config/features.ts` — re-enables `auth`, `settings`, `admin` and `cms` (the
   `api` flavor keeps only `adminApi`).
 - `start/routes.ts` — restores the pure per-domain import list, which
-  re-registers the CMS domain entry (`#transport/cms/routes`) alongside the other
+  re-registers the CMS domain entry (`#transport/cms/routes`) and the webhook
+  domain entry (`#transport/webhook/routes`) alongside the other
   domain entries.
 - `config/database.ts` — re-adds `database/migrations/cms` to the migration
   paths.
 - `config/shield.ts` — restores the CMS iframe `frame-src` hosts.
-- `start/nav.ts` / `start/permissions.ts` / `start/dashboard.ts` /
-  `start/sitemap.ts` — re-registers the page/template contributions and the
-  `cmsPermissionCatalog`.
+- `start/nav.ts` — re-registers the CMS (`#transport/cms/nav`) and webhook
+  (`#transport/webhook/nav`) admin menu entries.
+- `start/permissions.ts` — re-spreads the `cmsPermissionCatalog`
+  (`#cms/permissions`) and the `webhookPermissionCatalog`
+  (`#webhook/permissions`).
+- `start/dashboard.ts` / `start/sitemap.ts` — re-registers the page/template
+  contributions.
 - `start/container.ts` — re-binds the builder session service.
 - `config/cors.ts` — restores the default dev-origin policy (the `api` flavor
   rewrote it to read `CORS_ALLOWED_ORIGINS`).
 - `start/asset_middleware.ts` — restores the Vite + Inertia server middleware.
 - `start/env.ts` — restores the environment variables stripped by the prune
-  (the CORS var is harmless to keep).
+  (`WEBHOOK_SECRET` / `WEBHOOK_REPLAY_WINDOW`, the CMS content-policy vars;
+  the CORS var is harmless to keep).
 - `.env.example` — restores `AUTH_GUARD_WEB=true` / `AUTH_GUARD_API=false` so
-  session login works again.
+  session login works again, plus the `WEBHOOK_SECRET` /
+  `WEBHOOK_REPLAY_WINDOW` and CMS content-policy variables.
 - `adonisrc.ts` — restores the Inertia/Vite/Transmit providers, commands and
   preloads, `indexPages`, the Vite `buildStarting` hook, and
   `withSharedProps: true`.
@@ -145,17 +173,19 @@ version of each:
   reference and the `jsx` compiler option.
 - `README.md` — restore the `full` README (or keep the flavor one).
 
-## 5. Restore the pruned tests
+## 6. Restore the pruned tests
 
-| Artifact                             | From (`main`)                                                                                                                                        |
-| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Session-auth functional suites       | `tests/functional/auth/{accept_invitation,email_verification,forgot_password,oauth,register,reset_password,session}.spec.ts`, `tests/functional/log` |
-| Inertia-page + SEO functional suites | `tests/functional/core` (dashboard, maintenance, SEO endpoints)                                                                                      |
-| CMS functional suite                 | `tests/functional/cms`                                                                                                                               |
-| Full-router structure snapshot       | `tests/integration/routes_structure.spec.ts`                                                                                                         |
-| CMS unit/integration suites          | `tests/unit/cms`, `tests/integration/cms`                                                                                                            |
+| Artifact                             | From (`main`)                                                                                                                                                                                                                                       |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Session-auth functional suites       | `tests/functional/auth/{accept_invitation,email_verification,forgot_password,oauth,password_reset_queue,register,reset_password,session,token_consume,two_factor}.spec.ts`, `tests/functional/account/email_change.spec.ts`, `tests/functional/log` |
+| Inertia-page + SEO functional suites | `tests/functional/core` (dashboard, maintenance, SEO endpoints, OpenAPI docs specs)                                                                                                                                                                 |
+| CMS functional suite                 | `tests/functional/cms`                                                                                                                                                                                                                              |
+| Webhook suites                       | `tests/unit/webhook`, `tests/integration/webhook`, `tests/functional/webhook`                                                                                                                                                                       |
+| Page-adapter unit suite              | `tests/unit/core/rest/page_adapter.spec.ts`                                                                                                                                                                                                         |
+| Full-router structure snapshot       | `tests/integration/routes_structure.spec.ts`                                                                                                                                                                                                        |
+| CMS unit/integration suites          | `tests/unit/cms`, `tests/integration/cms`                                                                                                                                                                                                           |
 
-## 6. Regenerate the codegen
+## 7. Regenerate the codegen
 
 The flavor deletes `.adonisjs` (generated indexes). Regenerate it against the
 now-full source tree:
@@ -176,4 +206,6 @@ npm run test -- unit integration functional
 
 The login page is back at `/login`, the admin at `/admin`, `/admin/pages` and
 `/admin/templates` are reachable, and the public site renders pages again —
-while `/api/v1/*` keeps working.
+while `/api/v1/*` keeps working. With `WEBHOOK_SECRET` set,
+`POST /webhooks/:receiver` answers and the delivery log is browsable at
+`/admin/webhooks/deliveries`.

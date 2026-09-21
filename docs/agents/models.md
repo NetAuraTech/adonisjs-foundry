@@ -80,7 +80,7 @@ Scopes are for filtering logic intrinsic to the model. Conditional request-drive
 ## Conventions
 
 - One file per model, named after the entity (`user.ts`, `token.ts`).
-- Models live co-located under `src/{domain}/models/` (identity, file, log, account, auth, core) and `src/cms/models/` (CMS).
+- Models live co-located under `src/{domain}/models/` (identity, file, log, account, auth, core, webhook) and `src/cms/models/` (CMS).
 - Relations use arrow functions for lazy resolution: `@belongsTo(() => Role)`.
 - Computed properties use `@computed()` decorator when they derive from model state.
 - A model never imports another repository directly outside a hook — cross-entity composition belongs in the service layer.

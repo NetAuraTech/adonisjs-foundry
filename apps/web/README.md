@@ -80,7 +80,7 @@ Transport code is addressed through the single `#transport/*` alias with the dom
 | `database/`  | Migrations, per-domain factories, and seeders                                |
 | `resources/` | Locale namespaces (`lang/`) and edge templates (`views/`)                    |
 | `start/`     | Kernel, env validation, route index, registries, rate limiting               |
-| `tests/`     | Japa suites (unit, functional)                                               |
+| `tests/`     | Japa suites (unit, integration, functional)                                  |
 
 ## Conventions
 

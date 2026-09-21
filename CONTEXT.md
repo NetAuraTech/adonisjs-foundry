@@ -6,6 +6,10 @@ A production-ready boilerplate and headless CMS: authentication, an admin panel 
 
 ### Contexts & Modules
 
+**Flavor**:
+A surface variant of the codebase — `full` (the `main` branch: Inertia front + admin + CMS module), `inertia` (front + admin, no CMS) and `api` (headless REST, no front). The `inertia` and `api` branches are CI-regenerated artifacts of `main`, produced by the declarative prune manifests in `tooling/prune/flavors/`; they are never edited by hand. Flavor variation is confined to the allowlisted config/composition/docs files — any code only one flavor has belongs in a prunable module (the CMS module, the webhook module).
+_Avoid_: edition, tier, branch (the branch is the vehicle, the flavor is the concept)
+
 **Admin**:
 The authenticated back-office context: `/admin/*` URLs, controllers under `{domain}/admin/`, `admin.*` route names, the `admin.json` i18n namespace. Exists in every flavor, independently of the CMS module.
 _Avoid_: CMS (the old name of this context before ADR-0001; `cms` now names only the CMS module), dashboard (a screen inside Admin, not the context)
@@ -98,7 +102,7 @@ _Avoid_: Code, OTP, link token
 
 **Invitation**:
 The admin-driven flow of creating a passwordless User and sending them a PENDING*INVITE Token to set their own password and activate the account.
-\_Avoid*: Onboarding, signup link
+_Avoid_: Onboarding, signup link
 
 **Two-Factor (2FA)**:
 The optional TOTP second factor on a User. Enrollment (from Settings → Account) stores a cipher-protected TOTP secret; once enabled, login requires a 6-digit TOTP code or an unused Recovery Code after the password check, before any session exists. Disabling requires the current password plus a valid code.
@@ -117,6 +121,22 @@ A single inbound, HMAC-signed `POST /webhooks/:receiver`. Verified by `X-Signatu
 _Avoid_: Event (that is the Log Entry event slug), notification, inbound payload
 
 ### Operations
+
+**OpenAPI (API docs)**:
+The runtime-generated OpenAPI 3 document of the versioned REST surface (`/api/v1/openapi.json`), scoped to the caller's permissions, plus a self-hosted interactive reference at `/api/docs`. Both are gated by the `apiDocs` feature flag and generated from the same route/validator definitions the API serves — the rollout tests guard against spec drift.
+_Avoid_: Swagger (the spec is OpenAPI 3), API explorer
+
+**Background Job**:
+A unit of work on a named `@adonisjs/queue` queue (Redis-backed; the `sync` driver runs it inline). Ships with the password-reset mail, inbound-webhook delivery processing, and the scheduled maintenance tasks. Consumed by a worker process (`node ace queue:work`); with `QUEUE_DRIVER=redis` and no worker running, jobs wait in Redis.
+_Avoid_: Task (a task is the schedule; a job is one enqueued execution), cron entry
+
+**Scheduled Maintenance Task**:
+A recurring job registered at boot (`start/scheduler.ts`) on the `maintenance` queue: Log Entry pruning and Backup retention enforcement. Interval is a `MAINTENANCE_*_SCHEDULE` duration string (`"0"` disables); a distributed Lock keeps a task from running twice at once.
+_Avoid_: Cron, batch
+
+**Maintenance Mode**:
+A runtime toggle (admin UI or `maintenance:on`/`maintenance:off`) that serves a public maintenance page instead of the app routes. Gated by the `maintenance` feature flag: health probes (`/health`, `/health/ready`) stay reachable outside the maintenance middleware, and an IP allowlist exempts specific clients.
+_Avoid_: Degraded mode, read-only mode
 
 **Backup**:
 A point-in-time database export (full or differential), stored on a Drive disk under the `backup/` prefix — entirely separate from CMS file storage and from PageRevisions.

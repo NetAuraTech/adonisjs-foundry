@@ -104,6 +104,7 @@ src/
                        # get_folder_detail, get_file_detail, folder_tree (pure helper)
   identity/queries/    # list_users, list_roles, list_permissions, get_user_detail, get_role_detail
   log/queries/         # list_log_entries
+  webhook/queries/     # list_webhook_deliveries
 ```
 
 ## Documentation
