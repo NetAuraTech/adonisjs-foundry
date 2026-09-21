@@ -124,8 +124,11 @@ jobs:
           set -uo pipefail
           FLAVOR="${{ matrix.flavor }}"
           SHA="${{ needs.release-main.outputs.sha }}"
-          git fetch origin "refs/heads/${FLAVOR}:refs/remotes/origin/${FLAVOR}"
           for attempt in $(seq 1 60); do
+            # Fetch inside the loop: the prune pipeline force-pushes the branch
+            # after this step starts, so a one-shot fetch would only ever see the
+            # pre-release state and the poll would run out without matching.
+            git fetch origin "refs/heads/${FLAVOR}:refs/remotes/origin/${FLAVOR}" 2>/dev/null || true
             MSG="$(git log -1 --format=%B "refs/remotes/origin/${FLAVOR}" 2>/dev/null || true)"
             if printf '%s' "${MSG}" | grep -qF "from main ${SHA}"; then
               echo "Flavor branch '${FLAVOR}' is pruned from ${SHA}."
@@ -171,5 +174,7 @@ jobs:
             printf 'See the [main release](https://github.com/%s/releases/tag/%s) for the full changelog.\n' "${GITHUB_REPOSITORY}" "${TAG}"
           } > flavor-notes.md
 
-          gh release create "${FLAVOR_TAG}" --title "${TAG} (${FLAVOR} flavor)" --notes-file flavor-notes.md
+          # --prerelease: flavor releases are derived artifacts, so they must not
+          # steal the "Latest" badge from the main (stable) release.
+          gh release create "${FLAVOR_TAG}" --title "${TAG} (${FLAVOR} flavor)" --notes-file flavor-notes.md --prerelease
           echo "Created release ${FLAVOR_TAG}."
