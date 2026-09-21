@@ -1278,7 +1278,7 @@ Move email change logic from controller to AccountService
 
 ## Changelog
 
-### Unreleased
+### v2.0.0
 
 #### Architecture
 
