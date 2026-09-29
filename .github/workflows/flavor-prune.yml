@@ -178,6 +178,13 @@ jobs:
       - name: Reinstall dependencies (post-prune package.json)
         run: npm ci
 
+      - name: Converge the lockfile (post-prune package.json)
+        # npm ci never rewrites the lockfile, so without this step the
+        # flavor would ship main's lockfile, still containing subtrees for
+        # dependencies the manifest pruned (e.g. @adonisjs/transmit on
+        # inertia). Same technique as the dependabot-autofix workflow.
+        run: npm install --package-lock-only
+
       - name: Normalize formatting (post-prune oxfmt)
         # The prune engine rewrites the flavor package.json with a 2-space
         # indent (JSON.stringify), which fails the oxfmt tab check. Normalizing
@@ -189,6 +196,17 @@ jobs:
         uses: ./.github/actions/regenerate-codegen
         with:
           working-directory: apps/web
+
+      - name: Regenerate Lucid schema types (post-prune migrations)
+        # "node ace codegen" does not touch database/schema.ts: that file is
+        # rewritten by Lucid's schema codegen, triggered from "node ace
+        # migration:run". Without this step the flavor ships main's full
+        # schema, with table classes for migrations the manifest deleted.
+        shell: bash
+        working-directory: apps/web
+        run: |
+          cp .env.test .env
+          node ace migration:run
 
       - name: Run typecheck
         # The flavor package.json's typecheck script fans out to the surviving
