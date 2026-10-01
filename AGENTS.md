@@ -1,4 +1,4 @@
-This is `adonisjs-foundry` — a production-ready AdonisJS v7 + Inertia/React boilerplate and headless CMS, built on a domain-driven architecture (controllers → services/repositories → models).
+This is `adonisjs-foundry` — a production-ready AdonisJS v7 + Inertia/React boilerplate and headless CMS, built on a domain-driven architecture (controllers → actions → services/repositories → models).
 
 <critical>
 - Prefer `npm` for dependency management and scripts.
@@ -12,7 +12,7 @@ This is `adonisjs-foundry` — a production-ready AdonisJS v7 + Inertia/React bo
 
 Keep the codebase **prune-safe** while working on `main`:
 
-- Flavor variation is confined to config/composition/docs files on the `REWRITE_ALLOWLIST` (`tooling/prune/types.ts`). New code added outside the CMS module should not create hard couplings that a flavor cannot prune. **Rule of thumb: if it dies when the CMS dies, it lives in `apps/web/app/cms/`** (see [ADR-0001](docs/adr/0001-cms-module-extraction.md)).
+- Flavor variation is confined to config/composition/docs files on the `REWRITE_ALLOWLIST` (`tooling/prune/types.ts`). New code added outside the CMS module should not create hard couplings that a flavor cannot prune. **Rule of thumb: if it dies when the CMS dies, it lives in the CMS module** — `apps/web/src/cms/` (business: actions, services, repositories, models, exceptions) and `apps/web/app/cms/` (transport: controllers, routes, transformers, REST, validators) (see [ADR-0001](docs/adr/0001-cms-module-extraction.md)).
 - A hard coupling found while pruning means **refactoring `main`**, never patching a flavor.
 
 Where to learn more:
