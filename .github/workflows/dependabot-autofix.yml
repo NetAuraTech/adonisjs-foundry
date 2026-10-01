@@ -56,7 +56,9 @@ jobs:
         # Resolves the ideal tree from the package manifests without installing
         # or running lifecycle scripts. A no-op when dependabot's lockfile is
         # already consistent; repairs the rarer hoisting / range-mirror cases.
-        run: npm install --package-lock-only
+        # --ignore-scripts: --package-lock-only still runs the root postinstall
+        # (patch-package), whose binary is absent without node_modules.
+        run: npm install --package-lock-only --ignore-scripts
 
       - name: Commit and push if anything changed
         env:
