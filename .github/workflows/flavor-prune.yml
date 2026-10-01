@@ -185,13 +185,6 @@ jobs:
         # inertia). Same technique as the dependabot-autofix workflow.
         run: npm install --package-lock-only
 
-      - name: Normalize formatting (post-prune oxfmt)
-        # The prune engine rewrites the flavor package.json with a 2-space
-        # indent (JSON.stringify), which fails the oxfmt tab check. Normalizing
-        # the whole pruned tree here keeps the flavor source oxfmt-clean before
-        # the gates below and before the tree is force-pushed.
-        run: npm run format
-
       - name: Regenerate AdonisJS indexes (post-prune codegen)
         uses: ./.github/actions/regenerate-codegen
         with:
@@ -207,6 +200,15 @@ jobs:
         run: |
           cp .env.test .env
           node ace migration:run
+
+      - name: Normalize formatting (post-prune oxfmt)
+        # Must run after every codegen step: the prune engine rewrites the
+        # flavor package.json with a 2-space indent (JSON.stringify), and the
+        # Lucid schema codegen rewrites database/schema.ts with its own
+        # template — neither output is oxfmt-clean. Normalizing the whole
+        # pruned tree here keeps the flavor source oxfmt-clean before the
+        # gates below and before the tree is force-pushed.
+        run: npm run format
 
       - name: Run typecheck
         # The flavor package.json's typecheck script fans out to the surviving
