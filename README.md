@@ -1278,6 +1278,34 @@ Move email change logic from controller to AccountService
 
 ## Changelog
 
+### v2.1.0
+
+#### Backup
+
+- Private `r2-backup` drive disk (forcePathStyle, no ACL, no CDN) with `BACKUP_R2_BUCKET` env var for S3-compatible backup targets
+- Sanitize pg_dump COPY data: fields containing a single quote are wrapped in double quotes with embedded quotes doubled (`sanitizeDumpForApostrophes`), opt-in per dump via `DumpOptions.sanitizeApostrophes`
+- Fix AES-256-GCM encryption: the auth tag is now written after the ciphertext (it was dropped, so decryption failed on every file)
+
+#### Storage
+
+- The storage service resolves the active disk from `DRIVE_DISK`, the same variable the drive config uses for its default disk, instead of the undeclared `CMS_STORAGE_DISK`
+- R2 drive: `forcePathStyle`, `supportsACL=false`, and an optional `cdnUrl` served from the new `R2_PUBLIC_URL` env variable
+
+#### Security (dependencies)
+
+- Patched `dompurify` to ^3.4.16 (XSS fix), `brace-expansion` to 5.0.12 (CVE-2026-102276/77/78), and forced `nodemailer` 10.0.13 via an npm override (every remaining advisory is only patched on the 10.x line)
+
+#### Docker & infrastructure
+
+- The production image is now buildable and runnable: node-gyp toolchain for `better-sqlite3` on alpine, a `.dockerignore` (context drops from 898 MB to ~311 kB), and per-workspace production deps merged into the root `node_modules`
+- Flavor branches now ship a converged lockfile (no subtrees for pruned dependencies) and a freshly regenerated `database/schema.ts`
+
+#### CI
+
+- Post-prune formatting normalization moved after the codegen steps (the Lucid schema codegen was rewriting `schema.ts` in a form that failed the oxfmt gate)
+- Dependabot lockfile convergence no longer runs lifecycle scripts
+- Release workflow: the flavor catch-up poll fetches the branch on every iteration, and flavor releases are marked prerelease so they don't steal the "Latest" badge
+
 ### v2.0.0
 
 #### Architecture
