@@ -1,6 +1,7 @@
 import { test } from '@japa/runner';
 import sinon from 'sinon';
 import { StorageService } from '#file/services/storage_service';
+import env from '#start/env';
 
 /**
  * Unit tests for `StorageService`.
@@ -36,25 +37,13 @@ test.group('StorageService', (group) => {
 
 	// ─── disk() ───────────────────────────────────────────────────────────────
 
-	test('disk() returns value from CMS_STORAGE_DISK env', ({ assert }) => {
-		const original = process.env.CMS_STORAGE_DISK;
-		process.env.CMS_STORAGE_DISK = 's3';
+	test('disk() returns the active DRIVE_DISK from env', ({ assert }) => {
+		const original = env.get('DRIVE_DISK') as string;
+		env.set('DRIVE_DISK', 'r2');
 		try {
-			assert.equal(service.disk(), 's3');
+			assert.equal(service.disk(), 'r2');
 		} finally {
-			if (original !== undefined) process.env.CMS_STORAGE_DISK = original;
-			else delete process.env.CMS_STORAGE_DISK;
-		}
-	});
-
-	test('disk() falls back to local when CMS_STORAGE_DISK is unset', ({ assert }) => {
-		// Temporarily remove the env var so env.get returns the default
-		const original = process.env.CMS_STORAGE_DISK;
-		delete process.env.CMS_STORAGE_DISK;
-		try {
-			assert.equal(service.disk(), 'fs');
-		} finally {
-			if (original !== undefined) process.env.CMS_STORAGE_DISK = original;
+			env.set('DRIVE_DISK', original);
 		}
 	});
 

@@ -7,8 +7,9 @@ import type { StorageDisk } from '#types/file';
  *
  * All CMS files are stored under the `cms/` prefix to avoid colliding with
  * the `backup/` folder used by the backup system. The active disk is resolved
- * from `CMS_STORAGE_DISK` in the environment and must match one of the keys
- * declared in `config/drive.ts` (`local`, `s3`, or `r2`).
+ * from `DRIVE_DISK` in the environment — the same variable the drive config
+ * uses for its default disk — and must match one of the keys declared in
+ * `config/drive.ts` (`fs`, `s3`, or `r2`).
  *
  * This service is intentionally thin — it delegates all actual I/O to
  * AdonisJS Drive and only adds path prefixing, env-based disk resolution,
@@ -19,10 +20,10 @@ export class StorageService {
 
 	/**
 	 * Returns the configured CMS storage disk from the environment.
-	 * Falls back to `'fs'` if `CMS_STORAGE_DISK` is not set.
+	 * Falls back to `'fs'` if `DRIVE_DISK` is not set.
 	 */
 	disk(): StorageDisk {
-		return env.get('CMS_STORAGE_DISK', 'fs') as StorageDisk;
+		return env.get('DRIVE_DISK', 'fs') as StorageDisk;
 	}
 
 	/**
