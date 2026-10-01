@@ -1560,7 +1560,7 @@ const apiManifest: FlavorManifest = {
 				'    "postinstall": "patch-package"',
 				'  },',
 				'  "devDependencies": {',
-				'    "oxfmt": "^0.68.0",',
+				'    "oxfmt": "^0.70.0",',
 				'    "oxlint": "^1.85.0",',
 				'    "typescript": "~5.9.3"',
 				'  },',
