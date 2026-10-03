@@ -1633,7 +1633,7 @@ const apiManifest: FlavorManifest = {
 				'  "dependencies": {',
 				'    "@adonisjs/ally": "^6.3.1",',
 				'    "@adonisjs/auth": "^10.0.0",',
-				'    "@adonisjs/core": "^7.0.0",',
+				'    "@adonisjs/core": "^7.5.2",',
 				'    "@adonisjs/cors": "^3.0.0",',
 				'    "@adonisjs/drive": "^4.0.0",',
 				'    "@adonisjs/i18n": "^3.0.0",',
