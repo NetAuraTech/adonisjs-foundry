@@ -118,6 +118,14 @@ jobs:
     runs-on: ubuntu-latest
     needs: discover-flavors
     if: needs.discover-flavors.outputs.empty == 'false'
+    # Serialize per-flavor runs: back-to-back pushes to main trigger overlapping
+    # runs whose force-pushes race on the same flavor branch — the loser fails
+    # with "stale info" (force-with-lease) on output already superseded. A new
+    # push cancels the in-flight prune of the same flavor, so only the run for
+    # the newest main survives.
+    concurrency:
+      group: flavor-prune-${{ matrix.flavor }}
+      cancel-in-progress: true
     strategy:
       fail-fast: false
       matrix:
