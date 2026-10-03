@@ -1,7 +1,10 @@
+import app from '@adonisjs/core/services/app';
 import testUtils from '@adonisjs/core/services/test_utils';
 import limiter from '@adonisjs/limiter/services/main';
 import { test } from '@japa/runner';
-import { restoreMailClient, swapMailClient } from '#tests/helpers/mail';
+import edge from 'edge.js';
+import { MailClientContract } from '#core/contracts/mail_client';
+import { restoreMailClient, swapMailClient, type RecordingMailClient } from '#tests/helpers/mail';
 import { resetSharedState } from '#tests/helpers/shared_state';
 
 /**
@@ -41,5 +44,28 @@ test.group('Contact form endpoint', (group) => {
 		}
 
 		assert.deepEqual(statuses, [302, 302, 302, 302, 302, 429]);
+	});
+
+	test('contact: the notification mail renders the submission content', async ({ client, assert }) => {
+		const res = await client
+			.post('/contact')
+			.redirects(0)
+			.withCsrfToken()
+			.accept('json')
+			.json({
+				name: 'Jane Doe',
+				email: 'jane@example.com',
+				message: 'Hello from the regression test',
+			})
+			.send();
+		assert.equal(res.status(), 302);
+
+		const mailClient = (await app.container.make(MailClientContract)) as RecordingMailClient;
+		assert.equal(mailClient.sent.length, 1);
+
+		const html = await edge.render(mailClient.sent[0].template, mailClient.sent[0].data ?? {});
+		assert.include(html, 'Jane Doe');
+		assert.include(html, 'jane@example.com');
+		assert.include(html, 'Hello from the regression test');
 	});
 });
