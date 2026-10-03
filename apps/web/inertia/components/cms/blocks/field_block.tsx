@@ -19,8 +19,9 @@ export default function FieldBlock({ block }: FieldBlockProps) {
 			helpText={p.helpText}
 			sanitizeValue={(value) => getSanitizer(p.type, true)(value)}
 		>
-			{p.options &&
-				p.options.map((option) => <SelectOption key={option.value} value={option.value} label={option.label} />)}
+			{p.options?.length
+				? p.options.map((option) => <SelectOption key={option.value} value={option.value} label={option.label} />)
+				: null}
 		</Field>
 	);
 }
