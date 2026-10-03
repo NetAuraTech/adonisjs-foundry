@@ -1692,7 +1692,7 @@ const apiManifest: FlavorManifest = {
 				'    "@poppinss/ts-exec": "^1.4.4",',
 				'    "@types/dompurify": "^3.2.0",',
 				'    "@types/jsdom": "^30.0.0",',
-				'    "@types/luxon": "^3.7.5",',
+				'    "@types/luxon": "^3.7.6",',
 				'    "@types/node": "~26.6.2",',
 				'    "@types/react": "^19.3.0",',
 				'    "@types/react-dom": "^19.3.0",',
