@@ -1631,7 +1631,7 @@ const apiManifest: FlavorManifest = {
 				'    "test": "node ace test"',
 				'  },',
 				'  "dependencies": {',
-				'    "@adonisjs/ally": "^6.0.0",',
+				'    "@adonisjs/ally": "^6.3.1",',
 				'    "@adonisjs/auth": "^10.0.0",',
 				'    "@adonisjs/core": "^7.0.0",',
 				'    "@adonisjs/cors": "^3.0.0",',
