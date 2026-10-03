@@ -108,6 +108,7 @@ export default function Layout(props: LayoutProps) {
 			<>
 				<Header
 					appName={app_name}
+					homeHref={homeHref}
 					links={[{ label: 'Home', href: homeHref, isActive: homeActive }]}
 					isMenuOpen={isMenuOpen}
 					onToggleMenu={() => setIsMenuOpen(!isMenuOpen)}
