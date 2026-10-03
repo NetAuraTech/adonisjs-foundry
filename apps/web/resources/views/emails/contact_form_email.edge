@@ -128,7 +128,7 @@
         @if(intro)
           <p>{{ intro }}</p>
         @end
-        @each((value, key) in data)
+        @each(value in fields)
           @if(value)
             <p>{{ value }}</p>
           @end

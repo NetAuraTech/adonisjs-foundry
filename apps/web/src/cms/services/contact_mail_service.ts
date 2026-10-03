@@ -25,6 +25,11 @@ export class ContactMailService {
 	/**
 	 * Renders and delivers the contact-form notification.
 	 *
+	 * The localized fields ride the payload as a nested `fields` record
+	 * (issue #401): the mail client spreads the data record into the top
+	 * level of the Edge context, so a flat spread would be invisible to the
+	 * template's `@each` over `fields`.
+	 *
 	 * @param submission - The validated contact form fields.
 	 */
 	async sendContactFormEmail(submission: ContactFormSubmission): Promise<void> {
@@ -54,7 +59,7 @@ export class ContactMailService {
 				subject: i18n.t('cms.page.contact_form.mail.subject'),
 				greeting: i18n.t('cms.page.contact_form.mail.greeting'),
 				intro: i18n.t('cms.page.contact_form.mail.intro'),
-				...fields,
+				fields,
 			},
 		} satisfies MailClientMessage);
 	}
