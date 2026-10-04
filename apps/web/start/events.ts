@@ -1,11 +1,13 @@
 /*
 |--------------------------------------------------------------------------
-| Events file
+| Events
 |--------------------------------------------------------------------------
 |
-| Application event bindings. The domain currently ships no events: the
-| contact-form notification is delivered by a direct service call from the
-| controller instead of an event → listener → mailable chain.
+| The `inertia` flavor has no event-driven flows: the auth and account mail
+| flows deliver through the mail client directly (no event bus), and the
+| CMS contact-form listener is pruned. This file intentionally registers
+| nothing; the empty export keeps it a module so the dynamic import in
+| adonisrc.ts typechecks under the client tsconfig.
 |
 */
 
