@@ -1544,7 +1544,7 @@ const apiManifest: FlavorManifest = {
 			content: [
 				'{',
 				'  "name": "adonisjs-foundry",',
-				'  "version": "2.1.0",',
+				'  "version": "2.2.0",',
 				'  "private": true,',
 				'  "license": "UNLICENSED",',
 				'  "type": "module",',
@@ -1602,7 +1602,7 @@ const apiManifest: FlavorManifest = {
 			content: [
 				'{',
 				'  "name": "@foundry/web",',
-				'  "version": "2.1.0",',
+				'  "version": "2.2.0",',
 				'  "private": true,',
 				'  "license": "UNLICENSED",',
 				'  "type": "module",',
@@ -1656,7 +1656,7 @@ const apiManifest: FlavorManifest = {
 				'    "@fontsource/cormorant-garamond": "^5.2.11",',
 				'    "@fontsource/jost": "^5.3.0",',
 				'    "@fontsource/playfair-display": "^5.3.0",',
-				'    "@foundry/design-system": "^2.1.0",',
+				'    "@foundry/design-system": "^2.2.0",',
 				'    "@iconify/react": "^6.0.2",',
 				'    "@inertiajs/react": "^3.7.1",',
 				'    "@lukeed/ms": "^2.0.2",',
