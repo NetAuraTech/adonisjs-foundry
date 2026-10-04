@@ -248,6 +248,9 @@ REDIS_HOST=127.0.0.1
 REDIS_PORT=6379
 REDIS_PASSWORD=
 REDIS_SOCKET=
+# Logical database (0-15) used on a shared Redis instance — set a distinct
+# value per site to isolate their data. Defaults to 0.
+REDIS_DB=0
 
 # Queue — `redis` consumes jobs via a worker process (`node ace queue:work`);
 # `sync` runs them inline in the calling process (no worker, no Redis).
