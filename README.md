@@ -1281,6 +1281,27 @@ Move email change logic from controller to AccountService
 
 ## Changelog
 
+### v2.2.0
+
+#### Redis
+
+- The Redis logical database is now configurable via the `REDIS_DB` env variable (defaults to `0`), so several sites sharing one Redis instance can be isolated on distinct logical databases
+
+#### Fixes
+
+- Exception handler: a header-derived i18n locale is now bound before any error page renders — unmatched URLs (e.g. `/.env`, `/wp-admin`) no longer crash in the Inertia 404 status page and turn into a 500 in production
+- CMS: the contact form notification mail now includes the submission content (the localized fields were spread flat while the template iterated a non-existent `data` variable, so the body only showed the greeting, intro and footer)
+- Header organism: the logo no longer derives its href from the first nav entry — an explicit `homeHref` prop (mirroring the `Footer`) is used instead
+- `Field` molecule: `children` no longer leaks onto void controls (a non-null `children` value, e.g. an empty `options` array, crashed React SSR on self-closing tags)
+
+#### Security (dependencies)
+
+- Patched `braces` 3.0.3 against a stack-exhaustion DoS (GHSA-vfj7-8cjw-p6xm): nesting beyond a depth limit now raises a controlled, catchable error instead of an uncaught "Maximum call stack size exceeded"
+
+#### CI
+
+- Dependabot autofix workflow now runs `npm dedupe` after applying dependency bumps
+
 ### v2.1.0
 
 #### Backup
