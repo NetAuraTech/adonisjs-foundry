@@ -1,4 +1,6 @@
 {
 	"welcome": "Welcome",
-	"tagline": "This is the blank home page of your hand-written front. Edit inertia/pages/core/front/home.tsx to get started."
+	"tagline": "This is the blank home page of your hand-written front. Edit inertia/pages/core/front/home.tsx to get started.",
+	"seo_title": "Welcome",
+	"seo_description": "This is the blank home page of your hand-written front. Edit inertia/pages/core/front/home.tsx to get started."
 }

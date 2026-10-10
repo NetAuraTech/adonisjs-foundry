@@ -242,4 +242,16 @@ export default await Env.create(new URL('../', import.meta.url), {
   */
 	SITEMAP_ADDITIONS: Env.schema.string.optional(),
 	SITEMAP_EXCLUSIONS: Env.schema.string.optional(),
+
+	/*
+	|----------------------------------------------------------
+	| Variables for configuring the public front SEO.
+	| All optional — the publisher identity for the structured
+	| data emitted in the public page heads (see config/seo.ts).
+	|----------------------------------------------------------
+	*/
+	LEGAL_NAME: Env.schema.string.optional(),
+	LEGAL_SIRET: Env.schema.string.optional(),
+	LEGAL_ADDRESS: Env.schema.string.optional(),
+	LEGAL_PHONE: Env.schema.string.optional(),
 });

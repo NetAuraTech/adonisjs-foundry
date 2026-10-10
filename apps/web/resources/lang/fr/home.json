@@ -1,4 +1,6 @@
 {
 	"welcome": "Bienvenue",
-	"tagline": "Ceci est la page d'accueil vierge de votre front écrit à la main. Modifiez inertia/pages/core/front/home.tsx pour commencer."
+	"tagline": "Ceci est la page d'accueil vierge de votre front écrit à la main. Modifiez inertia/pages/core/front/home.tsx pour commencer.",
+	"seo_title": "Bienvenue",
+	"seo_description": "Ceci est la page d'accueil vierge de votre front écrit à la main. Modifiez inertia/pages/core/front/home.tsx pour commencer."
 }

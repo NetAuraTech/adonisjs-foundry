@@ -20,6 +20,7 @@
 /// <reference path="../../config/queue.ts" />
 /// <reference path="../../config/redis.ts" />
 /// <reference path="../../config/sentry.ts" />
+/// <reference path="../../config/seo.ts" />
 /// <reference path="../../config/sitemap.ts" />
 /// <reference path="../../config/transmit.ts" />
 /// <reference path="../../config/webhooks.ts" />

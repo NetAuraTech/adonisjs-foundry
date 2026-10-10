@@ -6,6 +6,8 @@ import type { BuildPayloadResult, I18nTranslator } from '#core/contracts/i18n_tr
 export const HOME_MAPPING = {
 	welcome: 'home.welcome',
 	tagline: 'home.tagline',
+	seoTitle: 'home.seo_title',
+	seoDescription: 'home.seo_description',
 };
 
 /**
