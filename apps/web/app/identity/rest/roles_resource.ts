@@ -5,13 +5,9 @@ import { GetRoleDetailAction } from '#identity/actions/role/get_role_detail_acti
 import { ListRolesAction } from '#identity/actions/role/list_roles_action';
 import { UpdateRoleAction } from '#identity/actions/role/update_role_action';
 import { type ApiOperationDoc } from '#transport/core/openapi/api_docs_registry';
-import {
-	errorSchema,
-	validationErrorSchema,
-	dataEnvelope,
-	paginatedEnvelope,
-} from '#transport/core/openapi/schemas';
+import { errorSchema, validationErrorSchema, dataEnvelope, paginatedEnvelope } from '#transport/core/openapi/schemas';
 import { type RestEndpoint } from '#transport/core/rest/rest_adapter';
+import { roleSchema } from '#transport/identity/rest/users_resource';
 import RoleTransformer from '#transport/identity/transformers/role_transformer';
 import {
 	listRolesValidator,
@@ -19,7 +15,6 @@ import {
 	updateRoleValidator,
 	restRoleIdValidator,
 } from '#transport/identity/validators/role';
-import { roleSchema } from '#transport/identity/rest/users_resource';
 import type { Role } from '#identity/domain/role';
 import type { Infer } from '@vinejs/vine/types';
 

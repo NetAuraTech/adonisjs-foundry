@@ -26,9 +26,9 @@ import { middleware } from '#start/kernel';
 import { apiClientThrottle } from '#start/limiter';
 import { permissions } from '#start/permissions';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
-import { maintenanceEndpointsDocs } from '#transport/core/rest/maintenance_resource';
 import { registerApiDoc } from '#transport/core/openapi/api_docs_registry';
 import { dataEnvelope, errorSchema } from '#transport/core/openapi/schemas';
+import { maintenanceEndpointsDocs } from '#transport/core/rest/maintenance_resource';
 import type { JsonSchema } from '#transport/core/openapi/api_docs_registry';
 
 /**

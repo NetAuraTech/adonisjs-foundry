@@ -1,12 +1,12 @@
 import { inject } from '@adonisjs/core';
 import { type Infer } from '@vinejs/vine/types';
-import { USER_STATUSES } from '#identity/domain/user';
 import { ListAllRolesAction } from '#identity/actions/role/list_all_roles_action';
 import { CreateUserAction } from '#identity/actions/user/create_user_action';
 import { DeleteUserAction } from '#identity/actions/user/delete_user_action';
 import { GetUserDetailAction } from '#identity/actions/user/get_user_detail_action';
 import { ListUsersAction } from '#identity/actions/user/list_users_action';
 import { UpdateUserAction } from '#identity/actions/user/update_user_action';
+import { USER_STATUSES } from '#identity/domain/user';
 import { I18nService } from '#transport/core/helpers/i18n_service';
 import { type ApiOperationDoc, type JsonSchema } from '#transport/core/openapi/api_docs_registry';
 import {
@@ -112,10 +112,7 @@ export const userSchema: JsonSchema = {
 	},
 };
 
-export const usersEndpointsDocs: Record<
-	'index' | 'show' | 'store' | 'update' | 'destroy',
-	ApiOperationDoc
-> = {
+export const usersEndpointsDocs: Record<'index' | 'show' | 'store' | 'update' | 'destroy', ApiOperationDoc> = {
 	index: {
 		summary: 'List users',
 		description: 'Paginated user listing, filterable by search term and role slug.',

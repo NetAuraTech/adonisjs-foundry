@@ -13,13 +13,13 @@
 */
 
 import router from '@adonisjs/core/services/router';
+import vine from '@vinejs/vine';
 import { enabledAuthGuards } from '#config/auth';
 import features from '#config/features';
 import { controllers } from '#generated/controllers';
 import { middleware } from '#start/kernel';
 import { apiClientThrottle } from '#start/limiter';
 import { permissions } from '#start/permissions';
-import vine from '@vinejs/vine';
 import { builderOperationValidator, builderPresenceValidator } from '#transport/cms/validators/builder';
 import {
 	listPageValidator,

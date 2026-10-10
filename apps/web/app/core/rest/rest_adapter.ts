@@ -1,7 +1,7 @@
 import { type HttpContext } from '@adonisjs/core/http';
 import { extractPagination } from '#transport/core/helpers/extract_pagination';
-import { type ApiOperationDoc } from '#transport/core/openapi/api_docs_registry';
 import { stripEmptyStrings } from '#transport/core/helpers/strip_empty_strings';
+import { type ApiOperationDoc } from '#transport/core/openapi/api_docs_registry';
 import { type PaginationFilters } from '#types/pagination';
 
 /**

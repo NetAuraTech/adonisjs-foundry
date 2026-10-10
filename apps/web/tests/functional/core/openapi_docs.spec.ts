@@ -27,14 +27,14 @@ import {
 	createBlockTemplateValidator,
 	createFromPageValidator,
 } from '#transport/cms/validators/template';
-import { maintenanceEndpointsDocs } from '#transport/core/rest/maintenance_resource';
 import { registerApiDoc } from '#transport/core/openapi/api_docs_registry';
+import { maintenanceEndpointsDocs } from '#transport/core/rest/maintenance_resource';
+import { filesEndpointsDocs } from '#transport/file/rest/files_resource';
+import { foldersEndpointsDocs } from '#transport/file/rest/folders_resource';
 import { permissionsEndpointsDocs } from '#transport/identity/rest/permissions_resource';
 import { rolesEndpointsDocs } from '#transport/identity/rest/roles_resource';
 import { usersEndpointsDocs } from '#transport/identity/rest/users_resource';
 import { logsEndpointsDocs } from '#transport/log/rest/logs_resource';
-import { filesEndpointsDocs } from '#transport/file/rest/files_resource';
-import { foldersEndpointsDocs } from '#transport/file/rest/folders_resource';
 import { deliveriesEndpointsDocs } from '#transport/webhook/rest/deliveries_resource';
 
 /**
@@ -79,8 +79,14 @@ test.group('OpenAPI surface', (group) => {
 			tags: ['Auth'],
 			request: [{ validator: resetPasswordValidator, in: 'body' }],
 		});
-		registerApiDoc('api.v1.auth.email_verification.store', { summary: 'Verify the email address with a token', tags: ['Auth'] });
-		registerApiDoc('api.v1.auth.accept_invitation.store', { summary: 'Accept an invitation and set a password', tags: ['Auth'] });
+		registerApiDoc('api.v1.auth.email_verification.store', {
+			summary: 'Verify the email address with a token',
+			tags: ['Auth'],
+		});
+		registerApiDoc('api.v1.auth.accept_invitation.store', {
+			summary: 'Accept an invitation and set a password',
+			tags: ['Auth'],
+		});
 		registerApiDoc('api.v1.auth.logout.destroy', { summary: 'Log out', tags: ['Auth'] });
 		registerApiDoc('api.v1.auth.me.show', { summary: 'Show the authenticated user', tags: ['Auth'] });
 		registerApiDoc('api.v1.admin.cms.pages.index', {
@@ -133,9 +139,15 @@ test.group('OpenAPI surface', (group) => {
 			tags: ['Pages'],
 			request: [{ validator: showPageValidator, in: 'path' }],
 		});
-		registerApiDoc('api.v1.admin.cms.page_revisions.index', { summary: "List a page translation's revisions", tags: ['Pages'] });
+		registerApiDoc('api.v1.admin.cms.page_revisions.index', {
+			summary: "List a page translation's revisions",
+			tags: ['Pages'],
+		});
 		registerApiDoc('api.v1.admin.cms.page_revisions.restore', { summary: 'Restore a page revision', tags: ['Pages'] });
-		registerApiDoc('api.v1.admin.cms.page_revisions.toggle', { summary: "Toggle a page revision's keep flag", tags: ['Pages'] });
+		registerApiDoc('api.v1.admin.cms.page_revisions.toggle', {
+			summary: "Toggle a page revision's keep flag",
+			tags: ['Pages'],
+		});
 		registerApiDoc('api.v1.admin.cms.pages_preview.token', { summary: 'Issue a page preview token', tags: ['Pages'] });
 		registerApiDoc('api.v1.admin.cms.templates.index', {
 			summary: 'List templates',
@@ -162,7 +174,10 @@ test.group('OpenAPI surface', (group) => {
 			tags: ['Templates'],
 			request: [{ validator: createFromPageValidator, in: 'body' }],
 		});
-		registerApiDoc('api.v1.admin.cms.templates_preview.token', { summary: 'Issue a template preview token', tags: ['Templates'] });
+		registerApiDoc('api.v1.admin.cms.templates_preview.token', {
+			summary: 'Issue a template preview token',
+			tags: ['Templates'],
+		});
 		registerApiDoc('api.v1.admin.cms.builder_operations.execute', {
 			summary: 'Execute a builder operation',
 			tags: ['Builder'],
@@ -173,7 +188,10 @@ test.group('OpenAPI surface', (group) => {
 			tags: ['Builder'],
 			request: [{ validator: builderPresenceValidator, in: 'path' }],
 		});
-		registerApiDoc('api.v1.admin.cms.builder_operations.save_draft', { summary: 'Save a builder draft', tags: ['Builder'] });
+		registerApiDoc('api.v1.admin.cms.builder_operations.save_draft', {
+			summary: 'Save a builder draft',
+			tags: ['Builder'],
+		});
 		registerApiDoc('api.v1.admin.core.maintenance.index', maintenanceEndpointsDocs.index);
 		registerApiDoc('api.v1.admin.core.maintenance.update', maintenanceEndpointsDocs.update);
 		registerApiDoc('api.v1.admin.core.maintenance.toggle', maintenanceEndpointsDocs.toggle);

@@ -10,8 +10,8 @@
 |
 */
 
-import vine from '@vinejs/vine';
 import router from '@adonisjs/core/services/router';
+import vine from '@vinejs/vine';
 import { enabledAuthGuards } from '#config/auth';
 import features from '#config/features';
 import { controllers } from '#generated/controllers';
@@ -25,7 +25,13 @@ import {
 } from '#transport/auth/validators/auth';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
 import { registerApiDoc, type JsonSchema } from '#transport/core/openapi/api_docs_registry';
-import { dateTime, errorSchema, validationErrorSchema, messageSchema, dataEnvelope } from '#transport/core/openapi/schemas';
+import {
+	dateTime,
+	errorSchema,
+	validationErrorSchema,
+	messageSchema,
+	dataEnvelope,
+} from '#transport/core/openapi/schemas';
 import { email, password } from '#transport/core/validators/rules';
 
 const userSchema: JsonSchema = {

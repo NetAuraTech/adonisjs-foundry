@@ -11,8 +11,8 @@
 |
 */
 
-import vine from '@vinejs/vine';
 import router from '@adonisjs/core/services/router';
+import vine from '@vinejs/vine';
 import { enabledAuthGuards } from '#config/auth';
 import features from '#config/features';
 import { controllers } from '#generated/controllers';

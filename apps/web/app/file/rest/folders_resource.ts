@@ -6,11 +6,7 @@ import { ListFolderChildrenAction } from '#file/actions/file_folder/list_folder_
 import { ListRootFoldersAction } from '#file/actions/file_folder/list_root_folders_action';
 import { RenameFolderAction } from '#file/actions/file_folder/rename_folder_action';
 import { type ApiOperationDoc, type JsonSchema } from '#transport/core/openapi/api_docs_registry';
-import {
-	errorSchema,
-	validationErrorSchema,
-	dataEnvelope,
-} from '#transport/core/openapi/schemas';
+import { errorSchema, validationErrorSchema, dataEnvelope } from '#transport/core/openapi/schemas';
 import { type RestEndpoint } from '#transport/core/rest/rest_adapter';
 import FileFolderTransformer from '#transport/file/transformers/file_folder_transformer';
 import { showFileValidator, createFolderValidator, updateFolderValidator } from '#transport/file/validators/file';
