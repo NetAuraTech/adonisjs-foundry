@@ -25,8 +25,11 @@ import { controllers } from '#generated/controllers';
 import { middleware } from '#start/kernel';
 import { apiClientThrottle } from '#start/limiter';
 import { permissions } from '#start/permissions';
-import { registerCoreApiDocs } from '#transport/core/api_docs';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
+import { maintenanceEndpointsDocs } from '#transport/core/rest/maintenance_resource';
+import { registerApiDoc } from '#transport/core/openapi/api_docs_registry';
+import { dataEnvelope, errorSchema } from '#transport/core/openapi/schemas';
+import type { JsonSchema } from '#transport/core/openapi/api_docs_registry';
 
 /**
  * The admin JSON surface is shared: the in-repo admin UI (session guard) and
@@ -36,10 +39,39 @@ import { maintenanceMiddleware } from '#transport/core/maintenance';
  */
 const apiGuards = enabledAuthGuards.api ? (['web', 'api'] as const) : (['web'] as const);
 
+const dashboardSchema: JsonSchema = {
+	type: 'object',
+	properties: {
+		identity: { type: 'object', nullable: true },
+		file: { type: 'object', nullable: true },
+		pages: { type: 'object', nullable: true },
+	},
+	additionalProperties: true,
+};
+
+const openApiDocumentSchema: JsonSchema = {
+	type: 'object',
+	properties: {
+		openapi: { type: 'string' },
+		info: { type: 'object' },
+		paths: { type: 'object' },
+		components: { type: 'object' },
+		tags: { type: 'array', items: { type: 'object' } },
+	},
+};
+
 if (features.adminApi) {
-	// Document the core surface alongside the routes, so the OpenAPI spec
-	// and the registry above stay in lockstep.
-	registerCoreApiDocs();
+	registerApiDoc('api.v1.admin.core.dashboard.index', {
+		summary: 'Show the dashboard statistics',
+		description: 'Aggregated, read-only snapshot of the application state, keyed by section.',
+		tags: ['Dashboard'],
+		responses: {
+			'200': { description: 'The dashboard statistics.', schema: dataEnvelope(dashboardSchema) },
+		},
+	});
+	registerApiDoc('api.v1.admin.core.maintenance.index', maintenanceEndpointsDocs.index);
+	registerApiDoc('api.v1.admin.core.maintenance.update', maintenanceEndpointsDocs.update);
+	registerApiDoc('api.v1.admin.core.maintenance.toggle', maintenanceEndpointsDocs.toggle);
 
 	router
 		.group(() => {
@@ -83,6 +115,16 @@ if (features.adminApi) {
 // and is scoped to their permissions. The interactive reference UI over it
 // lives on the front (`/api/docs`), not in this API namespace.
 if (features.apiDocs) {
+	registerApiDoc('core.openapi.spec', {
+		summary: 'Show the generated OpenAPI document',
+		description: "The OpenAPI 3.0 document of the API, scoped to the requesting user's permissions.",
+		tags: ['OpenAPI'],
+		responses: {
+			'200': { description: 'The generated OpenAPI 3.0 document.', schema: openApiDocumentSchema },
+			'401': { description: 'The request is not authenticated.', schema: errorSchema },
+		},
+	});
+
 	router
 		.get('openapi.json', [controllers.core.api.Openapi, 'spec'])
 		.as('core.openapi.spec')
