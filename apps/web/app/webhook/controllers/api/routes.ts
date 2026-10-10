@@ -19,7 +19,8 @@ import { middleware } from '#start/kernel';
 import { apiClientThrottle } from '#start/limiter';
 import { permissions } from '#start/permissions';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
-import { registerWebhookApiDocs } from '#transport/webhook/api_docs';
+import { registerApiDoc } from '#transport/core/openapi/api_docs_registry';
+import { deliveriesEndpointsDocs } from '#transport/webhook/rest/deliveries_resource';
 
 /**
  * The admin JSON surface is shared: the in-repo admin UI (session guard) and
@@ -30,9 +31,7 @@ import { registerWebhookApiDocs } from '#transport/webhook/api_docs';
 const apiGuards = enabledAuthGuards.api ? (['web', 'api'] as const) : (['web'] as const);
 
 if (features.adminApi) {
-	// Document the webhook surface alongside the routes, so the OpenAPI spec
-	// and the registry above stay in lockstep.
-	registerWebhookApiDocs();
+	registerApiDoc('api.v1.admin.webhook.deliveries.index', deliveriesEndpointsDocs.index);
 
 	router
 		.group(() => {

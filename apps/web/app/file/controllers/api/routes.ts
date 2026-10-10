@@ -12,6 +12,7 @@
 */
 
 import router from '@adonisjs/core/services/router';
+import vine from '@vinejs/vine';
 import { enabledAuthGuards } from '#config/auth';
 import features from '#config/features';
 import { controllers } from '#generated/controllers';
@@ -19,7 +20,10 @@ import { middleware } from '#start/kernel';
 import { apiClientThrottle } from '#start/limiter';
 import { permissions } from '#start/permissions';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
-import { registerFileApiDocs } from '#transport/file/api_docs';
+import { registerApiDoc, type ApiOperationDoc, type JsonSchema } from '#transport/core/openapi/api_docs_registry';
+import { errorSchema, dataEnvelope } from '#transport/core/openapi/schemas';
+import { filesEndpointsDocs } from '#transport/file/rest/files_resource';
+import { foldersEndpointsDocs } from '#transport/file/rest/folders_resource';
 
 /**
  * The admin JSON surface is shared: the in-repo admin UI (session guard) and
@@ -29,10 +33,58 @@ import { registerFileApiDocs } from '#transport/file/api_docs';
  */
 const apiGuards = enabledAuthGuards.api ? (['web', 'api'] as const) : (['web'] as const);
 
+/**
+ * The file-upload body: a multipart form with the required `file` field and
+ * an optional target `folder_id`. The endpoint reads the multipart request
+ * directly (no Vine validator), so this mirror documents its contract.
+ */
+const uploadFileBodyValidator = vine.create({
+	file: vine.string().minLength(1),
+	folder_id: vine.number().positive().optional(),
+});
+
+/** The file payload, as shaped by `FileTransformer` (lean admin/API shape). */
+const fileSchema: JsonSchema = {
+	type: 'object',
+	properties: {
+		id: { type: 'number' },
+		filename: { type: 'string' },
+		originalName: { type: 'string' },
+		mimeType: { type: 'string' },
+		folderId: { type: 'number', nullable: true },
+		extension: { type: 'string' },
+		url: { type: 'string' },
+		type: { type: 'string' },
+		alt: { type: 'string', nullable: true },
+	},
+};
+
+/** Docs for the file-upload route (not a thin endpoint dispatch). */
+const uploadFileDoc: ApiOperationDoc = {
+	summary: 'Upload a file',
+	description: 'Multipart form with a required `file` field and an optional `folder_id` target.',
+	tags: ['Files'],
+	request: [{ validator: uploadFileBodyValidator, in: 'body', contentType: 'multipart/form-data' }],
+	responses: {
+		'201': { description: 'The uploaded file.', schema: dataEnvelope(fileSchema) },
+		'400': { description: 'The `file` field is missing.', schema: errorSchema },
+	},
+};
+
 if (features.adminApi) {
-	// Document the file surface alongside the routes, so the OpenAPI spec
-	// and the registry above stay in lockstep.
-	registerFileApiDocs();
+	registerApiDoc('api.v1.admin.file.files.index', filesEndpointsDocs.index);
+	registerApiDoc('api.v1.admin.file.files.store', uploadFileDoc);
+	registerApiDoc('api.v1.admin.file.files.show', filesEndpointsDocs.show);
+	registerApiDoc('api.v1.admin.file.files.move', filesEndpointsDocs.move);
+	registerApiDoc('api.v1.admin.file.files.destroy', filesEndpointsDocs.destroy);
+	registerApiDoc('api.v1.admin.file.files.upsert_alt', filesEndpointsDocs.upsertAlt);
+	registerApiDoc('api.v1.admin.file.files.delete_alt', filesEndpointsDocs.deleteAlt);
+	registerApiDoc('api.v1.admin.file.folders.index', foldersEndpointsDocs.index);
+	registerApiDoc('api.v1.admin.file.folders.store', foldersEndpointsDocs.store);
+	registerApiDoc('api.v1.admin.file.folders.show', foldersEndpointsDocs.show);
+	registerApiDoc('api.v1.admin.file.folders.children', foldersEndpointsDocs.children);
+	registerApiDoc('api.v1.admin.file.folders.update', foldersEndpointsDocs.update);
+	registerApiDoc('api.v1.admin.file.folders.destroy', foldersEndpointsDocs.destroy);
 
 	router
 		.group(() => {

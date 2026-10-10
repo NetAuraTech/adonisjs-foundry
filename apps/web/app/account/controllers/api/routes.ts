@@ -18,8 +18,12 @@ import features from '#config/features';
 import { controllers } from '#generated/controllers';
 import { middleware } from '#start/kernel';
 import { apiClientThrottle } from '#start/limiter';
-import { registerAccountApiDocs } from '#transport/account/api_docs';
+import { accountApiDocs } from '#transport/account/rest/account_resource';
+import { profileEndpointsDocs } from '#transport/account/rest/profile_resource';
+import { updateValidator as preferencesValidator } from '#transport/account/validators/preference';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
+import { registerApiDoc } from '#transport/core/openapi/api_docs_registry';
+import { validationErrorSchema } from '#transport/core/openapi/schemas';
 
 /**
  * The admin JSON surface is shared: the in-repo admin UI (session guard) and
@@ -30,6 +34,11 @@ import { maintenanceMiddleware } from '#transport/core/maintenance';
 const apiGuards = enabledAuthGuards.api ? (['web', 'api'] as const) : (['web'] as const);
 
 if (features.adminApi && enabledAuthGuards.api) {
+	registerApiDoc('api.v1.account.profile.show', profileEndpointsDocs.show);
+	registerApiDoc('api.v1.account.profile.update', profileEndpointsDocs.update);
+	registerApiDoc('api.v1.account.account.update', accountApiDocs.update);
+	registerApiDoc('api.v1.account.account.destroy', accountApiDocs.destroy);
+
 	router
 		.group(() => {
 			router
@@ -52,9 +61,16 @@ if (features.adminApi && enabledAuthGuards.api) {
 }
 
 if (features.adminApi) {
-	// Document the account surface alongside the routes, so the OpenAPI spec
-	// and the registry above stay in lockstep.
-	registerAccountApiDocs();
+	registerApiDoc('api.v1.admin.account.preferences.execute', {
+		summary: "Update the current user's preferences",
+		description: 'Theme and/or locale preference; fields are optional so a single preference can be posted.',
+		tags: ['Account'],
+		request: [{ validator: preferencesValidator, in: 'body' }],
+		responses: {
+			'200': { description: 'A success message (translated string).', schema: { type: 'string' } },
+			'422': { description: 'Validation failed.', schema: validationErrorSchema },
+		},
+	});
 
 	router
 		.group(() => {

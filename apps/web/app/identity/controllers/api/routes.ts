@@ -22,7 +22,10 @@ import { middleware } from '#start/kernel';
 import { apiClientThrottle } from '#start/limiter';
 import { permissions } from '#start/permissions';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
-import { registerIdentityApiDocs } from '#transport/identity/api_docs';
+import { registerApiDoc } from '#transport/core/openapi/api_docs_registry';
+import { permissionsEndpointsDocs } from '#transport/identity/rest/permissions_resource';
+import { rolesEndpointsDocs } from '#transport/identity/rest/roles_resource';
+import { usersEndpointsDocs } from '#transport/identity/rest/users_resource';
 
 /**
  * The admin JSON surface is shared: the in-repo admin UI (session guard) and
@@ -33,9 +36,17 @@ import { registerIdentityApiDocs } from '#transport/identity/api_docs';
 const apiGuards = enabledAuthGuards.api ? (['web', 'api'] as const) : (['web'] as const);
 
 if (features.adminApi) {
-	// Document the identity surface alongside the routes, so the OpenAPI spec
-	// and the registry above stay in lockstep.
-	registerIdentityApiDocs();
+	registerApiDoc('api.v1.admin.identity.users.index', usersEndpointsDocs.index);
+	registerApiDoc('api.v1.admin.identity.users.store', usersEndpointsDocs.store);
+	registerApiDoc('api.v1.admin.identity.users.show', usersEndpointsDocs.show);
+	registerApiDoc('api.v1.admin.identity.users.update', usersEndpointsDocs.update);
+	registerApiDoc('api.v1.admin.identity.users.destroy', usersEndpointsDocs.destroy);
+	registerApiDoc('api.v1.admin.identity.roles.index', rolesEndpointsDocs.index);
+	registerApiDoc('api.v1.admin.identity.roles.store', rolesEndpointsDocs.store);
+	registerApiDoc('api.v1.admin.identity.roles.show', rolesEndpointsDocs.show);
+	registerApiDoc('api.v1.admin.identity.roles.update', rolesEndpointsDocs.update);
+	registerApiDoc('api.v1.admin.identity.roles.destroy', rolesEndpointsDocs.destroy);
+	registerApiDoc('api.v1.admin.identity.permissions.index', permissionsEndpointsDocs.index);
 
 	router
 		.group(() => {
