@@ -1,23 +1,33 @@
 import { inject } from '@adonisjs/core';
 import i18nManager from '@adonisjs/i18n/services/main';
 import { GetPreferencesAction } from '#account/actions/preferences/get_preferences_action';
-import { MailClientContract, type MailClientMessage } from '#core/contracts/mail_client';
+import { MAIL_SPECS } from '#core/mail_specs';
+import { MailService } from '#core/services/mail_service';
 import { UserRepository } from '#identity/repositories/user_repository';
-import env from '#start/env';
 import type { ContactFormSubmission } from '#cms/types/page';
+import type { MailMessage } from '#core/types/mail';
 
 /**
  * Sends the contact-form notification mail to the site administrator.
  *
  * Replaces the previous `ContactFormSubmitted` event → listener → Mailable
  * chain with one direct, traceable call per submission. The recipient is the
- * address configured as `MAIL_FROM_ADDRESS`; their preference locale drives
- * the mail translations when that address belongs to a known user.
+ * address configured as `MAIL_FROM_ADDRESS`, passed in by the transport; when
+ * that address belongs to a known user, their preference locale drives the
+ * mail translations, with the kernel fallback applied in exactly one place
+ * ({@link MailService.resolveLocale}).
+ *
+ * The locale, envelope and dispatch go through the kernel {@link MailService}
+ * like every other mail — the kernel's `contactForm` row of the spec catalog
+ * owns the subject (computed once) and the envelope i18n keys. Only the
+ * per-field value rendering stays domain-side: each form field is translated
+ * individually with its submission value, which the static spec pattern does
+ * not express.
  */
 @inject()
 export class ContactMailService {
 	constructor(
-		protected mailClient: MailClientContract,
+		protected mailService: MailService<MailMessage>,
 		protected getPreferencesAction: GetPreferencesAction,
 		protected userRepository: UserRepository,
 	) {}
@@ -31,36 +41,30 @@ export class ContactMailService {
 	 * template's `@each` over `fields`.
 	 *
 	 * @param submission - The validated contact form fields.
+	 * @param recipient - The notification recipient, read by the transport
+	 *   from `MAIL_FROM_ADDRESS`.
 	 */
-	async sendContactFormEmail(submission: ContactFormSubmission): Promise<void> {
-		const recipient = env.get('MAIL_FROM_ADDRESS');
-		let locale = 'en';
+	async sendContactFormEmail(submission: ContactFormSubmission, recipient: string): Promise<void> {
+		let locale: string | undefined;
 
 		const admin = await this.userRepository.findByEmail(recipient);
 		if (admin) {
 			const preferences = await this.getPreferencesAction.execute({ user: admin });
-			locale = preferences.locale || 'en';
+			locale = preferences.locale;
 		}
 
-		const i18n = i18nManager.locale(locale);
+		const resolved = this.mailService.resolveLocale(locale);
+
+		const i18n = i18nManager.locale(resolved);
 
 		const fields: Record<string, string> = {};
 		for (const [key, value] of Object.entries(submission)) {
 			fields[key] = i18n.t(`cms.page.contact_form.mail.${key}`, { value }, `${key}: ${value}`);
 		}
 
-		await this.mailClient.send({
-			to: recipient,
-			subject: i18n.t('cms.page.contact_form.mail.subject'),
-			template: 'emails/contact_form_email',
-			data: {
-				locale,
-				app_name: env.get('APP_NAME') ?? 'AdonisJS',
-				subject: i18n.t('cms.page.contact_form.mail.subject'),
-				greeting: i18n.t('cms.page.contact_form.mail.greeting'),
-				intro: i18n.t('cms.page.contact_form.mail.intro'),
-				fields,
-			},
-		} satisfies MailClientMessage);
+		await this.mailService.send(
+			this.mailService.buildMail(MAIL_SPECS.contactForm, { to: recipient, locale: resolved, data: { fields } }),
+			{ locale: resolved },
+		);
 	}
 }
