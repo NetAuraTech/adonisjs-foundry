@@ -1,12 +1,10 @@
 import app from '@adonisjs/core/services/app';
 import mail from '@adonisjs/mail/services/main';
-import { BackupEngine } from '#backup/services/backup_engine';
 import { PageSearchDriver } from '#cms/contracts/page_search_driver';
 import { BuilderSessionService } from '#cms/services/page/builder_session_service';
 import { TypesensePageSearchDriver } from '#cms/services/page/typesense_search_driver';
 import { MailClientContract, type MailClientMessage } from '#core/contracts/mail_client';
 import { MaintenanceService } from '#core/services/maintenance_service';
-import { LogService } from '#log/services/log_service';
 import { InMemoryCacheDriver } from '#shared/services/cache/drivers/in_memory_cache_driver';
 import { RedisCacheDriver } from '#shared/services/cache/drivers/redis_cache_driver';
 import { CacheService } from '#shared/services/cache_service';
@@ -45,24 +43,6 @@ class AdonisMailClient extends MailClientContract {
  *   () => import('#start/container'),
  * ]
  */
-
-// ─── BackupEngine (factory) ──────────────────────────────────────────────────
-
-/**
- * Factory binding for {@link BackupEngine} so that callers can resolve it
- * through the container instead of using `new`.  Runtime arguments
- * (`strategyType`, `tempDir`) are supplied at resolution time which keeps
- * the strategy dynamic while still being mockable in tests via
- * {@link app.container.swap}.
- *
- * @example
- * const engine = await app.container.make(BackupEngine, ['full', 'storage/temp/backups'])
- */
-app.container.bind(BackupEngine, async (resolver, runtimeValues) => {
-	const [strategyType, tempDir] = runtimeValues ?? [];
-	const logService = await resolver.make(LogService);
-	return new BackupEngine(strategyType, tempDir, logService);
-});
 
 // ─── CacheService (singleton) ─────────────────────────────────────────────────
 
