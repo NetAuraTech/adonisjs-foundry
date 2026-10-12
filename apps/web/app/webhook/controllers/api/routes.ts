@@ -31,8 +31,6 @@ import { deliveriesEndpointsDocs } from '#transport/webhook/rest/deliveries_reso
 const apiGuards = enabledAuthGuards.api ? (['web', 'api'] as const) : (['web'] as const);
 
 if (features.adminApi) {
-	registerApiDoc('api.v1.admin.webhook.deliveries.index', deliveriesEndpointsDocs.index);
-
 	router
 		.group(() => {
 			router
@@ -40,8 +38,10 @@ if (features.adminApi) {
 					// Deliveries
 					router
 						.group(() => {
-							router
-								.get('/', [controllers.webhook.api.DeliveriesApi, 'index'])
+							registerApiDoc(
+								router.get('/', [controllers.webhook.api.DeliveriesApi, 'index']),
+								deliveriesEndpointsDocs.index,
+							)
 								.as('webhook.deliveries.index')
 								.use([middleware.permission({ permissions: [permissions.webhooks.view] })]);
 						})

@@ -7,10 +7,9 @@
 | permissions. Self-registers on import (see `app/identity/routes.ts`),
 | gated by the `adminApi` feature flag. Public URLs live under
 | `/api/v1/admin/{users,roles,permissions}`; route names carry the
-| `api.v1.admin.identity` prefix.
-|
-| Also registers the OpenAPI docs for this surface (see
-| `#transport/identity/api_docs`), consumed by the generated spec.
+| `api.v1.admin.identity` prefix. Each route registers its OpenAPI docs at
+| its declaration (`registerApiDoc`), keyed by the route itself: the route
+| name is derived from the route, never hand-assembled.
 |
 */
 
@@ -36,18 +35,6 @@ import { usersEndpointsDocs } from '#transport/identity/rest/users_resource';
 const apiGuards = enabledAuthGuards.api ? (['web', 'api'] as const) : (['web'] as const);
 
 if (features.adminApi) {
-	registerApiDoc('api.v1.admin.identity.users.index', usersEndpointsDocs.index);
-	registerApiDoc('api.v1.admin.identity.users.store', usersEndpointsDocs.store);
-	registerApiDoc('api.v1.admin.identity.users.show', usersEndpointsDocs.show);
-	registerApiDoc('api.v1.admin.identity.users.update', usersEndpointsDocs.update);
-	registerApiDoc('api.v1.admin.identity.users.destroy', usersEndpointsDocs.destroy);
-	registerApiDoc('api.v1.admin.identity.roles.index', rolesEndpointsDocs.index);
-	registerApiDoc('api.v1.admin.identity.roles.store', rolesEndpointsDocs.store);
-	registerApiDoc('api.v1.admin.identity.roles.show', rolesEndpointsDocs.show);
-	registerApiDoc('api.v1.admin.identity.roles.update', rolesEndpointsDocs.update);
-	registerApiDoc('api.v1.admin.identity.roles.destroy', rolesEndpointsDocs.destroy);
-	registerApiDoc('api.v1.admin.identity.permissions.index', permissionsEndpointsDocs.index);
-
 	router
 		.group(() => {
 			router
@@ -55,24 +42,31 @@ if (features.adminApi) {
 					// Users
 					router
 						.group(() => {
-							router
-								.get('/', [controllers.identity.api.UsersApi, 'index'])
+							registerApiDoc(router.get('/', [controllers.identity.api.UsersApi, 'index']), usersEndpointsDocs.index)
 								.as('identity.users.index')
 								.use([middleware.permission({ permissions: [permissions.users.view] })]);
-							router
-								.post('/', [controllers.identity.api.UsersCreateApi, 'store'])
+							registerApiDoc(
+								router.post('/', [controllers.identity.api.UsersCreateApi, 'store']),
+								usersEndpointsDocs.store,
+							)
 								.as('identity.users.store')
 								.use([middleware.permission({ permissions: [permissions.users.create] })]);
-							router
-								.get('/:id', [controllers.identity.api.UsersShowApi, 'show'])
+							registerApiDoc(
+								router.get('/:id', [controllers.identity.api.UsersShowApi, 'show']),
+								usersEndpointsDocs.show,
+							)
 								.as('identity.users.show')
 								.use([middleware.permission({ permissions: [permissions.users.view] })]);
-							router
-								.put('/:id', [controllers.identity.api.UsersUpdateApi, 'update'])
+							registerApiDoc(
+								router.put('/:id', [controllers.identity.api.UsersUpdateApi, 'update']),
+								usersEndpointsDocs.update,
+							)
 								.as('identity.users.update')
 								.use([middleware.permission({ permissions: [permissions.users.update] })]);
-							router
-								.delete('/:id', [controllers.identity.api.UsersDeleteApi, 'destroy'])
+							registerApiDoc(
+								router.delete('/:id', [controllers.identity.api.UsersDeleteApi, 'destroy']),
+								usersEndpointsDocs.destroy,
+							)
 								.as('identity.users.destroy')
 								.use([middleware.permission({ permissions: [permissions.users.delete] })]);
 						})
@@ -81,32 +75,41 @@ if (features.adminApi) {
 					// Roles
 					router
 						.group(() => {
-							router
-								.get('/', [controllers.identity.api.RolesApi, 'index'])
+							registerApiDoc(router.get('/', [controllers.identity.api.RolesApi, 'index']), rolesEndpointsDocs.index)
 								.as('identity.roles.index')
 								.use([middleware.permission({ permissions: [permissions.roles.view] })]);
-							router
-								.post('/', [controllers.identity.api.RolesCreateApi, 'store'])
+							registerApiDoc(
+								router.post('/', [controllers.identity.api.RolesCreateApi, 'store']),
+								rolesEndpointsDocs.store,
+							)
 								.as('identity.roles.store')
 								.use([middleware.permission({ permissions: [permissions.roles.create] })]);
-							router
-								.get('/:id', [controllers.identity.api.RolesShowApi, 'show'])
+							registerApiDoc(
+								router.get('/:id', [controllers.identity.api.RolesShowApi, 'show']),
+								rolesEndpointsDocs.show,
+							)
 								.as('identity.roles.show')
 								.use([middleware.permission({ permissions: [permissions.roles.view] })]);
-							router
-								.put('/:id', [controllers.identity.api.RolesUpdateApi, 'update'])
+							registerApiDoc(
+								router.put('/:id', [controllers.identity.api.RolesUpdateApi, 'update']),
+								rolesEndpointsDocs.update,
+							)
 								.as('identity.roles.update')
 								.use([middleware.permission({ permissions: [permissions.roles.update] })]);
-							router
-								.delete('/:id', [controllers.identity.api.RolesDeleteApi, 'destroy'])
+							registerApiDoc(
+								router.delete('/:id', [controllers.identity.api.RolesDeleteApi, 'destroy']),
+								rolesEndpointsDocs.destroy,
+							)
 								.as('identity.roles.destroy')
 								.use([middleware.permission({ permissions: [permissions.roles.delete] })]);
 						})
 						.prefix('roles');
 
 					// Permissions
-					router
-						.get('permissions', [controllers.identity.api.PermissionsApi, 'index'])
+					registerApiDoc(
+						router.get('permissions', [controllers.identity.api.PermissionsApi, 'index']),
+						permissionsEndpointsDocs.index,
+					)
 						.as('identity.permissions.index')
 						.use([middleware.permission({ permissions: [permissions.roles.view] })]);
 				})

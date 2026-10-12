@@ -1,4 +1,5 @@
 import { inject } from '@adonisjs/core';
+import vine from '@vinejs/vine';
 import { ChangePageStatusAction } from '#cms/actions/page/change_page_status_action';
 import { CreatePageAction } from '#cms/actions/page/create_page_action';
 import { CreateTranslationAction } from '#cms/actions/page/create_translation_action';
@@ -23,6 +24,14 @@ import {
 	createTranslationValidator,
 	searchPagesValidator,
 } from '#transport/cms/validators/page';
+import { type ApiOperationDoc, type JsonSchema } from '#transport/core/openapi/api_docs_registry';
+import {
+	dateTime,
+	errorSchema,
+	validationErrorSchema,
+	dataEnvelope,
+	paginatedEnvelope,
+} from '#transport/core/openapi/schemas';
 import { type RestEndpoint } from '#transport/core/rest/rest_adapter';
 import type Page from '#cms/models/page/page';
 import type PageRevision from '#cms/models/page/page_revision';
@@ -39,6 +48,249 @@ type PageUpdatePayload = Infer<typeof updatePageValidator>;
 type PagePublishPayload = Infer<typeof publishPageValidator>;
 type PageTranslationPayload = Infer<typeof createTranslationValidator>;
 type PageSearchPayload = Infer<typeof searchPagesValidator>;
+
+const pageTranslationSchema: JsonSchema = {
+	type: 'object',
+	properties: {
+		id: { type: 'number' },
+		pageId: { type: 'number' },
+		locale: { type: 'string' },
+		slug: { type: 'string' },
+		title: { type: 'string' },
+		status: { type: 'string', enum: ['draft', 'published', 'archived'] },
+		metaTitle: { type: 'string', nullable: true },
+		metaDescription: { type: 'string', nullable: true },
+		content: { type: 'object' },
+		resolved_content: { type: 'object', nullable: true },
+		updatedAt: dateTime,
+	},
+};
+
+const pageSchema: JsonSchema = {
+	type: 'object',
+	properties: {
+		id: { type: 'number' },
+		defaultLocale: { type: 'string' },
+		isHomepage: { type: 'boolean' },
+		createdAt: dateTime,
+		updatedAt: dateTime,
+		translations: { type: 'array', items: pageTranslationSchema },
+	},
+};
+
+const pageRevisionSchema: JsonSchema = {
+	type: 'object',
+	properties: {
+		id: { type: 'number' },
+		keep: { type: 'boolean' },
+		createdAt: dateTime,
+		created_by: {
+			type: 'object',
+			properties: {
+				id: { type: 'number' },
+				username: { type: 'string' },
+			},
+			nullable: true,
+		},
+	},
+};
+
+const pageSearchResultSchema: JsonSchema = {
+	type: 'object',
+	properties: {
+		page: pageSchema,
+		matchedLocales: { type: 'array', items: { type: 'string' } },
+	},
+};
+
+const revisionsPathValidator = vine.create({
+	id: vine.number().positive(),
+	translationId: vine.number().positive(),
+});
+
+const revisionTargetPathValidator = vine.create({
+	id: vine.number().positive(),
+	translationId: vine.number().positive(),
+	revisionId: vine.number().positive(),
+});
+
+export const pagesEndpointsDocs: Record<
+	| 'index'
+	| 'store'
+	| 'search'
+	| 'show'
+	| 'update'
+	| 'destroy'
+	| 'publish'
+	| 'unpublish'
+	| 'setHomepage'
+	| 'storeTranslation'
+	| 'listRevisions'
+	| 'restoreRevision'
+	| 'toggleRevision',
+	ApiOperationDoc
+> = {
+	index: {
+		summary: 'List pages',
+		description: 'Paginated page listing, filterable by status, locale and search term.',
+		tags: ['Pages'],
+		request: [{ validator: listPageValidator, in: 'query' }],
+		paginated: true,
+		responses: {
+			'200': { description: 'The paginated page list.', schema: paginatedEnvelope(pageSchema) },
+			'422': { description: 'Validation failed.', schema: validationErrorSchema },
+		},
+	},
+	store: {
+		summary: 'Create a page',
+		tags: ['Pages'],
+		request: [{ validator: createPageValidator, in: 'body' }],
+		responses: {
+			'201': { description: 'The created page.', schema: dataEnvelope(pageSchema) },
+			'422': { description: 'Validation failed.', schema: validationErrorSchema },
+		},
+	},
+	search: {
+		summary: 'Search pages (full-text)',
+		tags: ['Pages'],
+		request: [{ validator: searchPagesValidator, in: 'query' }],
+		responses: {
+			'200': {
+				description: 'The search results (empty when the search engine is unavailable).',
+				schema: dataEnvelope({
+					type: 'object',
+					properties: {
+						available: { type: 'boolean' },
+						results: { type: 'array', items: pageSearchResultSchema },
+					},
+				}),
+			},
+			'422': { description: 'Validation failed.', schema: validationErrorSchema },
+		},
+	},
+	show: {
+		summary: 'Show a page',
+		tags: ['Pages'],
+		request: [{ validator: showPageValidator, in: 'path' }],
+		responses: {
+			'200': { description: 'The page with its translations.', schema: dataEnvelope(pageSchema) },
+			'404': { description: 'The page does not exist.', schema: errorSchema },
+		},
+	},
+	update: {
+		summary: 'Update a page translation',
+		tags: ['Pages'],
+		request: [
+			{ validator: showPageValidator, in: 'path' },
+			{ validator: updatePageValidator, in: 'body' },
+		],
+		responses: {
+			'200': { description: 'The updated page.', schema: dataEnvelope(pageSchema) },
+			'404': { description: 'The page does not exist.', schema: errorSchema },
+			'422': { description: 'Validation failed.', schema: validationErrorSchema },
+		},
+	},
+	destroy: {
+		summary: 'Delete a page',
+		tags: ['Pages'],
+		request: [{ validator: showPageValidator, in: 'path' }],
+		responses: {
+			'204': { description: 'The page was deleted.' },
+			'404': { description: 'The page does not exist.', schema: errorSchema },
+		},
+	},
+	publish: {
+		summary: 'Publish a page translation',
+		tags: ['Pages'],
+		request: [
+			{ validator: showPageValidator, in: 'path' },
+			{ validator: publishPageValidator, in: 'body' },
+		],
+		responses: {
+			'200': { description: 'The published page.', schema: dataEnvelope(pageSchema) },
+			'404': { description: 'The page does not exist.', schema: errorSchema },
+			'422': { description: 'Validation failed.', schema: validationErrorSchema },
+		},
+	},
+	unpublish: {
+		summary: 'Unpublish a page translation',
+		tags: ['Pages'],
+		request: [
+			{ validator: showPageValidator, in: 'path' },
+			{ validator: publishPageValidator, in: 'body' },
+		],
+		responses: {
+			'200': { description: 'The unpublished page.', schema: dataEnvelope(pageSchema) },
+			'404': { description: 'The page does not exist.', schema: errorSchema },
+			'422': { description: 'Validation failed.', schema: validationErrorSchema },
+		},
+	},
+	setHomepage: {
+		summary: 'Set a page as the homepage',
+		tags: ['Pages'],
+		request: [{ validator: showPageValidator, in: 'path' }],
+		responses: {
+			'200': { description: 'The updated page.', schema: dataEnvelope(pageSchema) },
+			'404': { description: 'The page does not exist.', schema: errorSchema },
+		},
+	},
+	storeTranslation: {
+		summary: 'Create a page translation',
+		tags: ['Pages'],
+		request: [
+			{ validator: showPageValidator, in: 'path' },
+			{ validator: createTranslationValidator, in: 'body' },
+		],
+		responses: {
+			'201': { description: 'The page with its new translation.', schema: dataEnvelope(pageSchema) },
+			'404': { description: 'The page does not exist.', schema: errorSchema },
+			'422': { description: 'Validation failed.', schema: validationErrorSchema },
+		},
+	},
+	listRevisions: {
+		summary: "List a page translation's revisions",
+		tags: ['Pages'],
+		request: [{ validator: revisionsPathValidator, in: 'path' }],
+		paginated: true,
+		responses: {
+			'200': {
+				description: 'The paginated revision list.',
+				schema: paginatedEnvelope(pageRevisionSchema),
+			},
+			'404': { description: 'The page does not exist.', schema: errorSchema },
+		},
+	},
+	restoreRevision: {
+		summary: 'Restore a page revision',
+		tags: ['Pages'],
+		request: [{ validator: revisionTargetPathValidator, in: 'path' }],
+		responses: {
+			'200': {
+				description: 'The restore confirmation.',
+				schema: dataEnvelope({
+					type: 'object',
+					properties: { restored: { type: 'boolean' } },
+				}),
+			},
+			'404': { description: 'The page or revision does not exist.', schema: errorSchema },
+		},
+	},
+	toggleRevision: {
+		summary: "Toggle a page revision's keep flag",
+		tags: ['Pages'],
+		request: [{ validator: revisionTargetPathValidator, in: 'path' }],
+		responses: {
+			'200': {
+				description: 'The pinned revision.',
+				schema: dataEnvelope({
+					type: 'object',
+					properties: { pinned: pageRevisionSchema },
+				}),
+			},
+			'404': { description: 'The page or revision does not exist.', schema: errorSchema },
+		},
+	},
+};
 
 /**
  * Endpoint declarations for the pages REST resource.
@@ -91,6 +343,7 @@ export default class PagesResource {
 
 	readonly endpoints: PagesEndpoints = {
 		index: {
+			docs: pagesEndpointsDocs.index,
 			paginated: true,
 			strip: true,
 			validator: () => listPageValidator,
@@ -104,6 +357,7 @@ export default class PagesResource {
 			transform: (entity) => PageTransformer.paginate(entity.all(), entity.getMeta()),
 		},
 		search: {
+			docs: pagesEndpointsDocs.search,
 			strip: true,
 			validator: () => searchPagesValidator,
 			execute: (_context, _prepared, payload) =>
@@ -118,12 +372,14 @@ export default class PagesResource {
 			}),
 		},
 		show: {
+			docs: pagesEndpointsDocs.show,
 			input: (context) => context.params,
 			validator: () => showPageValidator,
 			execute: (_context, _prepared, payload) => this.getPageDetailAction.execute({ id: payload.id }),
 			transform: (entity) => PageTransformer.transform(entity),
 		},
 		store: {
+			docs: pagesEndpointsDocs.store,
 			status: 201,
 			validator: () => createPageValidator,
 			execute: (context, _prepared, payload) =>
@@ -143,6 +399,7 @@ export default class PagesResource {
 			transform: (entity) => PageTransformer.transform(entity),
 		},
 		update: {
+			docs: pagesEndpointsDocs.update,
 			prepare: async (context) => {
 				const { id } = await showPageValidator.validate(context.params);
 
@@ -165,6 +422,7 @@ export default class PagesResource {
 			transform: (entity) => PageTransformer.transform(entity),
 		},
 		publish: {
+			docs: pagesEndpointsDocs.publish,
 			prepare: async (context) => {
 				const { id } = await showPageValidator.validate(context.params);
 
@@ -182,6 +440,7 @@ export default class PagesResource {
 			transform: (entity) => PageTransformer.transform(entity),
 		},
 		unpublish: {
+			docs: pagesEndpointsDocs.unpublish,
 			prepare: async (context) => {
 				const { id } = await showPageValidator.validate(context.params);
 
@@ -199,6 +458,7 @@ export default class PagesResource {
 			transform: (entity) => PageTransformer.transform(entity),
 		},
 		setHomepage: {
+			docs: pagesEndpointsDocs.setHomepage,
 			prepare: async (context) => {
 				const { id } = await showPageValidator.validate(context.params);
 
@@ -213,12 +473,14 @@ export default class PagesResource {
 			transform: (entity) => PageTransformer.transform(entity),
 		},
 		destroy: {
+			docs: pagesEndpointsDocs.destroy,
 			status: 204,
 			input: (context) => context.params,
 			validator: () => showPageValidator,
 			execute: (_context, _prepared, payload) => this.deletePageAction.execute({ id: payload.id }),
 		},
 		storeTranslation: {
+			docs: pagesEndpointsDocs.storeTranslation,
 			status: 201,
 			prepare: async (context) => {
 				const { id } = await showPageValidator.validate(context.params);
@@ -237,6 +499,7 @@ export default class PagesResource {
 			transform: (entity) => PageTransformer.transform(entity),
 		},
 		listRevisions: {
+			docs: pagesEndpointsDocs.listRevisions,
 			paginated: true,
 			execute: (context) =>
 				this.listRevisionsAction.execute({
@@ -246,6 +509,7 @@ export default class PagesResource {
 			transform: (entity) => PageRevisionTransformer.paginate(entity.all(), entity.getMeta()),
 		},
 		restoreRevision: {
+			docs: pagesEndpointsDocs.restoreRevision,
 			prepare: async (context) => ({
 				translationId: Number(context.params.translationId),
 				revisionId: Number(context.params.revisionId),
@@ -259,6 +523,7 @@ export default class PagesResource {
 			transform: () => ({ restored: true }),
 		},
 		toggleRevision: {
+			docs: pagesEndpointsDocs.toggleRevision,
 			prepare: async (context) => ({ revisionId: Number(context.params.revisionId) }),
 			execute: (_context, prepared) => this.toggleRevisionKeepAction.execute({ revisionId: prepared.revisionId }),
 			transform: (entity) => ({ pinned: entity }),
