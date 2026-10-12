@@ -7,7 +7,9 @@
 | Self-registers on import (see `app/file/routes.ts`), gated by the
 | `adminApi` feature flag. Public URLs live under
 | `/api/v1/admin/{files,folders}`; route names carry the
-| `api.v1.admin.file` prefix.
+| `api.v1.admin.file` prefix. Each route registers its OpenAPI docs at its
+| declaration (`registerApiDoc`), keyed by the route itself: the route name
+| is derived from the route, never hand-assembled.
 |
 */
 
@@ -72,20 +74,6 @@ const uploadFileDoc: ApiOperationDoc = {
 };
 
 if (features.adminApi) {
-	registerApiDoc('api.v1.admin.file.files.index', filesEndpointsDocs.index);
-	registerApiDoc('api.v1.admin.file.files.store', uploadFileDoc);
-	registerApiDoc('api.v1.admin.file.files.show', filesEndpointsDocs.show);
-	registerApiDoc('api.v1.admin.file.files.move', filesEndpointsDocs.move);
-	registerApiDoc('api.v1.admin.file.files.destroy', filesEndpointsDocs.destroy);
-	registerApiDoc('api.v1.admin.file.files.upsert_alt', filesEndpointsDocs.upsertAlt);
-	registerApiDoc('api.v1.admin.file.files.delete_alt', filesEndpointsDocs.deleteAlt);
-	registerApiDoc('api.v1.admin.file.folders.index', foldersEndpointsDocs.index);
-	registerApiDoc('api.v1.admin.file.folders.store', foldersEndpointsDocs.store);
-	registerApiDoc('api.v1.admin.file.folders.show', foldersEndpointsDocs.show);
-	registerApiDoc('api.v1.admin.file.folders.children', foldersEndpointsDocs.children);
-	registerApiDoc('api.v1.admin.file.folders.update', foldersEndpointsDocs.update);
-	registerApiDoc('api.v1.admin.file.folders.destroy', foldersEndpointsDocs.destroy);
-
 	router
 		.group(() => {
 			router
@@ -93,32 +81,34 @@ if (features.adminApi) {
 					// Files
 					router
 						.group(() => {
-							router
-								.get('/', [controllers.file.api.FilesApi, 'index'])
+							registerApiDoc(router.get('/', [controllers.file.api.FilesApi, 'index']), filesEndpointsDocs.index)
 								.as('file.files.index')
 								.use([middleware.permission({ permissions: [permissions.files.view] })]);
-							router
-								.post('/', [controllers.file.api.FilesUploadApi, 'store'])
+							registerApiDoc(router.post('/', [controllers.file.api.FilesUploadApi, 'store']), uploadFileDoc)
 								.as('file.files.store')
 								.use([middleware.permission({ permissions: [permissions.files.create] })]);
-							router
-								.get('/:id', [controllers.file.api.FilesShowApi, 'show'])
+							registerApiDoc(router.get('/:id', [controllers.file.api.FilesShowApi, 'show']), filesEndpointsDocs.show)
 								.as('file.files.show')
 								.use([middleware.permission({ permissions: [permissions.files.view] })]);
-							router
-								.put('/:id/move', [controllers.file.api.FilesApi, 'move'])
+							registerApiDoc(router.put('/:id/move', [controllers.file.api.FilesApi, 'move']), filesEndpointsDocs.move)
 								.as('file.files.move')
 								.use([middleware.permission({ permissions: [permissions.files.update] })]);
-							router
-								.delete('/:id', [controllers.file.api.FilesDeleteApi, 'destroy'])
+							registerApiDoc(
+								router.delete('/:id', [controllers.file.api.FilesDeleteApi, 'destroy']),
+								filesEndpointsDocs.destroy,
+							)
 								.as('file.files.destroy')
 								.use([middleware.permission({ permissions: [permissions.files.delete] })]);
-							router
-								.put('/:id/alt', [controllers.file.api.FilesAltApi, 'upsertAlt'])
+							registerApiDoc(
+								router.put('/:id/alt', [controllers.file.api.FilesAltApi, 'upsertAlt']),
+								filesEndpointsDocs.upsertAlt,
+							)
 								.as('file.files.upsert_alt')
 								.use([middleware.permission({ permissions: [permissions.files.update] })]);
-							router
-								.delete('/:id/alt', [controllers.file.api.FilesAltApi, 'deleteAlt'])
+							registerApiDoc(
+								router.delete('/:id/alt', [controllers.file.api.FilesAltApi, 'deleteAlt']),
+								filesEndpointsDocs.deleteAlt,
+							)
 								.as('file.files.delete_alt')
 								.use([middleware.permission({ permissions: [permissions.files.update] })]);
 						})
@@ -127,28 +117,34 @@ if (features.adminApi) {
 					// Folders
 					router
 						.group(() => {
-							router
-								.get('/', [controllers.file.api.FoldersApi, 'index'])
+							registerApiDoc(router.get('/', [controllers.file.api.FoldersApi, 'index']), foldersEndpointsDocs.index)
 								.as('file.folders.index')
 								.use([middleware.permission({ permissions: [permissions.folders.view] })]);
-							router
-								.post('/', [controllers.file.api.FoldersApi, 'store'])
+							registerApiDoc(router.post('/', [controllers.file.api.FoldersApi, 'store']), foldersEndpointsDocs.store)
 								.as('file.folders.store')
 								.use([middleware.permission({ permissions: [permissions.folders.create] })]);
-							router
-								.get('/:id', [controllers.file.api.FoldersShowApi, 'show'])
+							registerApiDoc(
+								router.get('/:id', [controllers.file.api.FoldersShowApi, 'show']),
+								foldersEndpointsDocs.show,
+							)
 								.as('file.folders.show')
 								.use([middleware.permission({ permissions: [permissions.folders.view] })]);
-							router
-								.get('/:id/children', [controllers.file.api.FoldersShowApi, 'children'])
+							registerApiDoc(
+								router.get('/:id/children', [controllers.file.api.FoldersShowApi, 'children']),
+								foldersEndpointsDocs.children,
+							)
 								.as('file.folders.children')
 								.use([middleware.permission({ permissions: [permissions.folders.view] })]);
-							router
-								.put('/:id', [controllers.file.api.FoldersUpdateApi, 'update'])
+							registerApiDoc(
+								router.put('/:id', [controllers.file.api.FoldersUpdateApi, 'update']),
+								foldersEndpointsDocs.update,
+							)
 								.as('file.folders.update')
 								.use([middleware.permission({ permissions: [permissions.folders.update] })]);
-							router
-								.delete('/:id', [controllers.file.api.FoldersDeleteApi, 'destroy'])
+							registerApiDoc(
+								router.delete('/:id', [controllers.file.api.FoldersDeleteApi, 'destroy']),
+								foldersEndpointsDocs.destroy,
+							)
 								.as('file.folders.destroy')
 								.use([middleware.permission({ permissions: [permissions.folders.delete] })]);
 						})

@@ -11,10 +11,12 @@
 |
 | Also hosts the OpenAPI surface, gated by the `apiDocs` feature flag:
 | `GET /api/v1/openapi.json` (generated spec), guarded and named
-| `api.v1.core.openapi.spec`. The spec is scoped to the authenticated user:
+| `core.openapi.spec`. The spec is scoped to the authenticated user:
 | only the routes their permissions allow are documented. The interactive
 | reference UI lives on the front (`GET /api/docs`) as a self-hosted
-| Vite/Edge page, not in this API namespace.
+| Vite/Edge page, not in this API namespace. Each route registers its
+| OpenAPI docs at its declaration (`registerApiDoc`), keyed by the route
+| itself: the route name is derived from the route, never hand-assembled.
 |
 */
 
@@ -26,10 +28,9 @@ import { middleware } from '#start/kernel';
 import { apiClientThrottle } from '#start/limiter';
 import { permissions } from '#start/permissions';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
-import { registerApiDoc } from '#transport/core/openapi/api_docs_registry';
+import { registerApiDoc, type ApiOperationDoc, type JsonSchema } from '#transport/core/openapi/api_docs_registry';
 import { dataEnvelope, errorSchema } from '#transport/core/openapi/schemas';
 import { maintenanceEndpointsDocs } from '#transport/core/rest/maintenance_resource';
-import type { JsonSchema } from '#transport/core/openapi/api_docs_registry';
 
 /**
  * The admin JSON surface is shared: the in-repo admin UI (session guard) and
@@ -60,26 +61,32 @@ const openApiDocumentSchema: JsonSchema = {
 	},
 };
 
-if (features.adminApi) {
-	registerApiDoc('api.v1.admin.core.dashboard.index', {
-		summary: 'Show the dashboard statistics',
-		description: 'Aggregated, read-only snapshot of the application state, keyed by section.',
-		tags: ['Dashboard'],
-		responses: {
-			'200': { description: 'The dashboard statistics.', schema: dataEnvelope(dashboardSchema) },
-		},
-	});
-	registerApiDoc('api.v1.admin.core.maintenance.index', maintenanceEndpointsDocs.index);
-	registerApiDoc('api.v1.admin.core.maintenance.update', maintenanceEndpointsDocs.update);
-	registerApiDoc('api.v1.admin.core.maintenance.toggle', maintenanceEndpointsDocs.toggle);
+const dashboardDoc: ApiOperationDoc = {
+	summary: 'Show the dashboard statistics',
+	description: 'Aggregated, read-only snapshot of the application state, keyed by section.',
+	tags: ['Dashboard'],
+	responses: {
+		'200': { description: 'The dashboard statistics.', schema: dataEnvelope(dashboardSchema) },
+	},
+};
 
+const openApiSpecDoc: ApiOperationDoc = {
+	summary: 'Show the generated OpenAPI document',
+	description: "The OpenAPI 3.0 document of the API, scoped to the requesting user's permissions.",
+	tags: ['OpenAPI'],
+	responses: {
+		'200': { description: 'The generated OpenAPI 3.0 document.', schema: openApiDocumentSchema },
+		'401': { description: 'The request is not authenticated.', schema: errorSchema },
+	},
+};
+
+if (features.adminApi) {
 	router
 		.group(() => {
 			router
 				.group(() => {
 					// Dashboard
-					router
-						.get('/', [controllers.core.api.DashboardApi, 'index'])
+					registerApiDoc(router.get('/', [controllers.core.api.DashboardApi, 'index']), dashboardDoc)
 						.prefix('dashboard')
 						.as('core.dashboard.index')
 						.use([middleware.permission({ permissions: [permissions.admin.access] })]);
@@ -87,16 +94,22 @@ if (features.adminApi) {
 					// Maintenance
 					router
 						.group(() => {
-							router
-								.get('/', [controllers.core.api.MaintenanceApi, 'index'])
+							registerApiDoc(
+								router.get('/', [controllers.core.api.MaintenanceApi, 'index']),
+								maintenanceEndpointsDocs.index,
+							)
 								.as('core.maintenance.index')
 								.use([middleware.permission({ permissions: [permissions.settings.maintenance] })]);
-							router
-								.put('/', [controllers.core.api.MaintenanceApi, 'update'])
+							registerApiDoc(
+								router.put('/', [controllers.core.api.MaintenanceApi, 'update']),
+								maintenanceEndpointsDocs.update,
+							)
 								.as('core.maintenance.update')
 								.use([middleware.permission({ permissions: [permissions.settings.maintenance] })]);
-							router
-								.put('/toggle', [controllers.core.api.MaintenanceApi, 'toggle'])
+							registerApiDoc(
+								router.put('/toggle', [controllers.core.api.MaintenanceApi, 'toggle']),
+								maintenanceEndpointsDocs.toggle,
+							)
 								.as('core.maintenance.toggle')
 								.use([middleware.permission({ permissions: [permissions.settings.maintenance] })]);
 						})
@@ -115,18 +128,7 @@ if (features.adminApi) {
 // and is scoped to their permissions. The interactive reference UI over it
 // lives on the front (`/api/docs`), not in this API namespace.
 if (features.apiDocs) {
-	registerApiDoc('core.openapi.spec', {
-		summary: 'Show the generated OpenAPI document',
-		description: "The OpenAPI 3.0 document of the API, scoped to the requesting user's permissions.",
-		tags: ['OpenAPI'],
-		responses: {
-			'200': { description: 'The generated OpenAPI 3.0 document.', schema: openApiDocumentSchema },
-			'401': { description: 'The request is not authenticated.', schema: errorSchema },
-		},
-	});
-
-	router
-		.get('openapi.json', [controllers.core.api.Openapi, 'spec'])
+	registerApiDoc(router.get('openapi.json', [controllers.core.api.Openapi, 'spec']), openApiSpecDoc)
 		.as('core.openapi.spec')
 		.prefix('api/v1')
 		// Spec generation is comparatively heavy: authenticated clients
