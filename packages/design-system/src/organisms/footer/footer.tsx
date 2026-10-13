@@ -44,7 +44,7 @@ export function Footer(props: FooterProps) {
 		<footer className={cn(footer(), className)}>
 			<div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 pb-10 mb-8 border-b border-primary">
 				<div className="col-span-2 md:col-span-1">
-					<Link href={homeHref} className="text-ink-inverted font-semibold tracking-wide text-xl font-cormorant">
+					<Link href={homeHref} className="text-ink-inverted font-semibold tracking-wide text-2xl font-display">
 						{appName}
 					</Link>
 					{description}

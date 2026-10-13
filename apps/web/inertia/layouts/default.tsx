@@ -21,8 +21,26 @@ export default function Layout(props: LayoutProps) {
 	const { props: pageProps, url, flash, component } = usePage<SharedProps>();
 	const { app_name, app_url } = pageProps;
 
+	// Request locale shared by the detect-user-locale middleware; kept in sync
+	// with the document `lang` attribute across client-side navigations (the
+	// initial value is rendered by the server entry template).
+	const locale = (pageProps.locale as string) ?? 'en';
+
+	useEffect(() => {
+		document.documentElement.lang = locale;
+	}, [locale]);
+
 	const homeHref = urlFor('core.home.render');
 	const homeActive = useNavLinkActive(homeHref);
+
+	const featuresHref = urlFor('cms.page.render', { slug: 'features' });
+	const featuresActive = useNavLinkActive(featuresHref);
+
+	const showcaseHref = urlFor('cms.page.render', { slug: 'showcase' });
+	const showcaseActive = useNavLinkActive(showcaseHref);
+
+	const contactHref = urlFor('cms.page.render', { slug: 'contact' });
+	const contactActive = useNavLinkActive(contactHref);
 
 	// The header's mobile menu is a controlled presentational component — the
 	// layout owns its open/close state, including the close-on-navigation
@@ -44,9 +62,9 @@ export default function Layout(props: LayoutProps) {
 	}, [closeMenu]);
 
 	const footerDescription = (
-		<Paragraph variant="ink-inverted" className="text-sm font-light leading-relaxed max-w-md flex items-center gap-2">
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aut culpa cupiditate dignissimos distinctio,
-			doloribus et harum id impedit ipsa laboriosam laudantium modi numquam obcaecati omnis, quisquam quod sint ullam!
+		<Paragraph variant="ink-inverted" className="text-sm leading-relaxed max-w-md">
+			Boilerplate AdonisJS v7 + Inertia/React : architecture domain-driven, builder visuel, RBAC, 2FA, journaux d'audit
+			et pipeline de flavors.
 		</Paragraph>
 	);
 
@@ -92,7 +110,7 @@ export default function Layout(props: LayoutProps) {
 				<link rel="preconnect" href="https://api.iconify.design" />
 				<link rel="dns-prefetch" href="https://api.iconify.design" />
 				<meta name="robots" content={robots} />
-				<meta name="language" content="fr" />
+				<meta name="language" content={locale} />
 				<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
 				<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 				<link rel="shortcut icon" href="/favicon.ico" />
@@ -102,7 +120,7 @@ export default function Layout(props: LayoutProps) {
 				<meta property="og:url" content={`${app_url}${url}`} />
 				<meta property="og:site_name" content={app_name} />
 				<meta property="og:type" content="website" />
-				<meta property="og:locale" content="fr_FR" />
+				<meta property="og:locale" content={locale === 'fr' ? 'fr_FR' : 'en_US'} />
 				<meta property="og:image:alt" content={`${app_name} - ${image_alt}`} />
 				<meta name="geo.region" content={geo.region} />
 				<meta name="geo.placename" content={geo.placename} />
@@ -115,7 +133,12 @@ export default function Layout(props: LayoutProps) {
 				<Header
 					appName={app_name}
 					homeHref={homeHref}
-					links={[{ label: 'Home', href: homeHref, isActive: homeActive }]}
+					links={[
+						{ label: 'Home', href: homeHref, isActive: homeActive },
+						{ label: 'Features', href: featuresHref, isActive: featuresActive },
+						{ label: 'Showcase', href: showcaseHref, isActive: showcaseActive },
+						{ label: 'Contact', href: contactHref, isActive: contactActive },
+					]}
 					isMenuOpen={isMenuOpen}
 					onToggleMenu={() => setIsMenuOpen(!isMenuOpen)}
 					onMenuClose={closeMenu}

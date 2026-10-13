@@ -49,9 +49,9 @@
     "node": ">=24.0.0"
   },
   "dependencies": {
-    "@fontsource/cormorant-garamond": "^5.3.0",
-    "@fontsource/jost": "^5.3.0",
-    "@fontsource/playfair-display": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@fontsource/ibm-plex-sans": "^5.3.0",
+    "@fontsource/zilla-slab": "^5.3.0",
     "@iconify/react": "^6.0.2",
     "@inertiajs/react": "^3.9.1",
     "tailwind-variants": "^3.3.1"

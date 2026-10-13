@@ -60,4 +60,18 @@ const classes = [
 	'-mt-1',
 	'-mt-2',
 	'my-5',
+	// DB-seeded content only (classNames + htmltext raw HTML — not in scanned sources):
+	'tracking-[0.3em]',
+	'tracking-[0.25em]',
+	'tracking-[0.2em]',
+	'max-w-2xl',
+	'max-w-3xl',
+	'mx-auto',
+	'mt-10',
+	'flex-1',
+	'p-6',
+	'bg-ink',
+	'text-ink-inverted',
+	'rounded-sm',
+	'overflow-x-auto',
 ];
