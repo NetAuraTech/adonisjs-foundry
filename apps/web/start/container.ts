@@ -112,11 +112,14 @@ app.container.singleton(BuilderSessionService, async () => {
 
 /**
  * Maintenance service singleton.
- * Handles Redis + memory fallback for maintenance mode configuration.
- * Initializes memory fallback on first resolution.
+ * Stores maintenance mode configuration through the root
+ * {@link CacheService} (composite failover driver: Redis primary,
+ * process-local fallback) and initializes its memory fallback on first
+ * resolution.
  */
 app.container.singleton(MaintenanceService, async () => {
-	const service = MaintenanceService.getInstance();
+	const cache = await app.container.make(CacheService);
+	const service = new MaintenanceService(cache);
 	await service.initializeMemoryFallback();
 	return service;
 });

@@ -1,5 +1,5 @@
 import logger from '@adonisjs/core/services/logger';
-import { type CacheDriver } from '#core/contracts/cache_driver';
+import { type CacheDriver, type CacheTier } from '#core/contracts/cache_driver';
 import { InMemoryCacheDriver } from './in_memory_cache_driver.js';
 
 /**
@@ -27,7 +27,7 @@ export class FailoverCacheDriver implements CacheDriver {
 	 * Last tier that served a successful operation. Used only to log one line
 	 * per tier transition — never to short-circuit the primary.
 	 */
-	private tier: 'primary' | 'fallback' = 'primary';
+	private tier: CacheTier = 'primary';
 
 	/**
 	 * @param primary - The tier tried first on every operation (Redis in
@@ -40,6 +40,17 @@ export class FailoverCacheDriver implements CacheDriver {
 		fallback?: CacheDriver,
 	) {
 		this.fallback = fallback ?? new InMemoryCacheDriver();
+	}
+
+	/**
+	 * The tier that served the last successful operation. Lets consumers
+	 * that must distinguish a primary-served result from a
+	 * fallback-served one (the maintenance reconciliation lifecycle, e.g.)
+	 * poll the composite between operations — without introducing any
+	 * sticky behaviour of their own.
+	 */
+	get currentTier(): CacheTier {
+		return this.tier;
 	}
 
 	/**
