@@ -1,12 +1,12 @@
-@import '@fontsource/cormorant-garamond/400.css';
-@import '@fontsource/cormorant-garamond/700.css';
-@import '@fontsource/cormorant-garamond/400-italic.css';
-@import '@fontsource/jost/400.css';
-@import '@fontsource/jost/700.css';
-@import '@fontsource/jost/400-italic.css';
-@import '@fontsource/playfair-display/400.css';
-@import '@fontsource/playfair-display/700.css';
-@import '@fontsource/playfair-display/400-italic.css';
+@import '@fontsource/zilla-slab/400.css';
+@import '@fontsource/zilla-slab/600.css';
+@import '@fontsource/zilla-slab/700.css';
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-sans/400-italic.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
 @import 'tailwindcss';
 
 @source '../';
@@ -16,51 +16,58 @@
 @custom-variant focus (&:is(:focus-visible));
 
 @theme {
-	--font-cormorant: 'Cormorant Garamond', serif;
-	--font-playfair: 'Playfair Display', serif;
-	--font-jost: 'Jost Variable', 'Jost', sans-serif;
+	--font-display: 'Zilla Slab', serif;
+	--font-body: 'IBM Plex Sans', sans-serif;
+	--font-mono: 'IBM Plex Mono', monospace;
 
-	--color-primary-deep: oklch(0.3038 0.0392 162.91);
-	--color-primary: oklch(0.4049 0.0528 161.65);
-	--color-primary-soft: oklch(0.5373 0.0669 159.37);
-	--color-primary-light: oklch(0.7959 0.043 153.88);
+	/* Primary — molten: hot iron, the forge fire */
+	--color-primary-deep: oklch(0.4 0.13 40);
+	--color-primary: oklch(0.52 0.17 45);
+	--color-primary-soft: oklch(0.65 0.14 52);
+	--color-primary-light: oklch(0.85 0.09 62);
 
-	--color-secondary-deep: oklch(0.7294 0.0887 81.25);
-	--color-secondary: oklch(0.7294 0.0887 81.25);
-	--color-secondary-soft: oklch(0.7294 0.0887 81.25);
-	--color-secondary-light: oklch(0.8507 0.0623 82.99);
+	/* Secondary — steel: cold structural blue */
+	--color-secondary-deep: oklch(0.34 0.06 255);
+	--color-secondary: oklch(0.46 0.08 255);
+	--color-secondary-soft: oklch(0.66 0.06 255);
+	--color-secondary-light: oklch(0.89 0.03 255);
 
-	--color-tertiary: oklch(0.7543 0.0621 18.63);
-	--color-tertiary-light: oklch(0.9019 0.0267 17.66);
+	/* Tertiary — brass: worn tooling amber */
+	--color-tertiary-deep: oklch(0.55 0.12 75);
+	--color-tertiary: oklch(0.69 0.13 80);
+	--color-tertiary-soft: oklch(0.81 0.09 85);
+	--color-tertiary-light: oklch(0.92 0.05 88);
 
-	--color-ink: oklch(0.162 0.014 258.363);
-	--color-ink-muted: oklch(0.4 0.018 263);
-	--color-ink-subtle: oklch(0.6 0.012 263);
-	--color-ink-inverted: oklch(0.97 0.005 263);
-	--color-ink-inverted-muted: oklch(0.823 0.01 267.344);
-	--color-ink-inverted-subtle: oklch(0.65 0.01 263);
+	/* Ink — warm iron blacks and greys */
+	--color-ink: oklch(0.21 0.015 80);
+	--color-ink-muted: oklch(0.42 0.015 80);
+	--color-ink-subtle: oklch(0.6 0.012 85);
+	--color-ink-inverted: oklch(0.95 0.008 85);
+	--color-ink-inverted-muted: oklch(0.78 0.012 85);
+	--color-ink-inverted-subtle: oklch(0.62 0.012 85);
 
-	--color-canvas: oklch(0.974 0.0114 84.58);
-	--color-surface: oklch(0.9322 0.0226 87.15);
-	--color-sunken: oklch(0.94 0.007 263);
-	--color-overlay: oklch(0.995 0.002 263);
+	/* Canvas — bone paper and mill surfaces */
+	--color-canvas: oklch(0.966 0.011 85);
+	--color-surface: oklch(0.94 0.013 85);
+	--color-sunken: oklch(0.915 0.013 85);
+	--color-overlay: oklch(0.985 0.008 85);
 	--color-raised: oklch(1 0 0);
 
-	--color-edge: oklch(0.82 0.012 263);
-	--color-edge-strong: oklch(0.65 0.018 263);
+	--color-edge: oklch(0.83 0.012 85);
+	--color-edge-strong: oklch(0.68 0.015 85);
 
-	--color-success: oklch(0.55 0.15 145);
-	--color-success-soft: oklch(0.92 0.04 145);
-	--color-warning: oklch(0.62 0.15 75);
-	--color-warning-soft: oklch(0.95 0.04 75);
-	--color-danger: oklch(0.55 0.18 25);
-	--color-danger-soft: oklch(0.93 0.04 25);
-	--color-info: oklch(0.55 0.12 240);
-	--color-info-soft: oklch(0.93 0.03 240);
+	--color-success: oklch(0.52 0.12 165);
+	--color-success-soft: oklch(0.92 0.04 165);
+	--color-warning: oklch(0.62 0.14 70);
+	--color-warning-soft: oklch(0.94 0.05 75);
+	--color-danger: oklch(0.53 0.18 25);
+	--color-danger-soft: oklch(0.92 0.04 25);
+	--color-info: oklch(0.5 0.1 255);
+	--color-info-soft: oklch(0.92 0.03 255);
 }
 
 @utility input {
-	@apply bg-sunken text-ink p-2 rounded-lg border border-solid border-edge;
+	@apply bg-sunken text-ink p-2 rounded-sm border border-solid border-edge;
 
 	&::placeholder {
 		@apply text-ink-subtle;
@@ -72,7 +79,7 @@
 
 	&:focus-visible {
 		@apply border-primary outline-none;
-		box-shadow: 0 0 0 3px oklch(0.759 0.029 263 / 0.35);
+		box-shadow: 0 0 0 3px oklch(0.52 0.17 45 / 0.3);
 
 		@variant dark {
 			box-shadow: 0 0 0 3px oklch(0.345 0.047 264 / 0.3);
@@ -120,7 +127,7 @@
 
 	tbody {
 		tr {
-			@apply block mb-6 border border-edge rounded-lg p-4;
+			@apply block mb-6 border border-edge rounded-sm p-4;
 
 			@variant lg {
 				@apply table-row mb-0 border-0 border-b border-edge rounded-none p-0;

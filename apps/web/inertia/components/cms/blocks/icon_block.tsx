@@ -50,7 +50,7 @@ export default function IconBlock({ block }: IconBlockProps) {
 	const { name, size, color, background, className } = block.props;
 
 	return (
-		<div className={[colorMap[color], backgroundMap[background], className].filter(Boolean).join(' ')}>
+		<div className={['w-fit p-2', colorMap[color], backgroundMap[background], className].filter(Boolean).join(' ')}>
 			{name && <Icon name={name} size={size} />}
 		</div>
 	);

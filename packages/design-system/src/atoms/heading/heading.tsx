@@ -2,7 +2,7 @@ import { cn, tv } from 'tailwind-variants';
 import type { ElementType, ReactNode } from 'react';
 
 const heading = tv({
-	base: 'font-playfair leading-tight',
+	base: 'font-display leading-tight',
 	variants: {
 		level: {
 			1: 'text-[clamp(2.2rem,5vw,4.2rem)]',

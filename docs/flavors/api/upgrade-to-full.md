@@ -44,8 +44,8 @@ Then reinstall the packages pruned by the manifest (into the app workspace):
 ```bash
 cd apps/web
 npm install @adonisjs/inertia @adonisjs/vite @inertiajs/react react react-dom \
-  sonner html-to-image @iconify/react @fontsource/cormorant-garamond \
-  @fontsource/jost @fontsource/playfair-display tailwindcss @tailwindcss/vite
+  sonner html-to-image @iconify/react @fontsource/ibm-plex-mono \
+  @fontsource/ibm-plex-sans @fontsource/zilla-slab tailwindcss @tailwindcss/vite
 npm install -D @vitejs/plugin-react vite vitest @types/react @types/react-dom
 ```
 

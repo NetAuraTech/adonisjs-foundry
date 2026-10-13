@@ -93,7 +93,7 @@ export function Header(props: HeaderProps) {
 		<header className={cn(header(), className)} data-state={menuState} aria-expanded={isExpanded}>
 			<Link
 				href={homeHref}
-				className="header__logo font-semibold tracking-wide text-xl font-cormorant"
+				className="header__logo font-semibold tracking-wide text-2xl font-display"
 				onClick={onMenuClose}
 			>
 				{appName}

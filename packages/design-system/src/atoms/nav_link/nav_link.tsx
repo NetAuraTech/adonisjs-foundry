@@ -15,7 +15,7 @@ const navLink = tv({
 				'button font-normal hover:bg-primary hover:text-ink-inverted current:bg-primary current:text-ink-inverted px-2 py-1',
 			admin_nav:
 				'flex items-center gap-2 p-3 rounded hover:text-ink-inverted hover:bg-primary-deep current:text-ink-inverted current:bg-primary-deep',
-			external: 'text-secondary hover:text-secondary-light font-semibold font-cormorant tracking-wide italic text-lg',
+			external: 'text-tertiary hover:text-tertiary-light font-semibold font-mono tracking-wider uppercase text-sm',
 			footer: 'text-ink-inverted hover:text-primary-light text-sm flex items-center',
 		},
 		state: {
