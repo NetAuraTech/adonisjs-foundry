@@ -67,7 +67,7 @@ const buildSeedPages = (files: Record<string, number>): SeededPage[] => [
 				metaTitle: 'Foundry — boilerplate AdonisJS v7 + Inertia/React',
 				metaDescription:
 					'Boilerplate de production : architecture domain-driven, builder visuel à 17 blocs, 2FA, RBAC et contenu multilingue.',
-				content: homeFR(files),
+				content: homeFR(),
 				status: 'published',
 			},
 			{
@@ -77,7 +77,7 @@ const buildSeedPages = (files: Record<string, number>): SeededPage[] => [
 				metaTitle: 'Foundry — AdonisJS v7 + Inertia/React boilerplate',
 				metaDescription:
 					'Production-ready boilerplate: domain-driven architecture, 17-block visual builder, 2FA, RBAC and multilingual content.',
-				content: homeEN(files),
+				content: homeEN(),
 				status: 'published',
 			},
 		],

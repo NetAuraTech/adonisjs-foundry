@@ -98,7 +98,7 @@ export default class extends BaseSeeder {
 									'md',
 									'md',
 									[
-										icon('mdi:layers-triple', 'primary', 'primary-light'),
+										icon('pepicons-pencil:duplicate', 'primary', 'primary-light'),
 										title('First', 3),
 										para('Feature copy goes here — one or two sentences at most.', 'sm', 'muted'),
 									],
@@ -110,7 +110,7 @@ export default class extends BaseSeeder {
 									'md',
 									'md',
 									[
-										icon('mdi:view-grid-plus-outline', 'primary', 'primary-light'),
+										icon('pepicons-pencil:grid', 'primary', 'primary-light'),
 										title('Second', 3),
 										para('Feature copy goes here — one or two sentences at most.', 'sm', 'muted'),
 									],
@@ -122,7 +122,7 @@ export default class extends BaseSeeder {
 									'md',
 									'md',
 									[
-										icon('mdi:shield-lock-outline', 'primary', 'primary-light'),
+										icon('pepicons-pencil:shield', 'primary', 'primary-light'),
 										title('Third', 3),
 										para('Feature copy goes here — one or two sentences at most.', 'sm', 'muted'),
 									],
@@ -390,7 +390,7 @@ export default class extends BaseSeeder {
 									'md',
 									'md',
 									[
-										icon('mdi:hammer-wrench', 'primary', 'primary-light'),
+										icon('pepicons-pencil:wrench', 'primary', 'primary-light'),
 										title('Feature one', 3),
 										para('Short feature copy — one or two sentences at most.', 'sm', 'muted'),
 									],
@@ -402,7 +402,7 @@ export default class extends BaseSeeder {
 									'md',
 									'md',
 									[
-										icon('mdi:cube-outline', 'primary', 'primary-light'),
+										icon('pepicons-pencil:square', 'primary', 'primary-light'),
 										title('Feature two', 3),
 										para('Short feature copy — one or two sentences at most.', 'sm', 'muted'),
 									],
@@ -414,7 +414,7 @@ export default class extends BaseSeeder {
 									'md',
 									'md',
 									[
-										icon('mdi:shield-lock-outline', 'primary', 'primary-light'),
+										icon('pepicons-pencil:shield', 'primary', 'primary-light'),
 										title('Feature three', 3),
 										para('Short feature copy — one or two sentences at most.', 'sm', 'muted'),
 									],

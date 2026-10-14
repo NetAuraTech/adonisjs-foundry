@@ -20,41 +20,41 @@
 	--font-body: 'IBM Plex Sans', sans-serif;
 	--font-mono: 'IBM Plex Mono', monospace;
 
-	/* Primary — molten: hot iron, the forge fire */
-	--color-primary-deep: oklch(0.4 0.13 40);
-	--color-primary: oklch(0.52 0.17 45);
-	--color-primary-soft: oklch(0.65 0.14 52);
-	--color-primary-light: oklch(0.85 0.09 62);
+	/* Primary — safety orange: the forge's signal colour, the only hot accent */
+	--color-primary-deep: oklch(0.47 0.15 40);
+	--color-primary: oklch(0.6 0.2 42);
+	--color-primary-soft: oklch(0.72 0.14 48);
+	--color-primary-light: oklch(0.91 0.06 52);
 
-	/* Secondary — steel: cold structural blue */
-	--color-secondary-deep: oklch(0.34 0.06 255);
-	--color-secondary: oklch(0.46 0.08 255);
-	--color-secondary-soft: oklch(0.66 0.06 255);
-	--color-secondary-light: oklch(0.89 0.03 255);
+	/* Secondary — ink: the page is black-and-white, the notebook takes the pen */
+	--color-secondary-deep: oklch(0.16 0.004 260);
+	--color-secondary: oklch(0.24 0.008 262);
+	--color-secondary-soft: oklch(0.45 0.01 262);
+	--color-secondary-light: oklch(0.9 0.004 262);
 
-	/* Tertiary — brass: worn tooling amber */
-	--color-tertiary-deep: oklch(0.55 0.12 75);
-	--color-tertiary: oklch(0.69 0.13 80);
-	--color-tertiary-soft: oklch(0.81 0.09 85);
-	--color-tertiary-light: oklch(0.92 0.05 88);
+	/* Tertiary — highlighter: amber marker */
+	--color-tertiary-deep: oklch(0.52 0.11 85);
+	--color-tertiary: oklch(0.68 0.14 90);
+	--color-tertiary-soft: oklch(0.84 0.09 92);
+	--color-tertiary-light: oklch(0.94 0.04 94);
 
-	/* Ink — warm iron blacks and greys */
-	--color-ink: oklch(0.21 0.015 80);
-	--color-ink-muted: oklch(0.42 0.015 80);
-	--color-ink-subtle: oklch(0.6 0.012 85);
-	--color-ink-inverted: oklch(0.95 0.008 85);
-	--color-ink-inverted-muted: oklch(0.78 0.012 85);
-	--color-ink-inverted-subtle: oklch(0.62 0.012 85);
+	/* Ink — near-black iron on paper */
+	--color-ink: oklch(0.19 0.005 90);
+	--color-ink-muted: oklch(0.44 0.008 90);
+	--color-ink-subtle: oklch(0.6 0.01 90);
+	--color-ink-inverted: oklch(0.97 0.004 90);
+	--color-ink-inverted-muted: oklch(0.79 0.006 90);
+	--color-ink-inverted-subtle: oklch(0.64 0.008 90);
 
-	/* Canvas — bone paper and mill surfaces */
-	--color-canvas: oklch(0.966 0.011 85);
-	--color-surface: oklch(0.94 0.013 85);
-	--color-sunken: oklch(0.915 0.013 85);
-	--color-overlay: oklch(0.985 0.008 85);
+	/* Canvas — paper */
+	--color-canvas: oklch(0.985 0.004 90);
+	--color-surface: oklch(0.96 0.005 90);
+	--color-sunken: oklch(0.925 0.006 90);
+	--color-overlay: oklch(0.995 0.002 90);
 	--color-raised: oklch(1 0 0);
 
-	--color-edge: oklch(0.83 0.012 85);
-	--color-edge-strong: oklch(0.68 0.015 85);
+	--color-edge: oklch(0.85 0.006 90);
+	--color-edge-strong: oklch(0.7 0.008 90);
 
 	--color-success: oklch(0.52 0.12 165);
 	--color-success-soft: oklch(0.92 0.04 165);
@@ -79,7 +79,7 @@
 
 	&:focus-visible {
 		@apply border-primary outline-none;
-		box-shadow: 0 0 0 3px oklch(0.52 0.17 45 / 0.3);
+		box-shadow: 0 0 0 3px oklch(0.6 0.2 42 / 0.3);
 
 		@variant dark {
 			box-shadow: 0 0 0 3px oklch(0.345 0.047 264 / 0.3);

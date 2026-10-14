@@ -68,6 +68,7 @@ const classes = [
 	'max-w-3xl',
 	'mx-auto',
 	'mt-10',
+	'mb-10',
 	'flex-1',
 	'p-6',
 	'bg-ink',

@@ -83,7 +83,7 @@ export const featuresEN = (files: Record<string, number>): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('mdi:key-variant', 'secondary', 'secondary-light'),
+							icon('pepicons-pencil:key', 'secondary', 'secondary-light'),
 							title('Sessions & tokens', 3),
 							para(
 								'Session-based authentication out of the box; opt-in API tokens for integrations (AUTH_GUARD_API).',
@@ -99,7 +99,7 @@ export const featuresEN = (files: Record<string, number>): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('mdi:shield-check-outline', 'secondary', 'secondary-light'),
+							icon('pepicons-pencil:shield-check', 'secondary', 'secondary-light'),
 							title('2FA TOTP', 3),
 							para('Enrollment, verification and recovery flows, applied where they matter.', 'sm', 'muted'),
 						],
@@ -111,7 +111,7 @@ export const featuresEN = (files: Record<string, number>): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('mdi:account-group-outline', 'secondary', 'secondary-light'),
+							icon('pepicons-pencil:people', 'secondary', 'secondary-light'),
 							title('RBAC', 3),
 							para('Roles, granular permissions and team invites — enforced at the transport layer.', 'sm', 'muted'),
 						],
@@ -141,7 +141,7 @@ export const featuresEN = (files: Record<string, number>): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('mdi:view-grid-plus-outline', 'primary', 'primary-light'),
+							icon('pepicons-pencil:grid', 'primary', 'primary-light'),
 							title('Visual builder', 3),
 							para(
 								'17 blocks with responsive grids and flex, saved as typed JSON — edited in the browser, not in a diff.',
@@ -157,7 +157,7 @@ export const featuresEN = (files: Record<string, number>): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('mdi:history-outline', 'primary', 'primary-light'),
+							icon('pepicons-pencil:rewind-time', 'primary', 'primary-light'),
 							title('Revisions', 3),
 							para('Every save is a revision; a page rolls back in one click, history stays intact.', 'sm', 'muted'),
 						],
@@ -169,7 +169,7 @@ export const featuresEN = (files: Record<string, number>): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('mdi:translate', 'primary', 'primary-light'),
+							icon('pepicons-pencil:earth-americas', 'primary', 'primary-light'),
 							title('Multilingual', 3),
 							para('Per-locale translations with unique slugs and locale-aware resolution at the edge.', 'sm', 'muted'),
 						],
@@ -194,14 +194,14 @@ export const featuresEN = (files: Record<string, number>): PageContent => ({
 					{ default: 1, md: 2, lg: 4 },
 					'md',
 					[
-						['mdi:clock-outline', 'Queues'],
-						['mdi:database-backup-outline', 'Backups'],
-						['mdi:timer-sand-outline', 'Rate limiting'],
-						['mdi:webhook-outline', 'Webhooks'],
-						['mdi:book-open-variant', 'OpenAPI docs'],
-						['mdi:heart-pulse-outline', 'Health checks'],
-						['mdi:construction', 'Maintenance mode'],
-						['mdi:transmission-tower', 'SSE real-time'],
+						['pepicons-pencil:clock', 'Queues'],
+						['pepicons-pencil:database', 'Backups'],
+						['pepicons-pencil:hourglass', 'Rate limiting'],
+						['pepicons-pencil:chain', 'Webhooks'],
+						['pepicons-pencil:book', 'OpenAPI docs'],
+						['pepicons-pencil:heart', 'Health checks'],
+						['pepicons-pencil:wrench', 'Maintenance mode'],
+						['pepicons-pencil:wifi', 'SSE real-time'],
 					].map(([name, label]) =>
 						flex([icon(name, 'secondary', 'secondary-light', 36), title(label, 4)], { direction: 'col', gap: 'xs' }),
 					),

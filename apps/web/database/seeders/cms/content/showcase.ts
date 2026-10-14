@@ -265,10 +265,10 @@ export const showcaseEN = (files: Record<string, number>): PageContent => ({
 				),
 				flex(
 					[
-						icon('mdi:shield-lock-outline', 'primary', 'primary-light', 48),
-						icon('mdi:hammer-wrench-outline', 'secondary', 'secondary-light', 48),
-						icon('mdi:cog-outline', 'tertiary', 'tertiary-light', 48),
-						icon('mdi:account-key-outline', 'primary-deep', 'primary-light', 48),
+						icon('pepicons-pencil:shield', 'primary', 'primary-light', 48),
+						icon('pepicons-pencil:wrench', 'secondary', 'secondary-light', 48),
+						icon('pepicons-pencil:gear', 'tertiary', 'tertiary-light', 48),
+						icon('pepicons-pencil:key', 'primary-deep', 'primary-light', 48),
 					],
 					{ direction: 'row', gap: 'lg', align: 'center' },
 				),
