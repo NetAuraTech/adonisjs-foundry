@@ -3,7 +3,7 @@ import { cn, tv } from 'tailwind-variants';
 import type { ReactNode } from 'react';
 
 const footer = tv({
-	base: 'px-6 md:px-16 pt-14 pb-8',
+	base: 'footer px-6 md:px-16 pt-14 pb-8',
 });
 
 interface FooterProps {
