@@ -178,6 +178,14 @@
 		}
 	}
 
+	/* Top rule mirroring the header's bottom border, so the sheet stays one
+	   continuous page with a clear footer limit. */
+	.footer {
+		@variant md {
+			@apply border-t-2 border-ink;
+		}
+	}
+
 	.card {
 		@apply flex flex-col rounded-sm border-2 border-ink bg-surface overflow-hidden;
 	}
