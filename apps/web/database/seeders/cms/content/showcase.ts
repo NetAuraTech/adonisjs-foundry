@@ -306,17 +306,17 @@ export const showcaseEN = (files: Record<string, number>): PageContent => ({
 
 		// ── Outro ──────────────────────────────────────────────────────────────
 		section(
-			'secondary-deep',
+			'canvas',
 			'xl',
 			'md',
 			[
 				flex(
 					[
-						title('That is all 17.', 2, 'ink-inverted'),
+						title('That is all 17.', 2),
 						para(
 							'Every block above is editable in the builder — this page is seeded JSON, not hand-written JSX.',
 							'base',
-							'ink-inverted',
+							'muted',
 							'base',
 							'max-w-2xl',
 						),
