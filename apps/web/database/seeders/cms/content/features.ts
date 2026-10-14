@@ -83,7 +83,7 @@ export const featuresEN = (files: Record<string, number>): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('pepicons-pencil:key', 'secondary', 'secondary-light'),
+							icon('pepicons-pencil:key', 'primary', 'none'),
 							title('Sessions & tokens', 3),
 							para(
 								'Session-based authentication out of the box; opt-in API tokens for integrations (AUTH_GUARD_API).',
@@ -99,7 +99,7 @@ export const featuresEN = (files: Record<string, number>): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('pepicons-pencil:shield-check', 'secondary', 'secondary-light'),
+							icon('pepicons-pencil:shield-check', 'primary', 'none'),
 							title('2FA TOTP', 3),
 							para('Enrollment, verification and recovery flows, applied where they matter.', 'sm', 'muted'),
 						],
@@ -111,7 +111,7 @@ export const featuresEN = (files: Record<string, number>): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('pepicons-pencil:people', 'secondary', 'secondary-light'),
+							icon('pepicons-pencil:people', 'primary', 'none'),
 							title('RBAC', 3),
 							para('Roles, granular permissions and team invites — enforced at the transport layer.', 'sm', 'muted'),
 						],
@@ -141,7 +141,7 @@ export const featuresEN = (files: Record<string, number>): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('pepicons-pencil:grid', 'primary', 'primary-light'),
+							icon('pepicons-pencil:grid', 'primary', 'none'),
 							title('Visual builder', 3),
 							para(
 								'17 blocks with responsive grids and flex, saved as typed JSON — edited in the browser, not in a diff.',
@@ -157,7 +157,7 @@ export const featuresEN = (files: Record<string, number>): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('pepicons-pencil:rewind-time', 'primary', 'primary-light'),
+							icon('pepicons-pencil:rewind-time', 'primary', 'none'),
 							title('Revisions', 3),
 							para('Every save is a revision; a page rolls back in one click, history stays intact.', 'sm', 'muted'),
 						],
@@ -169,7 +169,7 @@ export const featuresEN = (files: Record<string, number>): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('pepicons-pencil:earth-americas', 'primary', 'primary-light'),
+							icon('pepicons-pencil:earth-americas', 'primary', 'none'),
 							title('Multilingual', 3),
 							para('Per-locale translations with unique slugs and locale-aware resolution at the edge.', 'sm', 'muted'),
 						],
@@ -203,7 +203,7 @@ export const featuresEN = (files: Record<string, number>): PageContent => ({
 						['pepicons-pencil:wrench', 'Maintenance mode'],
 						['pepicons-pencil:wifi', 'SSE real-time'],
 					].map(([name, label]) =>
-						flex([icon(name, 'secondary', 'secondary-light', 36), title(label, 4)], { direction: 'col', gap: 'xs' }),
+						flex([icon(name, 'primary', 'none', 36), title(label, 4)], { direction: 'col', gap: 'xs' }),
 					),
 				),
 			],

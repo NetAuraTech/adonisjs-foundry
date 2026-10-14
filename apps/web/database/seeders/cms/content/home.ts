@@ -116,7 +116,7 @@ export const homeFR = (): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('pepicons-pencil:duplicate', 'default', 'none'),
+							icon('pepicons-pencil:duplicate', 'primary', 'none'),
 							title('Domain-driven', 3),
 							para(
 								'Controllers minces, actions de domaine, services, repositories, modèles. Chaque couche a son contrat, ses tests et sa documentation.',
@@ -132,7 +132,7 @@ export const homeFR = (): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('pepicons-pencil:grid', 'default', 'none'),
+							icon('pepicons-pencil:grid', 'primary', 'none'),
 							title('Builder visuel', 3),
 							para(
 								'17 blocs, grilles et flex responsives, révisions, templates réutilisables. Le contenu se modélise — il ne se code plus.',
@@ -148,7 +148,7 @@ export const homeFR = (): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('pepicons-pencil:shield', 'default', 'none'),
+							icon('pepicons-pencil:shield', 'primary', 'none'),
 							title('Sécurisé par défaut', 3),
 							para(
 								"Sessions ou tokens, 2FA TOTP, RBAC granulaire, rate-limiting, journaux d'audit immuables.",
@@ -335,7 +335,7 @@ export const homeEN = (): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('pepicons-pencil:duplicate', 'default', 'none'),
+							icon('pepicons-pencil:duplicate', 'primary', 'none'),
 							title('Domain-driven', 3),
 							para(
 								'Thin controllers, domain actions, services, repositories, models. Every layer has its contract, its tests and its docs.',
@@ -351,7 +351,7 @@ export const homeEN = (): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('pepicons-pencil:grid', 'default', 'none'),
+							icon('pepicons-pencil:grid', 'primary', 'none'),
 							title('Visual builder', 3),
 							para(
 								'17 blocks, responsive grids and flex, revisions, reusable templates. Content is modeled — not coded.',
@@ -367,7 +367,7 @@ export const homeEN = (): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('pepicons-pencil:shield', 'default', 'none'),
+							icon('pepicons-pencil:shield', 'primary', 'none'),
 							title('Secure by default', 3),
 							para(
 								'Sessions or tokens, TOTP 2FA, granular RBAC, rate limiting, immutable audit journals.',
