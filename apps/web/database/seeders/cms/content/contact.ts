@@ -1,4 +1,18 @@
-import { button, field, flex, form, grid, iframe, icon, image, kicker, para, section, title } from './helpers.js';
+import {
+	button,
+	externalButton,
+	field,
+	flex,
+	form,
+	grid,
+	iframe,
+	icon,
+	image,
+	kicker,
+	para,
+	section,
+	title,
+} from './helpers.js';
 import type { PageContent } from '#cms/types/page';
 
 /**
@@ -21,7 +35,7 @@ export const contactEN = (files: Record<string, number>): PageContent => ({
 						kicker('Contact'),
 						title('Talk to the foundry', 1),
 						para(
-							'This form is wired end to end: Vine validation, per-IP rate limiting, and a transactional e-mail on every submission.',
+							'This is the real form — the same block a CMS editor drops on any page: Vine validation, per-IP rate limiting, and a transactional e-mail on every submission.',
 							'base',
 							'muted',
 							'base',
@@ -66,7 +80,7 @@ export const contactEN = (files: Record<string, number>): PageContent => ({
 									[
 										icon('pepicons-pencil:pin', 'primary', 'none', 40),
 										title('Where', 4),
-										para('Paris, France — and remote everywhere else.', 'sm', 'muted'),
+										para('NetAuraTech — Paris, France, and remote everywhere else.', 'sm', 'muted'),
 									],
 									undefined,
 									'card',
@@ -78,7 +92,29 @@ export const contactEN = (files: Record<string, number>): PageContent => ({
 									[
 										icon('pepicons-pencil:clock', 'primary', 'none', 40),
 										title('Response', 4),
-										para('Submissions land in the mail queue and the audit journal.', 'sm', 'muted'),
+										para(
+											'Submissions land in the mail queue and the audit journal; a transactional e-mail goes to the configured recipient.',
+											'sm',
+											'muted',
+										),
+									],
+									undefined,
+									'card',
+								),
+								section(
+									'surface',
+									'md',
+									'md',
+									[
+										icon('pepicons-pencil:chain', 'primary', 'none', 40),
+										title('Support', 4),
+										para('Issues live on GitHub — open one and it gets triaged.', 'sm', 'muted'),
+										externalButton(
+											'Open the repo',
+											'https://github.com/NetAuraTech/adonisjs-foundry',
+											'link_muted',
+											'sm',
+										),
 									],
 									undefined,
 									'card',

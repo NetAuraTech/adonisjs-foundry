@@ -1,11 +1,13 @@
-import { button, flex, grid, icon, kicker, para, quote, section, title } from './helpers.js';
+import { button, flex, grid, htmltext, icon, kicker, para, quote, section, title } from './helpers.js';
 import type { PageContent } from '#cms/types/page';
 
 /**
  * Home page, FR translation (primary locale).
  *
  * The page presents the boilerplate itself: typographic hero, stats band,
- * three-pillar features teaser, manifesto quote, contact CTA.
+ * three-pillar features teaser, the flavor matrix, a quick start, the
+ * manifesto quote and the contact CTA. Copy is drawn from the repository
+ * README so the page stays in lockstep with the documented product.
  */
 export const homeFR = (): PageContent => ({
 	blocks: [
@@ -17,10 +19,10 @@ export const homeFR = (): PageContent => ({
 			[
 				flex(
 					[
-						kicker('Boilerplate de production · AdonisJS v7 — Inertia — React', 'primary'),
+						kicker('Boilerplate de production · CMS headless · AdonisJS v7 — Inertia — React', 'primary'),
 						title('La fonderie de vos applications', 1),
 						para(
-							"Foundry est un starter prêt à livrer : architecture domain-driven, builder visuel à 17 blocs, authentification avec 2FA, RBAC, journaux d'audit et contenu multilingue. Vous ne rebâtissez rien — vous forgez.",
+							'Foundry est un boilerplate prêt à livrer et un CMS headless : architecture domain-driven, builder visuel temps réel, authentification complète avec 2FA, RBAC, journaux d’audit, fichiers, templates, files de jobs et sauvegardes. Le socle est déjà livré — vous forgez le produit.',
 							'lg',
 							'muted',
 							'xl',
@@ -77,15 +79,15 @@ export const homeFR = (): PageContent => ({
 						),
 						flex(
 							[
-								title('4', 2, 'default'),
-								para('couches domain-driven', 'sm', 'subtle', 'base', 'font-mono uppercase tracking-[0.2em]'),
+								title('8', 2, 'default'),
+								para('domaines, un contrat par couche', 'sm', 'subtle', 'base', 'font-mono uppercase tracking-[0.2em]'),
 							],
 							{ direction: 'col', gap: 'xs', align: 'center' },
 						),
 						flex(
 							[
 								title('2FA', 2, 'default'),
-								para('TOTP + RBAC + audit', 'sm', 'subtle', 'base', 'font-mono uppercase tracking-[0.2em]'),
+								para('TOTP · RBAC · audit', 'sm', 'subtle', 'base', 'font-mono uppercase tracking-[0.2em]'),
 							],
 							{ direction: 'col', gap: 'xs', align: 'center' },
 						),
@@ -119,7 +121,7 @@ export const homeFR = (): PageContent => ({
 							icon('pepicons-pencil:duplicate', 'primary', 'none'),
 							title('Domain-driven', 3),
 							para(
-								'Controllers minces, actions de domaine, services, repositories, modèles. Chaque couche a son contrat, ses tests et sa documentation.',
+								'app/ pour le transport, src/ pour le business — par domaine. Controllers minces, actions de cas d’usage, services, repositories, modèles Lucid, exceptions typées. Chaque couche a sa convention écrite et ses tests.',
 								'sm',
 								'muted',
 							),
@@ -135,7 +137,7 @@ export const homeFR = (): PageContent => ({
 							icon('pepicons-pencil:grid', 'primary', 'none'),
 							title('Builder visuel', 3),
 							para(
-								'17 blocs, grilles et flex responsives, révisions, templates réutilisables. Le contenu se modélise — il ne se code plus.',
+								'17 blocs typés à props responsives, collaboration temps réel par SSE, verrouillage de champs, révisions restaurables, aperçu en direct. Le contenu se modélise — il ne se code plus.',
 								'sm',
 								'muted',
 							),
@@ -151,7 +153,7 @@ export const homeFR = (): PageContent => ({
 							icon('pepicons-pencil:shield', 'primary', 'none'),
 							title('Sécurisé par défaut', 3),
 							para(
-								"Sessions ou tokens, 2FA TOTP, RBAC granulaire, rate-limiting, journaux d'audit immuables.",
+								'Sessions ou tokens opt-in, 2FA TOTP avec codes de récupération, RBAC granulaire, tokens selector/validator, rate-limit par client, journaux d’audit persistés.',
 								'sm',
 								'muted',
 							),
@@ -174,6 +176,97 @@ export const homeFR = (): PageContent => ({
 			'features',
 		),
 
+		// ── Flavors ────────────────────────────────────────────────────────────
+		section(
+			'canvas',
+			'xl',
+			'md',
+			[
+				kicker('Flavors'),
+				title('Un dépôt, trois surfaces', 2),
+				para(
+					'Le même codebase, taillé à trois surfaces par des manifests de prune déclaratives rejouées en CI — un checkout de branche, pas une installation en plus. Rien n’est une porte à sens unique : chaque flavor se remonte vers full.',
+					'base',
+					'muted',
+					'base',
+					'max-w-2xl',
+				),
+				grid({ default: 1, lg: 3 }, 'lg', [
+					section(
+						'canvas',
+						'md',
+						'md',
+						[
+							icon('pepicons-pencil:duplicate', 'primary', 'none'),
+							title('full — main', 3),
+							para(
+								'Front Inertia + admin, le module CMS et le builder visuel. La branche que les humains éditent — les deux autres en sont des artefacts régénérés.',
+								'sm',
+								'muted',
+							),
+						],
+						undefined,
+						'card',
+					),
+					section(
+						'canvas',
+						'md',
+						'md',
+						[
+							icon('pepicons-pencil:grid', 'primary', 'none'),
+							title('inertia', 3),
+							para(
+								'Front Inertia + admin, pages écrites à la main, sans CMS ni builder. Pour les équipes qui veulent leur propre front.',
+								'sm',
+								'muted',
+							),
+						],
+						undefined,
+						'card',
+					),
+					section(
+						'canvas',
+						'md',
+						'md',
+						[
+							icon('pepicons-pencil:chain', 'primary', 'none'),
+							title('api', 3),
+							para(
+								'Backend headless REST sous /api/v1/*, sans front. La spec OpenAPI s’adapte aux permissions de l’appelant — Next.js, mobile, scripts.',
+								'sm',
+								'muted',
+							),
+						],
+						undefined,
+						'card',
+					),
+				]),
+			],
+			'flavors',
+		),
+
+		// ── Quick start ────────────────────────────────────────────────────────
+		section(
+			'surface',
+			'xl',
+			'md',
+			[
+				kicker('Démarrage'),
+				title('De zéro à localhost en quelques lignes', 2),
+				para(
+					'Foundry ne s’utilise pas tel quel : on crée son dépôt, on ajoute Foundry en remote upstream, et les mises à jour remontent par la suite — un merge, jamais une réécriture.',
+					'base',
+					'muted',
+					'base',
+					'max-w-2xl',
+				),
+				htmltext(
+					'<pre class="bg-ink text-ink-inverted p-4 rounded-sm overflow-x-auto text-sm"><code># votre dépôt\nmkdir my-project &amp;&amp; cd my-project &amp;&amp; git init\n\n# foundry en upstream\ngit remote add foundry https://github.com/NetAuraTech/adonisjs-foundry.git\ngit fetch foundry &amp;&amp; git merge foundry/main --allow-unrelated-histories\n\n# et on lance\nnpm install\ndocker compose up -d\ncp apps/web/.env.example apps/web/.env\ncd apps/web &amp;&amp; node ace generate:key &amp;&amp; node ace migration:run\nnpm run dev        # → http://localhost:3333</code></pre>',
+				),
+			],
+			'quickstart',
+		),
+
 		// ── Manifesto ──────────────────────────────────────────────────────────
 		section(
 			'canvas',
@@ -181,8 +274,8 @@ export const homeFR = (): PageContent => ({
 			'md',
 			[
 				quote(
-					"Un boilerplate n'est pas un cadre : c'est une équipe invisible qui livre avec vous — migrations, tests, CI, sécurité.",
-					'Foundry — architecture 2.2',
+					'Un point de départ solide et bien architecturé — pour que vous construisiez votre produit dès le premier jour.',
+					'Foundry — README',
 					'highlight',
 				),
 			],
@@ -199,7 +292,7 @@ export const homeFR = (): PageContent => ({
 					[
 						title('Prêt à forger ?', 2, 'default'),
 						para(
-							'Le formulaire de contact est câblé de bout en bout : validation Vine, rate-limit par IP, e-mail transactionnel.',
+							'Votre dépôt, Foundry en upstream, et le premier merge fait le reste : migrations, tests, CI et sécurité voyagent avec vous. Une question avant de démarrer ?',
 							'base',
 							'muted',
 							'base',
@@ -223,8 +316,6 @@ export const homeFR = (): PageContent => ({
 
 /**
  * Home page, EN translation.
- *
- * @param files - demo image filename → file id map (see `ensureDemoFiles`).
  */
 export const homeEN = (): PageContent => ({
 	blocks: [
@@ -236,10 +327,10 @@ export const homeEN = (): PageContent => ({
 			[
 				flex(
 					[
-						kicker('Production boilerplate · AdonisJS v7 — Inertia — React', 'primary'),
+						kicker('Production boilerplate · Headless CMS · AdonisJS v7 — Inertia — React', 'primary'),
 						title('Where applications get forged', 1),
 						para(
-							'Foundry is a production-ready starter: domain-driven architecture, a 17-block visual builder, 2FA auth, RBAC, immutable audit logs and multilingual content. You stop rebuilding — you forge.',
+							'Foundry is a production-ready boilerplate and a headless CMS: domain-driven architecture, a real-time visual builder, complete authentication with 2FA, RBAC, audit journals, file management, templates, job queues and backups. The foundation is already shipped — you forge the product.',
 							'lg',
 							'muted',
 							'xl',
@@ -296,15 +387,15 @@ export const homeEN = (): PageContent => ({
 						),
 						flex(
 							[
-								title('4', 2, 'default'),
-								para('domain-driven layers', 'sm', 'subtle', 'base', 'font-mono uppercase tracking-[0.2em]'),
+								title('8', 2, 'default'),
+								para('domains, one contract per layer', 'sm', 'subtle', 'base', 'font-mono uppercase tracking-[0.2em]'),
 							],
 							{ direction: 'col', gap: 'xs', align: 'center' },
 						),
 						flex(
 							[
 								title('2FA', 2, 'default'),
-								para('TOTP + RBAC + audit', 'sm', 'subtle', 'base', 'font-mono uppercase tracking-[0.2em]'),
+								para('TOTP · RBAC · audit', 'sm', 'subtle', 'base', 'font-mono uppercase tracking-[0.2em]'),
 							],
 							{ direction: 'col', gap: 'xs', align: 'center' },
 						),
@@ -338,7 +429,7 @@ export const homeEN = (): PageContent => ({
 							icon('pepicons-pencil:duplicate', 'primary', 'none'),
 							title('Domain-driven', 3),
 							para(
-								'Thin controllers, domain actions, services, repositories, models. Every layer has its contract, its tests and its docs.',
+								'app/ for transport, src/ for business — per domain. Thin controllers, use-case actions, services, repositories, Lucid models, typed exceptions. Every layer has its written convention and its tests.',
 								'sm',
 								'muted',
 							),
@@ -354,7 +445,7 @@ export const homeEN = (): PageContent => ({
 							icon('pepicons-pencil:grid', 'primary', 'none'),
 							title('Visual builder', 3),
 							para(
-								'17 blocks, responsive grids and flex, revisions, reusable templates. Content is modeled — not coded.',
+								'17 typed blocks with responsive props, real-time collaboration over SSE, field locking, restorable revisions and a live preview. Content is modeled — not coded.',
 								'sm',
 								'muted',
 							),
@@ -370,7 +461,7 @@ export const homeEN = (): PageContent => ({
 							icon('pepicons-pencil:shield', 'primary', 'none'),
 							title('Secure by default', 3),
 							para(
-								'Sessions or tokens, TOTP 2FA, granular RBAC, rate limiting, immutable audit journals.',
+								'Sessions or opt-in tokens, TOTP 2FA with recovery codes, granular RBAC, selector/validator tokens, per-client rate limiting, persisted audit journals.',
 								'sm',
 								'muted',
 							),
@@ -393,6 +484,97 @@ export const homeEN = (): PageContent => ({
 			'features',
 		),
 
+		// ── Flavors ────────────────────────────────────────────────────────────
+		section(
+			'canvas',
+			'xl',
+			'md',
+			[
+				kicker('Flavors'),
+				title('One repository, three surfaces', 2),
+				para(
+					'The same codebase, pruned to three surfaces by declarative manifests replayed in CI — a branch checkout, not an extra install. Nothing is a one-way door: every flavor upgrades back to full.',
+					'base',
+					'muted',
+					'base',
+					'max-w-2xl',
+				),
+				grid({ default: 1, lg: 3 }, 'lg', [
+					section(
+						'canvas',
+						'md',
+						'md',
+						[
+							icon('pepicons-pencil:duplicate', 'primary', 'none'),
+							title('full — main', 3),
+							para(
+								'Inertia front + admin, the CMS module and the visual page builder. The branch humans edit — the other two are regenerated artifacts.',
+								'sm',
+								'muted',
+							),
+						],
+						undefined,
+						'card',
+					),
+					section(
+						'canvas',
+						'md',
+						'md',
+						[
+							icon('pepicons-pencil:grid', 'primary', 'none'),
+							title('inertia', 3),
+							para(
+								'Inertia front + admin with hand-written pages, no CMS or builder. For teams that want to own their front end.',
+								'sm',
+								'muted',
+							),
+						],
+						undefined,
+						'card',
+					),
+					section(
+						'canvas',
+						'md',
+						'md',
+						[
+							icon('pepicons-pencil:chain', 'primary', 'none'),
+							title('api', 3),
+							para(
+								'Headless REST backend under /api/v1/*, no front end. The OpenAPI spec adapts to the caller’s permissions — Next.js, mobile, scripts.',
+								'sm',
+								'muted',
+							),
+						],
+						undefined,
+						'card',
+					),
+				]),
+			],
+			'flavors',
+		),
+
+		// ── Quick start ────────────────────────────────────────────────────────
+		section(
+			'surface',
+			'xl',
+			'md',
+			[
+				kicker('Quick start'),
+				title('From zero to localhost in a few lines', 2),
+				para(
+					'Foundry is not meant to be used as-is: create your repository, add Foundry as an upstream remote, and pull future updates — a merge, never a rewrite.',
+					'base',
+					'muted',
+					'base',
+					'max-w-2xl',
+				),
+				htmltext(
+					'<pre class="bg-ink text-ink-inverted p-4 rounded-sm overflow-x-auto text-sm"><code># your repo\nmkdir my-project &amp;&amp; cd my-project &amp;&amp; git init\n\n# foundry as upstream\ngit remote add foundry https://github.com/NetAuraTech/adonisjs-foundry.git\ngit fetch foundry &amp;&amp; git merge foundry/main --allow-unrelated-histories\n\n# and up you go\nnpm install\ndocker compose up -d\ncp apps/web/.env.example apps/web/.env\ncd apps/web &amp;&amp; node ace generate:key &amp;&amp; node ace migration:run\nnpm run dev        # → http://localhost:3333</code></pre>',
+				),
+			],
+			'quickstart',
+		),
+
 		// ── Manifesto ──────────────────────────────────────────────────────────
 		section(
 			'canvas',
@@ -400,8 +582,8 @@ export const homeEN = (): PageContent => ({
 			'md',
 			[
 				quote(
-					'A boilerplate is not a framework: it is an invisible team that ships with you — migrations, tests, CI, security.',
-					'Foundry — architecture 2.2',
+					'A solid, well-architected starting point — so you can focus on building your product from day one.',
+					'Foundry — README',
 					'highlight',
 				),
 			],
@@ -418,7 +600,7 @@ export const homeEN = (): PageContent => ({
 					[
 						title('Ready to forge?', 2, 'default'),
 						para(
-							'The contact form is wired end to end: Vine validation, per-IP rate limiting, transactional e-mail.',
+							'Your repo, Foundry as upstream, and the first merge does the rest: migrations, tests, CI and security ride along. A question before you start?',
 							'base',
 							'muted',
 							'base',
