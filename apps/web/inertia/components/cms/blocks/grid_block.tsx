@@ -40,7 +40,7 @@ export default function GridBlock(props: GridBlockProps) {
 
 	const gapClasses = resolveResponsive(gap || { default: 'none' }, gapMap);
 
-	const alignClass = alignMap[alignItems || 'start'];
+	const alignClass = alignMap[alignItems || 'stretch'];
 
 	return (
 		<div className={['grid', colClasses, gapClasses, alignClass, className].filter(Boolean).join(' ')}>{children}</div>

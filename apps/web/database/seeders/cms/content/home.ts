@@ -1,30 +1,28 @@
-import { button, flex, grid, icon, image, kicker, para, quote, section, title } from './helpers.js';
+import { button, flex, grid, icon, kicker, para, quote, section, title } from './helpers.js';
 import type { PageContent } from '#cms/types/page';
 
 /**
  * Home page, FR translation (primary locale).
  *
- * The page presents the boilerplate itself: hero over the forge, stats band,
+ * The page presents the boilerplate itself: typographic hero, stats band,
  * three-pillar features teaser, manifesto quote, contact CTA.
- *
- * @param files - demo image filename → file id map (see `ensureDemoFiles`).
  */
-export const homeFR = (files: Record<string, number>): PageContent => ({
+export const homeFR = (): PageContent => ({
 	blocks: [
 		// ── Hero ───────────────────────────────────────────────────────────────
 		section(
-			'primary-deep',
+			'canvas',
 			'xl',
 			'md',
 			[
 				flex(
 					[
-						kicker('Boilerplate de production · AdonisJS v7 — Inertia — React', 'primary-light'),
-						title('La fonderie de vos applications', 1, 'ink-inverted', 'primary-light'),
+						kicker('Boilerplate de production · AdonisJS v7 — Inertia — React', 'primary'),
+						title('La fonderie de vos applications', 1),
 						para(
 							"Foundry est un starter prêt à livrer : architecture domain-driven, builder visuel à 17 blocs, authentification avec 2FA, RBAC, journaux d'audit et contenu multilingue. Vous ne rebâtissez rien — vous forgez.",
 							'lg',
-							'primary-light',
+							'muted',
 							'xl',
 						),
 						flex(
@@ -38,7 +36,7 @@ export const homeFR = (files: Record<string, number>): PageContent => ({
 								),
 								button(
 									'Explorer la vitrine',
-									'outline',
+									'secondary',
 									'md',
 									{ linkType: 'route', route: 'cms.page.render', routeParams: { slug: 'showcase' } },
 									'center',
@@ -49,7 +47,6 @@ export const homeFR = (files: Record<string, number>): PageContent => ({
 					],
 					{ direction: 'col', gap: 'md', align: 'center', className: 'max-w-3xl mx-auto' },
 				),
-				image(files['forge-hero.png'], 'Fournaise — coulée en fusion', 'w-full mt-10'),
 			],
 			'hero',
 		),
@@ -111,7 +108,7 @@ export const homeFR = (files: Record<string, number>): PageContent => ({
 					'base',
 					'muted',
 					'base',
-					'max-w-2xl',
+					'max-w-2xl mb-10',
 				),
 				grid({ default: 1, lg: 3 }, 'lg', [
 					section(
@@ -119,7 +116,7 @@ export const homeFR = (files: Record<string, number>): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('mdi:layers-triple', 'primary', 'primary-light'),
+							icon('pepicons-pencil:duplicate', 'default', 'none'),
 							title('Domain-driven', 3),
 							para(
 								'Controllers minces, actions de domaine, services, repositories, modèles. Chaque couche a son contrat, ses tests et sa documentation.',
@@ -135,7 +132,7 @@ export const homeFR = (files: Record<string, number>): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('mdi:view-grid-plus-outline', 'primary', 'primary-light'),
+							icon('pepicons-pencil:grid', 'default', 'none'),
 							title('Builder visuel', 3),
 							para(
 								'17 blocs, grilles et flex responsives, révisions, templates réutilisables. Le contenu se modélise — il ne se code plus.',
@@ -151,7 +148,7 @@ export const homeFR = (files: Record<string, number>): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('mdi:shield-lock-outline', 'primary', 'primary-light'),
+							icon('pepicons-pencil:shield', 'default', 'none'),
 							title('Sécurisé par défaut', 3),
 							para(
 								"Sessions ou tokens, 2FA TOTP, RBAC granulaire, rate-limiting, journaux d'audit immuables.",
@@ -194,13 +191,13 @@ export const homeFR = (files: Record<string, number>): PageContent => ({
 
 		// ── CTA ────────────────────────────────────────────────────────────────
 		section(
-			'primary',
+			'secondary-deep',
 			'xl',
 			'md',
 			[
 				flex(
 					[
-						title('Prêt à forger ?', 2, 'ink-inverted', 'primary-light'),
+						title('Prêt à forger ?', 2, 'ink-inverted'),
 						para(
 							'Le formulaire de contact est câblé de bout en bout : validation Vine, rate-limit par IP, e-mail transactionnel.',
 							'base',
@@ -210,7 +207,7 @@ export const homeFR = (files: Record<string, number>): PageContent => ({
 						),
 						button(
 							'Nous contacter',
-							'secondary',
+							'primary',
 							'lg',
 							{ linkType: 'route', route: 'cms.page.render', routeParams: { slug: 'contact' } },
 							'center',
@@ -229,22 +226,22 @@ export const homeFR = (files: Record<string, number>): PageContent => ({
  *
  * @param files - demo image filename → file id map (see `ensureDemoFiles`).
  */
-export const homeEN = (files: Record<string, number>): PageContent => ({
+export const homeEN = (): PageContent => ({
 	blocks: [
 		// ── Hero ───────────────────────────────────────────────────────────────
 		section(
-			'primary-deep',
+			'canvas',
 			'xl',
 			'md',
 			[
 				flex(
 					[
-						kicker('Production boilerplate · AdonisJS v7 — Inertia — React', 'primary-light'),
-						title('Where applications get forged', 1, 'ink-inverted', 'primary-light'),
+						kicker('Production boilerplate · AdonisJS v7 — Inertia — React', 'primary'),
+						title('Where applications get forged', 1),
 						para(
 							'Foundry is a production-ready starter: domain-driven architecture, a 17-block visual builder, 2FA auth, RBAC, immutable audit logs and multilingual content. You stop rebuilding — you forge.',
 							'lg',
-							'primary-light',
+							'muted',
 							'xl',
 						),
 						flex(
@@ -258,7 +255,7 @@ export const homeEN = (files: Record<string, number>): PageContent => ({
 								),
 								button(
 									'Open the showcase',
-									'outline',
+									'secondary',
 									'md',
 									{ linkType: 'route', route: 'cms.page.render', routeParams: { slug: 'showcase' } },
 									'center',
@@ -269,7 +266,6 @@ export const homeEN = (files: Record<string, number>): PageContent => ({
 					],
 					{ direction: 'col', gap: 'md', align: 'center', className: 'max-w-3xl mx-auto' },
 				),
-				image(files['forge-hero.png'], 'Foundry — a molten pour', 'w-full mt-10'),
 			],
 			'hero',
 		),
@@ -331,7 +327,7 @@ export const homeEN = (files: Record<string, number>): PageContent => ({
 					'base',
 					'muted',
 					'base',
-					'max-w-2xl',
+					'max-w-2xl mb-10',
 				),
 				grid({ default: 1, lg: 3 }, 'lg', [
 					section(
@@ -339,7 +335,7 @@ export const homeEN = (files: Record<string, number>): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('mdi:layers-triple', 'primary', 'primary-light'),
+							icon('pepicons-pencil:duplicate', 'default', 'none'),
 							title('Domain-driven', 3),
 							para(
 								'Thin controllers, domain actions, services, repositories, models. Every layer has its contract, its tests and its docs.',
@@ -355,7 +351,7 @@ export const homeEN = (files: Record<string, number>): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('mdi:view-grid-plus-outline', 'primary', 'primary-light'),
+							icon('pepicons-pencil:grid', 'default', 'none'),
 							title('Visual builder', 3),
 							para(
 								'17 blocks, responsive grids and flex, revisions, reusable templates. Content is modeled — not coded.',
@@ -371,7 +367,7 @@ export const homeEN = (files: Record<string, number>): PageContent => ({
 						'md',
 						'md',
 						[
-							icon('mdi:shield-lock-outline', 'primary', 'primary-light'),
+							icon('pepicons-pencil:shield', 'default', 'none'),
 							title('Secure by default', 3),
 							para(
 								'Sessions or tokens, TOTP 2FA, granular RBAC, rate limiting, immutable audit journals.',
@@ -414,13 +410,13 @@ export const homeEN = (files: Record<string, number>): PageContent => ({
 
 		// ── CTA ────────────────────────────────────────────────────────────────
 		section(
-			'primary',
+			'secondary-deep',
 			'xl',
 			'md',
 			[
 				flex(
 					[
-						title('Ready to forge?', 2, 'ink-inverted', 'primary-light'),
+						title('Ready to forge?', 2, 'ink-inverted'),
 						para(
 							'The contact form is wired end to end: Vine validation, per-IP rate limiting, transactional e-mail.',
 							'base',
@@ -430,7 +426,7 @@ export const homeEN = (files: Record<string, number>): PageContent => ({
 						),
 						button(
 							'Contact us',
-							'secondary',
+							'primary',
 							'lg',
 							{ linkType: 'route', route: 'cms.page.render', routeParams: { slug: 'contact' } },
 							'center',

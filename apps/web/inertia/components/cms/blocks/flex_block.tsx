@@ -43,8 +43,8 @@ const justifyMap = {
 
 const backgroundMap: Record<string, string> = {
 	none: '',
-	canvas: 'bg-canvas',
-	surface: 'bg-surface',
+	canvas: '',
+	surface: '',
 	sunken: 'bg-sunken',
 	'primary-deep': 'bg-primary-deep',
 	primary: 'bg-primary',

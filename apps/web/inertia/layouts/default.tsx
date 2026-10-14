@@ -62,20 +62,20 @@ export default function Layout(props: LayoutProps) {
 	}, [closeMenu]);
 
 	const footerDescription = (
-		<Paragraph variant="ink-inverted" className="text-sm leading-relaxed max-w-md">
+		<Paragraph variant="muted" className="text-sm leading-relaxed max-w-md">
 			Boilerplate AdonisJS v7 + Inertia/React : architecture domain-driven, builder visuel, RBAC, 2FA, journaux d'audit
 			et pipeline de flavors.
 		</Paragraph>
 	);
 
 	const footerCopyright = (
-		<Paragraph variant="ink-inverted" className="text-sm font-light leading-relaxed max-w-md flex items-center gap-2">
+		<Paragraph variant="muted" className="text-sm font-light leading-relaxed max-w-md flex items-center gap-2">
 			{`© 2026 ${app_name} — Tous droits réservés`}
 		</Paragraph>
 	);
 
 	const footerCredit = (
-		<Paragraph variant="ink-inverted" className="text-sm font-light leading-relaxed max-w-md flex items-center gap-2">
+		<Paragraph variant="muted" className="text-sm font-light leading-relaxed max-w-md flex items-center gap-2">
 			Fait avec ♥ par{' '}
 			<a href="https://www.netauratech.fr" className={navLink({ variant: 'external' })}>
 				NetAuraTech
@@ -129,7 +129,7 @@ export default function Layout(props: LayoutProps) {
 				<meta name="twitter:title" content={app_name} />
 				<meta name="twitter:image:alt" content={`${app_name} - ${image_alt}`} />
 			</Head>
-			<>
+			<div className="notebook-page min-h-screen">
 				<Header
 					appName={app_name}
 					homeHref={homeHref}
@@ -152,7 +152,7 @@ export default function Layout(props: LayoutProps) {
 					copyright={footerCopyright}
 					credit={footerCredit}
 				/>
-			</>
+			</div>
 		</>
 	);
 }

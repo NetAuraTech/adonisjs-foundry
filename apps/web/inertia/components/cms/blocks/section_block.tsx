@@ -21,8 +21,8 @@ const paddingXMap = {
 
 const backgroundMap: Record<string, string> = {
 	none: '',
-	canvas: 'bg-canvas',
-	surface: 'bg-surface',
+	canvas: '',
+	surface: '',
 	sunken: 'bg-sunken',
 	'primary-deep': 'bg-primary-deep',
 	primary: 'bg-primary',
@@ -57,8 +57,8 @@ export default function SectionBlock(props: SectionBlockProps) {
 	const bgClass = backgroundMap[background] ?? '';
 
 	return (
-		<Section id={id} className={[bgClass, pyClasses, pxClasses, className].filter(Boolean).join(' ')}>
-			{children}
+		<Section id={id} className={[bgClass, pyClasses, className].filter(Boolean).join(' ')}>
+			<div className={['container', pxClasses].filter(Boolean).join(' ')}>{children}</div>
 		</Section>
 	);
 }

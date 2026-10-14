@@ -3,7 +3,7 @@ import { cn, tv } from 'tailwind-variants';
 import type { ReactNode } from 'react';
 
 const footer = tv({
-	base: 'bg-primary-deep px-6 md:px-16 pt-14 pb-8',
+	base: 'px-6 md:px-16 pt-14 pb-8',
 });
 
 interface FooterProps {
@@ -33,8 +33,8 @@ interface FooterProps {
  * <Footer
  *   appName="Foundry"
  *   homeHref={urlFor('core.home.render')}
- *   description={<Paragraph variant="ink-inverted">…</Paragraph>}
- *   copyright={<Paragraph variant="ink-inverted">© 2026 Foundry</Paragraph>}
+ *   description={<Paragraph variant="muted">…</Paragraph>}
+ *   copyright={<Paragraph variant="muted">© 2026 Foundry</Paragraph>}
  * />
  */
 export function Footer(props: FooterProps) {
@@ -44,7 +44,7 @@ export function Footer(props: FooterProps) {
 		<footer className={cn(footer(), className)}>
 			<div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 pb-10 mb-8 border-b border-primary">
 				<div className="col-span-2 md:col-span-1">
-					<Link href={homeHref} className="text-ink-inverted font-semibold tracking-wide text-2xl font-display">
+					<Link href={homeHref} className="text-ink font-semibold tracking-wide text-2xl font-display">
 						{appName}
 					</Link>
 					{description}

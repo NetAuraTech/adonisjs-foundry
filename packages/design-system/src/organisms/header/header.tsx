@@ -22,7 +22,7 @@ export interface HeaderLink {
 }
 
 const header = tv({
-	base: 'header',
+	base: 'header notebook-page',
 });
 
 interface HeaderProps {
