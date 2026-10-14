@@ -13,7 +13,7 @@ const specRow = (num: string, label: string, description: string) =>
 				flex([kicker(label), para(description, 'sm', 'muted')], { direction: 'col', gap: 'xs' }),
 			]),
 		],
-		{ direction: 'row', className: 'border-b border-ink/20 pb-8' },
+		{ direction: 'row', className: 'border-b border-ink/20 py-8' },
 	);
 
 /**
