@@ -11,18 +11,18 @@ export const featuresEN = (files: Record<string, number>): PageContent => ({
 	blocks: [
 		// ── Header ─────────────────────────────────────────────────────────────
 		section(
-			'secondary-deep',
+			'canvas',
 			'xl',
 			'md',
 			[
 				flex(
 					[
-						kicker('Features — what ships in the box', 'tertiary-light'),
-						title('Everything is wired. Nothing left to glue.', 1, 'ink-inverted', 'tertiary-light'),
+						kicker('Features — what ships in the box'),
+						title('Everything is wired. Nothing left to glue.', 1),
 						para(
 							'Foundry is a production-grade starter, not a skeleton. Every feature below is implemented, tested, and documented in the repository.',
 							'lg',
-							'primary-light',
+							'muted',
 							'xl',
 							'max-w-2xl',
 						),
@@ -212,20 +212,14 @@ export const featuresEN = (files: Record<string, number>): PageContent => ({
 
 		// ── CTA ────────────────────────────────────────────────────────────────
 		section(
-			'secondary',
+			'canvas',
 			'xl',
 			'md',
 			[
 				flex(
 					[
-						title('See the blocks in action', 2, 'ink-inverted'),
-						para(
-							'The showcase renders all 17 block types on a single page.',
-							'base',
-							'ink-inverted',
-							'base',
-							'max-w-2xl',
-						),
+						title('See the blocks in action', 2),
+						para('The showcase renders all 17 block types on a single page.', 'base', 'muted', 'base', 'max-w-2xl'),
 						button(
 							'Open the showcase',
 							'primary',
