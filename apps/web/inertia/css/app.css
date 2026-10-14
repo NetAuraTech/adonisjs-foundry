@@ -206,6 +206,16 @@
 		pointer-events: none;
 	}
 
+	/* Hand-drawn pencil icons are fill-based outline bands; overlaying a
+	   currentColor stroke thickens the line without touching the paths.
+	   Iconify tags the svg with the set prefix, so lucide (stroke-based)
+	   icons elsewhere are untouched. */
+	.notebook-page svg.iconify--pepicons-pencil path {
+		stroke: currentColor;
+		stroke-width: 0.4;
+		stroke-linejoin: round;
+	}
+
 	/* Cahier : ruled notebook paper with an orange margin line.
 	   Transparent sections show the rules through; solid blocks paste over them. */
 	.notebook-page {

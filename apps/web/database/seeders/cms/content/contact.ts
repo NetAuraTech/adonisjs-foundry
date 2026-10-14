@@ -64,7 +64,7 @@ export const contactEN = (files: Record<string, number>): PageContent => ({
 									'md',
 									'md',
 									[
-										icon('pepicons-pencil:pin', 'primary', 'primary-light', 40),
+										icon('pepicons-pencil:pin', 'primary', 'none', 40),
 										title('Where', 4),
 										para('Paris, France — and remote everywhere else.', 'sm', 'muted'),
 									],
@@ -76,7 +76,7 @@ export const contactEN = (files: Record<string, number>): PageContent => ({
 									'md',
 									'md',
 									[
-										icon('pepicons-pencil:clock', 'primary', 'primary-light', 40),
+										icon('pepicons-pencil:clock', 'primary', 'none', 40),
 										title('Response', 4),
 										para('Submissions land in the mail queue and the audit journal.', 'sm', 'muted'),
 									],

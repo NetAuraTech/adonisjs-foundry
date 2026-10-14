@@ -265,10 +265,10 @@ export const showcaseEN = (files: Record<string, number>): PageContent => ({
 				),
 				flex(
 					[
-						icon('pepicons-pencil:shield', 'primary', 'primary-light', 48),
-						icon('pepicons-pencil:wrench', 'secondary', 'secondary-light', 48),
-						icon('pepicons-pencil:gear', 'tertiary', 'tertiary-light', 48),
-						icon('pepicons-pencil:key', 'primary-deep', 'primary-light', 48),
+						icon('pepicons-pencil:shield', 'primary', 'none', 48),
+						icon('pepicons-pencil:wrench', 'primary', 'none', 48),
+						icon('pepicons-pencil:gear', 'primary', 'none', 48),
+						icon('pepicons-pencil:key', 'primary', 'none', 48),
 					],
 					{ direction: 'row', gap: 'lg', align: 'center' },
 				),
