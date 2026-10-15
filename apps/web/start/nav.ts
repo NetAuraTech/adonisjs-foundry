@@ -17,6 +17,7 @@ import { coreNavEntries, maintenanceNavEntries } from '#transport/core/nav';
 import { fileNavEntries } from '#transport/file/nav';
 import { identityNavEntries } from '#transport/identity/nav';
 import { loggingNavEntries } from '#transport/log/nav';
+// @scaffold-marker nav-imports: make:domain appends new domain nav-entry imports after this line.
 import { webhookNavEntries } from '#transport/webhook/nav';
 
 app.container.singleton(NavRegistry, () => new NavRegistry());
@@ -29,4 +30,5 @@ registry.register('file', fileNavEntries);
 registry.register('identity', identityNavEntries);
 registry.register('maintenance', maintenanceNavEntries);
 registry.register('logging', loggingNavEntries);
+// @scaffold-marker nav-registration: make:domain appends new domain registry.register() calls after this line.
 registry.register('webhook', webhookNavEntries);
