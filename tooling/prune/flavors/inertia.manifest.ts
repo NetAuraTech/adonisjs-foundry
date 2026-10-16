@@ -1454,7 +1454,7 @@ const inertiaManifest: FlavorManifest = {
 				'    "@iconify/react": "^6.0.2",',
 				'    "@inertiajs/react": "^3.7.1",',
 				'    "@lukeed/ms": "^2.0.2",',
-				'    "@scalar/api-reference": "^1.71.0",',
+				'    "@scalar/api-reference": "^1.74.0",',
 				'    "@sentry/node": "^11.4.0",',
 				'    "@sentry/react": "^11.1.0",',
 				'    "@tailwindcss/vite": "^4.2.1",',
