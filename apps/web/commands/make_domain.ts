@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { BaseCommand } from '@adonisjs/core/ace';
+import ScaffolderRegistrationException from '#core/exceptions/scaffolder_registration_exception';
 import {
 	applyNavRegistration,
 	applyPackageImportsRegistration,
@@ -18,7 +19,7 @@ import type { CommandOptions } from '@adonisjs/core/types/ace';
 interface CompositionEdit {
 	/** App-relative path of the tracked composition file. */
 	file: 'start/routes.ts' | 'start/permissions.ts' | 'start/nav.ts' | 'package.json';
-	/** The registration transformation (may throw a `ScaffolderRegistrationError`). */
+	/** The registration transformation (may throw a {@link ScaffolderRegistrationException}). */
 	edit: (content: string) => string;
 }
 
@@ -142,8 +143,12 @@ export default class MakeDomain extends BaseCommand {
 				].join('\n'),
 			);
 		} catch (error) {
-			this.logger.error(error instanceof Error ? error.message : 'An unexpected error occurred while scaffolding.');
-			if (error instanceof Error) this.logger.debug(error.stack ?? '');
+			if (error instanceof ScaffolderRegistrationException) {
+				this.logger.error(error.message);
+			} else {
+				this.logger.error(error instanceof Error ? error.message : 'An unexpected error occurred while scaffolding.');
+				if (error instanceof Error) this.logger.debug(error.stack ?? '');
+			}
 			this.exitCode = 1;
 		}
 	}

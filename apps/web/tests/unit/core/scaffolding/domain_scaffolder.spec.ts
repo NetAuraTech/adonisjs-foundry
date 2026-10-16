@@ -1,12 +1,12 @@
 import { readFileSync } from 'node:fs';
 import { test } from '@japa/runner';
+import ScaffolderRegistrationException from '#core/exceptions/scaffolder_registration_exception';
 import {
 	NAV_IMPORTS_MARKER,
 	NAV_REGISTRATION_MARKER,
 	PERMISSIONS_CATALOG_MARKER,
 	PERMISSIONS_IMPORTS_MARKER,
 	ROUTES_IMPORTS_MARKER,
-	ScaffolderRegistrationError,
 	applyNavRegistration,
 	applyPackageImportsRegistration,
 	applyPermissionsRegistration,
@@ -234,38 +234,38 @@ test.group('domain scaffolder registrations', () => {
 		assert.equal(applyNavRegistration(halfApplied, widgetNames), navOnce);
 	});
 
-	test('a missing marker throws an actionable ScaffolderRegistrationError', ({ assert }) => {
+	test('a missing marker throws an actionable ScaffolderRegistrationException', ({ assert }) => {
 		assert.throws(
 			() => applyRoutesRegistration(`import '#transport/log/routes';\n`, widgetNames),
-			ScaffolderRegistrationError,
+			ScaffolderRegistrationException,
 			ROUTES_IMPORTS_MARKER,
 		);
 
 		const noImportMarker = `import { loggingPermissionCatalog } from '#log/permissions';\n\nexport const permissionCatalog = {\n\t...loggingPermissionCatalog,\n${PERMISSIONS_CATALOG_MARKER}\n\t...webhookPermissionCatalog,\n};\n`;
 		assert.throws(
 			() => applyPermissionsRegistration(noImportMarker, widgetNames),
-			ScaffolderRegistrationError,
+			ScaffolderRegistrationException,
 			PERMISSIONS_IMPORTS_MARKER,
 		);
 
 		const noCatalogMarker = `import { loggingPermissionCatalog } from '#log/permissions';\n${PERMISSIONS_IMPORTS_MARKER}\n\nexport const permissionCatalog = {\n\t...loggingPermissionCatalog,\n\t...webhookPermissionCatalog,\n};\n`;
 		assert.throws(
 			() => applyPermissionsRegistration(noCatalogMarker, widgetNames),
-			ScaffolderRegistrationError,
+			ScaffolderRegistrationException,
 			PERMISSIONS_CATALOG_MARKER,
 		);
 
 		const noNavImportMarker = `import { loggingNavEntries } from '#transport/log/nav';\nimport { webhookNavEntries } from '#transport/webhook/nav';\n\nregistry.register('logging', loggingNavEntries);\n${NAV_REGISTRATION_MARKER}\nregistry.register('webhook', webhookNavEntries);\n`;
 		assert.throws(
 			() => applyNavRegistration(noNavImportMarker, widgetNames),
-			ScaffolderRegistrationError,
+			ScaffolderRegistrationException,
 			NAV_IMPORTS_MARKER,
 		);
 
 		const noNavRegistrationMarker = `import { loggingNavEntries } from '#transport/log/nav';\n${NAV_IMPORTS_MARKER}\nimport { webhookNavEntries } from '#transport/webhook/nav';\n\nregistry.register('logging', loggingNavEntries);\nregistry.register('webhook', webhookNavEntries);\n`;
 		assert.throws(
 			() => applyNavRegistration(noNavRegistrationMarker, widgetNames),
-			ScaffolderRegistrationError,
+			ScaffolderRegistrationException,
 			NAV_REGISTRATION_MARKER,
 		);
 	});
@@ -275,7 +275,7 @@ test.group('domain scaffolder registrations', () => {
 			applyRoutesRegistration(`import '#transport/log/routes';\n`, widgetNames);
 			assert.fail('expected applyRoutesRegistration() to throw');
 		} catch (error) {
-			assert.instanceOf(error, ScaffolderRegistrationError);
+			assert.instanceOf(error, ScaffolderRegistrationException);
 			assert.include((error as Error).message, 'start/routes.ts');
 		}
 	});
