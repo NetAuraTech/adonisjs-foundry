@@ -1727,7 +1727,7 @@ const apiManifest: FlavorManifest = {
 				'    "@vitejs/plugin-react": "^6.1.2",',
 				'    "hot-hook": "^1.0.0",',
 				'    "vite": "^8.3.3",',
-				'    "vitest": "^5.0.2",',
+				'    "vitest": "^5.0.4",',
 				'    "youch": "^4.1.0"',
 				'  },',
 				'  "engines": {',
