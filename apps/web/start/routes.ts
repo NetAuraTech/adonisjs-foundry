@@ -20,6 +20,7 @@ import '#transport/core/routes';
 import '#transport/file/routes';
 import '#transport/identity/routes';
 import '#transport/log/routes';
+// @scaffold-marker routes-imports: make:domain appends new domain route imports after this line.
 import '#transport/webhook/routes';
 import { registerCmsPageRoutes } from '#transport/cms/controllers/front/routes';
 import { registerCoreHealthRoutes } from '#transport/core/health.routes';

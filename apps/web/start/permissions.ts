@@ -26,6 +26,7 @@ import { corePermissionCatalog, coreRoleSlugs, maintenancePermissionCatalog } fr
 import { filePermissionCatalog } from '#file/permissions';
 import { identityPermissionCatalog } from '#identity/permissions';
 import { loggingPermissionCatalog } from '#log/permissions';
+// @scaffold-marker permissions-imports: make:domain appends new domain permission-catalog imports after this line.
 import { webhookPermissionCatalog } from '#webhook/permissions';
 import type { PermissionSlugs, PermissionMap } from '#types/permissions';
 
@@ -42,6 +43,7 @@ export const permissionCatalog = {
 	...filePermissionCatalog,
 	...maintenancePermissionCatalog,
 	...loggingPermissionCatalog,
+	// @scaffold-marker permissions-catalog: make:domain appends new domain permission-catalog spreads after this line.
 	...webhookPermissionCatalog,
 };
 
