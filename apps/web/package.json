@@ -52,16 +52,16 @@
     "@adonisjs/transmit-client": "^1.1.0",
     "@adonisjs/vite": "^6.0.3",
     "@aws-sdk/client-s3": "^3.1137.0",
-    "@aws-sdk/s3-request-presigner": "^3.1146.0",
+    "@aws-sdk/s3-request-presigner": "^3.1150.0",
     "@fontsource/cormorant-garamond": "^5.2.11",
     "@fontsource/jost": "^5.3.0",
     "@fontsource/playfair-display": "^5.3.0",
     "@foundry/design-system": "^2.2.0",
     "@iconify/react": "^6.0.2",
-    "@inertiajs/react": "^3.7.1",
+    "@inertiajs/react": "^3.9.1",
     "@lukeed/ms": "^2.0.2",
     "@scalar/api-reference": "^1.71.0",
-    "@sentry/node": "^11.4.0",
+    "@sentry/node": "^11.7.0",
     "@sentry/react": "^11.1.0",
     "@tailwindcss/vite": "^4.2.1",
     "@tuyau/core": "^1.0.0",
@@ -72,7 +72,7 @@
     "edge.js": "^6.5.1",
     "html-to-image": "^1.11.13",
     "ipaddr.js": "^2.4.0",
-    "jsdom": "^30.1.1",
+    "jsdom": "^30.1.2",
     "luxon": "^3.7.2",
     "patch-package": "^8.0.1",
     "pg": "^8.23.1",
@@ -86,7 +86,7 @@
     "sinon": "^22.1.0",
     "sonner": "^2.0.7",
     "tailwindcss": "^4.3.3",
-    "uuid": "^14.0.1"
+    "uuid": "^14.0.3"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^8.5.2",
@@ -107,7 +107,7 @@
     "@vitejs/plugin-react": "^6.1.2",
     "hot-hook": "^1.0.0",
     "vite": "^8.3.3",
-    "vitest": "^5.0.2",
+    "vitest": "^5.0.4",
     "youch": "^4.1.0"
   },
   "engines": {
