@@ -22,9 +22,9 @@ import { middleware } from '#start/kernel';
 import { apiClientThrottle } from '#start/limiter';
 import { permissions } from '#start/permissions';
 import { maintenanceMiddleware } from '#transport/core/maintenance';
-import { registerApiDoc, type ApiOperationDoc, type JsonSchema } from '#transport/core/openapi/api_docs_registry';
+import { registerApiDoc, type ApiOperationDoc } from '#transport/core/openapi/api_docs_registry';
 import { errorSchema, dataEnvelope } from '#transport/core/openapi/schemas';
-import { filesEndpointsDocs } from '#transport/file/rest/files_resource';
+import { filesEndpointsDocs, fileSchema } from '#transport/file/rest/files_resource';
 import { foldersEndpointsDocs } from '#transport/file/rest/folders_resource';
 
 /**
@@ -44,22 +44,6 @@ const uploadFileBodyValidator = vine.create({
 	file: vine.string().minLength(1),
 	folder_id: vine.number().positive().optional(),
 });
-
-/** The file payload, as shaped by `FileTransformer` (lean admin/API shape). */
-const fileSchema: JsonSchema = {
-	type: 'object',
-	properties: {
-		id: { type: 'number' },
-		filename: { type: 'string' },
-		originalName: { type: 'string' },
-		mimeType: { type: 'string' },
-		folderId: { type: 'number', nullable: true },
-		extension: { type: 'string' },
-		url: { type: 'string' },
-		type: { type: 'string' },
-		alt: { type: 'string', nullable: true },
-	},
-};
 
 /** Docs for the file-upload route (not a thin endpoint dispatch). */
 const uploadFileDoc: ApiOperationDoc = {
