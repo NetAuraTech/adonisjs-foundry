@@ -24,7 +24,8 @@ type TemplateFromPagePayload = Infer<typeof createFromPageValidator>;
 type TemplateUpdatePayload = Infer<typeof updateTemplateValidator>;
 type TemplateIdPayload = Infer<typeof showTemplateValidator>;
 
-const templateSchema: JsonSchema = {
+/** The template payload, as shaped by `TemplateTransformer`. */
+export const templateSchema: JsonSchema = {
 	type: 'object',
 	properties: {
 		id: { type: 'number' },
@@ -45,7 +46,7 @@ const templateSchema: JsonSchema = {
 	},
 };
 
-const templateEnvelope = (singular: boolean): JsonSchema => ({
+export const templateEnvelope = (singular: boolean): JsonSchema => ({
 	type: 'object',
 	properties: singular ? { template: templateSchema } : { templates: { type: 'array', items: templateSchema } },
 });
