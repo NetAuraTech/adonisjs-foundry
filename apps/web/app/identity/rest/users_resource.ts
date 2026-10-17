@@ -95,6 +95,7 @@ export const userSchema: JsonSchema = {
 		id: { type: 'number' },
 		username: { type: 'string' },
 		email: { type: 'string', format: 'email' },
+		apiRateLimit: { type: 'number', nullable: true },
 		status: { type: 'string', enum: USER_STATUSES },
 		emailVerifiedAt: dateTime,
 		createdAt: dateTime,

@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { ListLogEntriesAction } from '#log/actions/log/list_log_entries_action';
 import { type ApiOperationDoc, type JsonSchema } from '#transport/core/openapi/api_docs_registry';
-import { paginatedEnvelope, validationErrorSchema } from '#transport/core/openapi/schemas';
+import { dateTime, paginatedEnvelope, validationErrorSchema } from '#transport/core/openapi/schemas';
 import { type RestEndpoint } from '#transport/core/rest/rest_adapter';
 import LogEntryTransformer from '#transport/log/transformers/log_entry_transformer';
 import { listLogsValidator } from '#transport/log/validators/log';
@@ -10,15 +10,25 @@ import type { Infer } from '@vinejs/vine/types';
 type LogListPagination = Awaited<ReturnType<ListLogEntriesAction['execute']>>;
 type LogListPayload = Infer<typeof listLogsValidator>;
 
-const logEntrySchema: JsonSchema = {
+/**
+ * The log entry payload, as shaped by `LogEntryTransformer`. `id` is `null`
+ * for entries that have not been persisted yet.
+ */
+export const logEntrySchema: JsonSchema = {
 	type: 'object',
 	properties: {
-		id: { type: 'integer' },
-		timestamp: { type: 'string', format: 'date-time' },
+		id: { type: 'number', nullable: true },
 		level: { type: 'string' },
+		category: { type: 'string' },
 		message: { type: 'string' },
-		metadata: { type: 'object', additionalProperties: true },
-		context: { type: 'object', additionalProperties: true },
+		actorId: { type: 'number', nullable: true },
+		actorEmail: { type: 'string', nullable: true },
+		ip: { type: 'string', nullable: true },
+		userAgent: { type: 'string', nullable: true },
+		requestId: { type: 'string', nullable: true },
+		context: { type: 'object' },
+		error: { type: 'object', nullable: true },
+		createdAt: dateTime,
 	},
 };
 
