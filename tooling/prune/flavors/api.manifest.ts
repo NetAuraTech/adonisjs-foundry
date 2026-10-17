@@ -1689,6 +1689,7 @@ const apiManifest: FlavorManifest = {
 				'    "@tailwindcss/vite": "^4.2.1",',
 				'    "@tuyau/core": "^1.0.0",',
 				'    "@vinejs/vine": "^4.3.0",',
+				'    "ajv": "^8.20.0",',
 				'    "better-sqlite3": "^13.0.3",',
 				'    "dompurify": "^3.4.16",',
 				'    "edge.js": "^6.5.1",',
