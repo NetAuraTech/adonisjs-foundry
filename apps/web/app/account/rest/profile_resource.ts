@@ -11,16 +11,25 @@ import type { Infer } from '@vinejs/vine/types';
 
 type ProfileUpdatePayload = Infer<ReturnType<typeof profileValidator>>;
 
-const userSchema: JsonSchema = {
+export const userSchema: JsonSchema = {
 	type: 'object',
 	properties: {
 		id: { type: 'number' },
 		username: { type: 'string' },
 		email: { type: 'string', format: 'email' },
+		apiRateLimit: { type: 'number', nullable: true },
 		status: { type: 'string' },
 		emailVerifiedAt: dateTime,
 		createdAt: dateTime,
 		updatedAt: dateTime,
+		connectedProviders: {
+			type: 'object',
+			properties: {
+				github: { type: 'boolean' },
+				google: { type: 'boolean' },
+				facebook: { type: 'boolean' },
+			},
+		},
 		role: { type: 'object', nullable: true },
 		permissions: { type: 'array', items: { type: 'string' } },
 	},
