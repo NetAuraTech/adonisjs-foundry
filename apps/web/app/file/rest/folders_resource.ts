@@ -24,7 +24,7 @@ type FolderCreatePayload = Infer<typeof createFolderValidator>;
 type FolderUpdatePayload = Infer<typeof updateFolderValidator>;
 
 /** The folder node, as shaped by `FileFolderTransformer` (children are nested trees). */
-const folderSchema: JsonSchema = {
+export const folderSchema: JsonSchema = {
 	type: 'object',
 	properties: {
 		id: { type: 'number' },
