@@ -46,8 +46,12 @@ const altEntrySchema: JsonSchema = {
 	},
 };
 
-/** The file payload, as shaped by `FileTransformer` (lean admin/API shape). */
-const fileSchema: JsonSchema = {
+/**
+ * The file payload, as shaped by `FileTransformer` in its lean admin/API form
+ * (no display intent). The render-only fields (`width`, `height`, `variants`)
+ * are only produced by the CMS render path and are not part of this contract.
+ */
+export const fileSchema: JsonSchema = {
 	type: 'object',
 	properties: {
 		id: { type: 'number' },
@@ -62,9 +66,6 @@ const fileSchema: JsonSchema = {
 		url: { type: 'string' },
 		type: { type: 'string' },
 		alt: { type: 'string', nullable: true },
-		width: { type: 'number', nullable: true },
-		height: { type: 'number', nullable: true },
-		variants: { type: 'array', nullable: true },
 	},
 };
 

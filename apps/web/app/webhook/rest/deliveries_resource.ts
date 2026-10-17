@@ -11,7 +11,8 @@ import type { Infer } from '@vinejs/vine/types';
 type DeliveryListPagination = Awaited<ReturnType<ListWebhookDeliveriesAction['execute']>>;
 type DeliveryListPayload = Infer<typeof listWebhookDeliveriesValidator>;
 
-const webhookDeliverySchema: JsonSchema = {
+/** The webhook delivery payload, as shaped by `WebhookDeliveryTransformer`. */
+export const webhookDeliverySchema: JsonSchema = {
 	type: 'object',
 	properties: {
 		id: { type: 'number', nullable: true },
