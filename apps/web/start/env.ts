@@ -33,6 +33,18 @@ export default await Env.create(new URL('../', import.meta.url), {
 
 	/*
   |----------------------------------------------------------
+  | Variables for configuring CORS
+  |----------------------------------------------------------
+  |
+  | Comma-separated allowlist of external front origins the `api` flavor's
+  | REST API accepts cross-origin. Empty by default (no cross-origin
+  | browser access until configured).
+  |
+  */
+	CORS_ALLOWED_ORIGINS: Env.schema.string.optional(),
+
+	/*
+  |----------------------------------------------------------
   | Variables for configuring session
   |----------------------------------------------------------
   */
@@ -45,7 +57,8 @@ export default await Env.create(new URL('../', import.meta.url), {
   |
   | Which authentication mechanisms are active. full/inertia keep the
   | session guard and may opt into the token guard (REST API); the api
-  | flavor disables the session guard entirely.
+  | flavor disables the session guard entirely (`AUTH_GUARD_WEB=false`)
+  | and authenticates exclusively through API tokens.
   |
   */
 	AUTH_GUARD_WEB: Env.schema.boolean.optional(),
@@ -76,28 +89,14 @@ export default await Env.create(new URL('../', import.meta.url), {
 	REDIS_DB: Env.schema.number.optional(),
 
 	/*
-   |----------------------------------------------------------
-   | Variables for configuring the queue package
-   |----------------------------------------------------------
-   */
+  |----------------------------------------------------------
+  | Variables for configuring the queue package
+  |----------------------------------------------------------
+  */
 	QUEUE_DRIVER: Env.schema.enum(['redis', 'sync'] as const),
 	QUEUE_CONNECTION: Env.schema.enum(['main', 'local'] as const),
 	QUEUE_CONCURRENCY: Env.schema.number.optional(),
 	QUEUE_MAX_RETRIES: Env.schema.number.optional(),
-
-	/*
-   |----------------------------------------------------------
-   | Variables for configuring inbound webhooks
-   |----------------------------------------------------------
-   |
-   | WEBHOOK_SECRET is the shared HMAC-SHA256 signing secret senders use to
-   | sign deliveries; WEBHOOK_REPLAY_WINDOW bounds the accepted clock skew in
-   | seconds. Both are optional — an empty secret disables the webhook surface.
-   | Resolved in config/webhooks.ts.
-   |----------------------------------------------------------
-   */
-	WEBHOOK_SECRET: Env.schema.string.optional(),
-	WEBHOOK_REPLAY_WINDOW: Env.schema.number.optional(),
 
 	/*
   |----------------------------------------------------------
@@ -132,6 +131,18 @@ export default await Env.create(new URL('../', import.meta.url), {
   |----------------------------------------------------------
   */
 	SENTRY_DSN: Env.schema.string(),
+
+	/*
+  |----------------------------------------------------------
+  | Variables for configuring the ally (OAuth) package
+  |----------------------------------------------------------
+  */
+	FACEBOOK_CLIENT_ID: Env.schema.string.optional(),
+	FACEBOOK_CLIENT_SECRET: Env.schema.string.optional(),
+	GITHUB_CLIENT_ID: Env.schema.string.optional(),
+	GITHUB_CLIENT_SECRET: Env.schema.string.optional(),
+	GOOGLE_CLIENT_ID: Env.schema.string.optional(),
+	GOOGLE_CLIENT_SECRET: Env.schema.string.optional(),
 
 	/*
   |----------------------------------------------------------
@@ -213,45 +224,10 @@ export default await Env.create(new URL('../', import.meta.url), {
 
 	/*
   |----------------------------------------------------------
-  | Variables for CMS content policies (page builder blocks).
-  | Comma-separated lists; both have safe defaults in config/cms.ts.
-  |----------------------------------------------------------
-  */
-	CMS_IFRAME_ALLOWLIST: Env.schema.string.optional(),
-	CMS_VIDEO_PROVIDERS: Env.schema.string.optional(),
-
-	/*
-   |----------------------------------------------------------
-   | Variables for CMS page search (Typesense backend).
-   | All optional — search degrades gracefully when unset (see
-   | config/cms.ts). The dev service is provided by docker-compose.
-   |----------------------------------------------------------
-   */
-	SEARCH_ENABLED: Env.schema.boolean.optional(),
-	TYPESENSE_HOST: Env.schema.string.optional(),
-	TYPESENSE_PORT: Env.schema.number.optional(),
-	TYPESENSE_API_KEY: Env.schema.string.optional(),
-	TYPESENSE_COLLECTION: Env.schema.string.optional(),
-	TYPESENSE_SEARCH_LIMIT: Env.schema.number.optional(),
-
-	/*
-   |----------------------------------------------------------
-   | Variables for sitemap.xml generation.
+  | Variables for sitemap.xml generation.
   | Comma-separated lists; both have safe defaults in config/sitemap.ts.
   |----------------------------------------------------------
   */
 	SITEMAP_ADDITIONS: Env.schema.string.optional(),
 	SITEMAP_EXCLUSIONS: Env.schema.string.optional(),
-
-	/*
-	|----------------------------------------------------------
-	| Variables for configuring the public front SEO.
-	| All optional — the publisher identity for the structured
-	| data emitted in the public page heads (see config/seo.ts).
-	|----------------------------------------------------------
-	*/
-	LEGAL_NAME: Env.schema.string.optional(),
-	LEGAL_SIRET: Env.schema.string.optional(),
-	LEGAL_ADDRESS: Env.schema.string.optional(),
-	LEGAL_PHONE: Env.schema.string.optional(),
 });
