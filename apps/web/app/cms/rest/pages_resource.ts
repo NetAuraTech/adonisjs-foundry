@@ -49,7 +49,8 @@ type PagePublishPayload = Infer<typeof publishPageValidator>;
 type PageTranslationPayload = Infer<typeof createTranslationValidator>;
 type PageSearchPayload = Infer<typeof searchPagesValidator>;
 
-const pageTranslationSchema: JsonSchema = {
+/** The page translation payload, as shaped by `PageTranslationTransformer`. */
+export const pageTranslationSchema: JsonSchema = {
 	type: 'object',
 	properties: {
 		id: { type: 'number' },
@@ -66,7 +67,8 @@ const pageTranslationSchema: JsonSchema = {
 	},
 };
 
-const pageSchema: JsonSchema = {
+/** The page payload, as shaped by `PageTransformer` (embeds every translation). */
+export const pageSchema: JsonSchema = {
 	type: 'object',
 	properties: {
 		id: { type: 'number' },
@@ -78,7 +80,8 @@ const pageSchema: JsonSchema = {
 	},
 };
 
-const pageRevisionSchema: JsonSchema = {
+/** The page revision payload, as shaped by `PageRevisionTransformer`. */
+export const pageRevisionSchema: JsonSchema = {
 	type: 'object',
 	properties: {
 		id: { type: 'number' },
@@ -95,7 +98,8 @@ const pageRevisionSchema: JsonSchema = {
 	},
 };
 
-const pageSearchResultSchema: JsonSchema = {
+/** The page search-result payload, as shaped by `PageSearchResultTransformer`. */
+export const pageSearchResultSchema: JsonSchema = {
 	type: 'object',
 	properties: {
 		page: pageSchema,
