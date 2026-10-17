@@ -1683,7 +1683,7 @@ const apiManifest: FlavorManifest = {
 				'    "@fontsource/playfair-display": "^5.3.0",',
 				'    "@foundry/design-system": "^2.2.0",',
 				'    "@iconify/react": "^6.0.2",',
-				'    "@inertiajs/react": "^3.7.1",',
+				'    "@inertiajs/react": "^3.9.1",',
 				'    "@lukeed/ms": "^2.0.2",',
 				'    "@sentry/node": "^11.7.0",',
 				'    "@tailwindcss/vite": "^4.2.1",',
