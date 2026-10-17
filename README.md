@@ -1281,6 +1281,23 @@ Move email change logic from controller to AccountService
 
 ## Changelog
 
+### v2.3.0
+
+#### SEO
+
+- `robots.txt` now disallows `/admin/*`, `/settings/*` and `/api/*`
+- Every error page emits a `noindex, nofollow` robots meta tag and sets its own document title
+- The CMS show template's placeholder `LocalBusiness` JSON-LD is replaced by pure structured-data builders (business + breadcrumb) driven by the new `LEGAL_NAME`, `LEGAL_SIRET`, `LEGAL_ADDRESS` and `LEGAL_PHONE` env vars — unset fields are omitted instead of emitting empty values
+- New shared `SeoHead` atom (title, description, share image, JSON-LD scripts) wired into the CMS show template and the home page
+
+#### Fixes
+
+- Shield: the CSP `frame-ancestors` directive is now `self`, aligned with `X-Frame-Options: SAMEORIGIN` — same-origin framing (the CMS builder preview iframe) no longer conflicts with the CSP under strict enforcement
+
+#### Developer Experience
+
+- Commit-time OpenAPI schema drift tests: REST transformer output is pinned against the generated OpenAPI 3 response schemas (Ajv validation plus a top-level key-set pin), so a dropped, renamed or undocumented field fails the test suite instead of breaking API consumers
+
 ### v2.2.0
 
 #### Redis
