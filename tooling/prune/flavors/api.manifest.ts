@@ -1716,7 +1716,7 @@ const apiManifest: FlavorManifest = {
 				'    "@japa/api-client": "^3.2.1",',
 				'    "@japa/assert": "^4.2.0",',
 				'    "@japa/plugin-adonisjs": "^5.1.0",',
-				'    "@japa/runner": "^5.3.0",',
+				'    "@japa/runner": "^5.4.0",',
 				'    "@poppinss/ts-exec": "^1.4.4",',
 				'    "@types/dompurify": "^3.2.0",',
 				'    "@types/jsdom": "^30.0.0",',
