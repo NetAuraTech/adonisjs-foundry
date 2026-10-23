@@ -1699,7 +1699,7 @@ const apiManifest: FlavorManifest = {
 				'    "luxon": "^3.7.2",',
 				'    "patch-package": "^8.0.1",',
 				'    "pg": "^8.23.1",',
-				'    "react": "^19.3.0",',
+				'    "react": "^19.3.1",',
 				'    "react-dom": "^19.3.0",',
 				'    "react-markdown": "^10.1.0",',
 				'    "reflect-metadata": "^0.2.2",',
