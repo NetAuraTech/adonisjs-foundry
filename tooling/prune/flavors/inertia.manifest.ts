@@ -1433,7 +1433,7 @@ const inertiaManifest: FlavorManifest = {
 				'    "@adonisjs/cors": "^3.0.0",',
 				'    "@adonisjs/drive": "^4.0.0",',
 				'    "@adonisjs/i18n": "^3.0.0",',
-				'    "@adonisjs/inertia": "^5.0.0",',
+				'    "@adonisjs/inertia": "^5.0.4",',
 				'    "@adonisjs/limiter": "^3.0.1",',
 				'    "@adonisjs/lucid": "^22.0.0",',
 				'    "@adonisjs/mail": "^10.0.0",',
