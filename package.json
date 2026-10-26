@@ -38,11 +38,6 @@
     "@adonisjs/ally": {
       "@adonisjs/inertia": "^5.0.0"
     },
-    "@ai-sdk/provider": "^3.0.12",
-    "@ai-sdk/provider-utils": "^4.0.33",
-    "@scalar/json-magic": {
-      "undici": "7.29.1"
-    },
     "nodemailer": "^10.0.9"
   },
   "engines": {
