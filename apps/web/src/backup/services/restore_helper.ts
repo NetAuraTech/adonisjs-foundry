@@ -1,10 +1,8 @@
-import type { BackupType } from '#backup/types/backup';
-
 /**
- * The application schemas a restore resets.
+ * The application schemas the backup module manages.
  *
- * These are the schemas the backup pipeline dumps and inspects throughout
- * the module. A restore replaces their data, but never the schemas
+ * These are the schemas the pipeline dumps and inspects, and the schemas a
+ * restore resets. A restore replaces their data, but never the schemas
  * themselves, their ACLs, extensions, or platform event triggers.
  */
 export const RESTORE_SCHEMAS: readonly string[] = ['public'];
@@ -39,8 +37,10 @@ export const RESTORE_SCHEMAS: readonly string[] = ['public'];
  *   triggers — is left untouched.
  *
  * Both rewrites are dollar-quote aware (`$$` / `$tag$` ... `$$;` / `$tag$;`):
- * lines inside a function body are never touched. The dump stays a pure
- * CREATE + data script, so it remains portable to a fresh database.
+ * lines inside a function body are never touched. COPY data sections — the
+ * rows between a `COPY ... FROM stdin;` line and its `\.` terminator — are
+ * raw payload, not SQL, and pass through untouched as well. The dump stays
+ * a pure CREATE + data script, so it remains portable to a fresh database.
  *
  * @param input - Raw dump content.
  * @returns The idempotent dump content.
@@ -49,18 +49,38 @@ export const RESTORE_SCHEMAS: readonly string[] = ['public'];
  * const safe = makeDumpIdempotent(rawDump)
  */
 export function makeDumpIdempotent(input: string): string {
-	const state: DollarQuoteState = { active: null };
+	const state: DumpScanState = { activeDollarQuote: null, inCopySection: false };
 	return input
 		.split('\n')
 		.map((line) => {
-			if (state.active !== null) {
+			// Inside a COPY data section: raw payload, never SQL — pass every
+			// row through untouched, ending the section at the `\.` row.
+			if (state.inCopySection) {
+				if (line === '\\.') state.inCopySection = false;
+				return line;
+			}
+
+			if (line.startsWith('COPY ') && line.includes('FROM stdin;')) {
+				state.inCopySection = true;
+				state.activeDollarQuote = null;
+				return line;
+			}
+
+			if (state.activeDollarQuote !== null) {
 				// Inside a dollar-quoted body: pass the line through untouched,
 				// resyncing the state at the closing delimiter.
-				const delimiter = state.active;
+				const delimiter = state.activeDollarQuote;
 				const closeAt = line.indexOf(delimiter);
 				if (closeAt === -1) return line;
-				state.active = null;
+				state.activeDollarQuote = null;
 				scanDollarQuotes(line.slice(closeAt + delimiter.length), state);
+				return line;
+			}
+
+			// Backslash command lines (`\.`, `\restrict`, ...) outside a COPY
+			// section: resync the scan and pass through.
+			if (line.startsWith('\\')) {
+				state.activeDollarQuote = null;
 				return line;
 			}
 
@@ -72,32 +92,28 @@ export function makeDumpIdempotent(input: string): string {
 }
 
 /**
- * Input to {@link generateRestorePrelude}.
+ * Input to {@link generateRestorePrelude}: the artifact kind, and — for a
+ * differential artifact — the tables its manifest lists.
  */
-export interface RestorePreludeInput {
-	/**
-	 * The kind of artifact being restored: `full` resets every object the
-	 * dump re-creates, `differential` only the tables listed in its manifest.
-	 */
-	type: BackupType;
-	/**
-	 * The tables listed by a differential artifact's manifest. Required when
-	 * `type` is `differential`.
-	 */
-	tables?: string[];
-	/**
-	 * The schemas to reset. Defaults to {@link RESTORE_SCHEMAS}.
-	 */
-	schemas?: readonly string[];
-}
+export type RestorePreludeInput =
+	| {
+			/** A full artifact: the prelude resets every object the dump re-creates. */
+			type: 'full';
+	  }
+	| {
+			/** A differential artifact: the prelude resets only the manifest tables. */
+			type: 'differential';
+			/** The tables listed by the artifact's manifest. */
+			tables: string[];
+	  };
 
 /**
  * Generate the reset prelude for a restore: the SQL that drops everything
  * the dump is about to re-create, to be replayed through the same `psql`
  * transaction as the dump so reset and replay are atomic.
  *
- * - `full`: a `DO` block over the catalogs drops, in each configured
- *   schema, every table, view, materialized view, and sequence (relkind
+ * - `full`: a `DO` block over the catalogs drops, in each managed schema,
+ *   every table, view, materialized view, and sequence (relkind
  *   `r`/`v`/`m`/`S`) and every base/composite/domain/enum type (typtype
  *   `b`/`c`/`d`/`e`);
  * - `differential`: one `DROP TABLE` per table listed in the artifact's
@@ -106,40 +122,35 @@ export interface RestorePreludeInput {
  * The schemas themselves, their ACLs, extensions, and platform event
  * triggers stay untouched.
  *
- * @param input - What to reset: the artifact kind, the manifest tables
- *   (differential), and the schemas.
+ * @param input - What to reset: the artifact kind, and the manifest tables
+ *   for a differential artifact.
  * @returns The prelude SQL script.
- * @throws {Error} When `type` is `differential` and no manifest tables are
- *   given — resetting nothing would make the replay collide.
  *
  * @example
  * const prelude = generateRestorePrelude({ type: 'full' })
  */
 export function generateRestorePrelude(input: RestorePreludeInput): string {
-	const schemas = input.schemas ?? RESTORE_SCHEMAS;
-
 	if (input.type === 'differential') {
-		if (!Array.isArray(input.tables)) {
-			throw new Error('A differential restore prelude requires the manifest tables');
-		}
 		return [
 			'-- Restore prelude (differential): reset the tables the dump re-creates.',
-			...dropStatementsForTables(input.tables, schemas),
+			...dropStatementsForTables(input.tables),
 		].join('\n');
 	}
 
 	return [
 		'-- Restore prelude (full): reset every object the dump re-creates.',
-		...schemas.flatMap((schema) => fullResetBlock(quoteLiteral(schema))),
+		...RESTORE_SCHEMAS.flatMap((schema) => fullResetBlock(quoteLiteral(schema))),
 	].join('\n');
 }
 
 /**
- * Dollar-quote tracking state for {@link makeDumpIdempotent}.
+ * Scan state for {@link makeDumpIdempotent}.
  */
-interface DollarQuoteState {
+interface DumpScanState {
 	/** The open dollar-quote delimiter (`$$` or `$tag$`), or `null` outside a quote. */
-	active: string | null;
+	activeDollarQuote: string | null;
+	/** Whether the scan is inside a `COPY ... FROM stdin;` data section. */
+	inCopySection: boolean;
 }
 
 /**
@@ -167,7 +178,7 @@ function rewriteStatementStart(line: string): string {
  * outside a quote) into `state`, which ends up holding the delimiter open
  * at the end of the text, if any.
  */
-function scanDollarQuotes(text: string, state: DollarQuoteState): void {
+function scanDollarQuotes(text: string, state: DumpScanState): void {
 	let position = 0;
 	while (position < text.length) {
 		DOLLAR_QUOTE_PATTERN.lastIndex = position;
@@ -176,14 +187,14 @@ function scanDollarQuotes(text: string, state: DollarQuoteState): void {
 
 		const delimiter = match[0];
 		position = match.index + delimiter.length;
-		if (state.active === null) {
-			state.active = delimiter;
-		} else if (state.active === delimiter) {
-			state.active = null;
+		if (state.activeDollarQuote === null) {
+			state.activeDollarQuote = delimiter;
+		} else if (state.activeDollarQuote === delimiter) {
+			state.activeDollarQuote = null;
 		} else {
 			// A different delimiter while another is open cannot happen in
 			// valid SQL (dollar quotes do not nest); trust the latest one.
-			state.active = delimiter;
+			state.activeDollarQuote = delimiter;
 		}
 	}
 }
@@ -240,20 +251,18 @@ function fullResetBlock(schemaLiteral: string): string[] {
 }
 
 /**
- * Build one `DROP TABLE IF EXISTS ... CASCADE;` statement per table per
- * schema.
+ * Build one `DROP TABLE IF EXISTS ... CASCADE;` statement per manifest
+ * table.
+ *
+ * Manifest tables are named bare, so each is dropped from the single
+ * schema the module manages — a table lives in exactly one schema, never
+ * once per managed schema.
  *
  * @param tables - The manifest table names.
- * @param schemas - The schemas the tables live in.
  */
-function dropStatementsForTables(tables: string[], schemas: readonly string[]): string[] {
-	const statements: string[] = [];
-	for (const schema of schemas) {
-		for (const table of tables) {
-			statements.push(`DROP TABLE IF EXISTS ${quoteIdentifier(schema)}.${quoteIdentifier(table)} CASCADE;`);
-		}
-	}
-	return statements;
+function dropStatementsForTables(tables: string[]): string[] {
+	const schema = RESTORE_SCHEMAS[0];
+	return tables.map((table) => `DROP TABLE IF EXISTS ${quoteIdentifier(schema)}.${quoteIdentifier(table)} CASCADE;`);
 }
 
 /**
@@ -265,7 +274,9 @@ function quoteIdentifier(name: string): string {
 
 /**
  * Quote an SQL string literal (single quotes, embedded quotes doubled).
+ *
+ * @param name - The raw value to quote.
  */
-function quoteLiteral(name: string): string {
+export function quoteLiteral(name: string): string {
 	return `'${name.replaceAll("'", "''")}'`;
 }

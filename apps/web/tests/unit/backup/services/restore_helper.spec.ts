@@ -1,16 +1,11 @@
 import { test } from '@japa/runner';
-import sinon from 'sinon';
 
 /**
  * Unit tests for the restore preparation transforms in `restore_helper`:
  * `makeDumpIdempotent` (dump rewrites) and `generateRestorePrelude` (reset
  * script generation).
  */
-test.group('RestoreHelper', (group) => {
-	group.each.teardown(() => {
-		sinon.restore();
-	});
-
+test.group('RestoreHelper', () => {
 	// ─── makeDumpIdempotent ─────────────────────────────────────────────────
 
 	test('makeDumpIdempotent rewrites CREATE FUNCTION to CREATE OR REPLACE FUNCTION', async ({ assert }) => {
@@ -111,6 +106,30 @@ test.group('RestoreHelper', (group) => {
 		assert.equal(makeDumpIdempotent(input), input);
 	});
 
+	test('makeDumpIdempotent leaves COPY data rows that look like statements untouched', async ({ assert }) => {
+		const { makeDumpIdempotent } = await import('#backup/services/restore_helper');
+
+		const input = [
+			'CREATE TABLE public.t (body text);',
+			'COPY public.t (body) FROM stdin;',
+			'CREATE SCHEMA public;',
+			'CREATE FUNCTION public.f() RETURNS void',
+			'AS $$',
+			'SELECT 1;',
+			'$$;',
+			'\\.',
+			'CREATE SCHEMA public;',
+		].join('\n');
+
+		const output = makeDumpIdempotent(input).split('\n');
+
+		// The `CREATE SCHEMA` / `CREATE FUNCTION` rows are COPY data, not SQL
+		assert.equal(output[2], 'CREATE SCHEMA public;');
+		assert.equal(output[3], 'CREATE FUNCTION public.f() RETURNS void');
+		// A real `CREATE SCHEMA` after the COPY section is still rewritten
+		assert.equal(output[8], 'CREATE SCHEMA IF NOT EXISTS public;');
+	});
+
 	// ─── generateRestorePrelude ─────────────────────────────────────────────
 
 	test('generateRestorePrelude generates a catalog-driven reset for full artifacts', async ({ assert }) => {
@@ -130,15 +149,6 @@ test.group('RestoreHelper', (group) => {
 		assert.include(prelude, "format('DROP TYPE IF EXISTS %I.%I CASCADE',");
 	});
 
-	test('generateRestorePrelude resets every configured schema for full artifacts', async ({ assert }) => {
-		const { generateRestorePrelude } = await import('#backup/services/restore_helper');
-
-		const prelude = generateRestorePrelude({ type: 'full', schemas: ['public', 'analytics'] });
-
-		assert.include(prelude, "n.nspname = 'public'");
-		assert.include(prelude, "n.nspname = 'analytics'");
-	});
-
 	test('generateRestorePrelude resets only the manifest tables for differential artifacts', async ({ assert }) => {
 		const { generateRestorePrelude } = await import('#backup/services/restore_helper');
 
@@ -149,11 +159,5 @@ test.group('RestoreHelper', (group) => {
 		assert.notInclude(prelude, 'pg_class');
 		assert.notInclude(prelude, 'pg_type');
 		assert.notInclude(prelude, '$$');
-	});
-
-	test('generateRestorePrelude rejects differential input without manifest tables', async ({ assert }) => {
-		const { generateRestorePrelude } = await import('#backup/services/restore_helper');
-
-		assert.throws(() => generateRestorePrelude({ type: 'differential' }), /tables/);
 	});
 });
