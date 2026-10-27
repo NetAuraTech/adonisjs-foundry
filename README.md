@@ -190,6 +190,8 @@ This repository ships as **three flavor branches** — the same codebase, pruned
 git checkout -b inertia origin/inertia   # or: git checkout -b api origin/api
 ```
 
+Or grab a release archive from the [Releases page](https://github.com/NetAuraTech/adonisjs-foundry/releases) — one zip per flavor (`full`, `api`, `inertia`), standalone: the flavor machinery is stripped and the Docker image build workflow is included.
+
 **Upgrading:** flavors are not one-way doors — every flavor branch is derived from `main`, so anything it removes is recoverable. Upgrading is a documented manual `git` process, the inverse of each flavor's prune manifest: see `docs/flavors/README.md` and the [`api` → `full`](docs/flavors/api/upgrade-to-full.md) / [`inertia` → `full`](docs/flavors/inertia/upgrade-to-full.md) guides.
 
 **How it works:** the `inertia` and `api` branches are CI-regenerated artifacts produced from `main` by the declarative prune manifests in `tooling/prune/flavors/` (see [ADR-010](docs/adr/010-flavor-prune-pipeline.md)). They are never edited by hand.
@@ -1280,6 +1282,28 @@ Move email change logic from controller to AccountService
 ```
 
 ## Changelog
+
+### v2.4.0
+
+#### Backup
+
+- pg_dump backups can now be scoped to specific schemas: the new `BACKUP_PG_SCHEMAS` env var (comma-separated, empty = all schemas) is exposed as `database.schemas` in `config/backup.ts` and passed to pg_dump as one `--schema` flag per value, so on platform-hosted Postgres (e.g. Supabase) the platform-owned schemas (auth, storage, realtime, …) no longer leak into the application's backup artifacts — differential backups stay table-scoped since pg_dump combines `--schema` and `-t` as an intersection
+- Restore now works against a non-empty database: the stored artifact stays a plain CREATE + data script (portable to a fresh database), and the restore owns making the replay safe — the dump is rewritten to `CREATE OR REPLACE FUNCTION` / `CREATE SCHEMA IF NOT EXISTS` (dollar-quote aware) and a prelude sweeps the per-schema catalog for full artifacts (or drops one table per manifest entry for differential artifacts) before the replay
+- Backup listing skips S3 folder-marker objects and rejects non-backup artifacts (manifests, stray files) before any metadata lookup, so a `backup/` folder marker in the bucket no longer makes the whole listing fail
+
+#### Database
+
+- PostgreSQL connections enable TCP keepalive (`keepAlive`, initial delay 60 s) so a connection reset upstream is detected and replaced by the pool before user traffic hits it (requires node-postgres >= 8.9, baseline pins ^8.23.1)
+- Connection pool reduced to `min: 1` / `max: 10` — one warm connection covers typical site traffic and halves the idle TCP connections exposed to upstream idle timeouts
+
+#### Queue
+
+- Maintenance schedule registration is skipped when the queue manager is not initialized, fixing the `E_QUEUE_NOT_INITIALIZED` error during `node ace codegen` with `@adonisjs/queue` 0.7
+
+#### CI
+
+- Release workflow: a release now cuts a single GitHub release on `main` (the `full` flavor) with one zip archive per flavor (`full`, `api`, `inertia`) attached as assets, instead of two additional prerelease entries per flavor — the per-flavor tags (`<tag>-<flavor>`) are kept as pointers to the archived commits
+- The archives are standalone: they strip the flavor machinery (the `flavor-prune`, `release` and `dependabot-autofix` workflows, the prune tooling and its tests, the root tooling tsconfig and `#prune` import) and bundle the `docker-image` build workflow so each flavor can build and push its own image
 
 ### v2.3.0
 
