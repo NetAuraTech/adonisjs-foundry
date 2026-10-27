@@ -463,6 +463,7 @@ export class BackupPipeline {
 			...pgConnection(),
 			outputPath,
 			tables,
+			schemas: backupConfig.database.schemas,
 		});
 	}
 
