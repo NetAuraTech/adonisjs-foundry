@@ -5,7 +5,7 @@
  * restore resets. A restore replaces their data, but never the schemas
  * themselves, their ACLs, extensions, or platform event triggers.
  */
-export const RESTORE_SCHEMAS: readonly string[] = ['public'];
+export const MANAGED_SCHEMAS: readonly string[] = ['public'];
 
 /**
  * Restore preparation for SQL dumps.
@@ -113,9 +113,11 @@ export type RestorePreludeInput =
  * transaction as the dump so reset and replay are atomic.
  *
  * - `full`: a `DO` block over the catalogs drops, in each managed schema,
- *   every table, view, materialized view, and sequence (relkind
- *   `r`/`v`/`m`/`S`) and every base/composite/domain/enum type (typtype
- *   `b`/`c`/`d`/`e`);
+ *   every table — plain or partitioned parent —, view, materialized view,
+ *   and sequence (relkind `r`/`p`/`v`/`m`/`S`) and every
+ *   base/composite/domain/enum type (typtype `b`/`c`/`d`/`e`); sweeping
+ *   the partitioned parent alongside its partitions keeps the dump's
+ *   `CREATE TABLE … PARTITION BY` replay clean against a live database;
  * - `differential`: one `DROP TABLE` per table listed in the artifact's
  *   manifest.
  *
@@ -139,7 +141,7 @@ export function generateRestorePrelude(input: RestorePreludeInput): string {
 
 	return [
 		'-- Restore prelude (full): reset every object the dump re-creates.',
-		...RESTORE_SCHEMAS.flatMap((schema) => fullResetBlock(quoteLiteral(schema))),
+		...MANAGED_SCHEMAS.flatMap((schema) => fullResetBlock(quoteLiteral(schema))),
 	].join('\n');
 }
 
@@ -201,7 +203,7 @@ function scanDollarQuotes(text: string, state: DumpScanState): void {
 
 /**
  * Build the `DO` block that resets one schema from the catalogs: every
- * table, view, materialized view, and sequence, then every base/composite/
+ * table (plain or partitioned parent), view, materialized view, and sequence, then every base/composite/
  * domain/enum type, each dropped with `IF EXISTS ... CASCADE` so objects
  * already removed by a previous drop (e.g. a table's composite type) are
  * no-ops instead of errors.
@@ -222,9 +224,9 @@ function fullResetBlock(schemaLiteral: string): string[] {
 		'            FROM pg_class c',
 		'            JOIN pg_namespace n ON n.oid = c.relnamespace',
 		`            WHERE n.nspname = ${schemaLiteral}`,
-		"              AND c.relkind IN ('r', 'v', 'm', 'S')",
+		"              AND c.relkind IN ('r', 'p', 'v', 'm', 'S')",
 		'        LOOP',
-		"            IF object.kind = 'r' THEN",
+		"            IF object.kind IN ('r', 'p') THEN",
 		"                EXECUTE format('DROP TABLE IF EXISTS %I.%I CASCADE', object.nsp, object.relname);",
 		"            ELSIF object.kind = 'v' THEN",
 		"                EXECUTE format('DROP VIEW IF EXISTS %I.%I CASCADE', object.nsp, object.relname);",
@@ -261,7 +263,7 @@ function fullResetBlock(schemaLiteral: string): string[] {
  * @param tables - The manifest table names.
  */
 function dropStatementsForTables(tables: string[]): string[] {
-	const schema = RESTORE_SCHEMAS[0];
+	const schema = MANAGED_SCHEMAS[0];
 	return tables.map((table) => `DROP TABLE IF EXISTS ${quoteIdentifier(schema)}.${quoteIdentifier(table)} CASCADE;`);
 }
 

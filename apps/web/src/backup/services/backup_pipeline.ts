@@ -11,7 +11,7 @@ import { BackupMetadata } from '#backup/domain/backup';
 import { createDatabaseDump as defaultCreateDatabaseDump, type DumpOptions } from '#backup/services/dump_helper';
 import { restoreDatabaseWithPsql, type PsqlRestoreOptions } from '#backup/services/psql_helper';
 import {
-	RESTORE_SCHEMAS,
+	MANAGED_SCHEMAS,
 	generateRestorePrelude,
 	makeDumpIdempotent,
 	quoteLiteral,
@@ -162,9 +162,11 @@ export class BackupPipeline {
 	 *
 	 * @param filename - The backup artifact filename (relative to the storage
 	 *   prefix).
-	 * @returns A success/failure result with an optional error message.
+	 * @returns A success/failure result with an optional error message, and
+	 *   the error's code when the failure carries one (e.g. a missing or
+	 *   malformed differential manifest).
 	 */
-	async restore(filename: string): Promise<{ success: boolean; error?: string }> {
+	async restore(filename: string): Promise<{ success: boolean; error?: string; code?: string }> {
 		const exists = await this.storageUploader.exists(filename);
 		if (!exists) {
 			const error = `Backup file not found: ${filename}`;
@@ -215,7 +217,18 @@ export class BackupPipeline {
 
 			return { success: true };
 		} catch (error) {
-			return { success: false, error: (error as Error).message };
+			const coded = error as Error & { code?: string };
+			this.logService.error({
+				message: `Backup restoration failed: ${coded.message}`,
+				category: LogCategory.SYSTEM,
+				error,
+				metadata: { filename },
+			});
+			const failure: { success: false; error: string; code?: string } = { success: false, error: coded.message };
+			if (coded.code) {
+				failure.code = coded.code;
+			}
+			return failure;
 		} finally {
 			for (const path of filesToClean) {
 				try {
@@ -242,11 +255,11 @@ export class BackupPipeline {
 	 * @param sqlPath - Local path of the decompressed dump.
 	 * @param filesToClean - Cleanup list the produced files are tracked into.
 	 * @returns The local path of the written prelude.
-	 * @throws {Error} When the artifact type cannot be read from the filename
-	 *   (coded `E_BACKUP_RESTORE_TYPE_UNKNOWN`), when a differential
-	 *   artifact's manifest is missing (coded `E_BACKUP_MANIFEST_NOT_FOUND`),
-	 *   or when the manifest carries no table list (coded
-	 *   `E_BACKUP_MANIFEST_MALFORMED`).
+	 * @throws {Error & { code: string }} When the artifact type cannot be read
+	 *   from the filename (coded `E_BACKUP_RESTORE_TYPE_UNKNOWN`), when a
+	 *   differential artifact's manifest is missing (coded
+	 *   `E_BACKUP_MANIFEST_NOT_FOUND`), or when the manifest carries no table
+	 *   list (coded `E_BACKUP_MANIFEST_MALFORMED`).
 	 */
 	private async buildRestorePrelude(filename: string, sqlPath: string, filesToClean: string[]): Promise<string> {
 		const type = BackupMetadata.parseType(filename);
@@ -726,13 +739,13 @@ export class BackupPipeline {
 }
 
 /**
- * Build a `column IN (...)` clause over {@link RESTORE_SCHEMAS} for the
+ * Build a `column IN (...)` clause over {@link MANAGED_SCHEMAS} for the
  * catalog queries. The schema set is a module constant (never user input),
  * so the values are inlined as quoted literals rather than bound
- * placeholders — keeping the clause portable across PostgreSQL and SQLite.
+ * placeholders.
  *
  * @param column - The catalog column to filter (e.g. `schemaname`, `table_schema`).
  */
 function schemaInClause(column: string): string {
-	return `${column} IN (${RESTORE_SCHEMAS.map(quoteLiteral).join(', ')})`;
+	return `${column} IN (${MANAGED_SCHEMAS.map(quoteLiteral).join(', ')})`;
 }

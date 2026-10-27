@@ -140,7 +140,8 @@ test.group('RestoreHelper', () => {
 		assert.include(prelude, 'DO');
 		assert.include(prelude, '$$');
 		assert.include(prelude, "n.nspname = 'public'");
-		assert.include(prelude, "c.relkind IN ('r', 'v', 'm', 'S')");
+		assert.include(prelude, "c.relkind IN ('r', 'p', 'v', 'm', 'S')");
+		assert.include(prelude, "IF object.kind IN ('r', 'p') THEN");
 		assert.include(prelude, "t.typtype IN ('b', 'c', 'd', 'e')");
 		assert.include(prelude, "format('DROP TABLE IF EXISTS %I.%I CASCADE',");
 		assert.include(prelude, "format('DROP VIEW IF EXISTS %I.%I CASCADE',");

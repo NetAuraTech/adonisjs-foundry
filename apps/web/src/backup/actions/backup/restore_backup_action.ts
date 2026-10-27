@@ -19,12 +19,13 @@ export class RestoreBackupAction {
 	 * Execute backup restoration.
 	 *
 	 * @param payload - The backup filename to restore.
-	 * @returns An object indicating success or failure with an optional error message.
+	 * @returns An object indicating success or failure with an optional error
+	 *   message, and the error's code when the failure carries one.
 	 *
 	 * @example
 	 * const result = await restoreBackupAction.execute({ filename: 'backup-full-2024-01-01-120000.sql.gz.enc' })
 	 */
-	async execute(payload: RestoreBackupPayload): Promise<{ success: boolean; error?: string }> {
+	async execute(payload: RestoreBackupPayload): Promise<{ success: boolean; error?: string; code?: string }> {
 		return new BackupPipeline(this.logService).restore(payload.filename);
 	}
 }
