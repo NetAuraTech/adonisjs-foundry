@@ -35,6 +35,47 @@ test.group('RestoreHelper', () => {
 		assert.equal(output, 'CREATE SCHEMA IF NOT EXISTS public;\nCREATE SCHEMA IF NOT EXISTS custom;');
 	});
 
+	test('makeDumpIdempotent prepends DROP EVENT TRIGGER IF EXISTS to CREATE EVENT TRIGGER', async ({ assert }) => {
+		const { makeDumpIdempotent } = await import('#backup/services/restore_helper');
+
+		const input = 'CREATE EVENT TRIGGER ensure_rls ON ddl_command_start\n   EXECUTE FUNCTION public.rls_auto_enable();';
+
+		const output = makeDumpIdempotent(input).split('\n');
+
+		assert.equal(output[0], 'DROP EVENT TRIGGER IF EXISTS ensure_rls;');
+		assert.equal(output[1], 'CREATE EVENT TRIGGER ensure_rls ON ddl_command_start');
+		assert.equal(output[2], '   EXECUTE FUNCTION public.rls_auto_enable();');
+	});
+
+	test('makeDumpIdempotent does not duplicate the event trigger drop when applied twice', async ({ assert }) => {
+		const { makeDumpIdempotent } = await import('#backup/services/restore_helper');
+
+		const once = makeDumpIdempotent(
+			'CREATE EVENT TRIGGER ensure_rls ON ddl_command_start EXECUTE FUNCTION public.f();',
+		);
+
+		assert.equal(makeDumpIdempotent(once), once);
+	});
+
+	test('makeDumpIdempotent leaves CREATE EVENT TRIGGER lines inside dollar-quoted bodies untouched', async ({
+		assert,
+	}) => {
+		const { makeDumpIdempotent } = await import('#backup/services/restore_helper');
+
+		const input = [
+			'CREATE FUNCTION public.f() RETURNS void',
+			'LANGUAGE sql',
+			'AS $$',
+			'CREATE EVENT TRIGGER inner ON ddl_command_start EXECUTE FUNCTION public.g();',
+			'$$;',
+		].join('\n');
+
+		const output = makeDumpIdempotent(input);
+
+		assert.include(output, 'CREATE EVENT TRIGGER inner ON ddl_command_start EXECUTE FUNCTION public.g();');
+		assert.notInclude(output, 'DROP EVENT TRIGGER');
+	});
+
 	test('makeDumpIdempotent leaves lines inside dollar-quoted bodies untouched', async ({ assert }) => {
 		const { makeDumpIdempotent } = await import('#backup/services/restore_helper');
 
@@ -143,6 +184,11 @@ test.group('RestoreHelper', () => {
 		assert.include(prelude, "c.relkind IN ('r', 'p', 'v', 'm', 'S')");
 		assert.include(prelude, "IF object.kind IN ('r', 'p') THEN");
 		assert.include(prelude, "t.typtype IN ('b', 'c', 'd', 'e')");
+		assert.include(prelude, 't.typelem = 0');
+		// Extension-owned objects (pg_depend deptype 'e') are never swept
+		assert.include(prelude, "d.classid = 'pg_class'::regclass");
+		assert.include(prelude, "d.classid = 'pg_type'::regclass");
+		assert.include(prelude, "d.deptype = 'e'");
 		assert.include(prelude, "format('DROP TABLE IF EXISTS %I.%I CASCADE',");
 		assert.include(prelude, "format('DROP VIEW IF EXISTS %I.%I CASCADE',");
 		assert.include(prelude, "format('DROP MATERIALIZED VIEW IF EXISTS %I.%I CASCADE',");

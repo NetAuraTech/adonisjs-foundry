@@ -212,7 +212,7 @@ test.group('BackupPipeline', (group) => {
 		assert.equal(result.size, 0);
 		assert.include(result.error, 'Permission denied');
 		assert.isTrue(logService.error.calledOnce);
-		assert.equal(logService.error.firstCall.args[0].message, 'Full backup failed');
+		assert.equal(logService.error.firstCall.args[0].message, 'backup.run.failed');
 		assert.equal(logService.error.firstCall.args[0].context.filename, fullFilename);
 	});
 

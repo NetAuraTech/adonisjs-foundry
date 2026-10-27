@@ -5,7 +5,9 @@ import type { BackupType } from '#backup/types/backup';
  *
  * These are the schemas the pipeline dumps and inspects, and the schemas a
  * restore resets. A restore replaces their data, but never the schemas
- * themselves, their ACLs, extensions, or platform event triggers.
+ * themselves, their ACLs, or their extensions. Platform event triggers are
+ * never destroyed: a full restore re-creates the ones its dump carries, in
+ * place (see {@link makeDumpIdempotent}).
  */
 export const MANAGED_SCHEMAS: readonly string[] = ['public'];
 
@@ -36,9 +38,13 @@ export const MANAGED_SCHEMAS: readonly string[] = ['public'];
  *   references such as event triggers valid) instead of colliding;
  * - `CREATE SCHEMA x;` becomes `CREATE SCHEMA IF NOT EXISTS x;`, so an
  *   existing schema — with its ACLs, extensions, and platform event
- *   triggers — is left untouched.
+ *   triggers — is left untouched;
+ * - `CREATE EVENT TRIGGER x ...;` is preceded by `DROP EVENT TRIGGER IF
+ *   EXISTS x;`, so an existing trigger (a platform RLS trigger, for
+ *   instance) is re-created in place instead of colliding — PostgreSQL 16
+ *   has no `CREATE OR REPLACE EVENT TRIGGER`.
  *
- * Both rewrites are dollar-quote aware (`$$` / `$tag$` ... `$$;` / `$tag$;`):
+ * All rewrites are dollar-quote aware (`$$` / `$tag$` ... `$$;` / `$tag$;`):
  * lines inside a function body are never touched. COPY data sections — the
  * rows between a `COPY ... FROM stdin;` line and its `\.` terminator — are
  * raw payload, not SQL, and pass through untouched as well. The dump stays
@@ -52,45 +58,59 @@ export const MANAGED_SCHEMAS: readonly string[] = ['public'];
  */
 export function makeDumpIdempotent(input: string): string {
 	const state: DumpScanState = { activeDollarQuote: null, inCopySection: false };
-	return input
-		.split('\n')
-		.map((line) => {
-			// Inside a COPY data section: raw payload, never SQL — pass every
-			// row through untouched, ending the section at the `\.` row.
-			if (state.inCopySection) {
-				if (line === '\\.') state.inCopySection = false;
-				return line;
-			}
+	const out: string[] = [];
 
-			if (line.startsWith('COPY ') && line.includes('FROM stdin;')) {
-				state.inCopySection = true;
-				state.activeDollarQuote = null;
-				return line;
-			}
+	for (const line of input.split('\n')) {
+		// Inside a COPY data section: raw payload, never SQL — pass every
+		// row through untouched, ending the section at the `\.` row.
+		if (state.inCopySection) {
+			if (line === '\\.') state.inCopySection = false;
+			out.push(line);
+			continue;
+		}
 
-			if (state.activeDollarQuote !== null) {
-				// Inside a dollar-quoted body: pass the line through untouched,
-				// resyncing the state at the closing delimiter.
-				const delimiter = state.activeDollarQuote;
-				const closeAt = line.indexOf(delimiter);
-				if (closeAt === -1) return line;
-				state.activeDollarQuote = null;
-				scanDollarQuotes(line.slice(closeAt + delimiter.length), state);
-				return line;
-			}
+		if (line.startsWith('COPY ') && line.includes('FROM stdin;')) {
+			state.inCopySection = true;
+			state.activeDollarQuote = null;
+			out.push(line);
+			continue;
+		}
 
-			// Backslash command lines (`\.`, `\restrict`, ...) outside a COPY
-			// section: resync the scan and pass through.
-			if (line.startsWith('\\')) {
-				state.activeDollarQuote = null;
-				return line;
+		if (state.activeDollarQuote !== null) {
+			// Inside a dollar-quoted body: pass the line through untouched,
+			// resyncing the state at the closing delimiter.
+			const delimiter = state.activeDollarQuote;
+			const closeAt = line.indexOf(delimiter);
+			if (closeAt === -1) {
+				out.push(line);
+				continue;
 			}
+			state.activeDollarQuote = null;
+			scanDollarQuotes(line.slice(closeAt + delimiter.length), state);
+			out.push(line);
+			continue;
+		}
 
-			const rewritten = rewriteStatementStart(line);
-			scanDollarQuotes(rewritten, state);
-			return rewritten;
-		})
-		.join('\n');
+		// Backslash command lines (`\.`, `\restrict`, ...) outside a COPY
+		// section: resync the scan and pass through.
+		if (line.startsWith('\\')) {
+			state.activeDollarQuote = null;
+			out.push(line);
+			continue;
+		}
+
+		const rewritten = rewriteStatementStart(line);
+		scanDollarQuotes(rewritten, state);
+		// The event-trigger drop precedes its create and is the only rewrite
+		// that emits an extra line; a second pass must not emit it twice.
+		const dropLine = eventTriggerDropLine(rewritten);
+		if (dropLine !== null && out[out.length - 1] !== dropLine) {
+			out.push(dropLine);
+		}
+		out.push(rewritten);
+	}
+
+	return out.join('\n');
 }
 
 /**
@@ -117,9 +137,11 @@ export type RestorePreludeInput =
  * - `full`: a `DO` block over the catalogs drops, in each managed schema,
  *   every table — plain or partitioned parent —, view, materialized view,
  *   and sequence (relkind `r`/`p`/`v`/`m`/`S`) and every
- *   base/composite/domain/enum type (typtype `b`/`c`/`d`/`e`); sweeping
- *   the partitioned parent alongside its partitions keeps the dump's
- *   `CREATE TABLE … PARTITION BY` replay clean against a live database;
+ *   base/composite/domain/enum type (typtype `b`/`c`/`d`/`e`), except
+ *   extension-owned objects (`pg_depend` deptype `e`) which a drop would
+ *   reject; sweeping the partitioned parent alongside its partitions keeps
+ *   the dump's `CREATE TABLE … PARTITION BY` replay clean against a live
+ *   database;
  * - `differential`: one `DROP TABLE` per table listed in the artifact's
  *   manifest, without `CASCADE` — a manifest table that other objects
  *   depend on aborts the restore atomically instead of having those
@@ -180,6 +202,25 @@ function rewriteStatementStart(line: string): string {
 }
 
 /**
+ * The `CREATE EVENT TRIGGER` statement start, as pg_dump emits it:
+ * `CREATE EVENT TRIGGER <name> ON <events> ...` (the `EXECUTE FUNCTION`
+ * clause may follow on the next line).
+ */
+const CREATE_EVENT_TRIGGER_PATTERN = /^CREATE EVENT TRIGGER (\S+) ON\b/i;
+
+/**
+ * The drop that makes a `CREATE EVENT TRIGGER` replay idempotent — the
+ * trigger name is taken verbatim from the create, quoted names stay quoted
+ * — or `null` for any other statement.
+ *
+ * @param line - A dump statement line, outside quotes and COPY data.
+ */
+function eventTriggerDropLine(line: string): string | null {
+	const match = CREATE_EVENT_TRIGGER_PATTERN.exec(line);
+	return match ? `DROP EVENT TRIGGER IF EXISTS ${match[1]};` : null;
+}
+
+/**
  * Fold the dollar-quote openings and closings of `text` (scanned from
  * outside a quote) into `state`, which ends up holding the delimiter open
  * at the end of the text, if any.
@@ -207,10 +248,18 @@ function scanDollarQuotes(text: string, state: DumpScanState): void {
 
 /**
  * Build the `DO` block that resets one schema from the catalogs: every
- * table (plain or partitioned parent), view, materialized view, and sequence, then every base/composite/
- * domain/enum type, each dropped with `IF EXISTS ... CASCADE` so objects
- * already removed by a previous drop (e.g. a table's composite type) are
- * no-ops instead of errors.
+ * table (plain or partitioned parent), view, materialized view, and
+ * sequence, then every base/composite/domain/enum type, each dropped with
+ * `IF EXISTS ... CASCADE` so objects already removed by a previous drop
+ * (e.g. a table's composite type) are no-ops instead of errors.
+ *
+ * Extension-owned objects — those carrying a `pg_depend` entry of deptype
+ * `e` — are never swept: dropping one aborts with `cannot drop ... because
+ * extension ... requires it`, and a restore must not destroy platform
+ * objects (the citext type, PostGIS's `spatial_ref_sys`, ...). Array
+ * companion types (`typelem` set, e.g. `_citext`) are skipped as well:
+ * each one dies with its element type's `CASCADE` drop, and the companion
+ * of an extension-owned type cannot be dropped at all.
  *
  * @param schemaLiteral - The schema name as a quoted SQL string literal.
  */
@@ -229,6 +278,11 @@ function fullResetBlock(schemaLiteral: string): string[] {
 		'            JOIN pg_namespace n ON n.oid = c.relnamespace',
 		`            WHERE n.nspname = ${schemaLiteral}`,
 		"              AND c.relkind IN ('r', 'p', 'v', 'm', 'S')",
+		'              AND NOT EXISTS (',
+		'                  SELECT 1 FROM pg_depend d',
+		"                  WHERE d.classid = 'pg_class'::regclass",
+		'                    AND d.objid = c.oid',
+		"                    AND d.deptype = 'e')",
 		'        LOOP',
 		"            IF object.kind IN ('r', 'p') THEN",
 		"                EXECUTE format('DROP TABLE IF EXISTS %I.%I CASCADE', object.nsp, object.relname);",
@@ -248,6 +302,12 @@ function fullResetBlock(schemaLiteral: string): string[] {
 		'            JOIN pg_namespace n ON n.oid = t.typnamespace',
 		`            WHERE n.nspname = ${schemaLiteral}`,
 		"              AND t.typtype IN ('b', 'c', 'd', 'e')",
+		'              AND t.typelem = 0',
+		'              AND NOT EXISTS (',
+		'                  SELECT 1 FROM pg_depend d',
+		"                  WHERE d.classid = 'pg_type'::regclass",
+		'                    AND d.objid = t.oid',
+		"                    AND d.deptype = 'e')",
 		'        LOOP',
 		"            EXECUTE format('DROP TYPE IF EXISTS %I.%I CASCADE', object.nsp, object.typname);",
 		'        END LOOP;',

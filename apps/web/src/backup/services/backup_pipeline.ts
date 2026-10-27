@@ -205,11 +205,7 @@ export class BackupPipeline {
 			await this.makeDumpIdempotentInPlace(sqlPath);
 
 			await this.restoreDatabaseFn({
-				host: env.get('PG_HOST')!,
-				port: Number(env.get('PG_PORT') || 5432),
-				user: env.get('PG_USER')!,
-				database: env.get('PG_DB_NAME')!,
-				password: env.get('PG_PASSWORD').release(),
+				...pgConnection(),
 				sqlPath,
 				preludePath,
 			});
@@ -464,11 +460,7 @@ export class BackupPipeline {
 	private async dump(outputPath: string, tables?: string[]): Promise<void> {
 		this.track(outputPath);
 		await this.createDump({
-			host: env.get('PG_HOST')!,
-			port: Number(env.get('PG_PORT') || 5432),
-			user: env.get('PG_USER')!,
-			database: env.get('PG_DB_NAME')!,
-			password: env.get('PG_PASSWORD').release(),
+			...pgConnection(),
 			outputPath,
 			tables,
 		});
@@ -558,7 +550,7 @@ export class BackupPipeline {
 	 */
 	private failureResult(context: BackupContext, error: any, duration: number): BackupResult {
 		this.logService.error({
-			message: `${this.strategyLabelOf(context.strategyType)} backup failed`,
+			message: 'backup.run.failed',
 			category: LogCategory.SYSTEM,
 			error,
 			context: { filename: context.filename, duration },
@@ -584,13 +576,6 @@ export class BackupPipeline {
 			category: LogCategory.SYSTEM,
 			metadata: { filename: context.filename },
 		});
-	}
-
-	/**
-	 * Title-cased strategy label used in log messages.
-	 */
-	private strategyLabelOf(type: BackupType): string {
-		return type === 'full' ? 'Full' : 'Differential';
 	}
 
 	/**
@@ -645,13 +630,19 @@ export class BackupPipeline {
 	}
 
 	/**
+	 * The Lucid connection for the backup catalog queries.
+	 */
+	private async lucidConnection() {
+		const db = await import('@adonisjs/lucid/services/db');
+		return db.default.connection(backupConfig.database.connection);
+	}
+
+	/**
 	 * List all tables in the managed schemas (persisted in the manifest by
 	 * a full backup).
 	 */
 	private async getAllTables(): Promise<string[]> {
-		const db = await import('@adonisjs/lucid/services/db');
-		const connection = db.default.connection(backupConfig.database.connection);
-		return this.listManagedTableNames(connection);
+		return this.listManagedTableNames(await this.lucidConnection());
 	}
 
 	/**
@@ -765,4 +756,19 @@ function schemaInClause(column: string): string {
  */
 function codedError(code: string, message: string): Error {
 	return Object.assign(new Error(message), { code });
+}
+
+/**
+ * The PostgreSQL connection for the `pg_dump` and `psql` subprocesses,
+ * read from env. Called per use: the password is a released secret and
+ * must never be cached.
+ */
+function pgConnection() {
+	return {
+		host: env.get('PG_HOST')!,
+		port: Number(env.get('PG_PORT') || 5432),
+		user: env.get('PG_USER')!,
+		database: env.get('PG_DB_NAME')!,
+		password: env.get('PG_PASSWORD').release(),
+	};
 }
