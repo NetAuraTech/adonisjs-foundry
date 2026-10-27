@@ -663,7 +663,7 @@ test.group('BackupPipeline', (group) => {
 	test('list() parses stored objects into metadata sorted newest first', async ({ assert }) => {
 		const overrides = buildOverrides();
 		overrides._uploader.listBackups.resolves([
-			{ key: 'backup/backup-full-2024-01-01-020000.sql.gz.enc', isDirectory: false },
+			baseFullBackupObject,
 			{ key: 'backup/backup-differential-2024-01-02-030000.sql.gz.enc', isDirectory: false },
 			{ key: 'backup/some/dir', isDirectory: true },
 			{ key: 'backup/notes.txt', isDirectory: false },
@@ -695,7 +695,7 @@ test.group('BackupPipeline', (group) => {
 			// The `backup/` folder-marker object created by S3/R2 consoles,
 			// listed as a file whose trailing slash is normalized away
 			{ key: 'backup', isDirectory: false },
-			{ key: 'backup/backup-full-2024-01-01-020000.sql.gz.enc', isDirectory: false },
+			baseFullBackupObject,
 		] as any);
 		overrides._uploader.getMetaData.callsFake(async (key: string) => {
 			if (!key.startsWith('backup/')) {
