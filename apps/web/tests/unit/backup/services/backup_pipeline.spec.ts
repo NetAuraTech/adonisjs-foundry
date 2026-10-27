@@ -20,7 +20,7 @@ test.group('BackupPipeline', (group) => {
 
 	const manifestName = 'backup-full-2024-01-01-020000.manifest.json';
 	const fullFilename = 'backup-full-2024-01-01-020000.sql.gz.enc';
-	const differentialFilename = 'backup-differential-2024-01-08.sql.gz.enc';
+	const differentialFilename = 'backup-differential-2024-01-08-090000.sql.gz.enc';
 	const tempDir = backupConfig.tempDir;
 
 	const buildLogService = () =>
@@ -50,6 +50,7 @@ test.group('BackupPipeline', (group) => {
 		_mkdir: sinon.stub().resolves(),
 		_stat: sinon.stub().resolves({ size: 2048 }),
 		_unlink: sinon.stub().resolves(),
+		_readFile: sinon.stub().resolves(''),
 		_writeFile: sinon.stub().resolves(),
 		_createDatabaseDump: sinon.stub().resolves(),
 		_restoreDatabase: sinon.stub().resolves(),
@@ -211,7 +212,7 @@ test.group('BackupPipeline', (group) => {
 		assert.equal(result.size, 0);
 		assert.include(result.error, 'Permission denied');
 		assert.isTrue(logService.error.calledOnce);
-		assert.equal(logService.error.firstCall.args[0].message, 'Full backup failed');
+		assert.equal(logService.error.firstCall.args[0].message, 'backup.run.failed');
 		assert.equal(logService.error.firstCall.args[0].context.filename, fullFilename);
 	});
 
@@ -333,7 +334,7 @@ test.group('BackupPipeline', (group) => {
 		assert.equal(result.filename, differentialFilename);
 		// Table selection: the dump is restricted to the modified tables
 		const dumpOptions = overrides._createDatabaseDump.firstCall.args[0];
-		assert.equal(dumpOptions.outputPath, join(tempDir, 'backup-differential-2024-01-08.sql'));
+		assert.equal(dumpOptions.outputPath, join(tempDir, 'backup-differential-2024-01-08-090000.sql'));
 		assert.deepEqual(dumpOptions.tables, ['users']);
 		// The manifest lists the dumped tables and references the base full backup
 		assert.deepEqual(JSON.parse(overrides._writeFile.firstCall.args[1]), {
@@ -407,15 +408,34 @@ test.group('BackupPipeline', (group) => {
 	const restoreLocalPath = join(tempDir, restoreFilename);
 	const restoreDecryptedPath = restoreLocalPath.slice(0, -'.enc'.length);
 	const restoreSqlPath = restoreDecryptedPath.slice(0, -'.gz'.length);
+	const restorePreludePath = `${restoreSqlPath}.prelude.sql`;
+	const differentialRestoreFilename = 'backup-differential-2024-01-08-090000.sql.gz.enc';
+	const differentialRestoreLocalPath = join(tempDir, differentialRestoreFilename);
+	const differentialRestoreDecryptedPath = differentialRestoreLocalPath.slice(0, -'.enc'.length);
+	const differentialRestoreSqlPath = differentialRestoreDecryptedPath.slice(0, -'.gz'.length);
+	const differentialRestoreManifestFilename = 'backup-differential-2024-01-08-090000.manifest.json';
 
-	test('restore() downloads, decrypts, decompresses and restores the database', async ({ assert }) => {
+	// A pipeline wired for a restore happy path: the snapshot helper decrypts
+	// and decompresses to the given paths, and — when given — the dump file
+	// reads as the given SQL script.
+	const buildRestorePipeline = async (decryptedPath: string, sqlPath: string, dumpContents?: string) => {
 		const logService = buildLogService();
 		const overrides = buildOverrides();
-		overrides._snapshotHelper.decrypt.resolves(restoreDecryptedPath);
-		overrides._snapshotHelper.decompress.resolves(restoreSqlPath);
-
+		overrides._snapshotHelper.decrypt.resolves(decryptedPath);
+		overrides._snapshotHelper.decompress.resolves(sqlPath);
+		if (dumpContents !== undefined) {
+			overrides._readFile.resolves(dumpContents);
+		}
 		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
-		const pipeline = new BackupPipeline(logService, overrides);
+		return { pipeline: new BackupPipeline(logService, overrides), overrides, logService };
+	};
+
+	test('restore() downloads, decrypts, decompresses and restores the database', async ({ assert }) => {
+		const { pipeline, overrides } = await buildRestorePipeline(
+			restoreDecryptedPath,
+			restoreSqlPath,
+			'CREATE SCHEMA public;',
+		);
 
 		const result = await pipeline.restore(restoreFilename);
 
@@ -427,15 +447,135 @@ test.group('BackupPipeline', (group) => {
 		assert.isTrue(overrides._snapshotHelper.decompress.calledWith(restoreDecryptedPath));
 		assert.isTrue(overrides._restoreDatabase.calledOnce);
 		assert.equal(overrides._restoreDatabase.firstCall.args[0].sqlPath, restoreSqlPath);
+		assert.equal(overrides._restoreDatabase.firstCall.args[0].preludePath, restorePreludePath);
+	});
+
+	test('restore() rewrites the dump in place so the replay is idempotent', async ({ assert }) => {
+		const { pipeline, overrides } = await buildRestorePipeline(
+			restoreDecryptedPath,
+			restoreSqlPath,
+			'CREATE SCHEMA public;\nCREATE FUNCTION public.f() RETURNS void',
+		);
+
+		await pipeline.restore(restoreFilename);
+
+		assert.isTrue(overrides._readFile.calledWith(restoreSqlPath, 'utf8'));
+		const rewriteCall = overrides._writeFile.getCalls().find((call) => call.args[0] === restoreSqlPath);
+		assert.isDefined(rewriteCall);
+		assert.include(rewriteCall!.args[1], 'CREATE SCHEMA IF NOT EXISTS public;');
+		assert.include(rewriteCall!.args[1], 'CREATE OR REPLACE FUNCTION public.f() RETURNS void');
+	});
+
+	test('restore() writes a catalog reset prelude for full artifacts and replays it before the dump', async ({
+		assert,
+	}) => {
+		const { pipeline, overrides } = await buildRestorePipeline(
+			restoreDecryptedPath,
+			restoreSqlPath,
+			'CREATE SCHEMA public;',
+		);
+
+		await pipeline.restore(restoreFilename);
+
+		const preludeCall = overrides._writeFile.getCalls().find((call) => call.args[0] === restorePreludePath);
+		assert.isDefined(preludeCall);
+		const prelude = preludeCall!.args[1];
+		assert.include(prelude, "c.relkind IN ('r', 'p', 'v', 'm', 'S')");
+		assert.include(prelude, "t.typtype IN ('b', 'c', 'd', 'e')");
+		assert.include(prelude, "n.nspname = 'public'");
+		assert.isTrue(overrides._writeFile.calledBefore(overrides._restoreDatabase));
+	});
+
+	test('restore() resets only the manifest tables for differential artifacts', async ({ assert }) => {
+		const { pipeline, overrides } = await buildRestorePipeline(
+			differentialRestoreDecryptedPath,
+			differentialRestoreSqlPath,
+		);
+		overrides._readFile.callsFake((path: any) =>
+			Promise.resolve(String(path).endsWith('.manifest.json') ? JSON.stringify({ tables: ['users', 'posts'] }) : ''),
+		);
+
+		const result = await pipeline.restore(differentialRestoreFilename);
+
+		assert.isTrue(result.success);
+		assert.isTrue(overrides._uploader.exists.calledWith(differentialRestoreManifestFilename));
+		assert.isTrue(
+			overrides._uploader.download.calledWith(
+				differentialRestoreManifestFilename,
+				join(tempDir, differentialRestoreManifestFilename),
+			),
+		);
+		const preludeCall = overrides._writeFile
+			.getCalls()
+			.find((call) => call.args[0] === `${differentialRestoreSqlPath}.prelude.sql`);
+		assert.isDefined(preludeCall);
+		const prelude = preludeCall!.args[1];
+		assert.include(prelude, 'DROP TABLE IF EXISTS "public"."users";');
+		assert.include(prelude, 'DROP TABLE IF EXISTS "public"."posts";');
+		assert.notInclude(prelude, 'CASCADE');
+		assert.notInclude(prelude, 'pg_class');
+	});
+
+	test('restore() fails when the differential manifest is missing', async ({ assert }) => {
+		const { pipeline, overrides } = await buildRestorePipeline(
+			differentialRestoreDecryptedPath,
+			differentialRestoreSqlPath,
+		);
+		overrides._uploader.exists.callsFake((filename: string) => Promise.resolve(!filename.endsWith('.manifest.json')));
+
+		const result = await pipeline.restore(differentialRestoreFilename);
+
+		assert.deepEqual(result, {
+			success: false,
+			error: `Manifest not found for differential backup: ${differentialRestoreManifestFilename}`,
+			code: 'E_BACKUP_MANIFEST_NOT_FOUND',
+		});
+		assert.isFalse(overrides._restoreDatabase.called);
+	});
+
+	test('restore() fails when the differential manifest carries no table list', async ({ assert }) => {
+		const { pipeline, overrides } = await buildRestorePipeline(
+			differentialRestoreDecryptedPath,
+			differentialRestoreSqlPath,
+		);
+		overrides._readFile.callsFake((path: any) =>
+			Promise.resolve(String(path).endsWith('.manifest.json') ? JSON.stringify({}) : ''),
+		);
+
+		const result = await pipeline.restore(differentialRestoreFilename);
+
+		assert.deepEqual(result, {
+			success: false,
+			error: `Manifest for differential backup is malformed: ${differentialRestoreManifestFilename}`,
+			code: 'E_BACKUP_MANIFEST_MALFORMED',
+		});
+		assert.isFalse(overrides._restoreDatabase.called);
+	});
+
+	test('restore() fails when the artifact type cannot be determined from the filename', async ({ assert }) => {
+		const { pipeline, overrides } = await buildRestorePipeline(
+			restoreDecryptedPath,
+			restoreSqlPath,
+			'CREATE SCHEMA public;',
+		);
+
+		const result = await pipeline.restore('custom-dump.sql.gz.enc');
+
+		assert.deepEqual(result, {
+			success: false,
+			error: 'Cannot determine backup type from filename: custom-dump.sql.gz.enc',
+			code: 'E_BACKUP_RESTORE_TYPE_UNKNOWN',
+		});
+		assert.isFalse(overrides._restoreDatabase.called);
 	});
 
 	test('restore() returns a failure result when the backup file is not found', async ({ assert }) => {
-		const logService = buildLogService();
-		const overrides = buildOverrides();
+		const { pipeline, overrides, logService } = await buildRestorePipeline(
+			restoreDecryptedPath,
+			restoreSqlPath,
+			'CREATE SCHEMA public;',
+		);
 		overrides._uploader.exists.resolves(false);
-
-		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
-		const pipeline = new BackupPipeline(logService, overrides);
 
 		const result = await pipeline.restore('backup-missing.sql.gz.enc');
 
@@ -446,50 +586,46 @@ test.group('BackupPipeline', (group) => {
 	});
 
 	test('restore() cleans up the downloaded artifacts after the restore', async ({ assert }) => {
-		const logService = buildLogService();
-		const overrides = buildOverrides();
-		overrides._snapshotHelper.decrypt.resolves(restoreDecryptedPath);
-		overrides._snapshotHelper.decompress.resolves(restoreSqlPath);
-
-		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
-		const pipeline = new BackupPipeline(logService, overrides);
+		const { pipeline, overrides } = await buildRestorePipeline(
+			restoreDecryptedPath,
+			restoreSqlPath,
+			'CREATE SCHEMA public;',
+		);
 
 		const result = await pipeline.restore(restoreFilename);
 
 		assert.isTrue(result.success);
 		assert.deepEqual(
 			overrides._unlink.getCalls().map((call) => call.args[0]),
-			[restoreLocalPath, restoreDecryptedPath, restoreSqlPath],
+			[restoreLocalPath, restoreDecryptedPath, restoreSqlPath, restorePreludePath],
 		);
 	});
 
 	test('restore() cleans up partial artifacts when the database restore fails', async ({ assert }) => {
-		const logService = buildLogService();
-		const overrides = buildOverrides();
-		overrides._snapshotHelper.decrypt.resolves(restoreDecryptedPath);
-		overrides._snapshotHelper.decompress.resolves(restoreSqlPath);
+		const { pipeline, overrides, logService } = await buildRestorePipeline(
+			restoreDecryptedPath,
+			restoreSqlPath,
+			'CREATE SCHEMA public;',
+		);
 		overrides._restoreDatabase.rejects(new Error('psql exploded'));
-
-		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
-		const pipeline = new BackupPipeline(logService, overrides);
 
 		const result = await pipeline.restore(restoreFilename);
 
 		assert.deepEqual(result, { success: false, error: 'psql exploded' });
+		assert.isTrue(logService.error.calledOnce);
+		assert.equal(logService.error.firstCall.args[0].message, 'backup.restore.failed');
 		assert.deepEqual(
 			overrides._unlink.getCalls().map((call) => call.args[0]),
-			[restoreLocalPath, restoreDecryptedPath, restoreSqlPath],
+			[restoreLocalPath, restoreDecryptedPath, restoreSqlPath, restorePreludePath],
 		);
 	});
 
 	test('restore() logs the start and completion of the restore', async ({ assert }) => {
-		const logService = buildLogService();
-		const overrides = buildOverrides();
-		overrides._snapshotHelper.decrypt.resolves(restoreDecryptedPath);
-		overrides._snapshotHelper.decompress.resolves(restoreSqlPath);
-
-		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
-		const pipeline = new BackupPipeline(logService, overrides);
+		const { pipeline, logService } = await buildRestorePipeline(
+			restoreDecryptedPath,
+			restoreSqlPath,
+			'CREATE SCHEMA public;',
+		);
 
 		await pipeline.restore(restoreFilename);
 
