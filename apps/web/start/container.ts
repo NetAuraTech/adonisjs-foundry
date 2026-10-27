@@ -1,8 +1,5 @@
 import app from '@adonisjs/core/services/app';
 import mail from '@adonisjs/mail/services/main';
-import { PageSearchDriver } from '#cms/contracts/page_search_driver';
-import { BuilderSessionService } from '#cms/services/page/builder_session_service';
-import { TypesensePageSearchDriver } from '#cms/services/page/typesense_search_driver';
 import { MailClientContract, type MailClientMessage } from '#core/contracts/mail_client';
 import { MaintenanceService } from '#core/services/maintenance_service';
 import { FailoverCacheDriver } from '#shared/services/cache/drivers/failover_cache_driver';
@@ -31,8 +28,8 @@ class AdonisMailClient extends MailClientContract {
  * IoC container bindings.
  *
  * Singleton services are instantiated exactly once per process and reused
- * across every request — which is what makes in-flight state (locks, sessions)
- * work correctly without serialising to a database on every call.
+ * across every request — which is what makes in-flight state (locks,
+ * sessions) work correctly without serialising to a database on every call.
  * Factory bindings are re-created on each resolution with runtime arguments
  * supplied via {@link app.container.make}.
  *
@@ -45,7 +42,7 @@ class AdonisMailClient extends MailClientContract {
  * ]
  */
 
-// ─── CacheService (singleton) ─────────────────────────────────────────────────
+// ─── CacheService (singleton) ──────────────────────────────────────────
 
 /**
  * The root `CacheService` backed by the composite failover driver: Redis is
@@ -57,7 +54,6 @@ class AdonisMailClient extends MailClientContract {
  * @example
  * // In a service or controller
  * const cache = await app.container.make(CacheService)
- * const builderCache = cache.namespace('builder')
  */
 app.container.singleton(CacheService, () => {
 	const driver = new FailoverCacheDriver(new RedisCacheDriver());
@@ -79,7 +75,7 @@ app.container.singleton(CacheService, () => {
  */
 app.container.singleton(InMemoryCacheDriver, () => new InMemoryCacheDriver());
 
-// ─── LockService (singleton) ────────────────────────────────────────────────
+// ─── LockService (singleton) ──────────────────────────────────────────────
 
 /**
  * Distributed lock service singleton.
@@ -96,19 +92,7 @@ app.container.singleton(LockService, async () => {
 	return new LockService(cache);
 });
 
-// ─── BuilderSessionService (singleton) ───────────────────────────────────────
-
-/**
- * Wires `BuilderSessionService` with the root `CacheService`.
- * Resolved as a singleton so the same instance (and same Redis connection)
- * is reused across all requests.
- */
-app.container.singleton(BuilderSessionService, async () => {
-	const cache = await app.container.make(CacheService);
-	return new BuilderSessionService(cache);
-});
-
-// ─── MaintenanceService (singleton) ──────────────────────────────────────────
+// ─── MaintenanceService (singleton) ────────────────────────────────────
 
 /**
  * Maintenance service singleton.
@@ -124,7 +108,7 @@ app.container.singleton(MaintenanceService, async () => {
 	return service;
 });
 
-// ─── MailClientContract (singleton) ──────────────────────────────────────────
+// ─── MailClientContract (singleton) ───────────────────────────────────
 
 /**
  * Binds the kernel {@link MailClientContract} to the AdonisJS mail driver.
@@ -132,12 +116,3 @@ app.container.singleton(MaintenanceService, async () => {
  * decoupled from the mail package.
  */
 app.container.bind(MailClientContract, () => new AdonisMailClient());
-
-// ─── PageSearchDriver (singleton) ────────────────────────────────────────────
-
-/**
- * Binds the {@link PageSearchDriver} kernel contract to the Typesense-backed
- * driver. Singleton so the driver's "collection created" latch and connection
- * settings are shared across every request; tests swap the token for a fake.
- */
-app.container.singleton(PageSearchDriver, () => new TypesensePageSearchDriver());
