@@ -50,6 +50,7 @@ test.group('BackupPipeline', (group) => {
 		_mkdir: sinon.stub().resolves(),
 		_stat: sinon.stub().resolves({ size: 2048 }),
 		_unlink: sinon.stub().resolves(),
+		_readFile: sinon.stub().resolves(''),
 		_writeFile: sinon.stub().resolves(),
 		_createDatabaseDump: sinon.stub().resolves(),
 		_restoreDatabase: sinon.stub().resolves(),
@@ -407,12 +408,19 @@ test.group('BackupPipeline', (group) => {
 	const restoreLocalPath = join(tempDir, restoreFilename);
 	const restoreDecryptedPath = restoreLocalPath.slice(0, -'.enc'.length);
 	const restoreSqlPath = restoreDecryptedPath.slice(0, -'.gz'.length);
+	const restorePreludePath = `${restoreSqlPath}.prelude.sql`;
+	const differentialRestoreFilename = 'backup-differential-2024-01-08.sql.gz.enc';
+	const differentialRestoreLocalPath = join(tempDir, differentialRestoreFilename);
+	const differentialRestoreDecryptedPath = differentialRestoreLocalPath.slice(0, -'.enc'.length);
+	const differentialRestoreSqlPath = differentialRestoreDecryptedPath.slice(0, -'.gz'.length);
+	const differentialRestoreManifestFilename = 'backup-differential-2024-01-08.manifest.json';
 
 	test('restore() downloads, decrypts, decompresses and restores the database', async ({ assert }) => {
 		const logService = buildLogService();
 		const overrides = buildOverrides();
 		overrides._snapshotHelper.decrypt.resolves(restoreDecryptedPath);
 		overrides._snapshotHelper.decompress.resolves(restoreSqlPath);
+		overrides._readFile.resolves('CREATE SCHEMA public;');
 
 		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
 		const pipeline = new BackupPipeline(logService, overrides);
@@ -427,6 +435,118 @@ test.group('BackupPipeline', (group) => {
 		assert.isTrue(overrides._snapshotHelper.decompress.calledWith(restoreDecryptedPath));
 		assert.isTrue(overrides._restoreDatabase.calledOnce);
 		assert.equal(overrides._restoreDatabase.firstCall.args[0].sqlPath, restoreSqlPath);
+		assert.equal(overrides._restoreDatabase.firstCall.args[0].preludePath, restorePreludePath);
+	});
+
+	test('restore() rewrites the dump in place so the replay is idempotent', async ({ assert }) => {
+		const logService = buildLogService();
+		const overrides = buildOverrides();
+		overrides._snapshotHelper.decrypt.resolves(restoreDecryptedPath);
+		overrides._snapshotHelper.decompress.resolves(restoreSqlPath);
+		overrides._readFile.resolves('CREATE SCHEMA public;\nCREATE FUNCTION public.f() RETURNS void');
+
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
+		const pipeline = new BackupPipeline(logService, overrides);
+
+		await pipeline.restore(restoreFilename);
+
+		assert.isTrue(overrides._readFile.calledWith(restoreSqlPath, 'utf8'));
+		const rewriteCall = overrides._writeFile.getCalls().find((call) => call.args[0] === restoreSqlPath);
+		assert.isDefined(rewriteCall);
+		assert.include(rewriteCall!.args[1], 'CREATE SCHEMA IF NOT EXISTS public;');
+		assert.include(rewriteCall!.args[1], 'CREATE OR REPLACE FUNCTION public.f() RETURNS void');
+	});
+
+	test('restore() writes a catalog reset prelude for full artifacts and replays it before the dump', async ({
+		assert,
+	}) => {
+		const logService = buildLogService();
+		const overrides = buildOverrides();
+		overrides._snapshotHelper.decrypt.resolves(restoreDecryptedPath);
+		overrides._snapshotHelper.decompress.resolves(restoreSqlPath);
+		overrides._readFile.resolves('CREATE SCHEMA public;');
+
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
+		const pipeline = new BackupPipeline(logService, overrides);
+
+		await pipeline.restore(restoreFilename);
+
+		const preludeCall = overrides._writeFile.getCalls().find((call) => call.args[0] === restorePreludePath);
+		assert.isDefined(preludeCall);
+		const prelude = preludeCall!.args[1];
+		assert.include(prelude, "c.relkind IN ('r', 'v', 'm', 'S')");
+		assert.include(prelude, "t.typtype IN ('b', 'c', 'd', 'e')");
+		assert.include(prelude, "n.nspname = 'public'");
+		assert.isTrue(overrides._writeFile.calledBefore(overrides._restoreDatabase));
+	});
+
+	test('restore() resets only the manifest tables for differential artifacts', async ({ assert }) => {
+		const logService = buildLogService();
+		const overrides = buildOverrides();
+		overrides._snapshotHelper.decrypt.resolves(differentialRestoreDecryptedPath);
+		overrides._snapshotHelper.decompress.resolves(differentialRestoreSqlPath);
+		overrides._readFile.callsFake((path: any) =>
+			Promise.resolve(String(path).endsWith('.manifest.json') ? JSON.stringify({ tables: ['users', 'posts'] }) : ''),
+		);
+
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
+		const pipeline = new BackupPipeline(logService, overrides);
+
+		const result = await pipeline.restore(differentialRestoreFilename);
+
+		assert.isTrue(result.success);
+		assert.isTrue(overrides._uploader.exists.calledWith(differentialRestoreManifestFilename));
+		assert.isTrue(
+			overrides._uploader.download.calledWith(
+				differentialRestoreManifestFilename,
+				join(tempDir, differentialRestoreManifestFilename),
+			),
+		);
+		const preludeCall = overrides._writeFile
+			.getCalls()
+			.find((call) => call.args[0] === `${differentialRestoreSqlPath}.prelude.sql`);
+		assert.isDefined(preludeCall);
+		const prelude = preludeCall!.args[1];
+		assert.include(prelude, 'DROP TABLE IF EXISTS "public"."users" CASCADE;');
+		assert.include(prelude, 'DROP TABLE IF EXISTS "public"."posts" CASCADE;');
+		assert.notInclude(prelude, 'pg_class');
+	});
+
+	test('restore() fails when the differential manifest is missing', async ({ assert }) => {
+		const logService = buildLogService();
+		const overrides = buildOverrides();
+		overrides._snapshotHelper.decrypt.resolves(differentialRestoreDecryptedPath);
+		overrides._snapshotHelper.decompress.resolves(differentialRestoreSqlPath);
+		overrides._uploader.exists.callsFake((filename: string) => Promise.resolve(!filename.endsWith('.manifest.json')));
+
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
+		const pipeline = new BackupPipeline(logService, overrides);
+
+		const result = await pipeline.restore(differentialRestoreFilename);
+
+		assert.deepEqual(result, {
+			success: false,
+			error: `Manifest not found for differential backup: ${differentialRestoreManifestFilename}`,
+		});
+		assert.isFalse(overrides._restoreDatabase.called);
+	});
+
+	test('restore() fails when the artifact type cannot be determined from the filename', async ({ assert }) => {
+		const logService = buildLogService();
+		const overrides = buildOverrides();
+		overrides._snapshotHelper.decrypt.resolves('/tmp/backups/custom.sql.gz');
+		overrides._snapshotHelper.decompress.resolves('/tmp/backups/custom.sql');
+
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
+		const pipeline = new BackupPipeline(logService, overrides);
+
+		const result = await pipeline.restore('custom-dump.sql.gz.enc');
+
+		assert.deepEqual(result, {
+			success: false,
+			error: 'Cannot determine backup type from filename: custom-dump.sql.gz.enc',
+		});
+		assert.isFalse(overrides._restoreDatabase.called);
 	});
 
 	test('restore() returns a failure result when the backup file is not found', async ({ assert }) => {
@@ -459,7 +579,7 @@ test.group('BackupPipeline', (group) => {
 		assert.isTrue(result.success);
 		assert.deepEqual(
 			overrides._unlink.getCalls().map((call) => call.args[0]),
-			[restoreLocalPath, restoreDecryptedPath, restoreSqlPath],
+			[restoreLocalPath, restoreDecryptedPath, restoreSqlPath, restorePreludePath],
 		);
 	});
 
@@ -478,7 +598,7 @@ test.group('BackupPipeline', (group) => {
 		assert.deepEqual(result, { success: false, error: 'psql exploded' });
 		assert.deepEqual(
 			overrides._unlink.getCalls().map((call) => call.args[0]),
-			[restoreLocalPath, restoreDecryptedPath, restoreSqlPath],
+			[restoreLocalPath, restoreDecryptedPath, restoreSqlPath, restorePreludePath],
 		);
 	});
 

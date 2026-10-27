@@ -49,6 +49,39 @@ test.group('RestoreBackupAction', (group) => {
 		assert.include(args, '/tmp/backup.sql');
 	});
 
+	test('restoreDatabaseWithPsql replays the prelude before the dump in the same transaction', async ({ assert }) => {
+		const { restoreDatabaseWithPsql } = await import('#backup/services/psql_helper');
+
+		const mockProcess = {
+			on: sinon.stub().callsArgWith(1, 0),
+			stderr: { on: sinon.stub() },
+		};
+		const spawnStub = sinon.stub().returns(mockProcess);
+
+		await restoreDatabaseWithPsql(
+			{
+				host: 'localhost',
+				port: 5432,
+				user: 'postgres',
+				database: 'mydb',
+				password: 'secret',
+				preludePath: '/tmp/prelude.sql',
+				sqlPath: '/tmp/backup.sql',
+			},
+			spawnStub,
+		);
+
+		const [cmd, args] = spawnStub.firstCall.args;
+		assert.equal(cmd, 'psql');
+		assert.include(args, '-1');
+		const preludeAt = args.indexOf('/tmp/prelude.sql');
+		const dumpAt = args.indexOf('/tmp/backup.sql');
+		assert.isTrue(preludeAt > -1);
+		assert.isTrue(dumpAt > preludeAt);
+		assert.equal(args[preludeAt - 1], '-f');
+		assert.equal(args[dumpAt - 1], '-f');
+	});
+
 	test('restoreDatabaseWithPsql passes PGPASSWORD in env', async ({ assert }) => {
 		const { restoreDatabaseWithPsql } = await import('#backup/services/psql_helper');
 

@@ -1,5 +1,6 @@
 import {
 	mkdir as defaultMkdir,
+	readFile as defaultReadFile,
 	stat as defaultStat,
 	unlink as defaultUnlink,
 	writeFile as defaultWriteFile,
@@ -9,6 +10,7 @@ import { DateTime } from 'luxon';
 import { BackupMetadata } from '#backup/domain/backup';
 import { createDatabaseDump as defaultCreateDatabaseDump, type DumpOptions } from '#backup/services/dump_helper';
 import { restoreDatabaseWithPsql, type PsqlRestoreOptions } from '#backup/services/psql_helper';
+import { generateRestorePrelude, makeDumpIdempotent } from '#backup/services/restore_helper';
 import { SnapshotHelper, type SnapshotHelper as SnapshotHelperType } from '#backup/services/snapshot_helper';
 import { StorageUploader, type StorageUploader as StorageUploaderType } from '#backup/services/storage_uploader';
 import backupConfig from '#config/backup';
@@ -30,6 +32,7 @@ export interface BackupPipelineOverrides {
 	_snapshotHelper?: SnapshotHelperType;
 	_uploader?: StorageUploaderType;
 	_mkdir?: typeof defaultMkdir;
+	_readFile?: typeof defaultReadFile;
 	_stat?: typeof defaultStat;
 	_unlink?: typeof defaultUnlink;
 	_writeFile?: typeof defaultWriteFile;
@@ -80,6 +83,7 @@ export class BackupPipeline {
 	private readonly snapshotHelper: SnapshotHelperType;
 	private readonly storageUploader: StorageUploaderType;
 	private readonly mkdirFn: typeof defaultMkdir;
+	private readonly readFileFn: typeof defaultReadFile;
 	private readonly statFn: typeof defaultStat;
 	private readonly unlinkFn: typeof defaultUnlink;
 	private readonly writeFileFn: typeof defaultWriteFile;
@@ -103,6 +107,7 @@ export class BackupPipeline {
 		this.snapshotHelper = overrides?._snapshotHelper ?? new SnapshotHelper();
 		this.storageUploader = overrides?._uploader ?? new StorageUploader();
 		this.mkdirFn = overrides?._mkdir ?? defaultMkdir;
+		this.readFileFn = overrides?._readFile ?? defaultReadFile;
 		this.statFn = overrides?._stat ?? defaultStat;
 		this.unlinkFn = overrides?._unlink ?? defaultUnlink;
 		this.writeFileFn = overrides?._writeFile ?? defaultWriteFile;
@@ -143,8 +148,11 @@ export class BackupPipeline {
 	/**
 	 * Restore a database from a stored backup artifact: verify the artifact
 	 * exists, download it, decrypt and decompress it, then replay the SQL
-	 * dump through `psql`. All intermediate files are cleaned up after the
-	 * restore, whether it succeeds or fails.
+	 * dump through `psql`. The dump is made idempotent and a reset prelude
+	 * is generated and replayed first, so the restore works against a
+	 * database that is not empty (see {@link buildRestorePrelude} and
+	 * {@link makeDumpIdempotent}). All intermediate files are cleaned up
+	 * after the restore, whether it succeeds or fails.
 	 *
 	 * @param filename - The backup artifact filename (relative to the storage
 	 *   prefix).
@@ -178,6 +186,11 @@ export class BackupPipeline {
 			const sqlPath = await this.snapshotHelper.decompress(decryptedPath);
 			filesToClean.push(sqlPath);
 
+			const preludePath = await this.buildRestorePrelude(filename, sqlPath, filesToClean);
+			filesToClean.push(preludePath);
+
+			await this.makeDumpIdempotentInPlace(sqlPath);
+
 			await this.restoreDatabaseFn({
 				host: env.get('PG_HOST')!,
 				port: Number(env.get('PG_PORT') || 5432),
@@ -185,6 +198,7 @@ export class BackupPipeline {
 				database: env.get('PG_DB_NAME')!,
 				password: env.get('PG_PASSWORD').release(),
 				sqlPath,
+				preludePath,
 			});
 
 			this.logService.info({
@@ -205,6 +219,60 @@ export class BackupPipeline {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Build the reset prelude for a restore and write it next to the
+	 * decompressed dump, returning the prelude path to replay before the
+	 * dump in the same transaction.
+	 *
+	 * A `full` artifact resets every object its dump re-creates (a catalog
+	 * sweep per configured schema). A `differential` artifact resets only
+	 * the tables its manifest lists, so the manifest is downloaded and read
+	 * here before the prelude can be generated. The manifest file is tracked
+	 * for cleanup, inserted before the prelude so it is removed with it.
+	 *
+	 * @param filename - The artifact filename (relative to the storage prefix).
+	 * @param sqlPath - Local path of the decompressed dump.
+	 * @param filesToClean - Cleanup list the produced files are tracked into.
+	 * @returns The local path of the written prelude.
+	 * @throws {Error} When the artifact type cannot be read from the filename,
+	 *   or when a differential artifact's manifest is missing.
+	 */
+	private async buildRestorePrelude(filename: string, sqlPath: string, filesToClean: string[]): Promise<string> {
+		const type = BackupMetadata.parseType(filename);
+		if (!type) {
+			throw new Error(`Cannot determine backup type from filename: ${filename}`);
+		}
+
+		let tables: string[] | undefined;
+		if (type === 'differential') {
+			const manifestFilename = BackupMetadata.manifestFilename(filename);
+			const manifestLocalPath = join(backupConfig.tempDir, manifestFilename);
+			const exists = await this.storageUploader.exists(manifestFilename);
+			if (!exists) {
+				throw new Error(`Manifest not found for differential backup: ${manifestFilename}`);
+			}
+			await this.storageUploader.download(manifestFilename, manifestLocalPath);
+			filesToClean.push(manifestLocalPath);
+			const raw = await this.readFileFn(manifestLocalPath, 'utf8');
+			tables = (JSON.parse(raw) as { tables: string[] }).tables;
+		}
+
+		const preludePath = `${sqlPath}.prelude.sql`;
+		await this.writeFileFn(preludePath, generateRestorePrelude({ type, tables }));
+		return preludePath;
+	}
+
+	/**
+	 * Rewrite the decompressed dump in place so replaying it succeeds against
+	 * a database that is not empty (see {@link makeDumpIdempotent}).
+	 *
+	 * @param sqlPath - Local path of the decompressed dump, rewritten in place.
+	 */
+	private async makeDumpIdempotentInPlace(sqlPath: string): Promise<void> {
+		const raw = await this.readFileFn(sqlPath, 'utf8');
+		await this.writeFileFn(sqlPath, makeDumpIdempotent(raw));
 	}
 
 	/**
