@@ -667,8 +667,7 @@ export class BackupPipeline {
 	 * @param since - Reference date (creation time of the base full backup).
 	 */
 	private async getModifiedTables(since: Date): Promise<string[]> {
-		const db = await import('@adonisjs/lucid/services/db');
-		const connection = db.default.connection(backupConfig.database.connection);
+		const connection = await this.lucidConnection();
 
 		const result = await connection.rawQuery(
 			`

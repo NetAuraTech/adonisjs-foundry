@@ -1,16 +1,3 @@
-import type { BackupType } from '#backup/types/backup';
-
-/**
- * The application schemas the backup module manages.
- *
- * These are the schemas the pipeline dumps and inspects, and the schemas a
- * restore resets. A restore replaces their data, but never the schemas
- * themselves, their ACLs, or their extensions. Platform event triggers are
- * never destroyed: a full restore re-creates the ones its dump carries, in
- * place (see {@link makeDumpIdempotent}).
- */
-export const MANAGED_SCHEMAS: readonly string[] = ['public'];
-
 /**
  * Restore preparation for SQL dumps.
  *
@@ -27,6 +14,19 @@ export const MANAGED_SCHEMAS: readonly string[] = ['public'];
  *
  * Pure SQL text transforms — no I/O, no framework deps.
  */
+
+import type { BackupType } from '#backup/types/backup';
+
+/**
+ * The application schemas the backup module manages.
+ *
+ * These are the schemas the pipeline dumps and inspects, and the schemas a
+ * restore resets. A restore replaces their data, but never the schemas
+ * themselves, their ACLs, or their extensions. Platform event triggers are
+ * never destroyed: a full restore re-creates the ones its dump carries, in
+ * place (see {@link makeDumpIdempotent}).
+ */
+export const MANAGED_SCHEMAS: readonly string[] = ['public'];
 
 /**
  * Make a plain pg_dump replayable against a database that is not empty.
