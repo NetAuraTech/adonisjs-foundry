@@ -225,5 +225,9 @@ jobs:
 
           cd "${STAGE}"
           zip -rq "${NAME}.zip" "${NAME}"
-          gh release upload "${TAG}" "${NAME}.zip" --clobber
+
+          # gh resolves the repository via git from the current directory, so
+          # the upload runs from the workspace, not the staging dir.
+          cd "${GITHUB_WORKSPACE}"
+          gh release upload "${TAG}" "${STAGE}/${NAME}.zip" --clobber
           echo "Uploaded ${NAME}.zip to ${TAG}."
