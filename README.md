@@ -1303,7 +1303,7 @@ Move email change logic from controller to AccountService
 #### CI
 
 - Release workflow: a release now cuts a single GitHub release on `main` (the `full` flavor) with one zip archive per flavor (`full`, `api`, `inertia`) attached as assets, instead of two additional prerelease entries per flavor — the per-flavor tags (`<tag>-<flavor>`) are kept as pointers to the archived commits
-- The archives are standalone: they strip the flavor machinery (the `flavor-prune`, `release` and `dependabot-autofix` workflows, the prune tooling and its tests, the root tooling tsconfig and `#prune` import) and bundle the `docker-image` build workflow so each flavor can build and push its own image
+- The archives are standalone: the flavor machinery is stripped (the `flavor-prune`, `release` and `dependabot-autofix` workflows, the prune tooling and its tests, and the `#prune` import / root `tsc` segment of the typecheck script), and the `docker-image` build workflow ships with the tree so each flavor can build and push its own image
 
 ### v2.3.0
 
