@@ -353,6 +353,7 @@ export class BackupPipeline {
 			password: env.get('PG_PASSWORD').release(),
 			outputPath,
 			tables,
+			schemas: backupConfig.database.schemas,
 		});
 	}
 

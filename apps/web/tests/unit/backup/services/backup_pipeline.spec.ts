@@ -155,6 +155,8 @@ test.group('BackupPipeline', (group) => {
 		const dumpOptions = overrides._createDatabaseDump.firstCall.args[0];
 		assert.equal(dumpOptions.outputPath, join(tempDir, 'backup-full-2024-01-01-020000.sql'));
 		assert.isUndefined(dumpOptions.tables);
+		// No BACKUP_PG_SCHEMAS in the test env: the dump is not schema-scoped
+		assert.deepEqual(dumpOptions.schemas, []);
 		assert.isTrue(overrides._snapshotHelper.compress.calledBefore(overrides._snapshotHelper.encrypt));
 		assert.deepEqual(JSON.parse(overrides._writeFile.firstCall.args[1]), {
 			tables: ['users', 'posts'],
@@ -164,6 +166,29 @@ test.group('BackupPipeline', (group) => {
 		assert.equal(successLog.args[0].metadata.size, 2048);
 		// 1 explicit unlink (dump after compress) + cleanup of dump/compressed/encrypted/manifest
 		assert.equal(overrides._unlink.callCount, 5);
+	});
+
+	test('run("full") scopes the dump to the configured schemas', async ({ assert }) => {
+		const logService = buildLogService();
+		const overrides = buildOverrides();
+		sinon.stub(backupConfig.database, 'schemas').value(['public']);
+
+		const dbModule = await import('@adonisjs/lucid/services/db');
+		sinon.stub(dbModule.default, 'connection').returns({
+			rawQuery: sinon.stub().resolves({ rows: [] }),
+		} as any);
+		const domainModule = await import('#backup/domain/backup');
+		sinon.stub(domainModule.BackupMetadata, 'generateFilename').returns(fullFilename);
+		sinon.stub(domainModule.BackupMetadata, 'manifestFilename').returns(manifestName);
+
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
+		const pipeline = new BackupPipeline(logService, overrides);
+
+		const result = await pipeline.run('full');
+
+		assert.isTrue(result.success);
+		const dumpOptions = overrides._createDatabaseDump.firstCall.args[0];
+		assert.deepEqual(dumpOptions.schemas, ['public']);
 	});
 
 	test('run("full") uploads the encrypted artifact before the manifest', async ({ assert }) => {
