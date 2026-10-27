@@ -527,6 +527,62 @@ test.group('BackupPipeline', (group) => {
 		assert.equal(backups[1].type, 'full');
 	});
 
+	test('list() skips S3 folder-marker objects under the backup prefix', async ({ assert }) => {
+		const logService = buildLogService();
+		const overrides = buildOverrides();
+		overrides._uploader.listBackups.resolves([
+			// The `backup/` folder-marker object created by S3/R2 consoles,
+			// listed as a file whose trailing slash is normalized away
+			{ key: 'backup', isDirectory: false },
+			{ key: 'backup/backup-full-2024-01-01-020000.sql.gz.enc', isDirectory: false },
+		] as any);
+		overrides._uploader.getMetaData.callsFake(async (key: string) => {
+			if (!key.startsWith('backup/')) {
+				throw new Error(`Unable to retrieve metadata of file at location "${key}"`);
+			}
+			return { contentLength: 222, lastModified: new Date('2024-01-01T02:00:00') };
+		});
+
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
+		const pipeline = new BackupPipeline(logService, overrides);
+
+		const backups = await pipeline.list();
+
+		assert.lengthOf(backups, 1);
+		assert.equal(backups[0].filename, 'backup-full-2024-01-01-020000.sql.gz.enc');
+		// Metadata is only fetched for objects actually under the prefix
+		assert.isTrue(overrides._uploader.getMetaData.calledOnce);
+		assert.isTrue(overrides._uploader.getMetaData.calledWith('backup/backup-full-2024-01-01-020000.sql.gz.enc'));
+		assert.isFalse(logService.error.called);
+	});
+
+	test('list() skips manifest and stray files under the backup prefix', async ({ assert }) => {
+		const logService = buildLogService();
+		const overrides = buildOverrides();
+		overrides._uploader.listBackups.resolves([
+			{ key: 'backup/backup-full-2024-01-01-020000.sql.gz.enc', isDirectory: false },
+			{ key: 'backup/backup-full-2024-01-01-020000.manifest.json', isDirectory: false },
+			{ key: 'backup/notes.txt', isDirectory: false },
+		] as any);
+		overrides._uploader.getMetaData.callsFake(async () => ({
+			contentLength: 222,
+			lastModified: new Date('2024-01-01T02:00:00'),
+		}));
+
+		const { BackupPipeline } = await import('#backup/services/backup_pipeline');
+		const pipeline = new BackupPipeline(logService, overrides);
+
+		const backups = await pipeline.list();
+
+		assert.lengthOf(backups, 1);
+		assert.equal(backups[0].filename, 'backup-full-2024-01-01-020000.sql.gz.enc');
+		assert.equal(backups[0].type, 'full');
+		// Metadata is only fetched for artifacts matching the backup grammar
+		assert.isTrue(overrides._uploader.getMetaData.calledOnce);
+		assert.isTrue(overrides._uploader.getMetaData.calledWith('backup/backup-full-2024-01-01-020000.sql.gz.enc'));
+		assert.isFalse(logService.error.called);
+	});
+
 	test('list() returns an empty list and logs when the disk is unavailable', async ({ assert }) => {
 		const logService = buildLogService();
 		const overrides = buildOverrides();

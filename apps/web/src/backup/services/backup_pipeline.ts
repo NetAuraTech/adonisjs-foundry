@@ -212,17 +212,32 @@ export class BackupPipeline {
 	 * {@link BackupMetadata} and sorted newest first. Storage failures are
 	 * logged and swallowed as an empty list.
 	 *
+	 * Objects that are not backup artifacts are skipped before any metadata
+	 * lookup: directory markers, S3 folder-marker objects listed without the
+	 * trailing prefix separator (e.g. the `backup` marker created by S3/R2
+	 * consoles), and files that do not follow the backup filename grammar
+	 * (manifests, stray files).
+	 *
 	 * @returns An array of backup metadata, newest first.
 	 */
 	async list(): Promise<BackupMetadata[]> {
 		try {
 			const objects = await this.storageUploader.listBackups();
 			const backups: BackupMetadata[] = [];
+			const prefix = `${backupConfig.storage.prefix}/`;
 
 			for (const object of objects) {
 				if (object.isDirectory) continue;
 
-				const filename = object.key.replace(backupConfig.storage.prefix + '/', '');
+				// Folder-marker objects are listed without the trailing
+				// separator — their key is the bare prefix, not a file path
+				if (!object.key.startsWith(prefix)) continue;
+
+				const filename = object.key.slice(prefix.length);
+				// Filter by the backup grammar before hitting the disk so
+				// manifests and stray files never reach a metadata lookup
+				if (!BackupMetadata.parseFilename(filename)) continue;
+
 				const meta = await this.storageUploader.getMetaData(object.key);
 				const backup = BackupMetadata.fromStorageObject(filename, meta, object.key);
 				if (!backup) continue;
