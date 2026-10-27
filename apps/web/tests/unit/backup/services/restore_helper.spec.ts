@@ -155,8 +155,11 @@ test.group('RestoreHelper', () => {
 
 		const prelude = generateRestorePrelude({ type: 'differential', tables: ['users', 'posts'] });
 
-		assert.include(prelude, 'DROP TABLE IF EXISTS "public"."users" CASCADE;');
-		assert.include(prelude, 'DROP TABLE IF EXISTS "public"."posts" CASCADE;');
+		assert.include(prelude, 'DROP TABLE IF EXISTS "public"."users";');
+		assert.include(prelude, 'DROP TABLE IF EXISTS "public"."posts";');
+		// RESTRICT, not CASCADE: out-of-manifest dependents must abort the
+		// restore, not be destroyed.
+		assert.notInclude(prelude, 'CASCADE');
 		assert.notInclude(prelude, 'pg_class');
 		assert.notInclude(prelude, 'pg_type');
 		assert.notInclude(prelude, '$$');

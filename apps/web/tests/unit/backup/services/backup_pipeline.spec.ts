@@ -510,8 +510,9 @@ test.group('BackupPipeline', (group) => {
 			.find((call) => call.args[0] === `${differentialRestoreSqlPath}.prelude.sql`);
 		assert.isDefined(preludeCall);
 		const prelude = preludeCall!.args[1];
-		assert.include(prelude, 'DROP TABLE IF EXISTS "public"."users" CASCADE;');
-		assert.include(prelude, 'DROP TABLE IF EXISTS "public"."posts" CASCADE;');
+		assert.include(prelude, 'DROP TABLE IF EXISTS "public"."users";');
+		assert.include(prelude, 'DROP TABLE IF EXISTS "public"."posts";');
+		assert.notInclude(prelude, 'CASCADE');
 		assert.notInclude(prelude, 'pg_class');
 	});
 

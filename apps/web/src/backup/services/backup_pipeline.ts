@@ -264,9 +264,7 @@ export class BackupPipeline {
 	private async buildRestorePrelude(filename: string, sqlPath: string, filesToClean: string[]): Promise<string> {
 		const type = BackupMetadata.parseType(filename);
 		if (!type) {
-			throw Object.assign(new Error(`Cannot determine backup type from filename: ${filename}`), {
-				code: 'E_BACKUP_RESTORE_TYPE_UNKNOWN',
-			});
+			throw codedError('E_BACKUP_RESTORE_TYPE_UNKNOWN', `Cannot determine backup type from filename: ${filename}`);
 		}
 
 		let prelude: RestorePreludeInput;
@@ -275,9 +273,10 @@ export class BackupPipeline {
 			const manifestLocalPath = join(backupConfig.tempDir, manifestFilename);
 			const exists = await this.storageUploader.exists(manifestFilename);
 			if (!exists) {
-				throw Object.assign(new Error(`Manifest not found for differential backup: ${manifestFilename}`), {
-					code: 'E_BACKUP_MANIFEST_NOT_FOUND',
-				});
+				throw codedError(
+					'E_BACKUP_MANIFEST_NOT_FOUND',
+					`Manifest not found for differential backup: ${manifestFilename}`,
+				);
 			}
 			await this.storageUploader.download(manifestFilename, manifestLocalPath);
 			filesToClean.push(manifestLocalPath);
@@ -288,9 +287,10 @@ export class BackupPipeline {
 				tables?: string[];
 			};
 			if (!Array.isArray(manifest.tables)) {
-				throw Object.assign(new Error(`Manifest for differential backup is malformed: ${manifestFilename}`), {
-					code: 'E_BACKUP_MANIFEST_MALFORMED',
-				});
+				throw codedError(
+					'E_BACKUP_MANIFEST_MALFORMED',
+					`Manifest for differential backup is malformed: ${manifestFilename}`,
+				);
 			}
 			prelude = { type, tables: manifest.tables };
 		} else {
@@ -748,4 +748,15 @@ export class BackupPipeline {
  */
 function schemaInClause(column: string): string {
 	return `${column} IN (${MANAGED_SCHEMAS.map(quoteLiteral).join(', ')})`;
+}
+
+/**
+ * Build a coded error: a plain `Error` carrying a stable machine-readable
+ * code, the service-layer convention for failures a caller may branch on.
+ *
+ * @param code - The stable error code (e.g. `E_BACKUP_MANIFEST_NOT_FOUND`).
+ * @param message - The human-readable error message.
+ */
+function codedError(code: string, message: string): Error {
+	return Object.assign(new Error(message), { code });
 }

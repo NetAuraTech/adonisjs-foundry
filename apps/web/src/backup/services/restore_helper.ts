@@ -1,3 +1,5 @@
+import type { BackupType } from '#backup/types/backup';
+
 /**
  * The application schemas the backup module manages.
  *
@@ -98,11 +100,11 @@ export function makeDumpIdempotent(input: string): string {
 export type RestorePreludeInput =
 	| {
 			/** A full artifact: the prelude resets every object the dump re-creates. */
-			type: 'full';
+			type: Exclude<BackupType, 'differential'>;
 	  }
 	| {
 			/** A differential artifact: the prelude resets only the manifest tables. */
-			type: 'differential';
+			type: Extract<BackupType, 'differential'>;
 			/** The tables listed by the artifact's manifest. */
 			tables: string[];
 	  };
@@ -119,7 +121,9 @@ export type RestorePreludeInput =
  *   the partitioned parent alongside its partitions keeps the dump's
  *   `CREATE TABLE … PARTITION BY` replay clean against a live database;
  * - `differential`: one `DROP TABLE` per table listed in the artifact's
- *   manifest.
+ *   manifest, without `CASCADE` — a manifest table that other objects
+ *   depend on aborts the restore atomically instead of having those
+ *   dependents destroyed without being re-created by the dump.
  *
  * The schemas themselves, their ACLs, extensions, and platform event
  * triggers stay untouched.
@@ -253,18 +257,23 @@ function fullResetBlock(schemaLiteral: string): string[] {
 }
 
 /**
- * Build one `DROP TABLE IF EXISTS ... CASCADE;` statement per manifest
- * table.
+ * Build the reset statements for the manifest tables: one
+ * `DROP TABLE IF EXISTS` per managed schema per table, without
+ * `CASCADE`.
  *
- * Manifest tables are named bare, so each is dropped from the single
- * schema the module manages — a table lives in exactly one schema, never
- * once per managed schema.
+ * Manifest tables are named bare, so each is dropped from every managed
+ * schema — an absent target is a no-op. The drops are `RESTRICT`: when an
+ * out-of-manifest object (a view, a foreign key from another table) depends
+ * on a manifest table, the drop fails and the whole restore aborts before
+ * touching the database, instead of the `CASCADE` alternative, which would
+ * destroy those dependents without the dump re-creating them.
  *
  * @param tables - The manifest table names.
  */
 function dropStatementsForTables(tables: string[]): string[] {
-	const schema = MANAGED_SCHEMAS[0];
-	return tables.map((table) => `DROP TABLE IF EXISTS ${quoteIdentifier(schema)}.${quoteIdentifier(table)} CASCADE;`);
+	return MANAGED_SCHEMAS.flatMap((schema) =>
+		tables.map((table) => `DROP TABLE IF EXISTS ${quoteIdentifier(schema)}.${quoteIdentifier(table)};`),
+	);
 }
 
 /**
