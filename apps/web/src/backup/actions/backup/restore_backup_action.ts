@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core';
 import { BackupPipeline } from '#backup/services/backup_pipeline';
 import { LogService } from '#log/services/log_service';
+import type { RestoreResult } from '#backup/types/backup';
 
 interface RestoreBackupPayload {
 	filename: string;
@@ -25,7 +26,7 @@ export class RestoreBackupAction {
 	 * @example
 	 * const result = await restoreBackupAction.execute({ filename: 'backup-full-2024-01-01-120000.sql.gz.enc' })
 	 */
-	async execute(payload: RestoreBackupPayload): Promise<{ success: boolean; error?: string; code?: string }> {
+	async execute(payload: RestoreBackupPayload): Promise<RestoreResult> {
 		return new BackupPipeline(this.logService).restore(payload.filename);
 	}
 }

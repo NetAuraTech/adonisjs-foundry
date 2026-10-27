@@ -23,7 +23,14 @@ import backupConfig from '#config/backup';
 import { type LogService } from '#log/services/log_service';
 import { LogCategory } from '#log/types/logging';
 import env from '#start/env';
-import type { BackupResult, BackupContext, BackupStrategy, BackupType } from '#backup/types/backup';
+import type {
+	BackupContext,
+	BackupManifest,
+	BackupResult,
+	BackupStrategy,
+	BackupType,
+	RestoreResult,
+} from '#backup/types/backup';
 
 /**
  * Test-override dependency-injection bag for the backup pipeline.
@@ -166,7 +173,7 @@ export class BackupPipeline {
 	 *   the error's code when the failure carries one (e.g. a missing or
 	 *   malformed differential manifest).
 	 */
-	async restore(filename: string): Promise<{ success: boolean; error?: string; code?: string }> {
+	async restore(filename: string): Promise<RestoreResult> {
 		const exists = await this.storageUploader.exists(filename);
 		if (!exists) {
 			const error = `Backup file not found: ${filename}`;
@@ -175,7 +182,6 @@ export class BackupPipeline {
 		}
 
 		const localPath = join(backupConfig.tempDir, filename);
-		const filesToClean: string[] = [];
 
 		this.logService.info({
 			message: 'Starting backup restoration',
@@ -186,16 +192,15 @@ export class BackupPipeline {
 		try {
 			await this.mkdirFn(backupConfig.tempDir, { recursive: true });
 			await this.storageUploader.download(filename, localPath);
-			filesToClean.push(localPath);
+			this.track(localPath);
 
 			const decryptedPath = await this.snapshotHelper.decrypt(localPath);
-			filesToClean.push(decryptedPath);
+			this.track(decryptedPath);
 
 			const sqlPath = await this.snapshotHelper.decompress(decryptedPath);
-			filesToClean.push(sqlPath);
+			this.track(sqlPath);
 
-			const preludePath = await this.buildRestorePrelude(filename, sqlPath, filesToClean);
-			filesToClean.push(preludePath);
+			const preludePath = await this.buildRestorePrelude(filename, sqlPath);
 
 			await this.makeDumpIdempotentInPlace(sqlPath);
 
@@ -219,24 +224,18 @@ export class BackupPipeline {
 		} catch (error) {
 			const coded = error as Error & { code?: string };
 			this.logService.error({
-				message: `Backup restoration failed: ${coded.message}`,
+				message: 'backup.restore.failed',
 				category: LogCategory.SYSTEM,
 				error,
 				metadata: { filename },
 			});
-			const failure: { success: false; error: string; code?: string } = { success: false, error: coded.message };
+			const failure: RestoreResult = { success: false, error: coded.message };
 			if (coded.code) {
 				failure.code = coded.code;
 			}
 			return failure;
 		} finally {
-			for (const path of filesToClean) {
-				try {
-					await this.unlinkFn(path);
-				} catch {
-					// File already gone — no-op
-				}
-			}
+			await this.cleanupTemp();
 		}
 	}
 
@@ -248,12 +247,11 @@ export class BackupPipeline {
 	 * A `full` artifact resets every object its dump re-creates (a catalog
 	 * sweep per configured schema). A `differential` artifact resets only
 	 * the tables its manifest lists, so the manifest is downloaded and read
-	 * here before the prelude can be generated. The manifest file is tracked
-	 * for cleanup, inserted before the prelude so it is removed with it.
+	 * here before the prelude can be generated. The produced files are
+	 * tracked for cleanup.
 	 *
 	 * @param filename - The artifact filename (relative to the storage prefix).
 	 * @param sqlPath - Local path of the decompressed dump.
-	 * @param filesToClean - Cleanup list the produced files are tracked into.
 	 * @returns The local path of the written prelude.
 	 * @throws {Error & { code: string }} When the artifact type cannot be read
 	 *   from the filename (coded `E_BACKUP_RESTORE_TYPE_UNKNOWN`), when a
@@ -261,7 +259,7 @@ export class BackupPipeline {
 	 *   `E_BACKUP_MANIFEST_NOT_FOUND`), or when the manifest carries no table
 	 *   list (coded `E_BACKUP_MANIFEST_MALFORMED`).
 	 */
-	private async buildRestorePrelude(filename: string, sqlPath: string, filesToClean: string[]): Promise<string> {
+	private async buildRestorePrelude(filename: string, sqlPath: string): Promise<string> {
 		const type = BackupMetadata.parseType(filename);
 		if (!type) {
 			throw codedError('E_BACKUP_RESTORE_TYPE_UNKNOWN', `Cannot determine backup type from filename: ${filename}`);
@@ -279,13 +277,11 @@ export class BackupPipeline {
 				);
 			}
 			await this.storageUploader.download(manifestFilename, manifestLocalPath);
-			filesToClean.push(manifestLocalPath);
+			this.track(manifestLocalPath);
 			// The manifest is external data (read back from storage): the
 			// discriminated-union `tables` guarantee is enforced here, at the
 			// trust boundary, not in the prelude generator.
-			const manifest = JSON.parse((await this.readFileFn(manifestLocalPath, 'utf8')) as string) as {
-				tables?: string[];
-			};
+			const manifest = JSON.parse((await this.readFileFn(manifestLocalPath, 'utf8')) as string) as BackupManifest;
 			if (!Array.isArray(manifest.tables)) {
 				throw codedError(
 					'E_BACKUP_MANIFEST_MALFORMED',
@@ -299,6 +295,7 @@ export class BackupPipeline {
 
 		const preludePath = `${sqlPath}.prelude.sql`;
 		await this.writeFileFn(preludePath, generateRestorePrelude(prelude));
+		this.track(preludePath);
 		return preludePath;
 	}
 
@@ -508,10 +505,11 @@ export class BackupPipeline {
 	 * Serialize, write and upload the backup manifest, tracking it for cleanup.
 	 *
 	 * @param context - Execution context (temp dir, filename).
-	 * @param payload - Raw manifest content to persist as JSON.
+	 * @param payload - The manifest to persist, typed so the write side pairs
+	 *   with the {@link BackupManifest} the restore reads back.
 	 * @returns The local path of the written manifest file.
 	 */
-	private async writeManifest(context: BackupContext, payload: object): Promise<string> {
+	private async writeManifest(context: BackupContext, payload: BackupManifest): Promise<string> {
 		const manifestFilename = BackupMetadata.manifestFilename(context.filename);
 		const manifestPath = join(context.tempDir, manifestFilename);
 		await this.writeFileFn(manifestPath, JSON.stringify(payload, null, 2));
@@ -653,6 +651,17 @@ export class BackupPipeline {
 	private async getAllTables(): Promise<string[]> {
 		const db = await import('@adonisjs/lucid/services/db');
 		const connection = db.default.connection(backupConfig.database.connection);
+		return this.listManagedTableNames(connection);
+	}
+
+	/**
+	 * List the table names in the managed schemas in catalog order.
+	 *
+	 * @param connection - The Lucid connection to run the catalog query on.
+	 */
+	private async listManagedTableNames(connection: {
+		rawQuery: (sql: string) => Promise<{ rows: any[] }>;
+	}): Promise<string[]> {
 		const result = await connection.rawQuery(
 			`SELECT tablename FROM pg_tables WHERE ${schemaInClause('schemaname')} ORDER BY tablename`,
 		);
@@ -694,10 +703,7 @@ export class BackupPipeline {
 
 		const modifiedFromStats = result.rows.map((row: any) => row.table_name.replace(/^[^.]*\./, ''));
 
-		const allTablesResult = await connection.rawQuery(
-			`SELECT tablename FROM pg_tables WHERE ${schemaInClause('schemaname')} ORDER BY tablename`,
-		);
-		const allTables = allTablesResult.rows.map((row: any) => row.tablename);
+		const allTables = await this.listManagedTableNames(connection);
 
 		const modifiedFromUpdatedAt: string[] = [];
 

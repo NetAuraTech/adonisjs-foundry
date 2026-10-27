@@ -613,7 +613,7 @@ test.group('BackupPipeline', (group) => {
 
 		assert.deepEqual(result, { success: false, error: 'psql exploded' });
 		assert.isTrue(logService.error.calledOnce);
-		assert.equal(logService.error.firstCall.args[0].message, 'Backup restoration failed: psql exploded');
+		assert.equal(logService.error.firstCall.args[0].message, 'backup.restore.failed');
 		assert.deepEqual(
 			overrides._unlink.getCalls().map((call) => call.args[0]),
 			[restoreLocalPath, restoreDecryptedPath, restoreSqlPath, restorePreludePath],
