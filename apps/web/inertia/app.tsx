@@ -16,8 +16,8 @@ let appName = '';
 
 /**
  * Hand-drawn frame outlines for notebook front cards. Three tangent-continuous
- * wobbles (320x200 viewBox) cycled by card position so each frame reads as its
- * own pen stroke.
+ * wobbles sketched on a 320x200 sheet, cycled by card position so each frame
+ * reads as its own pen stroke.
  */
 const SKETCH_PATHS = [
 	'M 32 12.9 L 35.7 12.9 L 39.5 12.8 L 43.2 12.8 L 47 12.8 L 50.7 12.9 L 54.4 13.1 L 58.2 13.4 L 61.9 13.7 L 65.6 13.9 L 69.4 14 L 73.1 14.1 L 76.9 14 L 80.6 13.9 L 84.3 13.9 L 88.1 14 L 91.8 14.2 L 95.5 14.5 L 99.3 14.9 L 103 15.3 L 106.8 15.6 L 110.5 15.7 L 114.2 15.6 L 118 15.4 L 121.7 15.1 L 125.4 14.8 L 129.2 14.5 L 132.9 14.3 L 136.7 14 L 140.4 13.7 L 144.1 13.3 L 147.9 13 L 151.6 12.6 L 155.4 12.3 L 159.1 12.2 L 162.8 12.3 L 166.6 12.5 L 170.3 12.9 L 174 13.3 L 177.8 13.7 L 181.5 14 L 185.3 14.1 L 189 14.1 L 192.7 14.1 L 196.5 14 L 200.2 14.1 L 203.9 14.2 L 207.7 14.4 L 211.4 14.6 L 215.2 14.8 L 218.9 15 L 222.6 15 L 226.4 15 L 230.1 15 L 233.8 15 L 237.6 15 L 241.3 15.1 L 245.1 15.1 L 248.8 15 L 252.5 14.7 L 256.3 14.4 L 260 13.8 L 263.8 13.3 L 267.5 12.7 L 271.2 12.3 L 275 12.1 L 278.7 12.2 L 282.4 12.3 L 286.2 12.6 L 290 13 L 293.8 14.1 L 297.3 15.9 L 300.3 18.3 L 302.7 21.2 L 304.2 24.6 L 304.9 28.2 L 304.7 31.8 L 304.5 35.5 L 304.7 39.3 L 305.1 43 L 305.2 46.8 L 305 50.5 L 304.5 54.2 L 304.2 58 L 304.5 61.7 L 305.3 65.4 L 306.4 69.2 L 307.4 72.9 L 308 76.7 L 308.2 80.4 L 308.3 84.1 L 308.3 87.9 L 308.1 91.6 L 307.5 95.4 L 306.4 99.1 L 305.2 102.8 L 304.3 106.6 L 304.1 110.3 L 304.4 114 L 304.9 117.8 L 305.1 121.5 L 305 125.3 L 304.7 129 L 304.7 132.7 L 305 136.5 L 305.5 140.2 L 306 143.9 L 306.3 147.7 L 306.6 151.4 L 307.2 155.2 L 308 158.9 L 308.7 162.6 L 308.9 166.4 L 308.1 170.4 L 306.1 174.1 L 303.6 177.2 L 300.9 179.8 L 298 181.9 L 294.8 183.5 L 291.5 184.6 L 288 184.9 L 284.3 184.9 L 280.5 184.8 L 276.8 184.8 L 273 184.8 L 269.3 184.9 L 265.6 185.1 L 261.8 185.4 L 258.1 185.7 L 254.4 185.9 L 250.6 186 L 246.9 186.1 L 243.1 186 L 239.4 185.9 L 235.7 185.9 L 231.9 186 L 228.2 186.2 L 224.5 186.5 L 220.7 186.9 L 217 187.3 L 213.2 187.6 L 209.5 187.7 L 205.8 187.6 L 202 187.4 L 198.3 187.1 L 194.6 186.8 L 190.8 186.5 L 187.1 186.3 L 183.3 186 L 179.6 185.7 L 175.9 185.3 L 172.1 185 L 168.4 184.6 L 164.6 184.3 L 160.9 184.2 L 157.2 184.3 L 153.4 184.5 L 149.7 184.9 L 146 185.3 L 142.2 185.7 L 138.5 186 L 134.7 186.1 L 131 186.1 L 127.3 186.1 L 123.5 186 L 119.8 186.1 L 116.1 186.2 L 112.3 186.4 L 108.6 186.6 L 104.8 186.8 L 101.1 187 L 97.4 187 L 93.6 187 L 89.9 187 L 86.2 187 L 82.4 187 L 78.7 187.1 L 74.9 187.1 L 71.2 187 L 67.5 186.7 L 63.7 186.4 L 60 185.8 L 56.2 185.3 L 52.5 184.7 L 48.8 184.3 L 45 184.1 L 41.3 184.2 L 37.6 184.3 L 33.8 184.6 L 30.2 184.8 L 26.7 184.3 L 23.3 183.1 L 20.3 181.1 L 17.6 178.5 L 15.5 175.5 L 13.8 172 L 12.7 168.2 L 12.5 164.5 L 12.7 160.7 L 13.1 157 L 13.2 153.2 L 13 149.5 L 12.5 145.8 L 12.2 142 L 12.5 138.3 L 13.3 134.6 L 14.4 130.8 L 15.4 127.1 L 16 123.3 L 16.2 119.6 L 16.3 115.9 L 16.3 112.1 L 16.1 108.4 L 15.5 104.6 L 14.4 100.9 L 13.2 97.2 L 12.3 93.4 L 12.1 89.7 L 12.4 86 L 12.9 82.2 L 13.1 78.5 L 13 74.7 L 12.7 71 L 12.7 67.3 L 13 63.5 L 13.5 59.8 L 14 56.1 L 14.3 52.3 L 14.6 48.6 L 15.2 44.8 L 16 41.1 L 16.7 37.4 L 16.9 33.6 L 16.3 30.2 L 16 26.6 L 16.6 22.9 L 18.3 19.5 L 21 16.6 L 24.3 14.6 L 28.1 13.3 Z',
@@ -26,26 +26,53 @@ const SKETCH_PATHS = [
 ];
 
 /**
+ * Per-path viewBox, cropped to the stroke's own bounding box. The raw paths
+ * carry uneven margins on the 320x200 sheet; cropping each one lets
+ * `preserveAspectRatio="none"` stretch the pen stroke exactly to the card edge
+ * — the frame is the card's border, not a line drawn inside it. Pure string
+ * scan: the wobbles are plain `M`/`L` polylines.
+ */
+const SKETCH_VIEW_BOXES = SKETCH_PATHS.map((d) => {
+	const nums = d.match(/-?\d+(?:\.\d+)?/g)!.map(Number);
+	let minX = Infinity,
+		minY = Infinity,
+		maxX = -Infinity,
+		maxY = -Infinity;
+	for (let i = 0; i < nums.length; i += 2) {
+		minX = Math.min(minX, nums[i]);
+		minY = Math.min(minY, nums[i + 1]);
+		maxX = Math.max(maxX, nums[i]);
+		maxY = Math.max(maxY, nums[i + 1]);
+	}
+	return `${minX} ${minY} ${maxX - minX} ${maxY - minY}`;
+});
+
+/**
  * Injects the hand-drawn frame into every notebook front card (`.card` inside
  * `.notebook-page`).
  *
  * The frame is an inline SVG stretched to the card box: `preserveAspectRatio="none"`
  * bends the wobble to any card size while `vector-effect="non-scaling-stroke"`
  * keeps the ink a constant screen-space weight (a CSS background image cannot do
- * this — stretched strokes come out uneven). A mutation observer keeps frames
- * in sync with Inertia navigation and CMS builder edits.
+ * this — stretched strokes come out uneven). The viewBox is cropped to the
+ * stroke's bounding box, so the pen stroke sits flush on the card edge and
+ * replaces the card's border — cards flagged `border-danger` (the account
+ * delete card) draw the stroke in the danger colour. A mutation observer keeps
+ * frames in sync with Inertia navigation and CMS builder edits.
  */
 function SketchFrames() {
 	useEffect(() => {
 		const decorate = (card: Element) => {
 			if (card.querySelector(':scope > svg.sketch-frame')) return;
 			const siblings = Array.from(card.parentElement?.children ?? []).filter((c) => c.classList.contains('card'));
+			const index = siblings.indexOf(card) % SKETCH_PATHS.length;
+			const stroke = card.classList.contains('border-danger') ? 'var(--color-danger)' : 'var(--color-ink)';
 			const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 			svg.setAttribute('class', 'sketch-frame');
-			svg.setAttribute('viewBox', '0 0 320 200');
+			svg.setAttribute('viewBox', SKETCH_VIEW_BOXES[index]);
 			svg.setAttribute('preserveAspectRatio', 'none');
 			svg.setAttribute('aria-hidden', 'true');
-			svg.innerHTML = `<path d="${SKETCH_PATHS[siblings.indexOf(card) % SKETCH_PATHS.length]}" fill="none" stroke="var(--color-ink)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>`;
+			svg.innerHTML = `<path d="${SKETCH_PATHS[index]}" fill="none" stroke="${stroke}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>`;
 			card.appendChild(svg);
 		};
 

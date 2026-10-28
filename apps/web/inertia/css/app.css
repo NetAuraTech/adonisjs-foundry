@@ -190,30 +190,6 @@
 		@apply flex flex-col rounded-sm border-2 border-ink bg-surface overflow-hidden;
 	}
 
-	/* Front cards framed like a hand-drawn marker stroke: `inertia/app.tsx`
-	   injects an inline SVG (`.sketch-frame`) stretched to the card box. The
-	   wobble bends to any card size while `non-scaling-stroke` keeps the ink
-	   weight constant in screen space — a CSS background cannot do that.
-	   One of three paths is cycled per card position. Scoped to notebook
-	   pages so admin cards keep their crisp corners. */
-	.notebook-page .card {
-		position: relative;
-		border: 0;
-		/* Let the ruled paper continue inside the card — the frame is ink,
-		   not a pasted sheet. Extra inline padding keeps the text clear of
-		   the wobble, which sits ~15px in from the edge. */
-		background-color: transparent;
-		padding-inline: 2rem;
-	}
-
-	.notebook-page .sketch-frame {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		pointer-events: none;
-	}
-
 	/* Hand-drawn pencil icons are fill-based outline bands; overlaying a
 	   currentColor stroke thickens the line without touching the paths.
 	   Iconify tags the svg with the set prefix, so lucide (stroke-based)
@@ -309,6 +285,36 @@
 		&:has(.sidebar[aria-expanded='false']) .main main {
 			@apply ml-0 w-full;
 		}
+	}
+}
+
+/* Notebook cards: the hand-drawn frame IS the card border. `inertia/app.tsx`
+   injects an inline SVG (`.sketch-frame`) whose viewBox is cropped to the
+   stroke's bounding box, so the pen stroke sits flush on the card edge and
+   straddles it like a CSS border (`non-scaling-stroke` keeps the ink a
+   constant 3px in screen space — a CSS background cannot do that). These
+   rules live in the utilities layer on purpose: the Card atom adds its own
+   border utilities (`border`, `border-edge`, `border-danger`) in the same
+   layer, and `.notebook-page .card` outranks them on specificity — the pen
+   stroke is the only edge left. `overflow: visible` keeps the outer half of
+   the stroke from being clipped by the card box. Scoped to notebook pages so
+   admin cards keep their utilities-layer borders. */
+@layer utilities {
+	.notebook-page .card {
+		position: relative;
+		border: 0;
+		/* Let the ruled paper continue inside the card — the frame is ink,
+		   not a pasted sheet. */
+		background-color: transparent;
+		overflow: visible;
+	}
+
+	.notebook-page .sketch-frame {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
 	}
 }
 
