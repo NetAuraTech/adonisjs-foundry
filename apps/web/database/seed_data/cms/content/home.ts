@@ -203,7 +203,7 @@ export const homeFR = (): PageContent => ({
 					'base',
 					'muted',
 					'base',
-					'max-w-2xl',
+					'max-w-2xl mb-10',
 				),
 				grid({ default: 1, lg: 3 }, 'lg', [
 					section(
@@ -272,7 +272,7 @@ export const homeFR = (): PageContent => ({
 					'base',
 					'muted',
 					'base',
-					'max-w-2xl',
+					'max-w-2xl mb-10',
 				),
 				htmltext(
 					'<pre class="bg-ink text-ink-inverted p-4 rounded-sm overflow-x-auto text-sm"><code># votre dépôt\nmkdir my-project &amp;&amp; cd my-project &amp;&amp; git init\n\n# foundry en upstream\ngit remote add foundry https://github.com/NetAuraTech/adonisjs-foundry.git\ngit fetch foundry &amp;&amp; git merge foundry/main --allow-unrelated-histories\n\n# et on lance\nnpm install\ndocker compose up -d\ncp apps/web/.env.example apps/web/.env\ncd apps/web &amp;&amp; node ace generate:key &amp;&amp; node ace migration:run\nnpm run dev        # → http://localhost:3333</code></pre>',
@@ -510,7 +510,7 @@ export const homeEN = (): PageContent => ({
 					'base',
 					'muted',
 					'base',
-					'max-w-2xl',
+					'max-w-2xl mb-10',
 				),
 				grid({ default: 1, lg: 3 }, 'lg', [
 					section(
@@ -579,7 +579,7 @@ export const homeEN = (): PageContent => ({
 					'base',
 					'muted',
 					'base',
-					'max-w-2xl',
+					'max-w-2xl mb-10',
 				),
 				htmltext(
 					'<pre class="bg-ink text-ink-inverted p-4 rounded-sm overflow-x-auto text-sm"><code># your repo\nmkdir my-project &amp;&amp; cd my-project &amp;&amp; git init\n\n# foundry as upstream\ngit remote add foundry https://github.com/NetAuraTech/adonisjs-foundry.git\ngit fetch foundry &amp;&amp; git merge foundry/main --allow-unrelated-histories\n\n# and up you go\nnpm install\ndocker compose up -d\ncp apps/web/.env.example apps/web/.env\ncd apps/web &amp;&amp; node ace generate:key &amp;&amp; node ace migration:run\nnpm run dev        # → http://localhost:3333</code></pre>',

@@ -61,7 +61,7 @@ export const featuresEN = (files: Record<string, number>): PageContent => ({
 					'base',
 					'muted',
 					'base',
-					'max-w-2xl',
+					'max-w-2xl mb-10',
 				),
 				grid(
 					{ default: 1, lg: 2 },
@@ -431,7 +431,7 @@ export const featuresFR = (files: Record<string, number>): PageContent => ({
 					'base',
 					'muted',
 					'base',
-					'max-w-2xl',
+					'max-w-2xl mb-10',
 				),
 				grid(
 					{ default: 1, lg: 2 },
