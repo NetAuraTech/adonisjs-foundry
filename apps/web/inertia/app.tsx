@@ -57,8 +57,11 @@ const SKETCH_VIEW_BOXES = SKETCH_PATHS.map((d) => {
  * this — stretched strokes come out uneven). The viewBox is cropped to the
  * stroke's bounding box, so the pen stroke sits flush on the card edge and
  * replaces the card's border — cards flagged `border-danger` (the account
- * delete card) draw the stroke in the danger colour. A mutation observer keeps
- * frames in sync with Inertia navigation and CMS builder edits.
+ * delete card) draw the stroke in the danger colour. The stroke-width is
+ * doubled (6) on purpose: the card's `overflow: hidden` clips the outer half
+ * of the stroke at the box edge, leaving a constant 3px of visible ink. A
+ * mutation observer keeps frames in sync with Inertia navigation and CMS
+ * builder edits.
  */
 function SketchFrames() {
 	useEffect(() => {
@@ -72,7 +75,7 @@ function SketchFrames() {
 			svg.setAttribute('viewBox', SKETCH_VIEW_BOXES[index]);
 			svg.setAttribute('preserveAspectRatio', 'none');
 			svg.setAttribute('aria-hidden', 'true');
-			svg.innerHTML = `<path d="${SKETCH_PATHS[index]}" fill="none" stroke="${stroke}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>`;
+			svg.innerHTML = `<path d="${SKETCH_PATHS[index]}" fill="none" stroke="${stroke}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>`;
 			card.appendChild(svg);
 		};
 
