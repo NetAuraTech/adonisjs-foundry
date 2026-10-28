@@ -610,14 +610,14 @@ Foundry implements a **custom role/permission system** without external authoriz
 
 ### Backend
 
-| Layer                  | Location                            | Responsibility                                                  |
-| ---------------------- | ----------------------------------- | --------------------------------------------------------------- |
-| **Role model**         | `src/identity/models/role.ts`       | Roles with `hasPermission()`, `isAdmin`, system role protection |
-| **Permission model**   | `src/identity/models/permission.ts` | Permissions with system permission protection                   |
-| **Pivot table**        | `role_permission`                   | Many-to-many relationship between roles and permissions         |
-| **Role actions**       | `src/identity/actions/role/`        | Role business logic (create, update, delete, list)              |
-| **Permission actions** | `src/identity/actions/permission/`  | Permission business logic (create, update, delete, list)        |
-| **Seeders**            | `database/seeders/`                 | `role_seeder.ts`, `permission_seeder.ts` for default data       |
+| Layer                  | Location                            | Responsibility                                                      |
+| ---------------------- | ----------------------------------- | ------------------------------------------------------------------- |
+| **Role model**         | `src/identity/models/role.ts`       | Roles with `hasPermission()`, `isAdmin`, system role protection     |
+| **Permission model**   | `src/identity/models/permission.ts` | Permissions with system permission protection                       |
+| **Pivot table**        | `role_permission`                   | Many-to-many relationship between roles and permissions             |
+| **Role actions**       | `src/identity/actions/role/`        | Role business logic (create, update, delete, list)                  |
+| **Permission actions** | `src/identity/actions/permission/`  | Permission business logic (create, update, delete, list)            |
+| **Seeders**            | `database/seeders/`                 | `base/` — `permission_seeder.ts`, `role_seeder.ts` for default data |
 
 Permission checking is done via model methods: `role.hasPermission(slug)`, `role.assignPermission(id)`, `role.syncPermissions(ids)`.
 
@@ -817,8 +817,8 @@ database/
 │                           # log_entries, auth_access_tokens, pages, page_translations,
 │                           # page_revisions, templates, alter_pages, two_factor (users
 │                           # columns), webhook_deliveries
-├── seeders/                # role_seeder, permission_seeder, cms/ (page, template),
-│                           # mails/ (mail_service)
+├── seeders/                # base/ (permission, role), cms/ (page, template)
+├── seed_data/              # cms/ (presentation page content, demo images)
 ├── schema.ts
 └── schema_rules.ts
 

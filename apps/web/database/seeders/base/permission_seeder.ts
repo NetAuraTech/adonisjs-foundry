@@ -20,13 +20,17 @@ export default class extends BaseSeeder {
 				})),
 		);
 
-		const createdPermissions = await Promise.all(
-			permissions.map((permission) => {
-				Permission.updateOrCreate({ slug: permission.slug }, permission);
-			}),
-		);
+		/**
+		 * Upsert sequentially on the single warm pool connection: the seeder is
+		 * the only workload, so a burst of 35 concurrent queries only scales the
+		 * pool to `max`, and the reaped connections race the pool teardown at
+		 * process exit (unhandled "aborted" rejection, non-zero exit code).
+		 */
+		for (const permission of permissions) {
+			await Permission.updateOrCreate({ slug: permission.slug }, permission);
+		}
 
 		console.log('✅ Permissions seeded successfully');
-		console.log(`  - Created ${createdPermissions.length} permissions`);
+		console.log(`  - Created ${permissions.length} permissions`);
 	}
 }

@@ -1,11 +1,11 @@
 import { BaseSeeder } from '@adonisjs/lucid/seeders';
 import Page from '#cms/models/page/page';
 import PageTranslation from '#cms/models/page/page_translation';
-import { contactEN, contactFR } from './content/contact.js';
-import { featuresEN, featuresFR } from './content/features.js';
-import { homeEN, homeFR } from './content/home.js';
-import { showcaseEN, showcaseFR } from './content/showcase.js';
-import { ensureDemoFiles } from './demo_images.js';
+import { contactEN, contactFR } from '../../seed_data/cms/content/contact.js';
+import { featuresEN, featuresFR } from '../../seed_data/cms/content/features.js';
+import { homeEN, homeFR } from '../../seed_data/cms/content/home.js';
+import { showcaseEN, showcaseFR } from '../../seed_data/cms/content/showcase.js';
+import { ensureDemoFiles } from '../../seed_data/cms/demo_images.js';
 import type { PageContent, PageStatus } from '#cms/types/page';
 
 /**
@@ -169,7 +169,10 @@ const buildSeedPages = (files: Record<string, number>): SeededPage[] => [
  * a features page, a 17-block showcase and a working contact page, plus the
  * demo images they embed (generated at seed time, see `demo_images.ts`).
  *
- * Run with:
+ * `node ace db:seed` (no flags) discovers every seeder under `database/seeders/`
+ * by folder name and runs them in sorted order — `base/` (permission, role)
+ * before `cms/` (page, template) — so the base seeders run first. To run just
+ * this one:
  *   node ace db:seed --files database/seeders/cms/page_seeder.ts
  *
  * Idempotent: legacy seed slugs are removed, pages are keyed by their

@@ -10,9 +10,9 @@
  *
  * The delete inventory mirrors ADR-0001's CMS delete map: the co-located CMS
  * units (the `src/cms` business layer, the `app/cms` transport layer, CMS
- * migrations/seeders/factories, the `resources/lang/{en,fr}/cms` i18n
- * namespaces, the contact email template, the CMS React subtrees, the CMS
- * test suites and the CMS ace command), plus the Transmit integration.
+ * migrations/seeders/seed data/factories, the `resources/lang/{en,fr}/cms`
+ * i18n namespaces, the contact email template, the CMS React subtrees, the
+ * CMS test suites and the CMS ace command), plus the Transmit integration.
  * The rewrites drop the CMS and Transmit registrations from the allowlisted
  * composition files and turn the `cms` feature flag off.
  *
@@ -36,6 +36,9 @@ const inertiaManifest: FlavorManifest = {
 
 		// ─── CMS seeders ────────────────────────────────────────────────────────
 		'apps/web/database/seeders/cms',
+
+		// ─── CMS seed data (presentation page content, demo images) ─────────────
+		'apps/web/database/seed_data/cms',
 
 		// ─── CMS factories ──────────────────────────────────────────────────────
 		'apps/web/database/factories/cms',

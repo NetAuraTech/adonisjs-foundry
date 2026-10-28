@@ -34,6 +34,7 @@ from `apps/web/`.
 | CMS transport layer (controllers, routes, nav, i18n payload helpers, transformers, REST resources, validators) | `app/cms`                                        |
 | CMS migrations                                                                                                 | `database/migrations/cms`                        |
 | CMS seeders                                                                                                    | `database/seeders/cms`                           |
+| CMS seed data (presentation pages, demo images)                                                                | `database/seed_data/cms`                         |
 | CMS factories                                                                                                  | `database/factories/cms`                         |
 | CMS i18n namespaces (page, template, builder)                                                                  | `resources/lang/{en,fr}/cms`                     |
 | CMS email template (contact form)                                                                              | `resources/views/emails/contact_form_email.edge` |

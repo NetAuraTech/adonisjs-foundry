@@ -109,7 +109,7 @@ const apiManifest: FlavorManifest = {
 		// ─── CMS module (page/template/builder) — main-only ───────────────────
 		// The whole CMS domain is pruned: the co-located units (the `src/cms`
 		// business layer, the `app/cms` transport layer with its admin, front
-		// and api controllers, CMS migrations/seeders/factories, the
+		// and api controllers, CMS migrations/seeders/seed data/factories, the
 		// `resources/lang/{en,fr}/cms` i18n namespaces, the contact email
 		// template, the CMS ace command) — mirroring the `inertia` flavor's
 		// CMS delete map. The CMS React subtrees die with the whole
@@ -118,6 +118,7 @@ const apiManifest: FlavorManifest = {
 		'apps/web/app/cms',
 		'apps/web/database/migrations/cms',
 		'apps/web/database/seeders/cms',
+		'apps/web/database/seed_data/cms',
 		'apps/web/database/factories/cms',
 		'apps/web/resources/lang/en/cms',
 		'apps/web/resources/lang/fr/cms',

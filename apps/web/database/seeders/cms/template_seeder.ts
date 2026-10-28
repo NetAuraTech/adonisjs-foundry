@@ -14,7 +14,7 @@ import {
 	separator,
 	section,
 	title,
-} from './content/helpers.js';
+} from '../../seed_data/cms/content/helpers.js';
 import type { PageContent } from '#cms/types/page';
 
 /**
@@ -27,7 +27,8 @@ import type { PageContent } from '#cms/types/page';
  * Templates are intentionally image-free (a dangling file id would render
  * nothing): the demo assets are owned by the page seeder.
  *
- * Run with:
+ * Part of the ordered `node ace db:seed` set — the `cms/` folder sorts after
+ * `base/`, so the page and template seeders run last. To run just this one:
  *   node ace db:seed --files database/seeders/cms/template_seeder.ts
  *
  * Templates created:
