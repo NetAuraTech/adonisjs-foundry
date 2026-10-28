@@ -288,45 +288,6 @@
 	}
 }
 
-/* Notebook cards: the hand-drawn frame IS the card border. `inertia/app.tsx`
-   injects an inline SVG (`.sketch-frame`) whose viewBox is cropped to the
-   stroke's bounding box, so the pen stroke sits flush on the card edge and
-   straddles it like a CSS border (`non-scaling-stroke` keeps the ink a
-   constant 3px in screen space — a CSS background cannot do that). These
-   rules live in the utilities layer on purpose: the Card atom adds its own
-   border utilities (`border`, `border-edge`, `border-danger`) in the same
-   layer, and `.notebook-page .card` outranks them on specificity — the pen
-   stroke is the only edge left. `overflow: hidden` clips the frame to the
-   card box so the stroke no longer spills onto the ruled paper around the
-   card (the footer edge included); `app.tsx` compensates by doubling the
-   stroke-width so the clipped ink still reads as 3px. Scoped to notebook
-   pages so admin cards keep their utilities-layer borders. */
-@layer utilities {
-	.notebook-page .card {
-		position: relative;
-		border: 0;
-		/* Let the ruled paper continue inside the card — the frame is ink,
-		   not a pasted sheet. */
-		background-color: transparent;
-		overflow: hidden;
-	}
-
-	/* The form fields sit a little further from the ink frame than the Card's
-	   default `p-8` — the hand-drawn border reads as a closer edge than a CSS
-	   one did. */
-	.notebook-page .card > .flex-1 {
-		padding: 2.5rem;
-	}
-
-	.notebook-page .sketch-frame {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		pointer-events: none;
-	}
-}
-
 @utility input {
 	@apply bg-sunken text-ink p-2 rounded-sm border border-solid border-edge;
 
