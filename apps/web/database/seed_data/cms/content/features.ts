@@ -352,7 +352,11 @@ export const featuresEN = (files: Record<string, number>): PageContent => ({
 						['pepicons-pencil:wrench', 'Maintenance mode'],
 						['pepicons-pencil:wifi', 'SSE real-time'],
 					].map(([name, label]) =>
-						flex([icon(name, 'primary', 'none', 36), title(label, 4)], { direction: 'col', gap: 'xs' }),
+						flex([icon(name, 'primary', 'none', 36), title(label, 4)], {
+							direction: 'col',
+							gap: 'xs',
+							align: 'center',
+						}),
 					),
 				),
 			],
@@ -722,7 +726,11 @@ export const featuresFR = (files: Record<string, number>): PageContent => ({
 						['pepicons-pencil:wrench', 'Mode maintenance'],
 						['pepicons-pencil:wifi', 'Temps réel SSE'],
 					].map(([name, label]) =>
-						flex([icon(name, 'primary', 'none', 36), title(label, 4)], { direction: 'col', gap: 'xs' }),
+						flex([icon(name, 'primary', 'none', 36), title(label, 4)], {
+							direction: 'col',
+							gap: 'xs',
+							align: 'center',
+						}),
 					),
 				),
 			],
