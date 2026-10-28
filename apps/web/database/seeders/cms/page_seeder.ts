@@ -1,10 +1,10 @@
 import { BaseSeeder } from '@adonisjs/lucid/seeders';
 import Page from '#cms/models/page/page';
 import PageTranslation from '#cms/models/page/page_translation';
-import { contactEN } from './content/contact.js';
-import { featuresEN } from './content/features.js';
+import { contactEN, contactFR } from './content/contact.js';
+import { featuresEN, featuresFR } from './content/features.js';
 import { homeEN, homeFR } from './content/home.js';
-import { showcaseEN } from './content/showcase.js';
+import { showcaseEN, showcaseFR } from './content/showcase.js';
 import { ensureDemoFiles } from './demo_images.js';
 import type { PageContent, PageStatus } from '#cms/types/page';
 
@@ -96,6 +96,16 @@ const buildSeedPages = (files: Record<string, number>): SeededPage[] => [
 				content: featuresEN(files),
 				status: 'published',
 			},
+			{
+				slug: 'fonctionnalites',
+				locale: 'fr',
+				title: 'Fonctionnalités',
+				metaTitle: 'Fonctionnalités — Foundry',
+				metaDescription:
+					'Ce que le boilerplate Foundry embarque : architecture domaine-driven, authentification avec 2FA et RBAC, le builder visuel, et les défauts opérationnels.',
+				content: featuresFR(files),
+				status: 'published',
+			},
 		],
 	},
 	{
@@ -112,6 +122,16 @@ const buildSeedPages = (files: Record<string, number>): SeededPage[] => [
 				content: showcaseEN(files),
 				status: 'published',
 			},
+			{
+				slug: 'vitrine',
+				locale: 'fr',
+				title: 'Vitrine',
+				metaTitle: 'Vitrine — Foundry',
+				metaDescription:
+					'Les 17 types de blocs du CMS rendus sur une seule page — typographie, mises en page, médias, contrôles et HTML brut.',
+				content: showcaseFR(files),
+				status: 'published',
+			},
 		],
 	},
 	{
@@ -126,6 +146,16 @@ const buildSeedPages = (files: Record<string, number>): SeededPage[] => [
 				metaDescription:
 					'Reach the foundry: a contact form wired end to end — Vine validation, per-IP rate limiting, transactional e-mail.',
 				content: contactEN(files),
+				status: 'published',
+			},
+			{
+				slug: 'nous-joindre',
+				locale: 'fr',
+				title: 'Nous joindre',
+				metaTitle: 'Contact — Foundry',
+				metaDescription:
+					'Joindre la fonderie : un formulaire de contact câblé de bout en bout — validation Vine, limitation de débit par IP, e-mail transactionnel.',
+				content: contactFR(files),
 				status: 'published',
 			},
 		],
@@ -218,9 +248,12 @@ export default class extends BaseSeeder {
 
 		console.log('✅ CMS pages seeded successfully');
 		console.log('   Pages available at:');
-		console.log('   → /             (home — FR primary, EN at /home)');
-		console.log('   → /features     (boilerplate features)');
-		console.log('   → /showcase     (all 17 block types)');
-		console.log('   → /contact      (wired contact form + map)');
+		console.log('   → /                 (home — FR primary, EN at /home)');
+		console.log('   → /features         (boilerplate features, EN)');
+		console.log('   → /fonctionnalites  (boilerplate features, FR)');
+		console.log('   → /showcase         (all 17 block types, EN)');
+		console.log('   → /vitrine          (all 17 block types, FR)');
+		console.log('   → /contact          (wired contact form + map, EN)');
+		console.log('   → /nous-joindre     (wired contact form + map, FR)');
 	}
 }

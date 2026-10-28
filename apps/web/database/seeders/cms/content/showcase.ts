@@ -329,3 +329,324 @@ export const showcaseEN = (files: Record<string, number>): PageContent => ({
 		),
 	],
 });
+
+/**
+ * Showcase page (FR). Renders every one of the 17 block types with realistic
+ * content, grouped by family, so a screenshot of this page doubles as block
+ * documentation.
+ *
+ * @param files - demo image filename → file id map (see `ensureDemoFiles`).
+ */
+export const showcaseFR = (files: Record<string, number>): PageContent => ({
+	blocks: [
+		// ── Header ─────────────────────────────────────────────────────────────
+		section(
+			'surface',
+			'xl',
+			'md',
+			[
+				flex(
+					[
+						kicker('Vitrine — les 17 blocs'),
+						title('Chaque bloc, en vitrine', 1),
+						para(
+							'Cette page rend chacun des 17 types de blocs avec un contenu réaliste. Éditez-la dans le builder pour voir comment sont façonnés les arbres.',
+							'base',
+							'muted',
+							'base',
+							'max-w-2xl',
+						),
+					],
+					{ direction: 'col', gap: 'md' },
+				),
+			],
+			'header',
+		),
+
+		// ── 01 Typography ──────────────────────────────────────────────────────
+		section(
+			'canvas',
+			'xl',
+			'md',
+			[
+				kicker('01 — Typographie'),
+				title('Titre un — le marteau', 1),
+				title('Titre deux — la forge', 2),
+				title('Titre trois — la pince', 3),
+				title('Titre quatre — la truelle', 4),
+				separator('md', 'primary'),
+				para(
+					'Paragraphe par défaut (ink). Portez ce vieux wine au frigo, Madame. 0123456789 ?!@# — le corps est en IBM Plex Sans sur un canevas os.',
+				),
+				para(
+					'Paragraphe atténué — le poids secondaire pour les copies d’appui, légendes et lignes de méta.',
+					'base',
+					'muted',
+				),
+				para(
+					'Style kicker — mono, majuscules, espacée, en orange incandescent. À réserver aux tampons de section.',
+					'sm',
+					'primary',
+					'base',
+					'font-mono uppercase tracking-[0.25em] text-sm',
+				),
+				quote(
+					'Une citation en surbrillance — laiton sur enfoncé, pour les citations et les principes.',
+					'Variante highlight',
+					'highlight',
+				),
+				quote('Une citation simple — sans ornement, juste les mots et la signature.', 'Variante plain', 'plain'),
+				list(
+					[
+						'Section — le conteneur de mise en page',
+						'Grid — colonnes responsives',
+						'Flex — flux directionnel',
+						'Title — titres 1 à 4',
+						'Paragraph — corps de texte',
+					],
+					true,
+				),
+				list(['Button', 'Separator', 'Icon', 'Form + Field', 'HTML / Markdown']),
+			],
+			'typography',
+		),
+
+		// ── 02 Layouts ─────────────────────────────────────────────────────────
+		section(
+			'surface',
+			'xl',
+			'md',
+			[
+				kicker('02 — Mises en page'),
+				title('Section, grid et flex', 2),
+				grid({ default: 1, lg: 3 }, 'md', [
+					section(
+						'canvas',
+						'md',
+						'md',
+						[
+							title('Trois colonnes', 4),
+							para('lg:3 dans le bloc grid — une colonne sous le breakpoint lg.', 'sm', 'muted'),
+						],
+						undefined,
+						'card',
+					),
+					section(
+						'canvas',
+						'md',
+						'md',
+						[
+							title('Hauteurs égales', 4),
+							para(
+								'Les items de grid s’étirent par défaut ; les cartes courtes remplissent quand même leur ligne.',
+								'sm',
+								'muted',
+							),
+						],
+						undefined,
+						'card',
+					),
+					section(
+						'canvas',
+						'md',
+						'md',
+						[
+							title('Sections imbriquées', 4),
+							para(
+								'Les sections s’imbriquent librement — celle-ci est une carte dans une grid dans une section.',
+								'sm',
+								'muted',
+							),
+						],
+						undefined,
+						'card',
+					),
+				]),
+				flex(
+					[
+						flex([para('row / 1', 'sm', 'ink', 'base', 'font-mono uppercase tracking-[0.2em]')], {
+							direction: 'col',
+							gap: 'xs',
+							background: 'primary-light',
+							className: 'flex-1 p-6',
+						}),
+						flex([para('row / 2', 'sm', 'ink', 'base', 'font-mono uppercase tracking-[0.2em]')], {
+							direction: 'col',
+							gap: 'xs',
+							background: 'secondary-light',
+							className: 'flex-1 p-6',
+						}),
+						flex([para('row / 3', 'sm', 'ink', 'base', 'font-mono uppercase tracking-[0.2em]')], {
+							direction: 'col',
+							gap: 'xs',
+							background: 'tertiary-light',
+							className: 'flex-1 p-6',
+						}),
+					],
+					{ direction: 'row', gap: 'md', wrap: true },
+				),
+				grid({ default: 1, md: 2 }, 'md', [
+					section(
+						'sunken',
+						'md',
+						'md',
+						[
+							title('Demi-largeur', 4),
+							para('md:2 — deux à partir du breakpoint md, une colonne sur les téléphones.', 'sm', 'muted'),
+						],
+						undefined,
+						'card',
+					),
+					section(
+						'sunken',
+						'md',
+						'md',
+						[
+							title('Fond enfoncé', 4),
+							para('L’échelle de fond des sections va de canvas à enfoncé jusqu’à la palette complète.', 'sm', 'muted'),
+						],
+						undefined,
+						'card',
+					),
+				]),
+			],
+			'layouts',
+		),
+
+		// ── 03 Media ───────────────────────────────────────────────────────────
+		section(
+			'canvas',
+			'xl',
+			'md',
+			[
+				kicker('03 — Médias'),
+				title('Image, vidéo, carrousel et iframe', 2),
+				image(files['steel-plates.png'], 'Plaques d’acier rivetées, colonne en laiton', 'w-full'),
+				carousel(
+					[
+						image(files['specimen-grid.png'], 'Grille d’échantillons — plaques rivetées'),
+						image(files['molten-flow.png'], 'Flux incandescent le long du canal'),
+						image(files['spark-burst.png'], 'Étincelles de la forge'),
+						image(files['brass-gauge.png'], 'Manomètre en laiton à la ligne rouge'),
+					],
+					'16:9',
+				),
+				video(
+					'https://www.youtube.com/watch?v=SONvkc3D-o0',
+					'Big Buck Bunny — Blender Foundation. Le bloc vidéo gère les URL de provider et les fichiers média directs dans une boîte d’aspect sûre CLS.',
+				),
+				iframe(
+					'https://maps.google.com/maps?q=Paris&z=13&output=embed',
+					'Carte — Paris (intégration Google Maps, allowlist appliquée)',
+				),
+			],
+			'media',
+		),
+
+		// ── 04 Controls ────────────────────────────────────────────────────────
+		section(
+			'surface',
+			'xl',
+			'md',
+			[
+				kicker('04 — Contrôles'),
+				title('Boutons, icônes et un formulaire qui marche', 2),
+				flex(
+					[
+						button('Primaire', 'primary', 'md', {
+							linkType: 'external',
+							url: 'https://github.com/NetAuraTech/adonisjs-foundry',
+						}),
+						button('Secondaire', 'secondary', 'md', {
+							linkType: 'external',
+							url: 'https://github.com/NetAuraTech/adonisjs-foundry',
+						}),
+						button('Contour', 'outline', 'md', {
+							linkType: 'external',
+							url: 'https://github.com/NetAuraTech/adonisjs-foundry',
+						}),
+						button('Danger', 'danger', 'md', {
+							linkType: 'external',
+							url: 'https://github.com/NetAuraTech/adonisjs-foundry',
+						}),
+						button('Succès', 'success', 'md', {
+							linkType: 'external',
+							url: 'https://github.com/NetAuraTech/adonisjs-foundry',
+						}),
+						button('Lien atténué', 'link_muted', 'md', {
+							linkType: 'external',
+							url: 'https://github.com/NetAuraTech/adonisjs-foundry',
+						}),
+						button('Lien secondaire', 'link_secondary', 'md', {
+							linkType: 'external',
+							url: 'https://github.com/NetAuraTech/adonisjs-foundry',
+						}),
+					],
+					{ direction: 'row', gap: 'sm', wrap: true },
+				),
+				flex(
+					[
+						icon('pepicons-pencil:shield', 'primary', 'none', 48),
+						icon('pepicons-pencil:wrench', 'primary', 'none', 48),
+						icon('pepicons-pencil:gear', 'primary', 'none', 48),
+						icon('pepicons-pencil:key', 'primary', 'none', 48),
+					],
+					{ direction: 'row', gap: 'lg', align: 'center' },
+				),
+				form([
+					field('Nom', 'name', 'text', { placeholder: 'Jane Doe' }),
+					field('E-mail', 'email', 'email', { placeholder: 'jane@example.com' }),
+					field('Sujet', 'subject', 'select', {
+						options: [
+							{ value: 'question', label: 'Une question' },
+							{ value: 'demo', label: 'Demander une démo' },
+							{ value: 'support', label: 'Support' },
+						],
+					}),
+					field('Message', 'message', 'textarea', { placeholder: 'Dites-nous ce que vous forgez.' }),
+					button('Envoyer le message', 'primary', 'md', { linkType: 'page' }),
+				]),
+			],
+			'controls',
+		),
+
+		// ── 05 Raw HTML ────────────────────────────────────────────────────────
+		section(
+			'canvas',
+			'xl',
+			'md',
+			[
+				kicker('05 — Brute'),
+				title('Texte HTML / Markdown', 2),
+				htmltext(
+					'Le **markdown** en ligne fonctionne — `code`, *l’accent* rendu en bleu acier.\n\n<pre class="bg-ink text-ink-inverted p-4 rounded-sm overflow-x-auto text-sm"><code>const block = { id: "html-001", type: "htmltext" }</code></pre>',
+				),
+			],
+			'raw',
+		),
+
+		// ── Outro ──────────────────────────────────────────────────────────────
+		section(
+			'canvas',
+			'xl',
+			'md',
+			[
+				flex(
+					[
+						title('Voilà les 17.', 2),
+						para(
+							'Chaque bloc ci-dessus est éditable dans le builder — cette page est du JSON seedé, pas du JSX écrit à la main.',
+							'base',
+							'muted',
+							'base',
+							'max-w-2xl',
+						),
+						pageButton('Retour aux fonctionnalités', 'fonctionnalites', 'secondary', 'md', 'center'),
+					],
+					{ direction: 'col', gap: 'md', align: 'center' },
+				),
+			],
+			'outro',
+		),
+	],
+});
