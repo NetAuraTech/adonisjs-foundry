@@ -1690,7 +1690,7 @@ const apiManifest: FlavorManifest = {
 				'    "@iconify/react": "^6.0.2",',
 				'    "@inertiajs/react": "^3.9.1",',
 				'    "@lukeed/ms": "^2.0.2",',
-				'    "@sentry/node": "^11.7.0",',
+				'    "@sentry/node": "^11.9.0",',
 				'    "@tailwindcss/vite": "^4.2.1",',
 				'    "@tuyau/core": "^1.0.0",',
 				'    "@vinejs/vine": "^4.3.0",',
