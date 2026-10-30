@@ -1502,7 +1502,7 @@ const inertiaManifest: FlavorManifest = {
 				'    "@types/node": "~26.6.2",',
 				'    "@types/react": "^19.3.0",',
 				'    "@types/react-dom": "^19.3.0",',
-				'    "@types/sinon": "^22.0.0",',
+				'    "@types/sinon": "^22.0.2",',
 				'    "@vitejs/plugin-react": "^6.1.2",',
 				'    "hot-hook": "^1.0.0",',
 				'    "vite": "^8.3.3",',
