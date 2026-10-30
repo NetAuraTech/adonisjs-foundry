@@ -1692,7 +1692,7 @@ const apiManifest: FlavorManifest = {
 				'    "@lukeed/ms": "^2.0.2",',
 				'    "@sentry/node": "^11.7.0",',
 				'    "@tailwindcss/vite": "^4.2.1",',
-				'    "@tuyau/core": "^1.0.0",',
+				'    "@tuyau/core": "^1.2.3",',
 				'    "@vinejs/vine": "^4.3.0",',
 				'    "ajv": "^8.20.0",',
 				'    "better-sqlite3": "^13.0.3",',
