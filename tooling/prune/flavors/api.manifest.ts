@@ -1680,7 +1680,7 @@ const apiManifest: FlavorManifest = {
 				'    "@adonisjs/static": "^2.0.0",',
 				'    "@adonisjs/transmit": "^3.0.2",',
 				'    "@adonisjs/transmit-client": "^1.1.0",',
-				'    "@adonisjs/vite": "^6.0.3",',
+				'    "@adonisjs/vite": "^6.0.4",',
 				'    "@aws-sdk/client-s3": "^3.1150.0",',
 				'    "@aws-sdk/s3-request-presigner": "^3.1153.0",',
 				'    "@fontsource/cormorant-garamond": "^5.2.11",',
