@@ -1712,7 +1712,7 @@ const apiManifest: FlavorManifest = {
 				'    "sharp": "^0.35.5",',
 				'    "sinon": "^22.1.0",',
 				'    "sonner": "^2.0.7",',
-				'    "tailwindcss": "^4.3.3",',
+				'    "tailwindcss": "^4.3.4",',
 				'    "uuid": "^14.0.3"',
 				'  },',
 				'  "devDependencies": {',
