@@ -1462,7 +1462,7 @@ const inertiaManifest: FlavorManifest = {
 				'    "@scalar/api-reference": "^1.76.0",',
 				'    "@sentry/node": "^11.9.0",',
 				'    "@sentry/react": "^11.8.0",',
-				'    "@tailwindcss/vite": "^4.2.1",',
+				'    "@tailwindcss/vite": "^4.3.4",',
 				'    "@tuyau/core": "^1.2.3",',
 				'    "@vinejs/vine": "^4.3.0",',
 				'    "ajv": "^8.20.0",',
