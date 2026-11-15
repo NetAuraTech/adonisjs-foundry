@@ -11,24 +11,20 @@
 */
 
 import app from '@adonisjs/core/services/app';
+// @scaffold-marker nav-imports: make:domain appends new domain nav-entry imports after this line.
 import { NavRegistry } from '#core/services/nav_registry';
-import { cmsNavEntries } from '#transport/cms/nav';
 import { coreNavEntries, maintenanceNavEntries } from '#transport/core/nav';
 import { fileNavEntries } from '#transport/file/nav';
 import { identityNavEntries } from '#transport/identity/nav';
 import { loggingNavEntries } from '#transport/log/nav';
-// @scaffold-marker nav-imports: make:domain appends new domain nav-entry imports after this line.
-import { webhookNavEntries } from '#transport/webhook/nav';
 
 app.container.singleton(NavRegistry, () => new NavRegistry());
 
 const registry = await app.container.make(NavRegistry);
 
 registry.register('core', coreNavEntries);
-registry.register('cms', cmsNavEntries);
 registry.register('file', fileNavEntries);
 registry.register('identity', identityNavEntries);
 registry.register('maintenance', maintenanceNavEntries);
 registry.register('logging', loggingNavEntries);
 // @scaffold-marker nav-registration: make:domain appends new domain registry.register() calls after this line.
-registry.register('webhook', webhookNavEntries);
