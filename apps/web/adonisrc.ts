@@ -10,9 +10,9 @@ export default defineConfig({
   | Experimental flags
   |--------------------------------------------------------------------------
   |
-  | The following features will be enabled by default in the next major release
-  | of AdonisJS. You can opt into them today to avoid any breaking changes
-  | during upgrade.
+  | The following features will be enabled by default in the next major
+  | release of AdonisJS. You can opt into them today to avoid any breaking
+  | changes during upgrade.
   |
   */
 	experimental: {},
@@ -22,8 +22,8 @@ export default defineConfig({
   | Commands
   |--------------------------------------------------------------------------
   |
-  | List of ace commands to register from packages. The application commands
-  | will be scanned automatically from the "./commands" directory.
+  | List of ace commands to register from packages. The application
+  | commands will be scanned automatically from the "./commands" directory.
   |
   */
 	commands: [
@@ -70,7 +70,6 @@ export default defineConfig({
 		() => import('@adonisjs/mail/mail_provider'),
 		() => import('@adonisjs/drive/drive_provider'),
 		() => import('@adonisjs/limiter/limiter_provider'),
-		() => import('@adonisjs/transmit/transmit_provider'),
 	],
 
 	/*
@@ -91,7 +90,6 @@ export default defineConfig({
 		() => import('#start/sitemap'),
 		() => import('#start/nav'),
 		() => import('#start/extensions'),
-		() => import('#start/transmit'),
 		() => import('#start/scheduler'),
 	],
 
@@ -100,8 +98,8 @@ export default defineConfig({
   | Tests
   |--------------------------------------------------------------------------
   |
-  | List of test suites to organize tests by their type. Feel free to remove
-  | and add additional suites.
+  | List of test suites to organize tests by their type. Feel free to
+  | remove and add additional suites.
   |
   */
 	tests: {
@@ -130,8 +128,8 @@ export default defineConfig({
   | Metafiles
   |--------------------------------------------------------------------------
   |
-  | A collection of files you want to copy to the build folder when creating
-  | the production build.
+  | A collection of files you want to copy to the build folder when
+  | creating the production build.
   |
   */
 	metaFiles: [
