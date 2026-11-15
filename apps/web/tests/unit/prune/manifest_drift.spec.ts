@@ -12,8 +12,11 @@ import type { FlavorManifest } from '../../../../../tooling/prune/types.js';
  *
  * The fastest, cheapest CI check in the prune pipeline: every `delete` path in
  * every flavor manifest exists on `main`, every `rewrite` path is in the closed
- * allowlist, and no `package.json` rewrite (root or workspace) ever drifts from
- * the file main carries at the same path (version and dependency ranges). The
+ * allowlist, no `config/database.ts` rewrite drops the #484 pg pool hardening
+ * (the `pgConnection` const, TCP keepalive and `min`/`max` pool tuning) or
+ * keeps the CMS migration path on an active line, and no `package.json`
+ * rewrite (root or workspace) ever drifts from the file main carries at the
+ * same path (version and dependency ranges). The
  * `workspaces` glob field is flavor-invariant — a glob matching nothing is
  * valid, so no flavor ever narrows it — and a workspace package that a flavor
  * deletes wholesale must be pruned from every rewritten manifest that still
@@ -244,6 +247,76 @@ test.group('Manifest drift seam', () => {
 			[],
 			"the workspaces glob field is flavor-invariant — restore main's globs in the rewrite:\n" +
 				narrowed.map((d) => `  - [${d.flavor}] ${d.detail}`).join('\n'),
+		);
+	});
+
+	test('every config/database.ts rewrite keeps the #484 pg pool hardening and no active cms migration path', async ({
+		assert,
+	}) => {
+		const manifests = await loadAllManifests();
+
+		if (manifests.length === 0) {
+			assert.isTrue(true, 'no flavor manifests yet — database.ts drift seam is a no-op until #5/#8');
+			return;
+		}
+
+		// `config/database.ts` is a full-file rewrite whose only flavor-specific
+		// job is to strip the CMS migration path — everything else is main's file
+		// verbatim. Because the engine overwrites the file byte-for-byte, any
+		// hardening that lands on main later (the #484 pg pool: a `pgConnection`
+		// const with TCP keepalive, plus `min`/`max` pool tuning) is silently
+		// lost on the next flavor regeneration until this seam catches it: the
+		// flavor would ship without the keepalive that stops idle pooled
+		// connections from being killed and failing with ECONNRESET.
+		const hardeningTokens = [
+			'pgConnection',
+			'keepAlive: true',
+			'keepAliveInitialDelayMillis: 60_000',
+			'min: 1',
+			'max: 10',
+		];
+		const stale: { flavor: string; detail: string }[] = [];
+		for (const { flavor, manifest } of manifests) {
+			for (const rewrite of manifest.rewrites) {
+				if (rewrite.path !== 'apps/web/config/database.ts') {
+					continue;
+				}
+
+				for (const token of hardeningTokens) {
+					if (!rewrite.content.includes(token)) {
+						stale.push({
+							flavor,
+							detail: `${rewrite.path}: missing the #484 pg pool hardening token "${token}" — refresh the frozen content from main`,
+						});
+					}
+				}
+
+				// The CMS migration path must be gone from every active line. A
+				// JSDoc line may mention `database/migrations/cms` (it explains
+				// why the folder is absent), so only uncommented lines are
+				// checked — an active `paths` entry pointing at the pruned
+				// folder would break the flavor's migrations.
+				const activeCmsLines = rewrite.content
+					.split('\n')
+					.map((line, i) => ({ line, number: i + 1 }))
+					.filter(({ line }) => line.includes("'database/migrations/cms'") && !line.trim().startsWith('//'))
+					.map(({ line, number }) => `line ${number}: ${line.trim()}`);
+				if (activeCmsLines.length > 0) {
+					stale.push({
+						flavor,
+						detail:
+							`${rewrite.path}: an active line still carries the cms migration path — the flavor prunes that folder:\n  - ` +
+							activeCmsLines.join('\n  - '),
+					});
+				}
+			}
+		}
+
+		assert.deepEqual(
+			stale,
+			[],
+			"every config/database.ts rewrite must keep main's #484 pg pool hardening and no active cms migration path:\n" +
+				stale.map((s) => `  - [${s.flavor}] ${s.detail}`).join('\n'),
 		);
 	});
 
