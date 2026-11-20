@@ -1731,7 +1731,7 @@ const apiManifest: FlavorManifest = {
 				'    "@inertiajs/react": "^3.9.1",',
 				'    "@lukeed/ms": "^2.0.2",',
 				'    "@sentry/node": "^11.10.0",',
-				'    "@tailwindcss/vite": "^4.3.4",',
+				'    "@tailwindcss/vite": "^4.3.5",',
 				'    "@tuyau/core": "^1.2.3",',
 				'    "@vinejs/vine": "^4.3.0",',
 				'    "ajv": "^8.20.0",',
