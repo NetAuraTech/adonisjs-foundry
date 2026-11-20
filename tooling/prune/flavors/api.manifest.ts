@@ -1735,7 +1735,7 @@ const apiManifest: FlavorManifest = {
 				'    "@tuyau/core": "^1.2.3",',
 				'    "@vinejs/vine": "^4.3.0",',
 				'    "ajv": "^8.20.0",',
-				'    "better-sqlite3": "^13.0.3",',
+				'    "better-sqlite3": "^13.2.0",',
 				'    "dompurify": "^3.4.17",',
 				'    "edge.js": "^6.5.1",',
 				'    "html-to-image": "^1.11.13",',
